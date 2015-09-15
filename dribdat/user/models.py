@@ -60,3 +60,39 @@ class User(UserMixin, SurrogatePK, Model):
 
     def __repr__(self):
         return '<User({username!r})>'.format(username=self.username)
+
+
+class Event(SurrogatePK, Model):
+    __tablename__ = 'events'
+    name = Column(db.String(80), unique=True, nullable=False)
+    description = Column(db.String(140), nullable=True)
+    webpage_url = Column(db.String(255), nullable=True)
+    starts_at = Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)
+    ends_at = Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)
+
+    def __init__(self, name=None, **kwargs):
+        if name:
+            db.Model.__init__(self, name=name, **kwargs)
+
+    def __repr__(self):
+        return '<Event({name})>'.format(name=self.name)
+
+class Project(SurrogatePK, Model):
+    __tablename__ = 'projects'
+    name = Column(db.String(80), unique=True, nullable=False)
+    summary = Column(db.String(140), nullable=True)
+    longtext = Column(db.UnicodeText(), nullable=True)
+    image_url = Column(db.String(255), nullable=True)
+    webpage_url = Column(db.String(255), nullable=True)
+    created_at = Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)
+    updated_at = Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)
+
+    event_id = ReferenceCol('events', nullable=True)
+    event = relationship('Event', backref='projects')
+
+    def __init__(self, name=None, **kwargs):
+        if name:
+            db.Model.__init__(self, name=name, **kwargs)
+
+    def __repr__(self):
+        return '<Event({name})>'.format(name=self.name)

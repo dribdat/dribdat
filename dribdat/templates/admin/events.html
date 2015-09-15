@@ -1,0 +1,30 @@
+{% extends "admin/layout.html" %}
+
+{% block content %}
+<div class="container">
+    <div style="float:right; margin-top:1em">
+      <a href="{{ url_for('admin.event_new') }}" class="btn btn-success">Start an event</a>
+    </div>
+    <h2>Events</h2>
+    <table class='table table-bordered table-hover'>
+        <thead>
+            <tr>
+              <th>Name</th>
+              <th>Start</th>
+              <th>Finish</th>
+            </tr>
+        </thead>
+        {% for event in events %}
+        <tr>
+            <td>
+              <a href="{{ url_for('admin.event', event_id=event.id) }}">
+                {{ event.name }}
+              </a>
+            </td>
+            <td>{{ event.starts_at|format_date }}</td>
+            <td>{{ event.ends_at|format_date }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+{% endblock %}

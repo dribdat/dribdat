@@ -1,0 +1,10 @@
+{% from "macros/_form.html" import render_form %}
+
+{% extends "admin/layout.html" %}
+
+{% block content %}
+<div class="container">
+    <h2>Update event</h2>
+    {{ render_form(url_for('admin.event', event_id=event.id), form) }}
+</div>
+{% endblock %}
