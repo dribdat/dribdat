@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 """Public section, including homepage and signup."""
 from flask import (Blueprint, request, render_template, flash, url_for,
-                    redirect, session)
+                    redirect, session, current_app)
 from flask_login import login_user, login_required, logout_user
 
 from dribdat.extensions import login_manager
+from dribdat.extensions import sso
 from dribdat.user.models import User
 from dribdat.public.forms import LoginForm
 from dribdat.user.forms import RegisterForm
@@ -13,15 +14,33 @@ from dribdat.database import db
 
 blueprint = Blueprint('public', __name__, static_folder="../static")
 
+from pydiscourse.exceptions import *
+from pydiscourse.sso import sso_validate, sso_redirect_url
+
+def discourse_sso_view(request):
+    payload = request.args.get('sso')
+    signature = request.args.get('sig')
+    secret = current_app.config['DISCOURSE_SECRET_KEY']
+    try:
+        nonce = sso_validate(payload, signature, secret)
+    except DiscourseError as e:
+        flash(e.args[0])
+        return render_template("public/home.html")
+
+    url = sso_redirect_url(nonce, secret, request.user.email, request.user.id, request.user.username)
+    return redirect('%s%s' % (current_app.config['DISCOURSE_URL'], url))
 
 @login_manager.user_loader
 def load_user(id):
     return User.get_by_id(int(id))
 
+@sso.login_handler
+def login_callback(user_info):
+    """Store information in session."""
+    session["user"] = user_info
 
 @blueprint.route("/", methods=["GET", "POST"])
 def home():
-    form = LoginForm(request.form)
     # Handle logging in
     if request.method == 'POST':
         if form.validate_on_submit():

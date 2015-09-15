@@ -1,0 +1,3 @@
+[submodule "submodules/pydiscourse"]
+	path = submodules/pydiscourse
+	url = git@github.com:loleg/pydiscourse.git
