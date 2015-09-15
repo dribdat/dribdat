@@ -1,0 +1,32 @@
+{% extends "admin/layout.html" %}
+
+{% block content %}
+<div class="container">
+    <div style="float:right; margin-top:1em">
+      <a href="{{ url_for('admin.user_new') }}" class="btn btn-success">Add user</a>
+    </div>
+    <h2>Users</h2>
+    <table class='table table-bordered table-hover'>
+        <thead>
+            <tr>
+              <th>Username</th>
+              <th>Name</th>
+              <th>Admin?</th>
+              <th>Created</th>
+            </tr>
+        </thead>
+        {% for user in users %}
+        <tr>
+            <td>
+              <a href="{{ url_for('admin.user', user_id=user.id) }}">
+                {{ user.username }}
+              </a>
+            </td>
+            <td>{{ user.first_name }} {{ user.last_name }}</td>
+            <td>{{ user.is_admin }}</td>
+            <td>{{ user.created_at|format_date }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+{% endblock %}

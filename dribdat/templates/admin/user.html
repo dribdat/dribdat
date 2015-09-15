@@ -1,0 +1,10 @@
+{% from "macros/_form.html" import render_form %}
+
+{% extends "admin/layout.html" %}
+
+{% block content %}
+<div class="container">
+    <h2>Update account</h2>
+    {{ render_form(url_for('admin.user', user_id=user.id), form) }}
+</div>
+{% endblock %}

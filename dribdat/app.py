@@ -13,7 +13,7 @@ from dribdat.extensions import (
     migrate,
     debug_toolbar,
 )
-from dribdat import public, user
+from dribdat import public, user, admin
 
 
 def create_app(config_object=ProdConfig):
@@ -27,6 +27,7 @@ def create_app(config_object=ProdConfig):
     register_extensions(app)
     register_blueprints(app)
     register_errorhandlers(app)
+    register_filters(app)
     return app
 
 
@@ -45,6 +46,7 @@ def register_extensions(app):
 def register_blueprints(app):
     app.register_blueprint(public.views.blueprint)
     app.register_blueprint(user.views.blueprint)
+    app.register_blueprint(admin.views.blueprint)
     return None
 
 
@@ -56,3 +58,11 @@ def register_errorhandlers(app):
     for errcode in [401, 404, 500]:
         app.errorhandler(errcode)(render_error)
     return None
+
+def register_filters(app):
+    @app.template_filter()
+    def pretty_date(value):
+        return pretty_date(value)
+    @app.template_filter()
+    def format_date(value, format='%Y-%m-%d'):
+        return value.strftime(format)

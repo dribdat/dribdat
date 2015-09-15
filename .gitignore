@@ -32,6 +32,8 @@ nosetests.xml
 .mr.developer.cfg
 .project
 .pydevproject
+dev.db
+migrations/
 
 # Complexity
 output/*.html

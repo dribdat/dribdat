@@ -41,6 +41,7 @@ def login_callback(user_info):
 
 @blueprint.route("/", methods=["GET", "POST"])
 def home():
+    form = LoginForm(request.form)
     # Handle logging in
     if request.method == 'POST':
         if form.validate_on_submit():
@@ -51,7 +52,6 @@ def home():
         else:
             flash_errors(form)
     return render_template("public/home.html", form=form)
-
 
 @blueprint.route('/logout/')
 @login_required
