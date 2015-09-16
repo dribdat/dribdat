@@ -3,24 +3,20 @@
 {% block content %}
 <!-- Main jumbotron for a primary marketing message or call to action -->
 <div class="jumbotron">
-
-  <h1>Dribdat
-    <i class="fa fa-thumbs-up"></i>
-    <i style="-moz-transform: scale(-1, 1); -webkit-transform: scale(-1, 1); -o-transform: scale(-1, 1); -ms-transform: scale(-1, 1); transform: scale(-1, 1);" class="fa fa-thumbs-up"></i>
-  </h1>
-  <p>All your hack belong to us.</p>
-  <p><a href="{{ url_for('public.about') }}" class="btn btn-primary btn-large">Learn more &raquo;</a></p>
+  <center>
+    <h2 style="font-weight:bold">
+      {{event.name}}
+    </h2>
+    <p>From
+      <span>{{ event.starts_at|format_date }}</span>
+    to
+      <span>{{ event.ends_at|format_date }}</span>
+    </p>
+  </center>
+  <p>{{event.description}}</p>
+  <p>
+    <a href="{{ url_for('admin.project_new') }}" class="btn btn-primary btn-large">Join the hackathon &raquo;</a>
+    <a href="{{ url_for('public.event', event_id=event.id) }}" class="btn btn-default btn-large">See the projects</a>
+  </p>
 </div><!-- /.jumbotron -->
-
-<div class="body-content">
-  <div class="row">
-    {% for event in events %}
-    <div class="col-lg-4">
-      <h2><i class="fa fa-code"></i> {{event.name}}</h2>
-      <p>{{event.description}}</p>
-      <p><a class="btn btn-default" href="{{event.id}}">See the projects</a></p>
-    </div>
-    {% endfor %}
-  </div><!-- /.row -->
-</div>
 {% endblock %}

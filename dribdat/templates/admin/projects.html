@@ -1,10 +1,7 @@
-{% extends "admin/layout.html" %}
+{% extends "layout.html" %}
 
 {% block content %}
 <div class="container">
-    <div style="float:right; margin-top:1em">
-      <a href="{{ url_for('admin.project_new') }}" class="btn btn-success">Start a project</a>
-    </div>
     <h2>Projects</h2>
     <table class='table table-bordered table-hover'>
         <thead>

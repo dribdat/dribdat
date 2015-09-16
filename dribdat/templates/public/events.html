@@ -1,0 +1,20 @@
+
+{% extends "layout.html" %}
+{% block content %}
+<!-- Main jumbotron for a primary marketing message or call to action -->
+<div class="body-content">
+  <div class="row">
+    {% for event in events %}
+    <div class="col-lg-4">
+      <h2><i class="fa fa-code"></i> {{event.name}}</h2>
+      <i>
+        <span>{{ event.starts_at|format_date }}</span>
+        <span>{{ event.ends_at|format_date }}</span>
+      </i>
+      <p>{{event.description}}</p>
+      <p><a class="btn btn-default" href="{{ url_for('public.event', event_id=event.id) }}">Browse projects</a></p>
+    </div>
+    {% endfor %}
+  </div><!-- /.row -->
+</div>
+{% endblock %}

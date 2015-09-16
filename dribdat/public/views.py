@@ -6,7 +6,7 @@ from flask_login import login_user, login_required, logout_user
 
 from dribdat.extensions import login_manager
 from dribdat.extensions import sso
-from dribdat.user.models import User
+from dribdat.user.models import User, Event, Project
 from dribdat.public.forms import LoginForm
 from dribdat.user.forms import RegisterForm
 from dribdat.utils import flash_errors
@@ -51,7 +51,8 @@ def home():
             return redirect(redirect_url)
         else:
             flash_errors(form)
-    return render_template("public/home.html", form=form)
+    event = Event.query.first()
+    return render_template("public/home.html", form=form, event=event)
 
 @blueprint.route('/logout/')
 @login_required
@@ -75,6 +76,16 @@ def register():
         flash_errors(form)
     return render_template('public/register.html', form=form)
 
+@blueprint.route("/events")
+def events():
+    events = Event.query.all()
+    return render_template("public/events.html",  events=events)
+
+@blueprint.route("/event/<int:event_id>")
+def event(event_id):
+    event = Event.query.filter_by(id=event_id).first_or_404()
+    projects = Project.query.filter_by(event_id=event_id)
+    return render_template("public/event.html",  event=event, projects=projects)
 
 @blueprint.route("/about/")
 def about():

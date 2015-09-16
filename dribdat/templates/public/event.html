@@ -1,0 +1,20 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="container">
+  <h2>{{event.name}} projects</h2>
+    <div class="nav-projects">
+      <a href="{{ url_for('admin.project_new') }}" class="btn btn-success">Start a project</a>
+    </div>
+    <div class="hexaboard">
+        {% for project in projects %}
+        <div class="project">
+            <h3>{{ project.name }}</h3>
+            <p>{{ project.summary }}
+            <span>{{ project.updated_at|format_date }}</span>
+            <a class="btn btn-default" href="{{ url_for('admin.project', project_id=project.id) }}">Edit</a>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
