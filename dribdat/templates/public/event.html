@@ -4,7 +4,13 @@
 <div class="container">
   <h2>{{event.name}} projects</h2>
     <div class="nav-projects">
-      <a href="{{ url_for('admin.project_new') }}" class="btn btn-success">Start a project</a>
+      {% if current_user and current_user.is_authenticated() %}
+        <a href="{{ url_for('admin.project_new') }}" class="btn btn-success">Start a project</a>
+      {% else %}
+        Please <a href="{{ url_for('public.register') }}">create an account</a>
+        and log in to start a project.
+      {% endif %}
+      <a href="{{ event.webpage_url }}" class="btn btn-primary btn-large">More info &raquo;</a>
     </div>
     <div class="hexaboard">
         {% for project in projects %}
