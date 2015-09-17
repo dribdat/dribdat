@@ -65,7 +65,7 @@ class User(UserMixin, SurrogatePK, Model):
 class Event(SurrogatePK, Model):
     __tablename__ = 'events'
     name = Column(db.String(80), unique=True, nullable=False)
-    description = Column(db.String(140), nullable=True)
+    description = Column(db.UnicodeText(), nullable=True)
     webpage_url = Column(db.String(255), nullable=True)
     starts_at = Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)
     ends_at = Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)

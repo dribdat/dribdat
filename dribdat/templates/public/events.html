@@ -7,12 +7,17 @@
     {% for event in events %}
     <div class="col-lg-4">
       <h2><i class="fa fa-code"></i> {{event.name}}</h2>
-      <i>
+      <div style="font-size:90%; padding-bottom:2em"><i>
         <span>{{ event.starts_at|format_date }}</span>
+        <i class="fa fa-arrow-right"></i>
         <span>{{ event.ends_at|format_date }}</span>
-      </i>
-      <p>{{event.description}}</p>
-      <p><a class="btn btn-default" href="{{ url_for('public.event', event_id=event.id) }}">Browse projects</a></p>
+      </i></div>
+      <div class="panel panel-default">
+        <div class="panel-body">
+          {{event.description}}
+        </div>
+      </div>
+      <p><a class="btn btn-primary" href="{{ url_for('public.event', event_id=event.id) }}">Browse projects</a></p>
     </div>
     {% endfor %}
   </div><!-- /.row -->
