@@ -14,6 +14,8 @@ class Config(object):
     DEBUG_TB_INTERCEPT_REDIRECTS = False
     CACHE_TYPE = 'simple'  # Can be "memcached", "redis", etc.
 
+    # Default server name
+    SERVER_NAME = os_env.get('SERVER_URL', 'localhost:5000')
     # Discourse URL to send the user back
     DISCOURSE_URL = os_env.get('DISCOURSE_URL', 'set-DISCOURSE_URL-in-env')
     # Secret key shared with the Discourse server

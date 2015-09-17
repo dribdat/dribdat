@@ -18,5 +18,19 @@
     <a href="{{ url_for('admin.project_new') }}" class="btn btn-primary btn-large">Join the hackathon &raquo;</a>
     <a href="{{ url_for('public.event', event_id=event.id) }}" class="btn btn-default btn-large">See the projects</a>
   </p>
+  <div class="panel panel-default">
+    <div class="panel-body">
+      <div id='discourse-comments'></div>
+    </div>
+  </div>
+  <script type="text/javascript">
+    DiscourseEmbed = { discourseUrl: '{{ config['DISCOURSE_URL'] }}',
+                       discourseEmbedUrl: 'https://{{ config['SERVER_NAME'] }}' };
+    (function() {
+      var d = document.createElement('script'); d.type = 'text/javascript'; d.async = true;
+      d.src = DiscourseEmbed.discourseUrl + 'javascripts/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(d);
+    })();
+  </script>
 </div><!-- /.jumbotron -->
 {% endblock %}

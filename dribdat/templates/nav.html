@@ -18,7 +18,7 @@
   <div class="collapse navbar-collapse navbar-ex1-collapse">
     <ul class="nav navbar-nav">
       <li><a href="{{ url_for('public.events') }}">All events</a></li>
-      <li><a href="https://x.datalets.ch">Community</a></li>
+      <li><a href="{{ config['DISCOURSE_URL'] }}">Community</a></li>
       {% if tabs %}
         {% for tab, link in tabs %}
         <li class="{% if active == tab %}active{% endif %}">
