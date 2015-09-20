@@ -77,11 +77,6 @@ class Event(SurrogatePK, Model):
     def __repr__(self):
         return '<Event({name})>'.format(name=self.name)
 
-membership_table = Table('association', Base.metadata,
-    Column('project_id', Integer, ForeignKey('projects.id')),
-    Column('user_id', Integer, ForeignKey('users.id'))
-)
-
 class Project(SurrogatePK, Model):
     __tablename__ = 'projects'
     name = Column(db.String(80), unique=True, nullable=False)
@@ -97,10 +92,6 @@ class Project(SurrogatePK, Model):
     # Event under which this project belongs
     event_id = ReferenceCol('events', nullable=True)
     event = relationship('Event', backref='projects')
-
-    # Many-to-many relationship for project members
-    members = relationship("User",
-        secondary=membership_table, backref="projects")
 
     def __init__(self, name=None, **kwargs):
         if name:
