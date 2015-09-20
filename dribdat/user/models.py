@@ -77,18 +77,30 @@ class Event(SurrogatePK, Model):
     def __repr__(self):
         return '<Event({name})>'.format(name=self.name)
 
+membership_table = Table('association', Base.metadata,
+    Column('project_id', Integer, ForeignKey('projects.id')),
+    Column('user_id', Integer, ForeignKey('users.id'))
+)
+
 class Project(SurrogatePK, Model):
     __tablename__ = 'projects'
     name = Column(db.String(80), unique=True, nullable=False)
-    summary = Column(db.String(140), nullable=True)
-    longtext = Column(db.UnicodeText(), nullable=True)
+    summary = Column(db.String(120), nullable=True)
     image_url = Column(db.String(255), nullable=True)
+    source_url = Column(db.String(255), nullable=True)
     webpage_url = Column(db.String(255), nullable=True)
+    autotext_url = Column(db.String(255), nullable=True)
+    longtext = Column(db.UnicodeText(), nullable=True)
     created_at = Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)
     updated_at = Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)
 
+    # Event under which this project belongs
     event_id = ReferenceCol('events', nullable=True)
     event = relationship('Event', backref='projects')
+
+    # Many-to-many relationship for project members
+    members = relationship("User",
+        secondary=membership_table, backref="projects")
 
     def __init__(self, name=None, **kwargs):
         if name:

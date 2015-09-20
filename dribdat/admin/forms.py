@@ -33,10 +33,12 @@ class EventForm(Form):
 
 class ProjectForm(Form):
     next = HiddenField()
+    event_id = SelectField(u'Event', coerce=int)
     name = StringField(u'Title', [required(), length(max=80)])
-    summary = StringField(u'Short summary (140 chars)', [length(max=140)])
+    summary = StringField(u'Short summary (120 chars)', [length(max=120)])
+    longtext = TextAreaField(u'Full description (or cache)')
+    autotext_url = StringField(u"Auto-update link", [length(max=255)])
     webpage_url = StringField(u'Project home link', [length(max=255)])
     source_url = StringField(u'Source code link', [length(max=255)])
     image_url = StringField(u'Banner image link', [length(max=255)])
-    event_id = SelectField(u"Event", coerce=int)
     submit = SubmitField(u'Save')
