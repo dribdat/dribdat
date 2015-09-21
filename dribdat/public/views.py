@@ -14,22 +14,6 @@ from dribdat.database import db
 
 blueprint = Blueprint('public', __name__, static_folder="../static")
 
-from pydiscourse.exceptions import *
-from pydiscourse.sso import sso_validate, sso_redirect_url
-
-def discourse_sso_view(request):
-    payload = request.args.get('sso')
-    signature = request.args.get('sig')
-    secret = current_app.config['DISCOURSE_SECRET_KEY']
-    try:
-        nonce = sso_validate(payload, signature, secret)
-    except DiscourseError as e:
-        flash(e.args[0])
-        return render_template("public/home.html")
-
-    url = sso_redirect_url(nonce, secret, request.user.email, request.user.id, request.user.username)
-    return redirect('%s%s' % (current_app.config['DISCOURSE_URL'], url))
-
 @login_manager.user_loader
 def load_user(id):
     return User.get_by_id(int(id))
