@@ -8,6 +8,7 @@ from dribdat.extensions import login_manager
 from dribdat.user.models import User, Event, Project
 from dribdat.public.forms import LoginForm
 from dribdat.user.forms import RegisterForm
+from dribdat.admin.forms import ProjectForm
 from dribdat.utils import flash_errors
 from dribdat.database import db
 
@@ -31,6 +32,11 @@ def home():
             flash_errors(form)
     event = Event.query.first()
     return render_template("public/home.html", form=form, current_event=event)
+
+@blueprint.route("/about/")
+def about():
+    form = LoginForm(request.form)
+    return render_template("public/about.html", current_event, form=form)
 
 @blueprint.route('/logout/')
 @login_required
@@ -77,7 +83,32 @@ def project(project_id):
     event = Event.query.filter_by(id=project.event_id).first_or_404()
     return render_template('public/project.html', current_event=event, project=project)
 
-@blueprint.route("/about/")
-def about():
-    form = LoginForm(request.form)
-    return render_template("public/about.html", current_event, form=form)
+@blueprint.route('/project/<int:project_id>/edit', methods=['GET', 'POST'])
+@login_required
+def project_edit(project_id):
+    project = Project.query.filter_by(id=project_id).first_or_404()
+    form = ProjectForm(obj=project, next=request.args.get('next'))
+    event = Event.query.first()
+    form.event_id.choices = [(event.id, event.name)]
+    if form.validate_on_submit():
+        form.populate_obj(project)
+        db.session.add(project)
+        db.session.commit()
+        flash('Project updated.', 'success')
+        return render_template('public/project.html', current_event=event, project=project)
+    return render_template('public/projectedit.html', current_event=event, project=project, form=form)
+
+@blueprint.route('/project/new', methods=['GET', 'POST'])
+@login_required
+def project_new():
+    project = Project()
+    form = ProjectForm(obj=project, next=request.args.get('next'))
+    event = Event.query.first()
+    form.event_id.choices = [(event.id, event.name)]
+    if form.validate_on_submit():
+        form.populate_obj(project)
+        db.session.add(project)
+        db.session.commit()
+        flash('Project added.', 'success')
+        return render_template('public/project.html', current_event=event, project=project)
+    return render_template('public/projectnew.html', current_event=event, form=form)

@@ -23,6 +23,7 @@
   <p class="details">
     Last update:
     <span>{{ project.updated_at|format_date }}</span>
+    <a href="{{ url_for('public.project_edit', project_id=project.id) }}" class="btn btn-success btn-sm">edit</a>
   </p>
   <p class="started-at">
     Started at the

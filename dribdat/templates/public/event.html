@@ -19,7 +19,7 @@
   <h1>Project board</h1>
   <div class="nav-projects">
     {% if current_user and current_user.is_authenticated() %}
-      <a href="{{ url_for('admin.project_new') }}" class="btn btn-success btn-lg">Start a project</a>
+      <a href="{{ url_for('public.project_new') }}" class="btn btn-success btn-lg">Start a project</a>
     {% else %}
       Please <a href="{{ url_for('public.register') }}">create an account</a>
       and log in to start a project.

@@ -1,0 +1,10 @@
+{% from "macros/_form.html" import render_form %}
+
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="container">
+    <h2>Start a Project</h2>
+    {{ render_form(url_for('public.project_new'), form) }}
+</div>
+{% endblock %}
