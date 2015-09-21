@@ -44,7 +44,10 @@ def logout():
 def register():
     form = RegisterForm(request.form, csrf_enabled=False)
     if form.validate_on_submit():
-        new_user = User.create(username=form.username.data,
+        new_user = User.create(
+                        username=form.username.data,
+                        first_name=form.first_name.data,
+                        last_name=form.last_name.data,
                         email=form.email.data,
                         password=form.password.data,
                         active=True)
