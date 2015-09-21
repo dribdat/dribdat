@@ -84,3 +84,16 @@ footer .footer-nav {
   margin-right: 25px;
   list-style: none;
 }
+
+nav .section-header .section-header-logo {
+  float: left;
+}
+nav .section-header .section-header-logo img {
+  height: 80px;
+}
+nav .section-header .section-header-content div * {
+  color: white;
+}
+body {
+  padding-top: 180px;
+}

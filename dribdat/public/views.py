@@ -56,14 +56,22 @@ def register():
 
 @blueprint.route("/events")
 def events():
-    events = Event.query.all()
-    return render_template("public/events.html",  events=events)
+    q = Event.query
+    event = q.first()
+    events = q.all()
+    return render_template("public/events.html",  event=event, events=events)
 
 @blueprint.route("/event/<int:event_id>")
 def event(event_id):
     event = Event.query.filter_by(id=event_id).first_or_404()
     projects = Project.query.filter_by(event_id=event_id)
     return render_template("public/event.html",  event=event, projects=projects)
+
+@blueprint.route('/project/<int:project_id>')
+def project(project_id):
+    project = Project.query.filter_by(id=project_id).first_or_404()
+    event = Event.query.filter_by(id=project.event_id).first_or_404()
+    return render_template('public/project.html', event=event, project=project)
 
 @blueprint.route("/about/")
 def about():

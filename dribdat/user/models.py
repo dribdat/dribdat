@@ -65,10 +65,36 @@ class User(UserMixin, SurrogatePK, Model):
 class Event(SurrogatePK, Model):
     __tablename__ = 'events'
     name = Column(db.String(80), unique=True, nullable=False)
+    hostname = Column(db.String(80), nullable=True)
+    location = Column(db.String(255), nullable=True)
     description = Column(db.UnicodeText(), nullable=True)
+
+    logo_url = Column(db.String(255), nullable=True)
     webpage_url = Column(db.String(255), nullable=True)
+    community_url = Column(db.String(255), nullable=True)
+    community_embed = Column(db.UnicodeText(), nullable=True)
+
     starts_at = Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)
     ends_at = Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)
+
+    @property
+    def date(self):
+        if self.starts_at.month == self.ends_at.month:
+            return "{0} {1}-{2}, {3}".format(
+                self.starts_at.strftime("%B"),
+                self.starts_at.day,
+                self.ends_at.day,
+                self.ends_at.year,
+            )
+        else:
+            return "{0} {1}, {2} - {3} {4}, {5}".format(
+                self.starts_at.strftime("%B"),
+                self.starts_at.day,
+                self.starts_at.year,
+                self.ends_at.strftime("%B"),
+                self.ends_at.day,
+                self.ends_at.year,
+            )
 
     def __init__(self, name=None, **kwargs):
         if name:

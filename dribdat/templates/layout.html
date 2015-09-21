@@ -25,7 +25,7 @@
 </head>
 <body class="{% block body_class %}{% endblock %}">
 {% block body %}
-{% with form=form, tabs=tabs, event=current_event %}
+{% with form=form, tabs=tabs, event=event %}
 {% include "nav.html" %}
 {% endwith %}
 

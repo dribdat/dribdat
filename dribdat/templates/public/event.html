@@ -18,7 +18,7 @@
             <h3>{{ project.name }}</h3>
             <p>{{ project.summary }}
             <span>{{ project.updated_at|format_date }}</span>
-            <a class="btn btn-default" href="{{ url_for('admin.project', project_id=project.id) }}">Edit</a>
+            <p><a class="btn btn-default" href="{{ url_for('public.project', project_id=project.id) }}">Check it out</a></p>
         </div>
         {% endfor %}
     </div>

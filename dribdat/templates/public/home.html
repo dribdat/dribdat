@@ -1,7 +1,6 @@
-
 {% extends "layout.html" %}
+
 {% block content %}
-<!-- Main jumbotron for a primary marketing message or call to action -->
 <div class="jumbotron">
   {% if event %}
   <center>
@@ -22,7 +21,7 @@
   {% endif %}
   <div class="panel panel-default">
     <div class="panel-body">
-      {{event.embed_code}}
+      {{event.community_embed}}
     </div>
   </div>
 </div><!-- /.jumbotron -->

@@ -25,8 +25,13 @@ class UserForm(Form):
 class EventForm(Form):
     next = HiddenField()
     name = StringField(u'Title', [required(), length(max=80)])
+    hostname = StringField(u'Hosted by', [length(max=80)])
+    location = StringField(u'Located at', [length(max=255)])
     description = TextAreaField(u'Description')
+    logo_url = StringField(u'Host logo link', [length(max=255)])
     webpage_url = StringField(u'Home page link', [length(max=255)])
+    community_url = StringField(u'Community link', [length(max=255)])
+    community_embed = TextAreaField(u'Community embed code')
     starts_at = DateField(u'Starts at')
     ends_at = DateField(u'Finishes at')
     submit = SubmitField(u'Save')
