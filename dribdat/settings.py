@@ -13,7 +13,7 @@ class Config(object):
     DEBUG_TB_ENABLED = False  # Disable Debug toolbar
     DEBUG_TB_INTERCEPT_REDIRECTS = False
     CACHE_TYPE = 'simple'  # Can be "memcached", "redis", etc.
-    SERVER_NAME = os_env.get('SERVER_URL', 'localhost:8158')
+    SERVER_NAME = os_env.get('SERVER_URL', 'localhost:8159')
 
 class ProdConfig(Config):
     """Production configuration."""
