@@ -6,9 +6,6 @@ in app.py
 from flask_bcrypt import Bcrypt
 bcrypt = Bcrypt()
 
-from flask_sso import SSO
-sso = SSO()
-
 from flask_login import LoginManager
 login_manager = LoginManager()
 

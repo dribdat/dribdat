@@ -8,7 +8,6 @@ from dribdat.extensions import (
     bcrypt,
     cache,
     db,
-    sso,
     login_manager,
     migrate,
     debug_toolbar,
@@ -36,7 +35,6 @@ def register_extensions(app):
     bcrypt.init_app(app)
     cache.init_app(app)
     db.init_app(app)
-    sso.init_app(app)
     login_manager.init_app(app)
     debug_toolbar.init_app(app)
     migrate.init_app(app, db)

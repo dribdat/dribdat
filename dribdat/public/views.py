@@ -5,7 +5,6 @@ from flask import (Blueprint, request, render_template, flash, url_for,
 from flask_login import login_user, login_required, logout_user
 
 from dribdat.extensions import login_manager
-from dribdat.extensions import sso
 from dribdat.user.models import User, Event, Project
 from dribdat.public.forms import LoginForm
 from dribdat.user.forms import RegisterForm
@@ -17,11 +16,6 @@ blueprint = Blueprint('public', __name__, static_folder="../static")
 @login_manager.user_loader
 def load_user(id):
     return User.get_by_id(int(id))
-
-@sso.login_handler
-def login_callback(user_info):
-    """Store information in session."""
-    session["user"] = user_info
 
 @blueprint.route("/", methods=["GET", "POST"])
 def home():
