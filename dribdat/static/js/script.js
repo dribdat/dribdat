@@ -5,7 +5,9 @@
       var clock = $(this).FlipClock({
         clockFace: 'DailyCounter'
       });
-      var timeleft = Date.parse($(this).data('start'))-Date.now();
+      var startdate = $(this).data('start');
+      var datenow = Date.now();
+      var timeleft = Date.parse(startdate) - datenow;
       clock.setTime(timeleft/1000);
       clock.setCountdown(true);
     });
