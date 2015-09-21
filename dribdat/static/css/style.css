@@ -104,6 +104,23 @@ nav .fa-comment {
   position: relative;
 }
 
+.home-page h2 a {
+  text-align: center;
+  font-weight: bold;
+  color: #003;
+}
+.event-countdown {
+  zoom: 0.8;
+  left: 50%;
+  position: relative;
+  margin-left: -312px;
+  width: auto;
+  margin-top: 50px;
+}
+
+.jumbotron.event-page {
+  margin-top: 150px;
+}
 .event-page h1 {
   text-align: right;
   font-size: 60px;

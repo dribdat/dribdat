@@ -1,20 +1,12 @@
 {% extends "layout.html" %}
 
 {% block content %}
-<div class="jumbotron">
-  {% if current_event %}
-  <center>
-    <h2 style="font-weight:bold">
-      {{current_event.name}}
-    </h2>
-    <div class="event-countdown" data-start="{{ current_event.starts_at }}"></div>
-  </center>
-  <p>{{current_event.description}}</p>
-  <p>
-    <a href="{{ current_event.webpage_url }}" class="btn btn-primary">More information &raquo;</a>
-  </p>
-  {% endif %}
-</div><!-- /.jumbotron -->
+<h2><i class="fa fa-code"></i> {{current_event.name}}</h2>
+<div style="font-size:90%; padding-bottom:2em"><i>
+  <b>{{ current_event.date }}</b>
+  <span>{{ current_event.location }}</span>
+</i></div>
+
 <div class="container event-page">
   <h1>Project board</h1>
   <div class="nav-projects">
@@ -39,4 +31,11 @@
     </div>
   </div>
 </div>
+
+<div class="jumbotron event-page">
+  <p>{{current_event.description}}</p>
+  <p>
+    <a href="{{ current_event.webpage_url }}" class="btn btn-primary">More information &raquo;</a>
+  </p>
+</div><!-- /.jumbotron -->
 {% endblock %}
