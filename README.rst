@@ -25,7 +25,7 @@ Then run the following commands to bootstrap your environment.
     pip install -r requirements/dev.txt
     python manage.py server
 
-You will see a pretty welcome screen.
+You will see a pretty welcome screen at http://localhost:8158
 
 Once you have installed your DBMS, run the following to create your app's database tables and perform the initial migration:
 

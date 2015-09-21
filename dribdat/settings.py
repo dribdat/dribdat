@@ -13,14 +13,13 @@ class Config(object):
     DEBUG_TB_ENABLED = False  # Disable Debug toolbar
     DEBUG_TB_INTERCEPT_REDIRECTS = False
     CACHE_TYPE = 'simple'  # Can be "memcached", "redis", etc.
-    # Default server name
-    SERVER_NAME = os_env.get('SERVER_URL', 'localhost:5000')
+    SERVER_NAME = os_env.get('SERVER_URL', 'localhost:8158')
 
 class ProdConfig(Config):
     """Production configuration."""
     ENV = 'prod'
     DEBUG = False
-    SQLALCHEMY_DATABASE_URI = 'postgresql://localhost/example'  # TODO: Change me
+    SQLALCHEMY_DATABASE_URI = os_env.get('DRIBDAT_DB', 'postgresql://localhost/example')
     DEBUG_TB_ENABLED = False  # Disable Debug toolbar
 
 

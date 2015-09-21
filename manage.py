@@ -36,7 +36,7 @@ def test():
     return exit_code
 
 
-manager.add_command('server', Server())
+manager.add_command('server', Server(port=8158))
 manager.add_command('shell', Shell(make_context=_make_context))
 manager.add_command('db', MigrateCommand)
 manager.add_command("urls", ShowUrls())
