@@ -38,8 +38,12 @@ def user(user_id):
     form = UserForm(obj=user, next=request.args.get('next'))
 
     if form.validate_on_submit():
+        originalhash = user.password
         form.populate_obj(user)
-        user.set_password(form.password.data)
+        if form.password.data:
+            user.set_password(form.password.data)
+        else:
+            user.password = originalhash
         db.session.add(user)
         db.session.commit()
 
