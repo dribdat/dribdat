@@ -8,12 +8,7 @@
 <head>
   <meta charset="utf-8">
 
-  <title>{% block page_title %}
-
-    Dribdat
-
-    {% endblock %}
-  </title>
+  <title>{% block page_title %}{% endblock %}</title>
   <meta name="description" content="{% block meta_description %}{% endblock %}">
   <meta name="author" content="{% block meta_author %}{% endblock %}">
 
@@ -30,7 +25,7 @@
 </head>
 <body class="{% block body_class %}{% endblock %}">
 {% block body %}
-{% with form=form, tabs=tabs %}
+{% with form=form, tabs=tabs, event=current_event %}
 {% include "nav.html" %}
 {% endwith %}
 

@@ -1,6 +1,17 @@
-
 <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
   <div class="container">
+
+  {% if event %}
+  <div class="section section-centered section-header">
+    <div class="section-header-logo">
+      <img id="event-logo" src="{{ event.logo }}" alt="{{ event.hosted_by }}">
+    </div>
+    <div class="section-header-content">
+      <div class="rich-text"><h3>{{ event.name }}</h3></div>
+      <div class="rich-text"><h4>{{ event.date }}<br>{{ event.location }}</h4></div>
+    </div>
+  </div>
+  {% endif %}
 
   <!-- Brand and toggle get grouped for better mobile display -->
   <div class="navbar-header">
@@ -18,7 +29,9 @@
   <div class="collapse navbar-collapse navbar-ex1-collapse">
     <ul class="nav navbar-nav">
       <li><a href="{{ url_for('public.events') }}">All events</a></li>
-      <li><a href="{{ config['DISCOURSE_URL'] }}">Community</a></li>
+      {% if event %}
+        <li><a href="{{ event.community_url }}">Community</a></li>
+      {% endif %}
       {% if tabs %}
         {% for tab, link in tabs %}
         <li class="{% if active == tab %}active{% endif %}">

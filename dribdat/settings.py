@@ -13,20 +13,8 @@ class Config(object):
     DEBUG_TB_ENABLED = False  # Disable Debug toolbar
     DEBUG_TB_INTERCEPT_REDIRECTS = False
     CACHE_TYPE = 'simple'  # Can be "memcached", "redis", etc.
-
     # Default server name
     SERVER_NAME = os_env.get('SERVER_URL', 'localhost:5000')
-    # Discourse URL to send the user back
-    DISCOURSE_URL = os_env.get('DISCOURSE_URL', 'set-DISCOURSE_URL-in-env')
-    # Secret key shared with the Discourse server
-    DISCOURSE_SECRET_KEY = os_env.get('DISCOURSE_SECRET_KEY', 'set-DISCOURSE_SECRET_KEY-in-env')
-    # Attribute to read from the environment after user validation
-    DISCOURSE_USER_MAP = {
-        'name': ['givenName', 'sn'],
-        'username': 'username',
-        'external_id': 'eppn',
-        'email': 'mail'
-    }
 
 class ProdConfig(Config):
     """Production configuration."""
