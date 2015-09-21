@@ -53,6 +53,11 @@ To open the interactive shell, run ::
 
 By default, you will have access to ``app``, ``db``, and the ``User`` model.
 
+For example, to make yourself Administrator, create a user through the frontend then:
+
+    u = User.query.first()
+    u.is_admin = True
+    u.save()
 
 Running Tests
 -------------
