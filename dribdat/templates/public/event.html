@@ -1,26 +1,39 @@
 {% extends "layout.html" %}
 
 {% block content %}
-<div class="container">
-  <h2>{{event.name}} projects</h2>
-    <div class="nav-projects">
-      {% if current_user and current_user.is_authenticated() %}
-        <a href="{{ url_for('admin.project_new') }}" class="btn btn-success">Start a project</a>
-      {% else %}
-        Please <a href="{{ url_for('public.register') }}">create an account</a>
-        and log in to start a project.
-      {% endif %}
-      <a href="{{ event.webpage_url }}" class="btn btn-primary btn-large">More info &raquo;</a>
-    </div>
-    <div class="hexaboard">
-        {% for project in projects %}
-        <div class="project">
-            <h3>{{ project.name }}</h3>
-            <p>{{ project.summary }}
-            <span>{{ project.updated_at|format_date }}</span>
-            <p><a class="btn btn-default" href="{{ url_for('public.project', project_id=project.id) }}">Check it out</a></p>
-        </div>
-        {% endfor %}
-    </div>
+<div class="jumbotron">
+  {% if current_event %}
+  <center>
+    <h2 style="font-weight:bold">
+      {{current_event.name}}
+    </h2>
+    <div class="event-countdown" data-start="{{ current_event.starts_at }}"></div>
+  </center>
+  <p>{{current_event.description}}</p>
+  <p>
+    <a href="{{ current_event.webpage_url }}" class="btn btn-primary">More information &raquo;</a>
+  </p>
+  {% endif %}
+</div><!-- /.jumbotron -->
+<div class="container event-page">
+  <h1>Project board</h1>
+  <div class="nav-projects">
+    {% if current_user and current_user.is_authenticated() %}
+      <a href="{{ url_for('admin.project_new') }}" class="btn btn-success btn-lg">Start a project</a>
+    {% else %}
+      Please <a href="{{ url_for('public.register') }}">create an account</a>
+      and log in to start a project.
+    {% endif %}
+  </div>
+  <div class="hexaboard">
+      {% for project in projects %}
+      <div class="project">
+          <h3>{{ project.name }}</h3>
+          <p>{{ project.summary }}
+          <span>{{ project.updated_at|format_date }}</span>
+          <p><a class="btn btn-default" href="{{ url_for('public.project', project_id=project.id) }}">Check it out</a></p>
+      </div>
+      {% endfor %}
+  </div>
 </div>
 {% endblock %}

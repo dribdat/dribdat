@@ -7,8 +7,8 @@
       <img id="event-logo" src="{{ event.logo_url }}" alt="{{ event.hostname }}">
     </div>
     <div class="section-header-content">
-      <div class="rich-text"><h3>{{ event.name }}</h3></div>
-      <div class="rich-text"><h4>{{ event.date }}<br>{{ event.location }}</h4></div>
+      <h3>{{ event.name }}</h3>
+      <h4>{{ event.date }}<br>{{ event.location }}</h4>
     </div>
   </div>
   {% endif %}
@@ -30,7 +30,10 @@
     <ul class="nav navbar-nav">
       <li><a href="{{ url_for('public.events') }}">All events</a></li>
       {% if event %}
-        <li><a href="{{ event.community_url }}">Community</a></li>
+        <li>
+          <a href="{{ event.community_url }}" target="_blank">Community
+            <i class="fa fa-comment"></i></a>
+        </li>
       {% endif %}
       {% if tabs %}
         {% for tab, link in tabs %}

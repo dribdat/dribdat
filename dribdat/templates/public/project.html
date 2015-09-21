@@ -1,19 +1,14 @@
 {% extends "layout.html" %}
 
 {% block content %}
-<div class="jumbotron">
+<div class="jumbotron project-page">
   <center>
-    <h3>Project details</h3>
     <img src="{{project.image_url}}">
     <h2 style="font-weight:bold">
       {{project.name}}
     </h2>
     <p>
       {{project.summary}}
-    </p>
-    <p>
-      Last update:
-      <span>{{ project.updated_at|format_date }}</span>
     </p>
   </center>
   <div class="panel panel-default">
@@ -22,8 +17,17 @@
     </div>
   </div>
   <p>
-    <a href="{{ project.webpage_url }}" class="btn btn-primary btn-large">Project homepage &raquo;</a>
-    <a href="{{ project.source_url }}" class="btn btn-default btn-large">Source code</a>
+    <a href="{{ project.webpage_url }}" class="btn btn-primary">Project homepage &raquo;</a>
+    <a href="{{ project.source_url }}" class="btn btn-success">Source code</a>
+  </p>
+  <p class="details">
+    Last update:
+    <span>{{ project.updated_at|format_date }}</span>
+  </p>
+  <p class="started-at">
+    Started at the
+    <b>{{ current_event.name }}</b>
+    <a href="{{ url_for('public.event', event_id=current_event.id) }}" class="btn btn-default">Browse all projects</a>
   </p>
 </div><!-- /.jumbotron -->
 {% endblock %}

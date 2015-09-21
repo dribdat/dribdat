@@ -7,7 +7,7 @@ from wtforms import (
     TextAreaField
 )
 from wtforms.validators import AnyOf, required, length
-from wtforms.fields.html5 import DateField
+from wtforms.fields.html5 import DateTimeField
 
 from ..user import USER_ROLE, USER_STATUS
 
@@ -32,8 +32,8 @@ class EventForm(Form):
     webpage_url = StringField(u'Home page link', [length(max=255)])
     community_url = StringField(u'Community link', [length(max=255)])
     community_embed = TextAreaField(u'Community embed code')
-    starts_at = DateField(u'Starts at')
-    ends_at = DateField(u'Finishes at')
+    starts_at = DateTimeField(u'Starts at')
+    ends_at = DateTimeField(u'Finishes at')
     submit = SubmitField(u'Save')
 
 class ProjectForm(Form):

@@ -30,7 +30,7 @@ def home():
         else:
             flash_errors(form)
     event = Event.query.first()
-    return render_template("public/home.html", form=form, event=event)
+    return render_template("public/home.html", form=form, current_event=event)
 
 @blueprint.route('/logout/')
 @login_required
@@ -55,28 +55,29 @@ def register():
         return redirect(url_for('public.home'))
     else:
         flash_errors(form)
-    return render_template('public/register.html', form=form)
+    event = Event.query.first()
+    return render_template('public/register.html', current_event=event, form=form)
 
 @blueprint.route("/events")
 def events():
     q = Event.query
     event = q.first()
     events = q.all()
-    return render_template("public/events.html",  event=event, events=events)
+    return render_template("public/events.html", current_event=event, events=events)
 
 @blueprint.route("/event/<int:event_id>")
 def event(event_id):
     event = Event.query.filter_by(id=event_id).first_or_404()
     projects = Project.query.filter_by(event_id=event_id)
-    return render_template("public/event.html",  event=event, projects=projects)
+    return render_template("public/event.html",  current_event=event, projects=projects)
 
 @blueprint.route('/project/<int:project_id>')
 def project(project_id):
     project = Project.query.filter_by(id=project_id).first_or_404()
     event = Event.query.filter_by(id=project.event_id).first_or_404()
-    return render_template('public/project.html', event=event, project=project)
+    return render_template('public/project.html', current_event=event, project=project)
 
 @blueprint.route("/about/")
 def about():
     form = LoginForm(request.form)
-    return render_template("public/about.html", form=form)
+    return render_template("public/about.html", current_event, form=form)
