@@ -39,7 +39,7 @@ def user(user_id):
 
     if form.validate_on_submit():
         form.populate_obj(user)
-
+        user.set_password(form.password.data)
         db.session.add(user)
         db.session.commit()
 
