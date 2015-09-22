@@ -7,7 +7,9 @@
       });
       var startdate = $(this).data('start');
       var datenow = Date.now();
-      var timeleft = Date.parse(startdate) - datenow;
+      var datesched = Date.parse(startdate.replace(' ', 'T'));
+      var timeleft = datesched - datenow;
+      if (isNaN(timeleft)) return;
       clock.setTime(timeleft/1000);
       clock.setCountdown(true);
     });

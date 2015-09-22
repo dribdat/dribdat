@@ -30,6 +30,7 @@ class EventForm(Form):
     location = StringField(u'Located at', [length(max=255)])
     description = TextAreaField(u'Description')
     logo_url = StringField(u'Host logo link', [length(max=255)])
+    custom_css = TextAreaField(u'Custom CSS')
     webpage_url = StringField(u'Home page link', [length(max=255)])
     community_url = StringField(u'Community link', [length(max=255)])
     community_embed = TextAreaField(u'Community embed code')

@@ -68,6 +68,8 @@ class Event(SurrogatePK, Model):
     description = Column(db.UnicodeText(), nullable=True)
 
     logo_url = Column(db.String(255), nullable=True)
+    custom_css = Column(db.UnicodeText(), nullable=True)
+
     webpage_url = Column(db.String(255), nullable=True)
     community_url = Column(db.String(255), nullable=True)
     community_embed = Column(db.UnicodeText(), nullable=True)
