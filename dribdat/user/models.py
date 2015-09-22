@@ -76,6 +76,7 @@ class Event(SurrogatePK, Model):
 
     starts_at = Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)
     ends_at = Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)
+    is_current = Column(db.Boolean(), default=False)
 
     @property
     def date(self):

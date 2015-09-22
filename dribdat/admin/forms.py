@@ -36,6 +36,7 @@ class EventForm(Form):
     community_embed = TextAreaField(u'Community embed code')
     starts_at = DateTimeField(u'Starts at')
     ends_at = DateTimeField(u'Finishes at')
+    is_current = BooleanField(u"Current event on homepage", default=False)
     submit = SubmitField(u'Save')
 
 class ProjectForm(Form):

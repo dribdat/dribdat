@@ -15,7 +15,7 @@ from dribdat.database import db
 blueprint = Blueprint('public', __name__, static_folder="../static")
 
 def get_current_event():
-    return Event.query.first()
+    return Event.query.filter_by(is_current=True).first()
 
 @login_manager.user_loader
 def load_user(id):

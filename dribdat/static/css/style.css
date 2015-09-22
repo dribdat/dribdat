@@ -114,7 +114,7 @@ nav .fa-comment {
   left: 50%;
   position: relative;
   margin-left: -312px;
-  width: auto;
+  width: 100%;
   margin-top: 50px;
 }
 

@@ -15,11 +15,11 @@
         <a href="{{ url_for('public.project_new') }}" class="btn btn-success btn-lg">Start a project</a>
       {% endif %}
     </p>
-    <div class="event-countdown" data-start="{{ current_event.starts_at }}"></div>
   </center>
+  <div class="event-countdown" data-start="{{ current_event.starts_at }}"></div>
   <div class="panel panel-default">
     <div class="panel-body">
-      {{current_event.community_embed}}
+      {{current_event.community_embed|safe}}
     </div>
   </div>
   {% endif %}
