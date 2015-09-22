@@ -7,32 +7,32 @@
     <form id="registerForm" class="form form-register" method="POST" action="" role="form">
             {{ form.hidden_tag() }}
             <div class="form-group">
-                {{form.username.label}}
-                {{form.username(placeholder="Username", class_="form-control")}}
-            </div>
-            <div class="form-group">
                 {{form.first_name.label}}
-                {{form.first_name(placeholder="First name", class_="form-control")}}
+                {{form.first_name(placeholder="", class_="form-control")}}
             </div>
             <div class="form-group">
                 {{form.last_name.label}}
-                {{form.last_name(placeholder="Last name", class_="form-control")}}
+                {{form.last_name(placeholder="", class_="form-control")}}
             </div>
             <div class="form-group">
                 {{form.email.label}}
-                {{form.email(placeholder="Email", class_="form-control")}}
+                {{form.email(placeholder="name@domain.tld", class_="form-control")}}
             </div>
             <div class="form-group">
                 {{form.contact.label}}
-                {{form.contact(placeholder="Contact me at (phone, @handle,..)", class_="form-control")}}
+                {{form.contact(placeholder="phone, @handle, ...", class_="form-control")}}
+            </div>
+            <div class="form-group">
+                {{form.username.label}}
+                {{form.username(placeholder="", class_="form-control")}}
             </div>
             <div class="form-group">
                 {{form.password.label}}
-                {{form.password(placeholder="Password", class_="form-control")}}
+                {{form.password(placeholder="**********", class_="form-control")}}
             </div>
             <div class="form-group">
                 {{form.confirm.label}}
-                {{form.confirm(placeholder="Password (again)", class_="form-control")}}
+                {{form.confirm(placeholder="**********", class_="form-control")}}
             </div>
             <p><input class="btn btn-default btn-submit" type="submit" value="Register"></p>
     </form>

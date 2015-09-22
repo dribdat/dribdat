@@ -14,29 +14,34 @@ from dribdat.database import db
 
 blueprint = Blueprint('public', __name__, static_folder="../static")
 
+def get_current_event():
+    return Event.query.first()
+
 @login_manager.user_loader
 def load_user(id):
     return User.get_by_id(int(id))
 
-@blueprint.route("/", methods=["GET", "POST"])
+@blueprint.route("/")
 def home():
+    return render_template("public/home.html", current_event=get_current_event())
+
+@blueprint.route("/about/")
+def about():
+    return render_template("public/about.html", current_event=get_current_event())
+
+@blueprint.route("/login/", methods=["GET", "POST"])
+def login():
     form = LoginForm(request.form)
     # Handle logging in
     if request.method == 'POST':
         if form.validate_on_submit():
             login_user(form.user)
             flash("You are logged in.", 'success')
-            redirect_url = request.args.get("next") or url_for("user.members")
+            redirect_url = request.args.get("next") or url_for("public.home")
             return redirect(redirect_url)
         else:
             flash_errors(form)
-    event = Event.query.first()
-    return render_template("public/home.html", form=form, current_event=event)
-
-@blueprint.route("/about/")
-def about():
-    form = LoginForm(request.form)
-    return render_template("public/about.html", current_event, form=form)
+    return render_template("public/login.html", current_event=get_current_event(), form=form)
 
 @blueprint.route('/logout/')
 @login_required
@@ -49,6 +54,12 @@ def logout():
 @blueprint.route("/register/", methods=['GET', 'POST'])
 def register():
     form = RegisterForm(request.form, csrf_enabled=False)
+    if request.args.get('fn'):
+        form.first_name.data = request.args.get('fn')
+    if request.args.get('ln'):
+        form.last_name.data = request.args.get('ln')
+    if request.args.get('em'):
+        form.email.data = request.args.get('em')
     if form.validate_on_submit():
         new_user = User.create(
                         username=form.username.data,
@@ -58,12 +69,11 @@ def register():
                         contact=form.contact.data,
                         password=form.password.data,
                         active=True)
-        flash("Thank you for registering. You can now log in.", 'success')
-        return redirect(url_for('public.home'))
+        flash("Thank you for registering. You can now log in and submit projects.", 'success')
+        return redirect(url_for('public.login'))
     else:
         flash_errors(form)
-    event = Event.query.first()
-    return render_template('public/register.html', current_event=event, form=form)
+    return render_template('public/register.html', current_event=get_current_event(), form=form)
 
 @blueprint.route("/events")
 def events():
@@ -81,7 +91,7 @@ def event(event_id):
 @blueprint.route('/project/<int:project_id>')
 def project(project_id):
     project = Project.query.filter_by(id=project_id).first_or_404()
-    event = Event.query.filter_by(id=project.event_id).first_or_404()
+    event = project.event
     return render_template('public/project.html', current_event=event, project=project)
 
 @blueprint.route('/project/<int:project_id>/edit', methods=['GET', 'POST'])
@@ -89,7 +99,7 @@ def project(project_id):
 def project_edit(project_id):
     project = Project.query.filter_by(id=project_id).first_or_404()
     form = ProjectForm(obj=project, next=request.args.get('next'))
-    event = Event.query.first()
+    event = get_current_event()
     form.event_id.choices = [(event.id, event.name)]
     if form.validate_on_submit():
         form.populate_obj(project)
@@ -104,7 +114,7 @@ def project_edit(project_id):
 def project_new():
     project = Project()
     form = ProjectForm(obj=project, next=request.args.get('next'))
-    event = Event.query.first()
+    event = get_current_event()
     form.event_id.choices = [(event.id, event.name)]
     if form.validate_on_submit():
         form.populate_obj(project)
