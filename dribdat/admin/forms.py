@@ -17,6 +17,7 @@ class UserForm(Form):
     first_name = StringField(u'First name', [length(max=30)])
     last_name = StringField(u'Last name', [length(max=30)])
     email = StringField(u'E-mail', [required(), length(max=80)])
+    contact = StringField(u'Contact me at (phone, @handle,..)', [length(max=128)])
     password = PasswordField(u'New password')
     is_admin = BooleanField(u"Administrator", default=False)
     active = BooleanField(u"Active", default=True)

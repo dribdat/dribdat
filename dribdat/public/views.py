@@ -55,6 +55,7 @@ def register():
                         first_name=form.first_name.data,
                         last_name=form.last_name.data,
                         email=form.email.data,
+                        contact=form.contact.data,
                         password=form.password.data,
                         active=True)
         flash("Thank you for registering. You can now log in.", 'success')
