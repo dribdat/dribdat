@@ -2,11 +2,11 @@
 """Public section, including homepage and signup."""
 from flask import (Blueprint, request, render_template, flash, url_for,
                     redirect, session, current_app)
-from flask_login import login_user, login_required, logout_user
+from flask_login import login_user, login_required, logout_user, current_user
 
 from dribdat.extensions import login_manager
 from dribdat.user.models import User, Event, Project
-from dribdat.public.forms import LoginForm
+from dribdat.public.forms import LoginForm, UserForm
 from dribdat.user.forms import RegisterForm
 from dribdat.admin.forms import ProjectForm
 from dribdat.utils import flash_errors
@@ -74,6 +74,25 @@ def register():
     else:
         flash_errors(form)
     return render_template('public/register.html', current_event=get_current_event(), form=form)
+
+@blueprint.route('/user/profile', methods=['GET', 'POST'])
+@login_required
+def user_profile():
+    user = current_user
+    form = UserForm(obj=user, next=request.args.get('next'))
+
+    if form.validate_on_submit():
+        originalhash = user.password
+        form.populate_obj(user)
+        if form.password.data:
+            user.set_password(form.password.data)
+        else:
+            user.password = originalhash
+        db.session.add(user)
+        db.session.commit()
+
+        flash('Profile updated.', 'success')
+    return render_template('public/user.html', user=user, form=form)
 
 @blueprint.route("/events")
 def events():

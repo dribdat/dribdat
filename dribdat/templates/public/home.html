@@ -11,6 +11,9 @@
     <p>
       <a href="{{ current_event.webpage_url }}" class="btn btn-primary">Join the hackathon &raquo;</a>
       <a href="{{ url_for('public.event', event_id=current_event.id) }}" class="btn btn-default">See the projects</a>
+      {% if current_user and current_user.is_authenticated() %}
+        <a href="{{ url_for('public.project_new') }}" class="btn btn-success btn-lg">Start a project</a>
+      {% endif %}
     </p>
     <div class="event-countdown" data-start="{{ current_event.starts_at }}"></div>
   </center>
