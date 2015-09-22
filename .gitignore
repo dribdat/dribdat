@@ -37,6 +37,8 @@ dev.db
 # Complexity
 output/*.html
 output/*/index.html
+common.css
+common.js
 
 # Sphinx
 docs/_build
