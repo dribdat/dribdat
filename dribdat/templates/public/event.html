@@ -20,13 +20,11 @@
   <div class="honeycomb">
     <div class="ibws-fix">
       {% for project in projects %}
-      <div class="hexagon project">
-        <a href="{{ url_for('public.project', project_id=project.id) }}">
-          <div class="hexagontent">
-            {{ project.name }}
-          </div>
-        </a>
-      </div>
+      <a href="{{ url_for('public.project', project_id=project.id) }}" class="hexagon project">
+        <div class="hexagontent">
+        {{ project.name }}
+        </div>
+      </a>
       {% endfor %}
     </div>
   </div>
