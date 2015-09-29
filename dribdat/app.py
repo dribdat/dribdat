@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """The app module, containing the app factory function."""
 from flask import Flask, render_template
+from flaskext.markdown import Markdown
 
 from dribdat.settings import ProdConfig
 from dribdat.assets import assets
@@ -38,6 +39,7 @@ def register_extensions(app):
     login_manager.init_app(app)
     debug_toolbar.init_app(app)
     migrate.init_app(app, db)
+    Markdown(app)
     return None
 
 

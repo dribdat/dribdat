@@ -3,7 +3,9 @@
 {% block content %}
 <div class="jumbotron project-page">
   <center>
-    <img src="{{project.image_url}}">
+    {% if project.image_url %}
+      <img src="{{project.image_url}}">
+    {% endif %}
     <h2 style="font-weight:bold">
       {{project.name}}
     </h2>
@@ -13,7 +15,7 @@
   </center>
   <div class="panel panel-default">
     <div class="panel-body">
-      <p>{{project.longtext}}</p>
+      <p>{{project.longtext|markdown}}</p>
     </div>
   </div>
   <p>
