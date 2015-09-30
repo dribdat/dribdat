@@ -12,6 +12,8 @@ Participants can register their teams and start projects, which they can quickly
 
 We are working on data-driven social features to track the activity levels of the project, allow the teams and the public to gauge progress and send signals that may boost the success of the projects themselves.
 
+This is a tool to help organizers run a more professional event, and for team members to quickly publish presentable documentation about their idea.
+
 
 Quickstart
 ----------

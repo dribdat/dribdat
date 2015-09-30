@@ -7,6 +7,7 @@
         <thead>
             <tr>
               <th>Name</th>
+              <th>Category</th>
               <th>Created</th>
               <th>Updated</th>
             </tr>
@@ -18,8 +19,10 @@
                 {{ project.name }}
               </a>
             </td>
+            <td>{{ project.category.name }}
             <td>{{ project.created_at|format_date }}</td>
             <td>{{ project.updated_at|format_date }}</td>
+            </td>
         </tr>
         {% endfor %}
     </table>

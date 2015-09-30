@@ -13,6 +13,8 @@ from dribdat.database import (
     SurrogatePK,
 )
 
+from sqlalchemy import or_
+
 
 class Role(SurrogatePK, Model):
     __tablename__ = 'roles'
@@ -102,7 +104,9 @@ class Event(SurrogatePK, Model):
 class Project(SurrogatePK, Model):
     __tablename__ = 'projects'
     name = Column(db.String(80), unique=True, nullable=False)
+    # status = Column(db.Integer(), nullable=True, default=0)
     summary = Column(db.String(120), nullable=True)
+    tagwords = Column(db.String(255), nullable=True)
     image_url = Column(db.String(255), nullable=True)
     source_url = Column(db.String(255), nullable=True)
     webpage_url = Column(db.String(255), nullable=True)
@@ -121,9 +125,38 @@ class Project(SurrogatePK, Model):
     event_id = ReferenceCol('events', nullable=True)
     event = relationship('Event', backref='projects')
 
+    # And the optional event category
+    category_id = ReferenceCol('categories', nullable=True)
+    category = relationship('Category', backref='projects')
+
+    def categories_all(self):
+        return Category.query.order_by('name')
+    def categories_global(self):
+        return Category.query.filter_by(event_id=None).order_by('name')
+    def categories_event(self):
+        return Category.query.filter_by(event_id=self.event_id).order_by('name')
+
     def __init__(self, name=None, **kwargs):
         if name:
             db.Model.__init__(self, name=name, **kwargs)
 
     def __repr__(self):
         return '<Event({name})>'.format(name=self.name)
+
+class Category(SurrogatePK, Model):
+    __tablename__ = 'categories'
+    name = Column(db.String(80), nullable=False)
+    description = Column(db.UnicodeText(), nullable=True)
+    logo_color = Column(db.String(6), nullable=True)
+    logo_icon = Column(db.String(20), nullable=True)
+
+    # If specific to an event
+    event_id = ReferenceCol('events', nullable=True)
+    event = relationship('Event', backref='categories')
+
+    def __init__(self, name=None, **kwargs):
+        if name:
+            db.Model.__init__(self, name=name, **kwargs)
+
+    def __repr__(self):
+        return '<Category({name})>'.format(name=self.name)

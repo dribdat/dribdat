@@ -124,6 +124,7 @@ def project_edit(project_id):
         return render_template('public/project.html', current_event=event, project=project)
     form = ProjectForm(obj=project, next=request.args.get('next'))
     form.event_id.choices = [(event.id, event.name)]
+    form.category_id.choices = [(c.id, c.name) for c in project.categories_all()]
     if form.validate_on_submit():
         form.populate_obj(project)
         db.session.add(project)
@@ -140,6 +141,7 @@ def project_new():
     form = ProjectForm(obj=project, next=request.args.get('next'))
     event = get_current_event()
     form.event_id.choices = [(event.id, event.name)]
+    form.category_id.choices = [(c.id, c.name) for c in project.categories_all()]
     if form.validate_on_submit():
         form.populate_obj(project)
         db.session.add(project)

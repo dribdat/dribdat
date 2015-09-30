@@ -18,10 +18,29 @@
         </a>
       </span>
       {% endif %}
+
+      {% if project.category_id %}
+      <h3 class="project-category" style="background-color:#{{project.category.logo_color}}">
+        {% if project.category.logo_icon %}
+          <i class="fa fa-{{project.logo_icon}}"></i><br>
+        {% endif %}
+        <span>{{ project.category.name }}</span>
+      </h3>
+      {% endif %}
+
+      {% if tracking %}
+        <div data-theme="default" data-height="" data-width="400" data-github="loleg/kandidaten" class="github-card"></div>
+        <script src="//cdn.jsdelivr.net/github-cards/latest/widget.js"></script>
+      {% endif %}
     </h2>
     {% if project.summary %}
     <p class="project-summary">
       {{project.summary}}
+    </p>
+    {% endif %}
+    {% if project.tagwords %}
+    <p class="project-tagwords">
+      {{project.tagwords}}
     </p>
     {% endif %}
   </div>

@@ -47,11 +47,13 @@ class UserForm(Form):
 
 class ProjectForm(Form):
     event_id = SelectField(u'Event', coerce=int)
+    category_id = SelectField(u'Category or challenge', coerce=int)
     AUTOTEXT__HELP = u"Enter the URL of a supported service (GitHub, Bitbucket) to populate other fields automatically."
     autotext_url = StringField(u'Autofill link', [length(max=255)], description=AUTOTEXT__HELP)
     name = StringField(u'Title', [required(), length(max=80)])
     summary = StringField(u'Short summary (120 chars)', [length(max=120)])
     longtext = TextAreaField(u'Full description (Markdown)')
+    tagwords = StringField(u'Tags (separated by space)', [length(max=255)])
     webpage_url = StringField(u'Project home link', [length(max=255)])
     source_url = StringField(u'Source code link', [length(max=255)])
     image_url = StringField(u'Banner image link', [length(max=255)])
