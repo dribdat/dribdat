@@ -1,7 +1,6 @@
 {% extends "layout.html" %}
 
 {% block content %}
-<a href="{{ url_for('public.event', event_id=current_event.id) }}" class="btn">&laquo; project board</a>
 <div class="jumbotron project-page" style="background-color:#{{project.logo_color}}">
   <div class="project-info">
     {% if project.image_url %}
@@ -9,12 +8,12 @@
     {% endif %}
 
     {% if project.category_id %}
-    <button type="button" class="btn btn-default project-category" style="background-color:#{{project.category.logo_color}}">
+    <a href="{{ url_for('public.event', event_id=current_event.id) }}" class="btn btn-default project-category" style="background-color:#{{project.category.logo_color}}">
       {% if project.category.logo_icon %}
         <i class="fa fa-{{project.category.logo_icon}}"></i><br>
       {% endif %}
       <span>{{ project.category.name }}</span>
-    </button>
+    </a>
     {% endif %}
 
     <h2 style="font-weight:bold">

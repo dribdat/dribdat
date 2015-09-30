@@ -105,8 +105,6 @@ class Project(SurrogatePK, Model):
     __tablename__ = 'projects'
     name = Column(db.String(80), unique=True, nullable=False)
     summary = Column(db.String(120), nullable=True)
-    # status = Column(db.Integer(), nullable=True, default=0)
-    # tagwords = Column(db.String(255), nullable=True)
     image_url = Column(db.String(255), nullable=True)
     source_url = Column(db.String(255), nullable=True)
     webpage_url = Column(db.String(255), nullable=True)
@@ -160,3 +158,23 @@ class Category(SurrogatePK, Model):
 
     def __repr__(self):
         return '<Category({name})>'.format(name=self.name)
+
+class Activity(SurrogatePK, Model):
+    __tablename__ = 'activities'
+    name = Column(db.Enum(
+        'update',
+        'award',
+        'star',
+        name="activity_type"))
+    timestamp = Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)
+    project_id = ReferenceCol('projects', nullable=False)
+    project = relationship('Project', backref='activities')
+    description = Column(db.UnicodeText(), nullable=True)
+    score = Column(db.Integer(), nullable=True, default=0)
+
+    def __init__(self, name=None, **kwargs):
+        if name:
+            db.Model.__init__(self, name=name, **kwargs)
+
+    def __repr__(self):
+        return '<Activity({name})>'.format(name=self.name)
