@@ -136,9 +136,8 @@ class Project(SurrogatePK, Model):
 
     @property
     def score(self):
-        last = self.activities.last()
-        if last is None: return 0
-        return last.score
+        if not self.activities: return 0
+        return self.activities[-1].score
 
     def __init__(self, name=None, **kwargs):
         if name:

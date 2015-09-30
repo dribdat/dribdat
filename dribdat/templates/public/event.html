@@ -48,6 +48,10 @@
           {% else %}
             {{ project.name }}
           {% endif %}
+          <div class="progress">
+            <div class="progress-bar" role="progressbar" aria-valuenow="{{project.score}}" aria-valuemin="0" aria-valuemax="70">
+            </div>
+          </div>
         </div>
       </a>
       {% endfor %}

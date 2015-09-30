@@ -136,6 +136,9 @@ nav .fa-comment {
 .project .hexagontent .fa {
   font-size: 240%;
 }
+.project .hexagontent .progress {
+  height: 3px;
+}
 .hexagon:nth-child(2) { background-color: #f0e0a2; }
 .hexagon:nth-child(3) { background-color: #adddcf; }
 .hexagon:nth-child(4) { background-color: #777777; }
