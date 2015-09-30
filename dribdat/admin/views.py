@@ -48,6 +48,7 @@ def user(user_id):
         db.session.commit()
 
         flash('User updated.', 'success')
+        return users()
 
     return render_template('admin/user.html', user=user, form=form)
 
@@ -65,6 +66,7 @@ def user_new():
         db.session.commit()
 
         flash('User added.', 'success')
+        return users()
 
     return render_template('admin/usernew.html', form=form)
 
@@ -94,6 +96,7 @@ def event(event_id):
         db.session.commit()
 
         flash('Event updated.', 'success')
+        return events()
 
     return render_template('admin/event.html', event=event, form=form)
 
@@ -111,6 +114,7 @@ def event_new():
         db.session.commit()
 
         flash('Event added.', 'success')
+        return events()
 
     return render_template('admin/eventnew.html', form=form)
 
@@ -144,6 +148,7 @@ def project(project_id):
         db.session.commit()
 
         flash('Project updated.', 'success')
+        return projects()
 
     return render_template('admin/project.html', project=project, form=form)
 
@@ -164,6 +169,7 @@ def project_new():
         db.session.commit()
 
         flash('Project added.', 'success')
+        return projects()
 
     return render_template('admin/projectnew.html', form=form)
 
@@ -191,12 +197,12 @@ def category(category_id):
     if form.validate_on_submit():
         form.populate_obj(category)
         if category.event_id == -1: category.event_id = None
-        if category.promote_id == -1: category.promote_id = None
 
         db.session.add(category)
         db.session.commit()
 
         flash('Category updated.', 'success')
+        return categories()
 
     return render_template('admin/category.html', category=category, form=form)
 
@@ -212,11 +218,11 @@ def category_new():
     if form.validate_on_submit():
         form.populate_obj(category)
         if category.event_id == -1: category.event_id = None
-        if category.promote_id == -1: category.promote_id = None
 
         db.session.add(category)
         db.session.commit()
 
         flash('Category added.', 'success')
+        return categories()
 
     return render_template('admin/categorynew.html', form=form)
