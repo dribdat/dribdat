@@ -42,10 +42,11 @@ class EventForm(Form):
 class ProjectForm(Form):
     next = HiddenField()
     event_id = SelectField(u'Event', coerce=int)
+    AUTOTEXT__HELP = u"Enter the URL of a supported service (GitHub, Bitbucket) to populate other fields automatically."
+    autotext_url = StringField(u'Autofill link', [length(max=255)], description=AUTOTEXT__HELP)
     name = StringField(u'Title', [required(), length(max=80)])
     summary = StringField(u'Short summary (120 chars)', [length(max=120)])
-    longtext = TextAreaField(u'Full description (or cache)')
-    autotext_url = StringField(u"Auto-update link", [length(max=255)])
+    longtext = TextAreaField(u'Full description (Markdown)')
     webpage_url = StringField(u'Project home link', [length(max=255)])
     source_url = StringField(u'Source code link', [length(max=255)])
     image_url = StringField(u'Banner image link', [length(max=255)])

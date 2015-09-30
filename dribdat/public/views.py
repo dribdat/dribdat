@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """Public section, including homepage and signup."""
 from flask import (Blueprint, request, render_template, flash, url_for,
-                    redirect, session, current_app)
+                    redirect, session, current_app, jsonify)
 from flask_login import login_user, login_required, logout_user, current_user
 
 from dribdat.extensions import login_manager
@@ -11,6 +11,7 @@ from dribdat.user.forms import RegisterForm
 from dribdat.admin.forms import ProjectForm
 from dribdat.utils import flash_errors
 from dribdat.database import db
+from dribdat.aggregation import GetProjectData
 
 blueprint = Blueprint('public', __name__, static_folder="../static")
 
@@ -142,3 +143,10 @@ def project_new():
         flash('Project added.', 'success')
         return render_template('public/project.html', current_event=event, project=project)
     return render_template('public/projectnew.html', current_event=event, form=form)
+
+@blueprint.route('/project/autofill', methods=['GET', 'POST'])
+@login_required
+def project_autofill():
+    url = request.args.get('url')
+    data = GetProjectData(url)
+    return jsonify(data)
