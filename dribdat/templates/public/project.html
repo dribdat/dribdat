@@ -7,40 +7,40 @@
     {% if project.image_url %}
       <img class="project-image" src="{{project.image_url}}">
     {% endif %}
+
+    {% if project.category_id %}
+    <button type="button" class="btn btn-default project-category" style="background-color:#{{project.category.logo_color}}">
+      {% if project.category.logo_icon %}
+        <i class="fa fa-{{project.category.logo_icon}}"></i><br>
+      {% endif %}
+      <span>{{ project.category.name }}</span>
+    </button>
+    {% endif %}
+
     <h2 style="font-weight:bold">
-      <i class="fa fa-{{project.logo_icon}}"></i>
-      {{project.name}}
+      {% if project.logo_icon %}
+        <i class="fa fa-{{project.logo_icon}}"></i>
+      {% endif %}
 
       {% if project.user.teamname %}
-      <span class="project-team">/
+      <span class="project-team">
         <a href="{{project.user.webpage_url}}" target="_blank">
           {{ project.user.teamname }}
-        </a>
+        </a> /
       </span>
       {% endif %}
 
-      {% if project.category_id %}
-      <h3 class="project-category" style="background-color:#{{project.category.logo_color}}">
-        {% if project.category.logo_icon %}
-          <i class="fa fa-{{project.logo_icon}}"></i><br>
-        {% endif %}
-        <span>{{ project.category.name }}</span>
-      </h3>
-      {% endif %}
-
-      {% if tracking %}
-        <div data-theme="default" data-height="" data-width="400" data-github="loleg/kandidaten" class="github-card"></div>
-        <script src="//cdn.jsdelivr.net/github-cards/latest/widget.js"></script>
-      {% endif %}
+      {{project.name}}
     </h2>
+
+    {% if tracking %}
+      <div data-theme="default" data-height="" data-width="400" data-github="loleg/kandidaten" class="github-card"></div>
+      <script src="//cdn.jsdelivr.net/github-cards/latest/widget.js"></script>
+    {% endif %}
+
     {% if project.summary %}
     <p class="project-summary">
       {{project.summary}}
-    </p>
-    {% endif %}
-    {% if project.tagwords %}
-    <p class="project-tagwords">
-      {{project.tagwords}}
     </p>
     {% endif %}
   </div>

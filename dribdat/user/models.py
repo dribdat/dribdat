@@ -104,9 +104,9 @@ class Event(SurrogatePK, Model):
 class Project(SurrogatePK, Model):
     __tablename__ = 'projects'
     name = Column(db.String(80), unique=True, nullable=False)
-    # status = Column(db.Integer(), nullable=True, default=0)
     summary = Column(db.String(120), nullable=True)
-    tagwords = Column(db.String(255), nullable=True)
+    # status = Column(db.Integer(), nullable=True, default=0)
+    # tagwords = Column(db.String(255), nullable=True)
     image_url = Column(db.String(255), nullable=True)
     source_url = Column(db.String(255), nullable=True)
     webpage_url = Column(db.String(255), nullable=True)

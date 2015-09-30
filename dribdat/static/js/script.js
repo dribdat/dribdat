@@ -73,4 +73,20 @@
 
   });
 
+  $('.nav-categories .btn-group label').click(function() {
+    var selected_id = $(this).find('input').attr('id');
+    var $projects = $('.honeycomb .project');
+    var $infotext = $('.category-info');
+    if (selected_id != '') {
+      var $selected = $('[category-id="' + selected_id + '"]', $projects.parent());
+      $projects.css('opacity', 0.4);
+      $selected.css('opacity', 1.0);
+      $('div', $infotext).hide();
+      $('[category-id="' + selected_id + '"]', $infotext).show();
+    } else {
+      $projects.css('opacity', 1.0);
+      $('div', $infotext).hide();
+    }
+  });
+
 }).call(this, jQuery, window);

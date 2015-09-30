@@ -17,10 +17,30 @@
       and log in to start a project.
     {% endif %}
   </div>
+
+  <div class="nav-categories">
+    <div class="btn-group" data-toggle="buttons" role="group" aria-label="Filter by category">
+      <label class="btn btn-default active">
+        <input type="radio" name="category" id="" autocomplete="off" checked>
+          <br>
+          <span>*.*</span>
+      </label>
+    {% for category in current_event.categories %}
+      <label class="btn btn-default">
+        <input type="radio" name="category" id="{{category.id}}" autocomplete="off">
+          {% if category.logo_icon %}
+            <i class="fa fa-{{category.logo_icon}}"></i><br>
+          {% endif %}
+          <span>{{ category.name }}</span>
+      </label>
+    {% endfor %}
+    </div>
+  </div>
+
   <div class="honeycomb">
     <div class="ibws-fix">
       {% for project in projects %}
-      <a href="{{ url_for('public.project', project_id=project.id) }}" class="hexagon project" style="background-color:#{{project.logo_color}}">
+      <a href="{{ url_for('public.project', project_id=project.id) }}" class="hexagon project" category-id="{{project.category_id}}" style="background-color:#{{project.logo_color}}">
         <div class="hexagontent">
           {% if project.logo_icon %}
             <i class="fa fa-{{project.logo_icon}}"></i><br>
@@ -32,6 +52,15 @@
       </a>
       {% endfor %}
     </div>
+  </div>
+
+  <div class="category-info">
+    {% for category in current_event.categories %}
+    <div category-id="{{category.id}}" style="display:none">
+      <h4>{{ category.name }} projects</h4>
+      {{ category.description }}
+    </div>
+    {% endfor %}
   </div>
 </div>
 

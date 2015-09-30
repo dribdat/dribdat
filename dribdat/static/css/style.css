@@ -184,6 +184,29 @@ nav .fa-comment {
   padding: 20px;
 }
 
+.nav-categories .btn, .project-category.btn {
+  opacity: 0.6;
+  font-size: 16px;
+}
+.nav-categories {
+  text-align: right;
+  margin-bottom: 20px;
+  margin-right: 15px;
+}
+.project-category.btn {
+  float: right;
+  margin-right: 15px;
+}
+.category-info {
+  padding: 0 5em;
+  margin-top: 5em;
+  text-align: left;
+}
+
+.jumbotron.event-page {
+  margin-top: 3em;
+}
+
 .container.with-event {
   margin-top: 120px;
 }

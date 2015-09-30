@@ -117,16 +117,17 @@ def project(project_id):
 @blueprint.route('/project/<int:project_id>/edit', methods=['GET', 'POST'])
 @login_required
 def project_edit(project_id):
-    event = get_current_event()
     project = Project.query.filter_by(id=project_id).first_or_404()
+    event = project.event
     if project.user_id != current_user.id:
         flash('You do not have access to edit this project.', 'warning')
         return render_template('public/project.html', current_event=event, project=project)
     form = ProjectForm(obj=project, next=request.args.get('next'))
-    form.event_id.choices = [(event.id, event.name)]
     form.category_id.choices = [(c.id, c.name) for c in project.categories_all()]
+    form.category_id.choices.insert(0, (-1, ''))
     if form.validate_on_submit():
         form.populate_obj(project)
+        if project.category_id == -1: project.category_id = None
         db.session.add(project)
         db.session.commit()
         flash('Project updated.', 'success')
@@ -140,10 +141,12 @@ def project_new():
     project.user_id = current_user.id
     form = ProjectForm(obj=project, next=request.args.get('next'))
     event = get_current_event()
-    form.event_id.choices = [(event.id, event.name)]
     form.category_id.choices = [(c.id, c.name) for c in project.categories_all()]
+    form.category_id.choices.insert(0, (-1, ''))
     if form.validate_on_submit():
         form.populate_obj(project)
+        project.event = event
+        if project.category_id == -1: project.category_id = None
         db.session.add(project)
         db.session.commit()
         flash('Project added.', 'success')
