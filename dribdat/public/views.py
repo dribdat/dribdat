@@ -10,7 +10,7 @@ from dribdat.public.forms import LoginForm, UserForm, ProjectForm
 from dribdat.user.forms import RegisterForm
 from dribdat.utils import flash_errors
 from dribdat.database import db
-from dribdat.aggregation import GetProjectData
+from dribdat.aggregation import GetProjectData, ProjectActivity
 
 blueprint = Blueprint('public', __name__, static_folder="../static")
 
@@ -131,6 +131,7 @@ def project_edit(project_id):
         db.session.add(project)
         db.session.commit()
         flash('Project updated.', 'success')
+        ProjectActivity(project, 'update', current_user)
         return render_template('public/project.html', current_event=event, project=project)
     return render_template('public/projectedit.html', current_event=event, project=project, form=form)
 
@@ -150,6 +151,7 @@ def project_new():
         db.session.add(project)
         db.session.commit()
         flash('Project added.', 'success')
+        ProjectActivity(project, 'create', current_user)
         return render_template('public/project.html', current_event=event, project=project)
     return render_template('public/projectnew.html', current_event=event, form=form)
 

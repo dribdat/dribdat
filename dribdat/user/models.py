@@ -134,6 +134,12 @@ class Project(SurrogatePK, Model):
     def categories_event(self):
         return Category.query.filter_by(event_id=self.event_id).order_by('name')
 
+    @property
+    def score(self):
+        last = self.activities.last()
+        if last is None: return 0
+        return last.score
+
     def __init__(self, name=None, **kwargs):
         if name:
             db.Model.__init__(self, name=name, **kwargs)
@@ -162,6 +168,7 @@ class Category(SurrogatePK, Model):
 class Activity(SurrogatePK, Model):
     __tablename__ = 'activities'
     name = Column(db.Enum(
+        'create',
         'update',
         'award',
         'star',
@@ -169,12 +176,11 @@ class Activity(SurrogatePK, Model):
     timestamp = Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)
     project_id = ReferenceCol('projects', nullable=False)
     project = relationship('Project', backref='activities')
-    description = Column(db.UnicodeText(), nullable=True)
     score = Column(db.Integer(), nullable=True, default=0)
 
-    def __init__(self, name=None, **kwargs):
+    def __init__(self, name, project_id, **kwargs):
         if name:
-            db.Model.__init__(self, name=name, **kwargs)
+            db.Model.__init__(self, name=name, project_id=project_id, **kwargs)
 
     def __repr__(self):
         return '<Activity({name})>'.format(name=self.name)
