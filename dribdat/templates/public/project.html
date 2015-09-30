@@ -1,12 +1,13 @@
 {% extends "layout.html" %}
 
 {% block content %}
-<div class="jumbotron project-page">
+<div class="jumbotron project-page" style="background-color:#{{project.logo_color}}">
   <center>
     {% if project.image_url %}
       <img src="{{project.image_url}}">
     {% endif %}
     <h2 style="font-weight:bold">
+      <i class="fa fa-{{project.logo_icon}}"></i>
       {{project.name}}
     </h2>
     <p class="project-summary">

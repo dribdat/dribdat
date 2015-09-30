@@ -49,4 +49,6 @@ class ProjectForm(Form):
     webpage_url = StringField(u'Project home link', [length(max=255)])
     source_url = StringField(u'Source code link', [length(max=255)])
     image_url = StringField(u'Banner image link', [length(max=255)])
+    logo_color = StringField(u'Custom color (hexadecimal)', [length(max=6)])
+    logo_icon = StringField(u'Custom icon (Font Awesome)', [length(max=20)])
     submit = SubmitField(u'Save')
