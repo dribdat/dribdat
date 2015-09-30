@@ -3,28 +3,25 @@
 {% block content %}
 <div class="container-narrow">
   <h1>Register</h1>
+  <p>Create an account here to be able to submit projects.</p>
     <br/>
     <form id="registerForm" class="form form-register" method="POST" action="" role="form">
             {{ form.hidden_tag() }}
             <div class="form-group">
-                {{form.first_name.label}}
-                {{form.first_name(placeholder="", class_="form-control")}}
-            </div>
-            <div class="form-group">
-                {{form.last_name.label}}
-                {{form.last_name(placeholder="", class_="form-control")}}
+                {{form.username.label}}
+                {{form.username(placeholder="", class_="form-control")}}
             </div>
             <div class="form-group">
                 {{form.email.label}}
                 {{form.email(placeholder="name@domain.tld", class_="form-control")}}
             </div>
             <div class="form-group">
-                {{form.contact.label}}
-                {{form.contact(placeholder="phone, @handle, ...", class_="form-control")}}
+                {{form.teamname.label}}
+                {{form.teamname(placeholder="Dream Team", class_="form-control")}}
             </div>
             <div class="form-group">
-                {{form.username.label}}
-                {{form.username(placeholder="", class_="form-control")}}
+                {{form.webpage_url.label}}
+                {{form.webpage_url(placeholder="https://", class_="form-control")}}
             </div>
             <div class="form-group">
                 {{form.password.label}}

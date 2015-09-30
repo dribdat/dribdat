@@ -133,6 +133,7 @@ def projects():
 def project(project_id):
     project = Project.query.filter_by(id=project_id).first_or_404()
     form = ProjectForm(obj=project, next=request.args.get('next'))
+    form.user_id.choices = [(e.id, "%s (%s)" % (e.username, e.teamname)) for e in User.query.order_by('name')]
     form.event_id.choices = [(e.id, e.name) for e in Event.query.order_by('name')]
 
     if form.validate_on_submit():
@@ -151,6 +152,7 @@ def project(project_id):
 def project_new():
     project = Project()
     form = ProjectForm(obj=project, next=request.args.get('next'))
+    form.user_id.choices = [(e.id, "%s (%s)" % (e.username, e.teamname)) for e in User.query.order_by('name')]
     form.event_id.choices = [(e.id, e.name) for e in Event.query.order_by('name')]
 
     if form.validate_on_submit():

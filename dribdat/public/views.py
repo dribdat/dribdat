@@ -6,9 +6,8 @@ from flask_login import login_user, login_required, logout_user, current_user
 
 from dribdat.extensions import login_manager
 from dribdat.user.models import User, Event, Project
-from dribdat.public.forms import LoginForm, UserForm
+from dribdat.public.forms import LoginForm, UserForm, ProjectForm
 from dribdat.user.forms import RegisterForm
-from dribdat.admin.forms import ProjectForm
 from dribdat.utils import flash_errors
 from dribdat.database import db
 from dribdat.aggregation import GetProjectData
@@ -55,19 +54,20 @@ def logout():
 @blueprint.route("/register/", methods=['GET', 'POST'])
 def register():
     form = RegisterForm(request.form, csrf_enabled=False)
-    if request.args.get('fn'):
-        form.first_name.data = request.args.get('fn')
-    if request.args.get('ln'):
-        form.last_name.data = request.args.get('ln')
-    if request.args.get('em'):
-        form.email.data = request.args.get('em')
+    if request.args.get('name'):
+        form.username.data = request.args.get('name')
+    if request.args.get('email'):
+        form.email.data = request.args.get('email')
+    if request.args.get('team'):
+        form.teamname.data = request.args.get('team')
+    if request.args.get('web'):
+        form.webpage_url.data = request.args.get('web')
     if form.validate_on_submit():
         new_user = User.create(
                         username=form.username.data,
-                        first_name=form.first_name.data,
-                        last_name=form.last_name.data,
                         email=form.email.data,
-                        contact=form.contact.data,
+                        teamname=form.teamname.data,
+                        webpage_url=form.webpage_url.data,
                         password=form.password.data,
                         active=True)
         flash("Thank you for registering. You can now log in and submit projects.", 'success')
@@ -117,9 +117,12 @@ def project(project_id):
 @blueprint.route('/project/<int:project_id>/edit', methods=['GET', 'POST'])
 @login_required
 def project_edit(project_id):
-    project = Project.query.filter_by(id=project_id).first_or_404()
-    form = ProjectForm(obj=project, next=request.args.get('next'))
     event = get_current_event()
+    project = Project.query.filter_by(id=project_id).first_or_404()
+    if project.user_id != current_user.id:
+        flash('You do not have access to edit this project.', 'warning')
+        return render_template('public/project.html', current_event=event, project=project)
+    form = ProjectForm(obj=project, next=request.args.get('next'))
     form.event_id.choices = [(event.id, event.name)]
     if form.validate_on_submit():
         form.populate_obj(project)
@@ -133,6 +136,7 @@ def project_edit(project_id):
 @login_required
 def project_new():
     project = Project()
+    project.user_id = current_user.id
     form = ProjectForm(obj=project, next=request.args.get('next'))
     event = get_current_event()
     form.event_id.choices = [(event.id, event.name)]

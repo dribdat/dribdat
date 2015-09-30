@@ -1,6 +1,11 @@
 # -*- coding: utf-8 -*-
 from flask_wtf import Form
-from wtforms import StringField, TextField, PasswordField, SubmitField
+from wtforms import (
+    SubmitField, BooleanField,
+    StringField, PasswordField,
+    TextAreaField, TextField,
+    SelectField
+)
 from wtforms.validators import DataRequired
 
 from dribdat.user.models import User
@@ -34,9 +39,20 @@ class LoginForm(Form):
         return True
 
 class UserForm(Form):
-    first_name = StringField(u'First name', [length(max=30)])
-    last_name = StringField(u'Last name', [length(max=30)])
     email = StringField(u'E-mail', [required(), length(max=80)])
-    contact = StringField(u'Contact me at (phone, @handle,..)', [length(max=128)])
-    password = PasswordField(u'New password')
+    teamname = StringField(u'Team name', [length(max=80)], description="A name that identifies your team, if you have one")
+    webpage_url = StringField(u'Team web link', [length(max=128)], description="A website, GitHub or Twitter account of your team")
+    password = PasswordField(u'New password', [length(max=128)])
+    submit = SubmitField(u'Save')
+
+class ProjectForm(Form):
+    event_id = SelectField(u'Event', coerce=int)
+    AUTOTEXT__HELP = u"Enter the URL of a supported service (GitHub, Bitbucket) to populate other fields automatically."
+    autotext_url = StringField(u'Autofill link', [length(max=255)], description=AUTOTEXT__HELP)
+    name = StringField(u'Title', [required(), length(max=80)])
+    summary = StringField(u'Short summary (120 chars)', [length(max=120)])
+    longtext = TextAreaField(u'Full description (Markdown)')
+    webpage_url = StringField(u'Project home link', [length(max=255)])
+    source_url = StringField(u'Source code link', [length(max=255)])
+    image_url = StringField(u'Banner image link', [length(max=255)])
     submit = SubmitField(u'Save')
