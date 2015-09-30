@@ -40,7 +40,9 @@
       '</span>')
       .find('.autotext-indicator');
 
-    checkAutotext($inputfield, $indicator);
+    // On load
+    checkAutotext($inputfield.val(), $indicator);
+    // On keypress
     $inputfield.on('keyup', function(e) {
       checkAutotext($inputfield.val(), $indicator);
     });
@@ -48,6 +50,10 @@
       e.preventDefault();
       e.stopPropagation();
       var url = $inputfield.val();
+
+      if ($('input#name').val() &&
+          !window.confirm('Are you sure you wish to overwrite this form?'))
+            return;
 
       var $button = $(this);
       $indicator.find('i').css('color', 'blue');

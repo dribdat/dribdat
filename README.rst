@@ -29,14 +29,12 @@ You will see a pretty welcome screen at http://localhost:8159
 
 Once you have installed your DBMS, run the following to create your app's database tables and perform the initial migration:
 
-::
-
-    python manage.py db init
-    python manage.py db migrate
-    python manage.py db upgrade
-    python manage.py server
-
-
+```
+python manage.py db init
+python manage.py db migrate
+python manage.py db upgrade
+python manage.py server
+```
 
 Deployment
 ----------
@@ -55,9 +53,11 @@ By default, you will have access to ``app``, ``db``, and the ``User`` model.
 
 For example, to make yourself Administrator, create a user through the frontend then:
 
-    u = User.query.first()
-    u.is_admin = True
-    u.save()
+```
+u = User.query.first()
+u.is_admin = True
+u.save()
+```
 
 Running Tests
 -------------
