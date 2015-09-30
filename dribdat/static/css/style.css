@@ -161,9 +161,15 @@ nav .fa-comment {
 .hexagon:nth-child(26) { background-color: #fed1be; }
 .hexagon:nth-child(27) { background-color: #cccccc; }
 
+.project-page .project-team {
+  font-weight: normal;
+  color: #999;
+}
 .project-page img {
-  max-height: 240px;
-  max-width: 100%;
+  max-height: 200px;
+  max-width: 30%;
+  float: left;
+  margin-right: 40px;
 }
 .project-page .started-at {
   text-align: right;
@@ -171,6 +177,11 @@ nav .fa-comment {
 .project-page .details {
   float: left;
   font-size: 100%;
+}
+.project-page .project-info {
+  min-height: 240px;
+  background: rgba(255, 255, 255, 0.6);
+  padding: 20px;
 }
 
 .container.with-event {
