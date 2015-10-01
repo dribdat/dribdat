@@ -173,13 +173,20 @@ class Activity(SurrogatePK, Model):
         'star',
         name="activity_type"))
     timestamp = Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)
+    score = Column(db.Integer(), nullable=True, default=0)
+    user_id = ReferenceCol('users', nullable=False)
+    user = relationship('User', backref='activities')
     project_id = ReferenceCol('projects', nullable=False)
     project = relationship('Project', backref='activities')
-    score = Column(db.Integer(), nullable=True, default=0)
 
-    def __init__(self, name, project_id, **kwargs):
+    def __init__(self, name, user_id, project_id, **kwargs):
         if name:
-            db.Model.__init__(self, name=name, project_id=project_id, **kwargs)
+            db.Model.__init__(
+                self, name=name,
+                user_id=user_id,
+                project_id=project_id,
+                **kwargs
+            )
 
     def __repr__(self):
         return '<Activity({name})>'.format(name=self.name)

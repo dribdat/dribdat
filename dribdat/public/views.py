@@ -135,6 +135,15 @@ def project_edit(project_id):
         return render_template('public/project.html', current_event=event, project=project)
     return render_template('public/projectedit.html', current_event=event, project=project, form=form)
 
+@blueprint.route('/project/<int:project_id>/star', methods=['GET', 'POST'])
+@login_required
+def project_star(project_id):
+    project = Project.query.filter_by(id=project_id).first_or_404()
+    event = project.event
+    ProjectActivity(project, 'star', current_user)
+    flash('Thanks for your support!', 'success')
+    return render_template('public/project.html', current_event=event, project=project)
+
 @blueprint.route('/project/new', methods=['GET', 'POST'])
 @login_required
 def project_new():

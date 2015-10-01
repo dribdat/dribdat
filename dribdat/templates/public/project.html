@@ -7,14 +7,26 @@
       <img class="project-image" src="{{project.image_url}}">
     {% endif %}
 
-    {% if project.category_id %}
-    <a href="{{ url_for('public.event', event_id=current_event.id) }}" class="btn btn-default project-category" style="background-color:#{{project.category.logo_color}}">
-      {% if project.category.logo_icon %}
-        <i class="fa fa-{{project.category.logo_icon}}"></i><br>
+    <div class="project-tools">
+      {% if project.category_id %}
+      <a href="{{ url_for('public.event', event_id=current_event.id) }}" class="btn btn-default project-category" style="background-color:#{{project.category.logo_color}}">
+        {% if project.category.logo_icon %}
+          <i class="fa fa-{{project.category.logo_icon}}"></i><br>
+        {% endif %}
+        <span>{{ project.category.name }}</span>
+      </a><br>
       {% endif %}
-      <span>{{ project.category.name }}</span>
-    </a>
-    {% endif %}
+
+      <a href="{{ url_for('public.project_star', project_id=project.id) }}" class="project-star">
+        <i class="fa fa-heart"></i>
+      </a>
+
+      <div class="progress">
+        <div class="progress-bar" role="progressbar" aria-valuenow="{{project.score}}" aria-valuemin="0" aria-valuemax="70">
+          {{project.score}}
+        </div>
+      </div>
+    </div>
 
     <h2 style="font-weight:bold">
       {% if project.logo_icon %}

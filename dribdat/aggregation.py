@@ -30,27 +30,41 @@ def GetProjectData(url):
         }
     return {}
 
-def ProjectActivity(project, of_type, current_user):
-    activity = Activity(name=of_type, project_id=project.id)
+def GetProjectScore(project):
     score = 0
-    if of_type == 'update': score = score + 1
-    c_u = Activity.query.filter_by(project_id=project.id, name="update").count()
-    score = score + 1 * c_u
-    if of_type == 'star': score = score + 2
-    c_s = Activity.query.filter_by(project_id=project.id, name="star").count()
-    score = score + 2 * c_s
-    if of_type == 'award': score = score + 10
-    c_a = Activity.query.filter_by(project_id=project.id, name="award").count()
-    score = score + 10 * c_a
+    cqu = Activity.query.filter_by(project_id=project.id)
+    c_s = cqu.filter_by(name="star").count()
+    score = score + (2 * c_s)
+    c_a = cqu.filter_by(name="award").count()
+    score = score + (10 * c_a)
     if len(project.summary) > 3: score = score + 3
     if len(project.image_url) > 3: score = score + 3
     if len(project.source_url) > 3: score = score + 10
     if len(project.webpage_url) > 3: score = score + 10
     if len(project.logo_color) > 3: score = score + 1
     if len(project.logo_icon) > 3: score = score + 1
-    if len(project.longtext) > 3: score = score + 2
-    if len(project.longtext) > 100: score = score + 3
+    if len(project.longtext) > 3: score = score + 1
+    if len(project.longtext) > 100: score = score + 4
     if len(project.longtext) > 500: score = score + 10
-    activity.score = score
+    return score
+
+def ProjectActivity(project, of_type, current_user):
+    activity = Activity(
+        name=of_type,
+        project_id=project.id,
+        user_id=current_user.id
+    )
+    score = 0
+    if of_type == 'star':
+        score = 2
+        if Activity.query.filter_by(
+            name=of_type,
+            project_id=project.id,
+            user_id=current_user.id
+        ).count() > 0:
+            return # One star per user
+    if of_type == 'award':
+        score = 10
+    activity.score = score + GetProjectScore(project)
     db.session.add(activity)
     db.session.commit()
