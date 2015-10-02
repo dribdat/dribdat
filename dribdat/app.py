@@ -28,6 +28,7 @@ def create_app(config_object=ProdConfig):
     register_blueprints(app)
     register_errorhandlers(app)
     register_filters(app)
+    register_loggers(app)
     return app
 
 
@@ -66,3 +67,11 @@ def register_filters(app):
     @app.template_filter()
     def format_date(value, format='%Y-%m-%d'):
         return value.strftime(format)
+
+def register_loggers(app):
+    # if os.environ.get('HEROKU') is not None:
+        # app.logger.info('hello Heroku!')
+    import logging
+    stream_handler = logging.StreamHandler()
+    app.logger.addHandler(stream_handler)
+    app.logger.setLevel(logging.INFO)
