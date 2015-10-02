@@ -21,8 +21,15 @@
               <a href="{{ url_for('admin.user', user_id=user.id) }}">
                 {{ user.username }}
               </a>
+              [<a href="mailto:{{ user.email }}">
+                E-mail
+              </a>]
             </td>
-            <td>{{ user.first_name }} {{ user.last_name }}</td>
+            <td>
+              <a href="mailto:{{ user.webpage_url }}">
+                {{ user.teamname }}
+              </a>
+            </td>
             <td>{{ user.is_admin }}</td>
             <td>{{ user.created_at|format_date }}</td>
         </tr>

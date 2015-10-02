@@ -1,0 +1,10 @@
+{% from "macros/_form.html" import render_form %}
+
+{% extends "admin/layout.html" %}
+
+{% block content %}
+<div class="container">
+    <h2>New category</h2>
+    {{ render_form(url_for('admin.category_new'), form) }}
+</div>
+{% endblock %}

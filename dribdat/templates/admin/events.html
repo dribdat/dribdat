@@ -12,6 +12,7 @@
               <th>Name</th>
               <th>Start</th>
               <th>Finish</th>
+              <th>Current</th>
             </tr>
         </thead>
         {% for event in events %}
@@ -23,6 +24,7 @@
             </td>
             <td>{{ event.starts_at|format_date }}</td>
             <td>{{ event.ends_at|format_date }}</td>
+            <td>{% if event.is_current %}Yes{% endif %}</td>
         </tr>
         {% endfor %}
     </table>

@@ -1,28 +1,27 @@
 {% extends "layout.html" %}
 
 {% block content %}
-<div class="jumbotron">
-  {% if event %}
+<div class="jumbotron home-page">
+  {% if current_event %}
+  <h2>
+    <a href="{{ url_for('public.event', event_id=current_event.id) }}">{{current_event.name}}</a>
+  </h2>
+  <p>{{current_event.description}}</p>
   <center>
-    <h2 style="font-weight:bold">
-      {{event.name}}
-    </h2>
     <p>
-      <span>{{ event.starts_at|format_date }}</span>
-      <i class="fa fa-arrow-right"></i>
-      <span>{{ event.ends_at|format_date }}</span>
+      <a href="{{ current_event.webpage_url }}" class="btn btn-primary">Join the hackathon &raquo;</a>
+      <a href="{{ url_for('public.event', event_id=current_event.id) }}" class="btn btn-default">See the projects</a>
+      {% if current_user and current_user.is_authenticated() %}
+        <a href="{{ url_for('public.project_new') }}" class="btn btn-success btn-lg">Start a project</a>
+      {% endif %}
     </p>
   </center>
-  <p>{{event.description}}</p>
-  <p>
-    <a href="{{ event.webpage_url }}" class="btn btn-primary btn-large">Join the hackathon &raquo;</a>
-    <a href="{{ url_for('public.event', event_id=event.id) }}" class="btn btn-default btn-large">See the projects</a>
-  </p>
-  {% endif %}
+  <div class="event-countdown" data-start="{{ current_event.starts_at }}"></div>
   <div class="panel panel-default">
     <div class="panel-body">
-      {{event.community_embed}}
+      {{current_event.community_embed|safe}}
     </div>
   </div>
+  {% endif %}
 </div><!-- /.jumbotron -->
 {% endblock %}

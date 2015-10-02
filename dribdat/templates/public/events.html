@@ -8,9 +8,8 @@
     <div class="col-lg-4">
       <h2><i class="fa fa-code"></i> {{event.name}}</h2>
       <div style="font-size:90%; padding-bottom:2em"><i>
-        <span>{{ event.starts_at|format_date }}</span>
-        <i class="fa fa-arrow-right"></i>
-        <span>{{ event.ends_at|format_date }}</span>
+        <b>{{ event.date }}</b>
+        <span>{{ event.location }}</span>
       </i></div>
       <div class="panel panel-default">
         <div class="panel-body">

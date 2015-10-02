@@ -8,13 +8,15 @@ from .models import User
 
 class RegisterForm(Form):
     username = TextField('Username',
-                    validators=[DataRequired(), Length(min=3, max=25)])
+        validators=[DataRequired(), Length(min=3, max=25)])
     email = TextField('Email',
-                    validators=[DataRequired(), Email(), Length(min=6, max=40)])
+        validators=[DataRequired(), Email(), Length(min=6, max=40)])
+    teamname = TextField(u'Team name')
+    webpage_url = TextField(u'Team web link')
     password = PasswordField('Password',
-                                validators=[DataRequired(), Length(min=6, max=40)])
+        validators=[DataRequired(), Length(min=6, max=40)])
     confirm = PasswordField('Verify password',
-                [DataRequired(), EqualTo('password', message='Passwords must match')])
+        [DataRequired(), EqualTo('password', message='Passwords must match')])
 
     def __init__(self, *args, **kwargs):
         super(RegisterForm, self).__init__(*args, **kwargs)

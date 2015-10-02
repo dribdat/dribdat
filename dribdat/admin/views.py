@@ -6,8 +6,8 @@ from flask.ext.login import login_required, current_user
 from ..extensions import db
 from ..decorators import admin_required
 
-from ..user.models import User, Event, Project
-from .forms import UserForm, EventForm, ProjectForm
+from ..user.models import User, Event, Project, Category
+from .forms import UserForm, EventForm, ProjectForm, CategoryForm
 
 import json
 
@@ -38,12 +38,17 @@ def user(user_id):
     form = UserForm(obj=user, next=request.args.get('next'))
 
     if form.validate_on_submit():
+        originalhash = user.password
         form.populate_obj(user)
-
+        if form.password.data:
+            user.set_password(form.password.data)
+        else:
+            user.password = originalhash
         db.session.add(user)
         db.session.commit()
 
         flash('User updated.', 'success')
+        return users()
 
     return render_template('admin/user.html', user=user, form=form)
 
@@ -61,6 +66,7 @@ def user_new():
         db.session.commit()
 
         flash('User added.', 'success')
+        return users()
 
     return render_template('admin/usernew.html', form=form)
 
@@ -90,6 +96,7 @@ def event(event_id):
         db.session.commit()
 
         flash('Event updated.', 'success')
+        return events()
 
     return render_template('admin/event.html', event=event, form=form)
 
@@ -107,6 +114,7 @@ def event_new():
         db.session.commit()
 
         flash('Event added.', 'success')
+        return events()
 
     return render_template('admin/eventnew.html', form=form)
 
@@ -129,7 +137,9 @@ def projects():
 def project(project_id):
     project = Project.query.filter_by(id=project_id).first_or_404()
     form = ProjectForm(obj=project, next=request.args.get('next'))
+    form.user_id.choices = [(e.id, "%s (%s)" % (e.username, e.teamname)) for e in User.query.order_by('username')]
     form.event_id.choices = [(e.id, e.name) for e in Event.query.order_by('name')]
+    form.category_id.choices = [(c.id, c.name) for c in project.categories_all()]
 
     if form.validate_on_submit():
         form.populate_obj(project)
@@ -138,6 +148,7 @@ def project(project_id):
         db.session.commit()
 
         flash('Project updated.', 'success')
+        return projects()
 
     return render_template('admin/project.html', project=project, form=form)
 
@@ -147,7 +158,9 @@ def project(project_id):
 def project_new():
     project = Project()
     form = ProjectForm(obj=project, next=request.args.get('next'))
+    form.user_id.choices = [(e.id, "%s (%s)" % (e.username, e.teamname)) for e in User.query.order_by('username')]
     form.event_id.choices = [(e.id, e.name) for e in Event.query.order_by('name')]
+    form.category_id.choices = [(c.id, c.name) for c in project.categories_all()]
 
     if form.validate_on_submit():
         form.populate_obj(project)
@@ -156,5 +169,60 @@ def project_new():
         db.session.commit()
 
         flash('Project added.', 'success')
+        return projects()
 
     return render_template('admin/projectnew.html', form=form)
+
+##############
+##############
+##############
+
+@blueprint.route('/categories')
+@login_required
+@admin_required
+def categories():
+    categories = Category.query.all()
+    return render_template('admin/categories.html', categories=categories, active='categories')
+
+
+@blueprint.route('/category/<int:category_id>', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def category(category_id):
+    category = Category.query.filter_by(id=category_id).first_or_404()
+    form = CategoryForm(obj=category, next=request.args.get('next'))
+    form.event_id.choices = [(e.id, e.name) for e in Event.query.order_by('name')]
+    form.event_id.choices.insert(0, (-1, ''))
+
+    if form.validate_on_submit():
+        form.populate_obj(category)
+        if category.event_id == -1: category.event_id = None
+
+        db.session.add(category)
+        db.session.commit()
+
+        flash('Category updated.', 'success')
+        return categories()
+
+    return render_template('admin/category.html', category=category, form=form)
+
+@blueprint.route('/category/new', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def category_new():
+    category = Category()
+    form = CategoryForm(obj=category, next=request.args.get('next'))
+    form.event_id.choices = [(e.id, e.name) for e in Event.query.order_by('name')]
+    form.event_id.choices.insert(0, (-1, ''))
+
+    if form.validate_on_submit():
+        form.populate_obj(category)
+        if category.event_id == -1: category.event_id = None
+
+        db.session.add(category)
+        db.session.commit()
+
+        flash('Category added.', 'success')
+        return categories()
+
+    return render_template('admin/categorynew.html', form=form)

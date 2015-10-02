@@ -1,26 +1,77 @@
 {% extends "layout.html" %}
 
 {% block content %}
-<div class="container">
-  <h2>{{event.name}} projects</h2>
-    <div class="nav-projects">
-      {% if current_user and current_user.is_authenticated() %}
-        <a href="{{ url_for('admin.project_new') }}" class="btn btn-success">Start a project</a>
-      {% else %}
-        Please <a href="{{ url_for('public.register') }}">create an account</a>
-        and log in to start a project.
-      {% endif %}
-      <a href="{{ event.webpage_url }}" class="btn btn-primary btn-large">More info &raquo;</a>
+<h2><i class="fa fa-code"></i> {{current_event.name}}</h2>
+<div style="font-size:90%; padding-bottom:2em"><i>
+  <b>{{ current_event.date }}</b>
+  <span>{{ current_event.location }}</span>
+</i></div>
+
+<div class="container event-page">
+  <h1>Project board</h1>
+  <div class="nav-projects">
+    {% if current_user and current_user.is_authenticated() %}
+      <a href="{{ url_for('public.project_new') }}" class="btn btn-success btn-lg">Start a project</a>
+    {% else %}
+      Please <a href="{{ url_for('public.register') }}">create an account</a>
+      and log in to start a project.
+    {% endif %}
+  </div>
+
+  <div class="nav-categories">
+    <div class="btn-group" data-toggle="buttons" role="group" aria-label="Filter by category">
+      <label class="btn btn-default active">
+        <input type="radio" name="category" id="" autocomplete="off" checked>
+          <br>
+          <span>*.*</span>
+      </label>
+    {% for category in current_event.categories %}
+      <label class="btn btn-default">
+        <input type="radio" name="category" id="{{category.id}}" autocomplete="off">
+          {% if category.logo_icon %}
+            <i class="fa fa-{{category.logo_icon}}"></i><br>
+          {% endif %}
+          <span>{{ category.name }}</span>
+      </label>
+    {% endfor %}
     </div>
-    <div class="hexaboard">
-        {% for project in projects %}
-        <div class="project">
-            <h3>{{ project.name }}</h3>
-            <p>{{ project.summary }}
-            <span>{{ project.updated_at|format_date }}</span>
-            <p><a class="btn btn-default" href="{{ url_for('public.project', project_id=project.id) }}">Check it out</a></p>
+  </div>
+
+  <div class="honeycomb">
+    <div class="ibws-fix">
+      {% for project in projects %}
+      <a href="{{ url_for('public.project', project_id=project.id) }}" class="hexagon project" category-id="{{project.category_id}}" style="background-color:#{{project.logo_color}}">
+        <div class="hexagontent">
+          {% if project.logo_icon %}
+            <i class="fa fa-{{project.logo_icon}}"></i><br>
+            <small>{{ project.name }}</small>
+          {% else %}
+            {{ project.name }}
+          {% endif %}
+          <div class="progress">
+            <div class="progress-bar" role="progressbar" aria-valuenow="{{project.score}}" aria-valuemin="0" aria-valuemax="70">
+            </div>
+          </div>
         </div>
-        {% endfor %}
+      </a>
+      {% endfor %}
     </div>
+  </div>
+
+  <div class="category-info">
+    {% for category in current_event.categories %}
+    <div category-id="{{category.id}}" style="display:none">
+      <h4>{{ category.name }} projects</h4>
+      {{ category.description }}
+    </div>
+    {% endfor %}
+  </div>
 </div>
+
+<div class="jumbotron event-page">
+  <p>{{current_event.description}}</p>
+  <p>
+    <a href="{{ current_event.webpage_url }}" class="btn btn-primary">More information &raquo;</a>
+  </p>
+</div><!-- /.jumbotron -->
 {% endblock %}

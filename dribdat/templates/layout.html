@@ -25,12 +25,12 @@
 </head>
 <body class="{% block body_class %}{% endblock %}">
 {% block body %}
-{% with form=form, tabs=tabs, event=event %}
+{% with form=form, tabs=tabs, event=current_event %}
 {% include "nav.html" %}
 {% endwith %}
 
 <header>{% block header %}{% endblock %}</header>
-<div class="{% block content_class %}container{% endblock content_class %}">
+<div class="{% block content_class %}container{% endblock content_class %} {% if current_event %}with-event{% endif %}">
 
   <div role="main">
     {% with messages = get_flashed_messages(with_categories=true) %}
@@ -59,6 +59,7 @@
 {% assets "js_all" %}
     <script type="text/javascript" src="{{ ASSET_URL }}"></script>
 {% endassets %}
+<script type="text/javascript" src="{{ url_for('static', filename='libs/FlipClock/flipclock.min.js') }}"></script>
 {% block js %}{% endblock %}
 <!-- end scripts -->
 {% endblock %}
