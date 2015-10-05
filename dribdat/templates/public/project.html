@@ -79,5 +79,10 @@
     <b>{{ current_event.name }}</b>
     <a href="{{ url_for('public.event', event_id=current_event.id) }}" class="btn btn-default">&laquo; all projects</a>
   </p>
+  <div class="panel panel-default">
+    <div class="panel-body">
+      {{current_event.community_embed|safe}}
+    </div>
+  </div>
 </div><!-- /.jumbotron -->
 {% endblock %}
