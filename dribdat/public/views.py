@@ -27,7 +27,7 @@ def home():
 
 @blueprint.route("/about/")
 def about():
-    return render_template("public/about.html", current_event=get_current_event())
+    return render_template("public/about.html", current_event=get_current_event(), page_title="About dribdat")
 
 @blueprint.route("/login/", methods=["GET", "POST"])
 def login():
@@ -74,7 +74,7 @@ def register():
         return redirect(url_for('public.login'))
     else:
         flash_errors(form)
-    return render_template('public/register.html', current_event=get_current_event(), form=form)
+    return render_template('public/register.html', current_event=get_current_event(), form=form, page_title="Registration")
 
 @blueprint.route('/user/profile', methods=['GET', 'POST'])
 @login_required
@@ -93,14 +93,14 @@ def user_profile():
         db.session.commit()
 
         flash('Profile updated.', 'success')
-    return render_template('public/user.html', user=user, form=form)
+    return render_template('public/user.html', user=user, form=form, page_title="User profile")
 
 @blueprint.route("/events")
 def events():
     q = Event.query
     event = q.first()
     events = q.all()
-    return render_template("public/events.html", current_event=event, events=events)
+    return render_template("public/events.html", current_event=event, events=events, page_title="All events")
 
 @blueprint.route("/event/<int:event_id>")
 def event(event_id):
@@ -112,7 +112,8 @@ def event(event_id):
 def project(project_id):
     project = Project.query.filter_by(id=project_id).first_or_404()
     event = project.event
-    return render_template('public/project.html', current_event=event, project=project)
+    title = "%s ~%s" % (project.name, event.name)
+    return render_template('public/project.html', current_event=event, project=project, page_title=title)
 
 @blueprint.route('/project/<int:project_id>/edit', methods=['GET', 'POST'])
 @login_required
@@ -133,7 +134,7 @@ def project_edit(project_id):
         flash('Project updated.', 'success')
         ProjectActivity(project, 'update', current_user)
         return render_template('public/project.html', current_event=event, project=project)
-    return render_template('public/projectedit.html', current_event=event, project=project, form=form)
+    return render_template('public/projectedit.html', current_event=event, project=project, form=form, page_title="Edit project")
 
 @blueprint.route('/project/<int:project_id>/star', methods=['GET', 'POST'])
 @login_required
@@ -162,7 +163,7 @@ def project_new():
         flash('Project added.', 'success')
         ProjectActivity(project, 'create', current_user)
         return render_template('public/project.html', current_event=event, project=project)
-    return render_template('public/projectnew.html', current_event=event, form=form)
+    return render_template('public/projectnew.html', current_event=event, form=form, page_title="New project")
 
 @blueprint.route('/project/autofill', methods=['GET', 'POST'])
 @login_required
