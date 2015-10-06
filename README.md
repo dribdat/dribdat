@@ -1,6 +1,4 @@
-=======
-DRIBDAT
-=======
+# DRIBDAT
 
 *This is an open Hackathon. The stakes are high, the competition is ready. You will be measured, your progress tracked, your creativity analysed & compared. Think you have what it takes? Ready, steady, go!*
 
@@ -16,27 +14,24 @@ Participants can register their teams and start projects, which they can quickly
 
 The goals of this project is to create a tool to help organizers run a more professional event, and for team members to quickly publish presentable documentation about their idea.
 
-Quickstart
-----------
+## Quickstart
 
 Instructions to set up a development instance of this platform follow.
 
-First, set your app's secret key as an environment variable. For example, example add the following to ``.bashrc`` or ``.bash_profile``.
+First, set your app's secret key as an environment variable. For example, example add the following to `.bashrc` or `.bash_profile`.
 
-.. code-block:: bash
-
-    export DRIBDAT_SECRET='something-really-secret'
-
+```
+export DRIBDAT_SECRET='something-really-secret'
+```
 
 Then run the following commands to bootstrap your environment.
 
-
-::
-
-    git clone https://github.com/loleg/dribdat
-    cd dribdat
-    pip install -r requirements/dev.txt
-    python manage.py server
+```
+git clone https://github.com/loleg/dribdat
+cd dribdat
+pip install -r requirements/dev.txt
+python manage.py server
+```
 
 You will see a pretty welcome screen at http://localhost:5000
 
@@ -49,22 +44,17 @@ python manage.py db upgrade
 python manage.py server
 ```
 
-Deployment
-----------
+## Deployment
 
-In your production environment, make sure the ``DRIBDAT_ENV`` environment variable is set to ``"prod"``.
+In your production environment, make sure the `DRIBDAT_ENV` environment variable is set to `prod`.
 
+### Shell
 
-Shell
------
+To open the interactive shell, run: `python manage.py shell`
 
-To open the interactive shell, run ::
+By default, you will have access to `app`, `db`, and the `User` model.
 
-    python manage.py shell
-
-By default, you will have access to ``app``, ``db``, and the ``User`` model.
-
-For example, to make yourself Administrator, create a user through the frontend then:
+For example, to make yourself Administrator, create a user through the frontend, then:
 
 ```
 u = User.query.first()
@@ -72,33 +62,29 @@ u.is_admin = True
 u.save()
 ```
 
-Running Tests
--------------
+### Running Tests
 
-To run all tests, run ::
+To run all tests, run: `python manage.py test`
 
-    python manage.py test
-
-
-Migrations
-----------
+## Migrations
 
 Whenever a database migration needs to be made. Run the following commands:
-::
 
-    python manage.py db migrate
+```
+python manage.py db migrate
+```
 
 This will generate a new migration script. Then run:
-::
 
-    python manage.py db upgrade
+```
+python manage.py db upgrade
+```
 
-To apply the migration.
+To apply the migration. Watch out for any errors in the process.
 
-For a full migration command reference, run ``python manage.py db --help``.
+For a full migration command reference, run `python manage.py db --help`.
 
-Credits
--------
+## Credits
 
 Developed by [Oleg Lavrovsky](http://github.com/loleg) based on [Steven Loria](http://github.com/sloria/)'s [cookiecutter](http://github.com/audreyr/cookiecutter/) template.
 
