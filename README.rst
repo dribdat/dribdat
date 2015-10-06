@@ -1,6 +1,8 @@
-=======================================
-DRIBDAT: open source hackathon platform
-=======================================
+=======
+DRIBDAT
+=======
+
+## An open platform for data-driven hackathons
 
 *This is an open Hackathon. The stakes are high, the competition is ready. You will be measured, your progress tracked, your creativity analysed & compared. Think you have what it takes? Ready, steady, go!*
 
@@ -10,7 +12,7 @@ You can set up a website with details of your event, featuring links to communit
 
 Participants can register their teams and start projects, which they can quickly populate with documentation that they have set up on GitHub and other sites, or enter a Markdown formatted description directly.
 
-We are working on data-driven social features to track the activity levels of the project, allow the teams and the public to gauge progress and send signals that may boost the success of the projects themselves.
+"Data-driven hackathons" are supported with social features to track the activity levels of the project, which allow the teams and the public to gauge progress and send signals that may boost the success of the projects themselves.
 
 This is a tool to help organizers run a more professional event, and for team members to quickly publish presentable documentation about their idea.
 
