@@ -118,6 +118,18 @@ nav .fa-comment {
   margin-top: 50px;
 }
 
+.community-embed { margin-top: 60px; }
+.community-embed .fa-comment {
+  position: relative;
+  color: rgba(0, 0, 0, 0.1);
+  font-size: 50px;
+  left: -38px;
+  top: -38px;
+  line-height: 0px;
+  clear: none;
+  display: inherit;
+}
+
 .jumbotron.event-page {
   margin-top: 150px;
 }
@@ -132,11 +144,14 @@ nav .fa-comment {
 .project .hexagontent {
   color: black;
   font-weight: bold;
+  text-shadow: 1px 1px 0px #fff;
 }
 .project .hexagontent .fa {
   font-size: 240%;
 }
 .project .hexagontent .progress {
+  margin-top: 6px;
+  margin-bottom: 0px;
   height: 3px;
 }
 .project-info .progress {
@@ -186,13 +201,18 @@ nav .fa-comment {
   text-align: right;
 }
 .project-page .details {
-  float: left;
+  float: right;
   font-size: 100%;
+  text-align: right;
 }
 .project-page .project-info {
   min-height: 240px;
-  background: rgba(255, 255, 255, 0.6);
+  background: rgba(255, 255, 255, 0.8);
   padding: 20px;
+  margin-bottom: 10px;
+}
+.project-page .project-star i {
+  padding-right: 5px;
 }
 
 .nav-categories .btn, .project-category.btn {

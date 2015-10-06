@@ -36,7 +36,7 @@
     var $indicator = $inputfield.parent()
       .append('<span class="autotext-indicator">' +
         '<i style="color:red" class="fa fa-circle-o"></i>&nbsp;' +
-        '<button style="visibility:hidden">Update now</button>' +
+        '<button type="button" style="visibility:hidden">Update now</button>' +
       '</span>')
       .find('.autotext-indicator');
 

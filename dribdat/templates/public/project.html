@@ -17,11 +17,11 @@
       </a><br>
       {% endif %}
 
-      <a href="{{ url_for('public.project_star', project_id=project.id) }}" class="project-star">
-        <i class="fa fa-heart"></i>
+      <a href="{{ url_for('public.project_star', project_id=project.id) }}" class="project-star" title="Click to send compliments (you must be logged in)">
+        <i class="fa fa-heart"></i>KUDOS!
       </a>
 
-      <div class="progress">
+      <div class="progress" title="A score based on profile completeness and voting results">
         <div class="progress-bar" role="progressbar" aria-valuenow="{{project.score}}" aria-valuemin="0" aria-valuemax="70">
           {{project.score}}
         </div>
@@ -44,8 +44,8 @@
       {{project.name}}
     </h2>
 
-    {% if tracking %}
-      <div data-theme="default" data-height="" data-width="400" data-github="loleg/kandidaten" class="github-card"></div>
+    {% if github_project %}
+      <div data-theme="default" data-height="" data-width="400" data-github="{{ github_project }}" class="github-card"></div>
       <script src="//cdn.jsdelivr.net/github-cards/latest/widget.js"></script>
     {% endif %}
 
@@ -54,16 +54,12 @@
       {{project.summary}}
     </p>
     {% endif %}
-  </div>
-  <div class="panel panel-default">
-    <div class="panel-body">
-      <p>{{project.longtext|markdown}}</p>
+    <br clear="all"><hr>
+
+    <div class="project-longtext">
+      {{project.longtext|markdown}}
     </div>
   </div>
-  <p>
-    <a href="{{ project.webpage_url }}" class="btn btn-primary">Project homepage &raquo;</a>
-    <a href="{{ project.source_url }}" class="btn btn-success">Source code</a>
-  </p>
   <p class="details">
     Last update:
     <span>{{ project.updated_at|format_date }}</span>
@@ -74,15 +70,18 @@
       <a href="{{ url_for('public.project_edit', project_id=project.id) }}" class="btn btn-success btn-sm">edit</a>
     {% endif %}
   </p>
-  <p class="started-at">
-    Started at the
-    <b>{{ current_event.name }}</b>
-    <a href="{{ url_for('public.event', event_id=current_event.id) }}" class="btn btn-default">&laquo; all projects</a>
+  <p class="project-buttons">
+    <a href="{{ project.webpage_url }}" class="btn btn-primary">Project homepage &raquo;</a>
+    <a href="{{ project.source_url }}" class="btn btn-success">Source code</a>
   </p>
-  <div class="panel panel-default">
-    <div class="panel-body">
+  <div class="panel panel-default community-embed">
+    <div class="panel-body"><i class="fa fa-comment"></i>
       {{current_event.community_embed|safe}}
     </div>
   </div>
+  <p class="started-at">
+    <small>Launched at <b>{{ current_event.name }}</b></small>
+    <a href="{{ url_for('public.event', event_id=current_event.id) }}" class="btn btn-sm btn-default">&laquo; all projects</a>
+  </p>
 </div><!-- /.jumbotron -->
 {% endblock %}
