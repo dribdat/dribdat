@@ -3,14 +3,9 @@
 {% block page_title %}{{current_event.name}} Project Board{% endblock %}
 
 {% block content %}
-<h2><i class="fa fa-code"></i> {{current_event.name}}</h2>
-<div style="font-size:90%; padding-bottom:2em"><i>
-  <b>{{ current_event.date }}</b>
-  <span>{{ current_event.location }}</span>
-</i></div>
-
 <div class="container event-page">
   <h1>Project board</h1>
+  
   <div class="nav-projects">
     {% if current_user and current_user.is_authenticated() %}
       <a href="{{ url_for('public.project_new') }}" class="btn btn-success btn-lg">Start a project</a>
@@ -71,9 +66,15 @@
 </div>
 
 <div class="jumbotron event-page">
-  <p>{{current_event.description}}</p>
   <p>
-    <a href="{{ current_event.webpage_url }}" class="btn btn-primary">More information &raquo;</a>
+    <small>{{current_event.description}}</small><br>
+    <a href="{{ current_event.webpage_url }}" class="btn btn-sm btn-primary">More information &raquo;</a>
   </p>
+
+  <div class="panel panel-default community-embed">
+    <div class="panel-body"><i class="fa fa-comment"></i>
+      {{current_event.community_embed|safe}}
+    </div>
+  </div>
 </div><!-- /.jumbotron -->
 {% endblock %}

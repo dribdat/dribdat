@@ -20,6 +20,10 @@ textarea {
   resize: vertical;
 }
 
+h1 {
+  color: #999;
+}
+
 .container-narrow{
   margin: 0 auto;
   max-width: 700px;
@@ -133,14 +137,8 @@ nav .fa-comment {
 .jumbotron.event-page {
   margin-top: 150px;
 }
-.event-page h1 {
-  text-align: right;
-  font-size: 60px;
-  padding-right: 10px;
-  line-height: 0;
-  color: #999;
-  position: relative;
-  top: -0.5em;
+.event-page .nav-projects {
+  float: left;
 }
 
 .project .hexagontent {
@@ -158,11 +156,12 @@ nav .fa-comment {
 }
 .project-info .progress {
   width: 100px;
-  float: right;
+  margin-bottom: 5px;
   margin-left: 1em;
 }
 .progress-bar {
   min-width: 2em;
+  background-color: #3399f3;
 }
 .hexagon:nth-child(2) { background-color: #f0e0a2; }
 .hexagon:nth-child(3) { background-color: #adddcf; }
@@ -213,6 +212,9 @@ nav .fa-comment {
   padding: 20px;
   margin-bottom: 10px;
 }
+.project-page .project-star {
+  padding-right: 15px;
+}
 .project-page .project-star i {
   padding-right: 5px;
 }
@@ -240,10 +242,6 @@ nav .fa-comment {
   padding: 0 5em;
   margin-top: 5em;
   text-align: left;
-}
-
-.jumbotron.event-page {
-  margin-top: 3em;
 }
 
 .container.with-event {

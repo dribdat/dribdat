@@ -19,15 +19,15 @@
       </a><br>
       {% endif %}
 
-      <a href="{{ url_for('public.project_star', project_id=project.id) }}" class="project-star" title="Click to send compliments (you must be logged in)">
-        <i class="fa fa-heart"></i>KUDOS!
-      </a>
-
       <div class="progress" title="A score based on profile completeness and voting results">
         <div class="progress-bar" role="progressbar" aria-valuenow="{{project.score}}" aria-valuemin="0" aria-valuemax="70">
           {{project.score}}
         </div>
       </div>
+
+      <a href="{{ url_for('public.project_star', project_id=project.id) }}" class="project-star" title="Click to send compliments (you must be logged in)">
+        <i class="fa fa-heart"></i>KUDOS!
+      </a>
     </div>
 
     <h2 style="font-weight:bold">
