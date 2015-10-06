@@ -29,11 +29,10 @@
   <!-- Collect the nav links, forms, and other content for toggling -->
   <div class="collapse navbar-collapse navbar-ex1-collapse">
     <ul class="nav navbar-nav">
-      <li><a href="{{ url_for('public.events') }}">All events</a></li>
       {% if event %}
         <li>
           <a href="{{ url_for('public.event', event_id=event.id) }}">Project board</a>
-        </li>      
+        </li>
         <li>
           <a href="{{ event.community_url }}" target="_blank">Community
             <i class="fa fa-comment"></i></a>

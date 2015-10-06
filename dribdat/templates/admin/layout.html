@@ -1,5 +1,7 @@
 {% extends "layout.html" %}
 
+{% block page_title %}dribdat admin{% endblock %}
+
 {% set tabs = [
     ("users", url_for('admin.users')),
     ("projects", url_for('admin.projects')),

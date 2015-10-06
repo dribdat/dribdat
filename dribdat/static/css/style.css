@@ -139,6 +139,8 @@ nav .fa-comment {
   padding-right: 10px;
   line-height: 0;
   color: #999;
+  position: relative;
+  top: -0.5em;
 }
 
 .project .hexagontent {
@@ -215,6 +217,9 @@ nav .fa-comment {
   padding-right: 5px;
 }
 
+.navbar-collapse .nav li {
+    text-align: center;
+}
 .nav-categories .btn, .project-category.btn {
   opacity: 0.6;
   font-size: 16px;

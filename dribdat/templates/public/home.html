@@ -1,5 +1,7 @@
 {% extends "layout.html" %}
 
+{% block page_title %}{{current_event.name}}{% endblock %}
+
 {% block content %}
 <div class="jumbotron home-page">
   {% if current_event %}
