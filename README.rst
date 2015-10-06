@@ -2,7 +2,7 @@
 DRIBDAT
 =======
 
-## An open platform for data-driven hackathons
+!! An open platform for data-driven hackathons
 
 *This is an open Hackathon. The stakes are high, the competition is ready. You will be measured, your progress tracked, your creativity analysed & compared. Think you have what it takes? Ready, steady, go!*
 
@@ -16,6 +16,9 @@ Participants can register their teams and start projects, which they can quickly
 
 This is a tool to help organizers run a more professional event, and for team members to quickly publish presentable documentation about their idea.
 
+Developed by [Oleg Lavrovsky](http://github.com/loleg) based on [Steven Loria](http://github.com/sloria/)'s [cookiecutter](http://github.com/audreyr/cookiecutter/) template.
+
+With thanks to [Swisscom](http://swisscom.com)'s F. Wieser and M.-C. Gasser for conceptual inputs and financial support of the first release of this project.
 
 Quickstart
 ----------
