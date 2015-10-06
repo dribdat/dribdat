@@ -2,23 +2,19 @@
 DRIBDAT
 =======
 
-!! An open platform for data-driven hackathons
-
 *This is an open Hackathon. The stakes are high, the competition is ready. You will be measured, your progress tracked, your creativity analysed & compared. Think you have what it takes? Ready, steady, go!*
 
-DRIBDAT (Driven By Data) is a project board for running exciting, productive Hackathons with an impact factor. We created this after running events using plain wikis and forums for several years.
+**DRIBDAT (Driven By Data) is an open platform for data-driven hackathons.** It works as a website and project board for running exciting, productive Hackathons..with an Impact Factor.
 
-You can set up a website with details of your event, featuring links to community sites, customisable Bootstrap-based CSS design.
+We created this after running events using plain wikis and forums for years, and trying out a few proprietary tools that we felt limited us in one way or another.
+
+You can set up a website with details of your event, link and even embed your community site (we recommend [Discourse](http://www.discourse.org/), but there are many others), and adapt the customisable Bootstrap-based CSS design to your needs.
 
 Participants can register their teams and start projects, which they can quickly populate with documentation that they have set up on GitHub and other sites, or enter a Markdown formatted description directly.
 
 "Data-driven hackathons" are supported with social features to track the activity levels of the project, which allow the teams and the public to gauge progress and send signals that may boost the success of the projects themselves.
 
-This is a tool to help organizers run a more professional event, and for team members to quickly publish presentable documentation about their idea.
-
-Developed by [Oleg Lavrovsky](http://github.com/loleg) based on [Steven Loria](http://github.com/sloria/)'s [cookiecutter](http://github.com/audreyr/cookiecutter/) template.
-
-With thanks to [Swisscom](http://swisscom.com)'s F. Wieser and M.-C. Gasser for conceptual inputs and financial support of the first release of this project.
+The goals of this project is to create a tool to help organizers run a more professional event, and for team members to quickly publish presentable documentation about their idea.
 
 Quickstart
 ----------
@@ -100,3 +96,10 @@ This will generate a new migration script. Then run:
 To apply the migration.
 
 For a full migration command reference, run ``python manage.py db --help``.
+
+Credits
+-------
+
+Developed by [Oleg Lavrovsky](http://github.com/loleg) based on [Steven Loria](http://github.com/sloria/)'s [cookiecutter](http://github.com/audreyr/cookiecutter/) template.
+
+With thanks to [Swisscom](http://swisscom.com)'s F. Wieser and M.-C. Gasser for conceptual inputs and financial support of the first release of this project.
