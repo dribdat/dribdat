@@ -114,6 +114,7 @@ class Project(SurrogatePK, Model):
     longtext = Column(db.UnicodeText(), nullable=False, default=u"")
     created_at = Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)
     updated_at = Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)
+    is_hidden = Column(db.Boolean(), default=False)
 
     # User who created the project
     user_id = ReferenceCol('users', nullable=True)

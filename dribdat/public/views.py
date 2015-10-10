@@ -105,7 +105,7 @@ def events():
 @blueprint.route("/event/<int:event_id>")
 def event(event_id):
     event = Event.query.filter_by(id=event_id).first_or_404()
-    projects = Project.query.filter_by(event_id=event_id)
+    projects = Project.query.filter_by(event_id=event_id, is_hidden=False)
     return render_template("public/event.html",  current_event=event, projects=projects)
 
 @blueprint.route('/project/<int:project_id>')

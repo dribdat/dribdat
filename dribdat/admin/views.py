@@ -152,6 +152,32 @@ def project(project_id):
 
     return render_template('admin/project.html', project=project, form=form)
 
+@blueprint.route('/project/<int:project_id>/toggle', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def project_toggle(project_id):
+    project = Project.query.filter_by(id=project_id).first_or_404()
+    project.is_hidden = not project.is_hidden
+    project.save()
+    if project.is_hidden:
+        flash('Project is now hidden.', 'success')
+    else:
+        flash('Project is now visible.', 'success')
+    return projects()
+
+@blueprint.route('/project/<int:project_id>/delete', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def project_delete(project_id):
+    project = Project.query.filter_by(id=project_id).first_or_404()
+    if not project.is_hidden:
+        flash('Project must be disabled.', 'warning')
+    else:
+        for a in project.activities: a.delete()
+        project.delete()
+        flash('Project deleted.', 'success')
+    return projects()
+
 @blueprint.route('/project/new', methods=['GET', 'POST'])
 @login_required
 @admin_required
