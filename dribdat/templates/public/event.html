@@ -5,7 +5,7 @@
 {% block content %}
 <div class="container event-page">
   <h1>Project board</h1>
-  
+
   <div class="nav-projects">
     {% if current_user and current_user.is_authenticated() %}
       <a href="{{ url_for('public.project_new') }}" class="btn btn-success btn-lg">Start a project</a>
@@ -19,8 +19,7 @@
     <div class="btn-group" data-toggle="buttons" role="group" aria-label="Filter by category">
       <label class="btn btn-default active">
         <input type="radio" name="category" id="" autocomplete="off" checked>
-          <br>
-          <span>*.*</span>
+          <span> </span>
       </label>
     {% for category in current_event.categories %}
       <label class="btn btn-default">
