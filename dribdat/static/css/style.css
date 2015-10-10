@@ -153,6 +153,11 @@ nav .fa-comment {
   margin-top: 6px;
   margin-bottom: 0px;
   height: 3px;
+  position: relative;
+  width: 72px;
+  margin-left: -36px;
+  left: 50%;
+  opacity: 0.8;
 }
 .project-info .progress {
   width: 100px;
