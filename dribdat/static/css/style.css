@@ -135,12 +135,11 @@ nav .fa-comment {
 }
 
 .jumbotron.event-page {
-  margin-top: 150px;
+  margin-top: 40px;
 }
-.event-page .nav-projects {
-  float: left;
+.event-page .honeycomb {
+  margin: 40px 0;
 }
-
 .project .hexagontent {
   color: black;
   font-weight: bold;
