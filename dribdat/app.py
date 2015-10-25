@@ -12,6 +12,7 @@ from dribdat.extensions import (
     login_manager,
     migrate,
     debug_toolbar,
+    opbeat,
 )
 from dribdat import public, user, admin
 
@@ -39,6 +40,7 @@ def register_extensions(app):
     db.init_app(app)
     login_manager.init_app(app)
     debug_toolbar.init_app(app)
+    opbeat.init_app(app)
     migrate.init_app(app, db)
     Markdown(app)
     return None
