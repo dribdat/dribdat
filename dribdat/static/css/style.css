@@ -161,8 +161,10 @@ nav .fa-comment {
 }
 .project-info .progress {
   width: 100px;
-  margin-bottom: 5px;
+  display: inline-block;
+  margin-bottom: -5px;
   margin-left: 1em;
+  margin-right: 5px;
 }
 .progress-bar {
   min-width: 2em;
@@ -203,9 +205,6 @@ nav .fa-comment {
   float: left;
   margin-right: 40px;
 }
-.project-page .started-at {
-  text-align: right;
-}
 .project-page .details {
   float: right;
   font-size: 100%;
@@ -216,9 +215,6 @@ nav .fa-comment {
   background: rgba(255, 255, 255, 0.8);
   padding: 20px;
   margin-bottom: 10px;
-}
-.project-page .project-star {
-  padding-right: 15px;
 }
 .project-page .project-star i {
   padding-right: 5px;
@@ -234,9 +230,7 @@ nav .fa-comment {
   min-height: 64px;
 }
 .nav-categories {
-  text-align: right;
-  margin-bottom: 20px;
-  margin-right: 15px;
+  margin: 10px;
 }
 .project-tools {
   float: right;
