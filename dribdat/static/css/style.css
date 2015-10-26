@@ -138,9 +138,11 @@ nav .fa-comment {
   margin-top: 40px;
 }
 .event-page .honeycomb {
-  margin: 40px 0;
+  margin: 30px 0px 100px 0px;
+  text-align: left;
 }
 .project .hexagontent {
+  overflow: hidden;
   color: black;
   font-weight: bold;
   text-shadow: 1px 1px 0px #fff;
@@ -157,6 +159,17 @@ nav .fa-comment {
   margin-left: -36px;
   left: 50%;
   opacity: 0.8;
+}
+.project.hexalist .hexagontent {
+  overflow: visible;
+  position: relative;
+  transform: none;
+  left: 30%;
+}
+.project.hexalist .hexagontent .progress {
+  float: left;
+  position: initial;
+  margin-right: 20px;
 }
 .project-info .progress {
   width: 100px;
