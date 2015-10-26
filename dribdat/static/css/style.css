@@ -165,7 +165,11 @@ nav .fa-comment {
   position: relative;
   transform: none;
   left: 30%;
+  margin-bottom: 10px;
 }
+.project.hexalist .hexagontent i.fa,
+.project.hexalist .hexagontent br { display: none; }
+.project.hexalist .hexagontent small { font-size: 100%; }
 .project.hexalist .hexagontent .progress {
   float: left;
   position: initial;
