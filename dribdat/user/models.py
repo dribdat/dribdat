@@ -76,6 +76,15 @@ class Event(SurrogatePK, Model):
     is_current = Column(db.Boolean(), default=False)
 
     @property
+    def countdown(self):
+        if self.starts_at > dt.datetime.utcnow():
+            return self.starts_at
+        elif self.ends_at > dt.datetime.utcnow():
+            return self.ends_at
+        else:
+            return None
+
+    @property
     def date(self):
         if self.starts_at.month == self.ends_at.month:
             return "{0} {1}-{2}, {3}".format(
