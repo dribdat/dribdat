@@ -16,6 +16,7 @@ def GetProjectData(url):
         data = requests.get(apiurl)
         if data.text.find('{') < 0: return {}
         json = data.json()
+        if not 'name' in json: return {}
         readmeurl = "%s/readme" % apiurl
         readmedata = requests.get(readmeurl)
         if readmedata.text.find('{') < 0: return {}
