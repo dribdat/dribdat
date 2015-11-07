@@ -215,7 +215,7 @@ nav .fa-comment {
   font-weight: normal;
   color: #999;
 }
-.project-page img {
+.project-page .project-image {
   max-height: 200px;
   max-width: 30%;
   float: left;

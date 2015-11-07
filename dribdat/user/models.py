@@ -119,7 +119,7 @@ class Project(SurrogatePK, Model):
     webpage_url = Column(db.String(255), nullable=True)
     autotext_url = Column(db.String(255), nullable=True)
     logo_color = Column(db.String(6), nullable=True)
-    logo_icon = Column(db.String(20), nullable=True)
+    logo_icon = Column(db.String(40), nullable=True)
     longtext = Column(db.UnicodeText(), nullable=False, default=u"")
     created_at = Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)
     updated_at = Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)
