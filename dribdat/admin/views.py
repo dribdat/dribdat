@@ -10,6 +10,7 @@ from ..user.models import User, Event, Project, Category
 from .forms import UserForm, EventForm, ProjectForm, CategoryForm
 
 import json
+import datetime
 
 blueprint = Blueprint('admin', __name__, url_prefix='/admin')
 
@@ -130,6 +131,14 @@ def projects():
     projects = Project.query.all()
     return render_template('admin/projects.html', projects=projects, active='projects')
 
+@blueprint.route('/event/<int:event_id>/projects')
+@login_required
+@admin_required
+def event_projects(event_id):
+    now = datetime.datetime.utcnow().strftime("%d.%m.%Y %H:%M")
+    event = Event.query.filter_by(id=event_id).first_or_404()
+    projects = Project.query.filter_by(event_id=event_id, is_hidden=False).order_by(Project.name)
+    return render_template('admin/eventprojects.html', event=event, projects=projects, curdate=now, active='projects')
 
 @blueprint.route('/project/<int:project_id>', methods=['GET', 'POST'])
 @login_required

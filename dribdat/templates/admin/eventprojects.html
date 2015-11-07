@@ -1,0 +1,59 @@
+{% extends "admin/layout.html" %}
+
+{% block content %}
+<div class="container">
+    <h2>{{ event.name }}: all projects</h2>
+    <p>As of <b>{{ curdate }}</b></p>
+
+    {% for project in projects %}
+    <div class="project-info" style="page-break-after:always">
+      {% if project.image_url %}
+        <img class="project-image" width="128" src="{{project.image_url}}">
+      {% endif %}
+
+      <h2 style="font-weight:bold">
+        {% if project.logo_icon %}
+          <i class="fa fa-{{project.logo_icon}}"></i>
+        {% endif %}
+
+        {% if project.user.teamname %}
+        <span class="project-team">
+          <a href="{{project.user.webpage_url}}" target="_blank">
+            {{ project.user.teamname }}
+          </a> /
+        </span>
+        {% endif %}
+
+        {{project.name}}
+      </h2>
+
+      {% if project.summary %}
+      <p class="project-summary">
+        {{project.summary}}
+      </p>
+      {% endif %}
+
+      <div class="project-longtext">
+        {{project.longtext|markdown}}
+      </div>
+
+      <ul style="list-style-type:none; border:1px solid #999; background:#eee; border-radius:10px; padding:15px; width:auto">
+      {% if project.webpage_url %}
+        <li>Homepage: <a href="{{ project.webpage_url }}">{{ project.webpage_url }}</a></li>
+      {% endif %}
+      {% if project.source_url %}
+      <li>Source: <a href="{{ project.source_url }}">{{ project.source_url }}</a></li>
+      {% endif %}
+      <li>Last update: <span>{{ project.updated_at|format_date }}</span></li>
+      <li>Maintainer: {{ project.user.username }} &lt;{{ project.user.email }}&gt;</li>
+      {% if project.category_id %}
+        <li>Category: <span>{{ project.category.name }}</span></li>
+      {% endif %}
+      <li>Points: {{project.score}}</li>
+      </ul>
+    </div>
+
+    <br clear="all"><hr>
+    {% endfor %}
+</div>
+{% endblock %}

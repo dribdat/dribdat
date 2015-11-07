@@ -10,6 +10,7 @@
         <thead>
             <tr>
               <th>Name</th>
+              <th>Projects</th>
               <th>Start</th>
               <th>Finish</th>
               <th>Current</th>
@@ -20,6 +21,14 @@
             <td>
               <a href="{{ url_for('admin.event', event_id=event.id) }}">
                 {{ event.name }}
+              </a>
+            </td>
+            <td>
+              <a href="{{ url_for('public.event', event_id=event.id) }}" class="btn btn-sm btn-primary">
+                Go to board
+              </a>
+              <a href="{{ url_for('admin.event_projects', event_id=event.id) }}" class="btn btn-sm btn-default">
+                View all
               </a>
             </td>
             <td>{{ event.starts_at|format_date }}</td>
