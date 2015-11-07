@@ -235,6 +235,9 @@ nav .fa-comment {
 .project-page .project-star i {
   padding-right: 5px;
 }
+.project-page .project-longtext img {
+  width: 100%;
+}
 
 .navbar-collapse .nav li {
     text-align: center;
