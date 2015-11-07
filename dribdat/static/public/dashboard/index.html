@@ -71,14 +71,18 @@
   }
 </style>
 <script>
-$.getJSON('/project/list', function(data) {
-  $pp = $('#projects').empty();
-  data.projects.forEach(function(p) {
-    $pp.append('<div>' +
-      '<a href="/project/'+p.id+'">'+p.name+'</a>' +
-      '<sp style="width:'+p.score+'px"></sp>' +
-    '</div>');
+refreshProjects = function() {
+  $.getJSON('/project/list', function(data) {
+    $pp = $('#projects').empty();
+    data.projects.forEach(function(p) {
+      $pp.append('<div>' +
+        '<a href="/project/'+p.id+'">'+p.name+'</a>' +
+        '<sp style="width:'+p.score+'px"></sp>' +
+      '</div>');
+    });
   });
-});
+  setTimeout(refreshProjects, 60 * 1000);
+}
+refreshProjects();
 </script>
 </html>
