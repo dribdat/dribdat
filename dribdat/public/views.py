@@ -164,9 +164,19 @@ def project_new():
         return render_template('public/project.html', current_event=event, project=project)
     return render_template('public/projectnew.html', current_event=event, form=form)
 
+
+# API routines
+
 @blueprint.route('/project/autofill', methods=['GET', 'POST'])
 @login_required
 def project_autofill():
     url = request.args.get('url')
     data = GetProjectData(url)
     return jsonify(data)
+
+@blueprint.route('/project/list')
+def project_list():
+    projects = Project.query.filter_by(event_id=get_current_event().id, is_hidden=False)
+    summaries = [ p.data for p in projects ]
+    summaries.sort(key=lambda x: x['score'], reverse=True)
+    return jsonify(projects=summaries)

@@ -149,6 +149,15 @@ class Project(SurrogatePK, Model):
         if not self.activities: return 0
         return self.activities[-1].score
 
+    @property
+    def data(self):
+        return {
+            'name': self.name,
+            'score': self.score,
+            'summary': self.summary,
+            'image_url': self.image_url,
+        }
+
     def __init__(self, name=None, **kwargs):
         if name:
             db.Model.__init__(self, name=name, **kwargs)
