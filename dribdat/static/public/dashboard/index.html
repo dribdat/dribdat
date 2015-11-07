@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <title>Hackathon</title>
+        <meta name="description" content="" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+        <link rel="stylesheet" type="text/css" href="http://d2aprndauq1nk.cloudfront.net/static/css/reset.css">
+        <link rel="stylesheet" type="text/css" href="http://d2aprndauq1nk.cloudfront.net/static/css/hackathon.css">
+        <link rel="stylesheet" type="text/css" href="http://d2aprndauq1nk.cloudfront.net/static/slick/slick.css"/>
+        <link rel="stylesheet" type="text/css" href="http://d2aprndauq1nk.cloudfront.net/static/css/slick.css"/>
+        <script type="text/javascript" src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+        <script type="text/javascript" src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+        <script type="text/javascript" src="//d2aprndauq1nk.cloudfront.net/static/slick/slick.min.js"></script>
+    </head>
+
+    <body class="template-home-page">
+        <div id="wrapper">
+            <div id="content-wrapper">
+
+
+  <div style="position:absolute; top: 10%; left: 2em" id="projects">
+  </div>
+
+  <div style="position:absolute; top: 10%; right: 8%; width:245px;">
+    <a class="twitter-timeline" height="500" href="https://twitter.com/hashtag/iothack15" data-widget-id="662809470599364608">#iothack15-Tweets</a>
+    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+
+<iframe src="http://snapwidget.com/sl/?h=aW90aGFjazE1fGlufDI0MHwzfDN8fG5vfDV8bm9uZXxvblN0YXJ0fHllc3xubw==&ve=071115" title="Instagram Widget" class="snapwidget-widget" allowTransparency="true" frameborder="0" scrolling="no" style="margin-top:10px; border:none; overflow:hidden; width:245px; height:245px"></iframe>
+
+  </div>
+
+  <div style="position:absolute; top:420px; left: 50%; margin-left:-300px">
+    <img src="opbeat.png" style="width:600px;opacity:0.5">
+  </div>
+
+<div class="section section-centered section-header" style="zoom:0.75">
+    <div class="section-header-logo">
+        <img id="swisscom-logo" src="http://d2aprndauq1nk.cloudfront.net/static/img/swisscom_logo.png"/>
+    </div>
+    <div class="header-line"></div>
+    <div class="section-header-content">
+        <div class="rich-text"><h2>Swisscom</h2></div>
+        <div class="rich-text"><h3>IoT Hackathon</h3></div>
+    </div>
+    <div class="header-line" style="margin-top: 30px"></div>
+</div>
+
+        </div>
+      </div>
+
+    </body>
+<style>
+  #projects {
+    color: #DDA;
+    font: 14pt/29pt sans-serif;
+  }
+  #projects a {
+    color: inherit;
+    text-decoration: none;
+    opacity: 0.9;
+  }
+  #projects sp {
+    display: block;
+    border-bottom: 2px solid white;
+  }
+</style>
+<script>
+$.getJSON('/project/list', function(data) {
+  $pp = $('#projects').empty();
+  data.projects.forEach(function(p) {
+    $pp.append('<div>' +
+      '<a href="/project/'+p.id+'">'+p.name+'</a>' +
+      '<sp style="width:'+p.score+'px"></sp>' +
+    '</div>');
+  });
+});
+</script>
+</html>

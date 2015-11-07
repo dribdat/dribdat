@@ -152,6 +152,7 @@ class Project(SurrogatePK, Model):
     @property
     def data(self):
         return {
+            'id': self.id,
             'name': self.name,
             'score': self.score,
             'summary': self.summary,
