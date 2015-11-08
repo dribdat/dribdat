@@ -20,7 +20,7 @@
       {% endif %}
 
       <div class="progress" title="A score based on profile completeness and voting results">
-        <div class="progress-bar" role="progressbar" aria-valuenow="{{project.score}}" aria-valuemin="0" aria-valuemax="70">
+        <div class="progress-bar" role="progressbar" aria-valuenow="{{project.score}}" aria-valuemin="0" aria-valuemax="70" style="width:{{project.score}}%">
           {{project.score}}
         </div>
       </div>
