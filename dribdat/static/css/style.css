@@ -183,8 +183,10 @@ nav .fa-comment {
   margin-right: 5px;
 }
 .progress-bar {
-  min-width: 2em;
   background-color: #3399f3;
+}
+.project-tools .progress-bar {
+  min-width: 2em;
 }
 .hexagon:nth-child(2) { background-color: #f0e0a2; }
 .hexagon:nth-child(3) { background-color: #adddcf; }
