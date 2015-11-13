@@ -6,7 +6,7 @@
 
 See [DRIBD.AT](http://dribd.at) for more information.
 
-## Deployment
+## Deployment Quickstart
 
 Instructions to set up a development instance of this platform follow. This project is ready for fast deployment to [Heroku](http://heroku.com). You will need to set the following configuration variables:
 
@@ -21,6 +21,8 @@ We have used [OpBeat](https://opbeat.com/) and their new Flask metrics to track 
 * `OPBEAT_APP_ID`
 * `OPBEAT_ORGANIZATION_ID`
 * `OPBEAT_SECRET_TOKEN`
+
+Once your app is deployed on Heroku, create a user and use the shell commands below to become an administrator.
 
 ## Developer Quickstart
 
@@ -50,17 +52,11 @@ python manage.py db upgrade
 python manage.py server
 ```
 
-## Deployment
+### Shell access
 
-In your production environment, make sure the `DRIBDAT_ENV` environment variable is set to `prod`.
+To open the interactive shell, run: `python manage.py shell` (or, using the [Heroku toolchain](https://devcenter.heroku.com/categories/command-line), `heroku run python manage.py shell`)
 
-### Shell
-
-To open the interactive shell, run: `python manage.py shell`
-
-By default, you will have access to `app`, `db`, and the `User` model.
-
-For example, to make yourself Administrator, create a user through the frontend, then:
+By default, you will have access to `app`, `db`, and the `User` model. For example, to make yourself Administrator, create a user through the frontend, then promote the (here we assume, first) user in the shell:
 
 ```
 u = User.query.first()
