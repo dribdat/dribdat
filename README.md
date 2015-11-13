@@ -2,21 +2,27 @@
 
 *This is an open Hackathon. The stakes are high, the competition is ready. You will be measured, your progress tracked, your creativity analysed & compared. Think you have what it takes? Ready, steady, go!*
 
-**DRIBDAT (Driven By Data) is an open platform for data-driven hackathons.** It works as a website and project board for running exciting, productive Hackathons..with an Impact Factor.
+**DRIBDAT (Driven By Data) is an open platform for data-driven hackathons.** It works as a website and project board for running exciting, productive Hackathons..with Impact Factor. We created this after running events using plain wikis and forums for years, and trying out a few proprietary tools that we felt limited us in one way or another.
 
-We created this after running events using plain wikis and forums for years, and trying out a few proprietary tools that we felt limited us in one way or another.
+See [DRIBD.AT](http://dribd.at) for more information.
 
-You can set up a website with details of your event, link and even embed your community site (we recommend [Discourse](http://www.discourse.org/), but there are many others), and adapt the customisable Bootstrap-based CSS design to your needs.
+## Deployment
 
-Participants can register their teams and start projects, which they can quickly populate with documentation that they have set up on GitHub and other sites, or enter a Markdown formatted description directly.
+Instructions to set up a development instance of this platform follow. This project is ready for fast deployment to [Heroku](http://heroku.com). You will need to set the following configuration variables:
 
-"Data-driven hackathons" are supported with social features to track the activity levels of the project, which allow the teams and the public to gauge progress and send signals that may boost the success of the projects themselves.
+* `SERVER_URL` - fully qualified domain name where the site is hosted, e.g. minotaur-realm-1234.herokuapp.com or your custom domain name
+* `DRIBDAT_ENV` - 'dev' to enable debugging, 'prod' to optimise assets etc.
+* `DRIBDAT_DB` - if you are using the Postgres add-on, this would be postgres://username:password@...
+* `DATABASE_URL` - same as above - needed only for Heroku to recognise the database, set automatically if you use tools
+* `DRIBDAT_SECRET` - a long scary string for hashing your passwords
 
-The goals of this project is to create a tool to help organizers run a more professional event, and for team members to quickly publish presentable documentation about their idea.
+We have used [OpBeat](https://opbeat.com/) and their new Flask metrics to track performance and logging. If you would like to enable this, set these as per their documentation:
 
-## Quickstart
+* `OPBEAT_APP_ID`
+* `OPBEAT_ORGANIZATION_ID`
+* `OPBEAT_SECRET_TOKEN`
 
-Instructions to set up a development instance of this platform follow.
+## Developer Quickstart
 
 First, set your app's secret key as an environment variable. For example, example add the following to `.bashrc` or `.bash_profile`.
 
