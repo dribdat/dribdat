@@ -16,7 +16,7 @@ def admin_required(f):
 def requires_auth(f):
     @wraps(f)
     def decorated(*args, **kwargs):
-        if not current_user.is_authenticated():
+        if not current_user.is_authenticated:
             return jsonify(flag='fail', msg='Login required')
         return f(*args, **kwargs)
     return decorated

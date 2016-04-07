@@ -46,7 +46,7 @@
         {% endfor %}
       {% endif %}
     </ul>
-    {% if current_user and current_user.is_authenticated() %}
+    {% if current_user and current_user.is_authenticated %}
     <ul class="nav navbar-nav navbar-right">
       {% if current_user.is_admin %}
         <li><p class="navbar-text">

@@ -3,8 +3,8 @@
 in app.py
 """
 
-from flask_bcrypt import Bcrypt
-bcrypt = Bcrypt()
+from flask.ext.hashing import Hashing
+hashing = Hashing()
 
 from flask_login import LoginManager
 login_manager = LoginManager()

@@ -3,7 +3,7 @@ import datetime as dt
 
 from flask_login import UserMixin
 
-from dribdat.extensions import bcrypt
+from dribdat.extensions import hashing
 from dribdat.database import (
     Column,
     db,
@@ -48,10 +48,10 @@ class User(UserMixin, SurrogatePK, Model):
             self.set_password(password)
 
     def set_password(self, password):
-        self.password = bcrypt.generate_password_hash(password)
+        self.password = hashing.hash_value(password)
 
     def check_password(self, value):
-        return bcrypt.check_password_hash(self.password, value)
+        return hashing.check_value(self.password, value)
 
     def __repr__(self):
         return '<User({username!r})>'.format(username=self.username)

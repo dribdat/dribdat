@@ -6,7 +6,7 @@ from flaskext.markdown import Markdown
 from dribdat.settings import ProdConfig
 from dribdat.assets import assets
 from dribdat.extensions import (
-    bcrypt,
+    hashing,
     cache,
     db,
     login_manager,
@@ -35,7 +35,7 @@ def create_app(config_object=ProdConfig):
 
 def register_extensions(app):
     assets.init_app(app)
-    bcrypt.init_app(app)
+    hashing.init_app(app)
     cache.init_app(app)
     db.init_app(app)
     login_manager.init_app(app)

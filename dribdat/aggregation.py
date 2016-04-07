@@ -4,6 +4,7 @@
 import re
 import requests
 from base64 import b64decode
+from pyquery import PyQuery as pq
 
 from dribdat.user.models import Activity
 from dribdat.database import db
@@ -28,6 +29,22 @@ def GetProjectData(url):
             'homepage_url': json['homepage'],
             'source_url': json['html_url'],
             'image_url': json['owner']['avatar_url'],
+        }
+    elif url.find('//make.opendata.ch/wiki') > 0:
+        data = requests.get(url)
+        if data.text.find('<div class="dw-content">') < 0: return {}
+        doc = pq(data.text)
+        content = doc("div.dw-content")
+        if len(content) < 1: return {}
+        ptitle = doc("p.pageId span")
+        if len(ptitle) < 1: return {}
+        return {
+            'name': ptitle.text().replace('project:', ''),
+            # 'summary': json['description'],
+            'description': content.html(),
+            # 'homepage_url': url,
+            # 'source_url': json['html_url'],
+            # 'image_url': json['owner']['avatar_url'],
         }
     return {}
 
