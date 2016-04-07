@@ -68,7 +68,7 @@
     {% for category in current_event.categories %}
     <div category-id="{{category.id}}" style="display:none">
       <h4>{{ category.name }} projects</h4>
-      {{ category.description }}
+      {{ category.description|markdown }}
     </div>
     {% endfor %}
   </div>
