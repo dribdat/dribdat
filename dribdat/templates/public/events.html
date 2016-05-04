@@ -16,7 +16,7 @@
       </i></div>
       <div class="panel panel-default">
         <div class="panel-body">
-          {{event.description}}
+          {{event.description|markdown}}
         </div>
       </div>
       <p><a class="btn btn-primary" href="{{ url_for('public.event', event_id=event.id) }}">Browse projects</a></p>
