@@ -8,7 +8,7 @@
   <h2>
     <a href="{{ url_for('public.event', event_id=current_event.id) }}">{{current_event.name}}</a>
   </h2>
-  <p>{{current_event.description}}</p>
+  <p>{{current_event.description|markdown}}</p>
   <center>
     <p>
       <a href="{{ current_event.webpage_url }}" class="btn btn-primary">How to join &raquo;</a>
