@@ -4,7 +4,11 @@
 
 {% block content %}
 <div class="container event-page">
-  <h1>Project board</h1>
+  {% if current_event.has_started %}
+    <h1>Project board</h1>
+  {% else %}
+    <h1>The Challenges</h1>
+  {% endif %}
 
   <!-- Based on Hexagon Tiles by Graham Pyne http://codepen.io/gpyne/pen/iElhp/ -->
   <div class="honeycomb">
