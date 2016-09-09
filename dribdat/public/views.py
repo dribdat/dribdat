@@ -12,6 +12,8 @@ from dribdat.utils import flash_errors
 from dribdat.database import db
 from dribdat.aggregation import GetProjectData, ProjectActivity
 
+from datetime import datetime
+
 blueprint = Blueprint('public', __name__, static_folder="../static")
 
 def get_current_event():
@@ -105,6 +107,7 @@ def events():
 @blueprint.route("/event/<int:event_id>")
 def event(event_id):
     event = Event.query.filter_by(id=event_id).first_or_404()
+    event.has_started = e.starts_at <= datetime.utcnow()
     projects = Project.query.filter_by(event_id=event_id, is_hidden=False)
     return render_template("public/event.html",  current_event=event, projects=projects)
 
