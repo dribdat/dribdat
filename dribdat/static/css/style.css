@@ -188,8 +188,8 @@ nav .fa-comment {
 .project-tools .progress-bar {
   min-width: 2em;
 }
-.hexagon:nth-child(2) { background-color: #f0e0a2; }
-.hexagon:nth-child(3) { background-color: #adddcf; }
+.hexagon:nth-child(even) { background-color: #f0e0a2; }
+.hexagon:nth-child(odd) { background-color: #adddcf; }
 
 .project-page .project-team {
   font-weight: normal;
