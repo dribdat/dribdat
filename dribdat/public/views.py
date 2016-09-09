@@ -17,7 +17,9 @@ from datetime import datetime
 blueprint = Blueprint('public', __name__, static_folder="../static")
 
 def get_current_event():
-    return Event.query.filter_by(is_current=True).first()
+    event = Event.query.filter_by(is_current=True).first()
+    event.has_started = e.starts_at <= datetime.utcnow()
+    return event
 
 @login_manager.user_loader
 def load_user(id):
