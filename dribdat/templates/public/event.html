@@ -10,6 +10,39 @@
     <h1>The Challenges</h1>
   {% endif %}
 
+    <center class="nav-categories">
+      <div class="btn-group" data-toggle="buttons" role="group" aria-label="Filter by category">
+        <label class="btn btn-default active">
+          <input type="radio" name="category" id="" autocomplete="off" checked>
+            <i class="fa fa-cubes"></i><br>
+            <span> </span>
+        </label>
+      {% for category in current_event.categories %}
+        <label class="btn btn-default">
+          <input type="radio" name="category" id="{{category.id}}" autocomplete="off">
+            {% if category.logo_icon %}
+              <i class="fa fa-{{category.logo_icon}}"></i><br>
+            {% endif %}
+            <span>{{ category.name }}</span>
+        </label>
+      {% endfor %}
+        <label class="btn btn-default">
+          <input type="radio" name="category" id="list" autocomplete="off">
+            <i class="fa fa-list"></i><br>
+            <span> </span>
+        </label>
+      </div>
+    </center>
+
+    <div class="category-info">
+      {% for category in current_event.categories %}
+      <div category-id="{{category.id}}" style="display:none">
+        <h3>{{ category.name }}</h3>
+        {{ category.description|markdown }}
+      </div>
+      {% endfor %}
+    </div>
+
   <!-- Based on Hexagon Tiles by Graham Pyne http://codepen.io/gpyne/pen/iElhp/ -->
   <div class="honeycomb">
     <div class="ibws-fix">
@@ -33,39 +66,6 @@
       {% endif %}
     {% endfor %}
     </div>
-  </div>
-
-  <center class="nav-categories">
-    <div class="btn-group" data-toggle="buttons" role="group" aria-label="Filter by category">
-      <label class="btn btn-default active">
-        <input type="radio" name="category" id="" autocomplete="off" checked>
-          <i class="fa fa-cubes"></i><br>
-          <span> </span>
-      </label>
-    {% for category in current_event.categories %}
-      <label class="btn btn-default">
-        <input type="radio" name="category" id="{{category.id}}" autocomplete="off">
-          {% if category.logo_icon %}
-            <i class="fa fa-{{category.logo_icon}}"></i><br>
-          {% endif %}
-          <span>{{ category.name }}</span>
-      </label>
-    {% endfor %}
-      <label class="btn btn-default">
-        <input type="radio" name="category" id="list" autocomplete="off">
-          <i class="fa fa-list"></i><br>
-          <span> </span>
-      </label>
-    </div>
-  </center>
-
-  <div class="category-info">
-    {% for category in current_event.categories %}
-    <div category-id="{{category.id}}" style="display:none">
-      <h4>{{ category.name }} projects</h4>
-      {{ category.description|markdown }}
-    </div>
-    {% endfor %}
   </div>
 
   {% if current_event.has_started %}
