@@ -17,9 +17,7 @@ class RegisterForm(Form):
                              validators=[DataRequired(), Length(min=6, max=40)])
     confirm = PasswordField('Verify password',
                             [DataRequired(), EqualTo('password', message='Passwords must match')])
-    # DRIBDAT fields
-    teamname = TextField(u'Team name')
-    webpage_url = TextField(u'Team web link')
+    webpage_url = TextField(u'Online profile')
 
     def __init__(self, *args, **kwargs):
         """Create instance."""

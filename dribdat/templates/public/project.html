@@ -37,14 +37,6 @@
         <i class="fa fa-{{project.logo_icon}}"></i>
       {% endif %}
 
-      {% if project.user.teamname %}
-      <span class="project-team">
-        <a href="{{project.user.webpage_url}}" target="_blank">
-          {{ project.user.teamname }}
-        </a> /
-      </span>
-      {% endif %}
-
       {{project.name}}
     </h2>
 
@@ -80,7 +72,7 @@
         <span>{{ project.updated_at|format_date }}</span>
         <br>
         Maintained by:
-        <b>{{ project.user.username }}</b>
+        <b><a href="{{project.user.webpage_url}}" target="_blank">{{ project.user.username }}</a></b>
         {% if current_user and current_user.is_authenticated and current_user.id == project.user_id %}
           <a href="{{ url_for('public.project_edit', project_id=project.id) }}" class="btn btn-success btn-sm">edit</a>
         {% endif %}

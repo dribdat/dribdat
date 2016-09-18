@@ -146,7 +146,7 @@ def event_projects(event_id):
 def project(project_id):
     project = Project.query.filter_by(id=project_id).first_or_404()
     form = ProjectForm(obj=project, next=request.args.get('next'))
-    form.user_id.choices = [(e.id, "%s (%s)" % (e.username, e.teamname)) for e in User.query.order_by('username')]
+    form.user_id.choices = [(e.id, "%s" % (e.username)) for e in User.query.order_by('username')]
     form.event_id.choices = [(e.id, e.name) for e in Event.query.order_by('name')]
     form.category_id.choices = [(c.id, c.name) for c in project.categories_all()]
 
@@ -193,7 +193,7 @@ def project_delete(project_id):
 def project_new():
     project = Project()
     form = ProjectForm(obj=project, next=request.args.get('next'))
-    form.user_id.choices = [(e.id, "%s (%s)" % (e.username, e.teamname)) for e in User.query.order_by('username')]
+    form.user_id.choices = [(e.id, "%s" % (e.username)) for e in User.query.order_by('username')]
     form.event_id.choices = [(e.id, e.name) for e in Event.query.order_by('name')]
     form.category_id.choices = [(c.id, c.name) for c in project.categories_all()]
 

@@ -66,15 +66,12 @@ def register():
         form.username.data = request.args.get('name')
     if request.args.get('email'):
         form.email.data = request.args.get('email')
-    if request.args.get('team'):
-        form.teamname.data = request.args.get('team')
     if request.args.get('web'):
         form.webpage_url.data = request.args.get('web')
     if form.validate_on_submit():
         new_user = User.create(
                         username=form.username.data,
                         email=form.email.data,
-                        teamname=form.teamname.data,
                         webpage_url=form.webpage_url.data,
                         password=form.password.data,
                         active=True)

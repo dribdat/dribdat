@@ -10,9 +10,8 @@
         <thead>
             <tr>
               <th>Username</th>
-              <th>Name</th>
-              <th>Admin?</th>
               <th>Created</th>
+              <th>Admin</th>
             </tr>
         </thead>
         {% for user in users %}
@@ -25,13 +24,8 @@
                 E-mail
               </a>]
             </td>
-            <td>
-              <a href="mailto:{{ user.webpage_url }}">
-                {{ user.teamname }}
-              </a>
-            </td>
-            <td>{{ user.is_admin }}</td>
             <td>{{ user.created_at|format_date }}</td>
+            <td>{{ user.is_admin }}</td>
         </tr>
         {% endfor %}
     </table>

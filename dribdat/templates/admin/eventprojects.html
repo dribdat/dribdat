@@ -16,14 +16,6 @@
           <i class="fa fa-{{project.logo_icon}}"></i>
         {% endif %}
 
-        {% if project.user.teamname %}
-        <span class="project-team">
-          <a href="{{project.user.webpage_url}}" target="_blank">
-            {{ project.user.teamname }}
-          </a> /
-        </span>
-        {% endif %}
-
         {{project.name}}
       </h2>
 
@@ -45,7 +37,7 @@
       <li>Source: <a href="{{ project.source_url }}">{{ project.source_url }}</a></li>
       {% endif %}
       <li>Last update: <span>{{ project.updated_at|format_date }}</span></li>
-      <li>Maintainer: {{ project.user.username }} &lt;{{ project.user.email }}&gt;</li>
+      <li>Maintainer: <a href="{{project.user.webpage_url}}" target="_blank">{{ project.user.username }}</a></li>
       {% if project.category_id %}
         <li>Category: <span>{{ project.category.name }}</span></li>
       {% endif %}

@@ -44,8 +44,7 @@ class LoginForm(Form):
 
 class UserForm(Form):
     email = StringField(u'E-mail', [required(), length(max=80)])
-    teamname = StringField(u'Team name', [length(max=80)], description="A name that identifies your team, if you have one")
-    webpage_url = StringField(u'Team web link', [length(max=128)], description="A website, GitHub or Twitter account of your team")
+    webpage_url = StringField(u'Online profile', [length(max=128)], description="URL to a website, GitHub/Twitter,.. of your team")
     password = PasswordField(u'New password', [length(max=128)])
     submit = SubmitField(u'Save')
 

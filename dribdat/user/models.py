@@ -38,7 +38,6 @@ class User(UserMixin, SurrogatePK, Model):
     __tablename__ = 'users'
     username = Column(db.String(80), unique=True, nullable=False)
     email = Column(db.String(80), unique=True, nullable=False)
-    teamname = Column(db.String(128), nullable=True)
     webpage_url = Column(db.String(128), nullable=True)
     #: The hashed password
     password = Column(db.String(128), nullable=True)
