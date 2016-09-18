@@ -29,7 +29,7 @@ export DRIBDAT_SECRET='something-really-secret'
 Then run the following commands to bootstrap your environment.
 
 ```
-git clone https://github.com/loleg/dribdat
+git clone https://github.com/datalets/dribdat
 cd dribdat
 pip install -r requirements/dev.txt
 python manage.py server
@@ -82,6 +82,6 @@ For a full migration command reference, run `python manage.py db --help`.
 
 ## Credits
 
-Developed by [Oleg Lavrovsky](http://github.com/loleg) based on [Steven Loria's flask-cookiecutter](https://github.com/sloria/cookiecutter-flask).
+Developed by [Oleg Lavrovsky](http://datalets.ch) based on [Steven Loria's flask-cookiecutter](https://github.com/sloria/cookiecutter-flask).
 
 With thanks to [Swisscom](http://swisscom.com)'s F. Wieser and M.-C. Gasser for conceptual inputs and financial support of the first release of this project.
