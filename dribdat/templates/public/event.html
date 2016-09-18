@@ -1,16 +1,12 @@
 {% extends "layout.html" %}
 
-{% block page_title %}{{current_event.name}} Project Board{% endblock %}
+{% block page_title %}{{current_event.name}} / {% if current_event.has_started %} Project Board {% else %} The Challenges {% endif %}{% endblock %}
 
 {% block content %}
 <div class="container event-page">
-  {% if current_event.has_started %}
-    <h1>Project board</h1>
-  {% else %}
-    <h1>The Challenges</h1>
-  {% endif %}
 
     <center class="nav-categories">
+
       <div class="btn-group" data-toggle="buttons" role="group" aria-label="Filter by category">
         <label class="btn btn-default active">
           <input type="radio" name="category" id="" autocomplete="off" checked>
@@ -33,15 +29,6 @@
         </label>
       </div>
     </center>
-
-    <div class="category-info">
-      {% for category in current_event.categories %}
-      <div category-id="{{category.id}}" style="display:none">
-        <h3>{{ category.name }}</h3>
-        {{ category.description|markdown }}
-      </div>
-      {% endfor %}
-    </div>
 
   <!-- Based on Hexagon Tiles by Graham Pyne http://codepen.io/gpyne/pen/iElhp/ -->
   <div class="honeycomb">
@@ -78,6 +65,16 @@
     {% endif %}
   </div>
   {% endif %}
+
+    <div class="category-info">
+      {% for category in current_event.categories %}
+      <div category-id="{{category.id}}" style="display:none">
+        <h3>{{ category.name }}</h3>
+        {{ category.description|markdown }}
+      </div>
+      {% endfor %}
+    </div>
+
 </div>
 
 <div class="jumbotron event-page">
