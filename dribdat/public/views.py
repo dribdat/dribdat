@@ -22,8 +22,9 @@ def get_current_event():
     return event
 
 @login_manager.user_loader
-def load_user(id):
-    return User.get_by_id(int(id))
+def load_user(user_id):
+    """Load user by ID."""
+    return User.get_by_id(int(user_id))
 
 @blueprint.route("/")
 def home():
@@ -50,6 +51,7 @@ def login():
 @blueprint.route('/logout/')
 @login_required
 def logout():
+    """Logout."""
     logout_user()
     flash('You are logged out.', 'info')
     return redirect(url_for('public.home'))
@@ -57,6 +59,7 @@ def logout():
 
 @blueprint.route("/register/", methods=['GET', 'POST'])
 def register():
+    """Register new user."""
     form = RegisterForm(request.form, csrf_enabled=False)
     if request.args.get('name'):
         form.username.data = request.args.get('name')

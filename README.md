@@ -88,6 +88,6 @@ For a full migration command reference, run `python manage.py db --help`.
 
 ## Credits
 
-Developed by [Oleg Lavrovsky](http://github.com/loleg) based on [Steven Loria](http://github.com/sloria/)'s [cookiecutter](http://github.com/audreyr/cookiecutter/) template.
+Developed by [Oleg Lavrovsky](http://github.com/loleg) based on [Steven Loria's flask-cookiecutter](https://github.com/sloria/cookiecutter-flask).
 
 With thanks to [Swisscom](http://swisscom.com)'s F. Wieser and M.-C. Gasser for conceptual inputs and financial support of the first release of this project.

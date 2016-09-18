@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+"""Application assets."""
 from flask_assets import Bundle, Environment
 
 css = Bundle(
@@ -22,5 +23,5 @@ js = Bundle(
 
 assets = Environment()
 
-assets.register("js_all", js)
-assets.register("css_all", css)
+assets.register('js_all', js)
+assets.register('css_all', css)
