@@ -9,7 +9,7 @@ from dribdat.database import (
     Column,
     db,
     Model,
-    ReferenceCol,
+    reference_col,
     relationship,
     SurrogatePK,
 )
@@ -135,15 +135,15 @@ class Project(SurrogatePK, Model):
     is_hidden = Column(db.Boolean(), default=False)
 
     # User who created the project
-    user_id = ReferenceCol('users', nullable=True)
+    user_id = reference_col('users', nullable=True)
     user = relationship('User', backref='projects')
 
     # Event under which this project belongs
-    event_id = ReferenceCol('events', nullable=True)
+    event_id = reference_col('events', nullable=True)
     event = relationship('Event', backref='projects')
 
     # And the optional event category
-    category_id = ReferenceCol('categories', nullable=True)
+    category_id = reference_col('categories', nullable=True)
     category = relationship('Category', backref='projects')
 
     def categories_all(self):
@@ -183,7 +183,7 @@ class Category(SurrogatePK, Model):
     logo_icon = Column(db.String(20), nullable=True)
 
     # If specific to an event
-    event_id = ReferenceCol('events', nullable=True)
+    event_id = reference_col('events', nullable=True)
     event = relationship('Event', backref='categories')
 
     def __init__(self, name=None, **kwargs):
@@ -203,9 +203,9 @@ class Activity(SurrogatePK, Model):
         name="activity_type"))
     timestamp = Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)
     score = Column(db.Integer(), nullable=True, default=0)
-    user_id = ReferenceCol('users', nullable=False)
+    user_id = reference_col('users', nullable=False)
     user = relationship('User', backref='activities')
-    project_id = ReferenceCol('projects', nullable=False)
+    project_id = reference_col('projects', nullable=False)
     project = relationship('Project', backref='activities')
 
     def __init__(self, name, user_id, project_id, **kwargs):

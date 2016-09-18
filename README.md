@@ -10,17 +10,11 @@ See [DRIBD.AT](http://dribd.at) for more information.
 
 Instructions to set up a development instance of this platform follow. This project is ready for fast deployment to [Heroku](http://heroku.com). You will need to set the following configuration variables:
 
-* `SERVER_URL` - fully qualified domain name where the site is hosted, e.g. minotaur-realm-1234.herokuapp.com or your custom domain name
+* `SERVER_URL` - fully qualified domain name where the site is hosted
 * `DRIBDAT_ENV` - 'dev' to enable debugging, 'prod' to optimise assets etc.
 * `DRIBDAT_DB` - if you are using the Postgres add-on, this would be postgres://username:password@...
 * `DATABASE_URL` - same as above - needed only for Heroku to recognise the database, set automatically if you use tools
 * `DRIBDAT_SECRET` - a long scary string for hashing your passwords
-
-We have used [OpBeat](https://opbeat.com/) and their new Flask metrics to track performance and logging. If you would like to enable this, set these as per their documentation:
-
-* `OPBEAT_APP_ID`
-* `OPBEAT_ORGANIZATION_ID`
-* `OPBEAT_SECRET_TOKEN`
 
 Once your app is deployed on Heroku, create a user and use the shell commands below to become an administrator.
 

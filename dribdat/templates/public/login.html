@@ -7,6 +7,7 @@
   <h1>Log in</h1>
   <br/>
   <form id="loginForm" method="POST" class="navbar-form form-inline navbar-right" action="/login/" role="login">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
     {{ form.hidden_tag() }}
     <div class="form-group">
       {{ form.username(placeholder="Username", class_="form-control") }}
