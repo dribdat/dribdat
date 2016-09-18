@@ -12,12 +12,8 @@
   <center>
     <p>
       <a href="{{ current_event.webpage_url }}" class="btn btn-primary">How to join &raquo;</a>
-      <a href="{{ url_for('public.event', event_id=current_event.id) }}" class="btn btn-default"><b>To the
-        {% if current_event.has_started %}
-          projects
-        {% else %}
-          challenges
-        {% endif %}
+      <a href="{{ url_for('public.event', event_id=current_event.id) }}" class="btn btn-default"><b>
+        Projects &amp; challenges
       </b></a>
       {% if current_user and current_user.is_authenticated and current_event.has_started %}
         <a href="{{ url_for('public.project_new') }}" class="btn btn-success">Start a project!</a>

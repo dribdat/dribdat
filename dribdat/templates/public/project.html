@@ -10,15 +10,6 @@
     {% endif %}
 
     <div class="project-tools">
-      {% if project.category_id %}
-      <a href="{{ url_for('public.event', event_id=project.event.id) }}" class="btn btn-default project-category" style="background-color:#{{project.category.logo_color}}">
-        {% if project.category.logo_icon %}
-          <i class="fa fa-{{project.category.logo_icon}}"></i><br>
-        {% endif %}
-        <span>{{ project.category.name }}</span>
-      </a><br>
-      {% endif %}
-
       <div class="progress" title="A score based on profile completeness and voting results">
         <div class="progress-bar" role="progressbar" aria-valuenow="{{project.score}}" aria-valuemin="0" aria-valuemax="70" style="width:{{project.score}}%">
           {{project.score}}
@@ -38,6 +29,17 @@
       {% endif %}
 
       {{project.name}}
+
+      {% if project.category_id %}
+      <div style="font-size:80%">
+        <a href="{{ url_for('public.event', event_id=project.event.id) }}">
+          {% if project.category.logo_icon %}
+          <i class="fa fa-{{project.category.logo_icon}}"></i>
+          <span>{{ project.category.name }}</span>
+          {% endif %}
+        </a>
+      </div>
+      {% endif %}
     </h2>
 
     {% if github_project %}
@@ -78,8 +80,11 @@
         {% endif %}
       </p>
       <p class="started-at">
-        <small>Launched at <b>{{ project.event.name }}</b></small>
-        <a href="{{ url_for('public.event', event_id=project.event.id) }}" class="btn btn-sm btn-default">&laquo; all projects</a>
+        <small>Launched at
+          <a href="{{ url_for('public.event', event_id=project.event.id) }}">
+            <b>{{ project.event.name }}</b>
+          </a>
+        </small>
       </p>
     </div>
   </div>
