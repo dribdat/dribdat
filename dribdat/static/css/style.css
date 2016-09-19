@@ -245,3 +245,10 @@ nav .fa-comment {
 .container.with-event {
   margin-top: 120px;
 }
+
+.team-gravatar img {
+  margin-right: 5px;
+  margin-bottom: 5px;
+  padding: 2px;
+  border: 2px solid #eee;
+}

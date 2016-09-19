@@ -53,7 +53,7 @@ def GetProjectScore(project):
     cqu = Activity.query.filter_by(project_id=project.id)
     c_s = cqu.filter_by(name="star").count()
     score = score + (2 * c_s)
-    c_a = cqu.filter_by(name="award").count()
+    c_a = cqu.filter_by(name="boost").count()
     score = score + (10 * c_a)
     if len(project.summary) > 3: score = score + 3
     if len(project.image_url) > 3: score = score + 3
@@ -66,6 +66,19 @@ def GetProjectScore(project):
     if len(project.longtext) > 500: score = score + 10
     return score
 
+def IsProjectStarred(project, current_user):
+    return Activity.query.filter_by(
+        name='star',
+        project_id=project.id,
+        user_id=current_user.id
+    ).count() > 0
+
+def GetProjectTeam(project):
+    return Activity.query.filter_by(
+        name='star',
+        project_id=project.id
+    ).all()
+
 def ProjectActivity(project, of_type, current_user):
     activity = Activity(
         name=of_type,
@@ -73,16 +86,28 @@ def ProjectActivity(project, of_type, current_user):
         user_id=current_user.id
     )
     score = 0
+    allstars = Activity.query.filter_by(
+        name='star',
+        project_id=project.id,
+        user_id=current_user.id
+    )
     if of_type == 'star':
         score = 2
-        if Activity.query.filter_by(
-            name=of_type,
-            project_id=project.id,
-            user_id=current_user.id
-        ).count() > 0:
+        if allstars.count() > 0:
             return # One star per user
-    if of_type == 'award':
+    elif of_type == 'unstar':
+        score = 2
+        if allstars.count() > 0:
+            allstars[0].delete()
+        if current_user.is_admin:
+            score = 10
+        project.score = project.score - score
+        project.save()
+        return
+    # Admin stars give projects special awards
+    if of_type == 'star' and current_user.is_admin:
         score = 10
-    activity.score = score + GetProjectScore(project)
+    project.score = project.score + score
+    project.save()
     db.session.add(activity)
     db.session.commit()

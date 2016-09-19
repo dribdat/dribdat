@@ -7,7 +7,8 @@ os_env = os.environ
 class Config(object):
     """Base configuration."""
 
-    SECRET_KEY = os.environ.get('DRIBDAT_SECRET', 'jaNo-Ol771--yS6se87-2y')
+    SECRET_KEY = os_env.get('DRIBDAT_SECRET', 'jaNo-Ol771--yS6se87-2y')
+    DISCOURSE_KEY = os_env.get('DRIBDAT_DISCOURSE', None)
     APP_DIR = os.path.abspath(os.path.dirname(__file__))  # This directory
     PROJECT_ROOT = os.path.abspath(os.path.join(APP_DIR, os.pardir))
     ASSETS_DEBUG = False

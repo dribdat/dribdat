@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """User models."""
 import datetime as dt
+import urllib, hashlib
 
 from flask_login import UserMixin
 
@@ -44,6 +45,22 @@ class User(UserMixin, SurrogatePK, Model):
     created_at = Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)
     active = Column(db.Boolean(), default=False)
     is_admin = Column(db.Boolean(), default=False)
+
+    github = Column(db.String(80), nullable=True)
+    twitter = Column(db.String(80), nullable=True)
+    gravatar = Column(db.String(80), nullable=True)
+
+    def socialize(self):
+        if 'github.com/' in self.webpage_url:
+            self.github = self.webpage_url.strip('/').split('/')[-1]
+        if 'twitter.com/' in self.webpage_url:
+            self.twitter = self.webpage_url.strip('/').split('/')[-1]
+        gr_default = "http://opendata.ch/wordpress/files/2014/07/opendata-logo-noncircle.png"
+        gr_size = 40
+        gravatar_url = hashlib.md5(self.email.lower()).hexdigest() + "?"
+        gravatar_url += urllib.urlencode({'d':gr_default, 's':str(gr_size)})
+        self.gravatar = gravatar_url
+        self.save()
 
     def __init__(self, username=None, email=None, password=None, **kwargs):
         """Create instance."""
@@ -152,10 +169,8 @@ class Project(SurrogatePK, Model):
     def categories_event(self):
         return Category.query.filter_by(event_id=self.event_id).order_by('name')
 
-    @property
-    def score(self):
-        if not self.activities: return 0
-        return self.activities[-1].score
+    # Current tally
+    score = Column(db.Integer(), nullable=True, default=0)
 
     @property
     def data(self):
@@ -202,11 +217,10 @@ class Activity(SurrogatePK, Model):
     name = Column(db.Enum(
         'create',
         'update',
-        'award',
+        'boost',
         'star',
         name="activity_type"))
     timestamp = Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)
-    score = Column(db.Integer(), nullable=True, default=0)
     user_id = reference_col('users', nullable=False)
     user = relationship('User', backref='activities')
     project_id = reference_col('projects', nullable=False)

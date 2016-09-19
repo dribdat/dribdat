@@ -10,7 +10,7 @@ from dribdat.public.forms import LoginForm, UserForm, ProjectForm
 from dribdat.user.forms import RegisterForm
 from dribdat.utils import flash_errors
 from dribdat.database import db
-from dribdat.aggregation import GetProjectData, ProjectActivity
+from dribdat.aggregation import GetProjectData, ProjectActivity, IsProjectStarred, GetProjectTeam
 
 from datetime import datetime
 
@@ -41,7 +41,7 @@ def login():
     # Handle logging in
     if request.method == 'POST':
         if form.validate_on_submit():
-            login_user(form.user)
+            login_user(form.user, remember=True)
             flash("You are logged in.", 'success')
             redirect_url = request.args.get("next") or url_for("public.home")
             return redirect(redirect_url)
@@ -75,7 +75,13 @@ def register():
                         webpage_url=form.webpage_url.data,
                         password=form.password.data,
                         active=True)
-        flash("Thank you for registering. You can now log in and submit projects.", 'success')
+        new_user.socialize()
+        if User.query.count() == 1:
+            new_user.is_admin = True
+            new_user.save()
+            flash("Administrative user created - have fun with DRIBDAT!", 'success')
+        else:
+            flash("Thank you for registering. You can now log in and submit projects.", 'success')
         return redirect(url_for('public.login'))
     else:
         flash_errors(form)
@@ -86,7 +92,6 @@ def register():
 def user_profile():
     user = current_user
     form = UserForm(obj=user, next=request.args.get('next'))
-
     if form.validate_on_submit():
         originalhash = user.password
         form.populate_obj(user)
@@ -96,7 +101,7 @@ def user_profile():
             user.password = originalhash
         db.session.add(user)
         db.session.commit()
-
+        user.socialize()
         flash('Profile updated.', 'success')
     return render_template('public/user.html', user=user, form=form)
 
@@ -116,9 +121,7 @@ def event(event_id):
 
 @blueprint.route('/project/<int:project_id>')
 def project(project_id):
-    project = Project.query.filter_by(id=project_id).first_or_404()
-    event = project.event
-    return render_template('public/project.html', current_event=event, project=project)
+    return project_action(project_id, None)
 
 @blueprint.route('/project/<int:project_id>/edit', methods=['GET', 'POST'])
 @login_required
@@ -127,7 +130,7 @@ def project_edit(project_id):
     event = project.event
     if project.user_id != current_user.id:
         flash('You do not have access to edit this project.', 'warning')
-        return render_template('public/project.html', current_event=event, project=project)
+        return project_action(project_id, None)
     form = ProjectForm(obj=project, next=request.args.get('next'))
     form.category_id.choices = [(c.id, c.name) for c in project.categories_all()]
     form.category_id.choices.insert(0, (-1, ''))
@@ -137,18 +140,30 @@ def project_edit(project_id):
         db.session.add(project)
         db.session.commit()
         flash('Project updated.', 'success')
-        ProjectActivity(project, 'update', current_user)
-        return render_template('public/project.html', current_event=event, project=project)
+        return project_action(project_id, 'update')
     return render_template('public/projectedit.html', current_event=event, project=project, form=form)
+
+def project_action(project_id, of_type):
+    project = Project.query.filter_by(id=project_id).first_or_404()
+    event = project.event
+    if of_type is not None:
+        ProjectActivity(project, of_type, current_user)
+    project_starred = current_user and current_user.is_authenticated and IsProjectStarred(project, current_user)
+    project_stars = GetProjectTeam(project)
+    return render_template('public/project.html', current_event=event, project=project,
+        project_starred=project_starred, project_stars=project_stars)
 
 @blueprint.route('/project/<int:project_id>/star', methods=['GET', 'POST'])
 @login_required
 def project_star(project_id):
-    project = Project.query.filter_by(id=project_id).first_or_404()
-    event = project.event
-    ProjectActivity(project, 'star', current_user)
     flash('Thanks for your support!', 'success')
-    return render_template('public/project.html', current_event=event, project=project)
+    return project_action(project_id, 'star')
+
+@blueprint.route('/project/<int:project_id>/unstar', methods=['GET', 'POST'])
+@login_required
+def project_unstar(project_id):
+    flash('Project un-starred', 'success')
+    return project_action(project_id, 'unstar')
 
 @blueprint.route('/project/new', methods=['GET', 'POST'])
 @login_required
@@ -166,8 +181,7 @@ def project_new():
         db.session.add(project)
         db.session.commit()
         flash('Project added.', 'success')
-        ProjectActivity(project, 'create', current_user)
-        return render_template('public/project.html', current_event=event, project=project)
+        return project_action(project_id, 'create')
     return render_template('public/projectnew.html', current_event=event, form=form)
 
 
