@@ -86,6 +86,7 @@ def ProjectActivity(project, of_type, current_user):
         user_id=current_user.id
     )
     score = 0
+    if project.score is None: project.score = 0
     allstars = Activity.query.filter_by(
         name='star',
         project_id=project.id,
