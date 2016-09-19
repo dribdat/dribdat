@@ -19,7 +19,7 @@ blueprint = Blueprint('public', __name__, static_folder="../static")
 def get_current_event():
     event = Event.query.filter_by(is_current=True).first()
     if event is not None:
-        event.has_started = event.starts_at <= datetime.utcnow()
+        event.has_started = event.starts_at <= datetime.utcnow() <= event.ends_at
     return event
 
 @login_manager.user_loader
