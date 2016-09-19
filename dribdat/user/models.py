@@ -185,6 +185,11 @@ class Category(SurrogatePK, Model):
     event_id = reference_col('events', nullable=True)
     event = relationship('Event', backref='categories')
 
+    @property
+    def project_count(self):
+        if not self.projects: return 0
+        return len(self.projects)
+
     def __init__(self, name=None, **kwargs):
         if name:
             db.Model.__init__(self, name=name, **kwargs)

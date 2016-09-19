@@ -24,6 +24,9 @@ class UserForm(Form):
 class EventForm(Form):
     next = HiddenField()
     name = StringField(u'Title', [required(), length(max=80)])
+    starts_at = DateTimeField(u'Starts at', description="2020-09-25 09:00:00")
+    ends_at = DateTimeField(u'Finishes at', description="2020-09-26 17:00:00")
+    is_current = BooleanField(u'Current event shown on homepage', default=False)
     hostname = StringField(u'Hosted by', [length(max=80)])
     location = StringField(u'Located at', [length(max=255)])
     description = TextAreaField(u'Description')
@@ -32,9 +35,6 @@ class EventForm(Form):
     webpage_url = StringField(u'Home page link', [length(max=255)])
     community_url = StringField(u'Community link', [length(max=255)])
     community_embed = TextAreaField(u'Community embed code')
-    starts_at = DateTimeField(u'Starts at')
-    ends_at = DateTimeField(u'Finishes at')
-    is_current = BooleanField(u"Current event on homepage", default=False)
     submit = SubmitField(u'Save')
 
 class ProjectForm(Form):

@@ -6,5 +6,21 @@
 <div class="container">
     <h2>Update project</h2>
     {{ render_form(url_for('admin.project', project_id=project.id), form) }}
+
+    <hr>
+    
+    {% if project.is_hidden %}
+    <a href="{{ url_for('admin.project_toggle', project_id=project.id) }}" class="btn btn-sm btn-warning">
+      Enable
+    </a>
+      <a href="{{ url_for('admin.project_delete', project_id=project.id) }}" class="btn btn-sm"
+      onclick="if(!window.confirm('Are you sure you wish to delete this project?')) return false">
+      Delete
+    </a>
+    {% else %}
+    <a href="{{ url_for('admin.project_toggle', project_id=project.id) }}" class="btn btn-sm">
+      Disable
+    </a>
+    {% endif %}
 </div>
 {% endblock %}

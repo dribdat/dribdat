@@ -119,6 +119,22 @@ def event_new():
 
     return render_template('admin/eventnew.html', form=form)
 
+@blueprint.route('/event/<int:event_id>/delete', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def event_delete(event_id):
+    event = Event.query.filter_by(id=event_id).first_or_404()
+    if event.is_current:
+        flash('Event must not be set as current in order to delete.', 'warning')
+    elif len(event.categories) > 0:
+        flash('No categories may be assigned to event in order to delete.', 'warning')
+    elif len(event.projects) > 0:
+        flash('No projects may be assigned to event in order to delete.', 'warning')
+    else:
+        event.delete()
+        flash('Event deleted.', 'success')
+    return events()
+
 ##############
 ##############
 ##############
@@ -128,17 +144,34 @@ def event_new():
 @login_required
 @admin_required
 def projects():
-    projects = Project.query.all()
+    # TODO: pagination...
+    projects = Project.query.order_by(Project.id.desc()).all()
     return render_template('admin/projects.html', projects=projects, active='projects')
+
+@blueprint.route('/category/<int:category_id>/projects')
+@login_required
+@admin_required
+def category_projects(category_id):
+    category = Category.query.filter_by(id=category_id).first_or_404()
+    projects = Project.query.filter_by(category_id=category_id).order_by(Project.id.desc())
+    return render_template('admin/projects.html', projects=projects, category_name=category.name, active='projects')
 
 @blueprint.route('/event/<int:event_id>/projects')
 @login_required
 @admin_required
 def event_projects(event_id):
+    event = Event.query.filter_by(id=event_id).first_or_404()
+    projects = Project.query.filter_by(event_id=event_id).order_by(Project.id.desc())
+    return render_template('admin/projects.html', projects=projects, event_name=event.name, active='projects')
+
+@blueprint.route('/event/<int:event_id>/print')
+@login_required
+@admin_required
+def event_print(event_id):
     now = datetime.datetime.utcnow().strftime("%d.%m.%Y %H:%M")
     event = Event.query.filter_by(id=event_id).first_or_404()
     projects = Project.query.filter_by(event_id=event_id, is_hidden=False).order_by(Project.name)
-    return render_template('admin/eventprojects.html', event=event, projects=projects, curdate=now, active='projects')
+    return render_template('admin/eventprint.html', event=event, projects=projects, curdate=now, active='projects')
 
 @blueprint.route('/project/<int:project_id>', methods=['GET', 'POST'])
 @login_required
@@ -216,7 +249,7 @@ def project_new():
 @login_required
 @admin_required
 def categories():
-    categories = Category.query.all()
+    categories = Category.query.order_by(Category.id.desc()).all()
     return render_template('admin/categories.html', categories=categories, active='categories')
 
 
@@ -261,3 +294,16 @@ def category_new():
         return categories()
 
     return render_template('admin/categorynew.html', form=form)
+
+
+@blueprint.route('/category/<int:category_id>/delete', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def category_delete(category_id):
+    category = Category.query.filter_by(id=category_id).first_or_404()
+    if len(category.projects) > 0:
+        flash('No projects may be assigned to category in order to delete.', 'warning')
+    else:
+        category.delete()
+        flash('Category deleted.', 'success')
+    return categories()
