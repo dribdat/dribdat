@@ -46,20 +46,23 @@ class User(UserMixin, SurrogatePK, Model):
     active = Column(db.Boolean(), default=False)
     is_admin = Column(db.Boolean(), default=False)
 
-    github = Column(db.String(80), nullable=True)
-    twitter = Column(db.String(80), nullable=True)
-    gravatar = Column(db.String(80), nullable=True)
+    cardtype = Column(db.String(10), nullable=True)
+    carddata = Column(db.String(80), nullable=True)
 
     def socialize(self):
         if 'github.com/' in self.webpage_url:
-            self.github = self.webpage_url.strip('/').split('/')[-1]
-        if 'twitter.com/' in self.webpage_url:
-            self.twitter = self.webpage_url.strip('/').split('/')[-1]
-        gr_default = "http://opendata.ch/wordpress/files/2014/07/opendata-logo-noncircle.png"
-        gr_size = 40
-        gravatar_url = hashlib.md5(self.email.lower()).hexdigest() + "?"
-        gravatar_url += urllib.urlencode({'d':gr_default, 's':str(gr_size)})
-        self.gravatar = gravatar_url
+            self.cardtype = 'github'
+            self.carddata = self.webpage_url.strip('/').split('/')[-1]
+        elif 'twitter.com/' in self.webpage_url:
+            self.cardtype = 'twitter'
+            self.carddata = self.webpage_url.strip('/').split('/')[-1]
+        else:
+            gr_default = "http://opendata.ch/wordpress/files/2014/07/opendata-logo-noncircle.png"
+            gr_size = 40
+            gravatar_url = hashlib.md5(self.email.lower()).hexdigest() + "?"
+            gravatar_url += urllib.urlencode({'d':gr_default, 's':str(gr_size)})
+            self.cardtype = 'gravatar'
+            self.carddata = gravatar_url
         self.save()
 
     def __init__(self, username=None, email=None, password=None, **kwargs):

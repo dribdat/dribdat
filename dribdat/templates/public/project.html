@@ -91,19 +91,19 @@
         </small>
       </p>
       {% for activity in project_stars %}
-        {% if activity.user.github %}
-          <div class="github-card" data-user="{{activity.user.github}}"
+        {% if activity.user.cardtype == 'github' %}
+          <div class="github-card" data-user="{{activity.user.carddata}}"
             data-theme="medium"></div>
           <script src="//cdn.jsdelivr.net/github-cards/latest/widget.js"></script>
-        {% elif activity.user.twitter %}
+        {% elif activity.user.cardtype == 'twitter' %}
           <a class="twitter-follow-button"
-            href="https://twitter.com/{{activity.user.twitter}}"
+            href="https://twitter.com/{{activity.user.carddata}}"
             data-size="large" data-show-count="true">
-            @{{activity.user.twitter}}</a>
+            @{{activity.user.carddata}}</a>
             <script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
         {% else %}
           <a href="{{activity.user.webpage_url}}" title="{{activity.user.username}}" alt=":-)" target="_blank" class="team-gravatar">
-            <img align="left" width="40" height="40" src="https://www.gravatar.com/avatar/{{activity.user.gravatar}}"/>
+            <img align="left" width="40" height="40" src="https://www.gravatar.com/avatar/{{activity.user.carddata}}"/>
           </a>
         {% endif %}
       {% endfor %}
