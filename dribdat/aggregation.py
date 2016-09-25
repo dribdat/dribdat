@@ -22,6 +22,7 @@ def GetProjectData(url):
         readmedata = requests.get(readmeurl)
         if readmedata.text.find('{') < 0: return {}
         readme = readmedata.json()
+        if not 'content' in readme: return {}
         return {
             'name': json['name'],
             'summary': json['description'],
