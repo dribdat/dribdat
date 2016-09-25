@@ -50,7 +50,7 @@ class UserForm(Form):
 
 class ProjectForm(Form):
     category_id = SelectField(u'Category / challenge', coerce=int, description="Optional")
-    AUTOTEXT__HELP = u"Optional: enter URL of a GitHub project to populate the following fields automatically."
+    AUTOTEXT__HELP = u"Optional: URL of GitHub project with a README or a DokuWiki page to fill these fields with."
     autotext_url = StringField(u'Autofill link', [length(max=255)], description=AUTOTEXT__HELP)
     name = StringField(u'Title', [required(), length(max=80)], description="Required, you may change this any time")
     summary = StringField(u'Short summary', [length(max=120)], description="Optional, max. 120 characters")
