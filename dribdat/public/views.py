@@ -181,7 +181,7 @@ def project_new():
         db.session.add(project)
         db.session.commit()
         flash('Project added.', 'success')
-        return project_action(project_id, 'create')
+        return project_action(project.id, 'create')
     return render_template('public/projectnew.html', current_event=event, form=form)
 
 
