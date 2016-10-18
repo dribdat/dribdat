@@ -95,6 +95,7 @@ class Event(SurrogatePK, Model):
     logo_url = Column(db.String(255), nullable=True)
     custom_css = Column(db.UnicodeText(), nullable=True)
 
+    hashtag = Column(db.String(255), nullable=True)
     webpage_url = Column(db.String(255), nullable=True)
     community_url = Column(db.String(255), nullable=True)
     community_embed = Column(db.UnicodeText(), nullable=True)
