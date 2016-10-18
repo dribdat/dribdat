@@ -1,25 +1,17 @@
 # -*- coding: utf-8 -*-
-"""Extensions module. Each extension is initialized in the app factory located
-in app.py
-"""
-
-from flask.ext.hashing import Hashing
-hashing = Hashing()
-
-from flask_login import LoginManager
-login_manager = LoginManager()
-
-from flask_sqlalchemy import SQLAlchemy
-db = SQLAlchemy()
-
-from flask_migrate import Migrate
-migrate = Migrate()
-
-from flask_cache import Cache
-cache = Cache()
-
+"""Extensions module. Each extension is initialized in the app factory located in app.py."""
+from flask_hashing import Hashing
+from flask_caching import Cache
 from flask_debugtoolbar import DebugToolbarExtension
-debug_toolbar = DebugToolbarExtension()
+from flask_login import LoginManager
+from flask_migrate import Migrate
+from flask_sqlalchemy import SQLAlchemy
+from flask_wtf.csrf import CsrfProtect
 
-from opbeat.contrib.flask import Opbeat
-opbeat = Opbeat()
+hashing = Hashing()
+csrf_protect = CsrfProtect()
+login_manager = LoginManager()
+db = SQLAlchemy()
+migrate = Migrate()
+cache = Cache()
+debug_toolbar = DebugToolbarExtension()

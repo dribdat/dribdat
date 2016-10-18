@@ -12,14 +12,18 @@ from dribdat.user.models import User
 from wtforms.validators import AnyOf, required, length
 
 class LoginForm(Form):
-    username = TextField('Username', validators=[DataRequired()])
+    """Login form."""
+
+    username = StringField('Username', validators=[DataRequired()])
     password = PasswordField('Password', validators=[DataRequired()])
 
     def __init__(self, *args, **kwargs):
+        """Create instance."""
         super(LoginForm, self).__init__(*args, **kwargs)
         self.user = None
 
     def validate(self):
+        """Validate the form."""
         initial_validation = super(LoginForm, self).validate()
         if not initial_validation:
             return False
@@ -40,14 +44,13 @@ class LoginForm(Form):
 
 class UserForm(Form):
     email = StringField(u'E-mail', [required(), length(max=80)])
-    teamname = StringField(u'Team name', [length(max=80)], description="A name that identifies your team, if you have one")
-    webpage_url = StringField(u'Team web link', [length(max=128)], description="A website, GitHub or Twitter account of your team")
+    webpage_url = StringField(u'Online profile', [length(max=128)], description="URL to a GitHub / Twitter profile, or other website")
     password = PasswordField(u'New password', [length(max=128)])
     submit = SubmitField(u'Save')
 
 class ProjectForm(Form):
     category_id = SelectField(u'Category / challenge', coerce=int, description="Optional")
-    AUTOTEXT__HELP = u"Optional: enter URL of a GitHub project to populate the following fields automatically."
+    AUTOTEXT__HELP = u"Optional: URL of GitHub project with a README or a DokuWiki page to fill these fields with."
     autotext_url = StringField(u'Autofill link', [length(max=255)], description=AUTOTEXT__HELP)
     name = StringField(u'Title', [required(), length(max=80)], description="Required, you may change this any time")
     summary = StringField(u'Short summary', [length(max=120)], description="Optional, max. 120 characters")

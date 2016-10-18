@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
+"""User models."""
 import datetime as dt
+import urllib, hashlib
 
 from flask_login import UserMixin
 
@@ -8,7 +10,7 @@ from dribdat.database import (
     Column,
     db,
     Model,
-    ReferenceCol,
+    reference_col,
     relationship,
     SurrogatePK,
 )
@@ -19,41 +21,67 @@ from sqlalchemy import or_
 class Role(SurrogatePK, Model):
     __tablename__ = 'roles'
     name = Column(db.String(80), unique=True, nullable=False)
-    user_id = ReferenceCol('users', nullable=True)
+    user_id = reference_col('users', nullable=True)
     user = relationship('User', backref='roles')
 
     def __init__(self, name, **kwargs):
+        """Create instance."""
         db.Model.__init__(self, name=name, **kwargs)
 
     def __repr__(self):
+        """Represent instance as a unique string."""
         return '<Role({name})>'.format(name=self.name)
 
 
 class User(UserMixin, SurrogatePK, Model):
+    """A user of the app."""
 
     __tablename__ = 'users'
     username = Column(db.String(80), unique=True, nullable=False)
     email = Column(db.String(80), unique=True, nullable=False)
-    teamname = Column(db.String(128), nullable=True)
     webpage_url = Column(db.String(128), nullable=True)
+    #: The hashed password
     password = Column(db.String(128), nullable=True)
     created_at = Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)
     active = Column(db.Boolean(), default=False)
     is_admin = Column(db.Boolean(), default=False)
 
+    cardtype = Column(db.String(10), nullable=True)
+    carddata = Column(db.String(255), nullable=True)
+
+    def socialize(self):
+        if 'github.com/' in self.webpage_url:
+            self.cardtype = 'github'
+            self.carddata = self.webpage_url.strip('/').split('/')[-1]
+        elif 'twitter.com/' in self.webpage_url:
+            self.cardtype = 'twitter'
+            self.carddata = self.webpage_url.strip('/').split('/')[-1]
+        else:
+            gr_default = "http://opendata.ch/wordpress/files/2014/07/opendata-logo-noncircle.png"
+            gr_size = 40
+            gravatar_url = hashlib.md5(self.email.lower()).hexdigest() + "?"
+            gravatar_url += urllib.urlencode({'d':gr_default, 's':str(gr_size)})
+            self.cardtype = 'gravatar'
+            self.carddata = gravatar_url
+        self.save()
+
     def __init__(self, username=None, email=None, password=None, **kwargs):
+        """Create instance."""
         if username and email:
             db.Model.__init__(self, username=username, email=email, **kwargs)
         if password:
             self.set_password(password)
 
     def set_password(self, password):
+        """Set password."""
         self.password = hashing.hash_value(password)
 
     def check_password(self, value):
+        """Check password."""
         return hashing.check_value(self.password, value)
 
     def __repr__(self):
+        """Represent instance as a unique string."""
         return '<User({username!r})>'.format(username=self.username)
 
 
@@ -126,15 +154,15 @@ class Project(SurrogatePK, Model):
     is_hidden = Column(db.Boolean(), default=False)
 
     # User who created the project
-    user_id = ReferenceCol('users', nullable=True)
+    user_id = reference_col('users', nullable=True)
     user = relationship('User', backref='projects')
 
     # Event under which this project belongs
-    event_id = ReferenceCol('events', nullable=True)
+    event_id = reference_col('events', nullable=True)
     event = relationship('Event', backref='projects')
 
     # And the optional event category
-    category_id = ReferenceCol('categories', nullable=True)
+    category_id = reference_col('categories', nullable=True)
     category = relationship('Category', backref='projects')
 
     def categories_all(self):
@@ -144,10 +172,8 @@ class Project(SurrogatePK, Model):
     def categories_event(self):
         return Category.query.filter_by(event_id=self.event_id).order_by('name')
 
-    @property
-    def score(self):
-        if not self.activities: return 0
-        return self.activities[-1].score
+    # Current tally
+    score = Column(db.Integer(), nullable=True, default=0)
 
     @property
     def data(self):
@@ -174,8 +200,13 @@ class Category(SurrogatePK, Model):
     logo_icon = Column(db.String(20), nullable=True)
 
     # If specific to an event
-    event_id = ReferenceCol('events', nullable=True)
+    event_id = reference_col('events', nullable=True)
     event = relationship('Event', backref='categories')
+
+    @property
+    def project_count(self):
+        if not self.projects: return 0
+        return len(self.projects)
 
     def __init__(self, name=None, **kwargs):
         if name:
@@ -189,14 +220,13 @@ class Activity(SurrogatePK, Model):
     name = Column(db.Enum(
         'create',
         'update',
-        'award',
+        'boost',
         'star',
         name="activity_type"))
     timestamp = Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)
-    score = Column(db.Integer(), nullable=True, default=0)
-    user_id = ReferenceCol('users', nullable=False)
+    user_id = reference_col('users', nullable=False)
     user = relationship('User', backref='activities')
-    project_id = ReferenceCol('projects', nullable=False)
+    project_id = reference_col('projects', nullable=False)
     project = relationship('Project', backref='activities')
 
     def __init__(self, name, user_id, project_id, **kwargs):
