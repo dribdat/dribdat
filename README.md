@@ -4,7 +4,7 @@
 
 **DRIBDAT (Driven By Data) is an open platform for data-driven team collaboration, such as Hackathons.** It works as a website and project board for running exciting, productive events..with Impact Factor. We created this after using plain wikis and forums for years, and trying out a few proprietary tools that we felt limited us in one way or another.
 
-See [DRIBD.AT](http://dribd.at) for more information.
+[Visit this page](https://datalets.ch/dribdat/iot-2015/project/23/) for more background.
 
 ## Deployment Quickstart
 
@@ -29,7 +29,7 @@ export DRIBDAT_SECRET='something-really-secret'
 Then run the following commands to bootstrap your environment.
 
 ```
-git clone https://github.com/datalets/dribdat
+git clone https://github.com/loleg/dribdat
 cd dribdat
 pip install -r requirements/dev.txt
 python manage.py server
