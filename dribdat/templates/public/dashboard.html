@@ -32,7 +32,7 @@
 
 	{% if current_event.hashtag %}
   <div style="position:absolute; top: 10%; right: 8%; width:245px;">
-    <a class="twitter-timeline" height="400" href="https://twitter.com/hashtag/{{ current_event.hashtag }}" data-widget-id="662809470599364608">{{ current_event.hashtag }}-Tweets</a>
+    <a class="twitter-timeline" height="400" href="https://twitter.com/hashtag/{{ current_event.hashtag }}">{{ current_event.hashtag }}-Tweets</a>
     <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
   </div>
 	{% endif %}
@@ -45,7 +45,7 @@
 
 <div class="section section-centered section-header" style="zoom:0.75">
     <div class="section-header-logo">
-        <img src="{{ event.logo_url }}"/>
+        <img src="{{ current_event.logo_url }}"/>
     </div>
     <div class="header-line"></div>
     <div class="section-header-content">
