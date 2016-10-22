@@ -46,7 +46,7 @@ class User(UserMixin, SurrogatePK, Model):
     active = Column(db.Boolean(), default=False)
     is_admin = Column(db.Boolean(), default=False)
 
-    cardtype = Column(db.String(10), nullable=True)
+    cardtype = Column(db.String(80), nullable=True)
     carddata = Column(db.String(255), nullable=True)
 
     def socialize(self):

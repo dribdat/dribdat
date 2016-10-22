@@ -78,6 +78,10 @@
 </div>
 
 <div class="jumbotron event-page">
+  {% if current_event.countdown %}
+  <div class="event-countdown" data-start="{{ current_event.countdown }}"></div>
+  {% endif %}
+  
   <p>
     <small>{{current_event.description|markdown}}</small><br>
     <a href="{{ current_event.webpage_url }}" class="btn btn-sm btn-primary">More information &raquo;</a>

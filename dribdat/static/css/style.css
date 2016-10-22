@@ -237,9 +237,12 @@ nav .fa-comment {
   text-align: right;
 }
 .category-info {
-  padding: 0 5em;
-  margin-top: 5em;
+  padding: 0 1em;
+  margin-top: 3em;
   text-align: left;
+}
+.category-info img {
+  width: 100%;
 }
 
 .container.with-event {
