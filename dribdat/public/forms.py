@@ -44,13 +44,13 @@ class LoginForm(Form):
 
 class UserForm(Form):
     email = StringField(u'E-mail', [required(), length(max=80)])
-    webpage_url = StringField(u'Online profile', [length(max=128)], description="URL to a GitHub / Twitter profile, or other website")
+    webpage_url = StringField(u'Online profile', [length(max=128)], description="URL to a GitHub/Twitter profile, or another personal website")
     password = PasswordField(u'New password', [length(max=128)])
     submit = SubmitField(u'Save')
 
 class ProjectForm(Form):
-    category_id = SelectField(u'Category / challenge', coerce=int, description="Optional")
-    AUTOTEXT__HELP = u"Optional: URL of GitHub project with a README or a DokuWiki page to fill these fields with."
+    category_id = SelectField(u'Category / challenge', coerce=int)
+    AUTOTEXT__HELP = u"Link to a GitHub or wiki page from which to update the following fields."
     autotext_url = StringField(u'Autofill link', [length(max=255)], description=AUTOTEXT__HELP)
     name = StringField(u'Title', [required(), length(max=80)], description="Required, you may change this any time")
     summary = StringField(u'Short summary', [length(max=120)], description="Optional, max. 120 characters")
