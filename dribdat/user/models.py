@@ -105,6 +105,17 @@ class Event(SurrogatePK, Model):
     is_current = Column(db.Boolean(), default=False)
 
     @property
+    def data(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'hostname': self.hostname,
+            'location': self.location,
+            'starts_at': self.starts_at,
+            'ends_at': self.ends_at,
+        }
+
+    @property
     def countdown(self):
         if self.starts_at > dt.datetime.utcnow():
             return self.starts_at
