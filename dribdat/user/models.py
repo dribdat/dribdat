@@ -212,8 +212,8 @@ class Project(SurrogatePK, Model):
         cqu = Activity.query.filter_by(project_id=self.id)
         c_s = cqu.filter_by(name="star").count()
         score = score + (2 * c_s)
-        c_a = cqu.filter_by(name="boost").count()
-        score = score + (10 * c_a)
+        # c_a = cqu.filter_by(name="boost").count()
+        # score = score + (10 * c_a)
         if len(self.summary) > 3: score = score + 3
         if len(self.image_url) > 3: score = score + 3
         if len(self.source_url) > 3: score = score + 10
@@ -266,7 +266,7 @@ class Activity(SurrogatePK, Model):
     name = Column(db.Enum(
         'create',
         'update',
-        'boost',
+        # 'boost',
         'star',
         name="activity_type"))
     timestamp = Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)
