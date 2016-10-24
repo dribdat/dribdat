@@ -214,8 +214,6 @@ nav .fa-comment {
 .hexagon {
   background-size: cover;
   background-position: center;
-  transform: scale(1.2);
-  zoom: 1.2;
 }
 .hexagon:nth-child(even) { background-color: #f0e0a2; }
 .hexagon:nth-child(odd) { background-color: #adddcf; }
