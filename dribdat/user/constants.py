@@ -31,6 +31,14 @@ PROJECT_PROGRESS = {
     PR_LAUNCHED:    'The prototype has been launched and shared',
     PR_LIVE:        'This project is now live and publicly available',
 }
+PROJECT_PROGRESS_PHASE = {
+    PR_NEW:         'Researching',
+    PR_RESEARCHED:  'Sketching',
+    PR_SKETCHED:    'Prototyping',
+    PR_PROTOTYPED:  'Launching',
+    PR_LAUNCHED:    'Promoting',
+    PR_LIVE:        'Supporting',
+}
 def projectProgressList():
     pl = [(g, PROJECT_PROGRESS[g]) for g in PROJECT_PROGRESS]
     return sorted(pl, key=lambda x: x[0])

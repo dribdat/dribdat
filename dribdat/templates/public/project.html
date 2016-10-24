@@ -10,6 +10,7 @@
     {% endif %}
 
     <div class="project-tools">
+      <div style="float:left"><span class="label label-info">{{ project.phase }}</span></div>
       <div class="progress" title="A score based on profile completeness and voting results">
         <div class="progress-bar" role="progressbar" aria-valuenow="{{project.score}}" aria-valuemin="0" aria-valuemax="70" style="width:{{project.score}}%">
           {{project.score}}

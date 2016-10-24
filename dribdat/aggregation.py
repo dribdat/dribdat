@@ -49,24 +49,6 @@ def GetProjectData(url):
         }
     return {}
 
-def GetProjectScore(project):
-    score = 0
-    cqu = Activity.query.filter_by(project_id=project.id)
-    c_s = cqu.filter_by(name="star").count()
-    score = score + (2 * c_s)
-    c_a = cqu.filter_by(name="boost").count()
-    score = score + (10 * c_a)
-    if len(project.summary) > 3: score = score + 3
-    if len(project.image_url) > 3: score = score + 3
-    if len(project.source_url) > 3: score = score + 10
-    if len(project.webpage_url) > 3: score = score + 10
-    if len(project.logo_color) > 3: score = score + 1
-    if len(project.logo_icon) > 3: score = score + 1
-    if len(project.longtext) > 3: score = score + 1
-    if len(project.longtext) > 100: score = score + 4
-    if len(project.longtext) > 500: score = score + 10
-    return score
-
 def IsProjectStarred(project, current_user):
     return Activity.query.filter_by(
         name='star',

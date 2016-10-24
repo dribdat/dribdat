@@ -15,6 +15,8 @@ from dribdat.database import (
     SurrogatePK,
 )
 
+from dribdat.user import PROJECT_PROGRESS_PHASE
+
 from sqlalchemy import or_
 
 
@@ -187,6 +189,9 @@ class Project(SurrogatePK, Model):
 
     # Self-assessment
     progress = Column(db.Integer(), nullable=True, default=0)
+    @property
+    def phase(self):
+        return PROJECT_PROGRESS_PHASE[self.progress]
 
     # Current tally
     score = Column(db.Integer(), nullable=True, default=0)
@@ -200,6 +205,31 @@ class Project(SurrogatePK, Model):
             'summary': self.summary,
             'image_url': self.image_url,
         }
+
+    def update(self):
+        # Calculate score based on base progress
+        score = self.progress
+        cqu = Activity.query.filter_by(project_id=self.id)
+        c_s = cqu.filter_by(name="star").count()
+        score = score + (2 * c_s)
+        c_a = cqu.filter_by(name="boost").count()
+        score = score + (10 * c_a)
+        if len(self.summary) > 3: score = score + 3
+        if len(self.image_url) > 3: score = score + 3
+        if len(self.source_url) > 3: score = score + 10
+        if len(self.webpage_url) > 3: score = score + 10
+        if len(self.logo_color) > 3: score = score + 1
+        if len(self.logo_icon) > 3: score = score + 1
+        if len(self.longtext) > 3: score = score + 1
+        if len(self.longtext) > 100: score = score + 4
+        if len(self.longtext) > 500: score = score + 10
+        self.score = score
+        # Correct fields
+        if self.category_id == -1: self.category_id = None
+        if self.logo_icon.startswith('fa-'):
+            self.logo_icon = self.logo_icon.replace('fa-', '')
+        # Set the timestamp
+        self.updated_at = dt.datetime.utcnow()
 
     def __init__(self, name=None, **kwargs):
         if name:

@@ -138,11 +138,7 @@ def project_edit(project_id):
     form.category_id.choices.insert(0, (-1, ''))
     if form.validate_on_submit():
         form.populate_obj(project)
-        if project.category_id == -1:
-            project.category_id = None
-        if project.logo_icon.startswith('fa-'):
-            project.logo_icon = project.logo_icon.replace('fa-', '')
-        project.updated_at = datetime.utcnow()
+        project.update()
         db.session.add(project)
         db.session.commit()
         flash('Project updated.', 'success')
@@ -183,7 +179,7 @@ def project_new():
     if form.validate_on_submit():
         form.populate_obj(project)
         project.event = event
-        if project.category_id == -1: project.category_id = None
+        project.update()
         db.session.add(project)
         db.session.commit()
         flash('Project added.', 'success')

@@ -219,7 +219,7 @@ def project(project_id):
 
     if form.validate_on_submit():
         form.populate_obj(project)
-        project.updated_at = datetime.datetime.utcnow()
+        project.update()
         db.session.add(project)
         db.session.commit()
         flash('Project updated.', 'success')
@@ -283,7 +283,7 @@ def project_autoupdate(project_id):
         if len(data['homepage_url']) > 0: project.webpage_url = data['homepage_url']
         if len(data['source_url']) > 0: project.source_url = data['source_url']
         if len(data['image_url']) > 0: project.image_url = data['image_url']
-        project.updated_at = datetime.datetime.utcnow()
+        project.update()
         db.session.add(project)
         db.session.commit()
         flash("Project [%s] updated." % project.name, 'success')
