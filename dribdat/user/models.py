@@ -191,6 +191,7 @@ class Project(SurrogatePK, Model):
     progress = Column(db.Integer(), nullable=True, default=0)
     @property
     def phase(self):
+        if self.progress is None: return ""
         return PROJECT_PROGRESS_PHASE[self.progress]
 
     # Current tally
