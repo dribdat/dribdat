@@ -228,6 +228,8 @@ class Project(SurrogatePK, Model):
         if self.category_id == -1: self.category_id = None
         if self.logo_icon.startswith('fa-'):
             self.logo_icon = self.logo_icon.replace('fa-', '')
+        if self.logo_color == '#000000':
+            self.logo_color = ''
         # Set the timestamp
         self.updated_at = dt.datetime.utcnow()
 
