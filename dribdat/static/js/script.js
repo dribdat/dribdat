@@ -17,9 +17,19 @@
 
   $('#autotext_url').each(function() {
 
+    var supported = false;
+    var toggleUpdateFields = function() {
+      var UPDATED_INPUTS = 'input#name, input#summary, textarea#longtext, input#webpage_url, input#source_url, input#image_url';
+      if (supported && $('#is_autoupdate').is(':checked')) {
+        $(UPDATED_INPUTS).parents('.form-group').hide();
+      } else {
+        $(UPDATED_INPUTS).parents('.form-group').show();
+      }
+    }
+
     var checkAutotext = function(val, $ind) {
       if (typeof val !== 'string') return;
-      var supported = (
+      supported = (
         val.indexOf('//github.com/') > 0 ||
         val.indexOf('//bitbucket.com/') > 0 ||
         val.indexOf('//make.opendata.ch/wiki/') > 0
@@ -30,6 +40,10 @@
         .css('color', (supported ? 'green' : 'red'));
       $ind.find('button')
         .css('visibility', (supported ? '' : 'hidden'));
+
+      // Check autoupdate field
+      toggleUpdateFields();
+      $('#is_autoupdate').click(toggleUpdateFields);
     };
 
     var $inputfield = $(this);
@@ -46,13 +60,14 @@
     $inputfield.on('keyup', function(e) {
       checkAutotext($inputfield.val(), $indicator);
     });
+
     $indicator.find('button').click(function(e) {
       e.preventDefault();
       e.stopPropagation();
       var url = $inputfield.val();
 
       if ($('input#name').val() &&
-          !window.confirm('Are you sure you wish to overwrite this form?'))
+          !window.confirm('All project fields (Title, etc.) will be overwritten with remote project data. Proceed?'))
             return;
 
       var $button = $(this);
@@ -71,6 +86,8 @@
       });
     });
 
+    // Make the custom color field HTML5 compatible
+    $('input#logo_color').attr('type', 'color');
   });
 
   $('.nav-categories .btn-group label').click(function() {

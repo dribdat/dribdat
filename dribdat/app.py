@@ -15,6 +15,7 @@ from dribdat.extensions import (
     debug_toolbar,
 )
 from dribdat.settings import ProdConfig
+from dribdat.utils import timesince
 
 
 def create_app(config_object=ProdConfig):
@@ -89,8 +90,8 @@ def register_commands(app):
 
 def register_filters(app):
     @app.template_filter()
-    def pretty_date(value):
-        return pretty_date(value)
+    def since_date(value):
+        return timesince(value)
     @app.template_filter()
     def format_date(value, format='%Y-%m-%d'):
         return value.strftime(format)

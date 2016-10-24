@@ -138,7 +138,11 @@ def project_edit(project_id):
     form.category_id.choices.insert(0, (-1, ''))
     if form.validate_on_submit():
         form.populate_obj(project)
-        if project.category_id == -1: project.category_id = None
+        if project.category_id == -1:
+            project.category_id = None
+        if project.logo_icon.startswith('fa-'):
+            project.logo_icon = project.logo_icon.replace('fa-', '')
+        project.updated_at = datetime.utcnow()
         db.session.add(project)
         db.session.commit()
         flash('Project updated.', 'success')
@@ -184,6 +188,8 @@ def project_new():
         db.session.commit()
         flash('Project added.', 'success')
         return project_action(project.id, 'create')
+    del form.logo_icon
+    del form.logo_color
     return render_template('public/projectnew.html', current_event=event, form=form)
 
 # API routine used to sync project data

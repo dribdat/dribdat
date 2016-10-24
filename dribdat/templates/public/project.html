@@ -3,7 +3,7 @@
 {% block page_title %}{{project.name}} ~{{project.event.name}}{% endblock %}
 
 {% block content %}
-<div class="jumbotron project-page" style="background-color:#{{project.logo_color}}">
+<div class="jumbotron project-page" style="background-color:{{project.logo_color}}">
   <div class="project-info">
     {% if project.image_url %}
       <img class="project-image" src="{{project.image_url}}">

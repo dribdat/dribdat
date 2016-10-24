@@ -15,6 +15,8 @@ import io, csv
 import json
 import datetime
 
+from ..aggregation import GetProjectData
+
 blueprint = Blueprint('admin', __name__, url_prefix='/admin')
 
 
@@ -217,10 +219,9 @@ def project(project_id):
 
     if form.validate_on_submit():
         form.populate_obj(project)
-
+        project.updated_at = datetime.datetime.utcnow()
         db.session.add(project)
         db.session.commit()
-
         flash('Project updated.', 'success')
         return projects()
 
@@ -261,17 +262,34 @@ def project_new():
     form.user_id.choices = [(e.id, "%s" % (e.username)) for e in User.query.order_by('username')]
     form.event_id.choices = [(e.id, e.name) for e in Event.query.order_by('name')]
     form.category_id.choices = [(c.id, c.name) for c in project.categories_all()]
-
     if form.validate_on_submit():
         form.populate_obj(project)
-
         db.session.add(project)
         db.session.commit()
-
         flash('Project added.', 'success')
         return projects()
-
     return render_template('admin/projectnew.html', form=form)
+
+@blueprint.route('/project/<int:project_id>/autoupdate')
+@login_required
+@admin_required
+def project_autoupdate(project_id):
+    project = Project.query.filter_by(id=project_id).first_or_404()
+    if not project.is_hidden and project.is_autoupdate:
+        data = GetProjectData(project.autotext_url)
+        if len(data['name']) > 0: project.name = data['name']
+        if len(data['summary']) > 0: project.summary = data['summary']
+        if len(data['description']) > 0: project.longtext = data['description']
+        if len(data['homepage_url']) > 0: project.webpage_url = data['homepage_url']
+        if len(data['source_url']) > 0: project.source_url = data['source_url']
+        if len(data['image_url']) > 0: project.image_url = data['image_url']
+        project.updated_at = datetime.datetime.utcnow()
+        db.session.add(project)
+        db.session.commit()
+        flash("Project [%s] updated." % project.name, 'success')
+        return projects()
+    flash("Project [%s] not updated." % project.name, 'warning')
+    return projects()
 
 ##############
 ##############

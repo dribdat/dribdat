@@ -158,7 +158,8 @@ class Project(SurrogatePK, Model):
     source_url = Column(db.String(255), nullable=True)
     webpage_url = Column(db.String(255), nullable=True)
     autotext_url = Column(db.String(255), nullable=True)
-    logo_color = Column(db.String(6), nullable=True)
+    is_autoupdate = Column(db.Boolean(), default=True)
+    logo_color = Column(db.String(7), nullable=True)
     logo_icon = Column(db.String(40), nullable=True)
     longtext = Column(db.UnicodeText(), nullable=False, default=u"")
     created_at = Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)
@@ -184,6 +185,9 @@ class Project(SurrogatePK, Model):
     def categories_event(self):
         return Category.query.filter_by(event_id=self.event_id).order_by('name')
 
+    # Self-assessment
+    progress = Column(db.Integer(), nullable=True, default=0)
+
     # Current tally
     score = Column(db.Integer(), nullable=True, default=0)
 
@@ -208,7 +212,7 @@ class Category(SurrogatePK, Model):
     __tablename__ = 'categories'
     name = Column(db.String(80), nullable=False)
     description = Column(db.UnicodeText(), nullable=True)
-    logo_color = Column(db.String(6), nullable=True)
+    logo_color = Column(db.String(7), nullable=True)
     logo_icon = Column(db.String(20), nullable=True)
 
     # If specific to an event

@@ -10,6 +10,7 @@ from wtforms.validators import DataRequired
 
 from dribdat.user.models import User
 from wtforms.validators import AnyOf, required, length
+from ..user import projectProgressList
 
 class LoginForm(Form):
     """Login form."""
@@ -50,8 +51,10 @@ class UserForm(Form):
 
 class ProjectForm(Form):
     category_id = SelectField(u'Category / challenge', coerce=int)
+    progress = SelectField(u'Progress', coerce=int, choices=projectProgressList())
     AUTOTEXT__HELP = u"Link to a GitHub or wiki page from which to update the following fields."
     autotext_url = StringField(u'Autofill link', [length(max=255)], description=AUTOTEXT__HELP)
+    is_autoupdate = BooleanField(u'Autoupdate project data using this link')
     name = StringField(u'Title', [required(), length(max=80)], description="Required, you may change this any time")
     summary = StringField(u'Short summary', [length(max=120)], description="Optional, max. 120 characters")
     longtext = TextAreaField(u'Full description', description="Optional, Markdown formatting allowed")
@@ -59,6 +62,6 @@ class ProjectForm(Form):
     webpage_url = StringField(u'Project home link', [length(max=255)], description="Optional")
     source_url = StringField(u'Source code link', [length(max=255)], description="Optional")
     image_url = StringField(u'Banner image link', [length(max=255)], description="Optional")
-    logo_color = StringField(u'Custom color (hexadecimal)', [length(max=6)], description='Optional, here is a color picker: http://color.hailpixel.com/')
-    logo_icon = StringField(u'Custom icon (Font Awesome)', [length(max=20)], description='Optional, pick an icon here: http://fortawesome.github.io/Font-Awesome/icons/')
+    logo_color = StringField(u'Custom color', [length(max=7)])
+    logo_icon = StringField(u'<a target="_blank" href="http://fontawesome.io/icons/#search">Custom icon</a>', [length(max=20)])
     submit = SubmitField(u'Save')
