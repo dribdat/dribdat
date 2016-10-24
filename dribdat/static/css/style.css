@@ -108,18 +108,36 @@ nav .fa-comment {
   position: relative;
 }
 
-.home-page h2 a {
+.home-page h2 {
   text-align: center;
   font-weight: bold;
-  color: #003;
 }
+
 .event-countdown {
   zoom: 0.8;
+  -moz-transform: scale(0.8);
   left: 50%;
-  position: relative;
-  margin-left: -312px;
   width: 100%;
-  margin-top: 50px;
+  height: 100px;
+  overflow: hidden;
+  position: relative;
+  margin-top: 10px;
+  margin-left: -400px;
+}
+.event-countdown .flip-clock-label {
+  display: none;
+}
+@media (max-width: 1280px) {
+  .event-countdown {
+    margin-left: -330px;
+  }
+}
+@media (max-width: 992px) {
+  .event-countdown {
+    left: inherit;
+    margin-left: 0px;
+    margin-top: 10px;
+  }
 }
 
 .community-embed { margin-top: 60px; }
@@ -132,6 +150,11 @@ nav .fa-comment {
   line-height: 0px;
   clear: none;
   display: inherit;
+}
+@media (max-width: 750px) {
+  .community-embed .fa-comment {
+    display: none !important;
+  }
 }
 
 .jumbotron.event-page {
@@ -187,6 +210,12 @@ nav .fa-comment {
 }
 .project-tools .progress-bar {
   min-width: 2em;
+}
+.hexagon {
+  background-size: cover;
+  background-position: center;
+  transform: scale(1.2);
+  zoom: 1.2;
 }
 .hexagon:nth-child(even) { background-color: #f0e0a2; }
 .hexagon:nth-child(odd) { background-color: #adddcf; }

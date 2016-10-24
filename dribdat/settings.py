@@ -17,7 +17,7 @@ class Config(object):
     CACHE_TYPE = 'simple'  # Can be "memcached", "redis", etc.
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     CACHE_TYPE = 'simple'  # Can be "memcached", "redis", etc.
-    SERVER_NAME = os_env.get('SERVER_URL', 'localhost:5000')
+    SERVER_NAME = os_env.get('SERVER_URL', '127.0.0.1:5000')
 
 class ProdConfig(Config):
     """Production configuration."""
