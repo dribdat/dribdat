@@ -77,6 +77,11 @@
         $indicator.find('i').css('color', 'green');
         $button.removeAttr('disabled').html('Update now');
 
+        if (typeof data.name == 'undefined' || data.name == '') {
+          window.alert('Project data could not be fetched - please check your link.')
+          return;
+        }
+
         $('input#name').val(data.name);
         $('input#summary').val(data.summary);
         $('textarea#longtext').html(data.description);
