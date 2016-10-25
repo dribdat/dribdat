@@ -325,6 +325,7 @@ def category(category_id):
     if form.validate_on_submit():
         form.populate_obj(category)
         if category.event_id == -1: category.event_id = None
+        if category.logo_color == '#000000': category.logo_color = ''
 
         db.session.add(category)
         db.session.commit()

@@ -9,14 +9,19 @@ def flash_errors(form, category='warning'):
         for error in errors:
             flash('{0} - {1}'.format(getattr(form, field).label.text, error), category)
 
-def timesince(dt, default="just now"):
+def timesince(dt, default="just now", until=False):
     """
     Returns string representing "time since" e.g.
     3 days ago, 5 hours ago etc.
     - from http://flask.pocoo.org/snippets/33/
     """
     now = datetime.utcnow()
-    diff = now - dt
+    if until:
+        diff = dt - now
+        suffix = "to go"
+    else:
+        diff = now - dt
+        suffix = "ago"
     periods = (
         (diff.days / 365, "year", "years"),
         (diff.days / 30, "month", "months"),
@@ -28,5 +33,5 @@ def timesince(dt, default="just now"):
     )
     for period, singular, plural in periods:
         if period:
-            return "%d %s ago" % (period, singular if period == 1 else plural)
+            return "%d %s %s" % (period, singular if period == 1 else plural, suffix)
     return default

@@ -93,6 +93,9 @@ def register_filters(app):
     def since_date(value):
         return timesince(value)
     @app.template_filter()
+    def until_date(value):
+        return timesince(value, default="now!", until=True)
+    @app.template_filter()
     def format_date(value, format='%Y-%m-%d'):
         return value.strftime(format)
 

@@ -90,11 +90,12 @@
         $('input#image_url').val(data.image_url);
       });
     });
-
-    // Make the custom color field HTML5 compatible
-    $('input#logo_color').attr('type', 'color');
   });
 
+  // Make the custom color field HTML5 compatible
+  $('input#logo_color[type=text]').attr('type', 'color');
+
+  // Clickable categories navigation
   $('.nav-categories .btn-group label').click(function() {
     var selected_id = $(this).find('input').attr('id');
     var $projects = $('.honeycomb .project');

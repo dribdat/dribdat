@@ -121,8 +121,8 @@ nav .fa-comment {
   height: 100px;
   overflow: hidden;
   position: relative;
-  margin-top: 10px;
-  margin-left: -400px;
+  margin-top: 20px;
+  margin-left: -355px;
 }
 .event-countdown .flip-clock-label {
   display: none;
@@ -188,6 +188,8 @@ nav .fa-comment {
   position: relative;
   transform: none;
   left: 30%;
+  width: auto;
+  text-align: left;
   margin-bottom: 10px;
 }
 .project.hexalist .hexagontent i.fa,
