@@ -18,8 +18,6 @@ blueprint = Blueprint('public', __name__, static_folder="../static")
 
 def get_current_event():
     event = Event.query.filter_by(is_current=True).first()
-    if event is not None:
-        event.has_started = event.starts_at <= datetime.utcnow() <= event.ends_at
     return event
 
 @login_manager.user_loader
@@ -113,7 +111,6 @@ def user_profile():
 @blueprint.route("/event/<int:event_id>")
 def event(event_id):
     event = Event.query.filter_by(id=event_id).first_or_404()
-    event.has_started = event.starts_at <= datetime.utcnow() <= event.ends_at
     projects = Project.query.filter_by(event_id=event_id, is_hidden=False)
     return render_template("public/event.html",  current_event=event, projects=projects)
 
@@ -191,3 +188,32 @@ def project_autofill():
     url = request.args.get('url')
     data = GetProjectData(url)
     return jsonify(data)
+
+@blueprint.route('/project/<int:project_id>/autoupdate')
+@login_required
+def project_autoupdate(project_id):
+    project = Project.query.filter_by(id=project_id).first_or_404()
+    if project.user_id != current_user.id or project.is_hidden or not project.is_autoupdate:
+        flash('You cannot sync this project.', 'warning')
+        return project_action(project_id, None)
+    data = GetProjectData(project.autotext_url)
+    if not 'name' in data:
+        flash("Project could not be synced: check the autoupdate link.", 'warning')
+        return project_action(project_id, None)
+    if len(data['name']) > 0:
+        project.name = data['name']
+    if 'summary' in data and len(data['summary']) > 0:
+        project.summary = data['summary']
+    if 'description' in data and len(data['description']) > 0:
+        project.longtext = data['description']
+    if 'homepage_url' in data and len(data['homepage_url']) > 0:
+        project.webpage_url = data['homepage_url']
+    if 'source_url' in data and len(data['source_url']) > 0:
+        project.source_url = data['source_url']
+    if 'image_url' in data and len(data['image_url']) > 0:
+        project.image_url = data['image_url']
+    project.update()
+    db.session.add(project)
+    db.session.commit()
+    flash("Project data synced.", 'success')
+    return project_action(project_id, 'update')

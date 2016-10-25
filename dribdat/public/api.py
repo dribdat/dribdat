@@ -45,13 +45,13 @@ def project_list_csv(event_id):
 # API: Outputs JSON of all recent activity
 @blueprint.route('/projects/activity.json')
 def projects_activity_json():
-    activities = [a.data for a in Activity.query.limit(30).all()]
+    activities = [a.data for a in Activity.query.order_by(Activity.id.desc()).limit(30).all()]
     return jsonify(activities=activities)
 
 # API: Outputs JSON of recent activity of a project
 @blueprint.route('/project/<int:project_id>/activity.json')
 def project_activity_json(project_id):
     project = Project.query.filter_by(id=project_id).first_or_404()
-    query = Activity.query.filter_by(project_id=project.id).limit(30).all()
+    query = Activity.query.filter_by(project_id=project.id).order_by(Activity.id.desc()).limit(30).all()
     activities = [a.data for a in query]
     return jsonify(project=project.data, activities=activities)

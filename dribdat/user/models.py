@@ -124,6 +124,10 @@ class Event(SurrogatePK, Model):
         }
 
     @property
+    def has_started(self):
+        return self.starts_at <= dt.datetime.utcnow() <= self.ends_at
+
+    @property
     def countdown(self):
         if self.starts_at > dt.datetime.utcnow():
             return self.starts_at

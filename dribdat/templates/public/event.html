@@ -78,7 +78,7 @@
         <h3>{{ category.name }}</h3>
         {{ category.description|markdown }}
         {% if current_user and current_user.is_authenticated and current_user.is_admin %}
-          <br><a href="{{ url_for('admin.category', category_id=category.id) }}" class="btn btn-success btn-sm">edit</a>
+          <br><a href="{{ url_for('admin.category', category_id=category.id) }}" class="btn btn-success btn-sm">Edit</a>
         {% endif %}
       </div>
       {% endfor %}
@@ -90,10 +90,10 @@
 
   <p>
     <small>{{current_event.description|markdown}}</small><br>
-    <a href="{{ url_for('public.home') }}">{{ current_event.countdown|until_date }}</a>
-    <a href="{{ current_event.webpage_url }}" class="btn btn-sm btn-primary">More information &raquo;</a>
+    <a href="{{ url_for('public.home') }}" class="btn btn-sm btn-primary">{{ current_event.countdown|until_date }}</a>
+    <a href="{{ current_event.webpage_url }}" class="btn btn-sm btn-default">Info &raquo;</a>
     {% if current_user and current_user.is_authenticated and current_user.is_admin %}
-      <a href="{{ url_for('admin.event', event_id=current_event.id) }}" class="btn btn-success btn-sm">edit</a>
+      <a href="{{ url_for('admin.event', event_id=current_event.id) }}" class="btn btn-success btn-sm">Edit</a>
     {% endif %}
   </p>
 

@@ -69,7 +69,13 @@
   </div>
   <p class="project-buttons">
     <a href="{{ project.webpage_url }}" class="btn btn-primary">Project homepage &raquo;</a>
-    <a href="{{ project.source_url }}" class="btn btn-success">Source code</a>
+    <a href="{{ project.source_url }}" class="btn btn-default">Source code &raquo;</a>
+    {% if current_user and current_user.is_authenticated and current_user.id == project.user_id %}
+       <a href="{{ url_for('public.project_edit', project_id=project.id) }}" class="btn btn-success">Edit</a>
+       {% if project.is_autoupdate %}
+        <a href="{{ url_for('public.project_autoupdate', project_id=project.id) }}" class="btn btn-warning">Sync</a>
+       {% endif %}
+    {% endif %}
   </p>
   <div class="panel panel-default community-embed">
     <div class="panel-body"><i class="fa fa-comment"></i>
@@ -84,9 +90,6 @@
         <br>
         Maintainer:
         <b><a href="{{project.user.webpage_url}}" target="_blank">{{ project.user.username }}</a></b>
-        {% if current_user and current_user.is_authenticated and current_user.id == project.user_id %}
-          <a href="{{ url_for('public.project_edit', project_id=project.id) }}" class="btn btn-success btn-sm">edit</a>
-        {% endif %}
       </p>
       {% if project_stars %}
         <p class="started-at">

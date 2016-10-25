@@ -245,29 +245,6 @@ def project_autodata(project_id):
     project = Project.query.filter_by(id=project_id).first_or_404()
     return jsonify(projectdata=GetProjectData(project.autotext_url))
 
-@blueprint.route('/project/<int:project_id>/autoupdate')
-@login_required
-@admin_required
-def project_autoupdate(project_id):
-    project = Project.query.filter_by(id=project_id).first_or_404()
-    if not project.is_hidden and project.is_autoupdate:
-        data = GetProjectData(project.autotext_url)
-        if not 'name' in data:
-            flash("Project [%s] could not be updated." % project.name, 'warning')
-            return projects()
-        if len(data['name']) > 0: project.name = data['name']
-        if len(data['summary']) > 0: project.summary = data['summary']
-        if len(data['description']) > 0: project.longtext = data['description']
-        if len(data['homepage_url']) > 0: project.webpage_url = data['homepage_url']
-        if len(data['source_url']) > 0: project.source_url = data['source_url']
-        if len(data['image_url']) > 0: project.image_url = data['image_url']
-        project.update()
-        db.session.add(project)
-        db.session.commit()
-        flash("Project [%s] updated." % project.name, 'success')
-        return projects()
-    flash("Project [%s] is not enabled for autoupdate." % project.name, 'warning')
-    return projects()
 
 ##############
 ##############
