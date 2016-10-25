@@ -29,7 +29,12 @@ def load_user(user_id):
 
 @blueprint.route("/")
 def home():
-    return render_template("public/home.html", current_event=get_current_event())
+    event = get_current_event()
+    if event is not None:
+        events = Event.query.filter(Event.id != event.id)
+    else:
+        events = Event.query.all()
+    return render_template("public/home.html", events=events, current_event=event)
 
 @blueprint.route("/about/")
 def about():
@@ -104,11 +109,6 @@ def user_profile():
         user.socialize()
         flash('Profile updated.', 'success')
     return render_template('public/user.html', user=user, form=form)
-
-@blueprint.route("/events")
-def events():
-    events = Event.query.all()
-    return render_template("public/events.html", current_event=get_current_event(), events=events)
 
 @blueprint.route("/event/<int:event_id>")
 def event(event_id):
