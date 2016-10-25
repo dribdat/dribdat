@@ -16,6 +16,7 @@ def timesince(dt, default="just now", until=False):
     - from http://flask.pocoo.org/snippets/33/
     """
     now = datetime.utcnow()
+    if dt is None: return ""
     if until:
         diff = dt - now
         suffix = "to go"
