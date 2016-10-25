@@ -35,10 +35,6 @@ def home():
 def about():
     return render_template("public/about.html", current_event=get_current_event())
 
-@blueprint.route("/dashboard/")
-def dashboard():
-    return render_template("public/dashboard.html", current_event=get_current_event())
-
 @blueprint.route("/login/", methods=["GET", "POST"])
 def login():
     form = LoginForm(request.form)

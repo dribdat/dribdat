@@ -30,7 +30,6 @@ class EventForm(Form):
     hostname = StringField(u'Hosted by', [length(max=80)])
     location = StringField(u'Located at', [length(max=255)])
     description = TextAreaField(u'Description')
-    hashtag = StringField(u'Hashtag', [length(max=80)])
     logo_url = StringField(u'Host logo link', [length(max=255)])
     custom_css = TextAreaField(u'Custom CSS')
     webpage_url = StringField(u'Home page link', [length(max=255)])
