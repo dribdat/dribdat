@@ -31,6 +31,26 @@ def GetProjectData(url):
             'source_url': json['html_url'],
             'image_url': json['owner']['avatar_url'],
         }
+    elif url.find('//bitbucket.org') > 0:
+        apiurl = re.sub(r'https?://bitbucket\.org', 'https://api.bitbucket.org/2.0/repositories', url)
+        if apiurl == url: return {}
+        data = requests.get(apiurl)
+        if data.text.find('{') < 0: return {}
+        json = data.json()
+        if not 'name' in json: return {}
+        readmedata = requests.get(url)
+        if readmedata.text.find('class="readme') < 0: return {}
+        doc = pq(readmedata.text)
+        content = doc("div.readme")
+        if len(content) < 1: return {}
+        return {
+            'name': json['name'],
+            'summary': json['description'],
+            'description': content.html().strip(),
+            'homepage_url': json['website'],
+            'source_url': url,
+            'image_url': json['project']['links']['avatar']['href'],
+        }
     elif url.find('//make.opendata.ch/wiki') > 0:
         data = requests.get(url)
         if data.text.find('<div class="dw-content">') < 0: return {}
@@ -42,7 +62,7 @@ def GetProjectData(url):
         return {
             'name': ptitle.text().replace('project:', ''),
             # 'summary': json['description'],
-            'description': content.html(),
+            'description': content.html().strip(),
             # 'homepage_url': url,
             # 'source_url': json['html_url'],
             # 'image_url': json['owner']['avatar_url'],

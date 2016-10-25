@@ -88,31 +88,33 @@
           <a href="{{ url_for('public.project_edit', project_id=project.id) }}" class="btn btn-success btn-sm">edit</a>
         {% endif %}
       </p>
-      <p class="started-at">
-        <small>Launched at
-          <a href="{{ url_for('public.event', event_id=project.event.id) }}">
-            <b>{{ project.event.name }}</b>
-          </a> by
-        </small>
-      </p>
-      {% for activity in project_stars %}
-        {% if activity.user.cardtype == 'github' %}
-          <div class="github-card" data-user="{{activity.user.carddata}}"
-            data-theme="medium"></div>
-          <script src="//cdn.jsdelivr.net/github-cards/latest/widget.js"></script>
-        {% elif activity.user.cardtype == 'twitter' %}
-          <a class="twitter-follow-button"
-            href="https://twitter.com/{{activity.user.carddata}}"
-            data-size="large" data-show-count="true">
-            @{{activity.user.carddata}}</a>
-            <script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
-        {% else %}
-          <a href="{{activity.user.webpage_url}}" title="{{activity.user.username}}" alt=":-)" target="_blank" class="team-gravatar">
-            <img align="left" width="40" height="40" src="https://www.gravatar.com/avatar/{{activity.user.carddata}}"/>
-          </a>
-        {% endif %}
-      {% endfor %}
-    </div>
+      {% if project_stars %}
+        <p class="started-at">
+          <small>Launched at
+            <a href="{{ url_for('public.event', event_id=project.event.id) }}">
+              <b>{{ project.event.name }}</b>
+            </a> by
+          </small>
+        </p>
+        {% for activity in project_stars %}
+          {% if activity.user.cardtype == 'github' %}
+            <div class="github-card" data-user="{{activity.user.carddata}}"
+              data-theme="medium"></div>
+            <script src="//cdn.jsdelivr.net/github-cards/latest/widget.js"></script>
+          {% elif activity.user.cardtype == 'twitter' %}
+            <a class="twitter-follow-button"
+              href="https://twitter.com/{{activity.user.carddata}}"
+              data-size="large" data-show-count="true">
+              @{{activity.user.carddata}}</a>
+              <script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+          {% else %}
+            <a href="{{activity.user.webpage_url}}" title="{{activity.user.username}}" alt=":-)" target="_blank" class="team-gravatar">
+              <img align="left" width="40" height="40" src="https://www.gravatar.com/avatar/{{activity.user.carddata}}"/>
+            </a>
+          {% endif %}
+        {% endfor %}
+      {% endif %}
+      </div>
   </div>
 </div><!-- /.jumbotron -->
 {% endblock %}

@@ -264,6 +264,7 @@ def project_new():
     form.category_id.choices = [(c.id, c.name) for c in project.categories_all()]
     if form.validate_on_submit():
         form.populate_obj(project)
+        project.update()
         db.session.add(project)
         db.session.commit()
         flash('Project added.', 'success')
