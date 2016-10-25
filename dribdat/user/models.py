@@ -2,6 +2,7 @@
 """User models."""
 import datetime as dt
 import urllib, hashlib
+from time import mktime
 
 from flask_login import UserMixin
 
@@ -18,7 +19,6 @@ from dribdat.database import (
 from dribdat.user import PROJECT_PROGRESS_PHASE
 
 from sqlalchemy import or_
-
 
 class Role(SurrogatePK, Model):
     __tablename__ = 'roles'
@@ -50,6 +50,13 @@ class User(UserMixin, SurrogatePK, Model):
 
     cardtype = Column(db.String(80), nullable=True)
     carddata = Column(db.String(255), nullable=True)
+
+    @property
+    def data(self):
+        return {
+            'id': self.id,
+            'username': self.username,
+        }
 
     def socialize(self):
         if 'github.com/' in self.webpage_url:
@@ -276,6 +283,18 @@ class Activity(SurrogatePK, Model):
     user = relationship('User', backref='activities')
     project_id = reference_col('projects', nullable=False)
     project = relationship('Project', backref='activities')
+
+    @property
+    def data(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'time': int(mktime(self.timestamp.timetuple())),
+            'date': self.timestamp,
+            'user': self.user.data,
+            'project_id': self.project.id,
+            'project_name': self.project.name,
+        }
 
     def __init__(self, name, user_id, project_id, **kwargs):
         if name:

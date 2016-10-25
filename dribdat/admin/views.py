@@ -9,11 +9,7 @@ from ..decorators import admin_required
 from ..user.models import User, Event, Project, Category
 from .forms import UserForm, EventForm, ProjectForm, CategoryForm
 
-from flask import Response, stream_with_context
-import io, csv
-
-import json
-import datetime
+from datetime import datetime
 
 from ..aggregation import GetProjectData
 
@@ -173,39 +169,10 @@ def event_projects(event_id):
 @login_required
 @admin_required
 def event_print(event_id):
-    now = datetime.datetime.utcnow().strftime("%d.%m.%Y %H:%M")
+    now = datetime.utcnow().strftime("%d.%m.%Y %H:%M")
     event = Event.query.filter_by(id=event_id).first_or_404()
     projects = Project.query.filter_by(event_id=event_id, is_hidden=False).order_by(Project.name)
     return render_template('admin/eventprint.html', event=event, projects=projects, curdate=now, active='projects')
-
-# Collect all projects for current event
-def project_list(event_id):
-    projects = Project.query.filter_by(event_id=event_id, is_hidden=False)
-    summaries = [ p.data for p in projects ]
-    summaries.sort(key=lambda x: x['score'], reverse=True)
-    return summaries
-
-# Generate a CSV file
-def gen_csv(csvdata):
-    output = io.BytesIO()
-    writer = csv.writer(output, quoting=csv.QUOTE_NONNUMERIC)
-    writer.writerow(csvdata[0].keys())
-    for rk in csvdata:
-        writer.writerow(rk.values())
-    return output.getvalue()
-
-# Outputs JSON of all projects
-@blueprint.route('/event/<int:event_id>/projects.json')
-def project_list_json(event_id):
-    event = Event.query.filter_by(id=event_id).first_or_404()
-    return jsonify(projects=project_list(event_id), event=event.data)
-
-# Outputs CSV of all projects
-@blueprint.route('/event/<int:event_id>/projects.csv')
-def project_list_csv(event_id):
-    return Response(stream_with_context(gen_csv(project_list(event_id))),
-                    mimetype='text/csv',
-                    headers={'Content-Disposition': 'attachment; filename=project_list.csv'})
 
 @blueprint.route('/project/<int:project_id>', methods=['GET', 'POST'])
 @login_required
