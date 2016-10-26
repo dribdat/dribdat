@@ -73,6 +73,9 @@
   </div>
 
     <div class="category-info">
+      <div category-id="infobox">
+        <center><h3><i class="fa fa-arrow-circle-o-up"></i> Use the buttons above to explore our challenges.</h3></center>
+      </div>
       {% for category in current_event.categories %}
       <div category-id="{{category.id}}" style="border-top:5px solid {{category.logo_color}}; display:none">
         <h3>{{ category.name }}</h3>
