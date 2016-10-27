@@ -66,10 +66,9 @@ class User(UserMixin, SurrogatePK, Model):
             self.cardtype = 'twitter'
             self.carddata = self.webpage_url.strip('/').split('/')[-1]
         else:
-            gr_default = "http://opendata.ch/wordpress/files/2014/07/opendata-logo-noncircle.png"
             gr_size = 40
             gravatar_url = hashlib.md5(self.email.lower()).hexdigest() + "?"
-            gravatar_url += urllib.urlencode({'d':gr_default, 's':str(gr_size)})
+            gravatar_url += urllib.urlencode({'s':str(gr_size)})
             self.cardtype = 'gravatar'
             self.carddata = gravatar_url
         self.save()
