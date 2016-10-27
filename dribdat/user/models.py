@@ -121,6 +121,7 @@ class Event(SurrogatePK, Model):
             'location': self.location,
             'starts_at': self.starts_at,
             'ends_at': self.ends_at,
+            'info_url': self.webpage_url,
         }
 
     @property

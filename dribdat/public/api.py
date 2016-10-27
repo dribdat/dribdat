@@ -30,11 +30,30 @@ def gen_csv(csvdata):
         writer.writerow(rk.values())
     return output.getvalue()
 
+
+# API: Outputs JSON about an event
+@blueprint.route('/event/<int:event_id>/info.json')
+def info_event_json(event_id):
+    event = Event.query.filter_by(id=event_id).first_or_404()
+    return jsonify(event=event.data, timeuntil=timesince(event.countdown, until=True))
+
+# API: Outputs JSON about the current event
+@blueprint.route('/event/current/info.json')
+def info_current_event_json():
+    event = Event.query.filter_by(is_current=True).first()
+    return info_event_json(event.id)
+
 # API: Outputs JSON of all projects in an event
 @blueprint.route('/event/<int:event_id>/projects.json')
 def project_list_json(event_id):
     event = Event.query.filter_by(id=event_id).first_or_404()
     return jsonify(projects=project_list(event_id), event=event.data)
+
+# API: Outputs JSON of projects in the current event
+@blueprint.route('/event/current/projects.json')
+def project_list_current_json():
+    event = Event.query.filter_by(is_current=True).first()
+    return project_list_json(event.id)
 
 # API: Outputs CSV of all projects in an event
 @blueprint.route('/event/<int:event_id>/projects.csv')
@@ -56,9 +75,3 @@ def project_activity_json(project_id):
     query = Activity.query.filter_by(project_id=project.id).order_by(Activity.id.desc()).limit(30).all()
     activities = [a.data for a in query]
     return jsonify(project=project.data, activities=activities)
-
-# API: Outputs JSON about the current event
-@blueprint.route('/event/current.json')
-def current_event_json():
-    event = Event.query.filter_by(is_current=True).first()
-    return jsonify(event=event.data, timeuntil=timesince(event.countdown, until=True))
