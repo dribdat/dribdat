@@ -3,6 +3,8 @@
 from flask import Blueprint, render_template, redirect, url_for, make_response, request, flash, jsonify
 from flask_login import login_required, current_user
 
+from sqlalchemy import or_
+
 from ..extensions import db
 from ..utils import timesince
 
@@ -62,7 +64,7 @@ def project_list_csv(event_id):
                     headers={'Content-Disposition': 'attachment; filename=project_list.csv'})
 
 # API: Outputs JSON of all recent activity
-@blueprint.route('/projects/activity.json')
+@blueprint.route('/project/activity.json')
 def projects_activity_json():
     activities = [a.data for a in Activity.query.order_by(Activity.id.desc()).limit(30).all()]
     return jsonify(activities=activities)
@@ -74,3 +76,16 @@ def project_activity_json(project_id):
     query = Activity.query.filter_by(project_id=project.id).order_by(Activity.id.desc()).limit(30).all()
     activities = [a.data for a in query]
     return jsonify(project=project.data, activities=activities)
+
+# API: Full text search projects
+@blueprint.route('/project/search.json')
+def project_search_json():
+    q = request.args.get('q')
+    if q is None or len(q) < 3: return jsonify(projects=[])
+    q = "%%%s%%" % q
+    projects = Project.query.filter(or_(
+        Project.name.like(q),
+        Project.summary.like(q),
+        Project.longtext.like(q),
+    )).limit(5).all()
+    return jsonify(projects=[p.data for p in projects])
