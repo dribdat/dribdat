@@ -43,16 +43,16 @@ def info_current_event_json():
     event = Event.query.filter_by(is_current=True).first()
     return jsonify(event=event.data, timeuntil=timesince(event.countdown, until=True))
 
-# API: Outputs JSON of all projects in an event
+# API: Outputs JSON of all projects at a specific event
 @blueprint.route('/event/<int:event_id>/projects.json')
 def project_list_json(event_id):
     return jsonify(projects=project_list(event_id))
 
-# API: Outputs JSON of projects in the current event
+# API: Outputs JSON of projects in the current event, along with its info
 @blueprint.route('/event/current/projects.json')
 def project_list_current_json():
     event = Event.query.filter_by(is_current=True).first()
-    return jsonify(projects=project_list(event.id))
+    return jsonify(projects=project_list(event.id), event=event.data)
 
 # API: Outputs CSV of all projects in an event
 @blueprint.route('/event/<int:event_id>/projects.csv')
