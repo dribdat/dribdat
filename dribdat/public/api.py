@@ -4,6 +4,7 @@ from flask import Blueprint, render_template, redirect, url_for, make_response, 
 from flask_login import login_required, current_user
 
 from ..extensions import db
+from ..utils import timesince
 
 from ..user.models import Event, Project, Category, Activity
 
@@ -29,13 +30,13 @@ def gen_csv(csvdata):
         writer.writerow(rk.values())
     return output.getvalue()
 
-# API: Outputs JSON of all projects
+# API: Outputs JSON of all projects in an event
 @blueprint.route('/event/<int:event_id>/projects.json')
 def project_list_json(event_id):
     event = Event.query.filter_by(id=event_id).first_or_404()
     return jsonify(projects=project_list(event_id), event=event.data)
 
-# API: Outputs CSV of all projects
+# API: Outputs CSV of all projects in an event
 @blueprint.route('/event/<int:event_id>/projects.csv')
 def project_list_csv(event_id):
     return Response(stream_with_context(gen_csv(project_list(event_id))),
@@ -55,3 +56,9 @@ def project_activity_json(project_id):
     query = Activity.query.filter_by(project_id=project.id).order_by(Activity.id.desc()).limit(30).all()
     activities = [a.data for a in query]
     return jsonify(project=project.data, activities=activities)
+
+# API: Outputs JSON about the current event
+@blueprint.route('/event/current.json')
+def current_event_json():
+    event = Event.query.filter_by(is_current=True).first()
+    return jsonify(event=event.data, timesince=timesince(event.countdown))
