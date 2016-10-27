@@ -61,4 +61,4 @@ def project_activity_json(project_id):
 @blueprint.route('/event/current.json')
 def current_event_json():
     event = Event.query.filter_by(is_current=True).first()
-    return jsonify(event=event.data, timesince=timesince(event.countdown))
+    return jsonify(event=event.data, timeuntil=timesince(event.countdown, until=True))
