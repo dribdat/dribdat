@@ -113,14 +113,15 @@ def project_push_json():
         project.name = project.hashtag.replace('-', ' ')
     if 'summary' in data and len(data['summary']) > 0:
         project.summary = data['summary']
-    if 'longtext' in data and len(data['longtext']) > 0:
+    hasLongtext = 'longtext' in data and len(data['longtext']) > 0
+    if hasLongtext:
         project.longtext = data['longtext']
     if 'autotext_url' in data and data['autotext_url'].startswith('http'):
         project.autotext_url = data['autotext_url']
     if 'levelup' in data and 0 < project.progress + data['levelup'] * 10 < 50: # MAX progress
         project.progress = project.progress + data['levelup'] * 10
     # return jsonify(data=data)
-    if project.autotext_url is not None:
+    if project.autotext_url is not None and not hasLongtext:
         # Now try to autosync
         data = GetProjectData(project.autotext_url)
         if 'name' in data:
