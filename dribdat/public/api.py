@@ -118,6 +118,8 @@ def project_push_json():
         project.longtext = data['longtext']
     if 'autotext_url' in data and data['autotext_url'].startswith('http'):
         project.autotext_url = data['autotext_url']
+        if not project.source_url or project.source_url is '':
+            project.source_url = data['autotext_url']
     if 'levelup' in data and 0 < project.progress + data['levelup'] * 10 < 50: # MAX progress
         project.progress = project.progress + data['levelup'] * 10
     # return jsonify(data=data)
