@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from flask import Blueprint, render_template, redirect, url_for, make_response, request, flash, jsonify
+from flask import Blueprint, render_template, redirect, url_for, make_response, request, flash, jsonify, current_app
 from flask_login import login_required, current_user
 
 from sqlalchemy import or_
@@ -9,6 +9,7 @@ from ..extensions import db
 from ..utils import timesince
 
 from ..user.models import Event, Project, Category, Activity
+from ..aggregation import GetProjectData
 
 from flask import Response, stream_with_context
 import io, csv, json
@@ -90,31 +91,44 @@ def project_search_json():
     )).limit(5).all()
     return jsonify(projects=[p.data for p in projects])
 
-# API: Pulls project data
-@blueprint.route('/project/<string:hashtag>/details.json')
-def project_details_json(hashtag):
-    project = Project.query.filter_by(hashtag=hashtag).first_or_404()
-    return jsonify(project=project.data)
-
 # API: Pushes data into a project
 @blueprint.route('/project/push.json', methods=["PUT", "POST"])
-def project_push():
-    data = jsonify(request.get_json(force=True))
-    if data.key != app.config['SODABOT_KEY']:
+def project_push_json():
+    data = request.get_json(force=True)
+    if not 'key' in data or data['key'] != current_app.config['SODABOT_KEY']:
         return jsonify(error='Invalid key')
-    project = Project.query.filter_by(hashtag=data.hashtag).first()
+    project = Project.query.filter_by(hashtag=data['hashtag']).first()
     if not project:
         project = Project()
         project.user_id = 1
         project.is_autoupdate = True
-        project.event = get_current_event()
+        project.event = Event.query.filter_by(is_current=True).first()
     elif project.user_id != 1 or project.is_hidden or not project.is_autoupdate:
         return jsonify(error='Access denied')
-    project.name = data.name
-    project.hashtag = data.hashtag
-    project.summary = data.summary
-    project.longtext = data.longtext
+    project.hashtag = data['hashtag']
+    if 'name' in data and len(data['name']) > 0:
+        project.name = data['name']
+    else:
+        project.name = project.hashtag.replace('-', ' ')
+    if 'autotext_url' in data and data['autotext_url'].startswith('http'):
+        project.autotext_url = data['autotext_url']
+    if project.autotext_url is not None:
+        # Now try to autosync
+        data = GetProjectData(project.autotext_url)
+        if 'name' in data:
+            if len(data['name']) > 0:
+                project.name = data['name']
+            if 'summary' in data and len(data['summary']) > 0:
+                project.summary = data['summary']
+            if 'description' in data and len(data['description']) > 0:
+                project.longtext = data['description']
+            if 'homepage_url' in data and len(data['homepage_url']) > 0:
+                project.webpage_url = data['homepage_url']
+            if 'source_url' in data and len(data['source_url']) > 0:
+                project.source_url = data['source_url']
+            if 'image_url' in data and len(data['image_url']) > 0:
+                project.image_url = data['image_url']
     project.update()
     db.session.add(project)
     db.session.commit()
-    return jsonify(success='Project updated')
+    return jsonify(success='Updated', project=project.data)
