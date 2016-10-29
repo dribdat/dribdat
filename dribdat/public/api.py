@@ -111,6 +111,8 @@ def project_push_json():
         project.name = data['name']
     else:
         project.name = project.hashtag.replace('-', ' ')
+    if 'summary' in data and len(data['summary']) > 0:
+        project.summary = data['summary']
     if 'autotext_url' in data and data['autotext_url'].startswith('http'):
         project.autotext_url = data['autotext_url']
     if 'levelup' in data and 0 < project.progress + data['levelup'] * 10 < 50: # MAX progress
