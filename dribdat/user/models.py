@@ -131,9 +131,9 @@ class Event(SurrogatePK, Model):
     @property
     def countdown(self):
         if self.starts_at > dt.datetime.utcnow():
-            return self.starts_at + dt.timedelta(hours=2) # TODO: timezones...
+            return self.starts_at + dt.timedelta(hours=-2) # TODO: timezones...
         elif self.ends_at > dt.datetime.utcnow():
-            return self.ends_at + dt.timedelta(hours=2)
+            return self.ends_at + dt.timedelta(hours=-2)
         else:
             return None
 
