@@ -48,4 +48,4 @@ class TestConfig(Config):
     TESTING = True
     DEBUG = True
     SQLALCHEMY_DATABASE_URI = 'sqlite://'
-    WTF_CSRF_ENABLED = False  # Allows form testing
+    # WTF_CSRF_ENABLED = False  # Allows form testing

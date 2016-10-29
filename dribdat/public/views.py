@@ -64,7 +64,7 @@ def logout():
 @blueprint.route("/register/", methods=['GET', 'POST'])
 def register():
     """Register new user."""
-    form = RegisterForm(request.form, csrf_enabled=True)
+    form = RegisterForm(request.form)
     if request.args.get('name'):
         form.username.data = request.args.get('name')
     if request.args.get('email'):
