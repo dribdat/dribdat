@@ -56,6 +56,10 @@
       <script src="//cdn.jsdelivr.net/github-cards/latest/widget.js"></script>
     {% endif %}
 
+    {% if project.hashtag %}
+      <em><a href="https://climathonzurich.slack.com/messages/{{ project.hashtag }}/">Open in Slack</a></em>
+    {% endif %}
+
     {% if project.summary %}
     <p class="project-summary">
       {{project.summary}}

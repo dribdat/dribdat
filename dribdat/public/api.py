@@ -89,3 +89,32 @@ def project_search_json():
         Project.longtext.like(q),
     )).limit(5).all()
     return jsonify(projects=[p.data for p in projects])
+
+# API: Pulls project data
+@blueprint.route('/project/<string:hashtag>/details.json')
+def project_details_json(hashtag):
+    project = Project.query.filter_by(hashtag=hashtag).first_or_404()
+    return jsonify(project=project.data)
+
+# API: Pushes data into a project
+@blueprint.route('/project/push.json', methods=["PUT", "POST"])
+def project_push():
+    data = jsonify(request.get_json(force=True))
+    if data.key != app.config['SODABOT_KEY']:
+        return jsonify(error='Invalid key')
+    project = Project.query.filter_by(hashtag=data.hashtag).first()
+    if not project:
+        project = Project()
+        project.user_id = 1
+        project.is_autoupdate = True
+        project.event = get_current_event()
+    elif project.user_id != 1 or project.is_hidden or not project.is_autoupdate:
+        return jsonify(error='Access denied')
+    project.name = data.name
+    project.hashtag = data.hashtag
+    project.summary = data.summary
+    project.longtext = data.longtext
+    project.update()
+    db.session.add(project)
+    db.session.commit()
+    return jsonify(success='Project updated')

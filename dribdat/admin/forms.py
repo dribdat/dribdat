@@ -46,6 +46,7 @@ class ProjectForm(Form):
     autotext_url = StringField(u'Autofill link', [length(max=255)])
     is_autoupdate = BooleanField(u'Autoupdate project data using this link')
     name = StringField(u'Title', [required(), length(max=80)])
+    hashtag = StringField(u'Hashtag or channel', [length(max=40)])
     summary = StringField(u'Short summary (120 chars)', [length(max=120)])
     longtext = TextAreaField(u'Full description (Markdown)')
     # tagwords = StringField(u'Tags (separated by space)', [length(max=255)])
