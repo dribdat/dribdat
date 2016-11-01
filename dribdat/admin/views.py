@@ -9,8 +9,9 @@ from ..decorators import admin_required
 from ..user.models import User, Event, Project, Category
 from .forms import UserForm, EventForm, ProjectForm, CategoryForm
 
-import json
-import datetime
+from datetime import datetime
+
+from ..aggregation import GetProjectData
 
 blueprint = Blueprint('admin', __name__, url_prefix='/admin')
 
@@ -168,7 +169,7 @@ def event_projects(event_id):
 @login_required
 @admin_required
 def event_print(event_id):
-    now = datetime.datetime.utcnow().strftime("%d.%m.%Y %H:%M")
+    now = datetime.utcnow().strftime("%d.%m.%Y %H:%M")
     event = Event.query.filter_by(id=event_id).first_or_404()
     projects = Project.query.filter_by(event_id=event_id, is_hidden=False).order_by(Project.name)
     return render_template('admin/eventprint.html', event=event, projects=projects, curdate=now, active='projects')
@@ -185,10 +186,9 @@ def project(project_id):
 
     if form.validate_on_submit():
         form.populate_obj(project)
-
+        project.update()
         db.session.add(project)
         db.session.commit()
-
         flash('Project updated.', 'success')
         return projects()
 
@@ -229,17 +229,22 @@ def project_new():
     form.user_id.choices = [(e.id, "%s" % (e.username)) for e in User.query.order_by('username')]
     form.event_id.choices = [(e.id, e.name) for e in Event.query.order_by('name')]
     form.category_id.choices = [(c.id, c.name) for c in project.categories_all()]
-
     if form.validate_on_submit():
         form.populate_obj(project)
-
+        project.update()
         db.session.add(project)
         db.session.commit()
-
         flash('Project added.', 'success')
         return projects()
-
     return render_template('admin/projectnew.html', form=form)
+
+@blueprint.route('/project/<int:project_id>/autodata')
+@login_required
+@admin_required
+def project_autodata(project_id):
+    project = Project.query.filter_by(id=project_id).first_or_404()
+    return jsonify(projectdata=GetProjectData(project.autotext_url))
+
 
 ##############
 ##############
@@ -265,6 +270,7 @@ def category(category_id):
     if form.validate_on_submit():
         form.populate_obj(category)
         if category.event_id == -1: category.event_id = None
+        if category.logo_color == '#000000': category.logo_color = ''
 
         db.session.add(category)
         db.session.commit()

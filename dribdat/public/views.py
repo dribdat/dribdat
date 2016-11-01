@@ -18,8 +18,6 @@ blueprint = Blueprint('public', __name__, static_folder="../static")
 
 def get_current_event():
     event = Event.query.filter_by(is_current=True).first()
-    if event is not None:
-        event.has_started = event.starts_at <= datetime.utcnow() <= event.ends_at
     return event
 
 @login_manager.user_loader
@@ -29,15 +27,16 @@ def load_user(user_id):
 
 @blueprint.route("/")
 def home():
-    return render_template("public/home.html", current_event=get_current_event())
+    event = get_current_event()
+    if event is not None:
+        events = Event.query.filter(Event.id != event.id)
+    else:
+        events = Event.query.all()
+    return render_template("public/home.html", events=events, current_event=event)
 
 @blueprint.route("/about/")
 def about():
     return render_template("public/about.html", current_event=get_current_event())
-
-@blueprint.route("/dashboard/")
-def dashboard():
-    return render_template("public/dashboard.html", current_event=get_current_event())
 
 @blueprint.route("/login/", methods=["GET", "POST"])
 def login():
@@ -65,7 +64,7 @@ def logout():
 @blueprint.route("/register/", methods=['GET', 'POST'])
 def register():
     """Register new user."""
-    form = RegisterForm(request.form, csrf_enabled=False)
+    form = RegisterForm(request.form)
     if request.args.get('name'):
         form.username.data = request.args.get('name')
     if request.args.get('email'):
@@ -109,15 +108,9 @@ def user_profile():
         flash('Profile updated.', 'success')
     return render_template('public/user.html', user=user, form=form)
 
-@blueprint.route("/events")
-def events():
-    events = Event.query.all()
-    return render_template("public/events.html", current_event=get_current_event(), events=events)
-
 @blueprint.route("/event/<int:event_id>")
 def event(event_id):
     event = Event.query.filter_by(id=event_id).first_or_404()
-    event.has_started = event.starts_at <= datetime.utcnow() <= event.ends_at
     projects = Project.query.filter_by(event_id=event_id, is_hidden=False)
     return render_template("public/event.html",  current_event=event, projects=projects)
 
@@ -138,7 +131,7 @@ def project_edit(project_id):
     form.category_id.choices.insert(0, (-1, ''))
     if form.validate_on_submit():
         form.populate_obj(project)
-        if project.category_id == -1: project.category_id = None
+        project.update()
         db.session.add(project)
         db.session.commit()
         flash('Project updated.', 'success')
@@ -179,16 +172,16 @@ def project_new():
     if form.validate_on_submit():
         form.populate_obj(project)
         project.event = event
-        if project.category_id == -1: project.category_id = None
+        project.update()
         db.session.add(project)
         db.session.commit()
         flash('Project added.', 'success')
         return project_action(project.id, 'create')
+    del form.logo_icon
+    del form.logo_color
     return render_template('public/projectnew.html', current_event=event, form=form)
 
-
-# API routines
-
+# API routine used to sync project data
 @blueprint.route('/project/autofill', methods=['GET', 'POST'])
 @login_required
 def project_autofill():
@@ -196,9 +189,31 @@ def project_autofill():
     data = GetProjectData(url)
     return jsonify(data)
 
-@blueprint.route('/project/list')
-def project_list():
-    projects = Project.query.filter_by(event_id=get_current_event().id, is_hidden=False)
-    summaries = [ p.data for p in projects ]
-    summaries.sort(key=lambda x: x['score'], reverse=True)
-    return jsonify(projects=summaries)
+@blueprint.route('/project/<int:project_id>/autoupdate')
+@login_required
+def project_autoupdate(project_id):
+    project = Project.query.filter_by(id=project_id).first_or_404()
+    if project.user_id != current_user.id or project.is_hidden or not project.is_autoupdate:
+        flash('You cannot sync this project.', 'warning')
+        return project_action(project_id, None)
+    data = GetProjectData(project.autotext_url)
+    if not 'name' in data:
+        flash("Project could not be synced: check the autoupdate link.", 'warning')
+        return project_action(project_id, None)
+    if len(data['name']) > 0:
+        project.name = data['name']
+    if 'summary' in data and len(data['summary']) > 0:
+        project.summary = data['summary']
+    if 'description' in data and len(data['description']) > 0:
+        project.longtext = data['description']
+    if 'homepage_url' in data and len(data['homepage_url']) > 0:
+        project.webpage_url = data['homepage_url']
+    if 'source_url' in data and len(data['source_url']) > 0:
+        project.source_url = data['source_url']
+    if 'image_url' in data and len(data['image_url']) > 0:
+        project.image_url = data['image_url']
+    project.update()
+    db.session.add(project)
+    db.session.commit()
+    flash("Project data synced.", 'success')
+    return project_action(project_id, 'update')

@@ -3,13 +3,14 @@
 {% block page_title %}{{project.name}} ~{{project.event.name}}{% endblock %}
 
 {% block content %}
-<div class="jumbotron project-page" style="background-color:#{{project.logo_color}}">
+<div class="jumbotron project-page" style="background-color:{{project.logo_color}}">
   <div class="project-info">
     {% if project.image_url %}
       <img class="project-image" src="{{project.image_url}}">
     {% endif %}
 
     <div class="project-tools">
+      <div style="float:left"><span class="label label-info">{{ project.phase }}</span></div>
       <div class="progress" title="A score based on profile completeness and voting results">
         <div class="progress-bar" role="progressbar" aria-valuenow="{{project.score}}" aria-valuemin="0" aria-valuemax="70" style="width:{{project.score}}%">
           {{project.score}}
@@ -22,6 +23,10 @@
       </a>
       {% elif current_user and current_user.is_authenticated %}
       <a href="{{ url_for('public.project_star', project_id=project.id) }}" class="project-star" title="Join project to show your profile below">
+        <i class="fa fa-star-o"></i>JOIN
+      </a>
+      {% else %}
+      <a href="{{ url_for('public.login') }}" class="project-star" title="Login to join this project">
         <i class="fa fa-star-o"></i>JOIN
       </a>
       {% endif %}
@@ -51,6 +56,10 @@
       <script src="//cdn.jsdelivr.net/github-cards/latest/widget.js"></script>
     {% endif %}
 
+    {% if project.hashtag %}
+      <em><a href="https://climathonzurich.slack.com/messages/{{ project.hashtag }}/">Open in Slack</a></em>
+    {% endif %}
+
     {% if project.summary %}
     <p class="project-summary">
       {{project.summary}}
@@ -64,7 +73,13 @@
   </div>
   <p class="project-buttons">
     <a href="{{ project.webpage_url }}" class="btn btn-primary">Project homepage &raquo;</a>
-    <a href="{{ project.source_url }}" class="btn btn-success">Source code</a>
+    <a href="{{ project.source_url }}" class="btn btn-default">Source code &raquo;</a>
+    {% if current_user and current_user.is_authenticated and current_user.id == project.user_id %}
+       <a href="{{ url_for('public.project_edit', project_id=project.id) }}" class="btn btn-success">Edit</a>
+       {% if project.is_autoupdate %}
+        <a href="{{ url_for('public.project_autoupdate', project_id=project.id) }}" class="btn btn-warning">Sync</a>
+       {% endif %}
+    {% endif %}
   </p>
   <div class="panel panel-default community-embed">
     <div class="panel-body"><i class="fa fa-comment"></i>
@@ -79,35 +94,34 @@
         <br>
         Maintainer:
         <b><a href="{{project.user.webpage_url}}" target="_blank">{{ project.user.username }}</a></b>
-        {% if current_user and current_user.is_authenticated and current_user.id == project.user_id %}
-          <a href="{{ url_for('public.project_edit', project_id=project.id) }}" class="btn btn-success btn-sm">edit</a>
-        {% endif %}
       </p>
-      <p class="started-at">
-        <small>Launched at
-          <a href="{{ url_for('public.event', event_id=project.event.id) }}">
-            <b>{{ project.event.name }}</b>
-          </a> by
-        </small>
-      </p>
-      {% for activity in project_stars %}
-        {% if activity.user.cardtype == 'github' %}
-          <div class="github-card" data-user="{{activity.user.carddata}}"
-            data-theme="medium"></div>
-          <script src="//cdn.jsdelivr.net/github-cards/latest/widget.js"></script>
-        {% elif activity.user.cardtype == 'twitter' %}
-          <a class="twitter-follow-button"
-            href="https://twitter.com/{{activity.user.carddata}}"
-            data-size="large" data-show-count="true">
-            @{{activity.user.carddata}}</a>
-            <script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
-        {% else %}
-          <a href="{{activity.user.webpage_url}}" title="{{activity.user.username}}" alt=":-)" target="_blank" class="team-gravatar">
-            <img align="left" width="40" height="40" src="https://www.gravatar.com/avatar/{{activity.user.carddata}}"/>
-          </a>
-        {% endif %}
-      {% endfor %}
-    </div>
+      {% if project_stars %}
+        <p class="started-at">
+          <small>Launched at
+            <a href="{{ url_for('public.event', event_id=project.event.id) }}">
+              <b>{{ project.event.name }}</b>
+            </a> by
+          </small>
+        </p>
+        {% for activity in project_stars %}
+          {% if activity.user.cardtype == 'github' %}
+            <div class="github-card" data-user="{{activity.user.carddata}}"
+              data-theme="medium"></div>
+            <script src="//cdn.jsdelivr.net/github-cards/latest/widget.js"></script>
+          {% elif activity.user.cardtype == 'twitter' %}
+            <a class="twitter-follow-button"
+              href="https://twitter.com/{{activity.user.carddata}}"
+              data-size="large" data-show-count="true">
+              @{{activity.user.carddata}}</a>
+              <script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+          {% else %}
+            <a href="{{activity.user.webpage_url}}" title="{{activity.user.username}}" alt=":-)" target="_blank" class="team-gravatar">
+              <img align="left" width="40" height="40" src="https://www.gravatar.com/avatar/{{activity.user.carddata}}"/>
+            </a>
+          {% endif %}
+        {% endfor %}
+      {% endif %}
+      </div>
   </div>
 </div><!-- /.jumbotron -->
 {% endblock %}

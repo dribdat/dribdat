@@ -7,8 +7,8 @@ os_env = os.environ
 class Config(object):
     """Base configuration."""
 
-    SECRET_KEY = os_env.get('DRIBDAT_SECRET', 'jaNo-Ol771--yS6se87-2y')
-    DISCOURSE_KEY = os_env.get('DRIBDAT_DISCOURSE', None)
+    SECRET_KEY = os_env.get('DRIBDAT_SECRET', 'A-big-scary-Secret-goes-HERE.')
+    SODABOT_KEY = os_env.get('SODABOT_KEY', None)
     APP_DIR = os.path.abspath(os.path.dirname(__file__))  # This directory
     PROJECT_ROOT = os.path.abspath(os.path.join(APP_DIR, os.pardir))
     ASSETS_DEBUG = False
@@ -17,7 +17,7 @@ class Config(object):
     CACHE_TYPE = 'simple'  # Can be "memcached", "redis", etc.
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     CACHE_TYPE = 'simple'  # Can be "memcached", "redis", etc.
-    SERVER_NAME = os_env.get('SERVER_URL', 'localhost:5000')
+    SERVER_NAME = os_env.get('SERVER_URL', '127.0.0.1:5000')
 
 class ProdConfig(Config):
     """Production configuration."""
@@ -48,4 +48,4 @@ class TestConfig(Config):
     TESTING = True
     DEBUG = True
     SQLALCHEMY_DATABASE_URI = 'sqlite://'
-    WTF_CSRF_ENABLED = False  # Allows form testing
+    # WTF_CSRF_ENABLED = False  # Allows form testing

@@ -31,6 +31,26 @@ def GetProjectData(url):
             'source_url': json['html_url'],
             'image_url': json['owner']['avatar_url'],
         }
+    elif url.find('//bitbucket.org') > 0:
+        apiurl = re.sub(r'https?://bitbucket\.org', 'https://api.bitbucket.org/2.0/repositories', url)
+        if apiurl == url: return {}
+        data = requests.get(apiurl)
+        if data.text.find('{') < 0: return {}
+        json = data.json()
+        if not 'name' in json: return {}
+        readmedata = requests.get(url)
+        if readmedata.text.find('class="readme') < 0: return {}
+        doc = pq(readmedata.text)
+        content = doc("div.readme")
+        if len(content) < 1: return {}
+        return {
+            'name': json['name'],
+            'summary': json['description'],
+            'description': content.html().strip(),
+            'homepage_url': json['website'],
+            'source_url': url,
+            'image_url': json['project']['links']['avatar']['href'],
+        }
     elif url.find('//make.opendata.ch/wiki') > 0:
         data = requests.get(url)
         if data.text.find('<div class="dw-content">') < 0: return {}
@@ -42,30 +62,12 @@ def GetProjectData(url):
         return {
             'name': ptitle.text().replace('project:', ''),
             # 'summary': json['description'],
-            'description': content.html(),
+            'description': content.html().strip(),
             # 'homepage_url': url,
             # 'source_url': json['html_url'],
             # 'image_url': json['owner']['avatar_url'],
         }
     return {}
-
-def GetProjectScore(project):
-    score = 0
-    cqu = Activity.query.filter_by(project_id=project.id)
-    c_s = cqu.filter_by(name="star").count()
-    score = score + (2 * c_s)
-    c_a = cqu.filter_by(name="boost").count()
-    score = score + (10 * c_a)
-    if len(project.summary) > 3: score = score + 3
-    if len(project.image_url) > 3: score = score + 3
-    if len(project.source_url) > 3: score = score + 10
-    if len(project.webpage_url) > 3: score = score + 10
-    if len(project.logo_color) > 3: score = score + 1
-    if len(project.logo_icon) > 3: score = score + 1
-    if len(project.longtext) > 3: score = score + 1
-    if len(project.longtext) > 100: score = score + 4
-    if len(project.longtext) > 500: score = score + 10
-    return score
 
 def IsProjectStarred(project, current_user):
     return Activity.query.filter_by(

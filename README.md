@@ -1,8 +1,8 @@
-# DRIBDAT
+# Dribdat
 
 *The stakes are high, the competition is ready. You will be measured, your progress tracked, your creativity analysed & compared. Think you have what it takes? Ready, steady, go!*
 
-**DRIBDAT (Driven By Data) is an open platform for data-driven team collaboration, such as Hackathons.** It works as a website and project board for running exciting, productive events..with Impact Factor. We created this after using plain wikis and forums for years, and trying out a few proprietary tools that we felt limited us in one way or another.
+**Dribdat (from "Driven By Data") is an open platform for data-driven team collaboration, such as Hackathons.** It works as a website and project board for running exciting, productive events..with Impact Factor. We created this after using plain wikis and forums for years, and trying out a few proprietary tools that we felt limited us in one way or another.
 
 [Visit this page](https://datalets.ch/dribdat/iot-2015/project/23/) for more background.
 
@@ -79,6 +79,16 @@ python manage.py db upgrade
 To apply the migration. Watch out for any errors in the process.
 
 For a full migration command reference, run `python manage.py db --help`.
+
+## API notes
+
+There are a few API calls that admins can use to easily get to the data in Dribdat.
+
+Summary of all projects from current event in CSV or JSON format:
+`/admin/event/<EVENT ID>/projects.csv`
+`/admin/event/<EVENT ID>/projects.json`
+
+A print view of all projects is also accessible from the Events admin console.
 
 ## Credits
 

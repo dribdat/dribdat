@@ -5,25 +5,54 @@
 {% block content %}
 <div class="jumbotron home-page">
   {% if current_event %}
-  <h2>
-    <a href="{{ url_for('public.event', event_id=current_event.id) }}">{{current_event.name}}</a>
-  </h2>
-  <p>{{current_event.description|markdown}}</p>
-  <center>
-    <p>
-      <a href="{{ current_event.webpage_url }}" class="btn btn-primary">How to join &raquo;</a>
-      <a href="{{ url_for('public.event', event_id=current_event.id) }}" class="btn btn-default"><b>
-        Projects &amp; challenges
-      </b></a>
-      {% if current_user and current_user.is_authenticated and current_event.has_started %}
-        <a href="{{ url_for('public.project_new') }}" class="btn btn-success">Start a project!</a>
-      {% endif %}
-    </p>
-  </center>
+    <h2>
+      <a href="{{ url_for('public.event', event_id=current_event.id) }}">{{current_event.name}}</a>
+    </h2>
+    <p>{{current_event.description|markdown}}</p>
+    <center>
+      <p>
+        <a href="{{ current_event.webpage_url }}" class="btn btn-primary">How to join &raquo;</a>
+        <a href="{{ url_for('public.event', event_id=current_event.id) }}" class="btn btn-default"><b>
+          Challenges &amp; Projects
+        </b></a>
+        {% if current_user and current_user.is_authenticated and current_event.has_started %}
+          <a href="{{ url_for('public.project_new') }}" class="btn btn-success">Start a project!</a>
+        {% endif %}
+      </p>
+    </center>
     {% if current_event.countdown %}
     <div class="event-countdown" data-start="{{ current_event.countdown }}"></div>
     {% endif %}
   {% endif %}
 </div><!-- /.jumbotron -->
-<center><a href="{{ url_for('public.events') }}">All Events</a></center>
+
+<div class="body-content">
+  <div class="row">
+    {% for event in events %}
+    <div class="col-lg-4">
+      <div class="panel panel-default">
+        <div class="panel-body">
+          <h2><i class="fa fa-code"></i>
+            <a href="{{ url_for('public.event', event_id=event.id) }}">
+              {{event.name}}</a>
+            </h2>
+          <div style="font-size:90%"><i>
+            <b>{{ event.date }}</b>
+            <span>{{ event.location }}</span>
+          </i></div>
+          <hr>
+          {{event.description|markdown}}
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+
+    {% if not events %}
+    <center>
+      <h3>Looks like you are new to this - welcome!</h3>
+      <a href="/admin/event/new" class="btn btn-success">Start a Hackathon</a>
+    </center>
+    {% endif %}
+  </div><!-- /.row -->
+</div>
 {% endblock %}

@@ -28,13 +28,30 @@
             <span> </span>
         </label>
       </div>
+
+      {% if current_event.has_started %}
+        {% if current_user and current_user.is_authenticated %}
+            <a href="{{ url_for('public.project_new') }}" class="btn btn-success">
+              <span>Start
+                <i class="fa fa-flag"></i>
+                <br>project</span>
+            </a>
+        {% else %}
+          <p><a href="{{ url_for('public.register') }}">Register</a>
+          and log in to start a project.</p>
+        {% endif %}
+      </div>
+      {% endif %}
+
     </center>
 
   <!-- Based on Hexagon Tiles by Graham Pyne http://codepen.io/gpyne/pen/iElhp/ -->
   <div class="honeycomb">
     <div class="ibws-fix">
     {% for project in projects %}
-      <a href="{{ url_for('public.project', project_id=project.id) }}" class="hexagon project" category-id="{{project.category_id}}" style="background-color:#{{project.logo_color}}">
+      <a href="{{ url_for('public.project', project_id=project.id) }}"
+         class="hexagon project" category-id="{{project.category_id}}"
+         style="background-color:{{project.logo_color}}; background-image:url('{{project.image_url}}')">
         <div class="hexagontent">
           {% if project.logo_icon %}
             <i class="fa fa-{{project.logo_icon}}"></i><br>
@@ -55,22 +72,17 @@
     </div>
   </div>
 
-  {% if current_event.has_started %}
-  <div class="nav-projects">
-    {% if current_user and current_user.is_authenticated %}
-      <a href="{{ url_for('public.project_new') }}" class="btn btn-success btn-lg">Start a project</a>
-    {% else %}
-      Please <a href="{{ url_for('public.register') }}">create an account</a>
-      and log in to start a project.
-    {% endif %}
-  </div>
-  {% endif %}
-
     <div class="category-info">
+      <div category-id="infobox">
+        <center><h4><i class="fa fa-arrow-circle-o-up"></i> Use the buttons above to explore our challenges.</h4></center>
+      </div>
       {% for category in current_event.categories %}
-      <div category-id="{{category.id}}" style="display:none">
+      <div category-id="{{category.id}}" style="border-top:5px solid {{category.logo_color}}; display:none">
         <h3>{{ category.name }}</h3>
         {{ category.description|markdown }}
+        {% if current_user and current_user.is_authenticated and current_user.is_admin %}
+          <br><a href="{{ url_for('admin.category', category_id=category.id) }}" class="btn btn-success btn-sm">Edit</a>
+        {% endif %}
       </div>
       {% endfor %}
     </div>
@@ -78,9 +90,14 @@
 </div>
 
 <div class="jumbotron event-page">
+
   <p>
     <small>{{current_event.description|markdown}}</small><br>
-    <a href="{{ current_event.webpage_url }}" class="btn btn-sm btn-primary">More information &raquo;</a>
+    <a href="{{ url_for('public.home') }}" class="btn btn-sm btn-primary">{{ current_event.countdown|until_date }}</a>
+    <a href="{{ current_event.webpage_url }}" class="btn btn-sm btn-default">Info &raquo;</a>
+    {% if current_user and current_user.is_authenticated and current_user.is_admin %}
+      <a href="{{ url_for('admin.event', event_id=current_event.id) }}" class="btn btn-success btn-sm">Edit</a>
+    {% endif %}
   </p>
 
   <div class="panel panel-default community-embed">
@@ -88,5 +105,6 @@
       {{current_event.community_embed|safe}}
     </div>
   </div>
+
 </div><!-- /.jumbotron -->
 {% endblock %}

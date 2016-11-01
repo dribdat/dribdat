@@ -35,8 +35,8 @@
       {% if event %}
         <li>
           <a href="{{ url_for('public.event', event_id=event.id) }}">
-	    {% if event.has_started %} Project Board {% else %} The Challenges {% endif %}
-	  </a>
+      	    {% if event.has_started %} Projects &amp; Challenges {% else %} Challenges {% endif %}
+      	  </a>
         </li>
         <li>
           <a href="{{ event.community_url }}" target="_blank">Community

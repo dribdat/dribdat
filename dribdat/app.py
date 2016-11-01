@@ -8,13 +8,13 @@ from dribdat.assets import assets
 from dribdat.extensions import (
     hashing,
     cache,
-    csrf_protect,
     db,
     login_manager,
     migrate,
     debug_toolbar,
 )
 from dribdat.settings import ProdConfig
+from dribdat.utils import timesince
 
 
 def create_app(config_object=ProdConfig):
@@ -40,7 +40,6 @@ def register_extensions(app):
     hashing.init_app(app)
     cache.init_app(app)
     db.init_app(app)
-    csrf_protect.init_app(app)
     login_manager.init_app(app)
     debug_toolbar.init_app(app)
     migrate.init_app(app, db)
@@ -51,6 +50,7 @@ def register_extensions(app):
 def register_blueprints(app):
     """Register Flask blueprints."""
     app.register_blueprint(public.views.blueprint)
+    app.register_blueprint(public.api.blueprint)
     app.register_blueprint(user.views.blueprint)
     app.register_blueprint(admin.views.blueprint)
     return None
@@ -89,8 +89,11 @@ def register_commands(app):
 
 def register_filters(app):
     @app.template_filter()
-    def pretty_date(value):
-        return pretty_date(value)
+    def since_date(value):
+        return timesince(value)
+    @app.template_filter()
+    def until_date(value):
+        return timesince(value, default="now!", until=True)
     @app.template_filter()
     def format_date(value, format='%Y-%m-%d'):
         return value.strftime(format)
