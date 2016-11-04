@@ -33,6 +33,7 @@ class EventForm(Form):
     logo_url = StringField(u'Host logo link', [length(max=255)])
     custom_css = TextAreaField(u'Custom CSS')
     webpage_url = StringField(u'Home page link', [length(max=255)])
+    hashtag_url = StringField(u'Hashtag URL prefix', [length(max=255)])
     community_url = StringField(u'Community link', [length(max=255)])
     community_embed = TextAreaField(u'Community embed code')
     submit = SubmitField(u'Save')

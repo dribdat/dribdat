@@ -127,7 +127,7 @@ def project_edit(project_id):
         flash('You do not have access to edit this project.', 'warning')
         return project_action(project_id, None)
     form = ProjectForm(obj=project, next=request.args.get('next'))
-    form.category_id.choices = [(c.id, c.name) for c in project.categories_all()]
+    form.category_id.choices = [(c.id, c.name) for c in project.categories_for_event(event.id)]
     form.category_id.choices.insert(0, (-1, ''))
     if form.validate_on_submit():
         form.populate_obj(project)
@@ -167,7 +167,7 @@ def project_new():
     project.user_id = current_user.id
     form = ProjectForm(obj=project, next=request.args.get('next'))
     event = get_current_event()
-    form.category_id.choices = [(c.id, c.name) for c in project.categories_all()]
+    form.category_id.choices = [(c.id, c.name) for c in project.categories_for_event(event.id)]
     form.category_id.choices.insert(0, (-1, ''))
     if form.validate_on_submit():
         form.populate_obj(project)

@@ -10,7 +10,6 @@
         <thead>
             <tr>
               <th>Name</th>
-              <th>Description</th>
               <th>Event</th>
               <th>Projects</th>
             </tr>
@@ -22,7 +21,6 @@
                 {{ category.name }}
               </a>
             </td>
-            <td style="font-size:80%">{{ category.description }}</td>
             <td>{{ category.event.name }}</td>
             <td>{{ category.project_count }}
               <a href="{{ url_for('admin.category_projects', category_id=category.id) }}" class="btn btn-sm btn-primary">

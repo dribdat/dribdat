@@ -104,6 +104,7 @@ class Event(SurrogatePK, Model):
     custom_css = Column(db.UnicodeText(), nullable=True)
 
     webpage_url = Column(db.String(255), nullable=True)
+    hashtag_url = Column(db.String(255), nullable=True)
     community_url = Column(db.String(255), nullable=True)
     community_embed = Column(db.UnicodeText(), nullable=True)
 
@@ -194,10 +195,11 @@ class Project(SurrogatePK, Model):
 
     def categories_all(self):
         return Category.query.order_by('name')
-    def categories_global(self):
-        return Category.query.filter_by(event_id=None).order_by('name')
-    def categories_event(self):
-        return Category.query.filter_by(event_id=self.event_id).order_by('name')
+    def categories_for_event(self, event_id):
+        return Category.query.filter(or_(
+            Category.event_id==None,
+            Category.event_id==event_id
+        )).order_by('name')
 
     # Self-assessment
     progress = Column(db.Integer(), nullable=True, default=0)

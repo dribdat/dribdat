@@ -56,10 +56,6 @@
       <script src="//cdn.jsdelivr.net/github-cards/latest/widget.js"></script>
     {% endif %}
 
-    {% if project.hashtag %}
-      <em><a href="https://climathonzurich.slack.com/messages/{{ project.hashtag }}/">Open in Slack</a></em>
-    {% endif %}
-
     {% if project.summary %}
     <p class="project-summary">
       {{project.summary}}
@@ -72,8 +68,15 @@
     </div>
   </div>
   <p class="project-buttons">
-    <a href="{{ project.webpage_url }}" class="btn btn-primary">Project homepage &raquo;</a>
-    <a href="{{ project.source_url }}" class="btn btn-default">Source code &raquo;</a>
+    {% if project.webpage_url %}
+      <a href="{{ project.webpage_url }}" class="btn btn-primary">Project homepage &raquo;</a>
+    {% endif %}
+    {% if project.source_url %}
+      <a href="{{ project.source_url }}" class="btn btn-default">Source code</a>
+    {% endif %}
+    {% if project.hashtag %}
+      <a href="{{project.event.hashtag_url}}{{ project.hashtag }}" class="btn btn-default">Contact team</a>
+    {% endif %}
     {% if current_user and current_user.is_authenticated and current_user.id == project.user_id %}
        <a href="{{ url_for('public.project_edit', project_id=project.id) }}" class="btn btn-success">Edit</a>
        {% if project.is_autoupdate %}
