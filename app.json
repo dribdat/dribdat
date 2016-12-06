@@ -1,0 +1,37 @@
+{
+  "name": "Dribdat",
+  "description": "An open platform for data-driven team collaboration, such as Hackathons.",
+  "keywords": [
+    "teambuilding",
+    "hackathon",
+    "dashboard"
+  ],
+  "website": "http://datalets.ch/dribdat",
+  "repository": "https://github.com/loleg/dribdat",
+  "success_url": "/admin",
+  "scripts": {
+    "postdeploy": "python manage.py db init && python manage.py db migrate && python manage.py db upgrade"
+  },
+  "env": {
+    "DRIBDAT_SECRET": {
+      "description": "A secret key for verifying the integrity of signed cookies",
+      "generator": "secret"
+    },
+    "DRIBDAT_APIKEY": {
+      "description": "A secret key for connecting remote clients through the API",
+      "generator": "secret"
+    },
+    "DRIBDAT_ENV": {
+      "description": "'dev' to enable debugging, 'prod' to optimise assets",
+      "value": "prod"
+    }
+  },
+  "addons": [
+    {
+      "plan": "heroku-postgresql",
+      "options": {
+        "version": "9.5"
+      }
+    }
+  ]
+}
