@@ -24,6 +24,10 @@
     "DRIBDAT_ENV": {
       "description": "'dev' to enable debugging, 'prod' to optimise assets",
       "value": "prod"
+    },
+    "SERVER_URL": {
+      "description": "Host name of this instance",
+      "value": "my-dribdat-instance.herokuapp.com"
     }
   },
   "addons": [
