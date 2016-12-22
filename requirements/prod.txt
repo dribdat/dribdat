@@ -7,7 +7,7 @@ pyquery>=1.2.11
 
 # Everything needed in production
 
-setuptools==30.0.0
+setuptools==32.2.0
 wheel==0.29.0
 
 # Flask
