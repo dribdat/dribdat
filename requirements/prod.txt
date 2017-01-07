@@ -14,7 +14,7 @@ wheel==0.29.0
 Flask==0.11.1
 MarkupSafe==0.23
 Werkzeug==0.11.11
-Jinja2==2.8
+Jinja2==2.9
 itsdangerous==0.24
 click>=5.0
 
