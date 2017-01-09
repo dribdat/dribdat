@@ -7,14 +7,14 @@ pyquery>=1.2.11
 
 # Everything needed in production
 
-setuptools==30.0.0
+setuptools==32.3.1
 wheel==0.29.0
 
 # Flask
-Flask==0.11.1
+Flask==0.12
 MarkupSafe==0.23
-Werkzeug==0.11.11
-Jinja2==2.8
+Werkzeug==0.11.15
+Jinja2==2.9.3
 itsdangerous==0.24
 click>=5.0
 
@@ -27,7 +27,7 @@ SQLAlchemy==1.1.4
 Flask-Migrate==2.0.1
 
 # Forms
-Flask-WTF==0.13.1
+Flask-WTF==0.14
 WTForms==2.1
 
 # Deployment
