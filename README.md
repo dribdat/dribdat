@@ -12,7 +12,7 @@ Instructions to set up a development instance of this platform follow. This proj
 
 [![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy)
 
-You can set the following configuration variables:
+Set the following basic environment variables:
 
 * `SERVER_URL` - fully qualified domain name where the site is hosted
 * `DRIBDAT_ENV` - 'dev' to enable debugging, 'prod' to optimise assets etc.
@@ -20,37 +20,35 @@ You can set the following configuration variables:
 * `DATABASE_URL` - if you are using the Postgres add-on, this would be postgres://username:password@... - in Heroku this is set automatically
 * `DRIBDAT_SECRET` - a long scary string for hashing your passwords - in Heroku this is set automatically
 
-Once your app is deployed on Heroku, create a user and use the shell commands below to become an administrator.
-
 ## Developer Quickstart
 
-First, set your app's secret key as an environment variable. For example, example add the following to `.bashrc` or `.bash_profile`.
-
-```
-export DRIBDAT_SECRET='something-really-secret'
-```
-
-Then run the following commands to bootstrap your environment.
+Run the following commands to bootstrap your environment.
 
 ```
 git clone https://github.com/loleg/dribdat
 cd dribdat
 pip install -r requirements/dev.txt
+```
+
+By default in a dev environment, a SQLite database will be created in the root folder (`dev.db`). You can also install and configure your choice of DBMS supported by SQLAlchemy.
+
+Run the following to create your app's database tables and perform the initial migration:
+
+```
+python manage.py db init
+python manage.py db migrate
+python manage.py db upgrade
+```
+
+Finally, run this command to start the server:
+
+```
 python manage.py server
 ```
 
 You will see a pretty welcome screen at http://localhost:5000
 
 The first user that registers becomes an admin, so don't delay!
-
-Once you have installed your DBMS, run the following to create your app's database tables and perform the initial migration:
-
-```
-python manage.py db init
-python manage.py db migrate
-python manage.py db upgrade
-python manage.py server
-```
 
 ### Shell access
 
