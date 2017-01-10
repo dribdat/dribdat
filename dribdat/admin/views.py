@@ -186,6 +186,8 @@ def project(project_id):
 
     if form.validate_on_submit():
         form.populate_obj(project)
+        # Ensure project category remains blank
+        if project.category_id == -1: project.category_id = None
         project.update()
         db.session.add(project)
         db.session.commit()

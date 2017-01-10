@@ -16,7 +16,7 @@ class TestLoggingIn:
     def test_can_log_in_returns_200(self, user, testapp):
         """Login successful."""
         # Goes to homepage
-        res = testapp.get('/')
+        res = testapp.get('/login/')
         # Fills out login form in navbar
         form = res.forms['loginForm']
         form['username'] = user.username
@@ -27,7 +27,7 @@ class TestLoggingIn:
 
     def test_sees_alert_on_log_out(self, user, testapp):
         """Show alert on logout."""
-        res = testapp.get('/')
+        res = testapp.get('/login/')
         # Fills out login form in navbar
         form = res.forms['loginForm']
         form['username'] = user.username
@@ -41,7 +41,7 @@ class TestLoggingIn:
     def test_sees_error_message_if_password_is_incorrect(self, user, testapp):
         """Show error if password is incorrect."""
         # Goes to homepage
-        res = testapp.get('/')
+        res = testapp.get('/login/')
         # Fills out login form, password incorrect
         form = res.forms['loginForm']
         form['username'] = user.username
@@ -54,7 +54,7 @@ class TestLoggingIn:
     def test_sees_error_message_if_username_doesnt_exist(self, user, testapp):
         """Show error if username doesn't exist."""
         # Goes to homepage
-        res = testapp.get('/')
+        res = testapp.get('/login/')
         # Fills out login form, password incorrect
         form = res.forms['loginForm']
         form['username'] = 'unknown'

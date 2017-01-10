@@ -17,6 +17,7 @@ Werkzeug==0.11.15
 Jinja2==2.9.4
 itsdangerous==0.24
 click>=5.0
+Flask-Hashing==1.1
 
 # Database
 Flask-SQLAlchemy==2.1

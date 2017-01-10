@@ -8,53 +8,58 @@
 
 ## Deployment Quickstart
 
-Instructions to set up a development instance of this platform follow. This project is ready for fast deployment to [Heroku](http://heroku.com). You will need to set the following configuration variables:
+Instructions to set up a development instance of this platform follow. This project is ready for fast deployment to [Heroku](http://heroku.com):
+
+[![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy)
+
+Set the following basic environment variables:
 
 * `SERVER_URL` - fully qualified domain name where the site is hosted
 * `DRIBDAT_ENV` - 'dev' to enable debugging, 'prod' to optimise assets etc.
-* `DRIBDAT_DB` - if you are using the Postgres add-on, this would be postgres://username:password@...
-* `DATABASE_URL` - same as above - needed only for Heroku to recognise the database, set automatically if you use tools
-* `DRIBDAT_SECRET` - a long scary string for hashing your passwords
-
-Once your app is deployed on Heroku, create a user and use the shell commands below to become an administrator.
+* `DRIBDAT_APIKEY` - for connecting clients to the remote API (WIP)
+* `DATABASE_URL` - if you are using the Postgres add-on, this would be postgres://username:password@... - in Heroku this is set automatically
+* `DRIBDAT_SECRET` - a long scary string for hashing your passwords - in Heroku this is set automatically
 
 ## Developer Quickstart
 
-First, set your app's secret key as an environment variable. For example, example add the following to `.bashrc` or `.bash_profile`.
-
-```
-export DRIBDAT_SECRET='something-really-secret'
-```
-
-Then run the following commands to bootstrap your environment.
+Run the following commands to bootstrap your environment.
 
 ```
 git clone https://github.com/loleg/dribdat
 cd dribdat
 pip install -r requirements/dev.txt
-python manage.py server
 ```
 
-You will see a pretty welcome screen at http://localhost:5000
+By default in a dev environment, a SQLite database will be created in the root folder (`dev.db`). You can also install and configure your choice of DBMS supported by SQLAlchemy.
 
-Once you have installed your DBMS, run the following to create your app's database tables and perform the initial migration:
+Run the following to create your app's database tables and perform the initial migration:
 
 ```
 python manage.py db init
 python manage.py db migrate
 python manage.py db upgrade
+```
+
+Finally, run this command to start the server:
+
+```
 python manage.py server
 ```
+
+You will see a pretty welcome screen at http://localhost:5000
+
+The first user that registers becomes an admin, so don't delay!
 
 ### Shell access
 
 To open the interactive shell, run: `python manage.py shell` (or, using the [Heroku toolchain](https://devcenter.heroku.com/categories/command-line), `heroku run python manage.py shell`)
 
-By default, you will have access to `app`, `db`, and the `User` model. For example, to make yourself Administrator, create a user through the frontend, then promote the (here we assume, first) user in the shell:
+By default, you will have access to `app`, `db`, and the `User` model. For example, to promote to admin and reset the password of the first user:
 
 ```
 u = User.query.first()
 u.is_admin = True
+u.set_password('Ins@nEl*/c0mpl3x')
 u.save()
 ```
 

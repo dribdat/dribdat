@@ -8,7 +8,7 @@ class Config(object):
     """Base configuration."""
 
     SECRET_KEY = os_env.get('DRIBDAT_SECRET', 'A-big-scary-Secret-goes-HERE.')
-    SODABOT_KEY = os_env.get('SODABOT_KEY', None)
+    DRIBDAT_APIKEY = os_env.get('DRIBDAT_APIKEY', None)
     APP_DIR = os.path.abspath(os.path.dirname(__file__))  # This directory
     PROJECT_ROOT = os.path.abspath(os.path.join(APP_DIR, os.pardir))
     ASSETS_DEBUG = False
@@ -24,7 +24,7 @@ class ProdConfig(Config):
 
     ENV = 'prod'
     DEBUG = False
-    SQLALCHEMY_DATABASE_URI = os_env.get('DRIBDAT_DB', 'postgresql://localhost/example')
+    SQLALCHEMY_DATABASE_URI = os_env.get('DATABASE_URL', 'postgresql://localhost/example')
     DEBUG_TB_ENABLED = False  # Disable Debug toolbar
 
 
@@ -48,4 +48,5 @@ class TestConfig(Config):
     TESTING = True
     DEBUG = True
     SQLALCHEMY_DATABASE_URI = 'sqlite://'
+    SERVER_NAME = 'localhost'
     # WTF_CSRF_ENABLED = False  # Allows form testing
