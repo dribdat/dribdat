@@ -6,6 +6,8 @@
 
 [Visit this page](https://datalets.ch/dribdat/iot-2015/project/23/) for more background.
 
+[![Build Status](https://travis-ci.org/loleg/dribdat.svg?branch=master)](https://travis-ci.org/loleg/dribdat)
+
 ## Deployment Quickstart
 
 Instructions to set up a development instance of this platform follow. This project is ready for fast deployment to [Heroku](http://heroku.com):
@@ -30,7 +32,7 @@ cd dribdat
 pip install -r requirements/dev.txt
 ```
 
-By default in a dev environment, a SQLite database will be created in the root folder (`dev.db`). You can also install and configure your choice of DBMS supported by SQLAlchemy.
+By default in a dev environment, a SQLite database will be created in the root folder (`dev.db`). You can also install and configure your choice of DBMS [supported by SQLAlchemy](http://docs.sqlalchemy.org/en/rel_1_1/dialects/index.html).
 
 Run the following to create your app's database tables and perform the initial migration:
 
