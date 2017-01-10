@@ -50,3 +50,4 @@ class TestConfig(Config):
     SQLALCHEMY_DATABASE_URI = 'sqlite://'
     SERVER_NAME = 'localhost'
     # WTF_CSRF_ENABLED = False  # Allows form testing
+    PRESERVE_CONTEXT_ON_EXCEPTION = False

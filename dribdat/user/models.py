@@ -67,8 +67,13 @@ class User(UserMixin, SurrogatePK, Model):
             self.carddata = self.webpage_url.strip('/').split('/')[-1]
         else:
             gr_size = 40
-            gravatar_url = hashlib.md5(self.email.lower()).hexdigest() + "?"
-            gravatar_url += urllib.urlencode({'s':str(gr_size)})
+            email = self.email.lower().encode('utf-8')
+            gravatar_url = hashlib.md5(email).hexdigest() + "?"
+            # Python 3 compatibility hack
+            if 'python2' in urllib.__file__:
+                gravatar_url += urllib.urlencode({'s':str(gr_size)})
+            else:
+                gravatar_url += urllib.parse.urlencode({'s':str(gr_size)})
             self.cardtype = 'gravatar'
             self.carddata = gravatar_url
         self.save()
