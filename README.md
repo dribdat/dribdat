@@ -30,7 +30,7 @@ cd dribdat
 pip install -r requirements/dev.txt
 ```
 
-By default in a dev environment, a SQLite database will be created in the root folder (`dev.db`). You can also install and configure your choice of DBMS supported by SQLAlchemy.
+By default in a dev environment, a SQLite database will be created in the root folder (`dev.db`). You can also install and configure your choice of DBMS [supported by SQLAlchemy](http://docs.sqlalchemy.org/en/rel_1_1/dialects/index.html).
 
 Run the following to create your app's database tables and perform the initial migration:
 
