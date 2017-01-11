@@ -4,7 +4,7 @@ from flask import (Blueprint, request, render_template, flash, url_for,
                     redirect, session, current_app, jsonify)
 from flask_login import login_user, login_required, logout_user, current_user
 
-from dribdat.extensions import login_manager
+from dribdat.extensions import login_manager, login_oauth
 from dribdat.user.models import User, Event, Project
 from dribdat.public.forms import LoginForm, UserForm, ProjectForm
 from dribdat.user.forms import RegisterForm
@@ -52,6 +52,57 @@ def login():
             flash_errors(form)
     return render_template("public/login.html", current_event=get_current_event(), form=form)
 
+slack_oauth = login_oauth.remote_app("slack",
+    base_url = "https://slack.com/api/",
+    request_token_url = "",
+    access_token_url = "https://slack.com/api/oauth.access",
+    authorize_url = "https://slack.com/oauth/authorize",
+    consumer_key = "",
+    consumer_secret = "",
+    request_token_params = {"scope": "identity.email"},
+)
+
+@slack_oauth.tokengetter
+def slack_tokengetter():
+    return session.get("slack_token")
+
+@blueprint.route("/slack_oauth")
+def site_slack_oauth():
+    slack_oauth.consumer_key = current_app.config["DRIBDAT_SLACK_ID"]
+    slack_oauth.consumer_secret = current_app.config["DRIBDAT_SLACK_SECRET"]
+    return slack_oauth.authorize(
+        callback=url_for("public.slack_oauth_callback", _external=True)
+    )
+
+@blueprint.route("/slack_callback")
+@slack_oauth.authorized_handler
+def slack_oauth_callback(resp):
+    if resp is None or not resp["ok"]:
+        flash('Access denied to Slack', 'error')
+        return redirect(url_for("public.home"))
+    user = User.query.filter_by(slack_id=resp["user_id"]).first()
+    if not user:
+        if current_user and current_user.is_authenticated:
+            user = current_user
+            user.slack_id = resp["user_id"]
+        else:
+            user_data = slack_oauth.post("users.identity")
+            import string, random
+            rp = ''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(20))
+            user = User.create(
+                username=user_data["user"]["name"].lower().replace(" ", "_")
+                slack_id=resp["user_id"],
+                email=user_data["user"]["email"],
+                password=rp,
+                active=True)
+            user.socialize()
+            login_user(user, remember=True)
+            flash("A user account has been created", 'info')
+            return redirect(url_for("public.user_profile"))
+    login_user(user, remember=True)
+    flash(u'Logged in via Slack')
+    return redirect(url_for("public.home"))
+
 @blueprint.route('/logout/')
 @login_required
 def logout():
@@ -65,11 +116,11 @@ def logout():
 def register():
     """Register new user."""
     form = RegisterForm(request.form)
-    if request.args.get('name'):
+    if request.args.get('name') and not form.username.data:
         form.username.data = request.args.get('name')
-    if request.args.get('email'):
+    if request.args.get('email') and not form.email.data:
         form.email.data = request.args.get('email')
-    if request.args.get('web'):
+    if request.args.get('web') and not form.webpage_url.data:
         form.webpage_url.data = request.args.get('web')
     if form.validate_on_submit():
         new_user = User.create(
@@ -82,7 +133,7 @@ def register():
         if User.query.count() == 1:
             new_user.is_admin = True
             new_user.save()
-            flash("Administrative user created - have fun with DRIBDAT!", 'success')
+            flash("Administrative user created - have fun!", 'success')
         else:
             flash("Thank you for registering. You can now log in and submit projects.", 'success')
         return redirect(url_for('public.login'))

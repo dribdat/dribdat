@@ -10,6 +10,7 @@ from dribdat.extensions import (
     cache,
     db,
     login_manager,
+    login_oauth,
     migrate,
     debug_toolbar,
 )

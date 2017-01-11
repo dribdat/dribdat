@@ -44,6 +44,7 @@ class LoginForm(Form):
         return True
 
 class UserForm(Form):
+    username = StringField(u'Username', [required(), length(max=80)])
     email = StringField(u'E-mail', [required(), length(max=80)])
     webpage_url = StringField(u'Online profile', [length(max=128)], description="URL to a GitHub/Twitter profile, or another personal website")
     password = PasswordField(u'New password', [length(max=128)])
