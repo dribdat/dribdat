@@ -80,7 +80,8 @@ def user_delete(user_id):
     if user.is_admin or user.active:
         flash('Admins and active users may not be deleted.', 'warning')
     elif len(user.projects) > 0:
-        flash('No users owning projects (%s) may be deleted.' % user.projects.join(', '), 'warning')
+        pl = ", ".join([str(i.name) for i in user.projects])
+        flash('No users owning projects (%s) may be deleted.' % pl, 'warning')
     else:
         user.delete()
         flash('User deleted.', 'success')
