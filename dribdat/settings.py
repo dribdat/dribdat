@@ -41,6 +41,7 @@ class DevConfig(Config):
     SQLALCHEMY_DATABASE_URI = 'sqlite:///{0}'.format(DB_PATH)
     DEBUG_TB_ENABLED = True
     ASSETS_DEBUG = True  # Don't bundle/minify static assets
+    WTF_CSRF_ENABLED = False  # Allows form testing
 
 
 class TestConfig(Config):
@@ -50,5 +51,5 @@ class TestConfig(Config):
     DEBUG = True
     SQLALCHEMY_DATABASE_URI = 'sqlite://'
     SERVER_NAME = 'localhost'
-    # WTF_CSRF_ENABLED = False  # Allows form testing
+    WTF_CSRF_ENABLED = False  # Allows form testing
     PRESERVE_CONTEXT_ON_EXCEPTION = False

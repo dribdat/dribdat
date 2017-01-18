@@ -34,7 +34,7 @@ class TestLoggingIn:
         form['password'] = 'myprecious'
         # Submits
         res = form.submit().follow()
-        res = testapp.get(url_for('public.logout')).follow()
+        res = testapp.get(url_for('auth.logout')).follow()
         # sees alert
         assert 'You are logged out.' in res
 
@@ -90,7 +90,7 @@ class TestRegistering:
     def test_sees_error_message_if_passwords_dont_match(self, user, testapp):
         """Show error if passwords don't match."""
         # Goes to registration page
-        res = testapp.get(url_for('public.register'))
+        res = testapp.get(url_for('auth.register'))
         # Fills out form, but passwords don't match
         form = res.forms['registerForm']
         form['username'] = 'foobar'
@@ -107,7 +107,7 @@ class TestRegistering:
         user = UserFactory(active=True)  # A registered user
         user.save()
         # Goes to registration page
-        res = testapp.get(url_for('public.register'))
+        res = testapp.get(url_for('auth.register'))
         # Fills out form, but username is already registered
         form = res.forms['registerForm']
         form['username'] = user.username
