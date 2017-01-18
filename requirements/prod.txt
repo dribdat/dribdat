@@ -46,6 +46,7 @@ git+https://git@github.com/CentricWebEstate/flask-oauth.git#egg=Flask-OAuth
 
 # Caching
 Flask-Caching>=1.0.0
+redis==2.10.5
 
 # Debug toolbar
 Flask-DebugToolbar==0.10.0

@@ -15,6 +15,9 @@ from dribdat.database import db
 
 blueprint = Blueprint('auth', __name__, static_folder="../static")
 
+def current_event():
+    return Event.query.filter_by(is_current=True).first()
+
 @login_manager.user_loader
 def load_user(user_id):
     """Load user by ID."""
@@ -36,7 +39,7 @@ def login():
             return redirect(redirect_url)
         else:
             flash_errors(form)
-    return render_template("public/login.html", current_event=Event.current(), form=form, slack_enabled=slack_enabled())
+    return render_template("public/login.html", current_event=current_event(), form=form, slack_enabled=slack_enabled())
 
 
 @blueprint.route("/register/", methods=['GET', 'POST'])
@@ -66,7 +69,7 @@ def register():
         return redirect(url_for('auth.login'))
     else:
         flash_errors(form)
-    return render_template('public/register.html', current_event=Event.current(), form=form, slack_enabled=slack_enabled())
+    return render_template('public/register.html', current_event=current_event(), form=form, slack_enabled=slack_enabled())
 
 
 @blueprint.route('/logout/')

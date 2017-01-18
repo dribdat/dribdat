@@ -165,9 +165,6 @@ class Event(SurrogatePK, Model):
                 self.ends_at.year,
             )
 
-    def current():
-        return Event.query.filter_by(is_current=True).first()
-
     def __init__(self, name=None, **kwargs):
         if name:
             db.Model.__init__(self, name=name, **kwargs)

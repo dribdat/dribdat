@@ -11,9 +11,12 @@ from dribdat.aggregation import GetProjectData, ProjectActivity, IsProjectStarre
 
 blueprint = Blueprint('public', __name__, static_folder="../static")
 
+def current_event():
+    return Event.query.filter_by(is_current=True).first()
+
 @blueprint.route("/")
 def home():
-    event = Event.current()
+    event = current_event()
     if event is not None:
         events = Event.query.filter(Event.id != event.id)
     else:
@@ -22,7 +25,7 @@ def home():
 
 @blueprint.route("/about/")
 def about():
-    return render_template("public/about.html", current_event=Event.current())
+    return render_template("public/about.html", current_event=current_event())
 
 @blueprint.route("/event/<int:event_id>")
 def event(event_id):
@@ -82,7 +85,7 @@ def project_new():
     project = Project()
     project.user_id = current_user.id
     form = ProjectForm(obj=project, next=request.args.get('next'))
-    event = Event.current()
+    event = current_event()
     form.category_id.choices = [(c.id, c.name) for c in project.categories_for_event(event.id)]
     form.category_id.choices.insert(0, (-1, ''))
     if form.validate_on_submit():
