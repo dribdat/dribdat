@@ -28,7 +28,7 @@ def about():
     return render_template("public/about.html", current_event=current_event())
 
 @blueprint.route("/dashboard/")
-def about():
+def dashboard():
     return render_template("public/dashboard.html", current_event=current_event())
 
 @blueprint.route("/event/<int:event_id>")
