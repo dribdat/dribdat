@@ -21,7 +21,7 @@ You can configure your instance with the following basic environment variables:
 
 If you would like to use external clients, like the chatbot, to remote control Dribdat you need to set:
 
-* `DRIBDAT_APIKEY` - for connecting clients to the remote [API](#API)
+* `DRIBDAT_APIKEY` - for connecting clients to the remote [API](#api)
 
 OAuth 2.0 support is built in, currently fully supporting Slack, using these variables:
 
