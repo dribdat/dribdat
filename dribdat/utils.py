@@ -3,6 +3,10 @@
 from flask import flash
 from datetime import datetime
 
+def random_password():
+    import string, random
+    return ''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(20))
+
 def flash_errors(form, category='warning'):
     """Flash all errors for a form."""
     for field, errors in form.errors.items():

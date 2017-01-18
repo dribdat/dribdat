@@ -26,7 +26,7 @@ def GetProjectData(url):
         return {
             'name': json['name'],
             'summary': json['description'],
-            'description': b64decode(readme['content']),
+            'description': b64decode(readme['content']).decode('utf-8'),
             'homepage_url': json['homepage'],
             'source_url': json['html_url'],
             'image_url': json['owner']['avatar_url'],

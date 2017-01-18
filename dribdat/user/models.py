@@ -60,6 +60,8 @@ class User(UserMixin, SurrogatePK, Model):
         }
 
     def socialize(self):
+        if self.webpage_url is None:
+            self.webpage_url = ""
         if 'github.com/' in self.webpage_url:
             self.cardtype = 'github'
             self.carddata = self.webpage_url.strip('/').split('/')[-1]
