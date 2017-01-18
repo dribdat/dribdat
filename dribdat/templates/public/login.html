@@ -14,8 +14,15 @@
     </div>
     <button type="submit" class="btn btn-default">Confirm</button>
   </form>
-  <p><i>Please note, this is <b>not</b> the same login as for the Community board.</i></p>
-  <p>Not yet registered?
-    <a href="{{ url_for('public.register') }}">Create an account</a>.</p>
+  {% if slack_enabled %}
+  <p><a class="btn signin-slack" href="{{ url_for('auth.site_slack_oauth') }}">
+    Sign in with Slack
+  </a></p>
+  {% else %}
+  <p>
+    <i>Please note, this is <b>not</b> the same login as for the Community board.</i>
+  </p><p>Not yet registered?
+    <a href="{{ url_for('auth.register') }}">Create an account</a>.</p>
+  {% endif %}
 </div>
 {% endblock %}

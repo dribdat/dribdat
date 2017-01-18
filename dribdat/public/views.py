@@ -2,32 +2,21 @@
 """Public section, including homepage and signup."""
 from flask import (Blueprint, request, render_template, flash, url_for,
                     redirect, session, current_app, jsonify)
-from flask_login import login_user, login_required, logout_user, current_user
+from flask_login import login_required, current_user
 
-from dribdat.extensions import login_manager
 from dribdat.user.models import User, Event, Project
-from dribdat.public.forms import LoginForm, UserForm, ProjectForm
-from dribdat.user.forms import RegisterForm
-from dribdat.utils import flash_errors
+from dribdat.public.forms import ProjectForm
 from dribdat.database import db
 from dribdat.aggregation import GetProjectData, ProjectActivity, IsProjectStarred, GetProjectTeam
 
-from datetime import datetime
-
 blueprint = Blueprint('public', __name__, static_folder="../static")
 
-def get_current_event():
-    event = Event.query.filter_by(is_current=True).first()
-    return event
-
-@login_manager.user_loader
-def load_user(user_id):
-    """Load user by ID."""
-    return User.get_by_id(int(user_id))
+def current_event():
+    return Event.query.filter_by(is_current=True).first()
 
 @blueprint.route("/")
 def home():
-    event = get_current_event()
+    event = current_event()
     if event is not None:
         events = Event.query.filter(Event.id != event.id)
     else:
@@ -36,77 +25,7 @@ def home():
 
 @blueprint.route("/about/")
 def about():
-    return render_template("public/about.html", current_event=get_current_event())
-
-@blueprint.route("/login/", methods=["GET", "POST"])
-def login():
-    form = LoginForm(request.form)
-    # Handle logging in
-    if request.method == 'POST':
-        if form.validate_on_submit():
-            login_user(form.user, remember=True)
-            flash("You are logged in.", 'success')
-            redirect_url = request.args.get("next") or url_for("public.home")
-            return redirect(redirect_url)
-        else:
-            flash_errors(form)
-    return render_template("public/login.html", current_event=get_current_event(), form=form)
-
-@blueprint.route('/logout/')
-@login_required
-def logout():
-    """Logout."""
-    logout_user()
-    flash('You are logged out.', 'info')
-    return redirect(url_for('public.home'))
-
-
-@blueprint.route("/register/", methods=['GET', 'POST'])
-def register():
-    """Register new user."""
-    form = RegisterForm(request.form)
-    if request.args.get('name'):
-        form.username.data = request.args.get('name')
-    if request.args.get('email'):
-        form.email.data = request.args.get('email')
-    if request.args.get('web'):
-        form.webpage_url.data = request.args.get('web')
-    if form.validate_on_submit():
-        new_user = User.create(
-                        username=form.username.data,
-                        email=form.email.data,
-                        webpage_url=form.webpage_url.data,
-                        password=form.password.data,
-                        active=True)
-        new_user.socialize()
-        if User.query.count() == 1:
-            new_user.is_admin = True
-            new_user.save()
-            flash("Administrative user created - have fun with DRIBDAT!", 'success')
-        else:
-            flash("Thank you for registering. You can now log in and submit projects.", 'success')
-        return redirect(url_for('public.login'))
-    else:
-        flash_errors(form)
-    return render_template('public/register.html', current_event=get_current_event(), form=form)
-
-@blueprint.route('/user/profile', methods=['GET', 'POST'])
-@login_required
-def user_profile():
-    user = current_user
-    form = UserForm(obj=user, next=request.args.get('next'))
-    if form.validate_on_submit():
-        originalhash = user.password
-        form.populate_obj(user)
-        if form.password.data:
-            user.set_password(form.password.data)
-        else:
-            user.password = originalhash
-        db.session.add(user)
-        db.session.commit()
-        user.socialize()
-        flash('Profile updated.', 'success')
-    return render_template('public/user.html', user=user, form=form)
+    return render_template("public/about.html", current_event=current_event())
 
 @blueprint.route("/event/<int:event_id>")
 def event(event_id):
@@ -166,7 +85,7 @@ def project_new():
     project = Project()
     project.user_id = current_user.id
     form = ProjectForm(obj=project, next=request.args.get('next'))
-    event = get_current_event()
+    event = current_event()
     form.category_id.choices = [(c.id, c.name) for c in project.categories_for_event(event.id)]
     form.category_id.choices.insert(0, (-1, ''))
     if form.validate_on_submit():

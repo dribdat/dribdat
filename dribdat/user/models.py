@@ -42,6 +42,7 @@ class User(UserMixin, SurrogatePK, Model):
     username = Column(db.String(80), unique=True, nullable=False)
     email = Column(db.String(80), unique=True, nullable=False)
     webpage_url = Column(db.String(128), nullable=True)
+    sso_id = Column(db.String(128), nullable=True)
     #: The hashed password
     password = Column(db.String(128), nullable=True)
     created_at = Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)
@@ -59,6 +60,8 @@ class User(UserMixin, SurrogatePK, Model):
         }
 
     def socialize(self):
+        if self.webpage_url is None:
+            self.webpage_url = ""
         if 'github.com/' in self.webpage_url:
             self.cardtype = 'github'
             self.carddata = self.webpage_url.strip('/').split('/')[-1]

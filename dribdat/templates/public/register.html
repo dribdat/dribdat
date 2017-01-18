@@ -5,8 +5,15 @@
 {% block content %}
 <div class="container-narrow">
   <h1>Register</h1>
-  <p>Create an account here to be able to submit projects.</p>
+  <p><em>Already registered?</em> Click <a href="/">here</a> to login.</p>
+  <p>Create an account to be able to submit projects.</p>
+  <br/>
+  {% if slack_enabled %}
+    <p><a class="btn signin-slack" href="{{ url_for('auth.site_slack_oauth') }}">
+      Sign in with Slack
+    </a></p>
     <br/>
+  {% endif %}
     <form id="registerForm" class="form form-register" method="POST" action="" role="form">
             {{ form.hidden_tag() }}
             <div class="form-group">
@@ -31,6 +38,5 @@
             </div>
             <p><input class="btn btn-default btn-submit" type="submit" value="Register"></p>
     </form>
-    <p><em>Already registered?</em> Click <a href="/">here</a> to login.</p>
 </div>
 {% endblock %}

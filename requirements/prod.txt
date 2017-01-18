@@ -42,9 +42,11 @@ jsmin>=2.0.11
 # Auth
 Flask-Login==0.4.0
 Flask-Bcrypt==0.7.1
+git+https://git@github.com/CentricWebEstate/flask-oauth.git#egg=Flask-OAuth
 
 # Caching
 Flask-Caching>=1.0.0
+redis==2.10.5
 
 # Debug toolbar
 Flask-DebugToolbar==0.10.0

@@ -72,6 +72,21 @@ def user_new():
 
     return render_template('admin/usernew.html', form=form)
 
+@blueprint.route('/user/<int:user_id>/delete', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def user_delete(user_id):
+    user = User.query.filter_by(id=user_id).first_or_404()
+    if user.is_admin or user.active:
+        flash('Admins and active users may not be deleted.', 'warning')
+    elif len(user.projects) > 0:
+        pl = ", ".join([str(i.name) for i in user.projects])
+        flash('No users owning projects (%s) may be deleted.' % pl, 'warning')
+    else:
+        user.delete()
+        flash('User deleted.', 'success')
+    return users()
+
 ##############
 ##############
 ##############
