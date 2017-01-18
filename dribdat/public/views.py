@@ -80,24 +80,24 @@ def slack_oauth_callback(resp):
     if resp is None or not resp["ok"]:
         flash('Access denied to Slack', 'error')
         return redirect(url_for("public.home"))
-    user = User.query.filter_by(slack_id=resp["user_id"]).first()
+    user = User.query.filter_by(sso_id=resp["user_id"]).first()
     if not user:
         if current_user and current_user.is_authenticated:
             user = current_user
-            user.slack_id = resp["user_id"]
+            user.sso_id = resp["user_id"]
         else:
             user_data = slack_oauth.post("users.identity")
             import string, random
             rp = ''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(20))
             user = User.create(
-                username=user_data["user"]["name"].lower().replace(" ", "_")
-                slack_id=resp["user_id"],
+                username=user_data["user"]["name"].lower().replace(" ", "_"),
+                sso_id=resp["user_id"],
                 email=user_data["user"]["email"],
                 password=rp,
                 active=True)
             user.socialize()
             login_user(user, remember=True)
-            flash("A user account has been created", 'info')
+            flash("Please complete your user account", 'info')
             return redirect(url_for("public.user_profile"))
     login_user(user, remember=True)
     flash(u'Logged in via Slack')
