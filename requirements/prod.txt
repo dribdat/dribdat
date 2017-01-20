@@ -3,7 +3,6 @@
 requests>=2.9.1
 Flask-Markdown>=0.3
 pyquery>=1.2.11
-# pydiscourse>=0.7.0
 
 # Everything needed in production
 

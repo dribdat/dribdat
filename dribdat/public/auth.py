@@ -109,25 +109,34 @@ def slack_oauth_callback(resp):
     if resp is None or not resp["ok"]:
         flash('Access denied to Slack', 'error')
         return redirect(url_for("public.home"))
+    # Match user using the client ID
     user = User.query.filter_by(sso_id=resp['user']['id']).first()
+    # Match user by e-mail address
     if not user:
-        if current_user and current_user.is_authenticated:
-            user = current_user
+        user = User.query.filter_by(email=resp['user']['email']).first()
+        if user:
             user.sso_id = resp['user']['id']
-        else:
-            user = User.create(
-                username=resp['user']['name'].lower().replace(" ", "_"),
-                sso_id=resp['user']['id'],
-                email=resp['user']['email'],
-                password=random_password(),
-                active=True)
-            user.socialize()
-            login_user(user, remember=True)
-            flash("Welcome! Here is some information to get you started", 'info')
-            return redirect(url_for("public.about"))
+            db.session.add(user)
+            db.session.commit()
+    if user:
+        login_user(user, remember=True)
+        flash(u'Logged in via Slack - welcome back!')
+        return redirect(url_for("public.home"))
+    # Check for conflicting username
+    username = resp['user']['name'].lower().replace(" ", "_")
+    if User.query.filter_by(username=username).first():
+        username = "%s_%s" % (username, resp['user']['id'][:4])
+    # Finally, create a new user account
+    user = User.create(
+        username=username,
+        sso_id=resp['user']['id'],
+        email=resp['user']['email'],
+        password=random_password(),
+        active=True)
+    user.socialize()
     login_user(user, remember=True)
-    flash(u'Logged in via Slack')
-    return redirect(url_for("public.home"))
+    flash("Welcome! Here is some information to get you started", 'info')
+    return redirect(url_for("public.about"))
 
 
 @blueprint.route('/user/profile', methods=['GET', 'POST'])
