@@ -107,7 +107,7 @@ def site_slack_oauth():
 @slack_oauth.authorized_handler
 def slack_oauth_callback(resp):
     if resp is None or not resp["ok"]:
-        flash('Access denied to Slack', 'error')
+        flash('Access denied: make sure to select the appropriate Slack', 'error')
         return redirect(url_for("public.home"))
     # Match user using the client ID
     user = User.query.filter_by(sso_id=resp['user']['id']).first()
