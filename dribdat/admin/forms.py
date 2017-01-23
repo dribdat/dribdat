@@ -36,6 +36,7 @@ class EventForm(Form):
     hashtag_url = StringField(u'Hashtag URL prefix', [length(max=255)])
     community_url = StringField(u'Community link', [length(max=255)])
     community_embed = TextAreaField(u'Community embed code')
+    boilerplate = TextAreaField(u'Quickstart guide for new projects')
     submit = SubmitField(u'Save')
 
 class ProjectForm(Form):
@@ -44,18 +45,6 @@ class ProjectForm(Form):
     event_id = SelectField(u'Event', coerce=int)
     category_id = SelectField(u'Category or challenge', coerce=int)
     progress = SelectField(u'Progress', coerce=int, choices=projectProgressList())
-    autotext_url = StringField(u'Autofill link', [length(max=255)])
-    is_autoupdate = BooleanField(u'Autoupdate project data using this link')
-    name = StringField(u'Title', [required(), length(max=80)])
-    hashtag = StringField(u'Hashtag or channel', [length(max=40)])
-    summary = StringField(u'Short summary (120 chars)', [length(max=120)])
-    longtext = TextAreaField(u'Full description (Markdown)')
-    # tagwords = StringField(u'Tags (separated by space)', [length(max=255)])
-    webpage_url = StringField(u'Project home link', [length(max=255)])
-    source_url = StringField(u'Source code link', [length(max=255)])
-    image_url = StringField(u'Banner image link', [length(max=255)])
-    logo_color = StringField(u'Custom color', [length(max=7)])
-    logo_icon = StringField(u'<a target="_blank" href="http://fontawesome.io/icons/#search">Custom icon</a>', [length(max=20)])
     submit = SubmitField(u'Save')
 
 class CategoryForm(Form):

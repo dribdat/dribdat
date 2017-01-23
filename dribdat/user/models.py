@@ -107,6 +107,7 @@ class Event(SurrogatePK, Model):
     hostname = Column(db.String(80), nullable=True)
     location = Column(db.String(255), nullable=True)
     description = Column(db.UnicodeText(), nullable=True)
+    boilerplate = Column(db.UnicodeText(), nullable=True)
 
     logo_url = Column(db.String(255), nullable=True)
     custom_css = Column(db.UnicodeText(), nullable=True)

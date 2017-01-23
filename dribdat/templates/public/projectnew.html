@@ -8,10 +8,12 @@
 <div class="container">
     <h2>Start something awesome!</h2>
 
-    {% if boilerplate %}
+    {% if current_event.boilerplate %}
+      {{current_event.boilerplate|markdown}}
     {% else %}
       {% include "quickstart.html" %}
     {% endif %}
+    <hr>
 
     {% if form %}
       {{ render_form(url_for('public.project_new'), form) }}

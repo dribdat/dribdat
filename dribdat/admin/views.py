@@ -192,7 +192,7 @@ def event_print(event_id):
 @blueprint.route('/project/<int:project_id>', methods=['GET', 'POST'])
 @login_required
 @admin_required
-def project(project_id):
+def project_view(project_id):
     project = Project.query.filter_by(id=project_id).first_or_404()
     form = ProjectForm(obj=project, next=request.args.get('next'))
     form.user_id.choices = [(e.id, "%s" % (e.username)) for e in User.query.order_by('username')]
@@ -222,7 +222,7 @@ def project_toggle(project_id):
         flash('Project is now hidden.', 'success')
     else:
         flash('Project is now visible.', 'success')
-    return projects()
+    return project_view(project_id)
 
 @blueprint.route('/project/<int:project_id>/delete', methods=['GET', 'POST'])
 @login_required
