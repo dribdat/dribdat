@@ -36,6 +36,9 @@
       {% if project.source_url %}
       <li>Source: <a href="{{ project.source_url }}">{{ project.source_url }}</a></li>
       {% endif %}
+      {% if project.contact_url %}
+      <li>Contact: <a href="{{ project.contact_url }}">{{ project.contact_url }}</a></li>
+      {% endif %}
       <li>Last update: <span>{{ project.updated_at|format_date }}</span></li>
       <li>Maintainer: <a href="{{project.user.webpage_url}}" target="_blank">{{ project.user.username }}</a></li>
       {% if project.category_id %}

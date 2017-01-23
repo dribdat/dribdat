@@ -19,7 +19,7 @@
 
     var supported = false;
     var toggleUpdateFields = function() {
-      var UPDATED_INPUTS = 'input#name, input#summary, textarea#longtext, input#webpage_url, input#source_url, input#image_url';
+      var UPDATED_INPUTS = 'input#name, input#summary, textarea#longtext, input#webpage_url, input#source_url, input#contact_url, input#image_url';
       if (supported && $('#is_autoupdate').is(':checked')) {
         $(UPDATED_INPUTS).parents('.form-group').hide();
       } else {
@@ -92,6 +92,7 @@
         $('textarea#longtext').html(data.description);
         $('input#webpage_url').val(data.homepage_url);
         $('input#source_url').val(data.source_url);
+        $('input#contact_url').val(data.contact_url);
         $('input#image_url').val(data.image_url);
       });
       return true;
