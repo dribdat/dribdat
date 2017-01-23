@@ -21,7 +21,7 @@ def timesince(dt, default="just now", until=False):
     """
     now = datetime.utcnow()
     if dt is None: return ""
-    if until:
+    if until and dt > now:
         diff = dt - now
         suffix = "to go"
     else:
