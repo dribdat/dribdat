@@ -53,11 +53,10 @@ class UserForm(Form):
 class ProjectForm(Form):
     category_id = SelectField(u'Category / challenge', coerce=int)
     progress = SelectField(u'Progress', coerce=int, choices=projectProgressList())
-    AUTOTEXT__HELP = u"Link to a GitHub or wiki page from which to update the following fields."
+    AUTOTEXT__HELP = u"Link to a project page from which to sync all details."
     autotext_url = StringField(u'Autofill link', [length(max=255)], description=AUTOTEXT__HELP)
-    is_autoupdate = BooleanField(u'Autoupdate project data using this link')
+    is_autoupdate = BooleanField(u'Autoupdate project data using the Autofill link')
     name = StringField(u'Title', [required(), length(max=80)], description="Required, you may change this any time")
-    hashtag = StringField(u'Hashtag or channel', [length(max=40)])
     summary = StringField(u'Short summary', [length(max=120)], description="Optional, max. 120 characters")
     longtext = TextAreaField(u'Full description', description="Use plain text, Markdown or HTML if you wish")
     # tagwords = StringField(u'Tags', [length(max=255)], description="Optional, separated by spaces")
@@ -66,4 +65,5 @@ class ProjectForm(Form):
     image_url = StringField(u'Banner image link', [length(max=255)], description="Optional")
     logo_color = StringField(u'Custom color', [length(max=7)])
     logo_icon = StringField(u'<a target="_blank" href="http://fontawesome.io/icons/#search">Custom icon</a>', [length(max=20)])
+    hashtag = StringField(u'Hashtag or channel', [length(max=40)])
     submit = SubmitField(u'Save')

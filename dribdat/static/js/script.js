@@ -43,7 +43,12 @@
 
       // Check autoupdate field
       toggleUpdateFields();
-      $('#is_autoupdate').click(toggleUpdateFields);
+      $('#is_autoupdate').click(function() {
+        if ($(this).is(':checked'))
+          if (!$indicator.find('button').click())
+            $(this).click();
+        toggleUpdateFields();
+      });
     };
 
     var $inputfield = $(this);
@@ -68,7 +73,7 @@
 
       if ($('input#name').val() &&
           !window.confirm('All project fields (Title, etc.) will be overwritten with remote project data. Proceed?'))
-            return;
+            return false;
 
       var $button = $(this);
       $indicator.find('i').css('color', 'blue');
@@ -89,6 +94,7 @@
         $('input#source_url').val(data.source_url);
         $('input#image_url').val(data.image_url);
       });
+      return true;
     });
   });
 

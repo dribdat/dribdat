@@ -35,6 +35,8 @@ def dashboard():
 def event(event_id):
     event = Event.query.filter_by(id=event_id).first_or_404()
     projects = Project.query.filter_by(event_id=event_id, is_hidden=False)
+    if request.args.get('embed'):
+        return render_template("public/embed.html", current_event=event, projects=projects)
     return render_template("public/event.html",  current_event=event, projects=projects)
 
 @blueprint.route('/project/<int:project_id>')
@@ -84,24 +86,25 @@ def project_unstar(project_id):
     return project_action(project_id, 'unstar')
 
 @blueprint.route('/project/new', methods=['GET', 'POST'])
-@login_required
 def project_new():
-    project = Project()
-    project.user_id = current_user.id
-    form = ProjectForm(obj=project, next=request.args.get('next'))
-    event = current_event()
-    form.category_id.choices = [(c.id, c.name) for c in project.categories_for_event(event.id)]
-    form.category_id.choices.insert(0, (-1, ''))
-    if form.validate_on_submit():
-        form.populate_obj(project)
-        project.event = event
-        project.update()
-        db.session.add(project)
-        db.session.commit()
-        flash('Project added.', 'success')
-        return project_action(project.id, 'create')
-    del form.logo_icon
-    del form.logo_color
+    form = None
+    if current_user and current_user.is_authenticated:
+        project = Project()
+        project.user_id = current_user.id
+        form = ProjectForm(obj=project, next=request.args.get('next'))
+        event = current_event()
+        form.category_id.choices = [(c.id, c.name) for c in project.categories_for_event(event.id)]
+        form.category_id.choices.insert(0, (-1, ''))
+        if form.validate_on_submit():
+            form.populate_obj(project)
+            project.event = event
+            project.update()
+            db.session.add(project)
+            db.session.commit()
+            flash('Project added.', 'success')
+            return project_action(project.id, 'create')
+        del form.logo_icon
+        del form.logo_color
     return render_template('public/projectnew.html', current_event=event, form=form)
 
 # API routine used to sync project data

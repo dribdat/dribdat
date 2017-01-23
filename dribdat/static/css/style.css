@@ -114,29 +114,20 @@ nav .fa-comment {
 }
 
 .event-countdown {
-  zoom: 0.8;
-  -moz-transform: scale(0.8);
   left: 50%;
   width: 100%;
   height: 100px;
   overflow: hidden;
   position: relative;
   margin-top: 20px;
-  margin-left: -355px;
+  margin-left: -312px;
 }
 .event-countdown .flip-clock-label {
   display: none;
 }
-@media (max-width: 1280px) {
-  .event-countdown {
-    margin-left: -313px;
-  }
-}
 @media (max-width: 992px) {
   .event-countdown {
-    left: inherit;
-    margin-left: 0px;
-    margin-top: 10px;
+    display: none;
   }
 }
 
@@ -290,3 +281,9 @@ nav .fa-comment {
   background: url(../libs/sso/btn-sign-in-with-slack.png) no-repeat;
   width: 173px; height: 41px;
 }
+
+.embed-event { text-align: center; }
+.embed-view footer, .embed-view .navbar { display: none; }
+.embed-view h2 { margin-bottom: 0px; }
+.embed-view, .embed-view .container { margin: 0; padding: 0; width: 100%; }
+.embed-view .honeycomb { transform: scale(0.5); }
