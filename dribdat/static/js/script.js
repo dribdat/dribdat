@@ -109,7 +109,7 @@
     var $infotext = $('.category-info');
     if (selected_id === '' || selected_id === 'list') {
       $projects.css('opacity', 1.0);
-      $('div', $infotext).hide();
+      $('.category-container', $infotext).hide();
       $projects
         .removeClass('hexagon hexalist')
         .addClass(selected_id === 'list' ? 'hexalist' : 'hexagon');
@@ -117,7 +117,7 @@
       var $selected = $('[category-id="' + selected_id + '"]', $projects.parent());
       $projects.css('opacity', 0.4);
       $selected.css('opacity', 1.0);
-      $('div', $infotext).hide();
+      $('.category-container', $infotext).hide();
       $('[category-id="' + selected_id + '"]', $infotext).show();
     }
   });

@@ -69,11 +69,11 @@
 
   <div class="category-info">
   {% if current_event.has_categories %}
-    <div category-id="infobox">
+    <div category-id="infobox" class="category-container">
       <center><h4><i class="fa fa-arrow-circle-o-up"></i> Use the buttons above to explore our challenges.</h4></center>
     </div>
     {% for category in current_event.categories %}
-    <div category-id="{{category.id}}" style="border-top:5px solid {{category.logo_color}}; display:none">
+    <div category-id="{{category.id}}" class="category-container" style="border-top:5px solid {{category.logo_color}}; display:none">
       <h3>{{ category.name }}</h3>
       {{ category.description|markdown }}
       {% if current_user and current_user.is_authenticated and current_user.is_admin %}
