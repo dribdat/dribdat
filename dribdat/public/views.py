@@ -134,6 +134,8 @@ def project_autoupdate(project_id):
         project.longtext = data['description']
     if 'homepage_url' in data and len(data['homepage_url']) > 0:
         project.webpage_url = data['homepage_url']
+    if 'contact_url' in data and len(data['contact_url']) > 0:
+        project.contact_url = data['contact_url']
     if 'source_url' in data and len(data['source_url']) > 0:
         project.source_url = data['source_url']
     if 'image_url' in data and len(data['image_url']) > 0:
