@@ -236,7 +236,7 @@ nav .fa-comment {
   padding-right: 5px;
 }
 .project-page .project-longtext img {
-  width: 100%;
+  max-width: 100%;
 }
 
 .navbar-collapse .nav li {
