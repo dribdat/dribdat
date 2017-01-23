@@ -5,14 +5,14 @@
 {% block content %}
 <div class="container event-page">
 
-    <center class="nav-categories">
+  <center class="nav-categories">
 
-      <div class="btn-group" data-toggle="buttons" role="group" aria-label="Filter by category">
-        <label class="btn btn-default active">
-          <input type="radio" name="category" id="" autocomplete="off" checked>
-            <i class="fa fa-cubes"></i><br>
-            <span> </span>
-        </label>
+    <div class="btn-group" data-toggle="buttons" role="group" aria-label="Filter by category">
+      <label class="btn btn-default active">
+        <input type="radio" name="category" id="" autocomplete="off" checked>
+          <i class="fa fa-cubes"></i><br>
+          <span> </span>
+      </label>
       {% for category in current_event.categories %}
         <label class="btn btn-default">
           <input type="radio" name="category" id="{{category.id}}" autocomplete="off">
@@ -24,26 +24,21 @@
       {% endfor %}
         <label class="btn btn-default">
           <input type="radio" name="category" id="list" autocomplete="off">
-            <i class="fa fa-list"></i><br>
+            <i class="fa fa-bars"></i><br>
             <span> </span>
         </label>
       </div>
 
       {% if current_event.has_started %}
-        {% if current_user and current_user.is_authenticated %}
-            <a href="{{ url_for('public.project_new') }}" class="btn btn-success">
-              <span>Start
-                <i class="fa fa-flag"></i>
-                <br>project</span>
-            </a>
-        {% else %}
-          <p><a href="{{ url_for('auth.register') }}">Register</a>
-          and log in to start a project.</p>
-        {% endif %}
-      </div>
+        <a href="{{ url_for('public.project_new') }}" class="btn btn-success" style="opacity:1">
+          <span>Start
+            <i class="fa fa-flag"></i>
+            <br>project</span>
+        </a>
       {% endif %}
+    </div>
 
-    </center>
+  </center>
 
   <!-- Based on Hexagon Tiles by Graham Pyne http://codepen.io/gpyne/pen/iElhp/ -->
   <div class="honeycomb">
@@ -72,20 +67,22 @@
     </div>
   </div>
 
-    <div class="category-info">
-      <div category-id="infobox">
-        <center><h4><i class="fa fa-arrow-circle-o-up"></i> Use the buttons above to explore our challenges.</h4></center>
-      </div>
-      {% for category in current_event.categories %}
-      <div category-id="{{category.id}}" style="border-top:5px solid {{category.logo_color}}; display:none">
-        <h3>{{ category.name }}</h3>
-        {{ category.description|markdown }}
-        {% if current_user and current_user.is_authenticated and current_user.is_admin %}
-          <br><a href="{{ url_for('admin.category', category_id=category.id) }}" class="btn btn-success btn-sm">Edit</a>
-        {% endif %}
-      </div>
-      {% endfor %}
+  <div class="category-info">
+  {% if current_event.has_categories %}
+    <div category-id="infobox" class="category-container">
+      <center><h4><i class="fa fa-arrow-circle-o-up"></i> Use the buttons above to explore our challenges.</h4></center>
     </div>
+    {% for category in current_event.categories %}
+    <div category-id="{{category.id}}" class="category-container" style="border-top:5px solid {{category.logo_color}}; display:none">
+      <h3>{{ category.name }}</h3>
+      {{ category.description|markdown }}
+      {% if current_user and current_user.is_authenticated and current_user.is_admin %}
+        <br><a href="{{ url_for('admin.category', category_id=category.id) }}" class="btn btn-success btn-sm">Edit</a>
+      {% endif %}
+    </div>
+    {% endfor %}
+  {% endif %}
+  </div>
 
 </div>
 
@@ -93,18 +90,23 @@
 
   <p>
     <small>{{current_event.description|markdown}}</small><br>
-    <a href="{{ url_for('public.home') }}" class="btn btn-sm btn-primary">{{ current_event.countdown|until_date }}</a>
-    <a href="{{ current_event.webpage_url }}" class="btn btn-sm btn-default">Info &raquo;</a>
+    {% if current_event.countdown %}
+      <a href="{{ url_for('public.home') }}" class="btn btn-sm btn-primary">{{ current_event.countdown|until_date }}</a>
+    {% endif %}
+    <a href="{{ current_event.webpage_url }}" class="btn btn-sm btn-default">Information &raquo;</a>
     {% if current_user and current_user.is_authenticated and current_user.is_admin %}
+      <a href="{{ url_for('public.event', event_id=current_event.id) }}?embed=1" class="btn btn-default btn-sm">Embed</a>
       <a href="{{ url_for('admin.event', event_id=current_event.id) }}" class="btn btn-success btn-sm">Edit</a>
     {% endif %}
   </p>
 
+  {% if current_event.community_embed %}
   <div class="panel panel-default community-embed">
     <div class="panel-body"><i class="fa fa-comment"></i>
       {{current_event.community_embed|safe}}
     </div>
   </div>
+  {% endif %}
 
 </div><!-- /.jumbotron -->
 {% endblock %}

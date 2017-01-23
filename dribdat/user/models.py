@@ -107,12 +107,12 @@ class Event(SurrogatePK, Model):
     hostname = Column(db.String(80), nullable=True)
     location = Column(db.String(255), nullable=True)
     description = Column(db.UnicodeText(), nullable=True)
+    boilerplate = Column(db.UnicodeText(), nullable=True)
 
     logo_url = Column(db.String(255), nullable=True)
     custom_css = Column(db.UnicodeText(), nullable=True)
 
     webpage_url = Column(db.String(255), nullable=True)
-    hashtag_url = Column(db.String(255), nullable=True)
     community_url = Column(db.String(255), nullable=True)
     community_embed = Column(db.UnicodeText(), nullable=True)
 
@@ -130,18 +130,23 @@ class Event(SurrogatePK, Model):
             'starts_at': self.starts_at,
             'has_started': self.has_started,
             'ends_at': self.ends_at,
-            'info_url': self.webpage_url,
+            'info_url': self.webpage_url
         }
 
     @property
     def has_started(self):
         return self.starts_at <= dt.datetime.utcnow() <= self.ends_at
+    def has_categories(self):
+        return len(self.categories) > 0
 
     @property
     def countdown(self):
+        TIME_LIMIT = dt.datetime.utcnow() + dt.timedelta(days=30)
         if self.starts_at > dt.datetime.utcnow():
+            if self.starts_at > TIME_LIMIT: return None
             return self.starts_at + dt.timedelta(hours=-2) # TODO: timezones...
         elif self.ends_at > dt.datetime.utcnow():
+            if self.ends_at > TIME_LIMIT: return None
             return self.ends_at + dt.timedelta(hours=-2)
         else:
             return None
@@ -179,12 +184,14 @@ class Project(SurrogatePK, Model):
     image_url = Column(db.String(255), nullable=True)
     source_url = Column(db.String(255), nullable=True)
     webpage_url = Column(db.String(255), nullable=True)
+    contact_url = Column(db.String(255), nullable=True)
     autotext_url = Column(db.String(255), nullable=True)
     is_autoupdate = Column(db.Boolean(), default=True)
     logo_color = Column(db.String(7), nullable=True)
     logo_icon = Column(db.String(40), nullable=True)
-    hashtag = Column(db.String(40), nullable=True)
     longtext = Column(db.UnicodeText(), nullable=False, default=u"")
+
+    hashtag = Column(db.String(40), nullable=True)
     created_at = Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)
     updated_at = Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)
     is_hidden = Column(db.Boolean(), default=False)
@@ -227,7 +234,7 @@ class Project(SurrogatePK, Model):
             'score': self.score,
             'phase': self.phase,
             'summary': self.summary,
-            'hashtag': self.hashtag,
+            'contact_url': self.contact_url,
             'image_url': self.image_url,
         }
 

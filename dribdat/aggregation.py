@@ -30,6 +30,7 @@ def GetProjectData(url):
             'homepage_url': json['homepage'],
             'source_url': json['html_url'],
             'image_url': json['owner']['avatar_url'],
+            'contact_url': json['html_url'] + '/issues',
         }
     elif url.find('//bitbucket.org') > 0:
         apiurl = re.sub(r'https?://bitbucket\.org', 'https://api.bitbucket.org/2.0/repositories', url)
@@ -43,6 +44,8 @@ def GetProjectData(url):
         doc = pq(readmedata.text)
         content = doc("div.readme")
         if len(content) < 1: return {}
+        contact_url = json['website'] or url
+        if json['has_issues']: contact_url = url + '/issues'
         return {
             'name': json['name'],
             'summary': json['description'],
@@ -50,6 +53,7 @@ def GetProjectData(url):
             'homepage_url': json['website'],
             'source_url': url,
             'image_url': json['project']['links']['avatar']['href'],
+            'contact_url': contact_url,
         }
     elif url.find('//make.opendata.ch/wiki') > 0:
         data = requests.get(url)
@@ -66,6 +70,7 @@ def GetProjectData(url):
             # 'homepage_url': url,
             # 'source_url': json['html_url'],
             # 'image_url': json['owner']['avatar_url'],
+            'contact_url': url,
         }
     return {}
 

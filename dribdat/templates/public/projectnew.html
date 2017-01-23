@@ -7,6 +7,21 @@
 {% block content %}
 <div class="container">
     <h2>Start something awesome!</h2>
-    {{ render_form(url_for('public.project_new'), form) }}
+
+    {% if current_event.boilerplate %}
+      {{current_event.boilerplate|markdown}}
+    {% else %}
+      {% include "quickstart.html" %}
+    {% endif %}
+    <hr>
+
+    {% if form %}
+      {{ render_form(url_for('public.project_new'), form) }}
+    {% else %}
+      <div class="alert alert-info">
+        Please <a href="{{ url_for('auth.login') }}">log in</a>
+        to publish a project here.
+      </div>
+    {% endif %}
 </div>
 {% endblock %}

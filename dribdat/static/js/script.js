@@ -19,7 +19,7 @@
 
     var supported = false;
     var toggleUpdateFields = function() {
-      var UPDATED_INPUTS = 'input#name, input#summary, textarea#longtext, input#webpage_url, input#source_url, input#image_url';
+      var UPDATED_INPUTS = 'input#name, input#summary, textarea#longtext, input#webpage_url, input#source_url, input#contact_url, input#image_url';
       if (supported && $('#is_autoupdate').is(':checked')) {
         $(UPDATED_INPUTS).parents('.form-group').hide();
       } else {
@@ -43,7 +43,12 @@
 
       // Check autoupdate field
       toggleUpdateFields();
-      $('#is_autoupdate').click(toggleUpdateFields);
+      $('#is_autoupdate').click(function() {
+        if ($(this).is(':checked'))
+          if (!$indicator.find('button').click())
+            $(this).click();
+        toggleUpdateFields();
+      });
     };
 
     var $inputfield = $(this);
@@ -68,7 +73,7 @@
 
       if ($('input#name').val() &&
           !window.confirm('All project fields (Title, etc.) will be overwritten with remote project data. Proceed?'))
-            return;
+            return false;
 
       var $button = $(this);
       $indicator.find('i').css('color', 'blue');
@@ -87,8 +92,10 @@
         $('textarea#longtext').html(data.description);
         $('input#webpage_url').val(data.homepage_url);
         $('input#source_url').val(data.source_url);
+        $('input#contact_url').val(data.contact_url);
         $('input#image_url').val(data.image_url);
       });
+      return true;
     });
   });
 
@@ -102,7 +109,7 @@
     var $infotext = $('.category-info');
     if (selected_id === '' || selected_id === 'list') {
       $projects.css('opacity', 1.0);
-      $('div', $infotext).hide();
+      $('.category-container', $infotext).hide();
       $projects
         .removeClass('hexagon hexalist')
         .addClass(selected_id === 'list' ? 'hexalist' : 'hexagon');
@@ -110,7 +117,7 @@
       var $selected = $('[category-id="' + selected_id + '"]', $projects.parent());
       $projects.css('opacity', 0.4);
       $selected.css('opacity', 1.0);
-      $('div', $infotext).hide();
+      $('.category-container', $infotext).hide();
       $('[category-id="' + selected_id + '"]', $infotext).show();
     }
   });

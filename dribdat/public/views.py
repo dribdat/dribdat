@@ -35,7 +35,11 @@ def dashboard():
 def event(event_id):
     event = Event.query.filter_by(id=event_id).first_or_404()
     projects = Project.query.filter_by(event_id=event_id, is_hidden=False)
-    return render_template("public/event.html",  current_event=event, projects=projects)
+    if request.args.get('embed'):
+        return render_template("public/embed.html", current_event=event, projects=projects)
+    summaries = [ p.data for p in projects ]
+    summaries.sort(key=lambda x: x['score'], reverse=True)
+    return render_template("public/event.html",  current_event=event, projects=summaries)
 
 @blueprint.route('/project/<int:project_id>')
 def project(project_id):
@@ -84,24 +88,26 @@ def project_unstar(project_id):
     return project_action(project_id, 'unstar')
 
 @blueprint.route('/project/new', methods=['GET', 'POST'])
-@login_required
 def project_new():
-    project = Project()
-    project.user_id = current_user.id
-    form = ProjectForm(obj=project, next=request.args.get('next'))
-    event = current_event()
-    form.category_id.choices = [(c.id, c.name) for c in project.categories_for_event(event.id)]
-    form.category_id.choices.insert(0, (-1, ''))
-    if form.validate_on_submit():
-        form.populate_obj(project)
-        project.event = event
-        project.update()
-        db.session.add(project)
-        db.session.commit()
-        flash('Project added.', 'success')
-        return project_action(project.id, 'create')
-    del form.logo_icon
-    del form.logo_color
+    form = None
+    if current_user and current_user.is_authenticated:
+        project = Project()
+        project.user_id = current_user.id
+        form = ProjectForm(obj=project, next=request.args.get('next'))
+        event = current_event()
+        form.category_id.choices = [(c.id, c.name) for c in project.categories_for_event(event.id)]
+        form.category_id.choices.insert(0, (-1, ''))
+        if form.validate_on_submit():
+            form.populate_obj(project)
+            project.event = event
+            project.update()
+            db.session.add(project)
+            db.session.commit()
+            flash('Project added.', 'success')
+            project_action(project.id, 'create')
+            return project_action(project.id, 'star')
+        del form.logo_icon
+        del form.logo_color
     return render_template('public/projectnew.html', current_event=event, form=form)
 
 # API routine used to sync project data
@@ -131,6 +137,8 @@ def project_autoupdate(project_id):
         project.longtext = data['description']
     if 'homepage_url' in data and len(data['homepage_url']) > 0:
         project.webpage_url = data['homepage_url']
+    if 'contact_url' in data and len(data['contact_url']) > 0:
+        project.contact_url = data['contact_url']
     if 'source_url' in data and len(data['source_url']) > 0:
         project.source_url = data['source_url']
     if 'image_url' in data and len(data['image_url']) > 0:

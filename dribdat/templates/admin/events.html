@@ -24,14 +24,14 @@
               </a>
             </td>
             <td>
-              <a href="{{ url_for('admin.event_projects', event_id=event.id) }}" class="btn btn-sm btn-primary">
-                Show
-              </a>
               <a href="{{ url_for('public.event', event_id=event.id) }}" class="btn btn-sm btn-primary">
                 Public board
               </a>
+              <a href="{{ url_for('admin.event_projects', event_id=event.id) }}" class="btn btn-sm btn-default">
+                Show all projects
+              </a>
               <a href="{{ url_for('admin.event_print', event_id=event.id) }}" class="btn btn-sm btn-default">
-                All on one page
+                Print view
               </a>
             </td>
             <td>{{ event.starts_at|format_date }}</td>
