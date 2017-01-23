@@ -206,6 +206,8 @@ class Project(SurrogatePK, Model):
     category_id = reference_col('categories', nullable=True)
     category = relationship('Category', backref='projects')
 
+    def has_categories(self):
+        return len(self.categories) > 0
     def categories_all(self):
         return Category.query.order_by('name')
     def categories_for_event(self, event_id):

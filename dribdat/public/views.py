@@ -37,7 +37,9 @@ def event(event_id):
     projects = Project.query.filter_by(event_id=event_id, is_hidden=False)
     if request.args.get('embed'):
         return render_template("public/embed.html", current_event=event, projects=projects)
-    return render_template("public/event.html",  current_event=event, projects=projects)
+    summaries = [ p.data for p in projects ]
+    summaries.sort(key=lambda x: x['score'], reverse=True)
+    return render_template("public/event.html",  current_event=event, projects=summaries)
 
 @blueprint.route('/project/<int:project_id>')
 def project(project_id):

@@ -24,7 +24,7 @@
       {% endfor %}
         <label class="btn btn-default">
           <input type="radio" name="category" id="list" autocomplete="off">
-            <i class="fa fa-list"></i><br>
+            <i class="fa fa-bars"></i><br>
             <span> </span>
         </label>
       </div>
@@ -67,20 +67,22 @@
     </div>
   </div>
 
-    <div class="category-info">
-      <div category-id="infobox">
-        <center><h4><i class="fa fa-arrow-circle-o-up"></i> Use the buttons above to explore our challenges.</h4></center>
-      </div>
-      {% for category in current_event.categories %}
-      <div category-id="{{category.id}}" style="border-top:5px solid {{category.logo_color}}; display:none">
-        <h3>{{ category.name }}</h3>
-        {{ category.description|markdown }}
-        {% if current_user and current_user.is_authenticated and current_user.is_admin %}
-          <br><a href="{{ url_for('admin.category', category_id=category.id) }}" class="btn btn-success btn-sm">Edit</a>
-        {% endif %}
-      </div>
-      {% endfor %}
+  <div class="category-info">
+  {% if current_event.has_categories %}
+    <div category-id="infobox">
+      <center><h4><i class="fa fa-arrow-circle-o-up"></i> Use the buttons above to explore our challenges.</h4></center>
     </div>
+    {% for category in current_event.categories %}
+    <div category-id="{{category.id}}" style="border-top:5px solid {{category.logo_color}}; display:none">
+      <h3>{{ category.name }}</h3>
+      {{ category.description|markdown }}
+      {% if current_user and current_user.is_authenticated and current_user.is_admin %}
+        <br><a href="{{ url_for('admin.category', category_id=category.id) }}" class="btn btn-success btn-sm">Edit</a>
+      {% endif %}
+    </div>
+    {% endfor %}
+  {% endif %}
+  </div>
 
 </div>
 
