@@ -102,7 +102,8 @@ def project_new():
             db.session.add(project)
             db.session.commit()
             flash('Project added.', 'success')
-            return project_action(project.id, 'create')
+            project_action(project.id, 'create')
+            return project_action(project_id, 'star')
         del form.logo_icon
         del form.logo_color
     return render_template('public/projectnew.html', current_event=event, form=form)
