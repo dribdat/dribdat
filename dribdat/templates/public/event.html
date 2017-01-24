@@ -31,9 +31,8 @@
 
       {% if current_event.has_started %}
         <a href="{{ url_for('public.project_new') }}" class="btn btn-success" style="opacity:1">
-          <span>Start
-            <i class="fa fa-flag"></i>
-            <br>project</span>
+          <i class="fa fa-flag"></i><br>
+          <span>Start&nbsp;project</span>
         </a>
       {% endif %}
     </div>
@@ -77,7 +76,9 @@
       <h3>{{ category.name }}</h3>
       {{ category.description|markdown }}
       {% if current_user and current_user.is_authenticated and current_user.is_admin %}
-        <br><a href="{{ url_for('admin.category', category_id=category.id) }}" class="btn btn-success btn-sm">Edit</a>
+        <br><a href="{{ url_for('admin.category', category_id=category.id) }}" class="btn btn-success btn-sm">
+          <i class="fa fa-pencil" aria-hidden="true"></i>
+          Edit</a>
       {% endif %}
     </div>
     {% endfor %}
@@ -88,17 +89,23 @@
 
 <div class="jumbotron event-page">
 
-  <p>
+  <div class="btn-group" role="group" aria-label="Hackathon navigation">
     <small>{{current_event.description|markdown}}</small><br>
     {% if current_event.countdown %}
       <a href="{{ url_for('public.home') }}" class="btn btn-sm btn-primary">{{ current_event.countdown|until_date }}</a>
     {% endif %}
-    <a href="{{ current_event.webpage_url }}" class="btn btn-sm btn-default">Information &raquo;</a>
+    <a href="{{ current_event.webpage_url }}" class="btn btn-sm btn-default">
+      <i class="fa fa-info-circle" aria-hidden="true"></i>
+      Information &raquo;</a>
     {% if current_user and current_user.is_authenticated and current_user.is_admin %}
-      <a href="{{ url_for('public.event', event_id=current_event.id) }}?embed=1" class="btn btn-default btn-sm">Embed</a>
-      <a href="{{ url_for('admin.event', event_id=current_event.id) }}" class="btn btn-success btn-sm">Edit</a>
+      <a href="{{ url_for('public.event', event_id=current_event.id, _external=True) }}?embed=1" class="btn btn-default btn-sm" id="embed-link">
+        <i class="fa fa-external-link" aria-hidden="true"></i>
+        Embed</a>
+      <a href="{{ url_for('admin.event', event_id=current_event.id) }}" class="btn btn-success btn-sm">
+        <i class="fa fa-pencil" aria-hidden="true"></i>
+        Edit</a>
     {% endif %}
-  </p>
+  </div>
 
   {% if current_event.community_embed %}
   <div class="panel panel-default community-embed">

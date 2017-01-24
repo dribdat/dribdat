@@ -10,7 +10,7 @@
     </h2>
     <p>{{current_event.description|markdown}}</p>
     <center>
-      <p>
+      <div class="btn-group" role="group" aria-label="Hackathon navigation">
         <a href="{{ current_event.webpage_url }}" class="btn btn-primary">How to join &raquo;</a>
         <a href="{{ url_for('public.event', event_id=current_event.id) }}" class="btn btn-default"><b>
           {% if current_event.has_started %}
@@ -20,9 +20,11 @@
           {% endif %}
         </b></a>
         {% if current_user and current_user.is_authenticated and current_event.has_started %}
-          <a href="{{ url_for('public.project_new') }}" class="btn btn-success">Start a project!</a>
+          <a href="{{ url_for('public.project_new') }}" class="btn btn-success">
+            <i class="fa fa-flag"></i>
+            Start a project!</a>
         {% endif %}
-      </p>
+      </div>
     </center>
     {% if current_event.countdown %}
     <div class="event-countdown" data-start="{{ current_event.countdown }}"></div>

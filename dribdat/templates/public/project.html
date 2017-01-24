@@ -67,7 +67,7 @@
       {{project.longtext|markdown}}
     </div>
   </div>
-  <p class="project-buttons">
+  <div class="btn-group project-buttons" role="group" aria-label="Hackathon navigation">
     {% if project.webpage_url %}
       <a href="{{ project.webpage_url }}" class="btn btn-primary" target="_blank">Project homepage &raquo;</a>
     {% endif %}
@@ -84,10 +84,12 @@
          <i class="fa fa-pencil" aria-hidden="true"></i>
          Edit</a>
        {% if project.is_autoupdate %}
-        <a href="{{ url_for('public.project_autoupdate', project_id=project.id) }}" class="btn btn-warning">Sync</a>
+        <a href="{{ url_for('public.project_autoupdate', project_id=project.id) }}" class="btn btn-warning">
+          <i class="fa fa-refresh" aria-hidden="true"></i>
+          Sync</a>
        {% endif %}
     {% endif %}
-  </p>
+  </div>
   <div class="panel panel-default community-embed">
     <div class="panel-body"><i class="fa fa-comment"></i>
       {{project.event.community_embed|safe}}

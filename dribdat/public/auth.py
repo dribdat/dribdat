@@ -69,7 +69,8 @@ def register():
             flash("Administrative user created - have fun!", 'success')
         else:
             flash("Thank you for registering. You can now log in and submit projects.", 'success')
-        return redirect(url_for('auth.login'))
+        login_user(new_user, remember=True)
+        return redirect(url_for('public.home'))
     else:
         flash_errors(form)
     return render_template('public/register.html', current_event=current_event(), form=form, slack_enabled=slack_enabled())
