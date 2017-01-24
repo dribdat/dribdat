@@ -2,6 +2,7 @@
 """Helper utilities and decorators."""
 from flask import flash
 from datetime import datetime
+from math import floor
 
 def random_password():
     import string, random
@@ -37,6 +38,6 @@ def timesince(dt, default="just now", until=False):
         (diff.seconds, "second", "seconds"),
     )
     for period, singular, plural in periods:
-        if round(period) > 0:
+        if floor(period) > 0:
             return "%d %s %s" % (period, singular if period == 1 else plural, suffix)
     return default
