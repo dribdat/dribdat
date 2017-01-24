@@ -37,6 +37,6 @@ def timesince(dt, default="just now", until=False):
         (diff.seconds, "second", "seconds"),
     )
     for period, singular, plural in periods:
-        if period:
+        if round(period) > 0:
             return "%d %s %s" % (period, singular if period == 1 else plural, suffix)
     return default
