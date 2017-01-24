@@ -115,7 +115,7 @@ nav .fa-comment {
 
 .event-countdown {
   left: 50%;
-  width: 100%;
+  width: 624px;
   height: 100px;
   overflow: hidden;
   position: relative;
@@ -125,7 +125,7 @@ nav .fa-comment {
 .event-countdown .flip-clock-label {
   display: none;
 }
-@media (max-width: 992px) {
+@media (max-width: 760px) {
   .event-countdown {
     display: none;
   }
@@ -282,8 +282,16 @@ nav .fa-comment {
   width: 173px; height: 41px;
 }
 
-.embed-event { text-align: center; }
 .embed-view footer, .embed-view .navbar { display: none; }
 .embed-view h2 { margin-bottom: 0px; }
-.embed-view, .embed-view .container { margin: 0; padding: 0; width: 100%; }
+.embed-event {
+  text-align: center;
+  background: none transparent !important;
+}
+.embed-view, .embed-view .container {
+  margin: 0 !important;
+  padding: 0 !important;
+  width: 100% !important;
+  background: none !important;
+}
 .embed-view .honeycomb { transform: scale(0.5); }
