@@ -8,11 +8,13 @@
   <center class="nav-categories">
 
     <div class="btn-group" data-toggle="buttons" role="group" aria-label="Filter by category">
-      <label class="btn btn-default active">
-        <input type="radio" name="category" id="" autocomplete="off" checked>
-          <i class="fa fa-cubes"></i><br>
-          <span> </span>
-      </label>
+      {% if projects %}
+        <label class="btn btn-default active">
+          <input type="radio" name="category" id="" autocomplete="off" checked>
+            <i class="fa fa-cubes"></i><br>
+            <span> </span>
+        </label>
+      {% endif %}
       {% for category in current_event.categories %}
         <label class="btn btn-default">
           <input type="radio" name="category" id="{{category.id}}" autocomplete="off">
@@ -22,11 +24,13 @@
             <span>{{ category.name }}</span>
         </label>
       {% endfor %}
+      {% if projects %}
         <label class="btn btn-default">
           <input type="radio" name="category" id="list" autocomplete="off">
             <i class="fa fa-bars"></i><br>
             <span> </span>
         </label>
+      {% endif %}
       </div>
     </div>
 
@@ -60,7 +64,7 @@
   </div>
 
   <div class="category-info">
-  {% if current_event.has_categories %}
+  {% if current_event.categories %}
     <div category-id="infobox" class="category-container">
       <center><h4><i class="fa fa-arrow-circle-o-up"></i> Use the buttons above to explore our challenges.</h4></center>
     </div>
@@ -96,9 +100,11 @@
     {% if current_event.countdown %}
       <a href="{{ url_for('public.home') }}" class="btn btn-sm btn-primary">{{ current_event.countdown|until_date }}</a>
     {% endif %}
-    <a href="{{ current_event.webpage_url }}" class="btn btn-sm btn-default">
-      <i class="fa fa-info-circle" aria-hidden="true"></i>
-      Information &raquo;</a>
+    {% if current_event.webpage_url %}
+      <a href="{{ current_event.webpage_url }}" class="btn btn-sm btn-default">
+        <i class="fa fa-info-circle" aria-hidden="true"></i>
+        Information &raquo;</a>
+    {% endif %}
     {% if current_user and current_user.is_authenticated and current_user.is_admin %}
       <a href="{{ url_for('public.event', event_id=current_event.id, _external=True) }}?embed=1" class="btn btn-default btn-sm" id="embed-link">
         <i class="fa fa-external-link" aria-hidden="true"></i>
