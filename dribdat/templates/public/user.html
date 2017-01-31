@@ -5,8 +5,6 @@
 {% block page_title %}User profile{% endblock %}
 
 {% block content %}
-<div class="container">
-    <h2>My account</h2>
-    {{ render_form(url_for('auth.user_profile'), form) }}
-</div>
+  <h2>My account</h2>
+  {{ render_form(url_for('auth.user_profile'), form) }}
 {% endblock %}

@@ -5,8 +5,6 @@
 {% block page_title %}Edit: {{project.name}}{% endblock %}
 
 {% block content %}
-<div class="container">
-    <h2>Edit project data</h2>
-    {{ render_form(url_for('public.project_edit', project_id=project.id), form) }}
-</div>
+  <h2>Edit project data</h2>
+  {{ render_form(url_for('public.project_edit', project_id=project.id), form) }}
 {% endblock %}
