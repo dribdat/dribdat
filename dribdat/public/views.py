@@ -90,11 +90,11 @@ def project_unstar(project_id):
 @blueprint.route('/project/new', methods=['GET', 'POST'])
 def project_new():
     form = None
+    event = current_event()
     if current_user and current_user.is_authenticated:
         project = Project()
         project.user_id = current_user.id
         form = ProjectForm(obj=project, next=request.args.get('next'))
-        event = current_event()
         form.category_id.choices = [(c.id, c.name) for c in project.categories_for_event(event.id)]
         form.category_id.choices.insert(0, (-1, ''))
         if form.validate_on_submit():
