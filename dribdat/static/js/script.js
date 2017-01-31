@@ -104,7 +104,7 @@
   $('input#logo_color[type=text]').attr('type', 'color');
 
   // Clickable categories navigation
-  $('.nav-categories .btn-group label').click(function() {
+  var $navCategories = $('.nav-categories .btn-group label').click(function() {
     var selected_id = $(this).find('input').attr('id');
     var $projects = $('.honeycomb .project');
     var $infotext = $('.category-info');
@@ -122,6 +122,10 @@
       $('[category-id="' + selected_id + '"]', $infotext).show();
     }
   });
+
+  // Roll up categories if there is only one, and no projects
+  if ($navCategories.length === 1)
+    $navCategories.click().parent().parent().hide();
 
   // Show embed code when button clicked
   $('#embed-link').click(function(e) {
