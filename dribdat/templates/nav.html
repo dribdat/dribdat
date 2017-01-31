@@ -40,8 +40,16 @@
             {% endif %}
       	  </a>
         </li>
+        {% if event.has_started %}
         <li>
-          <a href="{{ event.community_url }}" target="_blank">Community
+          <a href="{{ url_for('public.project_new') }}">
+            Get started
+            <i class="fa fa-flag"></i></a>
+        </li>
+        {% endif %}
+        <li>
+          <a href="{{ event.community_url }}" target="_blank">
+            Community
             <i class="fa fa-comment"></i></a>
         </li>
       {% endif %}
