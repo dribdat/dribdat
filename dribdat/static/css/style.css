@@ -151,6 +151,13 @@ nav .fa-comment {
 .jumbotron.event-page {
   margin-top: 40px;
 }
+
+.with-event .start-project {
+  margin: 2em 0px;
+  text-align: center;
+  display: block;
+}
+
 .event-page .honeycomb {
   margin: 30px 0px 100px 0px;
   text-align: left;

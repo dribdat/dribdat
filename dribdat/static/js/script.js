@@ -83,7 +83,8 @@
         $button.removeAttr('disabled').html('Update now');
 
         if (typeof data.name === 'undefined' || data.name === '') {
-          window.alert('Project data could not be fetched - please check your link.');
+          window.alert('Project data could not be fetched - enter a valid Remote link.');
+          $('#is_autoupdate').prop('checked', false);
           return;
         }
 
