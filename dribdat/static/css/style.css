@@ -163,6 +163,9 @@ nav .fa {
   margin: 30px 0px 100px 0px;
   text-align: left;
 }
+.project.hexagon {
+  margin-bottom: 60px;
+}
 .project .hexagontent {
   overflow: hidden;
   color: black;
@@ -281,6 +284,14 @@ nav .fa {
 
 .container.with-event {
   margin-top: 120px;
+}
+@media (max-width: 760px) {
+  .container.with-event {
+    margin-top: 200px;
+  }
+  .category-info {
+    margin-top: none;
+  }
 }
 
 .team-gravatar img {
