@@ -6,7 +6,6 @@
 <div class="container event-page">
 
   <center class="nav-categories">
-
     <div class="btn-group" data-toggle="buttons" role="group" aria-label="Filter by category">
       {% if projects %}
         <label class="btn btn-default active">
@@ -31,13 +30,11 @@
             <span> </span>
         </label>
       {% endif %}
-      </div>
     </div>
-
   </center>
 
-  <!-- Based on Hexagon Tiles by Graham Pyne http://codepen.io/gpyne/pen/iElhp/ -->
-  <div class="honeycomb">
+  <div class="honeycomb"><!-- Based on Hexagon Tiles by Graham Pyne http://codepen.io/gpyne/pen/iElhp/ -->
+    <a name="projects"></a>
     <div class="ibws-fix">
     {% for project in projects %}
       <a href="{{ url_for('public.project', project_id=project.id) }}"
@@ -61,7 +58,7 @@
       {% endif %}
     {% endfor %}
     </div>
-  </div>
+  </div><!-- /honeycomb -->
 
   <div class="category-info">
   {% if current_event.categories %}
@@ -75,12 +72,12 @@
       {% if current_user and current_user.is_authenticated and current_user.is_admin %}
         <br><a href="{{ url_for('admin.category', category_id=category.id) }}" class="btn btn-success btn-sm">
           <i class="fa fa-pencil" aria-hidden="true"></i>
-          Edit</a>
+          Edit challenge</a>
       {% endif %}
     </div>
     {% endfor %}
   {% endif %}
-  </div>
+  </div><!-- /category-info -->
 
   {% if current_event.has_started %}
     <div class="start-project">
@@ -91,9 +88,17 @@
     </div>
   {% endif %}
 
-</div>
+</div><!-- /container -->
 
-<div class="jumbotron event-page">
+{% if current_event.resources %}
+<div class="container event-resources">
+  <a name="resources"></a>
+  {{current_event.resources|markdown}}
+</div>
+{% endif %}
+
+<div class="jumbotron event-page event-info">
+  <a name="info"></a>
 
   <div class="btn-group" role="group" aria-label="Hackathon navigation">
     <small>{{current_event.description|markdown}}</small><br>
@@ -111,12 +116,13 @@
         Embed</a>
       <a href="{{ url_for('admin.event', event_id=current_event.id) }}" class="btn btn-success btn-sm">
         <i class="fa fa-pencil" aria-hidden="true"></i>
-        Edit</a>
+        Edit event</a>
     {% endif %}
   </div>
 
   {% if current_event.community_embed %}
   <div class="panel panel-default community-embed">
+    <a name="community"></a>
     <div class="panel-body"><i class="fa fa-comment"></i>
       {{current_event.community_embed|safe}}
     </div>

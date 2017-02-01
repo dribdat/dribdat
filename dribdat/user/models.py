@@ -108,6 +108,7 @@ class Event(SurrogatePK, Model):
     location = Column(db.String(255), nullable=True)
     description = Column(db.UnicodeText(), nullable=True)
     boilerplate = Column(db.UnicodeText(), nullable=True)
+    resources = Column(db.UnicodeText(), nullable=True)
 
     logo_url = Column(db.String(255), nullable=True)
     custom_css = Column(db.UnicodeText(), nullable=True)
@@ -136,7 +137,7 @@ class Event(SurrogatePK, Model):
     @property
     def has_started(self):
         return self.starts_at <= dt.datetime.utcnow() <= self.ends_at
-    
+
     @property
     def countdown(self):
         TIME_LIMIT = dt.datetime.utcnow() + dt.timedelta(days=30)

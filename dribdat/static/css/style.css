@@ -103,7 +103,7 @@ nav .section-header .section-header-logo img {
 nav .section-header .section-header-content * {
   color: white;
 }
-nav .fa-comment {
+nav .fa {
   top: -7px;
   position: relative;
 }
@@ -150,6 +150,7 @@ nav .fa-comment {
 
 .jumbotron.event-page {
   margin-top: 40px;
+  padding: 30px;
 }
 
 .with-event .start-project {
@@ -270,6 +271,12 @@ nav .fa-comment {
 }
 .category-info img {
   width: 100%;
+}
+
+.event-resources {
+  padding: 0 1em;
+  margin-top: 40px;
+  text-align: left;
 }
 
 .container.with-event {

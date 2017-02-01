@@ -30,12 +30,13 @@ class EventForm(Form):
     hostname = StringField(u'Hosted by', [length(max=80)])
     location = StringField(u'Located at', [length(max=255)])
     description = TextAreaField(u'Description')
+    resources = TextAreaField(u'Guide to datasets and other resources')
+    boilerplate = TextAreaField(u'Quickstart guide for new projects')
     logo_url = StringField(u'Host logo link', [length(max=255)])
-    custom_css = TextAreaField(u'Custom CSS')
     webpage_url = StringField(u'Home page link', [length(max=255)])
     community_url = StringField(u'Community link', [length(max=255)])
     community_embed = TextAreaField(u'Community embed code')
-    boilerplate = TextAreaField(u'Quickstart guide for new projects')
+    custom_css = TextAreaField(u'Custom CSS')
     submit = SubmitField(u'Save')
 
 class ProjectForm(Form):
