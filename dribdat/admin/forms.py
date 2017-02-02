@@ -29,13 +29,14 @@ class EventForm(Form):
     is_current = BooleanField(u'Current event shown on homepage', default=False)
     hostname = StringField(u'Hosted by', [length(max=80)])
     location = StringField(u'Located at', [length(max=255)])
-    description = TextAreaField(u'Description')
+    description = TextAreaField(u'Description', description=u'Markdown and HTML supported')
+    resources = TextAreaField(u'Guide to datasets and other resources, event page', description=u'Markdown and HTML supported')
+    boilerplate = TextAreaField(u'Getting started guide, top of new project page', description=u'Markdown and HTML supported')
     logo_url = StringField(u'Host logo link', [length(max=255)])
-    custom_css = TextAreaField(u'Custom CSS')
     webpage_url = StringField(u'Home page link', [length(max=255)])
     community_url = StringField(u'Community link', [length(max=255)])
-    community_embed = TextAreaField(u'Community embed code')
-    boilerplate = TextAreaField(u'Quickstart guide for new projects')
+    community_embed = TextAreaField(u'Community code, bottom of event and project page', description=u'HTML and embedded scripts supported')
+    custom_css = TextAreaField(u'Custom CSS', description=u'External stylesheets: @import url(https://...);')
     submit = SubmitField(u'Save')
 
 class ProjectForm(Form):
@@ -50,7 +51,7 @@ class ProjectForm(Form):
 class CategoryForm(Form):
     next = HiddenField()
     name = StringField(u'Name', [required(), length(max=80)])
-    description = TextAreaField(u'Description')
+    description = TextAreaField(u'Description', description=u'Markdown and HTML supported')
     logo_color = StringField(u'Custom color', [length(max=7)])
     logo_icon = StringField(u'<a target="_blank" href="http://fontawesome.io/icons/#search">Custom icon</a>', [length(max=20)])
     event_id = SelectField(u'Specific to an event, or global if blank', coerce=int)

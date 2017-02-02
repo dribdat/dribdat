@@ -103,7 +103,7 @@ nav .section-header .section-header-logo img {
 nav .section-header .section-header-content * {
   color: white;
 }
-nav .fa-comment {
+nav .fa {
   top: -7px;
   position: relative;
 }
@@ -150,6 +150,7 @@ nav .fa-comment {
 
 .jumbotron.event-page {
   margin-top: 40px;
+  padding: 30px;
 }
 
 .with-event .start-project {
@@ -161,6 +162,9 @@ nav .fa-comment {
 .event-page .honeycomb {
   margin: 30px 0px 100px 0px;
   text-align: left;
+}
+.project.hexagon {
+  margin-bottom: 60px;
 }
 .project .hexagontent {
   overflow: hidden;
@@ -272,8 +276,25 @@ nav .fa-comment {
   width: 100%;
 }
 
+.event-resources {
+  padding: 0 1em;
+  margin-top: 40px;
+  text-align: left;
+}
+.event-info {
+  margin-top: 40px;
+}
+
 .container.with-event {
   margin-top: 120px;
+}
+@media (max-width: 760px) {
+  .container.with-event {
+    margin-top: 200px;
+  }
+  .category-info {
+    margin-top: none;
+  }
 }
 
 .team-gravatar img {
