@@ -62,7 +62,6 @@ def project_edit(project_id):
         project.update()
         db.session.add(project)
         db.session.commit()
-        cache.delete_memoized("project-%d" % project.id)
         flash('Project updated.', 'success')
         return project_action(project_id, 'update')
     return render_template('public/projectedit.html', current_event=event, project=project, form=form)
@@ -74,7 +73,6 @@ def project_action(project_id, of_type):
         ProjectActivity(project, of_type, current_user)
     project_starred = current_user and current_user.is_authenticated and IsProjectStarred(project, current_user)
     project_stars = GetProjectTeam(project)
-    cache.delete_memoized("project-%d" % project.id)
     return render_template('public/project.html', current_event=event, project=project,
         project_starred=project_starred, project_stars=project_stars)
 
@@ -108,7 +106,7 @@ def project_new():
             db.session.commit()
             flash('Project added.', 'success')
             project_action(project.id, 'create')
-            cache.delete_memoized("event-%d" % event.id)
+            cache.clear()
             return project_action(project.id, 'star')
         del form.logo_icon
         del form.logo_color
@@ -150,6 +148,5 @@ def project_autoupdate(project_id):
     project.update()
     db.session.add(project)
     db.session.commit()
-    cache.delete_memoized("project-%d" % project.id)
     flash("Project data synced.", 'success')
     return project_action(project.id, 'update')

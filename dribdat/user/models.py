@@ -227,7 +227,7 @@ class Project(SurrogatePK, Model):
 
     @property
     def data(self):
-        return {
+        d = {
             'id': self.id,
             'name': self.name,
             'score': self.score,
@@ -236,6 +236,12 @@ class Project(SurrogatePK, Model):
             'contact_url': self.contact_url,
             'image_url': self.image_url,
         }
+        if self.category is not None:
+            d['category'] = {
+                'id': self.category.id,
+                'name': self.category.name,
+            }
+        return d
 
     def update(self):
         # Calculate score based on base progress

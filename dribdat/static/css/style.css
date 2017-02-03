@@ -222,6 +222,15 @@ nav .fa {
 .hexagon:nth-child(even) { background-color: #f0e0a2; }
 .hexagon:nth-child(odd) { background-color: #adddcf; }
 
+.project-page .project-name {
+  font-weight: bold;
+  margin-top: 1.5em;
+}
+.project-page .project-category {
+  font-size: 70%;
+  color: #999;
+  font-style: italic;
+}
 .project-page .project-team {
   font-weight: normal;
   color: #999;
