@@ -161,7 +161,14 @@ nav .fa {
 
 .event-page .honeycomb {
   margin: 30px 0px 100px 0px;
-  text-align: left;
+  left: 50%;
+  width: 722px;
+}
+@media (max-width: 760px) {
+  .event-page .honeycomb {
+    width: auto;
+    left: inherit;
+  }
 }
 .project.hexagon {
   margin-bottom: 60px;
