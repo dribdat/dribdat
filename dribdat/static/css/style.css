@@ -103,7 +103,7 @@ nav .section-header .section-header-logo img {
 nav .section-header .section-header-content * {
   color: white;
 }
-nav .fa-comment {
+nav .fa {
   top: -7px;
   position: relative;
 }
@@ -150,6 +150,7 @@ nav .fa-comment {
 
 .jumbotron.event-page {
   margin-top: 40px;
+  padding: 30px;
 }
 
 .with-event .start-project {
@@ -160,7 +161,17 @@ nav .fa-comment {
 
 .event-page .honeycomb {
   margin: 30px 0px 100px 0px;
-  text-align: left;
+  left: 50%;
+  width: 722px;
+}
+@media (max-width: 760px) {
+  .event-page .honeycomb {
+    width: auto;
+    left: inherit;
+  }
+}
+.project.hexagon {
+  margin-bottom: 60px;
 }
 .project .hexagontent {
   overflow: hidden;
@@ -218,6 +229,15 @@ nav .fa-comment {
 .hexagon:nth-child(even) { background-color: #f0e0a2; }
 .hexagon:nth-child(odd) { background-color: #adddcf; }
 
+.project-page .project-name {
+  font-weight: bold;
+  margin-top: 1.5em;
+}
+.project-page .project-category {
+  font-size: 70%;
+  color: #999;
+  font-style: italic;
+}
 .project-page .project-team {
   font-weight: normal;
   color: #999;
@@ -272,8 +292,25 @@ nav .fa-comment {
   width: 100%;
 }
 
+.event-resources {
+  padding: 0 1em;
+  margin-top: 40px;
+  text-align: left;
+}
+.event-info {
+  margin-top: 40px;
+}
+
 .container.with-event {
   margin-top: 120px;
+}
+@media (max-width: 760px) {
+  .container.with-event {
+    margin-top: 200px;
+  }
+  .category-info {
+    margin-top: none;
+  }
 }
 
 .team-gravatar img {

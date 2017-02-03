@@ -25,7 +25,10 @@ class ProdConfig(Config):
 
     ENV = 'prod'
     DEBUG = False
-    CACHE_TYPE = 'redis'  # Can be "memcached", "redis", etc.
+    CACHE_TYPE = os_env.get('DRIBDAT_CACHE_TYPE', 'memcached')
+    CACHE_MEMCACHED_SERVERS = os_env.get('MEMCACHED_SERVERS', '')
+    CACHE_MEMCACHED_USERNAME = os_env.get('MEMCACHED_USERNAME', '')
+    CACHE_MEMCACHED_PASSWORD = os_env.get('MEMCACHED_PASSWORD', '')
     SQLALCHEMY_DATABASE_URI = os_env.get('DATABASE_URL', 'postgresql://localhost/example')
     DEBUG_TB_ENABLED = False  # Disable Debug toolbar
 

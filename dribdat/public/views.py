@@ -8,6 +8,7 @@ from dribdat.user.models import User, Event, Project
 from dribdat.public.forms import ProjectForm
 from dribdat.database import db
 from dribdat.aggregation import GetProjectData, ProjectActivity, IsProjectStarred, GetProjectTeam
+from dribdat.extensions import cache
 
 blueprint = Blueprint('public', __name__, static_folder="../static")
 
@@ -61,6 +62,7 @@ def project_edit(project_id):
         project.update()
         db.session.add(project)
         db.session.commit()
+        cache.clear()
         flash('Project updated.', 'success')
         return project_action(project_id, 'update')
     return render_template('public/projectedit.html', current_event=event, project=project, form=form)
@@ -105,6 +107,7 @@ def project_new():
             db.session.commit()
             flash('Project added.', 'success')
             project_action(project.id, 'create')
+            cache.clear()
             return project_action(project.id, 'star')
         del form.logo_icon
         del form.logo_color
@@ -147,4 +150,4 @@ def project_autoupdate(project_id):
     db.session.add(project)
     db.session.commit()
     flash("Project data synced.", 'success')
-    return project_action(project_id, 'update')
+    return project_action(project.id, 'update')
