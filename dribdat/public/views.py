@@ -62,6 +62,7 @@ def project_edit(project_id):
         project.update()
         db.session.add(project)
         db.session.commit()
+        cache.clear()
         flash('Project updated.', 'success')
         return project_action(project_id, 'update')
     return render_template('public/projectedit.html', current_event=event, project=project, form=form)

@@ -3,6 +3,7 @@
 {% block page_title %}{{current_event.name}} / {% if current_event.has_started %} Project Board {% else %} The Challenges {% endif %}{% endblock %}
 
 {% block content %}
+{% cache 60*5 %}
 <center class="nav-categories">
   <div class="btn-group" data-toggle="buttons" role="group" aria-label="Filter by category">
     {% if projects %}
@@ -93,6 +94,7 @@
   {{current_event.resources|markdown}}
 </div>
 {% endif %}
+{% endcache %}
 
 <div class="jumbotron event-info">
   <a name="info"></a>
