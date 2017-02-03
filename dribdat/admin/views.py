@@ -3,7 +3,7 @@
 from flask import Blueprint, render_template, redirect, url_for, make_response, request, flash, jsonify
 from flask_login import login_required, current_user
 
-from ..extensions import db
+from ..extensions import db, cache
 from ..decorators import admin_required
 
 from ..user.models import User, Event, Project, Category
@@ -112,7 +112,10 @@ def event(event_id):
         db.session.add(event)
         db.session.commit()
 
+        cache.clear()
+
         flash('Event updated.', 'success')
+        cache.clear()
         return events()
 
     return render_template('admin/event.html', event=event, form=form)
@@ -131,6 +134,7 @@ def event_new():
         db.session.commit()
 
         flash('Event added.', 'success')
+        cache.clear()
         return events()
 
     return render_template('admin/eventnew.html', form=form)
@@ -148,6 +152,7 @@ def event_delete(event_id):
         flash('No projects may be assigned to event in order to delete.', 'warning')
     else:
         event.delete()
+        cache.clear()
         flash('Event deleted.', 'success')
     return events()
 
@@ -218,6 +223,7 @@ def project_toggle(project_id):
     project = Project.query.filter_by(id=project_id).first_or_404()
     project.is_hidden = not project.is_hidden
     project.save()
+    cache.clear()
     if project.is_hidden:
         flash('Project is now hidden.', 'success')
     else:
@@ -251,6 +257,7 @@ def project_new():
         project.update()
         db.session.add(project)
         db.session.commit()
+        cache.clear()
         flash('Project added.', 'success')
         return projects()
     return render_template('admin/projectnew.html', form=form)
@@ -292,6 +299,7 @@ def category(category_id):
         db.session.add(category)
         db.session.commit()
 
+        cache.clear()
         flash('Category updated.', 'success')
         return categories()
 
@@ -313,6 +321,7 @@ def category_new():
         db.session.add(category)
         db.session.commit()
 
+        cache.clear()
         flash('Category added.', 'success')
         return categories()
 
@@ -327,6 +336,7 @@ def category_delete(category_id):
     if len(category.projects) > 0:
         flash('No projects may be assigned to category in order to delete.', 'warning')
     else:
+        cache.clear()
         category.delete()
         flash('Category deleted.', 'success')
     return categories()

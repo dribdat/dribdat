@@ -25,7 +25,7 @@ class ProdConfig(Config):
 
     ENV = 'prod'
     DEBUG = False
-    CACHE_TYPE = 'memcached'  # Can be "memcached", "redis", etc.
+    CACHE_TYPE = os_env.get('DRIBDAT_CACHE_TYPE', 'memcached')
     CACHE_MEMCACHED_SERVERS = os_env.get('MEMCACHED_SERVERS', '')
     CACHE_MEMCACHED_USERNAME = os_env.get('MEMCACHED_USERNAME', '')
     CACHE_MEMCACHED_PASSWORD = os_env.get('MEMCACHED_PASSWORD', '')
