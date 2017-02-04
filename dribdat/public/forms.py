@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from flask_wtf import Form
+from flask_wtf import FlaskForm
 from wtforms import (
     SubmitField, BooleanField,
     StringField, PasswordField,
@@ -12,7 +12,7 @@ from dribdat.user.models import User
 from wtforms.validators import AnyOf, required, length
 from ..user import projectProgressList
 
-class LoginForm(Form):
+class LoginForm(FlaskForm):
     """Login form."""
 
     username = StringField('Username', validators=[DataRequired()])
@@ -43,14 +43,14 @@ class LoginForm(Form):
             return False
         return True
 
-class UserForm(Form):
+class UserForm(FlaskForm):
     username = StringField(u'Username', [required(), length(max=80)])
     email = StringField(u'E-mail', [required(), length(max=80)])
     webpage_url = StringField(u'Online profile', [length(max=128)], description="URL to website or social profile - GitHub, Twitter supported with cards.")
     password = PasswordField(u'New password', [length(max=128)])
     submit = SubmitField(u'Save changes')
 
-class ProjectForm(Form):
+class ProjectForm(FlaskForm):
     category_id = SelectField(u'Category or Challenge', coerce=int)
     progress = SelectField(u'Progress', coerce=int, choices=projectProgressList())
     autotext_url = StringField(u'Remote link', [length(max=255)], description="A supported webpage (GitHub, Bitbucket, Wiki) from which to sync project details.")

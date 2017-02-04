@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
-
-from flask_wtf import Form
+from flask_wtf import FlaskForm
 from wtforms import (
     HiddenField, SubmitField, BooleanField,
     StringField, PasswordField, SelectField,
@@ -11,7 +10,7 @@ from wtforms.fields.html5 import DateTimeField
 
 from ..user import USER_ROLE, USER_STATUS, projectProgressList
 
-class UserForm(Form):
+class UserForm(FlaskForm):
     next = HiddenField()
     username = StringField(u'Username', [required(), length(max=80)])
     email = StringField(u'E-mail', [required(), length(max=80)])
@@ -21,7 +20,7 @@ class UserForm(Form):
     active = BooleanField(u"Active", default=True)
     submit = SubmitField(u'Save')
 
-class EventForm(Form):
+class EventForm(FlaskForm):
     next = HiddenField()
     name = StringField(u'Title', [required(), length(max=80)])
     starts_at = DateTimeField(u'Starts at', description="2020-09-25 09:00:00")
@@ -39,7 +38,7 @@ class EventForm(Form):
     custom_css = TextAreaField(u'Custom CSS', description=u'External stylesheets: @import url(https://...);')
     submit = SubmitField(u'Save')
 
-class ProjectForm(Form):
+class ProjectForm(FlaskForm):
     next = HiddenField()
     user_id = SelectField(u'Owner (team user)', coerce=int)
     event_id = SelectField(u'Event', coerce=int)
@@ -48,7 +47,7 @@ class ProjectForm(Form):
     progress = SelectField(u'Progress', coerce=int, choices=projectProgressList())
     submit = SubmitField(u'Save')
 
-class CategoryForm(Form):
+class CategoryForm(FlaskForm):
     next = HiddenField()
     name = StringField(u'Name', [required(), length(max=80)])
     description = TextAreaField(u'Description', description=u'Markdown and HTML supported')

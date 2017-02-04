@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
-from flask_wtf import Form
+from flask_wtf import FlaskForm
 from wtforms import TextField, PasswordField, StringField
 from wtforms.validators import DataRequired, Email, EqualTo, Length
 
 from .models import User
 
 
-class RegisterForm(Form):
+class RegisterForm(FlaskForm):
     """Register form."""
 
     username = StringField('Username',
