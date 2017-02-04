@@ -7,7 +7,6 @@ from flask_login import LoginManager
 from flask_oauth import OAuth
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
-from flask_misaka import Misaka
 
 hashing = Hashing()
 login_manager = LoginManager()
@@ -16,4 +15,3 @@ db = SQLAlchemy()
 migrate = Migrate()
 cache = Cache()
 debug_toolbar = DebugToolbarExtension()
-markdown = Misaka()
