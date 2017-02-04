@@ -2,6 +2,10 @@
 
 {% block page_title %}{{current_event.name}}{% endblock %}
 
+{% block js %}
+<script type="text/javascript" src="{{ url_for('static', filename='libs/FlipClock/flipclock.min.js') }}"></script>
+{% endblock %}
+
 {% block body_class %}embed-view{% endblock %}
 
 {% block content %}
