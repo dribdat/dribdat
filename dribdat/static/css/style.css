@@ -311,6 +311,9 @@ nav .fa {
   .category-info {
     margin-top: none;
   }
+  .project-tools {
+    float: none;
+  }
 }
 
 .team-gravatar img {
