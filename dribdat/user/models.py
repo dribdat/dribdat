@@ -137,7 +137,9 @@ class Event(SurrogatePK, Model):
     @property
     def has_started(self):
         return self.starts_at <= dt.datetime.utcnow() <= self.ends_at
-
+    @property
+    def has_finished(self):
+        return dt.datetime.utcnow() > self.ends_at
     @property
     def countdown(self):
         TIME_LIMIT = dt.datetime.utcnow() + dt.timedelta(days=30)

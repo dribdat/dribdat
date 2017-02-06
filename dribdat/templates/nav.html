@@ -33,7 +33,7 @@
   <div class="collapse navbar-collapse navbar-ex1-collapse">
     <ul class="nav navbar-nav">
       {% if event %}
-        {% if event.has_started %}
+        {% if event.has_started or event.has_finished %}
         <li>
           <a href="{{ url_for('public.event', event_id=event.id) }}#top">
             Projects
