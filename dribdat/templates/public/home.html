@@ -2,8 +2,17 @@
 
 {% block page_title %}{{current_event.name}}{% endblock %}
 
+{% block page_meta %}
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="{{ url_for('public.event', event_id=current_event.id, _external=True) }}">
+  <meta property="og:title" content="{{current_event.name}}">
+  <meta property="og:image" content="{{current_event.logo_url}}">
+  <meta property="og:description" content="{{current_event.description|truncate(140)}}">
+  <meta name="description" content="{{current_event.description|truncate(140)}}">
+{% endblock %}
+
 {% block js %}
-<script type="text/javascript" src="{{ url_for('static', filename='libs/FlipClock/flipclock.min.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='libs/FlipClock/flipclock.min.js') }}"></script>
 {% endblock %}
 
 {% block content %}
