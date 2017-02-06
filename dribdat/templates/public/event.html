@@ -2,6 +2,15 @@
 
 {% block page_title %}{{current_event.name}} / {% if current_event.has_started %} Project Board {% else %} The Challenges {% endif %}{% endblock %}
 
+{% block page_meta %}
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="{{ url_for('public.event', event_id=current_event.id, _external=True) }}">
+  <meta property="og:title" content="{{current_event.name}}">
+  <meta property="og:image" content="{{current_event.logo_url}}">
+  <meta property="og:description" content="{{current_event.description|truncate(140)}}">
+  <meta name="description" content="{{current_event.description|truncate(140)}}">
+{% endblock %}
+
 {% block content %}
 {% cache 60*5 %}
 <center class="nav-categories">
