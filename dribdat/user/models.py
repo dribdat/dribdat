@@ -223,6 +223,9 @@ class Project(SurrogatePK, Model):
     def phase(self):
         if self.progress is None: return ""
         return PROJECT_PROGRESS_PHASE[self.progress]
+    @property
+    def is_challenge(self):
+        return self.progress == PR_CHALLENGE
 
     # Current tally
     score = Column(db.Integer(), nullable=True, default=0)
