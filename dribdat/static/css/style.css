@@ -228,6 +228,7 @@ nav .navbar-nav .fa {
 .project.hexalist .hexagontent i.fa,
 .project.hexalist .hexagontent br { display: none; }
 .project.hexalist .hexagontent small { font-size: 100%; }
+.project.hexalist.challenge .hexagontent .progress { visibility: hidden; }
 .project.hexalist .hexagontent .progress {
   float: left;
   position: initial;
