@@ -52,7 +52,7 @@
 
 <div class="body-content">
   <div class="row">
-    {% cache 60*5 %}
+    {% cache 300, 'pastevents' %}
     {% for event in events %}
     <div class="col-lg-4">
       <div class="panel panel-default">
@@ -72,7 +72,6 @@
     </div>
     {% endfor %}
     {% endcache %}
-
     {% if not events %}
     <center>
       <h3>Looks like you are new to this - welcome!</h3>
