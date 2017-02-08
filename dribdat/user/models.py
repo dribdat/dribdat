@@ -225,7 +225,7 @@ class Project(SurrogatePK, Model):
         return PROJECT_PROGRESS_PHASE[self.progress]
     @property
     def is_challenge(self):
-        return self.progress == PR_CHALLENGE
+        return self.progress < 0
 
     # Current tally
     score = Column(db.Integer(), nullable=True, default=0)
@@ -249,30 +249,6 @@ class Project(SurrogatePK, Model):
         return d
 
     def update(self):
-        # Calculate score based on base progress
-        score = self.progress or 0
-        cqu = Activity.query.filter_by(project_id=self.id)
-        c_s = cqu.filter_by(name="star").count()
-        score = score + (2 * c_s)
-        # c_a = cqu.filter_by(name="boost").count()
-        # score = score + (10 * c_a)
-        if self.summary is None: self.summary = ''
-        if len(self.summary) > 3: score = score + 3
-        if self.image_url is None: self.image_url = ''
-        if len(self.image_url) > 3: score = score + 3
-        if self.source_url is None: self.source_url = ''
-        if len(self.source_url) > 3: score = score + 10
-        if self.webpage_url is None: self.webpage_url = ''
-        if len(self.webpage_url) > 3: score = score + 10
-        if self.logo_color is None: self.logo_color = ''
-        if len(self.logo_color) > 3: score = score + 1
-        if self.logo_icon is None: self.logo_icon = ''
-        if len(self.logo_icon) > 3: score = score + 1
-        if self.longtext is None: self.longtext = ''
-        if len(self.longtext) > 3: score = score + 1
-        if len(self.longtext) > 100: score = score + 4
-        if len(self.longtext) > 500: score = score + 10
-        self.score = score
         # Correct fields
         if self.category_id == -1: self.category_id = None
         if self.logo_icon.startswith('fa-'):
@@ -281,6 +257,33 @@ class Project(SurrogatePK, Model):
             self.logo_color = ''
         # Set the timestamp
         self.updated_at = dt.datetime.utcnow()
+        if self.is_challenge:
+            self.score = 0
+        else:
+            # Calculate score based on base progress
+            score = self.progress or 0
+            cqu = Activity.query.filter_by(project_id=self.id)
+            c_s = cqu.filter_by(name="star").count()
+            score = score + (2 * c_s)
+            # c_a = cqu.filter_by(name="boost").count()
+            # score = score + (10 * c_a)
+            if self.summary is None: self.summary = ''
+            if len(self.summary) > 3: score = score + 3
+            if self.image_url is None: self.image_url = ''
+            if len(self.image_url) > 3: score = score + 3
+            if self.source_url is None: self.source_url = ''
+            if len(self.source_url) > 3: score = score + 10
+            if self.webpage_url is None: self.webpage_url = ''
+            if len(self.webpage_url) > 3: score = score + 10
+            if self.logo_color is None: self.logo_color = ''
+            if len(self.logo_color) > 3: score = score + 1
+            if self.logo_icon is None: self.logo_icon = ''
+            if len(self.logo_icon) > 3: score = score + 1
+            if self.longtext is None: self.longtext = ''
+            if len(self.longtext) > 3: score = score + 1
+            if len(self.longtext) > 100: score = score + 4
+            if len(self.longtext) > 500: score = score + 10
+            self.score = score
 
     def __init__(self, name=None, **kwargs):
         if name:

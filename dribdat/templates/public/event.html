@@ -16,12 +16,12 @@
 <center class="nav-categories">
   <div class="btn-group" data-toggle="buttons" role="group" aria-label="Filter by category">
     {% if projects %}
-      <label class="btn btn-default active">
+      <label class="btn btn-default active" title="Projects">
         <input type="radio" name="category" id="" autocomplete="off" checked>
           <i class="fa fa-cubes"></i><br>
           <span> </span>
       </label>
-      <label class="btn btn-default active">
+      <label class="btn btn-default active" title="Challenges">
         <input type="checkbox" id="challenges" autocomplete="off" checked>
           <i class="fa fa-trophy"></i><br>
           <span> </span>
@@ -37,7 +37,7 @@
       </label>
     {% endfor %}
     {% if projects %}
-      <label class="btn btn-default">
+      <label class="btn btn-default" title="List view">
         <input type="radio" name="category" id="list" autocomplete="off">
           <i class="fa fa-bars"></i><br>
           <span> </span>

@@ -108,14 +108,14 @@ def ProjectActivity(project, of_type, current_user):
         score = 2
         if allstars.count() > 0:
             allstars[0].delete()
-        if current_user.is_admin:
-            score = 10
+        #if current_user.is_admin:
+        #    score = 10
         project.score = project.score - score
         project.save()
         return
     # Admin stars give projects special awards
-    if of_type == 'star' and current_user.is_admin:
-        score = 10
+    #if of_type == 'star' and current_user.is_admin:
+    #    score = 10
     project.score = project.score + score
     project.save()
     db.session.add(activity)
