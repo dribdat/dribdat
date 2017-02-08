@@ -201,6 +201,7 @@ nav .navbar-nav .fa {
   color: black;
   font-weight: bold;
   text-shadow: 1px 1px 0px #fff;
+  line-height: 1.5;
 }
 .project .hexagontent .fa {
   font-size: 240%;
