@@ -17,21 +17,21 @@ USER_STATUS = {
 }
 
 # Project progress
-PR_CHALLENGE = 0
-PR_NEW = 1
+PR_CHALLENGE = -1
+PR_NEW = 0
 PR_RESEARCHED = 10
 PR_SKETCHED = 20
 PR_PROTOTYPED = 30
 PR_LAUNCHED = 40
 PR_LIVE = 50
 PROJECT_PROGRESS = {
-    PR_NEW:         'A team has formed and announced the project',
+    PR_CHALLENGE:   'This is an idea or challenge description',
+    PR_NEW:         'A team has formed and started a project',
     PR_RESEARCHED:  'Research has been done to define the scope',
     PR_SKETCHED:    'Initial designs have been sketched and shared',
     PR_PROTOTYPED:  'A prototype of the idea has been developed',
     PR_LAUNCHED:    'The prototype has been deployed and presented',
     PR_LIVE:        'This project is now live and publicly available',
-    PR_CHALLENGE:   'This is an idea or challenge description',
 }
 PROJECT_PROGRESS_PHASE = {
     PR_NEW:         'Researching',

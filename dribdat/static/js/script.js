@@ -104,11 +104,13 @@
   $('input#logo_color[type=text]').attr('type', 'color');
 
   // Clickable categories navigation
-  var $navCategories = $('.nav-categories .btn-group label').click(function() {
+  var $navCategories = $('.nav-categories .btn-group label').click(function(e) {
     var selected_id = $(this).find('input').attr('id');
     var $projects = $('.honeycomb .project');
     var $infotext = $('.category-info');
-    if (selected_id === '' || selected_id === 'list') {
+    if (selected_id === 'challenges') {
+      // pass
+    } else if (selected_id === '' || selected_id === 'list') {
       $projects.css('opacity', 1.0);
       $('.category-container', $infotext).hide();
       $projects
@@ -121,6 +123,13 @@
       $('.category-container', $infotext).hide();
       $('[category-id="' + selected_id + '"]', $infotext).show();
     }
+    setTimeout(function() {
+      var challenges_on = $('#challenges').is(':checked');
+      $('.honeycomb').removeClass('hide-challenges')
+        .addClass(challenges_on ? '' : 'hide-challenges');
+      $('#challenges').parent().removeClass('active')
+        .addClass(challenges_on ? 'active' : '');
+    }, 1);
   });
 
   // Roll up categories if there is only one, and no projects
@@ -129,8 +138,7 @@
 
   // Show embed code when button clicked
   $('#embed-link').click(function(e) {
-    e.preventDefault();
-    e.stopPropagation();
+    e.preventDefault(); e.stopPropagation();
     var url = $(this).attr('href');
     var code = '<iframe src="' + url + '" style="width:100%;height:320px;background:transparent;border:none;overflow:hidden" scrolling="no"></iframe>';
     window.prompt('Copy and paste this code to embed this event:', code);

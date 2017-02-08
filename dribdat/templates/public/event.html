@@ -21,6 +21,11 @@
           <i class="fa fa-cubes"></i><br>
           <span> </span>
       </label>
+      <label class="btn btn-default active">
+        <input type="checkbox" id="challenges" autocomplete="off" checked>
+          <i class="fa fa-trophy"></i><br>
+          <span> </span>
+      </label>
     {% endif %}
     {% for category in current_event.categories %}
       <label class="btn btn-default">
@@ -46,7 +51,7 @@
   <div class="ibws-fix">
   {% for project in projects %}
     <a href="{{ url_for('public.project', project_id=project.id) }}"
-       class="hexagon project{% if project.is_challenge %} challenge{% endif %}"
+       class="hexagon project{% if project.phase=='Challenge' %} challenge{% endif %}"
        {% if project.category %}category-id="{{project.category.id}}"{% endif %}
        style="background-color:{{project.logo_color}}; background-image:url('{{project.image_url}}')">
       <div class="hexagontent">
