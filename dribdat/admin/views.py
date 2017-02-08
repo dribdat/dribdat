@@ -200,8 +200,8 @@ def event_print(event_id):
 def project_view(project_id):
     project = Project.query.filter_by(id=project_id).first_or_404()
     form = ProjectForm(obj=project, next=request.args.get('next'))
-    form.user_id.choices = [(e.id, "%s" % (e.username)) for e in User.query.order_by('username')]
-    form.event_id.choices = [(e.id, e.name) for e in Event.query.order_by('name')]
+    form.user_id.choices = [(e.id, "%s" % (e.username)) for e in User.query.filter_by(active=True).order_by('username')]
+    form.event_id.choices = [(e.id, e.name) for e in Event.query.order_by(Event.id.desc())]
     form.category_id.choices = [(c.id, c.name) for c in project.categories_all()]
     form.category_id.choices.insert(0, (-1, ''))
     if form.validate_on_submit():
@@ -249,8 +249,8 @@ def project_delete(project_id):
 def project_new():
     project = Project()
     form = ProjectForm(obj=project, next=request.args.get('next'))
-    form.user_id.choices = [(e.id, "%s" % (e.username)) for e in User.query.order_by('username')]
-    form.event_id.choices = [(e.id, e.name) for e in Event.query.order_by('name')]
+    form.user_id.choices = [(e.id, "%s" % (e.username)) for e in User.query.filter_by(active=True).order_by('username')]
+    form.event_id.choices = [(e.id, e.name) for e in Event.query.order_by(Event.id.desc())]
     form.category_id.choices = [(c.id, c.name) for c in project.categories_all()]
     form.category_id.choices.insert(0, (-1, ''))
     if form.validate_on_submit():
