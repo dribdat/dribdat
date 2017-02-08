@@ -12,7 +12,7 @@
 {% endblock %}
 
 {% block content %}
-{% cache 300 %}<!-- event: {{current_event.id}} -->
+{% cache 300, 'event-%d' % current_event.id %}
 <center class="nav-categories">
   <div class="btn-group" data-toggle="buttons" role="group" aria-label="Filter by category">
     {% if projects %}
@@ -103,19 +103,15 @@
 {% endif %}
 
 {% if current_event.resources %}
-<div class="event-resources">
   <a name="resources"></a>
-  {{current_event.resources|markdown}}
-</div>
+  <div class="event-resources">
+    {{current_event.resources|markdown}}
+  </div>
 {% endif %}
 
-{% endcache %}
-
+<a name="info"></a>
 <div class="jumbotron event-info">
-  <a name="info"></a>
-
-  <div class="btn-group" role="group" aria-label="Hackathon navigation">
-    <small>{{current_event.description|markdown}}</small><br>
+  <div class="btn-group center" role="group" aria-label="Hackathon navigation">
     {% if current_event.countdown %}
       <a href="{{ url_for('public.home') }}" class="btn btn-sm btn-primary">{{ current_event.countdown|until_date }}</a>
     {% endif %}
@@ -124,15 +120,9 @@
         <i class="fa fa-info-circle" aria-hidden="true"></i>
         Information &raquo;</a>
     {% endif %}
-    {% if current_user and current_user.is_authenticated and current_user.is_admin %}
-      <a href="{{ url_for('public.event', event_id=current_event.id, _external=True) }}?embed=1" class="btn btn-default btn-sm" id="embed-link">
-        <i class="fa fa-external-link" aria-hidden="true"></i>
-        Embed</a>
-      <a href="{{ url_for('admin.event', event_id=current_event.id) }}" class="btn btn-success btn-sm">
-        <i class="fa fa-pencil" aria-hidden="true"></i>
-        Edit event</a>
-    {% endif %}
   </div>
+
+  <small>{{current_event.description|markdown}}</small><br>
 
   {% if current_event.community_embed %}
   <div class="panel panel-default community-embed">
@@ -142,6 +132,18 @@
     </div>
   </div>
   {% endif %}
-
 </div><!-- /.jumbotron -->
+
+{% endcache %}
+
+{% if current_user and current_user.is_authenticated and current_user.is_admin %}
+  <div class="btn-group centered" role="group" aria-label="Hackathon admin">
+    <a href="{{ url_for('public.event', event_id=current_event.id, _external=True) }}?embed=1" class="btn btn-default btn-sm" id="embed-link">
+      <i class="fa fa-external-link" aria-hidden="true"></i>
+      Embed</a>
+    <a href="{{ url_for('admin.event', event_id=current_event.id) }}" class="btn btn-success btn-sm">
+      <i class="fa fa-pencil" aria-hidden="true"></i>
+      Edit event</a>
+  </div>
+{% endif %}
 {% endblock %}
