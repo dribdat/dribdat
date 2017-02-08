@@ -203,7 +203,7 @@ def project_view(project_id):
     form.user_id.choices = [(e.id, "%s" % (e.username)) for e in User.query.order_by('username')]
     form.event_id.choices = [(e.id, e.name) for e in Event.query.order_by('name')]
     form.category_id.choices = [(c.id, c.name) for c in project.categories_all()]
-
+    form.category_id.choices.insert(0, (-1, ''))
     if form.validate_on_submit():
         form.populate_obj(project)
         # Ensure project category remains blank
@@ -252,6 +252,7 @@ def project_new():
     form.user_id.choices = [(e.id, "%s" % (e.username)) for e in User.query.order_by('username')]
     form.event_id.choices = [(e.id, e.name) for e in Event.query.order_by('name')]
     form.category_id.choices = [(c.id, c.name) for c in project.categories_all()]
+    form.category_id.choices.insert(0, (-1, ''))
     if form.validate_on_submit():
         form.populate_obj(project)
         project.update()
