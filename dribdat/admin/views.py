@@ -95,7 +95,7 @@ def user_delete(user_id):
 @login_required
 @admin_required
 def events():
-    events = Event.query.all()
+    events = Event.query.order_by(Event.starts_at.desc()).all()
     return render_template('admin/events.html', events=events, active='events')
 
 
@@ -166,7 +166,7 @@ def event_delete(event_id):
 @admin_required
 def projects():
     # TODO: pagination...
-    projects = Project.query.order_by(Project.id.desc()).all()
+    projects = Project.query.order_by(Project.updated_at.desc()).all()
     return render_template('admin/projects.html', projects=projects, active='projects')
 
 @blueprint.route('/category/<int:category_id>/projects')
@@ -278,7 +278,7 @@ def project_autodata(project_id):
 @login_required
 @admin_required
 def categories():
-    categories = Category.query.order_by(Category.id.desc()).all()
+    categories = Category.query.order_by(Category.event_id.desc()).all()
     return render_template('admin/categories.html', categories=categories, active='categories')
 
 
