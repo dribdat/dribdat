@@ -42,7 +42,7 @@ class ProjectForm(FlaskForm):
     next = HiddenField()
     user_id = SelectField(u'Owner (team user)', coerce=int)
     event_id = SelectField(u'Event', coerce=int)
-    category_id = SelectField(u'Category / Challenge', coerce=int)
+    category_id = SelectField(u'Category', coerce=int)
     hashtag = StringField(u'Identifying tag or channel', [length(max=255)])
     progress = SelectField(u'Progress', coerce=int, choices=projectProgressList())
     submit = SubmitField(u'Save')

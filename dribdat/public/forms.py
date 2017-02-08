@@ -51,7 +51,7 @@ class UserForm(FlaskForm):
     submit = SubmitField(u'Save changes')
 
 class ProjectForm(FlaskForm):
-    category_id = SelectField(u'Category or Challenge', coerce=int)
+    category_id = SelectField(u'Category', coerce=int)
     progress = SelectField(u'Progress', coerce=int, choices=projectProgressList())
     autotext_url = StringField(u'Remote link', [length(max=255)], description="A supported webpage (GitHub, Bitbucket, Wiki) from which to sync project details.")
     is_autoupdate = BooleanField(u'Autoupdate project data')

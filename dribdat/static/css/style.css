@@ -104,8 +104,11 @@ nav .section-header .section-header-content * {
   color: white;
 }
 nav .fa {
-  top: -7px;
   position: relative;
+  top: -7px;
+}
+nav .navbar-nav .fa {
+  margin-left: 7px;
 }
 
 .home-page h2 {

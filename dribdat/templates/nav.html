@@ -33,46 +33,43 @@
   <div class="collapse navbar-collapse navbar-ex1-collapse">
     <ul class="nav navbar-nav">
       {% if event %}
-        {% if event.has_started or event.has_finished %}
         <li>
           <a href="{{ url_for('public.event', event_id=event.id) }}#top">
-            Projects
-            <i class="fa fa-bars" aria-hidden="true"></i></a>
+            {% if event.has_finished %}
+              Results<i class="fa fa-bars" aria-hidden="true"></i>
+            {% elif event.has_started %}
+              Projects<i class="fa fa-bars" aria-hidden="true"></i>
+            {% else %}
+              Challenges<i class="fa fa-trophy" aria-hidden="true"></i>
+            {% endif %}
+          </a>
         </li>
-        {% endif %}
-        {% if event.challenges %}
-        <li>
-          <a href="{{ url_for('public.event', event_id=event.id) }}#top">
-            Challenges
-            <i class="fa fa-trophy" aria-hidden="true"></i></a>
-        </li>
-        {% endif %}
         {% if event.resources %}
         <li>
           <a href="{{ url_for('public.event', event_id=event.id) }}#resources">
-            Resources
-            <i class="fa fa-cart-plus" aria-hidden="true"></i></a>
+            Resources<i class="fa fa-cart-plus" aria-hidden="true"></i>
+          </a>
         </li>
         {% endif %}
         {% if event.has_started %}
         <li>
           <a href="{{ url_for('public.project_new') }}">
-            Get started
-            <i class="fa fa-flag"></i></a>
+            Get started<i class="fa fa-flag"></i>
+          </a>
         </li>
         {% endif %}
         {% if event.community_url %}
         <li>
           <a href="{{ event.community_url }}">
-            Community
-            <i class="fa fa-comment"></i></a>
+            Community<i class="fa fa-comment"></i>
+          </a>
         </li>
         {% endif %}
       {% endif %}
       {% if tabs %}
         {% for tab, link in tabs %}
         <li class="{% if active == tab %}active{% endif %}">
-        <a href="{{ link }}">{{ tab|capitalize }}</a>
+          <a href="{{ link }}">{{ tab|capitalize }}</a>
         </li>
         {% endfor %}
       {% endif %}
@@ -88,7 +85,9 @@
           [ <a class="navbar-link" href="{{ url_for('auth.user_profile') }}">{{ current_user.username }}</a> ]
         </p></li>
         <li><p class="navbar-text">
-          <a class="navbar-link" href="{{ url_for('auth.logout') }}"><i class="fa fa-sign-out"></i> Logout</a>
+          <a class="navbar-link" href="{{ url_for('auth.logout') }}">
+            Logout<i class="fa fa-sign-out"></i>
+          </a>
         </p></li>
     </ul>
     {% else %}
