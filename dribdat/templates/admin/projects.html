@@ -2,6 +2,9 @@
 
 {% block content %}
 <div class="container">
+    <div style="float:right; margin-top:1em">
+      <a href="{{ url_for('admin.project_new') }}" class="btn btn-success">Add project or challenge</a>
+    </div>
     <h2>Projects</h2>
     {% if category_name %}<h4>Category: <b>{{ category_name }}</b></h4>{% endif %}
     {% if event_name %}<h4>Event: <b>{{ event_name }}</b></h4>{% endif %}
