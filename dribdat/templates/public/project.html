@@ -20,7 +20,7 @@
 {% endblock %}
 
 {% block content %}
-<div class="jumbotron project-page" style="background-color:{{project.logo_color}}">
+<div class="jumbotron project-page phase-{{ project.phase }}" style="background-color:{{project.logo_color}}">
   <div class="project-info">
     {% if project.image_url %}
       <img class="project-image" src="{{project.image_url}}">
@@ -83,7 +83,7 @@
   </div>
   <div class="btn-group project-buttons" role="group" aria-label="Hackathon navigation">
     {% if project.webpage_url %}
-      <a href="{{ project.webpage_url }}" class="btn btn-primary" target="_blank">Project homepage &raquo;</a>
+      <a href="{{ project.webpage_url }}" class="btn btn-primary" target="_blank">Homepage &raquo;</a>
     {% endif %}
     {% if project.source_url %}
       <a href="{{ project.source_url }}" class="btn btn-default" target="_blank">Source code &raquo;</a>

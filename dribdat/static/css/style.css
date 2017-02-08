@@ -104,8 +104,11 @@ nav .section-header .section-header-content * {
   color: white;
 }
 nav .fa {
-  top: -7px;
   position: relative;
+  top: -7px;
+}
+nav .navbar-nav .fa {
+  margin-left: 7px;
 }
 
 .home-page h2 {
@@ -170,6 +173,26 @@ nav .fa {
     left: inherit;
   }
 }
+
+.project-page.phase-Challenge .progress,
+.project-page.phase-Challenge .project-star,
+.hide-challenges .challenge,
+.challenge.hexagon .progress { display: none; }
+.challenge.hexagon .hexagontent { color: #35a; font-weight: normal; }
+.challenge.hexagon {
+  background-color: white !important;
+  border-top: 1px dashed rgba(0,0,200,0.4);
+  border-bottom: 1px dashed rgba(0,0,200,0.4);
+}
+.challenge.hexagon::before {
+  border-top: 1px dashed rgba(0,0,200,0.4);
+  border-bottom: 1px dashed rgba(0,0,200,0.4);
+}
+.challenge.hexagon::after {
+  border-top: 1px dashed rgba(0,0,200,0.4);
+  border-bottom: 1px dashed rgba(0,0,200,0.4);
+}
+
 .project.hexagon {
   margin-bottom: 60px;
 }
@@ -178,6 +201,7 @@ nav .fa {
   color: black;
   font-weight: bold;
   text-shadow: 1px 1px 0px #fff;
+  line-height: 1.5;
 }
 .project .hexagontent .fa {
   font-size: 240%;
@@ -204,6 +228,7 @@ nav .fa {
 .project.hexalist .hexagontent i.fa,
 .project.hexalist .hexagontent br { display: none; }
 .project.hexalist .hexagontent small { font-size: 100%; }
+.project.hexalist.challenge .hexagontent .progress { visibility: hidden; }
 .project.hexalist .hexagontent .progress {
   float: left;
   position: initial;

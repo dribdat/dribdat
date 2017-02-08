@@ -95,7 +95,7 @@ def user_delete(user_id):
 @login_required
 @admin_required
 def events():
-    events = Event.query.all()
+    events = Event.query.order_by(Event.starts_at.desc()).all()
     return render_template('admin/events.html', events=events, active='events')
 
 
@@ -166,7 +166,7 @@ def event_delete(event_id):
 @admin_required
 def projects():
     # TODO: pagination...
-    projects = Project.query.order_by(Project.id.desc()).all()
+    projects = Project.query.order_by(Project.updated_at.desc()).all()
     return render_template('admin/projects.html', projects=projects, active='projects')
 
 @blueprint.route('/category/<int:category_id>/projects')
@@ -200,10 +200,10 @@ def event_print(event_id):
 def project_view(project_id):
     project = Project.query.filter_by(id=project_id).first_or_404()
     form = ProjectForm(obj=project, next=request.args.get('next'))
-    form.user_id.choices = [(e.id, "%s" % (e.username)) for e in User.query.order_by('username')]
-    form.event_id.choices = [(e.id, e.name) for e in Event.query.order_by('name')]
+    form.user_id.choices = [(e.id, "%s" % (e.username)) for e in User.query.filter_by(active=True).order_by('username')]
+    form.event_id.choices = [(e.id, e.name) for e in Event.query.order_by(Event.id.desc())]
     form.category_id.choices = [(c.id, c.name) for c in project.categories_all()]
-
+    form.category_id.choices.insert(0, (-1, ''))
     if form.validate_on_submit():
         form.populate_obj(project)
         # Ensure project category remains blank
@@ -249,9 +249,10 @@ def project_delete(project_id):
 def project_new():
     project = Project()
     form = ProjectForm(obj=project, next=request.args.get('next'))
-    form.user_id.choices = [(e.id, "%s" % (e.username)) for e in User.query.order_by('username')]
-    form.event_id.choices = [(e.id, e.name) for e in Event.query.order_by('name')]
+    form.user_id.choices = [(e.id, "%s" % (e.username)) for e in User.query.filter_by(active=True).order_by('username')]
+    form.event_id.choices = [(e.id, e.name) for e in Event.query.order_by(Event.id.desc())]
     form.category_id.choices = [(c.id, c.name) for c in project.categories_all()]
+    form.category_id.choices.insert(0, (-1, ''))
     if form.validate_on_submit():
         form.populate_obj(project)
         project.update()
@@ -278,7 +279,7 @@ def project_autodata(project_id):
 @login_required
 @admin_required
 def categories():
-    categories = Category.query.order_by(Category.id.desc()).all()
+    categories = Category.query.order_by(Category.event_id.desc()).all()
     return render_template('admin/categories.html', categories=categories, active='categories')
 
 
