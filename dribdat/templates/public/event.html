@@ -1,6 +1,6 @@
 {% extends "layout.html" %}
 
-{% block page_title %}{{current_event.name}} / {% if current_event.has_started %} Project Board {% else %} The Challenges {% endif %}{% endblock %}
+{% block page_title %}{{current_event.name}} / {% if current_event.has_finished %} Results {% elif current_event.has_started %} Project Board {% else %} Challenges {% endif %}{% endblock %}
 
 {% block page_meta %}
   <meta property="og:type" content="website">
@@ -72,7 +72,7 @@
 <div class="category-info">
 {% if current_event.categories %}
   <div category-id="infobox" class="category-container">
-    <center><h4><i class="fa fa-arrow-circle-o-up"></i> Use the buttons above to explore our challenges.</h4></center>
+    <center><h4><i class="fa fa-arrow-circle-o-up"></i> Explore our challenges and projects above.</h4></center>
   </div>
   {% for category in current_event.categories %}
   <div category-id="{{category.id}}" class="category-container" style="border-top:5px solid {{category.logo_color}}; display:none">
