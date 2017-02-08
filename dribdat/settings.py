@@ -16,7 +16,7 @@ class Config(object):
     ASSETS_DEBUG = False
     DEBUG_TB_ENABLED = False  # Disable Debug toolbar
     DEBUG_TB_INTERCEPT_REDIRECTS = False
-    CACHE_TYPE = 'null'
+    CACHE_TYPE = 'simple'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SERVER_NAME = os_env.get('SERVER_URL', '127.0.0.1:5000')
 
@@ -25,7 +25,7 @@ class ProdConfig(Config):
 
     ENV = 'prod'
     DEBUG = False
-    CACHE_TYPE = os_env.get('DRIBDAT_CACHE_TYPE', 'simple')
+    CACHE_TYPE = os_env.get('DRIBDAT_CACHE_TYPE', 'memcached')
     CACHE_MEMCACHED_SERVERS = os_env.get('MEMCACHED_SERVERS', '')
     CACHE_MEMCACHED_USERNAME = os_env.get('MEMCACHED_USERNAME', '')
     CACHE_MEMCACHED_PASSWORD = os_env.get('MEMCACHED_PASSWORD', '')
