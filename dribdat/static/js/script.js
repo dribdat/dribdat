@@ -42,7 +42,9 @@
         .css('visibility', (supported ? '' : 'hidden'));
 
       // Check autoupdate field
-      toggleUpdateFields();
+      if (!$('.help-block.error').length)
+        toggleUpdateFields();
+
       $('#is_autoupdate').click(function() {
         if ($(this).is(':checked'))
           if (!$indicator.find('button').click())
@@ -61,6 +63,7 @@
 
     // On load
     checkAutotext($inputfield.val(), $indicator);
+
     // On keypress
     $inputfield.on('keyup', function(e) {
       checkAutotext($inputfield.val(), $indicator);
@@ -71,9 +74,11 @@
       e.stopPropagation();
       var url = $inputfield.val();
 
-      if ($('input#name').val() &&
-          !window.confirm('All project fields (Title, etc.) will be overwritten with remote project data. Proceed?'))
-            return false;
+      if ($('input#name').val() && !window.confirm('All project fields (Title, etc.) ' +
+        'will be overwritten with remote project data. Proceed?')) {
+          if ($('#is_autoupdate').is(':checked')) $('#is_autoupdate').click();
+          return false;
+        }
 
       var $button = $(this);
       $indicator.find('i').css('color', 'blue');
