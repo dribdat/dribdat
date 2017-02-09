@@ -18,14 +18,6 @@
   $('#autotext_url').each(function() {
 
     var supported = false;
-    var toggleUpdateFields = function() {
-      var UPDATED_INPUTS = 'input#name, input#summary, textarea#longtext, input#webpage_url, input#source_url, input#contact_url, input#image_url';
-      if (supported && $('#is_autoupdate').is(':checked')) {
-        $(UPDATED_INPUTS).parents('.form-group').hide();
-      } else {
-        $(UPDATED_INPUTS).parents('.form-group').show();
-      }
-    };
 
     var checkAutotext = function(val, $ind) {
       if (typeof val !== 'string') return;
@@ -40,14 +32,10 @@
         .css('color', (supported ? 'green' : 'red'));
       $ind.find('button')
         .css('visibility', (supported ? '' : 'hidden'));
-
-      // Check autoupdate field
-      toggleUpdateFields();
       $('#is_autoupdate').click(function() {
         if ($(this).is(':checked'))
           if (!$indicator.find('button').click())
             $(this).click();
-        toggleUpdateFields();
       });
     };
 
@@ -61,6 +49,7 @@
 
     // On load
     checkAutotext($inputfield.val(), $indicator);
+
     // On keypress
     $inputfield.on('keyup', function(e) {
       checkAutotext($inputfield.val(), $indicator);
@@ -71,9 +60,11 @@
       e.stopPropagation();
       var url = $inputfield.val();
 
-      if ($('input#name').val() &&
-          !window.confirm('All project fields (Title, etc.) will be overwritten with remote project data. Proceed?'))
-            return false;
+      if ($('input#name').val() && !window.confirm('All project fields (Title, etc.) ' +
+        'will be overwritten with remote project data. Proceed?')) {
+          if ($('#is_autoupdate').is(':checked')) $('#is_autoupdate').click();
+          return false;
+        }
 
       var $button = $(this);
       $indicator.find('i').css('color', 'blue');
