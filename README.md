@@ -27,7 +27,9 @@ If you would like to use external clients, like the chatbot, to remote control D
 OAuth 2.0 support is built in, currently fully supporting Slack, using these variables:
 
 * `DRIBDAT_SLACK_ID` - an OAuth Client ID to enable [Sign in with Slack](https://api.slack.com/docs/sign-in-with-slack)
-* `DRIBDAT_SLACK_SECRET` - ..and client secret. Set the redirect URL in your app's OAuth Settings to `<SERVER_URL>/slack_callback`
+* `DRIBDAT_SLACK_SECRET` - ..and client secret.
+
+Set the redirect URL in your app's OAuth Settings to `<SERVER_URL>/slack_callback`
 
 ## Developer guide
 

@@ -55,7 +55,7 @@ class LoginForm(FlaskForm):
         return True
 
 class UserForm(FlaskForm):
-    username = StringField(u'Username', [required(), length(max=80), UniqueValidator(User, 'name')])
+    username = StringField(u'Username', [required(), length(max=80), UniqueValidator(User, 'username')])
     email = StringField(u'E-mail', [required(), length(max=80)])
     webpage_url = StringField(u'Online profile', [length(max=128)],
         description="URL to website or social profile - GitHub, Twitter supported with cards.")
