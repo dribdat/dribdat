@@ -18,14 +18,6 @@
   $('#autotext_url').each(function() {
 
     var supported = false;
-    var toggleUpdateFields = function() {
-      var UPDATED_INPUTS = 'input#name, input#summary, textarea#longtext, input#webpage_url, input#source_url, input#contact_url, input#image_url';
-      if (supported && $('#is_autoupdate').is(':checked')) {
-        $(UPDATED_INPUTS).parents('.form-group').hide();
-      } else {
-        $(UPDATED_INPUTS).parents('.form-group').show();
-      }
-    };
 
     var checkAutotext = function(val, $ind) {
       if (typeof val !== 'string') return;
@@ -40,16 +32,10 @@
         .css('color', (supported ? 'green' : 'red'));
       $ind.find('button')
         .css('visibility', (supported ? '' : 'hidden'));
-
-      // Check autoupdate field
-      if (!$('.help-block.error').length)
-        toggleUpdateFields();
-
       $('#is_autoupdate').click(function() {
         if ($(this).is(':checked'))
           if (!$indicator.find('button').click())
             $(this).click();
-        toggleUpdateFields();
       });
     };
 
