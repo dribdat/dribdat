@@ -4,30 +4,12 @@ from wtforms import (
     SubmitField, BooleanField,
     StringField, PasswordField,
     TextAreaField, TextField,
-    SelectField
+    SelectField, HiddenField,
 )
-from wtforms.validators import DataRequired, ValidationError
-
 from dribdat.user.models import User, Project
-from wtforms.validators import AnyOf, required, length
+from wtforms.validators import DataRequired, AnyOf, required, length
+from ..user.validators import UniqueValidator
 from ..user import projectProgressList
-
-class UniqueValidator(object):
-    """ validator that checks field uniqueness """
-    def __init__(self, model, field, message=None):
-        self.model = model
-        self.field = field
-        if not message:
-            message = u'The %s must be unique.' % field
-        self.message = message
-    def __call__(self, form, field):
-        existing = self.model.query.filter(getattr(self.model,self.field) == field.data).first()
-        if 'id' in form:
-            id = int(form.id.data)
-        else:
-            id = None
-        if existing and (id is None or id != existing.key.id()):
-            raise ValidationError(self.message)
 
 class LoginForm(FlaskForm):
     """Login form."""
@@ -55,6 +37,7 @@ class LoginForm(FlaskForm):
         return True
 
 class UserForm(FlaskForm):
+    id = HiddenField('id')
     username = StringField(u'Username', [required(), length(max=80), UniqueValidator(User, 'username')])
     email = StringField(u'E-mail', [required(), length(max=80)])
     webpage_url = StringField(u'Online profile', [length(max=128)],
@@ -63,6 +46,7 @@ class UserForm(FlaskForm):
     submit = SubmitField(u'Save changes')
 
 class ProjectForm(FlaskForm):
+    id = HiddenField('id')
     category_id = SelectField(u'Category', coerce=int)
     progress = SelectField(u'Progress', coerce=int, choices=projectProgressList())
     autotext_url = StringField(u'Remote link', [length(max=255)],

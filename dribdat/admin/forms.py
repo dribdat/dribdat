@@ -5,14 +5,17 @@ from wtforms import (
     StringField, PasswordField, SelectField,
     TextAreaField
 )
-from wtforms.validators import AnyOf, required, length
+from dribdat.user.models import User, Project
 from wtforms.fields.html5 import DateTimeField
+from wtforms.validators import AnyOf, required, length
 
+from ..user.validators import UniqueValidator
 from ..user import USER_ROLE, USER_STATUS, projectProgressList
 
 class UserForm(FlaskForm):
     next = HiddenField()
-    username = StringField(u'Username', [required(), length(max=80)])
+    id = HiddenField('id')
+    username = StringField(u'Username', [required(), length(max=80), UniqueValidator(User, 'username')])
     email = StringField(u'E-mail', [required(), length(max=80)])
     webpage_url = StringField(u'Online profile', [length(max=128)])
     password = PasswordField(u'New password', [length(max=128)])
@@ -40,6 +43,7 @@ class EventForm(FlaskForm):
 
 class ProjectForm(FlaskForm):
     next = HiddenField()
+    id = HiddenField('id')
     user_id = SelectField(u'Owner (team user)', coerce=int)
     event_id = SelectField(u'Event', coerce=int)
     category_id = SelectField(u'Category', coerce=int)
@@ -47,7 +51,7 @@ class ProjectForm(FlaskForm):
     hashtag = StringField(u'Hashtag or channel', [length(max=255)])
     autotext_url = StringField(u'Remote link', [length(max=255)])
     is_autoupdate = BooleanField(u'Autoupdate project data')
-    name = StringField(u'Title', [required(), length(max=80)])
+    name = StringField(u'Title', [required(), length(max=80), UniqueValidator(Project, 'name')])
     summary = StringField(u'Short summary', [length(max=120)])
     longtext = TextAreaField(u'Full description')
     webpage_url = StringField(u'Web page link', [length(max=255)])

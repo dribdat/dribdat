@@ -41,6 +41,7 @@ def user(user_id):
 
     if form.validate_on_submit():
         originalhash = user.password
+        del form.id
         form.populate_obj(user)
         if form.password.data:
             user.set_password(form.password.data)
@@ -62,6 +63,7 @@ def user_new():
     form = UserForm(obj=user, next=request.args.get('next'))
 
     if form.validate_on_submit():
+        del form.id
         form.populate_obj(user)
 
         db.session.add(user)
@@ -205,6 +207,7 @@ def project_view(project_id):
     form.category_id.choices = [(c.id, c.name) for c in project.categories_all()]
     form.category_id.choices.insert(0, (-1, ''))
     if form.validate_on_submit():
+        del form.id
         form.populate_obj(project)
         # Ensure project category remains blank
         if project.category_id == -1: project.category_id = None
@@ -254,6 +257,7 @@ def project_new():
     form.category_id.choices = [(c.id, c.name) for c in project.categories_all()]
     form.category_id.choices.insert(0, (-1, ''))
     if form.validate_on_submit():
+        del form.id
         form.populate_obj(project)
         project.update()
         db.session.add(project)
