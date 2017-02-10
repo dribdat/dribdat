@@ -145,10 +145,10 @@ class Event(SurrogatePK, Model):
         TIME_LIMIT = dt.datetime.utcnow() + dt.timedelta(days=30)
         if self.starts_at > dt.datetime.utcnow():
             if self.starts_at > TIME_LIMIT: return None
-            return self.starts_at + dt.timedelta(hours=-2) # TODO: timezones...
+            return self.starts_at # + dt.timedelta(hours=-1) # TODO: timezones...
         elif self.ends_at > dt.datetime.utcnow():
             if self.ends_at > TIME_LIMIT: return None
-            return self.ends_at + dt.timedelta(hours=-2)
+            return self.ends_at # + dt.timedelta(hours=-1)
         else:
             return None
 
