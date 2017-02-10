@@ -58,6 +58,7 @@ def project_edit(project_id):
     form.category_id.choices = [(c.id, c.name) for c in project.categories_for_event(event.id)]
     form.category_id.choices.insert(0, (-1, ''))
     if form.validate_on_submit():
+        del form.id
         form.populate_obj(project)
         project.update()
         db.session.add(project)
@@ -100,6 +101,7 @@ def project_new():
         form.category_id.choices = [(c.id, c.name) for c in project.categories_for_event(event.id)]
         form.category_id.choices.insert(0, (-1, ''))
         if form.validate_on_submit():
+            del form.id
             form.populate_obj(project)
             project.event = event
             project.update()
