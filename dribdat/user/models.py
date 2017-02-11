@@ -337,7 +337,8 @@ class Activity(SurrogatePK, Model):
             'name': self.name,
             'time': int(mktime(self.timestamp.timetuple())),
             'date': self.timestamp,
-            'user': self.user.data,
+            'user_name': self.user.username,
+            'user_id': self.user.id,
             'project_id': self.project.id,
             'project_name': self.project.name,
         }
