@@ -238,6 +238,7 @@ class Project(SurrogatePK, Model):
             'score': self.score,
             'phase': self.phase,
             'summary': self.summary,
+            'hashtag': self.hashtag,
             'contact_url': self.contact_url,
             'image_url': self.image_url,
         }
