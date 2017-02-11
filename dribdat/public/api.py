@@ -26,12 +26,12 @@ def get_project_summaries(projects):
 
 # Collect all projects for an event
 def project_list(event_id):
-    projects = get_projects_by_event(event_id).filter(Project.progress.isnot(-1))
+    projects = get_projects_by_event(event_id).filter(Project.progress >= 0)
     return get_project_summaries(projects)
 
 # Collect all challenges for an event
 def challenges_list(event_id):
-    projects = get_projects_by_event(event_id).filter_by(progress=-1)
+    projects = get_projects_by_event(event_id).filter(Project.progress < 0)
     return get_project_summaries(projects)
 
 # Generate a CSV file
