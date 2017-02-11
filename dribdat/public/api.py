@@ -52,7 +52,7 @@ def gen_csv(csvdata):
             if isinstance(l, (int, float, datetime)):
                 rkline.append(l)
             else:
-                rkline.append(str(l))
+                rkline.append(l.encode('utf-8'))
         writer.writerow(rkline)
     return output.getvalue()
 
