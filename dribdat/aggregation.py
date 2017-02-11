@@ -46,13 +46,16 @@ def GetProjectData(url):
         if len(content) < 1: return {}
         contact_url = json['website'] or url
         if json['has_issues']: contact_url = url + '/issues'
+        image_url = ''
+        if 'project' in json and 'links' in json['project']:
+            image_url = json['project']['links']['avatar']['href']
         return {
             'name': json['name'],
             'summary': json['description'],
             'description': content.html().strip(),
             'homepage_url': json['website'],
             'source_url': url,
-            'image_url': json['project']['links']['avatar']['href'],
+            'image_url': image_url,
             'contact_url': contact_url,
         }
     elif url.find('//make.opendata.ch/wiki') > 0:
