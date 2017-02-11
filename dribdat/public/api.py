@@ -42,7 +42,7 @@ def gen_csv(csvdata):
         output = io.StringIO()
     else:
         output = io.BytesIO()
-        headerline = [l.encode(encoding) for l in headerline]
+        headerline = [l.encode('utf-8') for l in headerline]
     writer = csv.writer(output, quoting=csv.QUOTE_NONNUMERIC)
     writer.writerow(headerline)
     for rk in csvdata:
