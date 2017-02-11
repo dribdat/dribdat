@@ -131,7 +131,9 @@ class Event(SurrogatePK, Model):
             'starts_at': self.starts_at,
             'has_started': self.has_started,
             'ends_at': self.ends_at,
-            'info_url': self.webpage_url
+            'has_finished': self.has_finished,
+            'community_url': self.community_url,
+            'webpage_url': self.webpage_url
         }
 
     @property
@@ -243,10 +245,8 @@ class Project(SurrogatePK, Model):
             'image_url': self.image_url,
         }
         if self.category is not None:
-            d['category'] = {
-                'id': self.category.id,
-                'name': self.category.name,
-            }
+            d['category_id'] = self.category.id
+            d['category_name'] = self.category.name
         return d
 
     def update(self):

@@ -16,13 +16,23 @@ import io, csv, json
 
 blueprint = Blueprint('api', __name__, url_prefix='/api')
 
+def get_projects_by_event(event_id):
+    return Project.query.filter_by(event_id=event_id, is_hidden=False)
 
-# Collect all projects for an event
-def project_list(event_id):
-    projects = Project.query.filter_by(event_id=event_id, is_hidden=False)
+def get_project_summaries(projects):
     summaries = [ p.data for p in projects ]
     summaries.sort(key=lambda x: x['score'], reverse=True)
     return summaries
+
+# Collect all projects for an event
+def project_list(event_id):
+    projects = get_projects_by_event(event_id).filter(Project.progress.isnot(-1))
+    return get_project_summaries(projects)
+
+# Collect all challenges for an event
+def challenges_list(event_id):
+    projects = get_projects_by_event(event_id).filter_by(progress=-1)
+    return get_project_summaries(projects)
 
 # Generate a CSV file
 def gen_csv(csvdata):
@@ -46,16 +56,22 @@ def info_current_event_json():
     event = Event.query.filter_by(is_current=True).first()
     return jsonify(event=event.data, timeuntil=timesince(event.countdown, until=True))
 
-# API: Outputs JSON of all projects at a specific event
-@blueprint.route('/event/<int:event_id>/projects.json')
-def project_list_json(event_id):
-    return jsonify(projects=project_list(event_id))
+# API: Outputs JSON of challenges in the current event, along with its info
+@blueprint.route('/event/current/challenges.json')
+def challenges_list_current_json():
+    event = Event.query.filter_by(is_current=True).first()
+    return jsonify(challenges=challenges_list(event.id), event=event.data)
 
 # API: Outputs JSON of projects in the current event, along with its info
 @blueprint.route('/event/current/projects.json')
 def project_list_current_json():
     event = Event.query.filter_by(is_current=True).first()
     return jsonify(projects=project_list(event.id), event=event.data)
+
+# API: Outputs JSON of all projects at a specific event
+@blueprint.route('/event/<int:event_id>/projects.json')
+def project_list_json(event_id):
+    return jsonify(projects=project_list(event_id))
 
 # API: Outputs CSV of all projects in an event
 @blueprint.route('/event/<int:event_id>/projects.csv')
@@ -69,6 +85,14 @@ def project_list_csv(event_id):
 def projects_activity_json():
     activities = [a.data for a in Activity.query.order_by(Activity.id.desc()).limit(30).all()]
     return jsonify(activities=activities)
+
+# API: Outputs CSV of recent activity
+@blueprint.route('/project/activity.csv')
+def projects_activity_csv(event_id):
+    activities = [a.data for a in Activity.query.order_by(Activity.id.desc()).limit(500).all()]
+    return Response(stream_with_context(gen_csv(activities)),
+                    mimetype='text/csv',
+                    headers={'Content-Disposition': 'attachment; filename=activity_list.csv'})
 
 # API: Outputs JSON of recent activity of a project
 @blueprint.route('/project/<int:project_id>/activity.json')
