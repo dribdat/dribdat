@@ -11,6 +11,7 @@ from ..utils import timesince
 from ..user.models import Event, Project, Category, Activity
 from ..aggregation import GetProjectData
 
+from datetime import datetime
 from flask import Response, stream_with_context
 import io, csv, json, sys
 PY3 = sys.version_info[0] == 3
@@ -42,11 +43,17 @@ def gen_csv(csvdata):
         output = io.StringIO()
     else:
         output = io.BytesIO()
-        # headerline = [l.encode('utf-8') for l in headerline]
+        headerline = [l.encode('utf-8') for l in headerline]
     writer = csv.writer(output, quoting=csv.QUOTE_NONNUMERIC)
     writer.writerow(headerline)
     for rk in csvdata:
-        writer.writerow(rk.values())
+        rkline = []
+        for l in rk.values():
+            if isinstance(l, (int, float, datetime)):
+                rkline.append(l)
+            else:
+                rkline.append(str(l))
+        writer.writerow(rkline)
     return output.getvalue()
 
 
