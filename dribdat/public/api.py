@@ -88,8 +88,8 @@ def projects_activity_json():
 
 # API: Outputs CSV of recent activity
 @blueprint.route('/project/activity.csv')
-def projects_activity_csv(event_id):
-    activities = [a.data for a in Activity.query.order_by(Activity.id.desc()).limit(500).all()]
+def projects_activity_csv():
+    activities = [a.data for a in Activity.query.order_by(Activity.id.desc()).limit(1000).all()]
     return Response(stream_with_context(gen_csv(activities)),
                     mimetype='text/csv',
                     headers={'Content-Disposition': 'attachment; filename=activity_list.csv'})
