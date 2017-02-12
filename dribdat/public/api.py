@@ -49,7 +49,9 @@ def gen_csv(csvdata):
     for rk in csvdata:
         rkline = []
         for l in rk.values():
-            if isinstance(l, (int, float, datetime, NoneType)):
+            if l is None:
+                rkline.append("")
+            elif isinstance(l, (int, float, datetime)):
                 rkline.append(l)
             else:
                 rkline.append(l.encode('utf-8'))
