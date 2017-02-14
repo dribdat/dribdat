@@ -58,6 +58,7 @@ def project_edit(project_id):
     form.category_id.choices = [(c.id, c.name) for c in project.categories_for_event(event.id)]
     form.category_id.choices.insert(0, (-1, ''))
     if form.validate_on_submit():
+        del form.id
         form.populate_obj(project)
         project.update()
         db.session.add(project)
@@ -100,6 +101,7 @@ def project_new():
         form.category_id.choices = [(c.id, c.name) for c in project.categories_for_event(event.id)]
         form.category_id.choices.insert(0, (-1, ''))
         if form.validate_on_submit():
+            del form.id
             form.populate_obj(project)
             project.event = event
             project.update()
@@ -132,19 +134,19 @@ def project_autoupdate(project_id):
     if not 'name' in data:
         flash("Project could not be synced: check the autoupdate link.", 'warning')
         return project_action(project_id, None)
-    if len(data['name']) > 0:
+    if 'name' in data and data['name']:
         project.name = data['name']
-    if 'summary' in data and len(data['summary']) > 0:
+    if 'summary' in data and data['summary']:
         project.summary = data['summary']
-    if 'description' in data and len(data['description']) > 0:
+    if 'description' in data and data['description']:
         project.longtext = data['description']
-    if 'homepage_url' in data and len(data['homepage_url']) > 0:
+    if 'homepage_url' in data and data['homepage_url']:
         project.webpage_url = data['homepage_url']
-    if 'contact_url' in data and len(data['contact_url']) > 0:
+    if 'contact_url' in data and data['contact_url']:
         project.contact_url = data['contact_url']
-    if 'source_url' in data and len(data['source_url']) > 0:
+    if 'source_url' in data and data['source_url']:
         project.source_url = data['source_url']
-    if 'image_url' in data and len(data['image_url']) > 0:
+    if 'image_url' in data and data['image_url']:
         project.image_url = data['image_url']
     project.update()
     db.session.add(project)

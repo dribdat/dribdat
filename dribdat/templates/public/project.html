@@ -8,6 +8,9 @@
   <meta property="og:title" content="{{project.name}}">
   <meta property="og:image" content="{{project.image_url}}">
   <meta property="og:description" content="{{project.summary|safe}}">
+  <meta name="twitter:site" content="@opendatach">
+  <meta name="twitter:card" content="summary">
+  {% if project.user.cardtype == 'twitter' %}<meta name="twitter:creator" content="@{{ project.user.carddata }}">{% endif %}
   <meta name="description" content="{{project.summary|safe}}">
   <meta name="author" content="{{project.user.username}}">
 {% endblock %}

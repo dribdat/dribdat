@@ -11,26 +11,51 @@ from ..utils import timesince
 from ..user.models import Event, Project, Category, Activity
 from ..aggregation import GetProjectData
 
+from datetime import datetime
 from flask import Response, stream_with_context
-import io, csv, json
+import io, csv, json, sys
+PY3 = sys.version_info[0] == 3
 
 blueprint = Blueprint('api', __name__, url_prefix='/api')
 
+def get_projects_by_event(event_id):
+    return Project.query.filter_by(event_id=event_id, is_hidden=False)
 
-# Collect all projects for an event
-def project_list(event_id):
-    projects = Project.query.filter_by(event_id=event_id, is_hidden=False)
+def get_project_summaries(projects):
     summaries = [ p.data for p in projects ]
     summaries.sort(key=lambda x: x['score'], reverse=True)
     return summaries
 
+# Collect all projects for an event
+def project_list(event_id):
+    projects = get_projects_by_event(event_id).filter(Project.progress >= 0)
+    return get_project_summaries(projects)
+
+# Collect all challenges for an event
+def challenges_list(event_id):
+    projects = get_projects_by_event(event_id).filter(Project.progress < 0)
+    return get_project_summaries(projects)
+
 # Generate a CSV file
 def gen_csv(csvdata):
-    output = io.BytesIO()
+    headerline = csvdata[0].keys()
+    if PY3:
+        output = io.StringIO()
+    else:
+        output = io.BytesIO()
+        headerline = [l.encode('utf-8') for l in headerline]
     writer = csv.writer(output, quoting=csv.QUOTE_NONNUMERIC)
-    writer.writerow(csvdata[0].keys())
+    writer.writerow(headerline)
     for rk in csvdata:
-        writer.writerow(rk.values())
+        rkline = []
+        for l in rk.values():
+            if l is None:
+                rkline.append("")
+            elif isinstance(l, (int, float, datetime)):
+                rkline.append(l)
+            else:
+                rkline.append(l.encode('utf-8'))
+        writer.writerow(rkline)
     return output.getvalue()
 
 
@@ -46,16 +71,22 @@ def info_current_event_json():
     event = Event.query.filter_by(is_current=True).first()
     return jsonify(event=event.data, timeuntil=timesince(event.countdown, until=True))
 
-# API: Outputs JSON of all projects at a specific event
-@blueprint.route('/event/<int:event_id>/projects.json')
-def project_list_json(event_id):
-    return jsonify(projects=project_list(event_id))
+# API: Outputs JSON of challenges in the current event, along with its info
+@blueprint.route('/event/current/challenges.json')
+def challenges_list_current_json():
+    event = Event.query.filter_by(is_current=True).first()
+    return jsonify(challenges=challenges_list(event.id), event=event.data)
 
 # API: Outputs JSON of projects in the current event, along with its info
 @blueprint.route('/event/current/projects.json')
 def project_list_current_json():
     event = Event.query.filter_by(is_current=True).first()
     return jsonify(projects=project_list(event.id), event=event.data)
+
+# API: Outputs JSON of all projects at a specific event
+@blueprint.route('/event/<int:event_id>/projects.json')
+def project_list_json(event_id):
+    return jsonify(projects=project_list(event_id))
 
 # API: Outputs CSV of all projects in an event
 @blueprint.route('/event/<int:event_id>/projects.csv')
@@ -64,7 +95,25 @@ def project_list_csv(event_id):
                     mimetype='text/csv',
                     headers={'Content-Disposition': 'attachment; filename=project_list.csv'})
 
-# API: Outputs JSON of all recent activity
+def get_event_activities(event_id):
+    event = Event.query.filter_by(id=event_id).first_or_404()
+    return [a.data for a in Activity.query
+              .filter(Activity.timestamp>=event.starts_at)
+              .order_by(Activity.id.desc()).all()]
+
+# API: Outputs JSON of recent activity in an event
+@blueprint.route('/event/<int:event_id>/activity.json')
+def event_activity_json(event_id):
+    return jsonify(activities=get_event_activities(event_id))
+
+# API: Outputs CSV of an event activity
+@blueprint.route('/event/<int:event_id>/activity.csv')
+def event_activity_csv(event_id):
+    return Response(stream_with_context(gen_csv(get_event_activities(event_id))),
+                    mimetype='text/csv',
+                    headers={'Content-Disposition': 'attachment; filename=activity_list.csv'})
+
+# API: Outputs JSON of recent activity
 @blueprint.route('/project/activity.json')
 def projects_activity_json():
     activities = [a.data for a in Activity.query.order_by(Activity.id.desc()).limit(30).all()]

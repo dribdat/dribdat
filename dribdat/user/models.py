@@ -131,7 +131,9 @@ class Event(SurrogatePK, Model):
             'starts_at': self.starts_at,
             'has_started': self.has_started,
             'ends_at': self.ends_at,
-            'info_url': self.webpage_url
+            'has_finished': self.has_finished,
+            'community_url': self.community_url,
+            'webpage_url': self.webpage_url
         }
 
     @property
@@ -145,10 +147,10 @@ class Event(SurrogatePK, Model):
         TIME_LIMIT = dt.datetime.utcnow() + dt.timedelta(days=30)
         if self.starts_at > dt.datetime.utcnow():
             if self.starts_at > TIME_LIMIT: return None
-            return self.starts_at + dt.timedelta(hours=-2) # TODO: timezones...
+            return self.starts_at # + dt.timedelta(hours=-1) # TODO: timezones...
         elif self.ends_at > dt.datetime.utcnow():
             if self.ends_at > TIME_LIMIT: return None
-            return self.ends_at + dt.timedelta(hours=-2)
+            return self.ends_at # + dt.timedelta(hours=-1)
         else:
             return None
 
@@ -238,14 +240,13 @@ class Project(SurrogatePK, Model):
             'score': self.score,
             'phase': self.phase,
             'summary': self.summary,
+            'hashtag': self.hashtag,
             'contact_url': self.contact_url,
             'image_url': self.image_url,
         }
         if self.category is not None:
-            d['category'] = {
-                'id': self.category.id,
-                'name': self.category.name,
-            }
+            d['category_id'] = self.category.id
+            d['category_name'] = self.category.name
         return d
 
     def update(self):
@@ -336,7 +337,8 @@ class Activity(SurrogatePK, Model):
             'name': self.name,
             'time': int(mktime(self.timestamp.timetuple())),
             'date': self.timestamp,
-            'user': self.user.data,
+            'user_name': self.user.username,
+            'user_id': self.user.id,
             'project_id': self.project.id,
             'project_name': self.project.name,
         }
