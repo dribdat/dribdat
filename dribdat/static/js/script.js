@@ -102,15 +102,15 @@
     if (selected_id === 'challenges') {
       // pass
     } else if (selected_id === '' || selected_id === 'list') {
-      $projects.css('opacity', 1.0);
+      $projects.addClass('category-highlight');
       $('.category-container', $infotext).hide();
       $projects
         .removeClass('hexagon hexalist')
         .addClass(selected_id === 'list' ? 'hexalist' : 'hexagon');
     } else {
       var $selected = $('[category-id="' + selected_id + '"]', $projects.parent());
-      $projects.css('opacity', 0.4);
-      $selected.css('opacity', 1.0);
+      if ($selected.length) $projects.removeClass('category-highlight');
+      $selected.addClass('category-highlight');
       $('.category-container', $infotext).hide();
       $('[category-id="' + selected_id + '"]', $infotext).show();
     }
