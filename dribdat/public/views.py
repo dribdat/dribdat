@@ -90,10 +90,10 @@ def project_unstar(project_id):
     flash('Project un-starred', 'success')
     return project_action(project_id, 'unstar')
 
-@blueprint.route('/project/new', methods=['GET', 'POST'])
-def project_new():
+@blueprint.route('/event/<int:event_id>/project/new', methods=['GET', 'POST'])
+def project_new(event_id):
     form = None
-    event = current_event()
+    event = Event.query.filter_by(id=event_id).first_or_404()
     if current_user and current_user.is_authenticated:
         project = Project()
         project.user_id = current_user.id

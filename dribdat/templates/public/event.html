@@ -95,7 +95,7 @@
 
 {% if current_event.has_started %}
   <div class="start-project">
-    <a href="{{ url_for('public.project_new') }}" class="btn btn-lg btn-success">
+    <a href="{{ url_for('public.project_new', event_id=current_event.id) }}" class="btn btn-lg btn-success">
       <span>Start a project</span>
       <i class="fa fa-flag"></i>
     </a>
