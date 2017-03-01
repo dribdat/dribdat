@@ -157,10 +157,16 @@ class Event(SurrogatePK, Model):
     @property
     def date(self):
         if self.starts_at.month == self.ends_at.month:
-            return "{0} {1}-{2}, {3}".format(
+            if self.starts_at.day == self.ends_at.day:
+                dayrange = self.starts_at.day
+            else:
+                dayrange = "{0} - {1}".format(
+                    self.starts_at.day,
+                    self.ends_at.day
+                )
+            return "{0} {1}, {2}".format(
                 self.starts_at.strftime("%B"),
-                self.starts_at.day,
-                self.ends_at.day,
+                dayrange,
                 self.ends_at.year,
             )
         else:
