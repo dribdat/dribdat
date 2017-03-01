@@ -38,7 +38,7 @@
           {% endif %}
         </b></a>
         {% if current_user and current_user.is_authenticated and current_event.has_started %}
-          <a href="{{ url_for('public.project_new') }}" class="btn btn-success">
+          <a href="{{ url_for('public.project_new', event_id=current_event.id) }}" class="btn btn-success">
             Start a project
             <i class="fa fa-flag"></i></a>
         {% endif %}
