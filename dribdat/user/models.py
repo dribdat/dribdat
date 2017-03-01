@@ -16,6 +16,7 @@ from dribdat.database import (
     SurrogatePK,
 )
 
+from dribdat.utils import format_date_range
 from dribdat.user import PROJECT_PROGRESS_PHASE
 
 from sqlalchemy import or_
@@ -156,28 +157,7 @@ class Event(SurrogatePK, Model):
 
     @property
     def date(self):
-        if self.starts_at.month == self.ends_at.month:
-            if self.starts_at.day == self.ends_at.day:
-                dayrange = self.starts_at.day
-            else:
-                dayrange = "{0} - {1}".format(
-                    self.starts_at.day,
-                    self.ends_at.day
-                )
-            return "{0} {1}, {2}".format(
-                self.starts_at.strftime("%B"),
-                dayrange,
-                self.ends_at.year,
-            )
-        else:
-            return "{0} {1}, {2} - {3} {4}, {5}".format(
-                self.starts_at.strftime("%B"),
-                self.starts_at.day,
-                self.starts_at.year,
-                self.ends_at.strftime("%B"),
-                self.ends_at.day,
-                self.ends_at.year,
-            )
+        return format_date_range(self.starts_at, self.ends_at)
 
     def __init__(self, name=None, **kwargs):
         if name:

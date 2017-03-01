@@ -41,3 +41,27 @@ def timesince(dt, default="just now", until=False):
         if floor(period) > 0:
             return "%d %s %s" % (period, singular if period == 1 else plural, suffix)
     return default
+
+def format_date_range(starts_at, ends_at):
+    if starts_at.month == ends_at.month:
+        if starts_at.day == ends_at.day:
+            dayrange = starts_at.day
+        else:
+            dayrange = "{0} - {1}".format(
+                starts_at.day,
+                ends_at.day
+            )
+        return "{0} {1}, {2}".format(
+            starts_at.strftime("%B"),
+            dayrange,
+            ends_at.year,
+        )
+    else:
+        return "{0} {1}, {2} - {3} {4}, {5}".format(
+            starts_at.strftime("%B"),
+            starts_at.day,
+            starts_at.year,
+            ends_at.strftime("%B"),
+            ends_at.day,
+            ends_at.year,
+        )
