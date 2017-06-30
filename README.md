@@ -4,7 +4,7 @@
 
 **DRIBDAT (Driven By Data) is an open platform for data-driven team collaboration, such as Hackathons.** It works as a website and project board for running exciting, productive events..with Impact Factor. We created this after using plain wikis and forums for years, and trying out a few proprietary tools that we felt limited us in one way or another.
 
-See [DRIBD.AT](http://dribd.at) for more information.
+For example sites powered by Dribdat, see [hack.opendata.ch](https://hack.opendata.ch/) and [now.makezurich.ch](https://now.makezurich.ch/).
 
 ## Deployment Quickstart
 
