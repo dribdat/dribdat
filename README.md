@@ -6,6 +6,8 @@
 
 The platform allows organisers and participants to aggregate project details from multiple sources (Markdown, Wikis, GitHub, Bitbucket), display challenges and projects in attractive dashboards, reuse the data through an API, plug in community tools ([Discourse](https://www.discourse.org/), [Slack](http://slack.com), [Let's Chat](http://sdelements.github.io/lets-chat/), etc.) and even [chatbots](https://github.com/schoolofdata-ch/sodabot) to enhance the hackathon.
 
+For more background and links to example sites see [ABOUT](ABOUT.md).
+
 ## Deployment Quickstart
 
 This project is ready for fast deployment to [Heroku](http://heroku.com):
