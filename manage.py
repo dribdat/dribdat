@@ -1,46 +1,43 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+
 import os
-from flask_script import Manager, Shell, Server
-from flask_script.commands import Clean, ShowUrls
+
+from flask import Flask
+from flask.cli import FlaskGroup
 from flask_migrate import MigrateCommand
 
-from dribdat.app import create_app
+from dribdat.app import init_app
 from dribdat.user.models import User
 from dribdat.settings import DevConfig, ProdConfig
 from dribdat.database import db
 
-if os.environ.get("DRIBDAT_ENV") == 'prod':
-    app = create_app(ProdConfig)
-else:
-    app = create_app(DevConfig)
-
 HERE = os.path.abspath(os.path.dirname(__file__))
 TEST_PATH = os.path.join(HERE, 'tests')
 
-manager = Manager(app)
-
-
-def _make_context():
-    """Return context dict for a shell session so you can access
-    app, db, and the User model by default.
-    """
+def shell_context():
+    """Return context dict for a shell session"""
     return {'app': app, 'db': db, 'User': User}
 
+def create_app(script_info=None):
+    """Initialise the app object"""
+    if os.environ.get("DRIBDAT_ENV") == 'prod':
+        app = init_app(ProdConfig)
+    else:
+        app = init_app(DevConfig)
+    app.shell_context_processor(shell_context)
+    return app
 
-@manager.command
+cli = FlaskGroup(create_app=create_app)
+
+@cli.command
 def test():
     """Run the tests."""
     import pytest
     exit_code = pytest.main([TEST_PATH, '--verbose'])
     return exit_code
 
-
-manager.add_command('server', Server(port=5000))
-manager.add_command('shell', Shell(make_context=_make_context))
-manager.add_command('db', MigrateCommand)
-manager.add_command("urls", ShowUrls())
-manager.add_command("clean", Clean())
+cli.add_command('db', MigrateCommand)
 
 if __name__ == '__main__':
-    manager.run()
+    cli()

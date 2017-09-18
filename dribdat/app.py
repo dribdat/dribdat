@@ -17,7 +17,7 @@ from dribdat.settings import ProdConfig
 from dribdat.utils import timesince
 from flask_misaka import Misaka
 
-def create_app(config_object=ProdConfig):
+def init_app(config_object=ProdConfig):
     """An application factory, as explained here: http://flask.pocoo.org/docs/patterns/appfactories/.
 
     :param config_object: The configuration object to use.
