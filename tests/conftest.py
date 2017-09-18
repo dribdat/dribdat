@@ -4,7 +4,7 @@
 import pytest
 from webtest import TestApp
 
-from dribdat.app import create_app
+from dribdat.app import init_app
 from dribdat.database import db as _db
 from dribdat.settings import TestConfig
 
@@ -14,7 +14,7 @@ from .factories import UserFactory
 @pytest.yield_fixture(scope='function')
 def app():
     """An application for the tests."""
-    _app = create_app(TestConfig)
+    _app = init_app(TestConfig)
     ctx = _app.test_request_context()
     ctx.push()
 

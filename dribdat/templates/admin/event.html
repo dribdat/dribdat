@@ -5,6 +5,8 @@
 {% block content %}
 <div class="container">
     <h2>Update event</h2>
+    <p>Visit the <a href="{{ url_for('admin.project_new', event_id=event.id) }}">Admin area</a> to add projects.</p>
+
     {{ render_form(url_for('admin.event', event_id=event.id), form) }}
 
     <a href="{{ url_for('admin.event_delete', event_id=event.id) }}" class="btn btn-sm"

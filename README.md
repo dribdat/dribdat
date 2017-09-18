@@ -4,7 +4,7 @@
 
 **Dribdat (from "Driven By Data") is an open platform for data-driven team collaboration, such as Hackathons.** It works as a website and project board for running exciting, productive events..with Impact Factor. We [created this tool](https://datalets.ch/dribdat/iot-2015/project/23/) after using plain wikis and forums for years, and after trying out a few proprietary tools that we felt limited us in one way or another.
 
-The platform allows organisers and participants to aggregate project details from multiple sources (Markdown, Wikis, GitHub, Bitbucket), display challenges and projects in attractive dashboards, reuse the data through an API, plug in community tools ([Discourse](https://www.discourse.org/), [Slack](http://slack.com), [Let's Chat](http://sdelements.github.io/lets-chat/), etc.) and even [chatbots](https://github.com/schoolofdata-ch/sodabot) to enhance the hackathon.
+The platform allows organisers and participants to aggregate project details from multiple sources (Markdown, Wikis, GitHub, Bitbucket), display challenges and projects in attractive dashboards, reuse the data through an [API](#API), plug in community tools ([Discourse](https://www.discourse.org/), [Slack](http://slack.com), [Let's Chat](http://sdelements.github.io/lets-chat/), etc.) and even [chatbots](https://github.com/schoolofdata-ch/sodabot) to enhance the hackathon.
 
 For more background and links to example sites see [ABOUT](ABOUT.md).
 
@@ -32,73 +32,6 @@ OAuth 2.0 support is built in, currently fully supporting Slack, using these var
 * `DRIBDAT_SLACK_SECRET` - ..and client secret.
 
 Set the redirect URL in your app's OAuth Settings to `<SERVER_URL>/slack_callback`
-
-## Developer guide
-
-[![Build Status](https://travis-ci.org/loleg/dribdat.svg?branch=master)](https://travis-ci.org/loleg/dribdat)
-
-Run the following commands to bootstrap your environment.
-
-```
-git clone https://github.com/loleg/dribdat
-cd dribdat
-pip install -r requirements/dev.txt
-```
-
-By default in a dev environment, a SQLite database will be created in the root folder (`dev.db`). You can also install and configure your choice of DBMS [supported by SQLAlchemy](http://docs.sqlalchemy.org/en/rel_1_1/dialects/index.html).
-
-Run the following to create your app's database tables and perform the initial migration:
-
-```
-python manage.py db init
-python manage.py db migrate
-python manage.py db upgrade
-```
-
-Finally, run this command to start the server:
-
-```
-python manage.py server
-```
-
-You will see a pretty welcome screen at http://localhost:5000
-
-The first user that registers becomes an admin, so don't delay!
-
-### Shell access
-
-To open the interactive shell, run: `python manage.py shell` (or, using the [Heroku toolchain](https://devcenter.heroku.com/categories/command-line), `heroku run python manage.py shell`)
-
-By default, you will have access to `app`, `db`, and the `User` model. For example, to promote to admin and reset the password of the first user:
-
-```
-u = User.query.first()
-u.is_admin = True
-u.set_password('Ins@nEl*/c0mpl3x')
-u.save()
-```
-
-### Running Tests
-
-To run all tests, run: `python manage.py test`
-
-## Migrations
-
-Whenever a database migration needs to be made. Run the following commands:
-
-```
-python manage.py db migrate
-```
-
-This will generate a new migration script. Then run:
-
-```
-python manage.py db upgrade
-```
-
-To apply the migration. Watch out for any errors in the process.
-
-For a full migration command reference, run `python manage.py db --help`.
 
 ## API
 
@@ -130,7 +63,74 @@ Push data into projects (WIP):
 
 - `/api/project/push.json`
 
-For details see `api.py`
+For more details see `api.py`
+
+## Developer guide
+
+[![Build Status](https://travis-ci.org/loleg/dribdat.svg?branch=master)](https://travis-ci.org/loleg/dribdat)
+
+Run the following commands to bootstrap your environment.
+
+```
+git clone https://github.com/loleg/dribdat
+cd dribdat
+pip install -r requirements/dev.txt
+```
+
+By default in a dev environment, a SQLite database will be created in the root folder (`dev.db`). You can also install and configure your choice of DBMS [supported by SQLAlchemy](http://docs.sqlalchemy.org/en/rel_1_1/dialects/index.html).
+
+Run the following to create your app's database tables and perform the initial migration:
+
+```
+python manage.py db init
+python manage.py db migrate
+python manage.py db upgrade
+```
+
+Finally, run this command to start the server:
+
+```
+FLASK_DEBUG=1 python manage.py run
+```
+
+You will see a pretty welcome screen at http://localhost:5000
+
+The first user that registers becomes an admin, so don't delay!
+
+### Shell access
+
+To open the interactive shell, run: `python manage.py shell` (or, using the [Heroku toolchain](https://devcenter.heroku.com/categories/command-line), `heroku run python manage.py shell`)
+
+By default, you will have access to the `User` model, as well as Event, Project, Category, Activity. For example, to promote to admin and reset the password of the first user:
+
+```
+u = User.query.first()
+u.is_admin = True
+u.set_password('Ins@nEl*/c0mpl3x')
+u.save()
+```
+
+### Running Tests
+
+To run all tests, run: `python manage.py test`
+
+## Migrations
+
+Whenever a database migration needs to be made. Run the following commands:
+
+```
+python manage.py db migrate
+```
+
+This will generate a new migration script. Then run:
+
+```
+python manage.py db upgrade
+```
+
+To apply the migration. Watch out for any errors in the process.
+
+For a full migration command reference, run `python manage.py db --help`.
 
 ## Credits
 

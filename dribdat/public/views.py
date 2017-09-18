@@ -51,7 +51,7 @@ def project(project_id):
 def project_edit(project_id):
     project = Project.query.filter_by(id=project_id).first_or_404()
     event = project.event
-    if project.user_id != current_user.id:
+    if project.user_id != current_user.id and not current_user.is_admin:
         flash('You do not have access to edit this project.', 'warning')
         return project_action(project_id, None)
     form = ProjectForm(obj=project, next=request.args.get('next'))
@@ -65,6 +65,7 @@ def project_edit(project_id):
         db.session.commit()
         cache.clear()
         flash('Project updated.', 'success')
+        # TODO: return redirect(url_for('project', project_id=project.id))
         return project_action(project_id, 'update')
     return render_template('public/projectedit.html', current_event=event, project=project, form=form)
 
@@ -73,10 +74,11 @@ def project_action(project_id, of_type):
     event = project.event
     if of_type is not None:
         ProjectActivity(project, of_type, current_user)
-    project_starred = current_user and current_user.is_authenticated and IsProjectStarred(project, current_user)
+    project_starred = not current_user.is_anonymous and current_user.is_authenticated and IsProjectStarred(project, current_user)
+    allow_edit = project_starred or (not current_user.is_anonymous and current_user.is_admin)
     project_stars = GetProjectTeam(project)
     return render_template('public/project.html', current_event=event, project=project,
-        project_starred=project_starred, project_stars=project_stars)
+        project_starred=project_starred, project_stars=project_stars, allow_edit=allow_edit)
 
 @blueprint.route('/project/<int:project_id>/star', methods=['GET', 'POST'])
 @login_required
