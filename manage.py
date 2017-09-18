@@ -8,7 +8,6 @@ from flask.cli import FlaskGroup
 from flask_migrate import MigrateCommand
 
 from dribdat.app import init_app
-from dribdat.user.models import User
 from dribdat.settings import DevConfig, ProdConfig
 from dribdat.database import db
 
@@ -17,7 +16,8 @@ TEST_PATH = os.path.join(HERE, 'tests')
 
 def shell_context():
     """Return context dict for a shell session"""
-    return {'app': app, 'db': db, 'User': User}
+    from dribdat.user.models import User, Event, Project, Category, Activity
+    return {'User': User, 'Event':Event, 'Project':Project, 'Category':Category, 'Activity':Activity}
 
 def create_app(script_info=None):
     """Initialise the app object"""
