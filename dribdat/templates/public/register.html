@@ -5,7 +5,6 @@
 {% block content %}
 <div class="container-narrow">
   <h1>Register</h1>
-  <p><em>Already registered?</em> Click <a href="/">here</a> to login.</p>
   <p>Create an account to be able to submit projects.</p>
   <br/>
   {% if slack_enabled %}
@@ -38,5 +37,6 @@
             </div>
             <p><input class="btn btn-default btn-submit" type="submit" value="Register"></p>
     </form>
+    <p>Already registered? Click <a href="{{ url_for('auth.login') }}">here</a> to login.</p>
 </div>
 {% endblock %}

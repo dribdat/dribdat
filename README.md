@@ -90,7 +90,7 @@ python manage.py db upgrade
 Finally, run this command to start the server:
 
 ```
-python manage.py run
+FLASK_DEBUG=1 python manage.py run
 ```
 
 You will see a pretty welcome screen at http://localhost:5000

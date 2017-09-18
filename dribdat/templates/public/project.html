@@ -96,7 +96,7 @@
         <i class="fa fa-envelope-o" aria-hidden="true"></i>
         Contact team</a>
     {% endif %}
-    {% if current_user and current_user.is_authenticated and current_user.id == project.user_id %}
+    {% if allow_edit %}
        <a href="{{ url_for('public.project_edit', project_id=project.id) }}" class="btn btn-success">
          <i class="fa fa-pencil" aria-hidden="true"></i>
          Edit</a>

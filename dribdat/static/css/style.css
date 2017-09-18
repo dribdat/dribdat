@@ -5,7 +5,7 @@
 /* universal */
 
 html {
-  overflow-y: scroll;
+  /*overflow-y: scroll;*/
 }
 
 section {
@@ -20,7 +20,7 @@ h1 {
   color: #999;
 }
 
-.container-narrow{
+.container-narrow {
   margin: 0 auto;
   max-width: 700px;
 }
@@ -52,8 +52,8 @@ h1 {
 footer {
   margin-top: 45px;
   padding-top: 5px;
-  border-top: 1px solid #eaeaea;
-  color: #999999;
+  /*border-top: 1px solid #eaeaea;*/
+  /*color: #999999;*/
 }
 
 footer a {
@@ -89,22 +89,23 @@ footer .footer-nav {
 Dribdat custom styles
 */
 
-nav .section-header .section-header-logo {
+.section-header .section-header-logo {
   float: left;
   margin-right: 45px;
 }
-nav .section-header .section-header-logo img {
+.section-header .section-header-logo img {
   height: 80px;
 }
-nav .section-header .section-header-content * {
-  color: white;
-}
-nav .fa {
-  position: relative;
-  top: -7px;
+nav.navbar {
+  margin-bottom: 1em;
+  box-shadow: 0px 0px 20px rgba(0,0,0,0.5);
 }
 nav .navbar-nav .fa {
-  margin-left: 7px;
+  margin-left:  0.2em;
+}
+nav .navbar-nav .nav-item {
+  margin-right: 0.4em;
+  padding-right: 0.4em;
 }
 
 .home-page h2 {
@@ -133,10 +134,8 @@ nav .navbar-nav .fa {
 .community-embed { margin-top: 60px; }
 .community-embed .fa-comment {
   position: relative;
-  color: rgba(0, 0, 0, 0.1);
+  color: rgba(255,255,255, 0.1);
   font-size: 50px;
-  left: -38px;
-  top: -38px;
   line-height: 0px;
   clear: none;
   display: inherit;
@@ -220,7 +219,9 @@ nav .navbar-nav .fa {
 }
 .honeycomb .project { opacity: 0.4; }
 .honeycomb .project.category-highlight { opacity: 1.0; }
-.honeycomb .project.hexalist { display: none; background: none !important; }
+.honeycomb .project.hexalist {
+  display: none; background: white !important; color: black;
+}
 .honeycomb .project.hexalist.category-highlight { display: block; }
 .project.hexalist .hexagontent {
   overflow: visible;
@@ -286,7 +287,7 @@ nav .navbar-nav .fa {
 }
 .project-page .project-info {
   min-height: 240px;
-  background: rgba(255, 255, 255, 0.8);
+  background-color: rgba(255, 255, 255, 0.8); color: black;
   padding: 20px;
   margin-bottom: 10px;
 }
@@ -297,12 +298,9 @@ nav .navbar-nav .fa {
   max-width: 100%;
 }
 
-.navbar-inverse {
-  border: none;
-}
-.navbar-collapse .nav li {
+/*.navbar-collapse .navbar-nav li {
     text-align: center;
-}
+}*/
 .nav-categories .btn, .project-category.btn {
   opacity: 0.6;
   font-size: 16px;
