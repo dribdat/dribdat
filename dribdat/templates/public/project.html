@@ -52,6 +52,19 @@
       {% endif %}
     </div>
 
+    {% if allow_edit %}
+      <div class="btn-group edit-buttons" role="group" aria-label="Project tools">
+         <a href="{{ url_for('public.project_edit', project_id=project.id) }}" class="btn btn-success">
+           <i class="fa fa-pencil" aria-hidden="true"></i>
+           Edit</a>
+         {% if project.is_autoupdate %}
+          <a href="{{ url_for('public.project_autoupdate', project_id=project.id) }}" class="btn btn-warning">
+            <i class="fa fa-refresh" aria-hidden="true"></i>
+            Sync</a>
+         {% endif %}
+       </div>
+    {% endif %}
+
     <h2 class="project-name">
       {% if project.logo_icon %}
         <i class="fa fa-{{project.logo_icon}}"></i>
@@ -68,26 +81,6 @@
       {% endif %}
     </h2>
 
-    {% if project.contact_url %}
-      <a href="{{ project.contact_url }}" class="btn btn-default" target="_blank">
-        <i class="fa fa-envelope-o" aria-hidden="true"></i>
-        Contact</a>
-    {% endif %}
-
-    {% if allow_edit %}
-      <br clear="all">
-      <div class="btn-group edit-buttons" role="group" aria-label="Project tools">
-         <a href="{{ url_for('public.project_edit', project_id=project.id) }}" class="btn btn-success">
-           <i class="fa fa-pencil" aria-hidden="true"></i>
-           Edit</a>
-         {% if project.is_autoupdate %}
-          <a href="{{ url_for('public.project_autoupdate', project_id=project.id) }}" class="btn btn-warning">
-            <i class="fa fa-refresh" aria-hidden="true"></i>
-            Sync</a>
-         {% endif %}
-       </div>
-    {% endif %}
-
     {% if github_project %}
       <div data-theme="default" data-width="400" data-height="150" data-github="{{ github_project }}" class="github-card"></div>
       <script src="//cdn.jsdelivr.net/github-cards/latest/widget.js"></script>
@@ -97,6 +90,11 @@
     <p class="project-summary">
       {{project.summary}}
     </p>
+    {% endif %}
+    {% if project.contact_url %}
+      <a href="{{ project.contact_url }}" class="btn btn-default" target="_blank">
+        <i class="fa fa-envelope-o" aria-hidden="true"></i>
+        Contact</a>
     {% endif %}
     <br clear="all"><hr>
 
