@@ -30,7 +30,7 @@
     {% endif %}
 
     <div class="project-tools">
-      <div style="float:left"><span class="label label-info">{{ project.phase }}</span></div>
+      <span class="label label-info">{{ project.phase }}</span>
       <div class="progress" title="A score based on profile completeness and voting results">
         <div class="progress-bar" role="progressbar" aria-valuenow="{{project.score}}" aria-valuemin="0" aria-valuemax="70" style="width:{{project.score}}%">
           {{project.score}}
@@ -92,7 +92,7 @@
     </p>
     {% endif %}
     {% if project.contact_url %}
-      <a href="{{ project.contact_url }}" class="btn btn-default" target="_blank">
+      <a href="{{ project.contact_url }}" target="_blank">
         <i class="fa fa-envelope-o" aria-hidden="true"></i>
         Contact</a>
     {% endif %}
