@@ -68,7 +68,14 @@
       {% endif %}
     </h2>
 
+    {% if project.contact_url %}
+      <a href="{{ project.contact_url }}" class="btn btn-default" target="_blank">
+        <i class="fa fa-envelope-o" aria-hidden="true"></i>
+        Contact</a>
+    {% endif %}
+
     {% if allow_edit %}
+      <br clear="all">
       <div class="btn-group edit-buttons" role="group" aria-label="Project tools">
          <a href="{{ url_for('public.project_edit', project_id=project.id) }}" class="btn btn-success">
            <i class="fa fa-pencil" aria-hidden="true"></i>
@@ -103,11 +110,6 @@
     {% endif %}
     {% if project.source_url %}
       <a href="{{ project.source_url }}" class="btn btn-default" target="_blank">Source &raquo;</a>
-    {% endif %}
-    {% if project.contact_url %}
-      <a href="{{ project.contact_url }}" class="btn btn-default" target="_blank">
-        <i class="fa fa-envelope-o" aria-hidden="true"></i>
-        Contact</a>
     {% endif %}
   </div>
   <div class="panel panel-default community-embed">

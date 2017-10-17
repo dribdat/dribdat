@@ -310,11 +310,12 @@ pre { color: #333; background: white; }
 
 /* Badges */
 .challenge-badge {
-  float: left;
-  height: 2em; width: 2em;
-  margin-right: 1em;
+  float: left; display: inline-block;
+  height: 3em; width: 3em;
+  text-indent: -9999px; color: transparent;
+  margin-right: 0.3em;
   background-repeat: no-repeat;
-  background-size: cover;
+  background-size: contain;
 }
 .challenge-badge.level-1 {
   background-image: url('/static/img/badge-green.png');
