@@ -387,6 +387,7 @@ pre { color: #333; background: white; }
   width: 173px; height: 41px;
 }
 
+/* Embed view of the projects */
 .embed-view footer, .embed-view .navbar { display: none; }
 .embed-view h2 { margin-bottom: 0px; }
 .embed-event {
@@ -399,4 +400,7 @@ pre { color: #333; background: white; }
   width: 100% !important;
   background: none !important;
 }
-.embed-view .honeycomb { transform: scale(0.5); }
+.embed-view .honeycomb {
+  transform-origin: 50% 0%;
+  transform: scale(0.5);
+}
