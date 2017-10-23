@@ -291,11 +291,43 @@ nav .navbar-nav .nav-item {
   padding: 20px;
   margin-bottom: 10px;
 }
+.project-page .project-info a {
+  color: #15a;
+}
 .project-page .project-star i {
   padding-right: 5px;
 }
 .project-page .project-longtext img {
   max-width: 100%;
+}
+.project-page.jumbotron { padding: 1rem; }
+@media (min-width: 576px) {
+  .project-page.jumbotron { padding: 2rem; }
+}
+
+/* Code blocks */
+pre { color: #333; background: white; }
+
+/* Badges */
+.challenge-badge {
+  float: left; display: inline-block;
+  height: 3em; width: 3em;
+  text-indent: -9999px; color: transparent;
+  margin-right: 0.3em;
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+.challenge-badge.level-1 {
+  background-image: url('/static/img/badge-green.png');
+}
+.challenge-badge.level-2 {
+  background-image: url('/static/img/badge-blue.png');
+}
+.challenge-badge.level-3 {
+  background-image: url('/static/img/badge-black.png');
+}
+.challenge-badge.level-4 {
+  background-image: url('/static/img/badge-red.png');
 }
 
 /*.navbar-collapse .navbar-nav li {
@@ -310,7 +342,7 @@ nav .navbar-nav .nav-item {
 .nav-categories {
   margin: 10px;
 }
-.project-tools {
+.project-tools, .edit-buttons {
   float: right;
   margin-right: 15px;
   text-align: right;
@@ -355,6 +387,7 @@ nav .navbar-nav .nav-item {
   width: 173px; height: 41px;
 }
 
+/* Embed view of the projects */
 .embed-view footer, .embed-view .navbar { display: none; }
 .embed-view h2 { margin-bottom: 0px; }
 .embed-event {
@@ -367,4 +400,7 @@ nav .navbar-nav .nav-item {
   width: 100% !important;
   background: none !important;
 }
-.embed-view .honeycomb { transform: scale(0.5); }
+.embed-view .honeycomb {
+  transform-origin: 50% 0%;
+  transform: scale(0.5);
+}

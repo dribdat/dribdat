@@ -77,7 +77,7 @@
 <div class="category-info">
 {% if current_event.categories %}
   <div category-id="infobox" class="category-container">
-    <center><h4><i class="fa fa-arrow-circle-o-up"></i> Explore our challenges and projects above.</h4></center>
+    <center><h4><i class="fa fa-arrow-circle-o-up"></i> Explore challenges and projects</h4></center>
   </div>
   {% for category in current_event.categories %}
   <div category-id="{{category.id}}" class="category-container" style="border-top:5px solid {{category.logo_color}}; display:none">
@@ -96,7 +96,7 @@
 {% if current_event.has_started %}
   <div class="start-project">
     <a href="{{ url_for('public.project_new', event_id=current_event.id) }}" class="btn btn-lg btn-success">
-      <span>Start a project</span>
+      <span>Share project</span>
       <i class="fa fa-flag"></i>
     </a>
   </div>

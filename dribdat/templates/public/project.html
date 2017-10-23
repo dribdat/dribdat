@@ -30,7 +30,7 @@
     {% endif %}
 
     <div class="project-tools">
-      <div style="float:left"><span class="label label-info">{{ project.phase }}</span></div>
+      <span class="label label-info">{{ project.phase }}</span>
       <div class="progress" title="A score based on profile completeness and voting results">
         <div class="progress-bar" role="progressbar" aria-valuenow="{{project.score}}" aria-valuemin="0" aria-valuemax="70" style="width:{{project.score}}%">
           {{project.score}}
@@ -51,6 +51,19 @@
       </a>
       {% endif %}
     </div>
+
+    {% if allow_edit %}
+      <div class="btn-group edit-buttons" role="group" aria-label="Project tools">
+         <a href="{{ url_for('public.project_edit', project_id=project.id) }}" class="btn btn-success">
+           <i class="fa fa-pencil" aria-hidden="true"></i>
+           Edit</a>
+         {% if project.is_autoupdate %}
+          <a href="{{ url_for('public.project_autoupdate', project_id=project.id) }}" class="btn btn-warning">
+            <i class="fa fa-refresh" aria-hidden="true"></i>
+            Sync</a>
+         {% endif %}
+       </div>
+    {% endif %}
 
     <h2 class="project-name">
       {% if project.logo_icon %}
@@ -78,6 +91,11 @@
       {{project.summary}}
     </p>
     {% endif %}
+    {% if project.contact_url %}
+      <a href="{{ project.contact_url }}" target="_blank">
+        <i class="fa fa-envelope-o" aria-hidden="true"></i>
+        Contact</a>
+    {% endif %}
     <br clear="all"><hr>
 
     <div class="project-longtext">
@@ -89,22 +107,7 @@
       <a href="{{ project.webpage_url }}" class="btn btn-primary" target="_blank">Homepage &raquo;</a>
     {% endif %}
     {% if project.source_url %}
-      <a href="{{ project.source_url }}" class="btn btn-default" target="_blank">Source code &raquo;</a>
-    {% endif %}
-    {% if project.contact_url %}
-      <a href="{{ project.contact_url }}" class="btn btn-default" target="_blank">
-        <i class="fa fa-envelope-o" aria-hidden="true"></i>
-        Contact team</a>
-    {% endif %}
-    {% if allow_edit %}
-       <a href="{{ url_for('public.project_edit', project_id=project.id) }}" class="btn btn-success">
-         <i class="fa fa-pencil" aria-hidden="true"></i>
-         Edit</a>
-       {% if project.is_autoupdate %}
-        <a href="{{ url_for('public.project_autoupdate', project_id=project.id) }}" class="btn btn-warning">
-          <i class="fa fa-refresh" aria-hidden="true"></i>
-          Sync</a>
-       {% endif %}
+      <a href="{{ project.source_url }}" class="btn btn-default" target="_blank">Source &raquo;</a>
     {% endif %}
   </div>
   <div class="panel panel-default community-embed">
