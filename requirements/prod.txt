@@ -10,8 +10,8 @@ wheel>=0.29.0
 
 # Flask
 Flask==0.12.2
+Werkzeug>=0.12
 MarkupSafe==1.0
-Werkzeug==0.12.2
 Jinja2==2.9.6
 itsdangerous==0.24
 click==6.7
