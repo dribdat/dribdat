@@ -34,7 +34,7 @@
           Challenges
           {% endif %}
         </b></a>
-        {% if current_user and current_user.is_authenticated and current_event.has_started %}
+        {% if current_event.has_started and not current_event.has_finished %}
           <a href="{{ url_for('public.project_new', event_id=current_event.id) }}" class="btn btn-success">
             Share project
             <i class="fa fa-flag"></i></a>

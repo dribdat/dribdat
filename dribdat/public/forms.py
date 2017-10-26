@@ -9,7 +9,6 @@ from wtforms import (
 from dribdat.user.models import User, Project
 from wtforms.validators import DataRequired, AnyOf, required, length
 from ..user.validators import UniqueValidator
-from ..user import projectProgressList
 
 class LoginForm(FlaskForm):
     """Login form."""
@@ -48,7 +47,7 @@ class UserForm(FlaskForm):
 class ProjectForm(FlaskForm):
     id = HiddenField('id')
     category_id = SelectField(u'Category', coerce=int)
-    progress = SelectField(u'Progress', coerce=int, choices=projectProgressList())
+    progress = SelectField(u'Progress', coerce=int)
     autotext_url = StringField(u'Remote link', [length(max=255)],
         description="A supported webpage (GitHub, Bitbucket, Wiki) from which to sync project details.")
     is_autoupdate = BooleanField(u'Autoupdate project data')
