@@ -2,12 +2,14 @@
 """Collecting data from third party API repositories
 """
 
+import re
+import requests
+import bleach
+
 from future.standard_library import install_aliases
 install_aliases()
 from urllib.parse import quote_plus
 
-import re
-import requests
 from base64 import b64decode
 from pyquery import PyQuery as pq
 
@@ -73,30 +75,74 @@ def FetchBitbucketProject(project_url):
         image_url = json['project']['links']['avatar']['href']
     elif 'links' in json and 'avatar' in json['links']:
         image_url = json['links']['avatar']['href']
+    html_content = bleach.clean(content.html().strip())
     return {
         'name': json['name'],
         'summary': json['description'],
-        'description': content.html().strip(),
+        'description': html_content,
         'homepage_url': json['website'],
         'source_url': web_url,
         'image_url': image_url,
         'contact_url': contact_url,
     }
 
-def FetchDokuwikiProject(project_url):
+ALLOWED_HTML_TAGS = [
+    u'a', u'abbr', u'acronym', u'b', u'blockquote', u'code', u'em',
+    u'i', u'li', u'ol', u'strong', u'ul', u'h1', u'h2', u'h3',
+    u'h4', u'h5', u'p'
+]
+
+def FetchWebProject(project_url):
     data = requests.get(project_url)
-    if data.text.find('<div class="dw-content">') < 0: return {}
-    doc = pq(data.text)
-    content = doc("div.dw-content")
-    if len(content) < 1: return {}
-    ptitle = doc("p.pageId span")
-    if len(ptitle) < 1: return {}
-    return {
-        'name': ptitle.text().replace('project:', ''),
-        # 'summary': json['description'],
-        'description': content.html().strip(),
-        # 'homepage_url': url,
-        # 'source_url': json['html_url'],
-        # 'image_url': json['owner']['avatar_url'],
-        'contact_url': project_url,
-    }
+    obj = {}
+    # {
+    #     'name': name,
+    #     'summary': summary,
+    #     'description': html_content,
+    #     'image_url': image_url
+    #     'source_url': project_url,
+    # }
+
+    # DokuWiki
+    if data.text.find('<div class="dw-content">')>0:
+        doc = pq(data.text)
+        ptitle = doc("p.pageId span")
+        if len(ptitle) < 1: return {}
+        content = doc("div.dw-content")
+        if len(content) < 1: return {}
+        html_content = bleach.clean(content.html().strip(),
+            tags=ALLOWED_HTML_TAGS, strip=True)
+
+        obj['name'] = ptitle.text().replace('project:', '')
+        obj['description'] = html_content
+        obj['source_url'] = project_url
+        obj['image_url'] = "http://make.opendata.ch/wiki/lib/tpl/bootstrap3/images/logo.png"
+
+    # Google Drive
+    elif data.text.find('.com/docs/documents/images/kix-favicon')>0:
+        doc = pq(data.text)
+        doc("style").remove()
+        ptitle = doc("div#header")
+        if len(ptitle) < 1: return {}
+        content = doc("div#contents")
+        if len(content) < 1: return {}
+        html_content = bleach.clean(content.html().strip(),
+            tags=ALLOWED_HTML_TAGS, strip=True)
+
+        obj['name'] = ptitle.text()
+        obj['description'] = html_content
+        obj['source_url'] = project_url
+        obj['image_url'] = "http://orig07.deviantart.net/f364/f/2015/170/1/0/google_docs_icon_for_locus_icon_pack_by_droidappsreviewer-d8xwimi.png"
+
+    # Etherpad
+    elif data.text.find('pad.importExport.exportetherpad')>0:
+        ptitle = project_url.split('/')[-1]
+        if len(ptitle) < 1: return {}
+        text_content = requests.get("%s/export/txt" % project_url).text
+
+        obj['name'] = ptitle
+        obj['description'] = text_content
+        obj['source_url'] = project_url
+        obj['image_url'] = "https://avatars2.githubusercontent.com/u/181731?s=200&v=4"
+
+    return obj

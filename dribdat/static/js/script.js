@@ -25,7 +25,9 @@
         val.indexOf('//github.com/') > 0 ||
         val.indexOf('//gitlab.com/') > 0 ||
         val.indexOf('//bitbucket.org/') > 0 ||
-        val.indexOf('//make.opendata.ch/wiki/') > 0
+        val.indexOf('document') > 0 ||
+        val.indexOf('wiki') > 0 ||
+        val.indexOf('pad') > 0 
       );
       $ind.find('i')
         .removeClass('fa-circle-o fa-check-circle-o')

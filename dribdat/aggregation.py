@@ -23,10 +23,8 @@ def GetProjectData(url):
         if apiurl == url: return {}
         return FetchBitbucketProject(apiurl)
 
-    elif url.find('//make.opendata.ch/wiki') > 0:
-        return FetchDokuwikiProject(url)
-
-    return {}
+    else:
+        return FetchWebProject(url)
 
 def IsProjectStarred(project, current_user):
     return Activity.query.filter_by(
