@@ -58,12 +58,7 @@ def gen_csv(csvdata):
         writer.writerow(rkline)
     return output.getvalue()
 
-
-# API: Outputs JSON about an event
-@blueprint.route('/event/<int:event_id>/info.json')
-def info_event_json(event_id):
-    event = Event.query.filter_by(id=event_id).first_or_404()
-    return jsonify(event=event.data, timeuntil=timesince(event.countdown, until=True))
+# ------ EVENT INFORMATION ---------
 
 # API: Outputs JSON about the current event
 @blueprint.route('/event/current/info.json')
@@ -71,11 +66,13 @@ def info_current_event_json():
     event = Event.query.filter_by(is_current=True).first()
     return jsonify(event=event.data, timeuntil=timesince(event.countdown, until=True))
 
-# API: Outputs JSON of challenges in the current event, along with its info
-@blueprint.route('/event/current/challenges.json')
-def challenges_list_current_json():
-    event = Event.query.filter_by(is_current=True).first()
-    return jsonify(challenges=challenges_list(event.id), event=event.data)
+# API: Outputs JSON about an event
+@blueprint.route('/event/<int:event_id>/info.json')
+def info_event_json(event_id):
+    event = Event.query.filter_by(id=event_id).first_or_404()
+    return jsonify(event=event.data, timeuntil=timesince(event.countdown, until=True))
+
+# ------ PROJECTS ---------
 
 # API: Outputs JSON of projects in the current event, along with its info
 @blueprint.route('/event/current/projects.json')
@@ -94,6 +91,14 @@ def project_list_csv(event_id):
     return Response(stream_with_context(gen_csv(project_list(event_id))),
                     mimetype='text/csv',
                     headers={'Content-Disposition': 'attachment; filename=project_list.csv'})
+
+# API: Outputs JSON of challenges in the current event, along with its info
+@blueprint.route('/event/current/challenges.json')
+def challenges_list_current_json():
+    event = Event.query.filter_by(is_current=True).first()
+    return jsonify(challenges=challenges_list(event.id), event=event.data)
+
+# ------ ACTIVITY FEEDS ---------
 
 def get_event_activities(event_id):
     event = Event.query.filter_by(id=event_id).first_or_404()
@@ -127,6 +132,8 @@ def project_activity_json(project_id):
     activities = [a.data for a in query]
     return jsonify(project=project.data, activities=activities)
 
+# ------ SEARCH ---------
+
 # API: Full text search projects
 @blueprint.route('/project/search.json')
 def project_search_json():
@@ -139,6 +146,8 @@ def project_search_json():
         Project.longtext.like(q),
     )).limit(5).all()
     return jsonify(projects=[p.data for p in projects])
+
+# ------ UPDATE ---------
 
 # API: Pushes data into a project
 @blueprint.route('/project/push.json', methods=["PUT", "POST"])
@@ -192,3 +201,13 @@ def project_push_json():
     db.session.add(project)
     db.session.commit()
     return jsonify(success='Updated', project=project.data)
+
+# ------ FRONTEND -------
+
+# API routine used to sync project data
+@blueprint.route('/project/autofill', methods=['GET', 'POST'])
+@login_required
+def project_autofill():
+    url = request.args.get('url')
+    data = GetProjectData(url)
+    return jsonify(data)

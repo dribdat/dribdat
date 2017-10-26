@@ -1,81 +1,35 @@
 # -*- coding: utf-8 -*-
-"""Utilities for collecting data from third party sites
+"""Utilities for aggregating data
 """
-import re
-import requests
-from base64 import b64decode
-from pyquery import PyQuery as pq
 
 from dribdat.user.models import Activity
 from dribdat.database import db
+from dribdat.apifetch import * # TBR
 
 def GetProjectData(url):
     data = None
-    if url.find('//github.com') > 0:
-        apiurl = re.sub(r'https?://github\.com', 'https://api.github.com/repos', url)
+    if url.find('//gitlab.com') > 0:
+        apiurl = re.sub(r'https?://gitlab\.com/', '', url).strip('/')
         if apiurl == url: return {}
-        data = requests.get(apiurl)
-        if data.text.find('{') < 0: return {}
-        json = data.json()
-        if not 'name' in json: return {}
-        readmeurl = "%s/readme" % apiurl
-        readmedata = requests.get(readmeurl)
-        if readmedata.text.find('{') < 0: return {}
-        readme = readmedata.json()
-        if not 'content' in readme: return {}
-        return {
-            'name': json['name'],
-            'summary': json['description'],
-            'description': b64decode(readme['content']).decode('utf-8'),
-            'homepage_url': json['homepage'],
-            'source_url': json['html_url'],
-            'image_url': json['owner']['avatar_url'],
-            'contact_url': json['html_url'] + '/issues',
-        }
+        return FetchGitlabProject(apiurl)
+
+    elif url.find('//github.com') > 0:
+        apiurl = re.sub(r'https?://github\.com/', '', url).strip('/')
+        if apiurl == url: return {}
+        return FetchGithubProject(apiurl)
+
     elif url.find('//bitbucket.org') > 0:
-        apiurl = re.sub(r'https?://bitbucket\.org', 'https://api.bitbucket.org/2.0/repositories', url)
+        apiurl = re.sub(r'https?://bitbucket\.org', '', url).strip('/')
         if apiurl == url: return {}
-        data = requests.get(apiurl)
-        if data.text.find('{') < 0: return {}
-        json = data.json()
-        if not 'name' in json: return {}
-        readmedata = requests.get(url)
-        if readmedata.text.find('class="readme') < 0: return {}
-        doc = pq(readmedata.text)
-        content = doc("div.readme")
-        if len(content) < 1: return {}
-        contact_url = json['website'] or url
-        if json['has_issues']: contact_url = url + '/issues'
-        image_url = ''
-        if 'project' in json and 'links' in json['project']:
-            image_url = json['project']['links']['avatar']['href']
-        return {
-            'name': json['name'],
-            'summary': json['description'],
-            'description': content.html().strip(),
-            'homepage_url': json['website'],
-            'source_url': url,
-            'image_url': image_url,
-            'contact_url': contact_url,
-        }
-    elif url.find('//make.opendata.ch/wiki') > 0:
-        data = requests.get(url)
-        if data.text.find('<div class="dw-content">') < 0: return {}
-        doc = pq(data.text)
-        content = doc("div.dw-content")
-        if len(content) < 1: return {}
-        ptitle = doc("p.pageId span")
-        if len(ptitle) < 1: return {}
-        return {
-            'name': ptitle.text().replace('project:', ''),
-            # 'summary': json['description'],
-            'description': content.html().strip(),
-            # 'homepage_url': url,
-            # 'source_url': json['html_url'],
-            # 'image_url': json['owner']['avatar_url'],
-            'contact_url': url,
-        }
-    return {}
+        return FetchBitbucketProject(apiurl)
+
+    # The fun begins
+    elif url.find('/datapackage.json') > 0:
+        return FetchDataProject(url)
+
+    # Now we're really rock'n'rollin'
+    else:
+        return FetchWebProject(url)
 
 def IsProjectStarred(project, current_user):
     return Activity.query.filter_by(

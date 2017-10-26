@@ -22,9 +22,13 @@
     var checkAutotext = function(val, $ind) {
       if (typeof val !== 'string') return;
       supported = (
+        val.indexOf('datapackage.json') > 0 ||
         val.indexOf('//github.com/') > 0 ||
+        val.indexOf('//gitlab.com/') > 0 ||
         val.indexOf('//bitbucket.org/') > 0 ||
-        val.indexOf('//make.opendata.ch/wiki/') > 0
+        val.indexOf('document') > 0 ||
+        val.indexOf('wiki') > 0 ||
+        val.indexOf('pad') > 0
       );
       $ind.find('i')
         .removeClass('fa-circle-o fa-check-circle-o')
@@ -69,7 +73,7 @@
       var $button = $(this);
       $indicator.find('i').css('color', 'blue');
       $button.attr('disabled', 'disabled').html('Please wait ...');
-      $.getJSON('/project/autofill?url=' + url, function(data) {
+      $.getJSON('/api/project/autofill?url=' + url, function(data) {
         $indicator.find('i').css('color', 'green');
         $button.removeAttr('disabled').html('Update now');
 

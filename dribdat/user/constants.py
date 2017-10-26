@@ -42,6 +42,8 @@ PROJECT_PROGRESS_PHASE = {
     PR_LIVE:        'Supporting',
     PR_CHALLENGE:   'Challenge',
 }
-def projectProgressList():
+def projectProgressList(All=True):
+    if not All:
+        return [(PR_CHALLENGE, PROJECT_PROGRESS[PR_CHALLENGE])]
     pl = [(g, PROJECT_PROGRESS[g]) for g in PROJECT_PROGRESS]
     return sorted(pl, key=lambda x: x[0])

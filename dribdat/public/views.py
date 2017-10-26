@@ -9,6 +9,7 @@ from dribdat.public.forms import ProjectForm
 from dribdat.database import db
 from dribdat.aggregation import GetProjectData, ProjectActivity, IsProjectStarred, GetProjectTeam
 from dribdat.extensions import cache
+from dribdat.user import projectProgressList
 
 blueprint = Blueprint('public', __name__, static_folder="../static")
 
@@ -55,6 +56,7 @@ def project_edit(project_id):
         flash('You do not have access to edit this project.', 'warning')
         return project_action(project_id, None)
     form = ProjectForm(obj=project, next=request.args.get('next'))
+    form.progress.choices = projectProgressList(event.has_started)
     form.category_id.choices = [(c.id, c.name) for c in project.categories_for_event(event.id)]
     form.category_id.choices.insert(0, (-1, ''))
     if form.validate_on_submit():
@@ -100,6 +102,7 @@ def project_new(event_id):
         project = Project()
         project.user_id = current_user.id
         form = ProjectForm(obj=project, next=request.args.get('next'))
+        form.progress.choices = projectProgressList(event.has_started)
         form.category_id.choices = [(c.id, c.name) for c in project.categories_for_event(event.id)]
         form.category_id.choices.insert(0, (-1, ''))
         if form.validate_on_submit():
@@ -116,14 +119,6 @@ def project_new(event_id):
         del form.logo_icon
         del form.logo_color
     return render_template('public/projectnew.html', current_event=event, form=form)
-
-# API routine used to sync project data
-@blueprint.route('/project/autofill', methods=['GET', 'POST'])
-@login_required
-def project_autofill():
-    url = request.args.get('url')
-    data = GetProjectData(url)
-    return jsonify(data)
 
 @blueprint.route('/project/<int:project_id>/autoupdate')
 @login_required
