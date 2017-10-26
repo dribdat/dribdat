@@ -70,7 +70,7 @@
       var $button = $(this);
       $indicator.find('i').css('color', 'blue');
       $button.attr('disabled', 'disabled').html('Please wait ...');
-      $.getJSON('/project/autofill?url=' + url, function(data) {
+      $.getJSON('/api/project/autofill?url=' + url, function(data) {
         $indicator.find('i').css('color', 'green');
         $button.removeAttr('disabled').html('Update now');
 

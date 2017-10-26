@@ -201,3 +201,13 @@ def project_push_json():
     db.session.add(project)
     db.session.commit()
     return jsonify(success='Updated', project=project.data)
+
+# ------ FRONTEND -------
+
+# API routine used to sync project data
+@blueprint.route('/project/autofill', methods=['GET', 'POST'])
+@login_required
+def project_autofill():
+    url = request.args.get('url')
+    data = GetProjectData(url)
+    return jsonify(data)

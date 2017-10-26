@@ -117,14 +117,6 @@ def project_new(event_id):
         del form.logo_color
     return render_template('public/projectnew.html', current_event=event, form=form)
 
-# API routine used to sync project data
-@blueprint.route('/project/autofill', methods=['GET', 'POST'])
-@login_required
-def project_autofill():
-    url = request.args.get('url')
-    data = GetProjectData(url)
-    return jsonify(data)
-
 @blueprint.route('/project/<int:project_id>/autoupdate')
 @login_required
 def project_autoupdate(project_id):
