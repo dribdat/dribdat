@@ -86,6 +86,30 @@ def FetchBitbucketProject(project_url):
         'contact_url': contact_url,
     }
 
+DP_VIEWER_URL = 'http://data.okfn.org/tools/view?url=%s'
+DP_IMAGE_URL = 'http://assets.okfn.org/p/data/img/icon-128.png'
+
+def FetchDataProject(project_url):
+    data = requests.get(project_url)
+    if data.text.find('{') < 0: return {}
+    json = data.json()
+    if not 'name' in json: return {}
+    readme_url = project_url.replace('datapackage.json', 'README.md')
+    if readme_url == project_url: return {}
+    text_content = requests.get(readme_url).text
+    contact_url = 'http://frictionlessdata.io/'
+    if 'maintainers' in json and len(json['maintainers'])>0 and 'web' in json['maintainers'][0]:
+        contact_url = json['maintainers'][0]['web']
+    return {
+        'name': json['name'],
+        'summary': json['title'],
+        'description': text_content,
+        'homepage_url': DP_VIEWER_URL % project_url,
+        'source_url': project_url,
+        'image_url': DP_IMAGE_URL,
+        'contact_url': contact_url,
+    }
+
 ALLOWED_HTML_TAGS = [
     u'a', u'abbr', u'acronym', u'b', u'blockquote', u'code', u'em',
     u'i', u'li', u'ol', u'strong', u'ul', u'h1', u'h2', u'h3',

@@ -4,7 +4,7 @@
 
 from dribdat.user.models import Activity
 from dribdat.database import db
-from dribdat.apifetch import *
+from dribdat.apifetch import * # TBR
 
 def GetProjectData(url):
     data = None
@@ -23,6 +23,11 @@ def GetProjectData(url):
         if apiurl == url: return {}
         return FetchBitbucketProject(apiurl)
 
+    # The fun begins
+    elif url.find('/datapackage.json') > 0:
+        return FetchDataProject(url)
+
+    # Now we're really rock'n'rollin'
     else:
         return FetchWebProject(url)
 
