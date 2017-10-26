@@ -23,6 +23,7 @@
       if (typeof val !== 'string') return;
       supported = (
         val.indexOf('//github.com/') > 0 ||
+        val.indexOf('//gitlab.com/') > 0 ||
         val.indexOf('//bitbucket.org/') > 0 ||
         val.indexOf('//make.opendata.ch/wiki/') > 0
       );

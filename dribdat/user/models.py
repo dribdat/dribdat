@@ -1,7 +1,12 @@
 # -*- coding: utf-8 -*-
 """User models."""
+
+from future.standard_library import install_aliases
+install_aliases()
+from urllib.parse import urlencode
+
+import hashlib
 import datetime as dt
-import urllib, hashlib
 from time import mktime
 
 from flask_login import UserMixin
@@ -73,11 +78,7 @@ class User(UserMixin, SurrogatePK, Model):
             gr_size = 40
             email = self.email.lower().encode('utf-8')
             gravatar_url = hashlib.md5(email).hexdigest() + "?"
-            # Python 3 compatibility hack
-            if 'python2' in urllib.__file__:
-                gravatar_url += urllib.urlencode({'s':str(gr_size)})
-            else:
-                gravatar_url += urllib.parse.urlencode({'s':str(gr_size)})
+            gravatar_url += urlencode({'s':str(gr_size)})
             self.cardtype = 'gravatar'
             self.carddata = gravatar_url
         self.save()

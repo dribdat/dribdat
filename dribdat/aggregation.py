@@ -1,6 +1,11 @@
 # -*- coding: utf-8 -*-
 """Utilities for collecting data from third party sites
 """
+
+from future.standard_library import install_aliases
+install_aliases()
+from urllib.parse import quote_plus
+
 import re
 import requests
 from base64 import b64decode
@@ -11,7 +16,26 @@ from dribdat.database import db
 
 def GetProjectData(url):
     data = None
-    if url.find('//github.com') > 0:
+    if url.find('//gitlab.com') > 0:
+        apiurl = re.sub(r'https?://gitlab\.com/', '', url).strip('/')
+        if apiurl == url: return {}
+        data = requests.get("https://gitlab.com/api/v4/projects/%s" % quote_plus(apiurl))
+        if data.text.find('{') < 0: return {}
+        json = data.json()
+        if not 'name' in json: return {}
+        readmeurl = "%s/raw/master/README.md" % url
+        readmedata = requests.get(readmeurl)
+        readme = readmedata.text or ""
+        return {
+            'name': json['name'],
+            'summary': json['description'],
+            'description': readme,
+            # 'homepage_url': "",
+            'source_url': json['web_url'],
+            'image_url': json['avatar_url'],
+            'contact_url': json['web_url'] + '/issues',
+        }
+    elif url.find('//github.com') > 0:
         apiurl = re.sub(r'https?://github\.com', 'https://api.github.com/repos', url)
         if apiurl == url: return {}
         data = requests.get(apiurl)
