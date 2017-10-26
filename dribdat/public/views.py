@@ -18,12 +18,14 @@ def current_event():
 
 @blueprint.route("/")
 def home():
-    event = current_event()
-    if event is not None:
-        events = Event.query.filter(Event.id != event.id)
+    cur_event = current_event()
+    if cur_event is not None:
+        events = Event.query.filter(Event.id != cur_event.id)
     else:
-        events = Event.query.all()
-    return render_template("public/home.html", events=events, current_event=event)
+        events = Event.query
+    events = events.order_by(Event.id.desc()).all()
+    return render_template("public/home.html",
+        events=events, current_event=cur_event)
 
 @blueprint.route("/about/")
 def about():
