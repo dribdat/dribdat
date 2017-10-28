@@ -32,6 +32,8 @@ def GetProjectData(url):
         return FetchWebProject(url)
 
 def IsProjectStarred(project, current_user):
+    if not current_user or current_user.is_anonymous or not current_user.is_authenticated:
+        return False 
     return Activity.query.filter_by(
         name='star',
         project_id=project.id,
