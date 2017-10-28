@@ -89,6 +89,10 @@ footer .footer-nav {
 Dribdat custom styles
 */
 
+ul.help-block {
+  background-color: red; color: white; padding: 5px;
+}
+
 .section-header .section-header-logo {
   float: left;
   margin-right: 45px;

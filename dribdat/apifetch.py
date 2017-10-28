@@ -164,7 +164,7 @@ def FetchWebProject(project_url):
         if len(ptitle) < 1: return {}
         text_content = requests.get("%s/export/txt" % project_url).text
 
-        obj['name'] = ptitle
+        obj['name'] = ptitle.replace('_', ' ')
         obj['description'] = text_content
         obj['source_url'] = project_url
         obj['image_url'] = "https://avatars2.githubusercontent.com/u/181731?s=200&v=4"
