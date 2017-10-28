@@ -54,7 +54,9 @@ def project(project_id):
 def project_edit(project_id):
     project = Project.query.filter_by(id=project_id).first_or_404()
     event = project.event
-    if project.user_id != current_user.id and not current_user.is_admin:
+    starred = IsProjectStarred(project, current_user)
+    allow_edit = starred or (not current_user.is_anonymous and current_user.is_admin)
+    if not allow_edit:
         flash('You do not have access to edit this project.', 'warning')
         return project_action(project_id, None)
     form = ProjectForm(obj=project, next=request.args.get('next'))
@@ -78,11 +80,11 @@ def project_action(project_id, of_type):
     event = project.event
     if of_type is not None:
         ProjectActivity(project, of_type, current_user)
-    project_starred = not current_user.is_anonymous and current_user.is_authenticated and IsProjectStarred(project, current_user)
-    allow_edit = project_starred or (not current_user.is_anonymous and current_user.is_admin)
+    starred = IsProjectStarred(project, current_user)
+    allow_edit = starred or (not current_user.is_anonymous and current_user.is_admin)
     project_stars = GetProjectTeam(project)
     return render_template('public/project.html', current_event=event, project=project,
-        project_starred=project_starred, project_stars=project_stars, allow_edit=allow_edit)
+        project_starred=starred, project_stars=project_stars, allow_edit=allow_edit)
 
 @blueprint.route('/project/<int:project_id>/star', methods=['GET', 'POST'])
 @login_required
@@ -126,8 +128,10 @@ def project_new(event_id):
 @login_required
 def project_autoupdate(project_id):
     project = Project.query.filter_by(id=project_id).first_or_404()
-    if project.user_id != current_user.id or project.is_hidden or not project.is_autoupdate:
-        flash('You cannot sync this project.', 'warning')
+    starred = IsProjectStarred(project, current_user)
+    allow_edit = starred or (not current_user.is_anonymous and current_user.is_admin)
+    if not allow_edit or project.is_hidden or not project.is_autoupdate:
+        flash('You may not sync this project.', 'warning')
         return project_action(project_id, None)
     data = GetProjectData(project.autotext_url)
     if not 'name' in data:
