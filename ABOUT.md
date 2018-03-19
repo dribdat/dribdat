@@ -2,17 +2,17 @@ This document summarises the current status and makes some vision statements abo
 
 # About Dribdat
 
-[![](https://soda.camp/workshops/2017/dribdat/dribdat.png)](https://github.com/loleg/dribdat/)
+[![](https://blog.datalets.ch/workshops/2017/dribdat/dribdat.png)](https://github.com/loleg/dribdat/)
 
 Dribdat (from "Driven By Data") is an open source tool for data-driven team collaboration such as Hackathons. It provides an open source website and project board for running events, and integrates popular community platforms and open source code repositories. It is the official platform of Opendata.ch hackathons and School of Data Switzerland workshops.
 
 ## Screenshots
 
-[![Now.Makezurich.ch](https://soda.camp/workshops/2017/dribdat/nowmakezurich.jpg)](http://now.makezurich.ch/)
+[![Now.Makezurich.ch](https://blog.datalets.ch/workshops/2017/dribdat/nowmakezurich.jpg)](http://now.makezurich.ch/)
 
-[![Climathon Zürich](https://soda.camp/workshops/2017/dribdat/climathon.jpg)](https://hack.opendata.ch/event/4)
+[![Climathon Zürich](https://blog.datalets.ch/workshops/2017/dribdat/climathon.jpg)](https://hack.opendata.ch/event/4)
 
-[![Open Food Hackdays](https://soda.camp/workshops/2017/dribdat/foodhackdays-openreceipts.jpg)](https://hack.opendata.ch/project/74)     
+[![Open Food Hackdays](https://blog.datalets.ch/workshops/2017/dribdat/foodhackdays-openreceipts.jpg)](https://hack.opendata.ch/project/74)     
 
 ## Summary
 
