@@ -50,3 +50,7 @@ docs/_build
 
 # Virtualenvs
 env/
+
+# JavaScript
+node_modules
+yarn-error.log
