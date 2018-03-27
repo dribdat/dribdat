@@ -387,7 +387,7 @@ pre { color: #333; background: white; }
 
 .signin-slack {
   font-size: 0px; border: 0px !important;
-  background: url(../libs/sso/btn-sign-in-with-slack.png) no-repeat;
+  background: url(../img/btn-sign-in-with-slack.png) no-repeat;
   width: 173px; height: 41px;
 }
 
