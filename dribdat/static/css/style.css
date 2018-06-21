@@ -181,7 +181,7 @@ nav .navbar-nav .nav-item {
 .hide-challenges .challenge,
 .challenge.hexagon .progress { display: none; }
 .challenge.hexagon {
-  background-color: white !important;
+  background-color: #dda0dd !important;
   border-top: 1px dashed rgba(0,0,200,0.4);
   border-bottom: 1px dashed rgba(0,0,200,0.4);
 }
