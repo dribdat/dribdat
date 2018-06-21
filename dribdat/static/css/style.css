@@ -180,7 +180,6 @@ nav .navbar-nav .nav-item {
 .project-page.phase-Challenge .project-star,
 .hide-challenges .challenge,
 .challenge.hexagon .progress { display: none; }
-.challenge.hexagon .hexagontent { color: #35a; font-weight: normal; }
 .challenge.hexagon {
   background-color: white !important;
   border-top: 1px dashed rgba(0,0,200,0.4);
