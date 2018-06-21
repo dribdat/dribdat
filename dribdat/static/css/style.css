@@ -182,16 +182,6 @@ nav .navbar-nav .nav-item {
 .challenge.hexagon .progress { display: none; }
 .challenge.hexagon {
   background-color: #dda0dd !important;
-  border-top: 1px dashed rgba(0,0,200,0.4);
-  border-bottom: 1px dashed rgba(0,0,200,0.4);
-}
-.challenge.hexagon::before {
-  border-top: 1px dashed rgba(0,0,200,0.4);
-  border-bottom: 1px dashed rgba(0,0,200,0.4);
-}
-.challenge.hexagon::after {
-  border-top: 1px dashed rgba(0,0,200,0.4);
-  border-bottom: 1px dashed rgba(0,0,200,0.4);
 }
 
 .project.hexagon {
