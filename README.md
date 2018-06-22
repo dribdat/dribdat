@@ -2,59 +2,111 @@
 
 *The stakes are high, the competition is ready. You will be measured, your progress tracked, your creativity analysed & compared. Think you have what it takes? Ready, steady, go!*
 
-**Dribdat (from "Driven By Data") is an open platform for data-driven team collaboration, such as Hackathons.** It works as a website and project board for running exciting, productive events..with Impact Factor. We created this after using plain wikis and forums for years, and trying out a few proprietary tools that we felt limited us in one way or another.
+**Dribdat (from "Driven By Data") is an open platform for data-driven team collaboration, such as Hackathons.** It works as a website and project board for running exciting, productive events..with Impact Factor. We [created this tool](https://datalets.ch/dribdat/iot-2015/project/23/) after using plain wikis and forums for years, and after trying out a few proprietary tools that we felt limited us in one way or another.
 
-[Visit this page](https://datalets.ch/dribdat/iot-2015/project/23/) for more background.
+The platform allows organisers and participants to aggregate project details from multiple sources (Markdown, Wikis, GitHub, Bitbucket), display challenges and projects in attractive dashboards, reuse the data through an [API](#API), plug in community tools ([Discourse](https://www.discourse.org/), [Slack](http://slack.com), [Let's Chat](http://sdelements.github.io/lets-chat/), etc.) and even [chatbots](https://github.com/schoolofdata-ch/sodabot) to enhance the hackathon.
+
+For more background and links to example sites see [ABOUT](ABOUT.md).
 
 ## Deployment Quickstart
 
-Instructions to set up a development instance of this platform follow. This project is ready for fast deployment to [Heroku](http://heroku.com). You will need to set the following configuration variables:
+This project is ready for fast deployment to [Heroku](http://heroku.com):
+
+[![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy)
+
+You can configure your instance with the following basic environment variables:
 
 * `SERVER_URL` - fully qualified domain name where the site is hosted
 * `DRIBDAT_ENV` - 'dev' to enable debugging, 'prod' to optimise assets etc.
-* `DRIBDAT_DB` - if you are using the Postgres add-on, this would be postgres://username:password@...
-* `DATABASE_URL` - same as above - needed only for Heroku to recognise the database, set automatically if you use tools
-* `DRIBDAT_SECRET` - a long scary string for hashing your passwords
+* `DRIBDAT_SECRET` - a long scary string for hashing your passwords - in Heroku this is set automatically
+* `DATABASE_URL` - if you are using the Postgres add-on, this would be postgres://username:password@... - in Heroku this is set automatically
+* `CACHE_TYPE` - in production, you can use built-in, Redis, Memcache to speed up your site (see `settings.py`)
 
-Once your app is deployed on Heroku, create a user and use the shell commands below to become an administrator.
+If you would like to use external clients, like the chatbot, to remote control Dribdat you need to set:
 
-## Developer Quickstart
+* `DRIBDAT_APIKEY` - for connecting clients to the remote [API](#api)
 
-First, set your app's secret key as an environment variable. For example, example add the following to `.bashrc` or `.bash_profile`.
+OAuth 2.0 support is built in, currently fully supporting Slack, using these variables:
 
-```
-export DRIBDAT_SECRET='something-really-secret'
-```
+* `DRIBDAT_SLACK_ID` - an OAuth Client ID to enable [Sign in with Slack](https://api.slack.com/docs/sign-in-with-slack)
+* `DRIBDAT_SLACK_SECRET` - ..and client secret.
 
-Then run the following commands to bootstrap your environment.
+Set the redirect URL in your app's OAuth Settings to `<SERVER_URL>/slack_callback`
+
+## API
+
+There are a few API calls that admins can use to easily get to the data in Dribdat in CSV or JSON format.
+
+Note that a print view of all projects is accessible from the Events admin console.
+
+Basic data on an event:
+
+- `/api/event/<EVENT ID>/info.json`
+- `/api/event/current/info.json`
+
+Retrieve data on all projects from an event:
+
+- `/api/event/<EVENT ID>/projects.csv`
+- `/api/event/<EVENT ID>/projects.json`
+- `/api/event/current/projects.json`
+
+Recent activity in projects (all or specific):
+
+- `/api/project/activity.json`
+- `/api/<PROJECT ID>/activity.json`
+
+Search project contents:
+
+- `/api/project/search.json?q=<text_query>`
+
+Push data into projects (WIP):
+
+- `/api/project/push.json`
+
+For more details see `api.py`
+
+## Developer guide
+
+[![Build Status](https://travis-ci.org/loleg/dribdat.svg?branch=master)](https://travis-ci.org/loleg/dribdat)
+
+Run the following commands to bootstrap your environment.
 
 ```
 git clone https://github.com/loleg/dribdat
 cd dribdat
 pip install -r requirements/dev.txt
-python manage.py server
 ```
 
-You will see a pretty welcome screen at http://localhost:5000
+By default in a dev environment, a SQLite database will be created in the root folder (`dev.db`). You can also install and configure your choice of DBMS [supported by SQLAlchemy](http://docs.sqlalchemy.org/en/rel_1_1/dialects/index.html).
 
-Once you have installed your DBMS, run the following to create your app's database tables and perform the initial migration:
+Run the following to create your app's database tables and perform the initial migration:
 
 ```
 python manage.py db init
 python manage.py db migrate
 python manage.py db upgrade
-python manage.py server
 ```
+
+Finally, run this command to start the server:
+
+```
+FLASK_DEBUG=1 python manage.py run
+```
+
+You will see a pretty welcome screen at http://localhost:5000
+
+The first user that registers becomes an admin, so don't delay!
 
 ### Shell access
 
 To open the interactive shell, run: `python manage.py shell` (or, using the [Heroku toolchain](https://devcenter.heroku.com/categories/command-line), `heroku run python manage.py shell`)
 
-By default, you will have access to `app`, `db`, and the `User` model. For example, to make yourself Administrator, create a user through the frontend, then promote the (here we assume, first) user in the shell:
+By default, you will have access to the `User` model, as well as Event, Project, Category, Activity. For example, to promote to admin and reset the password of the first user:
 
 ```
 u = User.query.first()
 u.is_admin = True
+u.set_password('Ins@nEl*/c0mpl3x')
 u.save()
 ```
 
@@ -80,18 +132,6 @@ To apply the migration. Watch out for any errors in the process.
 
 For a full migration command reference, run `python manage.py db --help`.
 
-## API notes
-
-There are a few API calls that admins can use to easily get to the data in Dribdat.
-
-Summary of all projects from current event in CSV or JSON format:
-`/admin/event/<EVENT ID>/projects.csv`
-`/admin/event/<EVENT ID>/projects.json`
-
-A print view of all projects is also accessible from the Events admin console.
-
 ## Credits
 
-Developed by [Oleg Lavrovsky](http://datalets.ch) based on [Steven Loria's flask-cookiecutter](https://github.com/sloria/cookiecutter-flask).
-
-With thanks to [Swisscom](http://swisscom.com)'s F. Wieser and M.-C. Gasser for conceptual inputs and financial support of the first release of this project.
+Developed by [Oleg Lavrovsky](http://datalets.ch) based on Steven Loria's [flask-cookiecutter](https://github.com/sloria/cookiecutter-flask). With thanks to [Swisscom](http://swisscom.com)'s F. Wieser and M.-C. Gasser for conceptual inputs and financial support of the first release of this project.

@@ -16,7 +16,7 @@
         </thead>
         {% for user in users %}
         <tr>
-            <td>
+            <td style="{% if not user.active %}text-decoration:line-through; color:red;{% endif %}">
               <a href="{{ url_for('admin.user', user_id=user.id) }}">
                 {{ user.username }}
               </a>

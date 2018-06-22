@@ -5,11 +5,7 @@
 /* universal */
 
 html {
-  overflow-y: scroll;
-}
-
-body {
-  padding-top: 60px;
+  /*overflow-y: scroll;*/
 }
 
 section {
@@ -24,7 +20,7 @@ h1 {
   color: #999;
 }
 
-.container-narrow{
+.container-narrow {
   margin: 0 auto;
   max-width: 700px;
 }
@@ -56,8 +52,8 @@ h1 {
 footer {
   margin-top: 45px;
   padding-top: 5px;
-  border-top: 1px solid #eaeaea;
-  color: #999999;
+  /*border-top: 1px solid #eaeaea;*/
+  /*color: #999999;*/
 }
 
 footer a {
@@ -93,19 +89,27 @@ footer .footer-nav {
 Dribdat custom styles
 */
 
-nav .section-header .section-header-logo {
+ul.help-block {
+  background-color: red; color: white; padding: 5px;
+}
+
+.section-header .section-header-logo {
   float: left;
   margin-right: 45px;
 }
-nav .section-header .section-header-logo img {
+.section-header .section-header-logo img {
   height: 80px;
 }
-nav .section-header .section-header-content * {
-  color: white;
+nav.navbar {
+  margin-bottom: 1em;
+  box-shadow: 0px 0px 20px rgba(0,0,0,0.5);
 }
-nav .fa-comment {
-  top: -7px;
-  position: relative;
+nav .navbar-nav .fa {
+  margin-left:  0.2em;
+}
+nav .navbar-nav .nav-item {
+  margin-right: 0.4em;
+  padding-right: 0.4em;
 }
 
 .home-page h2 {
@@ -114,39 +118,28 @@ nav .fa-comment {
 }
 
 .event-countdown {
-  zoom: 0.8;
-  -moz-transform: scale(0.8);
   left: 50%;
-  width: 100%;
+  width: 624px;
   height: 100px;
   overflow: hidden;
   position: relative;
   margin-top: 20px;
-  margin-left: -355px;
+  margin-left: -312px;
 }
 .event-countdown .flip-clock-label {
   display: none;
 }
-@media (max-width: 1280px) {
+@media (max-width: 760px) {
   .event-countdown {
-    margin-left: -313px;
-  }
-}
-@media (max-width: 992px) {
-  .event-countdown {
-    left: inherit;
-    margin-left: 0px;
-    margin-top: 10px;
+    display: none;
   }
 }
 
 .community-embed { margin-top: 60px; }
 .community-embed .fa-comment {
   position: relative;
-  color: rgba(0, 0, 0, 0.1);
+  color: rgba(255,255,255, 0.1);
   font-size: 50px;
-  left: -38px;
-  top: -38px;
   line-height: 0px;
   clear: none;
   display: inherit;
@@ -157,18 +150,63 @@ nav .fa-comment {
   }
 }
 
+.jumbotron.home-page {
+  background: none;
+}
 .jumbotron.event-page {
   margin-top: 40px;
+  padding: 30px;
 }
+
+.with-event .start-project {
+  margin: 2em 0px;
+  text-align: center;
+  display: block;
+}
+
 .event-page .honeycomb {
   margin: 30px 0px 100px 0px;
-  text-align: left;
+  left: 50%;
+  width: 722px;
+}
+@media (max-width: 760px) {
+  .event-page .honeycomb {
+    width: auto;
+    left: inherit;
+  }
+}
+
+.project-page.phase-Challenge .progress,
+.project-page.phase-Challenge .project-star,
+.hide-challenges .challenge,
+.challenge.hexagon .progress { display: none; }
+.challenge.hexagon .hexagontent { color: #35a; font-weight: normal; }
+.challenge.hexagon {
+  background-color: white !important;
+  border-top: 1px dashed rgba(0,0,200,0.4);
+  border-bottom: 1px dashed rgba(0,0,200,0.4);
+}
+.challenge.hexagon::before {
+  border-top: 1px dashed rgba(0,0,200,0.4);
+  border-bottom: 1px dashed rgba(0,0,200,0.4);
+}
+.challenge.hexagon::after {
+  border-top: 1px dashed rgba(0,0,200,0.4);
+  border-bottom: 1px dashed rgba(0,0,200,0.4);
+}
+
+.project.hexagon {
+  margin-bottom: 60px;
+}
+.project.hexagon:hover {
+  box-shadow: 0px 3px 3px lightblue;
 }
 .project .hexagontent {
   overflow: hidden;
   color: black;
   font-weight: bold;
   text-shadow: 1px 1px 0px #fff;
+  line-height: 1.5;
 }
 .project .hexagontent .fa {
   font-size: 240%;
@@ -183,6 +221,12 @@ nav .fa-comment {
   left: 50%;
   opacity: 0.8;
 }
+.honeycomb .project { opacity: 0.4; }
+.honeycomb .project.category-highlight { opacity: 1.0; }
+.honeycomb .project.hexalist {
+  display: none; background: white !important; color: black;
+}
+.honeycomb .project.hexalist.category-highlight { display: block; }
 .project.hexalist .hexagontent {
   overflow: visible;
   position: relative;
@@ -195,6 +239,7 @@ nav .fa-comment {
 .project.hexalist .hexagontent i.fa,
 .project.hexalist .hexagontent br { display: none; }
 .project.hexalist .hexagontent small { font-size: 100%; }
+.project.hexalist.challenge .hexagontent .progress { visibility: hidden; }
 .project.hexalist .hexagontent .progress {
   float: left;
   position: initial;
@@ -220,6 +265,15 @@ nav .fa-comment {
 .hexagon:nth-child(even) { background-color: #f0e0a2; }
 .hexagon:nth-child(odd) { background-color: #adddcf; }
 
+.project-page .project-name {
+  font-weight: bold;
+  margin-top: 1.5em;
+}
+.project-page .project-category {
+  font-size: 70%;
+  color: #999;
+  font-style: italic;
+}
 .project-page .project-team {
   font-weight: normal;
   color: #999;
@@ -237,20 +291,52 @@ nav .fa-comment {
 }
 .project-page .project-info {
   min-height: 240px;
-  background: rgba(255, 255, 255, 0.8);
+  background-color: rgba(255, 255, 255, 0.8); color: black;
   padding: 20px;
   margin-bottom: 10px;
+}
+.project-page .project-info a {
+  color: #15a;
 }
 .project-page .project-star i {
   padding-right: 5px;
 }
 .project-page .project-longtext img {
-  width: 100%;
+  max-width: 100%;
+}
+.project-page.jumbotron { padding: 1rem; }
+@media (min-width: 576px) {
+  .project-page.jumbotron { padding: 2rem; }
 }
 
-.navbar-collapse .nav li {
-    text-align: center;
+/* Code blocks */
+pre { color: #333; background: white; }
+
+/* Badges */
+.challenge-badge {
+  float: left; display: inline-block;
+  height: 3em; width: 3em;
+  text-indent: -9999px; color: transparent;
+  margin-right: 0.3em;
+  background-repeat: no-repeat;
+  background-size: contain;
 }
+.challenge-badge.level-1 {
+  background-image: url('/static/img/badge-green.png');
+}
+.challenge-badge.level-2 {
+  background-image: url('/static/img/badge-blue.png');
+}
+.challenge-badge.level-3 {
+  background-image: url('/static/img/badge-black.png');
+}
+.challenge-badge.level-4 {
+  background-image: url('/static/img/badge-red.png');
+}
+
+/*.navbar-collapse .navbar-nav li {
+    text-align: center;
+}*/
 .nav-categories .btn, .project-category.btn {
   opacity: 0.6;
   font-size: 16px;
@@ -260,7 +346,7 @@ nav .fa-comment {
 .nav-categories {
   margin: 10px;
 }
-.project-tools {
+.project-tools, .edit-buttons {
   float: right;
   margin-right: 15px;
   text-align: right;
@@ -274,8 +360,22 @@ nav .fa-comment {
   width: 100%;
 }
 
-.container.with-event {
-  margin-top: 120px;
+.event-resources {
+  padding: 0 1em;
+  margin-top: 40px;
+  text-align: left;
+}
+.event-info {
+  margin-top: 40px;
+}
+
+@media (max-width: 760px) {
+  .category-info {
+    margin-top: none;
+  }
+  .project-tools {
+    float: none;
+  }
 }
 
 .team-gravatar img {
@@ -283,4 +383,28 @@ nav .fa-comment {
   margin-bottom: 5px;
   padding: 2px;
   border: 2px solid #eee;
+}
+
+.signin-slack {
+  font-size: 0px; border: 0px !important;
+  background: url(../img/btn-sign-in-with-slack.png) no-repeat;
+  width: 173px; height: 41px;
+}
+
+/* Embed view of the projects */
+.embed-view footer, .embed-view .navbar { display: none; }
+.embed-view h2 { margin-bottom: 0px; }
+.embed-event {
+  text-align: center;
+  background: none transparent !important;
+}
+.embed-view, .embed-view .container {
+  margin: 0 !important;
+  padding: 0 !important;
+  width: 100% !important;
+  background: none !important;
+}
+.embed-view .honeycomb {
+  transform-origin: 50% 0%;
+  transform: scale(0.5);
 }

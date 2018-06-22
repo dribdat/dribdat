@@ -2,16 +2,19 @@
 -r prod.txt
 
 # Testing
-pytest==3.0.4
-WebTest==2.0.23
-factory-boy==2.7.0
+pytest>=3.2.2
+WebTest>=2.0.28
+factory-boy>=2.9.2
 
 # Lint and code style
-flake8==3.2.1
-flake8-blind-except==0.1.1
-flake8-debugger==1.4.0
-flake8-docstrings==1.0.2
-flake8-isort==2.0.3
-flake8-quotes==0.8.1
-isort==4.2.5
-pep8-naming==0.4.1
+flake8>=3.4.1
+flake8-blind-except>=0.1.1
+flake8-debugger>=1.4.0
+flake8-docstrings>=1.1.0
+flake8-isort>=2.2.2
+flake8-quotes>=0.11.0
+isort>=4.2.15
+pep8-naming>=0.4.1
+
+# Debug toolbar
+Flask-DebugToolbar>=0.10.1

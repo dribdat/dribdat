@@ -24,6 +24,7 @@ pip-log.txt
 .coverage
 .tox
 nosetests.xml
+.cache
 tests/.cache
 
 # Translations
@@ -49,3 +50,7 @@ docs/_build
 
 # Virtualenvs
 env/
+
+# JavaScript
+node_modules
+yarn-error.log

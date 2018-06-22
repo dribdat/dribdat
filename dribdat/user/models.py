@@ -1,7 +1,12 @@
 # -*- coding: utf-8 -*-
 """User models."""
+
+from future.standard_library import install_aliases
+install_aliases()
+from urllib.parse import urlencode
+
+import hashlib
 import datetime as dt
-import urllib, hashlib
 from time import mktime
 
 from flask_login import UserMixin
@@ -16,6 +21,7 @@ from dribdat.database import (
     SurrogatePK,
 )
 
+from dribdat.utils import format_date_range
 from dribdat.user import PROJECT_PROGRESS_PHASE
 
 from sqlalchemy import or_
@@ -42,6 +48,7 @@ class User(UserMixin, SurrogatePK, Model):
     username = Column(db.String(80), unique=True, nullable=False)
     email = Column(db.String(80), unique=True, nullable=False)
     webpage_url = Column(db.String(128), nullable=True)
+    sso_id = Column(db.String(128), nullable=True)
     #: The hashed password
     password = Column(db.String(128), nullable=True)
     created_at = Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)
@@ -59,6 +66,8 @@ class User(UserMixin, SurrogatePK, Model):
         }
 
     def socialize(self):
+        if self.webpage_url is None:
+            self.webpage_url = ""
         if 'github.com/' in self.webpage_url:
             self.cardtype = 'github'
             self.carddata = self.webpage_url.strip('/').split('/')[-1]
@@ -67,8 +76,9 @@ class User(UserMixin, SurrogatePK, Model):
             self.carddata = self.webpage_url.strip('/').split('/')[-1]
         else:
             gr_size = 40
-            gravatar_url = hashlib.md5(self.email.lower()).hexdigest() + "?"
-            gravatar_url += urllib.urlencode({'s':str(gr_size)})
+            email = self.email.lower().encode('utf-8')
+            gravatar_url = hashlib.md5(email).hexdigest() + "?"
+            gravatar_url += urlencode({'s':str(gr_size)})
             self.cardtype = 'gravatar'
             self.carddata = gravatar_url
         self.save()
@@ -99,12 +109,13 @@ class Event(SurrogatePK, Model):
     hostname = Column(db.String(80), nullable=True)
     location = Column(db.String(255), nullable=True)
     description = Column(db.UnicodeText(), nullable=True)
+    boilerplate = Column(db.UnicodeText(), nullable=True)
+    resources = Column(db.UnicodeText(), nullable=True)
 
     logo_url = Column(db.String(255), nullable=True)
     custom_css = Column(db.UnicodeText(), nullable=True)
 
     webpage_url = Column(db.String(255), nullable=True)
-    hashtag_url = Column(db.String(255), nullable=True)
     community_url = Column(db.String(255), nullable=True)
     community_embed = Column(db.UnicodeText(), nullable=True)
 
@@ -122,40 +133,32 @@ class Event(SurrogatePK, Model):
             'starts_at': self.starts_at,
             'has_started': self.has_started,
             'ends_at': self.ends_at,
-            'info_url': self.webpage_url,
+            'has_finished': self.has_finished,
+            'community_url': self.community_url,
+            'webpage_url': self.webpage_url
         }
 
     @property
     def has_started(self):
         return self.starts_at <= dt.datetime.utcnow() <= self.ends_at
-
+    @property
+    def has_finished(self):
+        return dt.datetime.utcnow() > self.ends_at
     @property
     def countdown(self):
+        TIME_LIMIT = dt.datetime.utcnow() + dt.timedelta(days=30)
         if self.starts_at > dt.datetime.utcnow():
-            return self.starts_at + dt.timedelta(hours=-2) # TODO: timezones...
+            if self.starts_at > TIME_LIMIT: return None
+            return self.starts_at # + dt.timedelta(hours=-1) # TODO: timezones...
         elif self.ends_at > dt.datetime.utcnow():
-            return self.ends_at + dt.timedelta(hours=-2)
+            if self.ends_at > TIME_LIMIT: return None
+            return self.ends_at # + dt.timedelta(hours=-1)
         else:
             return None
 
     @property
     def date(self):
-        if self.starts_at.month == self.ends_at.month:
-            return "{0} {1}-{2}, {3}".format(
-                self.starts_at.strftime("%B"),
-                self.starts_at.day,
-                self.ends_at.day,
-                self.ends_at.year,
-            )
-        else:
-            return "{0} {1}, {2} - {3} {4}, {5}".format(
-                self.starts_at.strftime("%B"),
-                self.starts_at.day,
-                self.starts_at.year,
-                self.ends_at.strftime("%B"),
-                self.ends_at.day,
-                self.ends_at.year,
-            )
+        return format_date_range(self.starts_at, self.ends_at)
 
     def __init__(self, name=None, **kwargs):
         if name:
@@ -171,12 +174,14 @@ class Project(SurrogatePK, Model):
     image_url = Column(db.String(255), nullable=True)
     source_url = Column(db.String(255), nullable=True)
     webpage_url = Column(db.String(255), nullable=True)
+    contact_url = Column(db.String(255), nullable=True)
     autotext_url = Column(db.String(255), nullable=True)
     is_autoupdate = Column(db.Boolean(), default=True)
     logo_color = Column(db.String(7), nullable=True)
     logo_icon = Column(db.String(40), nullable=True)
-    hashtag = Column(db.String(40), nullable=True)
     longtext = Column(db.UnicodeText(), nullable=False, default=u"")
+
+    hashtag = Column(db.String(40), nullable=True)
     created_at = Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)
     updated_at = Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)
     is_hidden = Column(db.Boolean(), default=False)
@@ -207,47 +212,31 @@ class Project(SurrogatePK, Model):
     def phase(self):
         if self.progress is None: return ""
         return PROJECT_PROGRESS_PHASE[self.progress]
+    @property
+    def is_challenge(self):
+        return self.progress < 0
 
     # Current tally
     score = Column(db.Integer(), nullable=True, default=0)
 
     @property
     def data(self):
-        return {
+        d = {
             'id': self.id,
             'name': self.name,
             'score': self.score,
             'phase': self.phase,
             'summary': self.summary,
             'hashtag': self.hashtag,
+            'contact_url': self.contact_url,
             'image_url': self.image_url,
         }
+        if self.category is not None:
+            d['category_id'] = self.category.id
+            d['category_name'] = self.category.name
+        return d
 
     def update(self):
-        # Calculate score based on base progress
-        score = self.progress or 0
-        cqu = Activity.query.filter_by(project_id=self.id)
-        c_s = cqu.filter_by(name="star").count()
-        score = score + (2 * c_s)
-        # c_a = cqu.filter_by(name="boost").count()
-        # score = score + (10 * c_a)
-        if self.summary is None: self.summary = ''
-        if len(self.summary) > 3: score = score + 3
-        if self.image_url is None: self.image_url = ''
-        if len(self.image_url) > 3: score = score + 3
-        if self.source_url is None: self.source_url = ''
-        if len(self.source_url) > 3: score = score + 10
-        if self.webpage_url is None: self.webpage_url = ''
-        if len(self.webpage_url) > 3: score = score + 10
-        if self.logo_color is None: self.logo_color = ''
-        if len(self.logo_color) > 3: score = score + 1
-        if self.logo_icon is None: self.logo_icon = ''
-        if len(self.logo_icon) > 3: score = score + 1
-        if self.longtext is None: self.longtext = ''
-        if len(self.longtext) > 3: score = score + 1
-        if len(self.longtext) > 100: score = score + 4
-        if len(self.longtext) > 500: score = score + 10
-        self.score = score
         # Correct fields
         if self.category_id == -1: self.category_id = None
         if self.logo_icon.startswith('fa-'):
@@ -256,6 +245,33 @@ class Project(SurrogatePK, Model):
             self.logo_color = ''
         # Set the timestamp
         self.updated_at = dt.datetime.utcnow()
+        if self.is_challenge:
+            self.score = 0
+        else:
+            # Calculate score based on base progress
+            score = self.progress or 0
+            cqu = Activity.query.filter_by(project_id=self.id)
+            c_s = cqu.filter_by(name="star").count()
+            score = score + (2 * c_s)
+            # c_a = cqu.filter_by(name="boost").count()
+            # score = score + (10 * c_a)
+            if self.summary is None: self.summary = ''
+            if len(self.summary) > 3: score = score + 3
+            if self.image_url is None: self.image_url = ''
+            if len(self.image_url) > 3: score = score + 3
+            if self.source_url is None: self.source_url = ''
+            if len(self.source_url) > 3: score = score + 10
+            if self.webpage_url is None: self.webpage_url = ''
+            if len(self.webpage_url) > 3: score = score + 10
+            if self.logo_color is None: self.logo_color = ''
+            if len(self.logo_color) > 3: score = score + 1
+            if self.logo_icon is None: self.logo_icon = ''
+            if len(self.logo_icon) > 3: score = score + 1
+            if self.longtext is None: self.longtext = ''
+            if len(self.longtext) > 3: score = score + 1
+            if len(self.longtext) > 100: score = score + 4
+            if len(self.longtext) > 500: score = score + 10
+            self.score = score
 
     def __init__(self, name=None, **kwargs):
         if name:
@@ -308,7 +324,8 @@ class Activity(SurrogatePK, Model):
             'name': self.name,
             'time': int(mktime(self.timestamp.timetuple())),
             'date': self.timestamp,
-            'user': self.user.data,
+            'user_name': self.user.username,
+            'user_id': self.user.id,
             'project_id': self.project.id,
             'project_name': self.project.name,
         }

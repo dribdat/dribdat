@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 """The user module."""
-from . import views  # noqa
+from . import views, validators  # noqa
 
-from .constants import USER_ROLE, ADMIN, USER, USER_STATUS, ACTIVE
-from .constants import PROJECT_PROGRESS, PROJECT_PROGRESS_PHASE, projectProgressList
+from .constants import (
+    USER_ROLE, ADMIN, USER, USER_STATUS, ACTIVE,
+    PROJECT_PROGRESS, PROJECT_PROGRESS_PHASE,
+    projectProgressList
+)

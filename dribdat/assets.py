@@ -3,17 +3,17 @@
 from flask_assets import Bundle, Environment
 
 css = Bundle(
-    # "libs/bootstrap/css/bootstrap.css",
-    "css/bootstrap.min.css",
-    "css/honeycomb.css",
+    "libs/bootstrap/css/bootstrap.min.css",
     "libs/FlipClock/flipclock.css",
+    "css/honeycomb.css",
     "css/style.css",
     filters="cssmin",
     output="public/css/common.css"
 )
 
 js = Bundle(
-    "libs/jQuery/dist/jquery.js",
+    "libs/jquery/jquery.min.js",
+    "libs/popper.js/umd/popper.min.js",
     "libs/bootstrap/js/bootstrap.min.js",
     "js/plugins.js",
     "js/script.js",

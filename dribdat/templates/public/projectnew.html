@@ -5,8 +5,24 @@
 {% block page_title %}New project{% endblock %}
 
 {% block content %}
-<div class="container">
-    <h2>Start something awesome!</h2>
-    {{ render_form(url_for('public.project_new'), form) }}
-</div>
+  {% if form %}
+    <div class="jumbotron">
+      <div class="container">
+        <h2>Start something awesome!</h2>
+        {% if current_event.boilerplate %}
+          {{current_event.boilerplate|markdown}}
+        {% else %}
+          {% include "quickstart.html" %}
+        {% endif %}
+      </div>
+    </div>
+    <div class="container">
+      {{ render_form(url_for('public.project_new', event_id=current_event.id), form) }}
+    </div>
+  {% else %}
+    <div class="alert alert-info">
+      Please <b><a href="{{ url_for('auth.login') }}">log in</a></b>
+      to publish a project here.
+    </div>
+  {% endif %}
 {% endblock %}

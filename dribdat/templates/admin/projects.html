@@ -3,7 +3,7 @@
 {% block content %}
 <div class="container">
     <div style="float:right; margin-top:1em">
-      <a href="{{ url_for('admin.project_new') }}" class="btn btn-success">Add project</a>
+      <a href="{{ url_for('admin.project_new') }}" class="btn btn-success">Add project or challenge</a>
     </div>
     <h2>Projects</h2>
     {% if category_name %}<h4>Category: <b>{{ category_name }}</b></h4>{% endif %}
@@ -21,7 +21,7 @@
         {% for project in projects %}
         <tr>
             <td>
-              <a href="{{ url_for('admin.project', project_id=project.id) }}">
+              <a href="{{ url_for('admin.project_view', project_id=project.id) }}">
                 {{ project.name }}
               </a>
             </td>
@@ -29,23 +29,19 @@
             <td>{{ project.created_at|format_date }}</td>
             <td>{{ project.updated_at|since_date }}</td>
             <td>
+              <a href="{{ url_for('public.project', project_id=project.id) }}" class="btn btn-sm btn-primary">
+                Public view
+              </a>
               {% if project.is_hidden %}
-                <a href="{{ url_for('admin.project_toggle', project_id=project.id) }}" class="btn btn-sm btn-warning">
+                <a href="{{ url_for('admin.project_toggle', project_id=project.id) }}" class="btn btn-sm btn-success">
                   Enable
-                </a>
-                <a href="{{ url_for('admin.project_delete', project_id=project.id) }}" class="btn btn-sm"
-                   onclick="if(!window.confirm('Are you sure you wish to delete this project?')) return false">
-                  Delete
                 </a>
               {% else %}
                 {% if project.is_autoupdate %}
-                <a href="{{ url_for('public.project_autoupdate', project_id=project.id) }}" class="btn btn-sm btn-primary">
+                <a href="{{ url_for('public.project_autoupdate', project_id=project.id) }}" class="btn btn-sm btn-warning">
                   Sync
                 </a>
                 {% endif %}
-                <a href="{{ url_for('admin.project_toggle', project_id=project.id) }}" class="btn btn-sm">
-                  Disable
-                </a>
               {% endif %}
             </td>
         </tr>

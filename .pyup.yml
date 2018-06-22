@@ -1,0 +1,3 @@
+# Config file for automatic package maintenance with pyup.io
+
+update: security

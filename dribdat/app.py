@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 """The app module, containing the app factory function."""
 from flask import Flask, render_template
-from flaskext.markdown import Markdown
 
 from dribdat import commands, public, user, admin
 from dribdat.assets import assets
@@ -10,14 +9,14 @@ from dribdat.extensions import (
     cache,
     db,
     login_manager,
+    login_oauth,
     migrate,
-    debug_toolbar,
 )
 from dribdat.settings import ProdConfig
 from dribdat.utils import timesince
+from flask_misaka import Misaka
 
-
-def create_app(config_object=ProdConfig):
+def init_app(config_object=ProdConfig):
     """An application factory, as explained here: http://flask.pocoo.org/docs/patterns/appfactories/.
 
     :param config_object: The configuration object to use.
@@ -41,15 +40,14 @@ def register_extensions(app):
     cache.init_app(app)
     db.init_app(app)
     login_manager.init_app(app)
-    debug_toolbar.init_app(app)
     migrate.init_app(app, db)
-    Markdown(app)
     return None
 
 
 def register_blueprints(app):
     """Register Flask blueprints."""
     app.register_blueprint(public.views.blueprint)
+    app.register_blueprint(public.auth.blueprint)
     app.register_blueprint(public.api.blueprint)
     app.register_blueprint(user.views.blueprint)
     app.register_blueprint(admin.views.blueprint)
@@ -88,6 +86,7 @@ def register_commands(app):
 
 
 def register_filters(app):
+    Misaka(app, autolink=True, fenced_code=True, strikethrough=True)
     @app.template_filter()
     def since_date(value):
         return timesince(value)
