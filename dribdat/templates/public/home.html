@@ -36,7 +36,7 @@
         </b></a>
         {% if current_event.has_started and not current_event.has_finished %}
           <a href="{{ url_for('public.project_new', event_id=current_event.id) }}" class="btn btn-success">
-            Share project
+            Start project
             <i class="fa fa-rocket"></i></a>
         {% endif %}
       </div>
