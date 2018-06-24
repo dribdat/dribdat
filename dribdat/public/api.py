@@ -72,6 +72,27 @@ def info_event_json(event_id):
     event = Event.query.filter_by(id=event_id).first_or_404()
     return jsonify(event=event.data, timeuntil=timesince(event.countdown, until=True))
 
+# API: Outputs JSON-LD about an Event according to https://schema.org/Event specification
+@blueprint.route('/event/<int:event_id>/hackathon.json')
+def info_event_hackathon_json(event_id):
+    event = Event.query.filter_by(id=event_id).first_or_404()
+    return jsonify({
+        "@context":"http://schema.org",
+        "@type":"Event",
+        "location":{ "@type":"Place",
+            "name":event.hostname,
+            "address":event.location
+        },
+        "name":event.name,
+        "description":event.description,
+        "startDate":event.starts_at,
+        "endDate":event.ends_at,
+        "image":[event.logo_url],
+        "offers":{ "@type":"Offer",
+            "url":event.webpage_url
+        }
+    })
+
 # ------ PROJECTS ---------
 
 # API: Outputs JSON of projects in the current event, along with its info
