@@ -5,6 +5,7 @@ from future.standard_library import install_aliases
 install_aliases()
 from urllib.parse import urlencode
 
+import re
 import hashlib
 import datetime as dt
 from time import mktime
@@ -148,13 +149,12 @@ class Event(SurrogatePK, Model):
             },
             "name": self.name,
             "url": host_url + self.url,
-            "description": self.description,
+            "description": re.sub('<[^>]*>', '', self.description),
             "startDate": format_date(self.starts_at, '%Y-%m-%dT%H:%M'),
             "endDate": format_date(self.ends_at, '%Y-%m-%dT%H:%M'),
             "logo": self.logo_url,
-            "offers":{ "@type":"Offer",
-                "url": self.webpage_url
-            },
+            "mainEntityOfPage": self.webpage_url,
+            "offers":{ "@type":"Offer", "url": self.webpage_url },
             "workPerformed":[ p.get_schema(host_url) for p in self.projects ]
         }
 
@@ -271,7 +271,7 @@ class Project(SurrogatePK, Model):
         return {
             "@type": "CreativeWork",
             "name": self.name,
-            "description": self.summary,
+            "description": re.sub('<[^>]*>', '', self.summary),
             "dateCreated": format_date(self.created_at, '%Y-%m-%dT%H:%M'),
             "dateUpdated": format_date(self.updated_at, '%Y-%m-%dT%H:%M'),
             "discussionUrl": self.contact_url,
