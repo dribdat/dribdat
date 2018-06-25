@@ -10,8 +10,7 @@
   <meta property="og:image" content="{{current_event.logo_url}}">
   <meta property="og:description" content="{{current_event.description|truncate(140)}}">
   <meta name="description" content="{{current_event.description|truncate(140)}}">
-  <script type="application/ld+json">{{current_}}
-  </script>
+  <script type="application/ld+json">{{ current_event.get_schema(request.host_url)|safe }}</script>
 {% endif %}
 {% endblock %}
 
