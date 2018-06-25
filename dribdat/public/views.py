@@ -67,7 +67,7 @@ def project_edit(project_id):
         return project_action(project_id, None)
     form = ProjectForm(obj=project, next=request.args.get('next'))
     form.progress.choices = projectProgressList(event.has_started or event.has_finished)
-    form.category_id.choices = [(c.id, c.name) for c in project.categories_for_event(event.id)]
+    form.category_id.choices = [(c.id, c.name) for c in project.event.categories_for_event()]
     form.category_id.choices.insert(0, (-1, ''))
     if form.validate_on_submit():
         del form.id
@@ -113,7 +113,7 @@ def project_new(event_id):
         project.user_id = current_user.id
         form = ProjectForm(obj=project, next=request.args.get('next'))
         form.progress.choices = projectProgressList(event.has_started)
-        form.category_id.choices = [(c.id, c.name) for c in project.categories_for_event(event.id)]
+        form.category_id.choices = [(c.id, c.name) for c in project.event.categories_for_event()]
         form.category_id.choices.insert(0, (-1, ''))
         if form.validate_on_submit():
             del form.id
