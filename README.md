@@ -4,7 +4,7 @@
 
 **Dribdat (from "Driven By Data") is an open platform for data-driven team collaboration, such as Hackathons.** It works as a website and project board for running exciting, productive events..with Impact Factor. We [created this tool](https://datalets.ch/dribdat/iot-2015/project/23/) after using plain wikis and forums for years, and after trying out a few proprietary tools that we felt limited us in one way or another.
 
-The platform allows organisers and participants to aggregate project details from multiple sources (Markdown, Wikis, GitHub, Bitbucket), display challenges and projects in attractive dashboards, reuse the data through an [API](#API), plug in community tools ([Discourse](https://www.discourse.org/), [Slack](http://slack.com), [Let's Chat](http://sdelements.github.io/lets-chat/), etc.) and even [chatbots](https://github.com/schoolofdata-ch/sodabot) to enhance the hackathon.
+The platform allows organisers and participants to aggregate project details from multiple sources (Markdown, Wikis, GitHub, Bitbucket), display challenges and projects in attractive dashboards, reuse the data through a [remote API](#api), plug in community tools ([Discourse](https://www.discourse.org/), [Slack](http://slack.com), [Let's Chat](http://sdelements.github.io/lets-chat/), etc.) and even [chatbots](https://github.com/schoolofdata-ch/sodabot) to enhance the hackathon.
 
 For more background and links to example sites see [ABOUT](ABOUT.md).
 
