@@ -254,7 +254,7 @@ class Project(SurrogatePK, Model):
 
     @property
     def data(self):
-        return {
+        d = {
             'id': self.id,
             'name': self.name,
             'score': self.score,
@@ -263,8 +263,10 @@ class Project(SurrogatePK, Model):
             'hashtag': self.hashtag,
             'contact_url': self.contact_url,
             'image_url': self.image_url,
-            'category': self.category.data
         }
+        if self.category is not None:
+            d['category'] = self.category.data
+        return d
 
     def get_schema(self, host_url=''):
         return {
