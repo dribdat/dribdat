@@ -3,9 +3,14 @@ General theme tweaks
 -------------------- */
 
 body { background: url(https://makezurich.ch/images/background.jpg) no-repeat top right; background-size: cover; }
+
+/* ---------------
+Navigation buttons
+------------------ */
 .with-event .nav-categories .btn input[type=radio] { display: none; }
 .nav-categories .btn, .project-category.btn { padding: 1rem; }
-#ideas-list .list-group-item { border: none !important; }
+@media (max-width: 1188px) { .nav-categories .btn-group { display: block !important; }
+.nav-categories .btn[title=Challenges] { display:none !important; }
 
 /* ------------
 Code of Conduct
@@ -18,6 +23,7 @@ Code of Conduct
 /* ------------
 Challenges view
 --------------- */
+#ideas-list .list-group-item { border: none !important; }
 .list-data .list-group-item {
     border-left: none; border-right: none; border-top: none;
     border-bottom: 1px solid #333; border-radius: 0px;
