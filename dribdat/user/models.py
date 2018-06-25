@@ -21,7 +21,7 @@ from dribdat.database import (
     SurrogatePK,
 )
 
-from dribdat.utils import format_date_range
+from dribdat.utils import format_date_range, format_date
 from dribdat.user import PROJECT_PROGRESS_PHASE
 
 from sqlalchemy import or_
@@ -135,9 +135,37 @@ class Event(SurrogatePK, Model):
             'ends_at': self.ends_at,
             'has_finished': self.has_finished,
             'community_url': self.community_url,
-            'webpage_url': self.webpage_url
+            'webpage_url': self.webpage_url,
         }
 
+    def get_schema(self, host_url=''):
+        return {
+            "@context": "http://schema.org",
+            "@type":"Event",
+            "location":{ "@type":"Place",
+                "name": self.hostname,
+                "address": self.location
+            },
+            "name": self.name,
+            "url": host_url + self.url,
+            "description": self.description,
+            "startDate": format_date(self.starts_at, '%Y-%m-%dT%H:%M'),
+            "endDate": format_date(self.ends_at, '%Y-%m-%dT%H:%M'),
+            "logo": self.logo_url,
+            "offers":{ "@type":"Offer",
+                "url": self.webpage_url
+            },
+            "workPerformed":[ p.get_schema(host_url) for p in self.projects ]
+        }
+
+    # TODO: allow this to be configured
+    @property
+    def license(self):
+        return "http://creativecommons.org/licenses/by/4.0/"
+
+    @property
+    def url(self):
+        return "event/%d" % (self.id)
     @property
     def has_started(self):
         return self.starts_at <= dt.datetime.utcnow() <= self.ends_at
@@ -155,7 +183,6 @@ class Event(SurrogatePK, Model):
             return self.ends_at # + dt.timedelta(hours=-1)
         else:
             return None
-
     @property
     def date(self):
         return format_date_range(self.starts_at, self.ends_at)
@@ -220,6 +247,10 @@ class Project(SurrogatePK, Model):
     score = Column(db.Integer(), nullable=True, default=0)
 
     @property
+    def url(self):
+        return "project/%d" % (self.id)
+
+    @property
     def data(self):
         d = {
             'id': self.id,
@@ -235,6 +266,19 @@ class Project(SurrogatePK, Model):
             d['category_id'] = self.category.id
             d['category_name'] = self.category.name
         return d
+
+    def get_schema(self, host_url=''):
+        return {
+            "@type": "CreativeWork",
+            "name": self.name,
+            "description": self.summary,
+            "dateCreated": format_date(self.created_at, '%Y-%m-%dT%H:%M'),
+            "dateUpdated": format_date(self.updated_at, '%Y-%m-%dT%H:%M'),
+            "discussionUrl": self.contact_url,
+            "image": self.image_url,
+            "license": self.event.license,
+            "url": host_url + self.url
+        }
 
     def update(self):
         # Correct fields

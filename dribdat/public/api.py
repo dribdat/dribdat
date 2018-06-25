@@ -72,7 +72,13 @@ def info_event_json(event_id):
     event = Event.query.filter_by(id=event_id).first_or_404()
     return jsonify(event=event.data, timeuntil=timesince(event.countdown, until=True))
 
-# ------ PROJECTS ---------
+# API: Outputs JSON-LD about an Event according to https://schema.org/Event specification
+@blueprint.route('/event/<int:event_id>/hackathon.json')
+def info_event_hackathon_json(event_id):
+    event = Event.query.filter_by(id=event_id).first_or_404()
+    return jsonify(event.get_schema(request.host_url))
+
+# ------ EVENT PROJECTS ---------
 
 # API: Outputs JSON of projects in the current event, along with its info
 @blueprint.route('/event/current/projects.json')
@@ -131,6 +137,12 @@ def project_activity_json(project_id):
     query = Activity.query.filter_by(project_id=project.id).order_by(Activity.id.desc()).limit(30).all()
     activities = [a.data for a in query]
     return jsonify(project=project.data, activities=activities)
+
+# API: Outputs JSON info for a specific project
+@blueprint.route('/project/<int:project_id>/info.json')
+def project_info_json(project_id):
+    project = Project.query.filter_by(id=project_id).first_or_404()
+    return jsonify(project=project.data, event=project.event.data)
 
 # ------ SEARCH ---------
 

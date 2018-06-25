@@ -21,6 +21,7 @@
 
     var checkAutotext = function(val, $ind) {
       if (typeof val !== 'string') return;
+      if (val.trim() === '') return;
       supported = (
         val.indexOf('datapackage.json') > 0 ||
         val.indexOf('//github.com/') > 0 ||

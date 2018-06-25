@@ -60,7 +60,7 @@
   left: 50%;
   transform: translate(-50%, -50%);
   width: 140%;
-  font-size: 1.4rem;
+  font-size: 1.0rem;
   line-height: 1.2;
   z-index: 100;
 }

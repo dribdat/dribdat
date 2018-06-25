@@ -42,6 +42,9 @@ def timesince(dt, default="just now", until=False):
             return "%d %s %s" % (period, singular if period == 1 else plural, suffix)
     return default
 
+def format_date(value, format='%Y-%m-%d'):
+    return value.strftime(format)
+
 def format_date_range(starts_at, ends_at):
     if starts_at.month == ends_at.month:
         if starts_at.day == ends_at.day:
