@@ -9,8 +9,8 @@ Navigation buttons
 ------------------ */
 .with-event .nav-categories .btn input[type=radio] { display: none; }
 .nav-categories .btn, .project-category.btn { padding: 1rem; }
-@media (max-width: 1188px) { .nav-categories .btn-group { display: block !important; }
 .nav-categories .btn[title="Challenges"] { display:none !important; }
+@media (max-width: 1188px) { .nav-categories .btn-group { display: block !important; } }
 
 /* ------------
 Code of Conduct
