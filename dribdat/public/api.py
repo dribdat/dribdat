@@ -76,24 +76,9 @@ def info_event_json(event_id):
 @blueprint.route('/event/<int:event_id>/hackathon.json')
 def info_event_hackathon_json(event_id):
     event = Event.query.filter_by(id=event_id).first_or_404()
-    return jsonify({
-        "@context":"http://schema.org",
-        "@type":"Event",
-        "location":{ "@type":"Place",
-            "name":event.hostname,
-            "address":event.location
-        },
-        "name":event.name,
-        "description":event.description,
-        "startDate":event.starts_at,
-        "endDate":event.ends_at,
-        "image":[event.logo_url],
-        "offers":{ "@type":"Offer",
-            "url":event.webpage_url
-        }
-    })
+    return jsonify(event.get_schema(request.host_url))
 
-# ------ PROJECTS ---------
+# ------ EVENT PROJECTS ---------
 
 # API: Outputs JSON of projects in the current event, along with its info
 @blueprint.route('/event/current/projects.json')
@@ -152,6 +137,12 @@ def project_activity_json(project_id):
     query = Activity.query.filter_by(project_id=project.id).order_by(Activity.id.desc()).limit(30).all()
     activities = [a.data for a in query]
     return jsonify(project=project.data, activities=activities)
+
+# API: Outputs JSON info for a specific project
+@blueprint.route('/project/<int:project_id>/info.json')
+def project_info_json(project_id):
+    project = Project.query.filter_by(id=project_id).first_or_404()
+    return jsonify(project=project.data, event=project.event.data)
 
 # ------ SEARCH ---------
 

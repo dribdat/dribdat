@@ -21,7 +21,7 @@ from dribdat.database import (
     SurrogatePK,
 )
 
-from dribdat.utils import format_date_range
+from dribdat.utils import format_date_range, format_date
 from dribdat.user import PROJECT_PROGRESS_PHASE
 
 from sqlalchemy import or_
@@ -135,9 +135,31 @@ class Event(SurrogatePK, Model):
             'ends_at': self.ends_at,
             'has_finished': self.has_finished,
             'community_url': self.community_url,
-            'webpage_url': self.webpage_url
+            'webpage_url': self.webpage_url,
         }
 
+    def get_schema(self, host_url=''):
+        return {
+            "@context":"http://schema.org",
+            "@type":"Event",
+            "location":{ "@type":"Place",
+                "name":self.hostname,
+                "address":self.location
+            },
+            "name":self.name,
+            "url":host_url + self.url,
+            "description":self.description,
+            "startDate":format_date(self.starts_at),
+            "endDate":format_date(self.ends_at),
+            "image":[self.logo_url],
+            "offers":{ "@type":"Offer",
+                "url":self.webpage_url
+            }
+        }
+
+    @property
+    def url(self):
+        return "event/%d" % (self.id)
     @property
     def has_started(self):
         return self.starts_at <= dt.datetime.utcnow() <= self.ends_at
@@ -155,7 +177,6 @@ class Event(SurrogatePK, Model):
             return self.ends_at # + dt.timedelta(hours=-1)
         else:
             return None
-
     @property
     def date(self):
         return format_date_range(self.starts_at, self.ends_at)
@@ -218,6 +239,10 @@ class Project(SurrogatePK, Model):
 
     # Current tally
     score = Column(db.Integer(), nullable=True, default=0)
+
+    @property
+    def url(self):
+        return "/project/%d" % (self.id)
 
     @property
     def data(self):
