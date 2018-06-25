@@ -140,22 +140,28 @@ class Event(SurrogatePK, Model):
 
     def get_schema(self, host_url=''):
         return {
-            "@context":"http://schema.org",
+            "@context": "http://schema.org",
             "@type":"Event",
             "location":{ "@type":"Place",
-                "name":self.hostname,
-                "address":self.location
+                "name": self.hostname,
+                "address": self.location
             },
-            "name":self.name,
-            "url":host_url + self.url,
-            "description":self.description,
-            "startDate":format_date(self.starts_at),
-            "endDate":format_date(self.ends_at),
-            "image":[self.logo_url],
+            "name": self.name,
+            "url": host_url + self.url,
+            "description": self.description,
+            "startDate": format_date(self.starts_at, '%Y-%m-%dT%H:%M'),
+            "endDate": format_date(self.ends_at, '%Y-%m-%dT%H:%M'),
+            "logo": self.logo_url,
             "offers":{ "@type":"Offer",
-                "url":self.webpage_url
-            }
+                "url": self.webpage_url
+            },
+            "workPerformed":[ p.get_schema(host_url) for p in self.projects ]
         }
+
+    # TODO: allow this to be configured
+    @property
+    def license(self):
+        return "http://creativecommons.org/licenses/by/4.0/"
 
     @property
     def url(self):
@@ -242,7 +248,7 @@ class Project(SurrogatePK, Model):
 
     @property
     def url(self):
-        return "/project/%d" % (self.id)
+        return "project/%d" % (self.id)
 
     @property
     def data(self):
@@ -260,6 +266,19 @@ class Project(SurrogatePK, Model):
             d['category_id'] = self.category.id
             d['category_name'] = self.category.name
         return d
+
+    def get_schema(self, host_url=''):
+        return {
+            "@type": "CreativeWork",
+            "name": self.name,
+            "description": self.summary,
+            "dateCreated": format_date(self.created_at, '%Y-%m-%dT%H:%M'),
+            "dateUpdated": format_date(self.updated_at, '%Y-%m-%dT%H:%M'),
+            "discussionUrl": self.contact_url,
+            "image": self.image_url,
+            "license": self.event.license,
+            "url": host_url + self.url
+        }
 
     def update(self):
         # Correct fields
