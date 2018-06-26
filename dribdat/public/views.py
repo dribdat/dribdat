@@ -37,10 +37,6 @@ def info_current_hackathon_json():
 def about():
     return render_template("public/about.html", current_event=current_event())
 
-@blueprint.route("/dashboard/")
-def dashboard():
-    return render_template("public/dashboard.html", current_event=current_event())
-
 @blueprint.route("/event/<int:event_id>")
 def event(event_id):
     event = Event.query.filter_by(id=event_id).first_or_404()
