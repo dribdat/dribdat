@@ -187,6 +187,16 @@ class Event(SurrogatePK, Model):
     def date(self):
         return format_date_range(self.starts_at, self.ends_at)
 
+    # Event categories
+    def categories_all(self):
+        return Category.query.order_by('name')
+    def categories_for_event(self, event_id=None):
+        if event_id is None: event_id = self.id
+        return Category.query.filter(or_(
+            Category.event_id==None,
+            Category.event_id==event_id
+        )).order_by('name')
+
     def __init__(self, name=None, **kwargs):
         if name:
             db.Model.__init__(self, name=name, **kwargs)
@@ -225,14 +235,6 @@ class Project(SurrogatePK, Model):
     category_id = reference_col('categories', nullable=True)
     category = relationship('Category', backref='projects')
 
-    def categories_all(self):
-        return Category.query.order_by('name')
-    def categories_for_event(self, event_id):
-        return Category.query.filter(or_(
-            Category.event_id==None,
-            Category.event_id==event_id
-        )).order_by('name')
-
     # Self-assessment
     progress = Column(db.Integer(), nullable=True, default=0)
     @property
@@ -263,8 +265,7 @@ class Project(SurrogatePK, Model):
             'image_url': self.image_url,
         }
         if self.category is not None:
-            d['category_id'] = self.category.id
-            d['category_name'] = self.category.name
+            d['category'] = self.category.data
         return d
 
     def get_schema(self, host_url=''):
@@ -339,6 +340,14 @@ class Category(SurrogatePK, Model):
     def project_count(self):
         if not self.projects: return 0
         return len(self.projects)
+
+    @property
+    def data(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'description': self.description,
+        }
 
     def __init__(self, name=None, **kwargs):
         if name:

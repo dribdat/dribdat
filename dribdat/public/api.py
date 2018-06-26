@@ -98,11 +98,17 @@ def project_list_csv(event_id):
                     mimetype='text/csv',
                     headers={'Content-Disposition': 'attachment; filename=project_list.csv'})
 
-# API: Outputs JSON of challenges in the current event, along with its info
+# API: Outputs JSON of ideas/challenges in the current event, along with its info
 @blueprint.route('/event/current/challenges.json')
 def challenges_list_current_json():
     event = Event.query.filter_by(is_current=True).first()
     return jsonify(challenges=challenges_list(event.id), event=event.data)
+
+# API: Outputs JSON of categories in the current event
+@blueprint.route('/event/current/categories.json')
+def categories_list_current_json():
+    event = Event.query.filter_by(is_current=True).first()
+    return jsonify(categories=[ c.data for c in event.categories_for_event() ], event=event.data)
 
 # ------ ACTIVITY FEEDS ---------
 
