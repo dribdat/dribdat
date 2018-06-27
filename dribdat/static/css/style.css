@@ -315,6 +315,12 @@ nav .navbar-nav .nav-item {
   .project-page.jumbotron { padding: 2rem; }
 }
 
+/* Project entry form */
+.fld-progress .radio-inline { display: block; }
+.fld-progress { border-width: 25px; padding-left: 5px; border-top: none !important; border-bottom: none !important; border-right: none !important; border-style: solid; -webkit-border-image: -webkit-gradient(linear, 0 100%, 0 0, from(black), to(rgba(0, 0, 0, 0))) 1 100%; -webkit-border-image: -webkit-linear-gradient(bottom, black, rgba(0, 0, 0, 0)) 1 100%; -moz-border-image: -moz-linear-gradient(bottom, black, rgba(0, 0, 0, 0)) 1 100%; -o-border-image: -o-linear-gradient(bottom, black, rgba(0, 0, 0, 0)) 1 100%; border-image: linear-gradient(to top, black, rgba(0, 0, 0, 0)) 1 100%; }
+.with-event form .control-label { font-weight: 600; font-size: 140%; }
+.with-event form .checkbox label[for="is_autoupdate"] { margin-left:30%; margin-top:20px; padding:10px; border-radius:10px; box-shadow: 0 0 0 10px cyan; }
+
 /* Code blocks */
 pre { color: #333; background: white; }
 

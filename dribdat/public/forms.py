@@ -5,10 +5,11 @@ from wtforms import (
     StringField, PasswordField,
     TextAreaField, TextField,
     SelectField, HiddenField,
+    RadioField
 )
-from dribdat.user.models import User, Project
 from wtforms.validators import DataRequired, AnyOf, required, length
 from ..user.validators import UniqueValidator
+from dribdat.user.models import User, Project
 
 class LoginForm(FlaskForm):
     """Login form."""
@@ -47,7 +48,7 @@ class UserForm(FlaskForm):
 class ProjectForm(FlaskForm):
     id = HiddenField('id')
     category_id = SelectField(u'Category', coerce=int)
-    progress = SelectField(u'Progress', coerce=int)
+    progress = RadioField(u'Progress', coerce=int)
     autotext_url = StringField(u'Remote link', [length(max=255)],
         description="A supported repository from which to fetch project details.")
     is_autoupdate = BooleanField(u'Autoupdate project data')

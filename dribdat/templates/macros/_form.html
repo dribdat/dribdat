@@ -17,7 +17,7 @@
 {% macro render_radio(field) %}
 <div class="form-group{% if field.errors %} has-error{% endif %}">
     {{ field.label(class_="control-label") }}
-    <div class="">
+    <div class="fld-{{ field.name }}">
         {% for subfield in field -%}
         <label for="{{ subfield.id }}" class="radio-inline">
             {{ subfield }} {{ subfield.label.text }}
@@ -41,7 +41,7 @@
         for="{{ field.id }}">
         {{ field.label }}
     </label>
-    <div class="">
+    <div class="fld-{{ field.name }}">
         {{ field() }}
         <span class="help-inline">{{ field.description }}</span>
         {% if field.errors -%}
@@ -61,8 +61,8 @@
         for="{{ field.id }}">
         {{ field.label }}
     </label>
-    <div class="">
-        {{ field(class_="form-control", rows="4") }}
+    <div class="fld-{{ field.name }}">
+        {{ field(class_="form-control", rows="10") }}
         <span class="help-inline">{{ field.description }}</span>
         {% if field.errors -%}
         <ul class="help-block">
@@ -81,7 +81,7 @@
         for="{{ field.id }}">
         {{ field.label }}
     </label>
-    <div class="">
+    <div class="fld-{{ field.name }}">
         {{ field }}
         <span class="help-inline">{{ field.description }}</span>
         {% if field.errors -%}
@@ -101,7 +101,7 @@
         for="{{ field.id }}">
         {{ field.label }}
     </label>
-    <div class="">
+    <div class="fld-{{ field.name }}">
         {{ field(class_="form-control") }}
         <span class="help-inline">{{ field.description }}</span>
         {% if field.errors -%}
