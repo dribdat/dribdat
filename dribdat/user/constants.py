@@ -31,7 +31,7 @@ PROJECT_PROGRESS = {
     PR_SKETCHED:    'Initial designs have been sketched and shared',
     PR_PROTOTYPED:  'A prototype of the idea has been developed',
     PR_LAUNCHED:    'The prototype has been deployed and presented',
-    PR_LIVE:        'This project is now live and publicly available',
+    PR_LIVE:        'This project is live and available to the public',
 }
 PROJECT_PROGRESS_PHASE = {
     PR_NEW:         'Researching',

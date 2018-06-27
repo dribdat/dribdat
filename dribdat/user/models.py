@@ -188,8 +188,6 @@ class Event(SurrogatePK, Model):
         return format_date_range(self.starts_at, self.ends_at)
 
     # Event categories
-    def categories_all(self):
-        return Category.query.order_by('name')
     def categories_for_event(self, event_id=None):
         if event_id is None: event_id = self.id
         return Category.query.filter(or_(
@@ -234,6 +232,11 @@ class Project(SurrogatePK, Model):
     # And the optional event category
     category_id = reference_col('categories', nullable=True)
     category = relationship('Category', backref='projects')
+
+    # Convenience query for all categories
+    def categories_all(self):
+        if self.event: return self.event.categories_for_event()
+        return Category.query.order_by('name')
 
     # Self-assessment
     progress = Column(db.Integer(), nullable=True, default=0)

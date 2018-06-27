@@ -204,7 +204,7 @@ def project_view(project_id):
     form = ProjectForm(obj=project, next=request.args.get('next'))
     form.user_id.choices = [(e.id, "%s" % (e.username)) for e in User.query.filter_by(active=True).order_by('username')]
     form.event_id.choices = [(e.id, e.name) for e in Event.query.order_by(Event.id.desc())]
-    form.category_id.choices = [(c.id, c.name) for c in project.event.categories_all()]
+    form.category_id.choices = [(c.id, c.name) for c in project.categories_all()]
     form.category_id.choices.insert(0, (-1, ''))
     if form.validate_on_submit():
         del form.id
@@ -254,7 +254,7 @@ def project_new():
     form = ProjectForm(obj=project, next=request.args.get('next'))
     form.user_id.choices = [(e.id, "%s" % (e.username)) for e in User.query.filter_by(active=True).order_by('username')]
     form.event_id.choices = [(e.id, e.name) for e in Event.query.order_by(Event.id.desc())]
-    form.category_id.choices = [(c.id, c.name) for c in project.event.categories_all()]
+    form.category_id.choices = [(c.id, c.name) for c in project.categories_all()]
     form.category_id.choices.insert(0, (-1, ''))
     if form.validate_on_submit():
         del form.id
