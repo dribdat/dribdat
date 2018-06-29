@@ -385,6 +385,7 @@ class Activity(SurrogatePK, Model):
             'user_id': self.user.id,
             'project_id': self.project.id,
             'project_name': self.project.name,
+            'project_score': self.project.score
         }
 
     def __init__(self, name, user_id, project_id, **kwargs):
