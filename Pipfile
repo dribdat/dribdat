@@ -1,0 +1,40 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+misaka = ">=2.1.0"
+requests = ">=2.18.4"
+flask-misaka = ">=0.4.1"
+pyquery = ">=1.2.17"
+graphene = ">=1.4.1"
+bleach = ">=2.1.3"
+future = ">=0.16.0"
+flask = ">=0.12.2"
+werkzeug = ">=0.12"
+markupsafe = ">=1.0"
+"jinja2" = ">=2.9.6"
+itsdangerous = ">=0.24"
+click = ">=6.7"
+flask-hashing = ">=1.1"
+flask-sqlalchemy = ">=2.3.2"
+"psycopg2" = ">=2.7.3.1"
+sqlalchemy = ">=1.1.14"
+flask-migrate = ">=2.1.1"
+flask-wtf = ">=0.14.2"
+wtforms = ">=2.1"
+gunicorn = ">=19.7.1"
+flask-assets = ">=0.12"
+cssmin = ">=0.2.0"
+jsmin = ">=2.2.2"
+flask-login = ">=0.4.0"
+flask-bcrypt = ">=0.7.1"
+flask-oauth = {git = "git://github.com/mitsuhiko/flask-oauth.git", ref = "d5c3f6a229df1c3566b9bc3233311c109b4dcff9"}
+flask-caching = ">=1.3.3"
+redis = ">=2.10.6"
+
+[dev-packages]
+
+[requires]
+python_version = "3.6"
