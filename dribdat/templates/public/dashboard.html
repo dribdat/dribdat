@@ -141,19 +141,18 @@ refreshProjects = function() {
         "x": {
           "field": "date",
           "type": "temporal",
-          "axis": { "title": null },
           "scale": { "rangeStep": null }
         },
         "y": {
           "aggregate": "mean",
           "field": "project_score",
           "type": "quantitative",
-          "axis": { "title": null }
+          "axis": { "title": null, "labels": false }
         }
       },
       "config": {
         "autosize": { "type": "fit", "contains": "padding" },
-        "axis": { "grid": false, "labels": false, "ticks": false, "labelPadding": 0 }
+        "axis": { "grid": false, "ticks": false }
       }
     }
     vegaEmbed("#activities", yourVlSpec);
