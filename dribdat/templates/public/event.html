@@ -28,7 +28,7 @@
           <span> </span>
       </label>
     {% endif %}
-    {% for category in current_event.categories %}
+    {% for category in current_event.categories_for_event() %}
       <label class="btn btn-default">
         <input type="radio" name="category" id="{{category.id}}" autocomplete="off">
           {% if category.logo_icon %}
@@ -80,7 +80,7 @@
   <div category-id="infobox" class="category-container">
     <center><h4><i class="fa fa-arrow-circle-o-up"></i> Explore challenges and projects</h4></center>
   </div>
-  {% for category in current_event.categories %}
+  {% for category in current_event.categories_for_event() %}
   <div category-id="{{category.id}}" class="category-container" style="border-top:5px solid {{category.logo_color}}; display:none">
     <h3>{{ category.name }}</h3>
     {{ category.description|markdown }}

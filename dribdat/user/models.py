@@ -234,8 +234,9 @@ class Project(SurrogatePK, Model):
     category = relationship('Category', backref='projects')
 
     # Convenience query for all categories
-    def categories_all(self):
+    def categories_all(self, event=None):
         if self.event: return self.event.categories_for_event()
+        if event is not None: return event.categories_for_event()
         return Category.query.order_by('name')
 
     # Self-assessment

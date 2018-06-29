@@ -8,7 +8,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <title>DRIBDAT</title>
         <meta name="description" content="Project dashboard" />
-        <meta http-equiv="refresh" content="30">
+        <meta http-equiv="refresh" content="180">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 
         <link rel="stylesheet" href="/static/libs/font-awesome/css/font-awesome.min.css">
@@ -24,6 +24,10 @@
         <script type="text/javascript" src="/static/js/plugins.js"></script>
         <script type="text/javascript" src="/static/js/script.js"></script>
         <script type="text/javascript" src="/static/libs/FlipClock/flipclock.min.js"></script>
+
+        <script src="https://cdn.jsdelivr.net/npm/vega@3"></script>
+        <script src="https://cdn.jsdelivr.net/npm/vega-lite@2"></script>
+        <script src="https://cdn.jsdelivr.net/npm/vega-embed@3"></script>
     </head>
 
     <body class="dashboard-page">
@@ -46,6 +50,12 @@
             {% if current_event.countdown %}
               <div class="event-countdown" data-start="{{ current_event.countdown }}"></div>
             {% endif %}
+
+            <div class="panel-body">
+                <div>
+                    <canvas id="activities"></canvas>
+                </div>
+            </div>
           </main>
 
           <div class="col-md-3 sidebar-social">
@@ -115,5 +125,6 @@ refreshProjects = function() {
   setTimeout(refreshProjects, 60 * 1000); // refresh every minute
 }
 refreshProjects();
+
 </script>
 </html>

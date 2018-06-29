@@ -101,6 +101,7 @@
 
   // Clickable categories navigation
   var $navCategories = $('.nav-categories .btn-group label').click(function(e) {
+    $(this).parent().find('.active').removeClass('active');
     var selected_id = $(this).find('input').attr('id');
     var $projects = $('.honeycomb .project');
     var $infotext = $('.category-info');
