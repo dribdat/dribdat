@@ -40,20 +40,24 @@
 
       <div class="container-fluid">
         <div class="row">
-          <nav class="col-md-2 d-none d-md-block bg-light sidebar">
+          <nav class="col-md-2 bg-light sidebar">
             <div class="sidebar-sticky" id="projects">
 
             </div>
           </nav>
 
-          <main role="main" class="col-md-8 ml-sm-auto px-4">
+          <main role="main" class="container-countdown col-md-9 ml-sm-auto">
+            <center><img id="event-logo" src="https://makezurich.ch/images/logo.svg" alt="ONIA"></center>
+
             {% if current_event.countdown %}
               <div class="event-countdown" data-start="{{ current_event.countdown }}"></div>
             {% endif %}
+
+            <img src="https://blog.datalets.ch//workshops/2018/makezurich/heroku-makezurich-week.png" width="100%" id="metrics">
           </main>
 
-          <div class="col-md-4 sidebar-social">
-            <a class="twitter-grid" data-limit="5" data-dnt="true" data-partner="tweetdeck" href="https://twitter.com/loleg/timelines/1012604019615903744?ref_src=twsrc%5Etfw">MakeZurich</a> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+          <div class="col-md-3 sidebar-social">
+            <a class="twitter-grid" data-limit="3" data-dnt="true" data-partner="tweetdeck" href="https://twitter.com/loleg/timelines/1012604019615903744?ref_src=twsrc%5Etfw">MakeZurich</a> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
           </div>
         </div>
       </div>
@@ -62,6 +66,9 @@
 
 </body>
 <style>
+  body {
+    overflow: hidden;
+  }
   #projects {
     color: #DDA;
     font: 14pt/29pt sans-serif;
@@ -76,6 +83,9 @@
     border-bottom: 2px solid white;
   }
 
+  .container-countdown {
+    padding-left: 265px;
+  }
 
   .container-fluid {
     margin-top: 40px;
@@ -86,6 +96,17 @@
     position: fixed;
     background-color: black !important;
     opacity: 0.7;
+  }
+
+  #event-logo {
+    width: 40%;
+    margin-top: 100px;
+  }
+
+  #metrics {
+    position: relative;
+    left: 15px;
+    top: 150px;
   }
 </style>
 <script>
