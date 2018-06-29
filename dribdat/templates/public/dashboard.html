@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <title>DRIBDAT</title>
+        <meta name="description" content="" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+        <link rel="stylesheet" href="/static/libs/font-awesome/css/font-awesome.min.css">
+        <link rel="stylesheet" href="/static/libs/bootstrap/css/bootstrap.min.css">
+        <link rel="stylesheet" href="/static/libs/FlipClock/flipclock.css">
+        <link rel="stylesheet" href="/static/css/honeycomb.css">
+        <link rel="stylesheet" href="/static/css/style.css">
+        <style type="text/css">{{ current_event.custom_css }}</style>
+
+        <script type="text/javascript" src="/static/libs/jquery/jquery.min.js"></script>
+        <script type="text/javascript" src="/static/libs/popper.js/umd/popper.min.js"></script>
+        <script type="text/javascript" src="/static/libs/bootstrap/js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="/static/js/plugins.js"></script>
+        <script type="text/javascript" src="/static/js/script.js"></script>
+        <script type="text/javascript" src="/static/libs/FlipClock/flipclock.min.js"></script>
+    </head>
+
+    <body class="dashboard-page">
+
+      <nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
+        {% if current_event.logo_url %}
+        <center><img src="{{ current_event.logo_url }}"/></center>
+        {% else %}
+          <h1>{{ current_event.name }}</h1>
+        {% endif %}
+        <div class="navbar-brand col-sm-3 col-md-2 mr-0">
+          {{ current_event.hostname }}
+        </div>
+      </nav>
+
+      <div class="container-fluid">
+        <div class="row">
+          <nav class="col-md-2 d-none d-md-block bg-light sidebar">
+            <div class="sidebar-sticky" id="projects">
+
+            </div>
+          </nav>
+
+          <main role="main" class="col-md-8 ml-sm-auto px-4">
+            {% if current_event.countdown %}
+              <div class="event-countdown" data-start="{{ current_event.countdown }}"></div>
+            {% endif %}
+          </main>
+
+          <div class="col-md-4 sidebar-social">
+            <a class="twitter-grid" data-limit="5" data-dnt="true" data-partner="tweetdeck" href="https://twitter.com/loleg/timelines/1012604019615903744?ref_src=twsrc%5Etfw">MakeZurich</a> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+          </div>
+        </div>
+      </div>
+  </div>
+</div>
+
+</body>
+<style>
+  #projects {
+    color: #DDA;
+    font: 14pt/29pt sans-serif;
+  }
+  #projects a {
+    color: inherit;
+    text-decoration: none;
+    opacity: 0.9;
+  }
+  #projects sp {
+    display: block;
+    border-bottom: 2px solid white;
+  }
+
+
+  .container-fluid {
+    margin-top: 40px;
+  }
+
+  .container-fluid .sidebar {
+    height: 100%;
+    position: fixed;
+    background-color: black !important;
+    opacity: 0.7;
+  }
+</style>
+<script>
+refreshProjects = function() {
+  $.getJSON('/api/event/current/projects.json', function(data) {
+    $pp = $('#projects').empty();
+    data.projects.forEach(function(p) {
+      $pp.append('<div>' +
+        '<a href="/project/'+p.id+'">'+p.name+'</a>' +
+        '<sp style="width:'+p.score+'px"></sp>' +
+      '</div>');
+    });
+  });
+  setTimeout(refreshProjects, 60 * 1000); // refresh every minute
+}
+refreshProjects();
+</script>
+</html>

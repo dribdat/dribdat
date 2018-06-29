@@ -27,6 +27,10 @@ def home():
     return render_template("public/home.html",
         events=events, current_event=cur_event)
 
+@blueprint.route("/dashboard/")
+def dashboard():
+    return render_template("public/dashboard.html", current_event=current_event())
+
 # Outputs JSON-LD about the current event (see also api.py/info_event_hackathon_json)
 @blueprint.route('/hackathon.json')
 def info_current_hackathon_json():
