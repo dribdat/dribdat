@@ -8,7 +8,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <title>DRIBDAT</title>
         <meta name="description" content="Project dashboard" />
-        <meta http-equiv="refresh" content="180">
+        <meta http-equiv="refresh" content="360">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 
         <link rel="stylesheet" href="/static/libs/font-awesome/css/font-awesome.min.css">
@@ -45,16 +45,14 @@
           </nav>
 
           <main role="main" class="container-countdown col-md-9 ml-sm-auto">
-            <center><img id="event-logo" src="{{ current_event.logo_url }}"></center>
+            <img id="event-logo" src="{{ current_event.logo_url }}">
 
             {% if current_event.countdown %}
               <div class="event-countdown" data-start="{{ current_event.countdown }}"></div>
             {% endif %}
 
             <div class="panel-body">
-                <div>
-                    <canvas id="activities"></canvas>
-                </div>
+                <div id="activities"></div>
             </div>
           </main>
 
@@ -87,6 +85,7 @@
 
   .container-countdown {
     padding-left: 265px;
+    text-align: center;
   }
 
   .container-fluid {
@@ -110,6 +109,9 @@
     left: 15px;
     top: 150px;
   }
+
+  .vega-actions-wrapper, .vega-actions { display: none; }
+
 </style>
 <script>
 refreshProjects = function() {
@@ -122,9 +124,43 @@ refreshProjects = function() {
       '</div>');
     });
   });
+
+  $.getJSON('/api/project/activity.json', function(data) {
+    var yourVlSpec = {
+      "width": 525,
+      "$schema": "https://vega.github.io/schema/vega-lite/v2.0.json",
+      "description": "Project activities",
+      "data": {
+        "values": data.activities
+      },
+      "mark": {
+        "type": "area",
+        "interpolate": "monotone"
+      },
+      "encoding": {
+        "x": {
+          "field": "date",
+          "type": "temporal",
+          "axis": { "title": null },
+          "scale": { "rangeStep": null }
+        },
+        "y": {
+          "aggregate": "mean",
+          "field": "project_score",
+          "type": "quantitative",
+          "axis": { "title": null }
+        }
+      },
+      "config": {
+        "autosize": { "type": "fit", "contains": "padding" },
+        "axis": { "grid": false, "labels": false, "ticks": false, "labelPadding": 0 }
+      }
+    }
+    vegaEmbed("#activities", yourVlSpec);
+  });
+
   setTimeout(refreshProjects, 60 * 1000); // refresh every minute
 }
 refreshProjects();
-
 </script>
 </html>
