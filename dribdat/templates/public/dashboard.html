@@ -7,7 +7,8 @@
         <meta charset="utf-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <title>DRIBDAT</title>
-        <meta name="description" content="" />
+        <meta name="description" content="Project dashboard" />
+        <meta http-equiv="refresh" content="30">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 
         <link rel="stylesheet" href="/static/libs/font-awesome/css/font-awesome.min.css">
@@ -28,11 +29,6 @@
     <body class="dashboard-page">
 
       <nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
-        {% if current_event.logo_url %}
-        <center><img src="{{ current_event.logo_url }}"/></center>
-        {% else %}
-          <h1>{{ current_event.name }}</h1>
-        {% endif %}
         <div class="navbar-brand col-sm-3 col-md-2 mr-0">
           {{ current_event.hostname }}
         </div>
@@ -41,19 +37,15 @@
       <div class="container-fluid">
         <div class="row">
           <nav class="col-md-2 bg-light sidebar">
-            <div class="sidebar-sticky" id="projects">
-
-            </div>
+            <div class="sidebar-sticky" id="projects"></div>
           </nav>
 
           <main role="main" class="container-countdown col-md-9 ml-sm-auto">
-            <center><img id="event-logo" src="https://makezurich.ch/images/logo.svg" alt="ONIA"></center>
+            <center><img id="event-logo" src="{{ current_event.logo_url }}"></center>
 
             {% if current_event.countdown %}
               <div class="event-countdown" data-start="{{ current_event.countdown }}"></div>
             {% endif %}
-
-            <img src="https://blog.datalets.ch//workshops/2018/makezurich/heroku-makezurich-week.png" width="100%" id="metrics">
           </main>
 
           <div class="col-md-3 sidebar-social">
