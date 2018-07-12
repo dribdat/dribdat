@@ -18,7 +18,7 @@ Using dribdat's API, it is also possible to create a live dashboard, for example
 
 ![](https://blog.datalets.ch/workshops/2017/dribdat/IMG_6910_800.JPG)
 
-*Photo credit: MakeZurich 2018 by Cristina Sarasua CC BY-SA 4.0*
+*Photo credit: MakeZurich 2018 by Christina Rieder CC BY-SA 4.0*
 
 ## Summary
 
