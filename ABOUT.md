@@ -14,6 +14,12 @@ Dribdat (from "Driven By Data") is an open source tool for data-driven team col
 
 [![Open Food Hackdays](https://blog.datalets.ch/workshops/2017/dribdat/foodhackdays-openreceipts.jpg)](https://hack.opendata.ch/project/74)     
 
+Using dribdat's API, it is also possible to create a live dashboard, for example for use as Digital Signage at the event:
+
+![](https://blog.datalets.ch/workshops/2017/dribdat/IMG_6910_800.JPG)
+
+*Photo credit: MakeZurich 2018 by Cristina Sarasua CC BY-SA 4.0*
+
 ## Summary
 
 Dribdat is an open source project board designed for splendid collaboration. On Dribdat-powered sites we collect and showcase all projects from a hackathon event in one place. Hackathons are more than just a trendy way to get recruited into an IT job: they are an important venue for open collaboration, civic engagement, and technical experimentation in a social setting.
