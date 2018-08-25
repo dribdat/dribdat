@@ -420,3 +420,9 @@ pre { color: #333; background: white; }
   transform-origin: 50% 0%;
   transform: scale(0.5);
 }
+
+/* Dashboard */
+#schedule { color: transparent; margin-top: 1em; }
+#schedule dashboard { color: #eee; display: inline !important; }
+#schedule * { display: none; }
+#announcements { margin: 0 4em; font-size: 200%; font-weight: bold; }
