@@ -110,6 +110,14 @@
       <a href="{{ project.source_url }}" class="btn btn-default" target="_blank">Source &raquo;</a>
     {% endif %}
   </div>
+  {% if project.category %}
+  <div class="panel panel-default category-details">
+    <div category-id="{{project.category.id}}" class="category-container" style="border-top:5px solid {{project.category.logo_color}}">
+      <h3>{{ project.category.name }}</h3>
+      {{ project.category.description|markdown }}
+    </div>
+  </div>
+  {% endif %}
   <div class="panel panel-default community-embed">
     <div class="panel-body"><i class="fa fa-comment"></i>
       {{project.event.community_embed|safe}}
