@@ -314,6 +314,9 @@ nav .navbar-nav .nav-item {
 @media (min-width: 576px) {
   .project-page.jumbotron { padding: 2rem; }
 }
+.project-page .project-info td,
+.project-page .project-info th { padding: 0.2em 1.4em 0 0; }
+.project-page .project-info thead { border-bottom: 1px solid black; }
 
 /* Project entry form */
 .fld-progress .radio-inline { display: block; }
