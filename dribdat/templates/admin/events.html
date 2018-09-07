@@ -28,10 +28,13 @@
                 Public board
               </a>
               <a href="{{ url_for('admin.event_projects', event_id=event.id) }}" class="btn btn-sm btn-default">
-                Show all projects
+                Projects
               </a>
               <a href="{{ url_for('admin.event_print', event_id=event.id) }}" class="btn btn-sm btn-default">
-                Print view
+                Print
+              </a>
+              <a href="{{ url_for('public.dashboard', event_id=event.id) }}" class="btn btn-sm btn-default">
+                Dashboard
               </a>
             </td>
             <td>{{ event.starts_at|format_date }}</td>
