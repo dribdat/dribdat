@@ -86,7 +86,7 @@ def register_commands(app):
 
 
 def register_filters(app):
-    Misaka(app, autolink=True, fenced_code=True, strikethrough=True)
+    Misaka(app, autolink=True, fenced_code=True, strikethrough=True, tables=True)
     @app.template_filter()
     def since_date(value):
         return timesince(value)

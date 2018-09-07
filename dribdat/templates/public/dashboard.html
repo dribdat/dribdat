@@ -8,7 +8,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <title>DRIBDAT</title>
         <meta name="description" content="Project dashboard" />
-        <meta http-equiv="refresh" content="360">
+        <meta DISABLED-http-equiv="refresh" content="360">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 
         <link rel="stylesheet" href="/static/libs/font-awesome/css/font-awesome.min.css">
@@ -42,6 +42,9 @@
         <div class="row">
           <nav class="col-md-2 bg-light sidebar">
             <div class="sidebar-sticky" id="projects"></div>
+            <div class="sidebar-sticky" id="schedule">
+              {{ current_event.description|safe }}
+            </div>
           </nav>
 
           <main role="main" class="container-countdown col-md-9 ml-sm-auto">
@@ -52,12 +55,15 @@
             {% endif %}
 
             <div class="panel-body">
+                <div id="announcements" class="editable">Hello, World!</div>
                 <div id="activities"></div>
             </div>
           </main>
 
           <div class="col-md-3 sidebar-social">
-            <a class="twitter-grid" data-limit="3" data-dnt="true" data-partner="tweetdeck" href="https://twitter.com/loleg/timelines/1012604019615903744?ref_src=twsrc%5Etfw">MakeZurich</a> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+            {% if 'twitter.com' in current_event.community_url %}
+              <a class="twitter-timeline" data-width="340" data-height="900" data-dnt="true" data-theme="dark" data-link-color="#E95F28" href="{{ current_event.community_url }}?ref_src=twsrc%5Etfw">Tweets</a> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+            {% endif %}
           </div>
         </div>
       </div>
@@ -161,5 +167,10 @@ refreshProjects = function() {
   setTimeout(refreshProjects, 60 * 1000); // refresh every minute
 }
 refreshProjects();
+
+// Enable editable fields
+$('.editable').each(function() {
+  this.contentEditable = 'true';
+});
 </script>
 </html>

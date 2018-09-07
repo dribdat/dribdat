@@ -1,6 +1,12 @@
 (function($, window) {
 
   $(document).ready(function() {
+    
+    // Detect and recommend SSL connection
+    if ('https:' != document.location.protocol) 
+      $('.navbar').after('<center class="alert alert-danger" role="alert">Your connection to this website is insecure. <a href="https:' + window.location.href.substring(window.location.protocol.length) + '" class="btn btn-sm btn-warning"><b>Switch to HTTPS</b></a></center>');
+ 
+    // Initialise home page countdown
     $('.event-countdown').each(function() {
       var clock = $(this).FlipClock({
         clockFace: 'DailyCounter'
@@ -15,6 +21,7 @@
     });
   });
 
+  // Initialize project data loader
   $('#autotext_url').each(function() {
 
     var supported = false;
@@ -43,7 +50,7 @@
             $(this).click();
       });
     };
-
+    // Toggle status indicator
     var $inputfield = $(this);
     var $indicator = $inputfield.parent()
       .append('<span class="autotext-indicator">' +
