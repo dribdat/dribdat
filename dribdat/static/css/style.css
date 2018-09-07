@@ -520,7 +520,7 @@ SlackIn button
 
 .signin-slack {
   font-size: 0px; border: 0px !important;
-  background: url(../img/btn-sign-in-with-slack.png) no-repeat;
+  background: url('/static/img/btn-sign-in-with-slack.png') no-repeat;
   width: 173px; height: 41px;
 }
 
