@@ -2,11 +2,11 @@
 
 [![Travis](https://travis-ci.org/datalets/dribdat.svg?branch=master)](https://travis-ci.org/datalets/dribdat)
 [![Coveralls](https://coveralls.io/repos/github/datalets/dribdat/badge.svg?branch=master)](https://coveralls.io/github/datalets/dribdat?branch=master)
-[![Gitter](https://img.shields.io/gitter/room/datalets/chat.svg)](https://gitter.im/datalets/chat)
+[![Mattermost](https://img.shields.io/badge/Mattermost-chat-blue.svg)](https://team.opendata.ch/signup_user_complete/?id=74yuxwruaby9fpoukx9bmoxday)
 
 An open platform for data-driven team collaboration, such as *Hackathons*.
 
-This project is being developed by [Datalets](https://datalets.ch), a small studio in Bern, with support from the Swiss open data and open source community. If you need help or advice in setting up your event, or would like to contribute to the project: **get in touch** via our public [Gitter chat](https://gitter.im/datalets/chat) and [GitHub Issues](https://github.com/datalets/dribdat/issues). For more background and references, see [ABOUT](ABOUT.md).
+This project is being developed by [Datalets](https://datalets.ch), a small studio in Bern, with support from the Swiss open data and open source community. If you need help or advice in setting up your event, or would like to contribute to the project: **get in touch** via our [team chat](https://team.opendata.ch/signup_user_complete/?id=74yuxwruaby9fpoukx9bmoxday) and [GitHub Issues](https://github.com/datalets/dribdat/issues). For more background and references, see [ABOUT](ABOUT.md).
 
 ## How does it look?
 
@@ -20,7 +20,7 @@ Data on projects can be entered into the application directly using [Markdown](h
 
 - [GitHub](https://github.com) (README / README.md)
 - [GitLab](https://gitlab.com) (README.md)
-- [BitBucket](https://bitbucket.org) 
+- [BitBucket](https://bitbucket.org)
 - [Etherpad Lite](http://etherpad.org)
 - [Google Docs](https://support.google.com/docs/answer/183965?co=GENIE.Platform%3DDesktop&hl=en) (Publish to Web)
 - [DokuWiki](http://make.opendata.ch/wiki/project:home)
