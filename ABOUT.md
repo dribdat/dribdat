@@ -1,8 +1,8 @@
-This document summarises the current status and makes some vision statements about possible future developments as discussed in [issue #100](https://github.com/loleg/dribdat/issues/100).
+This document summarises the current status and makes some vision statements about possible future developments as discussed in [issue #100](https://github.com/datalets/dribdat/issues/100).
 
 # About Dribdat
 
-[![](https://blog.datalets.ch/workshops/2017/dribdat/dribdat.png)](https://github.com/loleg/dribdat/)
+[![](https://blog.datalets.ch/workshops/2017/dribdat/dribdat.png)](https://github.com/datalets/dribdat/)
 
 Dribdat (from "Driven By Data") is an open source tool for data-driven team collaboration such as Hackathons. It provides an open source website and project board for running events, and integrates popular community platforms and open source code repositories. It is the official platform of Opendata.ch hackathons and School of Data Switzerland workshops.
 
@@ -38,7 +38,7 @@ Dribdat is a Web application written using the Flask framework for Python and B
 
 ### Links / contacts
 
-- Source: [github.com/loleg/dribdat](https://github.com/loleg/dribdat)
+- Source: [github.com/datalets/dribdat](https://github.com/datalets/dribdat)
 - Website: [datalets.ch/dribdat](https://datalets.ch/dribdat)
 - Discuss:  [forum.schoolofdata.ch](https://forum.schoolofdata.ch/search?q=dribdat)
 
@@ -96,7 +96,7 @@ Yes, there is a getting started page which can also be customized by the hackath
 
 _&gt; Please provide the page where we can find more information about the easy hacks._
 
-For deployment see [https://github.com/loleg/dribdat](https://github.com/loleg/dribdat)
+For deployment see [https://github.com/datalets/dribdat](https://github.com/datalets/dribdat)
 
 For usage notes, see [https://hack.opendata.ch/about/](https://hack.opendata.ch/about/)
 
