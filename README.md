@@ -1,12 +1,20 @@
 # Dribdat
 
-*The stakes are high, the competition is ready. You will be measured, your progress tracked, your creativity analysed & compared. Think you have what it takes? Ready, steady, go!*
+An open platform for data-driven team collaboration, such as *Hackathons*.
 
-**Dribdat (from "Driven By Data") is an open platform for data-driven team collaboration, such as Hackathons.** It works as a website and project board for running exciting, productive events..with Impact Factor. We [created this tool](https://datalets.ch/dribdat/iot-2015/project/23/) after using plain wikis and forums for years, and after trying out a few proprietary tools that we felt limited us in one way or another.
+## How does it look?
 
-The platform allows organisers and participants to aggregate project details from multiple sources (Markdown, Wikis, GitHub, Bitbucket), display challenges and projects in attractive dashboards, reuse the data through a [remote API](#api), plug in community tools ([Discourse](https://www.discourse.org/), [Slack](http://slack.com), [Let's Chat](http://sdelements.github.io/lets-chat/), etc.) and even [chatbots](https://github.com/schoolofdata-ch/sodabot) to enhance the hackathon.
+Dribdat works as a website and project board for running exciting, productive events, and allows organizers and participants to aggregate project details from [data sources](#data-sources), display challenges and projects in Web dashboards, plug in community tools ([Discourse](https://www.discourse.org/), [Slack](http://slack.com), [Let's Chat](http://sdelements.github.io/lets-chat/), etc.), and use the [remote API](#api) for additional interfaces such as [chatbots](https://github.com/schoolofdata-ch/sodabot) to enhance the hackathon.
 
-For more background and links to example sites see [ABOUT](ABOUT.md).
+Logged-in users can submit challenges, ideas and projects by linking their document or repository, or entering details directly into a form. The administrative interface allows defining details of the event and managing project data.
+
+![](dribdat/static/img/screenshot_admin_projects.png)
+
+The look and feel of the project view can be customized with CSS, and shows challenges and projects, with a rating of how completely they are documented. In the `Events` screen there are links to a *Print* view for a summary of all projects on one page, and the ability to *Embed* results into another website.
+
+![](dribdat/static/img/screenshot_makezurich.jpg)
+
+For more background and references, see [ABOUT](ABOUT.md).
 
 ## Deployment Quickstart
 
@@ -35,9 +43,7 @@ Set the redirect URL in your app's OAuth Settings to `<SERVER_URL>/slack_callbac
 
 ## API
 
-There are a few API calls that admins can use to easily get to the data in Dribdat in CSV or JSON format.
-
-Note that a print view of all projects is accessible from the Events admin console.
+There are a number of API calls that admins can use to easily get to the data in Dribdat in CSV or JSON format. See GitHub issues for [development status](https://github.com/loleg/dribdat/issues?utf8=%E2%9C%93&q=is%3Aissue+is%3Aopen+API).
 
 Basic data on an event:
 
