@@ -89,8 +89,10 @@ def project_action(project_id, of_type):
     starred = IsProjectStarred(project, current_user)
     allow_edit = starred or (not current_user.is_anonymous and current_user.is_admin)
     project_stars = GetProjectTeam(project)
+    latest_activity = project.latest_activity()
     return render_template('public/project.html', current_event=event, project=project,
-        project_starred=starred, project_stars=project_stars, allow_edit=allow_edit)
+        project_starred=starred, project_stars=project_stars,
+        allow_edit=allow_edit, latest_activity=latest_activity)
 
 @blueprint.route('/project/<int:project_id>/star', methods=['GET', 'POST'])
 @login_required
@@ -141,7 +143,7 @@ def project_autoupdate(project_id):
         return project_action(project_id, None)
     data = GetProjectData(project.autotext_url)
     if not 'name' in data:
-        flash("Project could not be synced: check the autoupdate link.", 'warning')
+        flash("Project could not be synced: check the Remote Link.", 'warning')
         return project_action(project_id, None)
     if 'name' in data and data['name']:
         project.name = data['name']

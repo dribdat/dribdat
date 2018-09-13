@@ -51,7 +51,7 @@ class ProjectForm(FlaskForm):
     progress = RadioField(u'Progress', coerce=int)
     autotext_url = StringField(u'Remote link', [length(max=255)],
         description="A supported repository from which to fetch project details.")
-    is_autoupdate = BooleanField(u'Autoupdate project data')
+    is_autoupdate = BooleanField(u'Sync project data')
     name = StringField(u'Title', [required(), length(max=80), UniqueValidator(Project, 'name')],
         description="Required, though you may change this any time.")
     summary = StringField(u'Short summary', [length(max=120)],

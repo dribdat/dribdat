@@ -145,4 +145,11 @@
     window.prompt('Copy and paste this code to embed this event:', code);
   });
 
+  // Show project history
+  $('#show-history').click(function(e) {
+    e.preventDefault(); e.stopPropagation();
+    $('.details .history').slideDown();
+  });
+  $('.details .history').hide();
+
 }).call(this, jQuery, window);

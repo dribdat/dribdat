@@ -233,6 +233,10 @@ class Project(SurrogatePK, Model):
     category_id = reference_col('categories', nullable=True)
     category = relationship('Category', backref='projects')
 
+    # Convenience query for latest activity
+    def latest_activity(self):
+        return Activity.query.filter_by(project_id=self.id).order_by(Activity.timestamp.desc()).limit(5)
+
     # Convenience query for all categories
     def categories_all(self, event=None):
         if self.event: return self.event.categories_for_event()
@@ -327,7 +331,7 @@ class Project(SurrogatePK, Model):
             db.Model.__init__(self, name=name, **kwargs)
 
     def __repr__(self):
-        return '<Event({name})>'.format(name=self.name)
+        return '<Project({name})>'.format(name=self.name)
 
 class Category(SurrogatePK, Model):
     __tablename__ = 'categories'

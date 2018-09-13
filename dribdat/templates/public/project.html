@@ -36,20 +36,6 @@
           {{project.score}}
         </div>
       </div>
-
-      {% if project_starred %}
-      <a href="{{ url_for('public.project_unstar', project_id=project.id) }}" class="project-star" title="Click to leave the project">
-        <i class="fa fa-star"></i>TEAM
-      </a>
-      {% elif current_user and current_user.is_authenticated %}
-      <a href="{{ url_for('public.project_star', project_id=project.id) }}" class="project-star" title="Join project to show your profile below">
-        <i class="fa fa-star-o"></i>JOIN
-      </a>
-      {% else %}
-      <a href="{{ url_for('auth.login') }}" class="project-star" title="Login to join this project">
-        <i class="fa fa-star-o"></i>JOIN
-      </a>
-      {% endif %}
     </div>
 
     {% if allow_edit %}
@@ -94,8 +80,23 @@
     {% if project.contact_url %}
       <a href="{{ project.contact_url }}" target="_blank">
         <i class="fa fa-envelope-o" aria-hidden="true"></i>
-        Contact</a>
+        Contact</a> &nbsp;
     {% endif %}
+
+    {% if project_starred %}
+    <a href="{{ url_for('public.project_unstar', project_id=project.id) }}" class="btn project-star" title="Click to leave the project">
+      <i class="fa fa-star"></i>TEAM
+    </a>
+    {% elif current_user and current_user.is_authenticated %}
+    <a href="{{ url_for('public.project_star', project_id=project.id) }}" class="btn btn-primary project-star" title="Join project to show your profile below">
+      <i class="fa fa-star-o"></i>JOIN
+    </a>
+    {% else %}
+    <a href="{{ url_for('auth.login') }}" class="btn btn-primary project-star" title="Login to join this project">
+      <i class="fa fa-star-o"></i>JOIN
+    </a>
+    {% endif %}
+
     <br clear="all"><hr>
 
     <div class="project-longtext">
@@ -107,7 +108,7 @@
       <a href="{{ project.webpage_url }}" class="btn btn-primary" target="_blank">Homepage &raquo;</a>
     {% endif %}
     {% if project.source_url %}
-      <a href="{{ project.source_url }}" class="btn btn-default" target="_blank">Source &raquo;</a>
+      <a href="{{ project.source_url }}" class="btn btn-success" target="_blank">Source &raquo;</a>
     {% endif %}
   </div>
   {% if project.category %}
@@ -125,13 +126,6 @@
   </div>
   <div class="panel panel-default community-embed">
     <div class="panel-body">
-      <p class="details">
-        Latest update:
-        <span>{{ project.updated_at|format_date }}</span>
-        <br>
-        Maintainer:
-        <b><a href="{{project.user.webpage_url}}" target="_blank">{{ project.user.username }}</a></b>
-      </p>
       {% if project_stars %}
         <p class="started-at">
           <small>Launched at
@@ -141,24 +135,34 @@
           </small>
         </p>
         {% for activity in project_stars %}
-          {% if activity.user.cardtype == 'github' %}
-            <div class="github-card" data-width="310" data-height="150" data-user="{{activity.user.carddata}}"
-              data-theme="default"></div>
-            <script src="//cdn.jsdelivr.net/github-cards/latest/widget.js"></script>
-          {% elif activity.user.cardtype == 'twitter' %}
-            <a class="twitter-follow-button"
-              href="https://twitter.com/{{activity.user.carddata}}"
-              data-size="large" data-show-count="false">
-              @{{activity.user.carddata}}</a>
-              <script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
-          {% else %}
-            <a href="{{activity.user.webpage_url}}" title="{{activity.user.username}}" alt=":-)" target="_blank" class="team-gravatar">
-              <img align="left" width="40" height="40" src="https://www.gravatar.com/avatar/{{activity.user.carddata}}"/>
-            </a>
-          {% endif %}
+          <a href="{% if activity.user.webpage_url %}{{activity.user.webpage_url}}{% else %}{{ project.contact_url }}{% endif %}" title="{{activity.user.username}}" alt=":-)" target="_blank" class="team-gravatar">
+            <img width="40" height="40" src="https://www.gravatar.com/avatar/{{activity.user.carddata}}"/>
+            {% if activity.user.cardtype == 'github' %}
+              <img src="{{ url_for('static', filename='img/GitHub-Mark.png') }}" width="30" height="30">
+            {% elif activity.user.cardtype == 'twitter' %}
+              <img src="{{ url_for('static', filename='img/Twitter_Social_Icon_Circle_Color.png') }}" width="30" height="30">
+            {% endif %}
+
+            <span>{{activity.user.username}}</span>
+          </a>
         {% endfor %}
       {% endif %}
       </div>
   </div>
+
+    <div class="details">
+      <hr>
+      <p>Updated
+      <a href="#" id="show-history">{{ project.updated_at|format_datetime }}</a>
+      / Maintained by
+      <b><a href="{{project.user.webpage_url}}" target="_blank">{{ project.user.username }}</a></b>
+      </p>
+      <ul class="history">
+        {% for activity in latest_activity %}
+          <li><span>{{activity.timestamp|format_datetime}}</span> /
+            <b>{{activity.user.username}}</b> / {{activity.name}}</li>
+        {% endfor %}
+      </ul>
+    </div>
 </div><!-- /.jumbotron -->
 {% endblock %}

@@ -14,7 +14,16 @@ _Dribdat_ works as a website and project board for running exciting, productive 
 
 Logged-in users can submit challenges, ideas and projects by linking their document or repository, or entering details directly into a form. You can change or customize these [instructions](dribdat/templates/quickstart.html) as you see fit.
 
-Data about the projects can be entered into the application directly using [Markdown](https://www.markdowntutorial.com/) formatting, or aggregated from the following data sources:
+![](dribdat/static/img/screenshot_start.png)
+
+Data on projects can be entered into the application directly using [Markdown](https://www.markdowntutorial.com/) formatting, or aggregated simply by putting in a URL to a public project hosted on one of these supported platforms:
+
+- [GitHub](https://github.com) (README / README.md)
+- [GitLab](https://gitlab.com) (README.md)
+- [BitBucket](https://bitbucket.org) 
+- [Etherpad Lite](http://etherpad.org)
+- [Google Docs](https://support.google.com/docs/answer/183965?co=GENIE.Platform%3DDesktop&hl=en) (Publish to Web)
+- [DokuWiki](http://make.opendata.ch/wiki/project:home)
 
 The administrative interface shown below allows defining details of the event and managing project data.
 
@@ -87,7 +96,9 @@ For more details see [api.py](dribdat/public/api.py)
 
 ## Developer guide
 
-You will need to install Python, Virtualenv and Pip or Pipenv to work with the code. You may need to install additional libraries (`libffi`) for the [misaka](http://misaka.61924.nl/) package, which depends on [CFFI](https://cffi.readthedocs.io/en/latest/installation.html#platform-specific-instructions), e.g. `sudo dnf install libffi-devel`
+Install Python, Virtualenv and Pip or Pipenv to start working with the code.
+
+You may need to install additional libraries (`libffi`) for the [misaka](http://misaka.61924.nl/) package, which depends on [CFFI](https://cffi.readthedocs.io/en/latest/installation.html#platform-specific-instructions), e.g. `sudo dnf install libffi-devel`
 
 Run the following commands to bootstrap your environment.
 
