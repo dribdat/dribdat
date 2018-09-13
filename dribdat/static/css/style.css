@@ -358,6 +358,16 @@ pre { color: #333; background: white; }
   margin-bottom: 10px;
   min-height: 64px;
 }
+.nav-categories label {
+  border: 1px solid #ddd;
+  background: white;
+}
+.nav-categories label.active {
+  border: 1px solid #777;
+}
+.nav-categories label input {
+  display: none;
+}
 .nav-categories {
   margin: 10px;
 }

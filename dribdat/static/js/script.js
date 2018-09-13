@@ -1,11 +1,11 @@
 (function($, window) {
 
   $(document).ready(function() {
-    
+
     // Detect and recommend SSL connection
-    if ('https:' != document.location.protocol) 
+    if ('https:' != document.location.protocol)
       $('.navbar').after('<center class="alert alert-danger" role="alert">Your connection to this website is insecure. <a href="https:' + window.location.href.substring(window.location.protocol.length) + '" class="btn btn-sm btn-warning"><b>Switch to HTTPS</b></a></center>');
- 
+
     // Initialise home page countdown
     $('.event-countdown').each(function() {
       var clock = $(this).FlipClock({
@@ -109,31 +109,28 @@
   // Clickable categories navigation
   var $navCategories = $('.nav-categories .btn-group label').click(function(e) {
     $(this).parent().find('.active').removeClass('active');
+    $(this).parent().addClass('active');
     var selected_id = $(this).find('input').attr('id');
     var $projects = $('.honeycomb .project');
     var $infotext = $('.category-info');
-    if (selected_id === 'challenges') {
-      // pass
-    } else if (selected_id === '' || selected_id === 'list') {
+    $('.honeycomb').removeClass('hide-challenges');
+
+    if (selected_id === '' || selected_id === 'list' || selected_id === 'challenges') {
       $projects.addClass('category-highlight');
       $('.category-container', $infotext).hide();
       $projects
         .removeClass('hexagon hexalist')
         .addClass(selected_id === 'list' ? 'hexalist' : 'hexagon');
+      if (selected_id === 'challenges')
+        $('.honeycomb').addClass('hide-challenges');
+
     } else {
       var $selected = $('[category-id="' + selected_id + '"]', $projects.parent());
-      if ($selected.length) $projects.removeClass('category-highlight');
+      $projects.removeClass('category-highlight');
       $selected.addClass('category-highlight');
       $('.category-container', $infotext).hide();
       $('[category-id="' + selected_id + '"]', $infotext).show();
     }
-    setTimeout(function() {
-      var challenges_on = $('#challenges').is(':checked');
-      $('.honeycomb').removeClass('hide-challenges')
-        .addClass(challenges_on ? '' : 'hide-challenges');
-      $('#challenges').parent().removeClass('active')
-        .addClass(challenges_on ? 'active' : '');
-    }, 1);
   });
 
   // Roll up categories if there is only one, and no projects
