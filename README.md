@@ -1,12 +1,22 @@
 # Dribdat
 
+[![Travis](https://travis-ci.org/datalets/dribdat.svg?branch=master)](https://travis-ci.org/datalets/dribdat)
+[![Coveralls](https://coveralls.io/repos/github/datalets/dribdat/badge.svg?branch=master)](https://coveralls.io/github/datalets/dribdat?branch=master)
+[![Gitter](https://img.shields.io/gitter/room/datalets/chat.svg)](https://gitter.im/datalets/chat)
+
 An open platform for data-driven team collaboration, such as *Hackathons*.
+
+This project is being developed by [Datalets](https://datalets.ch), a small studio in Bern, with support from the Swiss open data and open source community. If you need help or advice in setting up your event, or would like to contribute to the project: **get in touch** via our public [Gitter chat](https://gitter.im/datalets/chat) and [GitHub Issues](https://github.com/datalets/dribdat/issues). For more background and references, see [ABOUT](ABOUT.md).
 
 ## How does it look?
 
-Dribdat works as a website and project board for running exciting, productive events, and allows organizers and participants to aggregate project details from [data sources](#data-sources), display challenges and projects in Web dashboards, plug in community tools ([Discourse](https://www.discourse.org/), [Slack](http://slack.com), [Let's Chat](http://sdelements.github.io/lets-chat/), etc.), and use the [remote API](#api) for additional interfaces such as [chatbots](https://github.com/schoolofdata-ch/sodabot) to enhance the hackathon.
+_Dribdat_ works as a website and project board for running exciting, productive events, and allows organizers and participants to collect their project details in one place, displaying the challenges and projects in Web dashboards, and plugging in community tools such as [Discourse](https://www.discourse.org/), [Slack](http://slack.com), or [Let's Chat](http://sdelements.github.io/lets-chat/) - or using the [remote API](#api) for additional interfaces such as [chatbots](https://github.com/schoolofdata-ch/sodabot) to enhance the hackathon.
 
-Logged-in users can submit challenges, ideas and projects by linking their document or repository, or entering details directly into a form. The administrative interface allows defining details of the event and managing project data.
+Logged-in users can submit challenges, ideas and projects by linking their document or repository, or entering details directly into a form. You can change or customize these [instructions](dribdat/templates/quickstart.html) as you see fit.
+
+Data about the projects can be entered into the application directly using [Markdown](https://www.markdowntutorial.com/) formatting, or aggregated from the following data sources:
+
+The administrative interface shown below allows defining details of the event and managing project data.
 
 ![](dribdat/static/img/screenshot_admin_projects.png)
 
@@ -14,11 +24,15 @@ The look and feel of the project view can be customized with CSS, and shows chal
 
 ![](dribdat/static/img/screenshot_makezurich.jpg)
 
-For more background and references, see [ABOUT](ABOUT.md).
+And, as we're really into making the most of those time constraints, the homepage and dashboard feature a big animated countdown clock.
+
+![](dribdat/static/img/screenshot_countdown.png)
+
+Tick tock!
 
 ## Deployment Quickstart
 
-This project is ready for fast deployment to [Heroku](http://heroku.com):
+This project can be deployed to any server capable of serving Python applications, and is set up for fast deployment to the [Heroku](http://heroku.com) cloud:
 
 [![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy)
 
@@ -69,11 +83,11 @@ Push data into projects (WIP):
 
 - `/api/project/push.json`
 
-For more details see `api.py`
+For more details see [api.py](dribdat/public/api.py)
 
 ## Developer guide
 
-[![Build Status](https://travis-ci.org/loleg/dribdat.svg?branch=master)](https://travis-ci.org/loleg/dribdat)
+You will need to install Python, Virtualenv and Pip or Pipenv to work with the code. You may need to install additional libraries (`libffi`) for the [misaka](http://misaka.61924.nl/) package, which depends on [CFFI](https://cffi.readthedocs.io/en/latest/installation.html#platform-specific-instructions), e.g. `sudo dnf install libffi-devel`
 
 Run the following commands to bootstrap your environment.
 
@@ -140,4 +154,4 @@ For a full migration command reference, run `python manage.py db --help`.
 
 ## Credits
 
-Developed by [Oleg Lavrovsky](http://datalets.ch) based on Steven Loria's [flask-cookiecutter](https://github.com/sloria/cookiecutter-flask). With thanks to [Swisscom](http://swisscom.com)'s F. Wieser and M.-C. Gasser for conceptual inputs and financial support of the first release of this project.
+Developed by [Oleg Lavrovsky](http://datalets.ch) based on Steven Loria's [flask-cookiecutter](https://github.com/sloria/cookiecutter-flask). With thanks to the Swiss communities for [Open Data](https://opendata.ch), [Open Networking](https://opennetworkinfrastructure.org/) and [Open Source](https://dinacon.ch) for their many contributions, and to [Swisscom](http://swisscom.com) via F. Wieser and M.-C. Gasser for conceptual inputs and financial support of the first release of this project.

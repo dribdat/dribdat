@@ -33,7 +33,7 @@
               <a href="{{ url_for('public.event', event_id=event.id) }}" class="btn btn-sm btn-primary">
                 Board
               </a>
-              <a href="{{ url_for('public.event', event_id=current_event.id, _external=True) }}?embed=1" class="btn btn-primary btn-sm" id="embed-link">
+              <a href="{{ url_for('public.event', event_id=event.id, _external=True) }}?embed=1" class="btn btn-primary btn-sm" id="embed-link">
                 Embed
               </a>
             </td>
