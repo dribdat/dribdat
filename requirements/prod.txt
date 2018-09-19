@@ -33,7 +33,6 @@ jsmin==2.2.2
 lxml==4.2.5
 mako==1.0.7
 markupsafe==1.0
-misaka==2.1.0
 promise==2.1
 psycopg2==2.7.5
 pycparser==2.19
