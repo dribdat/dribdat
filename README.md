@@ -100,11 +100,17 @@ Install Python, Virtualenv and Pip or Pipenv to start working with the code.
 
 You may need to install additional libraries (`libffi`) for the [misaka](http://misaka.61924.nl/) package, which depends on [CFFI](https://cffi.readthedocs.io/en/latest/installation.html#platform-specific-instructions), e.g. `sudo dnf install libffi-devel`
 
-Run the following commands to bootstrap your environment.
+Run the following commands from the repository root folder to bootstrap your environment using [Pipenv](https://pipenv.readthedocs.io/):
 
 ```
-git clone https://github.com/datalets/dribdat
-cd dribdat
+pipenv --three
+pipenv shell
+pipenv install
+```
+
+Or using plain pip:
+
+```
 pip install -r requirements/dev.txt
 ```
 

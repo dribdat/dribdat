@@ -35,6 +35,15 @@ flask-caching = ">=1.3.3"
 redis = ">=2.10.6"
 
 [dev-packages]
-
-[requires]
-python_version = "3.5"
+pytest = "*"
+WebTest = "*"
+factory-boy = "*"
+flake8 = "*"
+flake8-blind-except = "*"
+flake8-debugger = "*"
+flake8-docstrings = "*"
+flake8-isort = "*"
+flake8-quotes = "*"
+isort = "*"
+pep8-naming = "*"
+Flask-DebugToolbar = "*"
