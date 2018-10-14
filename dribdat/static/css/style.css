@@ -336,13 +336,20 @@ nav .navbar-nav .nav-item {
 .project-page img {
   max-width: 100%;
 }
-.project-page.jumbotron { padding: 1rem; }
+.project-page.jumbotron {
+  background-color: white;
+  padding: 1rem;
+}
 @media (min-width: 576px) {
   .project-page.jumbotron { padding: 2rem; }
 }
 .project-page .project-info td,
 .project-page .project-info th { padding: 0.2em 1.4em 0 0; }
 .project-page .project-info thead { border-bottom: 1px solid black; }
+
+.project-page .project-longtext { margin: 2em 0; font-size: 125%; }
+.project-page .project-autotext { padding-top: 2em; border-top: 1px solid #ccc; }
+.project-page .project-buttons { display: block; text-align: center; }
 
 /* Project entry form */
 .fld-progress .radio-inline { display: block; }
@@ -398,10 +405,18 @@ pre { color: #333; background: white; }
 .nav-categories {
   margin: 10px;
 }
-.project-tools, .edit-buttons {
+.project-tools {
   float: right;
   margin-right: 15px;
   text-align: right;
+}
+.project-edit-buttons {
+  margin: -2em 0 0 0;
+  float: right;
+}
+.project-edit-buttons * {
+  box-shadow: none !important;
+  opacity: 0.8;
 }
 .category-info {
   padding: 0 1em;
@@ -516,7 +531,6 @@ Challenges view
     padding-right: 0.5em;
 }
 @media (min-width: 1000px) {
-div[role=main] { background: white; padding:2em; }
 .list-data .list-group-item {
     width: 48%;
     display: inline-block;
@@ -546,7 +560,6 @@ Data Packages view
     background: transparent;
 }
 @media (min-width: 1000px) {
-div[role=main] { background: white; padding:2em; }
 .list-datapackage .list-group-item {
     width: 100%;
     display: inline-block;
