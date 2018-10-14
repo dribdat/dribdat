@@ -297,6 +297,9 @@ class Project(SurrogatePK, Model):
             self.logo_icon = self.logo_icon.replace('fa-', '')
         if self.logo_color == '#000000':
             self.logo_color = ''
+        # Check update status
+        self.is_autoupdate = bool(self.autotext_url and self.autotext_url.strip())
+        if not self.is_autoupdate: self.autotext = ''
         # Set the timestamp
         self.updated_at = dt.datetime.utcnow()
         if self.is_challenge:

@@ -50,7 +50,7 @@ class ProjectForm(FlaskForm):
     progress = SelectField(u'Progress', coerce=int, choices=projectProgressList())
     hashtag = StringField(u'Hashtag or channel', [length(max=255)])
     autotext_url = StringField(u'Remote link', [length(max=255)])
-    is_autoupdate = BooleanField(u'Autoupdate project data')
+    # is_autoupdate = BooleanField(u'Autoupdate project data')
     name = StringField(u'Title', [required(), length(max=80), UniqueValidator(Project, 'name')])
     summary = StringField(u'Short summary', [length(max=120)])
     longtext = TextAreaField(u'Description')
