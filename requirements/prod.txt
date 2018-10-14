@@ -2,11 +2,11 @@
 alembic==1.0.0
 aniso8601==3.0.2
 bcrypt==3.1.4
-bleach==2.1.4
+bleach==3.0.2
 certifi==2018.8.24
 cffi==1.11.5
 chardet==3.0.4
-click==6.7
+click==7.0
 cssmin==0.2.0
 cssselect==1.0.3
 flask-assets==0.12
@@ -33,8 +33,8 @@ jsmin==2.2.2
 lxml==4.2.5
 mako==1.0.7
 markupsafe==1.0
-promise==2.1
-psycopg2==2.7.5
+promise==2.2.1
+psycopg2-binary==2.7.5
 pycparser==2.19
 pyquery==1.4.0
 python-dateutil==2.7.3
