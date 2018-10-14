@@ -53,11 +53,11 @@ class ProjectForm(FlaskForm):
         description="A supported repository from which to fetch project details.")
     is_autoupdate = BooleanField(u'Sync project data')
     name = StringField(u'Title', [required(), length(max=80), UniqueValidator(Project, 'name')],
-        description="Required, though you may change this any time.")
+        description="Required, though you may change this at any time.")
     summary = StringField(u'Short summary', [length(max=120)],
         description="Optional, max. 120 characters, appearing at the top of the project page.")
-    longtext = TextAreaField(u'Full description',
-        description="Use plain text, Markdown or HTML as you wish to document your project.")
+    longtext = TextAreaField(u'Description',
+        description="Use plain text, Markdown or HTML to document your project. This is shown above the README, if Sync is used.")
     webpage_url = StringField(u'Project home link', [length(max=255)],
         description="Optional - a live demo or information page.")
     source_url = StringField(u'Source code link', [length(max=255)],
