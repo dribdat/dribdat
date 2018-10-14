@@ -351,6 +351,37 @@ nav .navbar-nav .nav-item {
 .project-page .project-autotext { padding-top: 2em; border-top: 1px solid #ccc; }
 .project-page .project-buttons { display: block; text-align: center; }
 
+/* Autotext fader */
+.project-page .project-autotext.active {
+  max-height: none;
+  overflow: visible;
+}
+.project-page .project-autotext.active .cover {
+  display: none;
+}
+.project-page .project-autotext {
+  max-height: 500px;
+  overflow: hidden;
+  position: relative;
+  margin-bottom: 0;
+}
+.project-page .project-autotext .cover {
+  position: absolute;
+  top: 0px; left: 0px;
+  width: 100%; height: 100%;
+  cursor: pointer; cursor: hand;
+
+  background: rgba(255,255,255,0);
+  background: -moz-linear-gradient(top, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 92%, rgba(255,255,255,1) 100%);
+  background: -webkit-gradient(left top, left bottom, color-stop(0%, rgba(255,255,255,0)), color-stop(92%, rgba(255,255,255,1)), color-stop(100%, rgba(255,255,255,1)));
+  background: -webkit-linear-gradient(top, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 92%, rgba(255,255,255,1) 100%);
+  background: -o-linear-gradient(top, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 92%, rgba(255,255,255,1) 100%);
+  background: -ms-linear-gradient(top, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 92%, rgba(255,255,255,1) 100%);
+  background: linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 92%, rgba(255,255,255,1) 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#ffffff', GradientType=0 );
+
+}
+
 /* Project entry form */
 .fld-progress .radio-inline { display: block; }
 .fld-progress { border-width: 25px; padding-left: 5px; border-top: none !important; border-bottom: none !important; border-right: none !important; border-style: solid; -webkit-border-image: -webkit-gradient(linear, 0 100%, 0 0, from(black), to(rgba(0, 0, 0, 0))) 1 100%; -webkit-border-image: -webkit-linear-gradient(bottom, black, rgba(0, 0, 0, 0)) 1 100%; -moz-border-image: -moz-linear-gradient(bottom, black, rgba(0, 0, 0, 0)) 1 100%; -o-border-image: -o-linear-gradient(bottom, black, rgba(0, 0, 0, 0)) 1 100%; border-image: linear-gradient(to top, black, rgba(0, 0, 0, 0)) 1 100%; }

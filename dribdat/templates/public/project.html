@@ -24,12 +24,6 @@
 
 {% block content %}
 <div class="btn-group project-edit-buttons" role="group" aria-label="Project tools">
-  {% if project.contact_url %}
-    <a href="{{ project.contact_url }}" target="_blank" class="btn btn-default">
-      <i class="fa fa-envelope-o" aria-hidden="true"></i>
-      Contact</a>
-  {% endif %}
-
   {% if allow_edit %}
    <a href="{{ url_for('public.project_edit', project_id=project.id) }}" class="btn btn-success">
      <i class="fa fa-pencil" aria-hidden="true"></i>
@@ -104,12 +98,17 @@
     {% endif %}
 
     {% if project.autotext %}
-    <div class="project-autotext">
+    <div class="project-autotext"><div class="cover"></div>
       {{project.autotext|markdown}}
     </div>
     {% endif %}
   </div>
   <div class="btn-group project-buttons" role="group" aria-label="Hackathon navigation">
+    {% if project.contact_url %}
+      <a href="{{ project.contact_url }}" target="_blank" class="btn btn-default">
+        <i class="fa fa-envelope-o" aria-hidden="true"></i>
+        Contact</a>
+    {% endif %}
     {% if project.webpage_url %}
       <a href="{{ project.webpage_url }}" class="btn btn-primary" target="_blank">Homepage &raquo;</a>
     {% endif %}

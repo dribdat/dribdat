@@ -106,6 +106,11 @@
   // Make the custom color field HTML5 compatible
   $('input#logo_color[type=text]').attr('type', 'color');
 
+  // Open up the README on click
+  $('.project-autotext').click(function() {
+    $(this).addClass('active');
+  });
+
   // Clickable categories navigation
   var $navCategories = $('.nav-categories .btn-group label').click(function(e) {
     $(this).parent().find('.active').removeClass('active');

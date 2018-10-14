@@ -34,7 +34,7 @@ Challenges view
     padding-right: 0.5em;
 }
 @media (min-width: 1000px) {
-div[role=main] { background: white; padding:2em; }
+div[role=main] { padding:2em; }
 .list-data .list-group-item {
     width: 48%;
     display: inline-block;
