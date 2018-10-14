@@ -72,11 +72,13 @@
       e.stopPropagation();
       var url = $inputfield.val();
 
-      if ($('input#name').val() /*&& !window.confirm('All project fields (Title, etc.) ' +
-        'will be overwritten with remote project data. Proceed?')*/) {
+      /* Warning no longer needed -
+      if ($('input#name').val() && !window.confirm('All project fields (Title, etc.) ' +
+        'will be overwritten with remote project data. Proceed?')) {
           if ($('#is_autoupdate').is(':checked')) $('#is_autoupdate').click();
           return false;
         }
+      */
 
       var $button = $(this);
       $indicator.find('i').css('color', 'blue');
