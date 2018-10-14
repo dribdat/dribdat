@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import os
+import click
 
 from flask import Flask
 from flask.cli import FlaskGroup
@@ -26,18 +27,19 @@ def create_app(script_info=None):
     else:
         app = init_app(DevConfig)
     app.shell_context_processor(shell_context)
+    app.cli.add_command('db', MigrateCommand)
     return app
 
-cli = FlaskGroup(create_app=create_app)
+@click.group(cls=FlaskGroup, create_app=create_app)
+def cli():
+    """This is a management script for the wiki application."""
 
-@cli.command
+@click.command
 def test():
     """Run the tests."""
     import pytest
     exit_code = pytest.main([TEST_PATH, '--verbose'])
     return exit_code
-
-cli.add_command('db', MigrateCommand)
 
 if __name__ == '__main__':
     cli()

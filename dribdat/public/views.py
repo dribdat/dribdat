@@ -145,19 +145,22 @@ def project_autoupdate(project_id):
     if not 'name' in data:
         flash("Project could not be synced: check the Remote Link.", 'warning')
         return project_action(project_id, None)
-    if 'name' in data and data['name']:
-        project.name = data['name']
-    if 'summary' in data and data['summary']:
-        project.summary = data['summary']
+    # Project name is not updated
+    # if 'name' in data and data['name']: project.name = data['name']
+    # Always update "autotext" field
     if 'description' in data and data['description']:
-        project.longtext = data['description']
-    if 'homepage_url' in data and data['homepage_url']:
+        project.autotext = data['description']
+    # Update following fields only if blank
+    if 'summary' in data and data['summary']:
+        if not project.summary or not project.summary.strip():
+            project.summary = data['summary']
+    if 'homepage_url' in data and data['homepage_url'] and not project.webpage_url:
         project.webpage_url = data['homepage_url']
-    if 'contact_url' in data and data['contact_url']:
+    if 'contact_url' in data and data['contact_url'] and not project.contact_url:
         project.contact_url = data['contact_url']
-    if 'source_url' in data and data['source_url']:
+    if 'source_url' in data and data['source_url'] and not project.source_url:
         project.source_url = data['source_url']
-    if 'image_url' in data and data['image_url']:
+    if 'image_url' in data and data['image_url'] and not project.image_url:
         project.image_url = data['image_url']
     project.update()
     db.session.add(project)

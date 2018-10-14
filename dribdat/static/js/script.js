@@ -93,7 +93,7 @@
 
         $('input#name').val(data.name);
         $('input#summary').val(data.summary);
-        $('textarea#longtext').html(data.description);
+        // $('textarea#longtext').html(excerpt);
         $('input#webpage_url').val(data.homepage_url);
         $('input#source_url').val(data.source_url);
         $('input#contact_url').val(data.contact_url);

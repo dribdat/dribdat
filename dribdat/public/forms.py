@@ -3,7 +3,7 @@ from flask_wtf import FlaskForm
 from wtforms import (
     SubmitField, BooleanField,
     StringField, PasswordField,
-    TextAreaField, TextField,
+    TextAreaField,
     SelectField, HiddenField,
     RadioField
 )

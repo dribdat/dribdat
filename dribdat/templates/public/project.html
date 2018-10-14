@@ -97,11 +97,19 @@
     </a>
     {% endif %}
 
-    <br clear="all"><hr>
+    <br clear="all">
 
+    {% if project.longtext %}
     <div class="project-longtext">
       {{project.longtext|markdown}}
     </div>
+    {% endif %}
+    
+    {% if project.autotext %}
+    <div class="project-autotext">
+      {{project.autotext|markdown}}
+    </div>
+    {% endif %}
   </div>
   <div class="btn-group project-buttons" role="group" aria-label="Hackathon navigation">
     {% if project.webpage_url %}

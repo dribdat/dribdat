@@ -315,7 +315,7 @@ nav .navbar-nav .nav-item {
   list-style: none; color: #777;
 }
 .project-page .history span {
-  font-size: 90%; color: #aaa; 
+  font-size: 90%; color: #aaa;
 }
 .project-page .history li:hover{
   background: #fff;
@@ -333,7 +333,7 @@ nav .navbar-nav .nav-item {
 .project-page .project-star i {
   padding-right: 5px;
 }
-.project-page .project-longtext img {
+.project-page img {
   max-width: 100%;
 }
 .project-page.jumbotron { padding: 1rem; }
