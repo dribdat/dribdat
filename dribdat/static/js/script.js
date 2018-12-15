@@ -72,11 +72,13 @@
       e.stopPropagation();
       var url = $inputfield.val();
 
+      /* Warning no longer needed -
       if ($('input#name').val() && !window.confirm('All project fields (Title, etc.) ' +
         'will be overwritten with remote project data. Proceed?')) {
           if ($('#is_autoupdate').is(':checked')) $('#is_autoupdate').click();
           return false;
         }
+      */
 
       var $button = $(this);
       $indicator.find('i').css('color', 'blue');
@@ -91,13 +93,18 @@
           return;
         }
 
-        $('input#name').val(data.name);
-        $('input#summary').val(data.summary);
-        $('textarea#longtext').html(data.description);
-        $('input#webpage_url').val(data.homepage_url);
-        $('input#source_url').val(data.source_url);
-        $('input#contact_url').val(data.contact_url);
-        $('input#image_url').val(data.image_url);
+        if (!$('input#name').val())
+          $('input#name').val(data.name);
+        if (!$('input#summary').val())
+          $('input#summary').val(data.summary);
+        if (!$('input#webpage_url').val())
+          $('input#webpage_url').val(data.homepage_url);
+        if (!$('input#source_url').val())
+          $('input#source_url').val(data.source_url);
+        if (!$('input#contact_url').val())
+          $('input#contact_url').val(data.contact_url);
+        if (!$('input#image_url').val())
+          $('input#image_url').val(data.image_url);
       });
       return true;
     });
@@ -105,6 +112,11 @@
 
   // Make the custom color field HTML5 compatible
   $('input#logo_color[type=text]').attr('type', 'color');
+
+  // Open up the README on click
+  $('.project-autotext').click(function() {
+    $(this).addClass('active');
+  });
 
   // Clickable categories navigation
   var $navCategories = $('.nav-categories .btn-group label').click(function(e) {

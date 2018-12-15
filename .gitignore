@@ -26,6 +26,7 @@ pip-log.txt
 nosetests.xml
 .cache
 tests/.cache
+.pytest_cache/
 
 # Translations
 *.mo
