@@ -2,14 +2,13 @@
 
 {% block content %}
 <div class="container">
-    <div style="float:right; margin-top:1em">
-      <a href="{{ url_for('admin.user_new') }}" class="btn btn-success">Add user</a>
-    </div>
+    <a href="{{ url_for('admin.user_new') }}" class="btn btn-success btn-lg">Add user</a>
     <h2>Users</h2>
     <table class='table table-bordered table-hover'>
         <thead>
             <tr>
-              <th>Username</th>
+              <th width="100%">Username</th>
+              <th>Contact</th>
               <th>Created</th>
               <th>Admin</th>
             </tr>
@@ -20,9 +19,10 @@
               <a href="{{ url_for('admin.user', user_id=user.id) }}">
                 {{ user.username }}
               </a>
-              [<a href="mailto:{{ user.email }}">
+            </td><td>
+              <a href="mailto:{{ user.email }}" class="btn btn-sm btn-info">
                 E-mail
-              </a>]
+              </a>
             </td>
             <td>{{ user.created_at|format_date }}</td>
             <td>{{ user.is_admin }}</td>

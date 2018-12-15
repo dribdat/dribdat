@@ -195,6 +195,12 @@ class Event(SurrogatePK, Model):
             Category.event_id==event_id
         )).order_by('name')
 
+    # Number of projects
+    @property
+    def project_count(self):
+        if not self.projects: return 0
+        return len(self.projects)
+
     def __init__(self, name=None, **kwargs):
         if name:
             db.Model.__init__(self, name=name, **kwargs)
