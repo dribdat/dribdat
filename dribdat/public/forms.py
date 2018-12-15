@@ -47,13 +47,14 @@ class UserForm(FlaskForm):
 
 class ProjectForm(FlaskForm):
     id = HiddenField('id')
-    category_id = SelectField(u'Category', coerce=int)
     progress = RadioField(u'Progress', coerce=int)
-    autotext_url = StringField(u'Remote link', [length(max=255)],
+    autotext_url = StringField(u'Sync', [length(max=255)],
         description="A supported repository from which to fetch project details.")
     # is_autoupdate = BooleanField(u'Sync project data')
     name = StringField(u'Title', [required(), length(max=80), UniqueValidator(Project, 'name')],
-        description="Required, though you may change this at any time.")
+        description="* Required, though you may change this at any time.")
+    category_id = SelectField(u'Category', coerce=int,
+        description="Optional")
     summary = StringField(u'Short summary', [length(max=120)],
         description="Optional, max. 120 characters, appearing at the top of the project page.")
     longtext = TextAreaField(u'Description',
