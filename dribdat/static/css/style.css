@@ -183,7 +183,6 @@ nav .navbar-nav .nav-item {
 }
 
 .project-page.phase-Challenge .progress,
-.project-page.phase-Challenge .project-star,
 .hide-challenges .challenge,
 .challenge.hexagon .progress { display: none; }
 .challenge.hexagon .hexagontent { color: #35a; font-weight: normal; }
