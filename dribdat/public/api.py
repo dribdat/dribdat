@@ -162,6 +162,7 @@ def project_search_json():
         Project.name.like(q),
         Project.summary.like(q),
         Project.longtext.like(q),
+        Project.autotext.like(q),
     )).limit(5).all()
     return jsonify(projects=[p.data for p in projects])
 

@@ -3,7 +3,7 @@ from flask_wtf import FlaskForm
 from wtforms import (
     SubmitField, BooleanField,
     StringField, PasswordField,
-    TextAreaField, TextField,
+    TextAreaField,
     SelectField, HiddenField,
     RadioField
 )
@@ -47,17 +47,18 @@ class UserForm(FlaskForm):
 
 class ProjectForm(FlaskForm):
     id = HiddenField('id')
-    category_id = SelectField(u'Category', coerce=int)
     progress = RadioField(u'Progress', coerce=int)
-    autotext_url = StringField(u'Remote link', [length(max=255)],
+    autotext_url = StringField(u'Sync', [length(max=255)],
         description="A supported repository from which to fetch project details.")
-    is_autoupdate = BooleanField(u'Autoupdate project data')
+    # is_autoupdate = BooleanField(u'Sync project data')
     name = StringField(u'Title', [required(), length(max=80), UniqueValidator(Project, 'name')],
-        description="Required, though you may change this any time.")
+        description="* Required, though you may change this at any time.")
+    category_id = SelectField(u'Category', coerce=int,
+        description="Optional")
     summary = StringField(u'Short summary', [length(max=120)],
         description="Optional, max. 120 characters, appearing at the top of the project page.")
-    longtext = TextAreaField(u'Full description',
-        description="Use plain text, Markdown or HTML as you wish to document your project.")
+    longtext = TextAreaField(u'Description',
+        description="Use plain text, Markdown or HTML to document your project. Shown above the README, if Sync is used.")
     webpage_url = StringField(u'Project home link', [length(max=255)],
         description="Optional - a live demo or information page.")
     source_url = StringField(u'Source code link', [length(max=255)],

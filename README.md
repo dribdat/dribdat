@@ -1,16 +1,47 @@
 # Dribdat
 
-*The stakes are high, the competition is ready. You will be measured, your progress tracked, your creativity analysed & compared. Think you have what it takes? Ready, steady, go!*
+[![Travis](https://travis-ci.org/datalets/dribdat.svg?branch=master)](https://travis-ci.org/datalets/dribdat)
+[![Coveralls](https://coveralls.io/repos/github/datalets/dribdat/badge.svg?branch=master)](https://coveralls.io/github/datalets/dribdat?branch=master)
+[![Mattermost](https://img.shields.io/badge/Mattermost-chat-blue.svg)](https://team.opendata.ch/signup_user_complete/?id=74yuxwruaby9fpoukx9bmoxday)
 
-**Dribdat (from "Driven By Data") is an open platform for data-driven team collaboration, such as Hackathons.** It works as a website and project board for running exciting, productive events..with Impact Factor. We [created this tool](https://datalets.ch/dribdat/iot-2015/project/23/) after using plain wikis and forums for years, and after trying out a few proprietary tools that we felt limited us in one way or another.
+An open platform for data-driven team collaboration, such as *Hackathons*.
 
-The platform allows organisers and participants to aggregate project details from multiple sources (Markdown, Wikis, GitHub, Bitbucket), display challenges and projects in attractive dashboards, reuse the data through a [remote API](#api), plug in community tools ([Discourse](https://www.discourse.org/), [Slack](http://slack.com), [Let's Chat](http://sdelements.github.io/lets-chat/), etc.) and even [chatbots](https://github.com/schoolofdata-ch/sodabot) to enhance the hackathon.
+This project is being developed by [Datalets](https://datalets.ch), a small studio in Bern, with support from the Swiss open data and open source community. If you need help or advice in setting up your event, or would like to contribute to the project: **get in touch** via our [team chat](https://team.opendata.ch/signup_user_complete/?id=74yuxwruaby9fpoukx9bmoxday) and [GitHub Issues](https://github.com/datalets/dribdat/issues). For more background and references, see [ABOUT](ABOUT.md).
 
-For more background and links to example sites see [ABOUT](ABOUT.md).
+## How does it look?
+
+_Dribdat_ works as a website and project board for running exciting, productive events, and allows organizers and participants to collect their project details in one place, displaying the challenges and projects in Web dashboards, and plugging in community tools such as [Discourse](https://www.discourse.org/), [Slack](http://slack.com), or [Let's Chat](http://sdelements.github.io/lets-chat/) - or using the [remote API](#api) for additional interfaces such as [chatbots](https://github.com/schoolofdata-ch/sodabot) to enhance the hackathon.
+
+Logged-in users can submit challenges, ideas and projects by linking their document or repository, or entering details directly into a form. You can change or customize these [instructions](dribdat/templates/quickstart.html) as you see fit.
+
+![](dribdat/static/img/screenshot_start.png)
+
+Data on projects can be entered into the application directly using [Markdown](https://www.markdowntutorial.com/) formatting, or aggregated simply by putting in a URL to a public project hosted on one of these supported platforms:
+
+- [GitHub](https://github.com) (README / README.md)
+- [GitLab](https://gitlab.com) (README.md)
+- [BitBucket](https://bitbucket.org)
+- [Etherpad Lite](http://etherpad.org)
+- [Google Docs](https://support.google.com/docs/answer/183965?co=GENIE.Platform%3DDesktop&hl=en) (Publish to Web)
+- [DokuWiki](http://make.opendata.ch/wiki/project:home)
+
+The administrative interface shown below allows defining details of the event and managing project data.
+
+![](dribdat/static/img/screenshot_admin_projects.png)
+
+The look and feel of the project view can be customized with CSS, and shows challenges and projects, with a rating of how completely they are documented. In the `Events` screen there are links to a *Print* view for a summary of all projects on one page, and the ability to *Embed* results into another website.
+
+![](dribdat/static/img/screenshot_makezurich.jpg)
+
+And, as we're really into making the most of those time constraints, the homepage and dashboard feature a big animated countdown clock.
+
+![](dribdat/static/img/screenshot_countdown.png)
+
+Tick tock!
 
 ## Deployment Quickstart
 
-This project is ready for fast deployment to [Heroku](http://heroku.com):
+This project can be deployed to any server capable of serving Python applications, and is set up for fast deployment to the [Heroku](http://heroku.com) cloud:
 
 [![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy)
 
@@ -35,9 +66,7 @@ Set the redirect URL in your app's OAuth Settings to `<SERVER_URL>/slack_callbac
 
 ## API
 
-There are a few API calls that admins can use to easily get to the data in Dribdat in CSV or JSON format.
-
-Note that a print view of all projects is accessible from the Events admin console.
+There are a number of API calls that admins can use to easily get to the data in Dribdat in CSV or JSON format. See GitHub issues for [development status](https://github.com/datalets/dribdat/issues?utf8=%E2%9C%93&q=is%3Aissue+is%3Aopen+API).
 
 Basic data on an event:
 
@@ -63,17 +92,25 @@ Push data into projects (WIP):
 
 - `/api/project/push.json`
 
-For more details see `api.py`
+For more details see [api.py](dribdat/public/api.py)
 
 ## Developer guide
 
-[![Build Status](https://travis-ci.org/loleg/dribdat.svg?branch=master)](https://travis-ci.org/loleg/dribdat)
+Install Python, Virtualenv and Pip or Pipenv to start working with the code.
 
-Run the following commands to bootstrap your environment.
+You may need to install additional libraries (`libffi`) for the [misaka](http://misaka.61924.nl/) package, which depends on [CFFI](https://cffi.readthedocs.io/en/latest/installation.html#platform-specific-instructions), e.g. `sudo dnf install libffi-devel`
+
+Run the following commands from the repository root folder to bootstrap your environment using [Pipenv](https://pipenv.readthedocs.io/):
 
 ```
-git clone https://github.com/loleg/dribdat
-cd dribdat
+pipenv --three
+pipenv shell
+pipenv install
+```
+
+Or using plain pip:
+
+```
 pip install -r requirements/dev.txt
 ```
 
@@ -134,4 +171,4 @@ For a full migration command reference, run `python manage.py db --help`.
 
 ## Credits
 
-Developed by [Oleg Lavrovsky](http://datalets.ch) based on Steven Loria's [flask-cookiecutter](https://github.com/sloria/cookiecutter-flask). With thanks to [Swisscom](http://swisscom.com)'s F. Wieser and M.-C. Gasser for conceptual inputs and financial support of the first release of this project.
+Developed by [Oleg Lavrovsky](http://datalets.ch) based on Steven Loria's [flask-cookiecutter](https://github.com/sloria/cookiecutter-flask). With thanks to the Swiss communities for [Open Data](https://opendata.ch), [Open Networking](https://opennetworkinfrastructure.org/) and [Open Source](https://dinacon.ch) for their many contributions, and to [Swisscom](http://swisscom.com) via F. Wieser and M.-C. Gasser for conceptual inputs and financial support of the first release of this project.

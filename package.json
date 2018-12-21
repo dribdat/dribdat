@@ -3,7 +3,7 @@
   "version": "0.1.2",
   "description": "Open source hackathon platform",
   "main": "index.js",
-  "repository": "git@github.com:loleg/dribdat.git",
+  "repository": "git@github.com:datalets/dribdat.git",
   "author": "Oleg Lavrovsky <oleg@datalets.ch>",
   "license": "MIT",
   "private": false,

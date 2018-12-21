@@ -2,8 +2,8 @@
 
 {% block content %}
 <div class="container">
-    <h2>{{ event.name }}: all projects</h2>
-    <p>As of <b>{{ curdate }}</b></p>
+    <h2>{{ event.name }}</h2>
+    <p>List of all projects which have advanced beyond idea/challenge phase as of <b>{{ curdate }}</b></p>
 
     {% for project in projects %}
     <hr>

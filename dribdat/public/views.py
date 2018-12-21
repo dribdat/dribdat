@@ -89,8 +89,10 @@ def project_action(project_id, of_type):
     starred = IsProjectStarred(project, current_user)
     allow_edit = starred or (not current_user.is_anonymous and current_user.is_admin)
     project_stars = GetProjectTeam(project)
+    latest_activity = project.latest_activity()
     return render_template('public/project.html', current_event=event, project=project,
-        project_starred=starred, project_stars=project_stars, allow_edit=allow_edit)
+        project_starred=starred, project_stars=project_stars,
+        allow_edit=allow_edit, latest_activity=latest_activity)
 
 @blueprint.route('/project/<int:project_id>/star', methods=['GET', 'POST'])
 @login_required
@@ -141,21 +143,24 @@ def project_autoupdate(project_id):
         return project_action(project_id, None)
     data = GetProjectData(project.autotext_url)
     if not 'name' in data:
-        flash("Project could not be synced: check the autoupdate link.", 'warning')
+        flash("Project could not be synced: check the Remote Link.", 'warning')
         return project_action(project_id, None)
-    if 'name' in data and data['name']:
-        project.name = data['name']
-    if 'summary' in data and data['summary']:
-        project.summary = data['summary']
+    # Project name is not updated
+    # if 'name' in data and data['name']: project.name = data['name']
+    # Always update "autotext" field
     if 'description' in data and data['description']:
-        project.longtext = data['description']
-    if 'homepage_url' in data and data['homepage_url']:
+        project.autotext = data['description']
+    # Update following fields only if blank
+    if 'summary' in data and data['summary']:
+        if not project.summary or not project.summary.strip():
+            project.summary = data['summary']
+    if 'homepage_url' in data and data['homepage_url'] and not project.webpage_url:
         project.webpage_url = data['homepage_url']
-    if 'contact_url' in data and data['contact_url']:
+    if 'contact_url' in data and data['contact_url'] and not project.contact_url:
         project.contact_url = data['contact_url']
-    if 'source_url' in data and data['source_url']:
+    if 'source_url' in data and data['source_url'] and not project.source_url:
         project.source_url = data['source_url']
-    if 'image_url' in data and data['image_url']:
+    if 'image_url' in data and data['image_url'] and not project.image_url:
         project.image_url = data['image_url']
     project.update()
     db.session.add(project)

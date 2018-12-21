@@ -2,9 +2,7 @@
 
 {% block content %}
 <div class="container">
-    <div style="float:right; margin-top:1em">
-      <a href="{{ url_for('admin.project_new') }}" class="btn btn-success">Add project or challenge</a>
-    </div>
+    <a href="{{ url_for('admin.project_new') }}" class="btn btn-success btn-lg">Add project</a>
     <h2>Projects</h2>
     {% if category_name %}<h4>Category: <b>{{ category_name }}</b></h4>{% endif %}
     {% if event_name %}<h4>Event: <b>{{ event_name }}</b></h4>{% endif %}
@@ -30,7 +28,7 @@
             <td>{{ project.updated_at|since_date }}</td>
             <td>
               <a href="{{ url_for('public.project', project_id=project.id) }}" class="btn btn-sm btn-primary">
-                Public view
+                View
               </a>
               {% if project.is_hidden %}
                 <a href="{{ url_for('admin.project_toggle', project_id=project.id) }}" class="btn btn-sm btn-success">

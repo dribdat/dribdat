@@ -2,44 +2,56 @@
 
 {% block content %}
 <div class="container">
-    <div style="float:right; margin-top:1em">
-      <a href="{{ url_for('admin.event_new') }}" class="btn btn-success">Start an event</a>
-    </div>
+    <a href="{{ url_for('admin.event_new') }}" class="btn btn-success btn-lg">Start an event</a>
     <h2>Events</h2>
     <table class='table table-bordered table-hover'>
         <thead>
             <tr>
-              <th>Name</th>
-              <th>Projects</th>
+              <th></th>
+              <th width="100%">Name</th>
               <th>Start</th>
               <th>Finish</th>
-              <th>Current</th>
+              <th>Projects</th>
             </tr>
         </thead>
         {% for event in events %}
         <tr>
             <td>
-              <a href="{{ url_for('admin.event', event_id=event.id) }}">
-                {{ event.name }}
-              </a>
+              <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="evMenu{{ event.id }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  Action ...
+                </button>
+                <div class="dropdown-menu" aria-labelledby="evMenu{{ event.id }}">
+                  <a href="{{ url_for('admin.event_projects', event_id=event.id) }}" class="dropdown-item">
+                    View
+                  </a>
+                  <a href="{{ url_for('admin.event_print', event_id=event.id) }}" class="dropdown-item">
+                    Print
+                  </a>
+                  <a href="{{ url_for('public.event', event_id=event.id) }}" class="dropdown-item">
+                    Board
+                  </a>
+                  <a href="{{ url_for('public.event', event_id=event.id, _external=True) }}?embed=1" class="dropdown-item" id="embed-link">
+                    Embed
+                  </a>
+                </div>
+              </div>
             </td>
             <td>
-              <a href="{{ url_for('public.event', event_id=event.id) }}" class="btn btn-sm btn-primary">
-                Public board
-              </a>
-              <a href="{{ url_for('admin.event_projects', event_id=event.id) }}" class="btn btn-sm btn-default">
-                Projects
-              </a>
-              <a href="{{ url_for('admin.event_print', event_id=event.id) }}" class="btn btn-sm btn-default">
-                Print
-              </a>
-              <a href="{{ url_for('public.dashboard', event_id=event.id) }}" class="btn btn-sm btn-default">
-                Dashboard
+              <a href="{{ url_for('admin.event', event_id=event.id) }}">
+                {{ event.name }}
+                {% if event.is_current %}
+                  &nbsp; <span class="btn btn-warning btn-sm">Current event</span>
+                {% endif %}
               </a>
             </td>
             <td>{{ event.starts_at|format_date }}</td>
             <td>{{ event.ends_at|format_date }}</td>
-            <td>{% if event.is_current %}Yes{% endif %}</td>
+            <td>
+              <a href="{{ url_for('admin.event_projects', event_id=event.id) }}" class="btn btn-primary">
+                {{ event.project_count }} items
+              </a>
+            </td>
         </tr>
         {% endfor %}
     </table>

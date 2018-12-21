@@ -195,6 +195,12 @@ class Event(SurrogatePK, Model):
             Category.event_id==event_id
         )).order_by('name')
 
+    # Number of projects
+    @property
+    def project_count(self):
+        if not self.projects: return 0
+        return len(self.projects)
+
     def __init__(self, name=None, **kwargs):
         if name:
             db.Model.__init__(self, name=name, **kwargs)
@@ -212,11 +218,12 @@ class Project(SurrogatePK, Model):
     contact_url = Column(db.String(255), nullable=True)
     autotext_url = Column(db.String(255), nullable=True)
     is_autoupdate = Column(db.Boolean(), default=True)
+    autotext = Column(db.UnicodeText(), nullable=True, default=u"")
+    longtext = Column(db.UnicodeText(), nullable=False, default=u"")
+    hashtag = Column(db.String(40), nullable=True)
     logo_color = Column(db.String(7), nullable=True)
     logo_icon = Column(db.String(40), nullable=True)
-    longtext = Column(db.UnicodeText(), nullable=False, default=u"")
 
-    hashtag = Column(db.String(40), nullable=True)
     created_at = Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)
     updated_at = Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)
     is_hidden = Column(db.Boolean(), default=False)
@@ -232,6 +239,10 @@ class Project(SurrogatePK, Model):
     # And the optional event category
     category_id = reference_col('categories', nullable=True)
     category = relationship('Category', backref='projects')
+
+    # Convenience query for latest activity
+    def latest_activity(self):
+        return Activity.query.filter_by(project_id=self.id).order_by(Activity.timestamp.desc()).limit(5)
 
     # Convenience query for all categories
     def categories_all(self, event=None):
@@ -292,6 +303,9 @@ class Project(SurrogatePK, Model):
             self.logo_icon = self.logo_icon.replace('fa-', '')
         if self.logo_color == '#000000':
             self.logo_color = ''
+        # Check update status
+        self.is_autoupdate = bool(self.autotext_url and self.autotext_url.strip())
+        if not self.is_autoupdate: self.autotext = ''
         # Set the timestamp
         self.updated_at = dt.datetime.utcnow()
         if self.is_challenge:
@@ -320,6 +334,10 @@ class Project(SurrogatePK, Model):
             if len(self.longtext) > 3: score = score + 1
             if len(self.longtext) > 100: score = score + 4
             if len(self.longtext) > 500: score = score + 10
+            if self.autotext is not None:
+                if len(self.autotext) > 3: score = score + 1
+                if len(self.autotext) > 100: score = score + 4
+                if len(self.autotext) > 500: score = score + 10
             self.score = score
 
     def __init__(self, name=None, **kwargs):
@@ -327,7 +345,7 @@ class Project(SurrogatePK, Model):
             db.Model.__init__(self, name=name, **kwargs)
 
     def __repr__(self):
-        return '<Event({name})>'.format(name=self.name)
+        return '<Project({name})>'.format(name=self.name)
 
 class Category(SurrogatePK, Model):
     __tablename__ = 'categories'

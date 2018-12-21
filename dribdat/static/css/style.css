@@ -251,15 +251,28 @@ nav .navbar-nav .nav-item {
   position: initial;
   margin-right: 20px;
 }
-.project-info .progress {
-  width: 100px;
+.progress-container {
   display: inline-block;
+  text-align: center;
   margin-bottom: -5px;
   margin-left: 1em;
   margin-right: 5px;
 }
+.project-info .progress {
+  width: 100px;
+  display: block;
+}
 .progress-bar {
   background-color: #3399f3;
+}
+.project-info .project-tools {
+  display: inline-block;
+  text-align: center;
+  margin-left: 1em;
+  margin-right: 5px;
+}
+.project-tools .label-info {
+  color: #aaa;
 }
 .project-tools .progress-bar {
   min-width: 2em;
@@ -290,10 +303,22 @@ nav .navbar-nav .nav-item {
   float: left;
   margin-right: 40px;
 }
-.project-page .details {
+.project-page .details p {
   float: right;
-  font-size: 100%;
+  font-size: 80%;
   text-align: right;
+}
+.project-page .details a {
+  font-size: 120%;
+}
+.project-page .history {
+  list-style: none; color: #777;
+}
+.project-page .history span {
+  font-size: 90%; color: #aaa;
+}
+.project-page .history li:hover{
+  background: #fff;
 }
 .project-page .project-info {
   min-height: 240px;
@@ -304,13 +329,17 @@ nav .navbar-nav .nav-item {
 .project-page .project-info a {
   color: #15a;
 }
+.project-page a.project-star.btn-primary { color: white; }
 .project-page .project-star i {
   padding-right: 5px;
 }
-.project-page .project-longtext img {
+.project-page img {
   max-width: 100%;
 }
-.project-page.jumbotron { padding: 1rem; }
+.project-page.jumbotron {
+  background-color: white;
+  padding: 1rem;
+}
 @media (min-width: 576px) {
   .project-page.jumbotron { padding: 2rem; }
 }
@@ -318,11 +347,47 @@ nav .navbar-nav .nav-item {
 .project-page .project-info th { padding: 0.2em 1.4em 0 0; }
 .project-page .project-info thead { border-bottom: 1px solid black; }
 
+.project-page .project-longtext { margin: 2em 0; font-size: 125%; }
+.project-page .project-autotext { padding-top: 2em; border-top: 1px solid #ccc; }
+.project-page .project-buttons { display: block; text-align: center; }
+
+/* Autotext fader */
+.project-page .project-autotext.active {
+  max-height: none;
+  overflow: visible;
+}
+.project-page .project-autotext.active .cover {
+  display: none;
+}
+.project-page .project-autotext {
+  max-height: 500px;
+  overflow: hidden;
+  position: relative;
+  margin-bottom: 0;
+}
+.project-page .project-autotext .cover {
+  position: absolute;
+  top: 0px; left: 0px;
+  width: 100%; height: 100%;
+  cursor: pointer; cursor: hand;
+
+  background: rgba(255,255,255,0);
+  background: -moz-linear-gradient(top, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 92%, rgba(255,255,255,1) 100%);
+  background: -webkit-gradient(left top, left bottom, color-stop(0%, rgba(255,255,255,0)), color-stop(92%, rgba(255,255,255,1)), color-stop(100%, rgba(255,255,255,1)));
+  background: -webkit-linear-gradient(top, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 92%, rgba(255,255,255,1) 100%);
+  background: -o-linear-gradient(top, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 92%, rgba(255,255,255,1) 100%);
+  background: -ms-linear-gradient(top, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 92%, rgba(255,255,255,1) 100%);
+  background: linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 92%, rgba(255,255,255,1) 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#ffffff', GradientType=0 );
+
+}
+
 /* Project entry form */
 .fld-progress .radio-inline { display: block; }
 .fld-progress { border-width: 25px; padding-left: 5px; border-top: none !important; border-bottom: none !important; border-right: none !important; border-style: solid; -webkit-border-image: -webkit-gradient(linear, 0 100%, 0 0, from(black), to(rgba(0, 0, 0, 0))) 1 100%; -webkit-border-image: -webkit-linear-gradient(bottom, black, rgba(0, 0, 0, 0)) 1 100%; -moz-border-image: -moz-linear-gradient(bottom, black, rgba(0, 0, 0, 0)) 1 100%; -o-border-image: -o-linear-gradient(bottom, black, rgba(0, 0, 0, 0)) 1 100%; border-image: linear-gradient(to top, black, rgba(0, 0, 0, 0)) 1 100%; }
 .with-event form .control-label { font-weight: 600; font-size: 140%; }
 .with-event form .checkbox label[for="is_autoupdate"] { margin-left:30%; margin-top:20px; padding:10px; border-radius:10px; box-shadow: 0 0 0 10px cyan; }
+.with-event form .checkbox label[for="is_autoupdate"] input { margin-right: 1em; }
 
 /* Code blocks */
 pre { color: #333; background: white; }
@@ -358,13 +423,31 @@ pre { color: #333; background: white; }
   margin-bottom: 10px;
   min-height: 64px;
 }
+.nav-categories label {
+  border: 1px solid #ddd;
+  background: white;
+}
+.nav-categories label.active {
+  border: 1px solid #777;
+}
+.nav-categories label input {
+  display: none;
+}
 .nav-categories {
   margin: 10px;
 }
-.project-tools, .edit-buttons {
+.project-tools {
   float: right;
   margin-right: 15px;
   text-align: right;
+}
+.project-edit-buttons {
+  margin: -2em 0 0 0;
+  float: right;
+}
+.project-edit-buttons * {
+  box-shadow: none !important;
+  opacity: 0.8;
 }
 .category-info {
   padding: 0 1em;
@@ -394,10 +477,24 @@ pre { color: #333; background: white; }
 }
 
 .team-gravatar img {
-  margin-right: 5px;
-  margin-bottom: 5px;
-  padding: 2px;
+  margin: 5px;
+}
+.team-gravatar span {
+  width: 48%;
+  display: inline-block;
+}
+.team-gravatar {
+  width: 200px;
+  height: 60px;
+  display: inline-block;
+  background: white;
   border: 2px solid #eee;
+  padding: 2px; margin-right: 5px;
+  overflow: hidden;
+}
+.team-gravatar:hover {
+  text-decoration: none;
+  border: 2px solid #dde;
 }
 
 /* Embed view of the projects */
@@ -465,7 +562,6 @@ Challenges view
     padding-right: 0.5em;
 }
 @media (min-width: 1000px) {
-div[role=main] { background: white; padding:2em; }
 .list-data .list-group-item {
     width: 48%;
     display: inline-block;
@@ -495,7 +591,6 @@ Data Packages view
     background: transparent;
 }
 @media (min-width: 1000px) {
-div[role=main] { background: white; padding:2em; }
 .list-datapackage .list-group-item {
     width: 100%;
     display: inline-block;

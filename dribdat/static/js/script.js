@@ -1,11 +1,11 @@
 (function($, window) {
 
   $(document).ready(function() {
-    
+
     // Detect and recommend SSL connection
-    if ('https:' != document.location.protocol) 
+    if ('https:' != document.location.protocol)
       $('.navbar').after('<center class="alert alert-danger" role="alert">Your connection to this website is insecure. <a href="https:' + window.location.href.substring(window.location.protocol.length) + '" class="btn btn-sm btn-warning"><b>Switch to HTTPS</b></a></center>');
- 
+
     // Initialise home page countdown
     $('.event-countdown').each(function() {
       var clock = $(this).FlipClock({
@@ -72,11 +72,13 @@
       e.stopPropagation();
       var url = $inputfield.val();
 
+      /* Warning no longer needed -
       if ($('input#name').val() && !window.confirm('All project fields (Title, etc.) ' +
         'will be overwritten with remote project data. Proceed?')) {
           if ($('#is_autoupdate').is(':checked')) $('#is_autoupdate').click();
           return false;
         }
+      */
 
       var $button = $(this);
       $indicator.find('i').css('color', 'blue');
@@ -91,13 +93,18 @@
           return;
         }
 
-        $('input#name').val(data.name);
-        $('input#summary').val(data.summary);
-        $('textarea#longtext').html(data.description);
-        $('input#webpage_url').val(data.homepage_url);
-        $('input#source_url').val(data.source_url);
-        $('input#contact_url').val(data.contact_url);
-        $('input#image_url').val(data.image_url);
+        if (!$('input#name').val())
+          $('input#name').val(data.name);
+        if (!$('input#summary').val())
+          $('input#summary').val(data.summary);
+        if (!$('input#webpage_url').val())
+          $('input#webpage_url').val(data.homepage_url);
+        if (!$('input#source_url').val())
+          $('input#source_url').val(data.source_url);
+        if (!$('input#contact_url').val())
+          $('input#contact_url').val(data.contact_url);
+        if (!$('input#image_url').val())
+          $('input#image_url').val(data.image_url);
       });
       return true;
     });
@@ -106,34 +113,36 @@
   // Make the custom color field HTML5 compatible
   $('input#logo_color[type=text]').attr('type', 'color');
 
+  // Open up the README on click
+  $('.project-autotext').click(function() {
+    $(this).addClass('active');
+  });
+
   // Clickable categories navigation
   var $navCategories = $('.nav-categories .btn-group label').click(function(e) {
     $(this).parent().find('.active').removeClass('active');
+    $(this).parent().addClass('active');
     var selected_id = $(this).find('input').attr('id');
     var $projects = $('.honeycomb .project');
     var $infotext = $('.category-info');
-    if (selected_id === 'challenges') {
-      // pass
-    } else if (selected_id === '' || selected_id === 'list') {
+    $('.honeycomb').removeClass('hide-challenges');
+
+    if (selected_id === '' || selected_id === 'list' || selected_id === 'challenges') {
       $projects.addClass('category-highlight');
       $('.category-container', $infotext).hide();
       $projects
         .removeClass('hexagon hexalist')
         .addClass(selected_id === 'list' ? 'hexalist' : 'hexagon');
+      if (selected_id === 'challenges')
+        $('.honeycomb').addClass('hide-challenges');
+
     } else {
       var $selected = $('[category-id="' + selected_id + '"]', $projects.parent());
-      if ($selected.length) $projects.removeClass('category-highlight');
+      $projects.removeClass('category-highlight');
       $selected.addClass('category-highlight');
       $('.category-container', $infotext).hide();
       $('[category-id="' + selected_id + '"]', $infotext).show();
     }
-    setTimeout(function() {
-      var challenges_on = $('#challenges').is(':checked');
-      $('.honeycomb').removeClass('hide-challenges')
-        .addClass(challenges_on ? '' : 'hide-challenges');
-      $('#challenges').parent().removeClass('active')
-        .addClass(challenges_on ? 'active' : '');
-    }, 1);
   });
 
   // Roll up categories if there is only one, and no projects
@@ -147,5 +156,12 @@
     var code = '<iframe src="' + url + '" style="width:100%;height:320px;background:transparent;border:none;overflow:hidden" scrolling="no"></iframe>';
     window.prompt('Copy and paste this code to embed this event:', code);
   });
+
+  // Show project history
+  $('#show-history').click(function(e) {
+    e.preventDefault(); e.stopPropagation();
+    $('.details .history').slideDown();
+  });
+  $('.details .history').hide();
 
 }).call(this, jQuery, window);

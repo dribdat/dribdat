@@ -2,9 +2,7 @@
 
 {% block content %}
 <div class="container">
-    <div style="float:right; margin-top:1em">
-      <a href="{{ url_for('admin.category_new') }}" class="btn btn-success">Add category</a>
-    </div>
+    <a href="{{ url_for('admin.category_new') }}" class="btn btn-success btn-lg">Add category</a>
     <h2>Categories</h2>
     <table class='table table-bordered table-hover'>
         <thead>
@@ -22,9 +20,9 @@
               </a>
             </td>
             <td>{{ category.event.name }}</td>
-            <td>{{ category.project_count }}
+            <td>
               <a href="{{ url_for('admin.category_projects', category_id=category.id) }}" class="btn btn-sm btn-primary">
-                Show
+                {{ category.project_count }} items
               </a>
             </td>
         </tr>
