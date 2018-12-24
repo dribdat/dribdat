@@ -77,15 +77,17 @@ def project_edit(project_id):
         db.session.commit()
         cache.clear()
         flash('Project updated.', 'success')
-        # TODO: return redirect(url_for('project', project_id=project.id))
-        return project_action(project_id, 'update')
+        project_action(project_id, 'update', False)
+        return redirect(url_for('public.project', project_id=project.id))
     return render_template('public/projectedit.html', current_event=event, project=project, form=form)
 
-def project_action(project_id, of_type):
+def project_action(project_id, of_type, as_view=True):
     project = Project.query.filter_by(id=project_id).first_or_404()
     event = project.event
     if of_type is not None:
         ProjectActivity(project, of_type, current_user)
+    if not as_view:
+        return True
     starred = IsProjectStarred(project, current_user)
     allow_edit = starred or (not current_user.is_anonymous and current_user.is_admin)
     project_stars = GetProjectTeam(project)
@@ -126,9 +128,9 @@ def project_new(event_id):
             db.session.add(project)
             db.session.commit()
             flash('Project added.', 'success')
-            project_action(project.id, 'create')
+            project_action(project.id, 'create', False)
             cache.clear()
-            project_action(project.id, 'star')
+            project_action(project.id, 'star', False)
             return redirect(url_for('public.project', project_id=project.id))
         del form.logo_icon
         del form.logo_color
