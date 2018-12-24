@@ -216,7 +216,7 @@ class Project(SurrogatePK, Model):
     summary = Column(db.String(120), nullable=True)
     image_url = Column(db.String(255), nullable=True)
     source_url = Column(db.String(255), nullable=True)
-    webpage_url = Column(db.String(255), nullable=True)
+    webpage_url = Column(db.String(2048), nullable=True)
     is_webembed = Column(db.Boolean(), default=False)
     contact_url = Column(db.String(255), nullable=True)
     autotext_url = Column(db.String(255), nullable=True)
