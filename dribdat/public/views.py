@@ -113,6 +113,7 @@ def project_new(event_id):
     if current_user and current_user.is_authenticated:
         project = Project()
         project.user_id = current_user.id
+        project.progress = -1
         form = ProjectForm(obj=project, next=request.args.get('next'))
         form.progress.choices = projectProgressList(event.has_started)
         form.category_id.choices = [(c.id, c.name) for c in project.categories_all(event)]
@@ -127,7 +128,8 @@ def project_new(event_id):
             flash('Project added.', 'success')
             project_action(project.id, 'create')
             cache.clear()
-            return project_action(project.id, 'star')
+            project_action(project.id, 'star')
+            return redirect(url_for('public.project', project_id=project.id))
         del form.logo_icon
         del form.logo_color
     return render_template('public/projectnew.html', current_event=event, form=form)

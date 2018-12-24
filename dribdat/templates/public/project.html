@@ -20,6 +20,7 @@
 {% endblock %}
 {% block js %}
 <script type="text/javascript" src="{{ url_for('static', filename='css/rainbow/rainbow-custom.min.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='libs/jquery-resizable/dist/jquery-resizable.min.js') }}"></script>
 {% endblock %}
 
 {% block content %}
@@ -85,6 +86,13 @@
     {% endif %}
 
     <br clear="all">
+
+    {% if project.is_webembed %}
+    <div class="project-webembed resizable">
+      {{ project.webembed|safe }}
+      <div class="win-size-grip"></div>
+    </div>
+    {% endif %}
 
     {% if project.longtext %}
     <div class="project-longtext">

@@ -56,6 +56,7 @@ class ProjectForm(FlaskForm):
     longtext = TextAreaField(u'Description')
     autotext = TextAreaField(u'Readme content')
     webpage_url = StringField(u'Web page link', [length(max=255)])
+    is_webembed = BooleanField(u'Embed or show contents of web page link in a frame', default=False)
     source_url = StringField(u'Source code link', [length(max=255)])
     contact_url = StringField(u'Contact link', [length(max=255)])
     image_url = StringField(u'Banner image link', [length(max=255)])

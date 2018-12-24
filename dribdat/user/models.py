@@ -21,8 +21,10 @@ from dribdat.database import (
     relationship,
     SurrogatePK,
 )
-
-from dribdat.utils import format_date_range, format_date
+from dribdat.utils import (
+    format_date_range, format_date,
+    format_webembed,
+)
 from dribdat.user import PROJECT_PROGRESS_PHASE
 
 from sqlalchemy import or_
@@ -215,6 +217,7 @@ class Project(SurrogatePK, Model):
     image_url = Column(db.String(255), nullable=True)
     source_url = Column(db.String(255), nullable=True)
     webpage_url = Column(db.String(255), nullable=True)
+    is_webembed = Column(db.Boolean(), default=False)
     contact_url = Column(db.String(255), nullable=True)
     autotext_url = Column(db.String(255), nullable=True)
     is_autoupdate = Column(db.Boolean(), default=True)
@@ -240,6 +243,10 @@ class Project(SurrogatePK, Model):
     category_id = reference_col('categories', nullable=True)
     category = relationship('Category', backref='projects')
 
+    # Self-assessment and total score
+    progress = Column(db.Integer(), nullable=True, default=-1)
+    score = Column(db.Integer(), nullable=True, default=0)
+
     # Convenience query for latest activity
     def latest_activity(self):
         return Activity.query.filter_by(project_id=self.id).order_by(Activity.timestamp.desc()).limit(5)
@@ -250,8 +257,7 @@ class Project(SurrogatePK, Model):
         if event is not None: return event.categories_for_event()
         return Category.query.order_by('name')
 
-    # Self-assessment
-    progress = Column(db.Integer(), nullable=True, default=0)
+    # Self-assessment (progress)
     @property
     def phase(self):
         if self.progress is None: return ""
@@ -260,8 +266,9 @@ class Project(SurrogatePK, Model):
     def is_challenge(self):
         return self.progress < 0
 
-    # Current tally
-    score = Column(db.Integer(), nullable=True, default=0)
+    @property
+    def webembed(self):
+        return format_webembed(self.webpage_url)
 
     @property
     def url(self):

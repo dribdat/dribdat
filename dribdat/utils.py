@@ -68,3 +68,11 @@ def format_date_range(starts_at, ends_at):
             ends_at.day,
             ends_at.year,
         )
+
+def format_webembed(url):
+    if url.lower().startswith('<iframe '):
+        return url
+    if url.startswith('https://query.wikidata.org/'):
+        url = url.replace('https://query.wikidata.org/', 'https://query.wikidata.org/embed.html')
+    # TODO: add more embeddables
+    return '<iframe src="%s"></iframe>' % url

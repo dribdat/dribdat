@@ -164,4 +164,12 @@
   });
   $('.details .history').hide();
 
+  // Make embedded iframes resizable
+  setTimeout(function() {
+    $('.resizable').resizable({
+      resizeWidth: false,
+      handleSelector: ".win-size-grip"
+    });
+  }, 100)
+
 }).call(this, jQuery, window);
