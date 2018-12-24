@@ -165,11 +165,16 @@
   $('.details .history').hide();
 
   // Make embedded iframes resizable
-  setTimeout(function() {
-    $('.resizable').resizable({
-      resizeWidth: false,
-      handleSelector: ".win-size-grip"
+  $('.resizable').each(function() {
+    var $self = $(this);
+    // Yech. Because script loading order
+    // and this whole UI needs a refresh.
+    $(window).on('load', function() {
+      $self.resizable({
+        resizeWidth: false,
+        handleSelector: ".win-size-grip"
+      });
     });
-  }, 100)
+  });
 
 }).call(this, jQuery, window);
