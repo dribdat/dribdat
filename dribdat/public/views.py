@@ -49,7 +49,9 @@ def event(event_id):
         return render_template("public/embed.html", current_event=event, projects=projects)
     summaries = [ p.data for p in projects ]
     # Sort projects by reverse score, then name
-    summaries.sort(key=lambda x: (-x['score'], x['name'].lower()))
+    summaries.sort(key=lambda x: (
+        -x['score'] if isinstance(x['score'], int) else 0, 
+        x['name'].lower()))
     return render_template("public/event.html",  current_event=event, projects=summaries)
 
 @blueprint.route('/project/<int:project_id>')
