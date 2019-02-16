@@ -57,12 +57,7 @@ If you would like to use external clients, like the chatbot, to remote control D
 
 * `DRIBDAT_APIKEY` - for connecting clients to the remote [API](#api)
 
-OAuth 2.0 support is built in, currently fully supporting Slack, using these variables:
-
-* `DRIBDAT_SLACK_ID` - an OAuth Client ID to enable [Sign in with Slack](https://api.slack.com/docs/sign-in-with-slack)
-* `DRIBDAT_SLACK_SECRET` - ..and client secret.
-
-Set the redirect URL in your app's OAuth Settings to `<SERVER_URL>/slack_callback`
+OAuth 2.0 support is currently not available. For information see [issue #118](https://github.com/dataletsch/dribdat/issues/118)
 
 ## API
 
@@ -171,7 +166,7 @@ For a full migration command reference, run `python manage.py db --help`.
 
 If you get errors like *ERROR [alembic.env] Can't locate revision identified by 'aa969b4f9f51'*, usually the fix is to drop the migration history table, and again `db init .. db migrate .. db upgrade`. You can do this in your database client, or with a line like this in the case of Heroku:
 
-`heroku pg:psql -c "drop table alembic_version" -a my-dribdat-instance` 
+`heroku pg:psql -c "drop table alembic_version" -a my-dribdat-instance`
 
 ## Credits
 

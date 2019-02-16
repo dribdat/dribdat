@@ -9,7 +9,6 @@ from dribdat.extensions import (
     cache,
     db,
     login_manager,
-    login_oauth,
     migrate,
 )
 from dribdat.settings import ProdConfig

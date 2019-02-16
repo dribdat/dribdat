@@ -194,10 +194,6 @@
             "index": "pypi",
             "version": "==0.4.1"
         },
-        "flask-oauth": {
-            "git": "git://github.com/mitsuhiko/flask-oauth.git",
-            "ref": "d5c3f6a229df1c3566b9bc3233311c109b4dcff9"
-        },
         "flask-sqlalchemy": {
             "hashes": [
                 "sha256:3bc0fac969dd8c0ace01b32060f0c729565293302f0c4269beed154b46bec50b",
