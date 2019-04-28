@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+ # -*- coding: utf-8 -*-
 
 from flask import Blueprint, render_template, redirect, url_for, make_response, request, flash, jsonify, current_app
 from flask_login import login_required, current_user
@@ -171,6 +171,7 @@ def project_search_json():
 # API: Pushes data into a project
 @blueprint.route('/project/push.json', methods=["PUT", "POST"])
 def project_push_json():
+
     data = request.get_json(force=True)
     if not 'key' in data or data['key'] != current_app.config['DRIBDAT_APIKEY']:
         return jsonify(error='Invalid key')

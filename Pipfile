@@ -3,6 +3,9 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 name = "pypi"
 
+[requires]
+python_version = "3.7"
+
 [packages]
 misaka = ">=2.1.0"
 requests = ">=2.18.4"
@@ -33,6 +36,7 @@ flask-bcrypt = ">=0.7.1"
 flask-oauth = {git = "git://github.com/mitsuhiko/flask-oauth.git",ref = "d5c3f6a229df1c3566b9bc3233311c109b4dcff9"}
 flask-caching = ">=1.3.3"
 redis = ">=2.10.6"
+flask-cors = "*"
 
 [dev-packages]
 pytest = "*"

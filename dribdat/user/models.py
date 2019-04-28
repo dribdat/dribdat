@@ -286,6 +286,7 @@ class Project(SurrogatePK, Model):
             'contact_url': self.contact_url,
             'image_url': self.image_url,
             'source_url': self.source_url,
+            'progress': self.progress,
         }
         if self.category is not None:
             d['category'] = self.category.data
