@@ -9,7 +9,7 @@ from ..extensions import db
 from ..utils import timesince
 
 from ..user.models import Event, Project, Category, Activity
-from ..aggregation import GetProjectData
+from ..aggregation import GetProjectData, GetProjectTeam
 
 from datetime import datetime
 from flask import Response, stream_with_context
@@ -148,7 +148,30 @@ def project_activity_json(project_id):
 @blueprint.route('/project/<int:project_id>/info.json')
 def project_info_json(project_id):
     project = Project.query.filter_by(id=project_id).first_or_404()
-    return jsonify(project=project.data, event=project.event.data)
+    project_stars = GetProjectTeam(project)
+    activities = []
+    for a in project_stars:
+        user = {
+            'id': a.user.id,
+            'name': a.user.username,
+            'link': a.user.webpage_url
+        }
+        activities.append(user)
+
+    data = {
+        'project': project.data,
+        'phase': project.phase,
+        'pitch': project.webembed,
+        'is_webembed': project.is_webembed,
+        'event': project.event.data,
+        'creator': {
+            'id': project.user.id,
+            'username': project.user.username
+        },
+        'team': activities
+    }
+
+    return jsonify(data)
 
 # ------ SEARCH ---------
 
