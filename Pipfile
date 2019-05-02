@@ -33,6 +33,7 @@ flask-bcrypt = ">=0.7.1"
 flask-oauth = {git = "git://github.com/mitsuhiko/flask-oauth.git", ref = "d5c3f6a229df1c3566b9bc3233311c109b4dcff9"}
 flask-caching = ">=1.3.3"
 redis = ">=2.10.6"
+pytz = "*"
 
 [dev-packages]
 pytest = "*"
