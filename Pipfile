@@ -33,6 +33,7 @@ flask-bcrypt = ">=0.7.1"
 flask-caching = ">=1.3.3"
 redis = ">=2.10.6"
 flask-cors = "*"
+pytz = "*"
 
 [dev-packages]
 pytest = "*"
