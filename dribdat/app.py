@@ -25,6 +25,7 @@ def init_app(config_object=ProdConfig):
     app.config.from_object(config_object)
 
     cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
+    app.config['CORS_HEADERS'] = 'Content-Type'
 
     register_extensions(app)
     register_blueprints(app)
