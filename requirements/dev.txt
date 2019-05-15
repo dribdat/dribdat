@@ -15,8 +15,6 @@ flake8
 flask-debugtoolbar
 flask
 isort
-jinja2
-markupsafe
 mccabe
 more-itertools
 pep8-naming
@@ -26,11 +24,9 @@ pycodestyle
 pydocstyle
 pyflakes
 pytest
-six
 snowballstemmer
 testfixtures
 text-unidecode
 waitress
 webob
 webtest
-werkzeug
