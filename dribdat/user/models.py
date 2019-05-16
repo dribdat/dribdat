@@ -9,8 +9,10 @@ import re
 import hashlib
 import datetime as dt
 from time import mktime
+import pytz
 
 from flask_login import UserMixin
+from flask import current_app
 
 from dribdat.extensions import hashing
 from dribdat.database import (
@@ -21,8 +23,10 @@ from dribdat.database import (
     relationship,
     SurrogatePK,
 )
-
-from dribdat.utils import format_date_range, format_date
+from dribdat.utils import (
+    format_date_range, format_date,
+    format_webembed,
+)
 from dribdat.user import PROJECT_PROGRESS_PHASE
 
 from sqlalchemy import or_
@@ -172,17 +176,26 @@ class Event(SurrogatePK, Model):
     @property
     def has_finished(self):
         return dt.datetime.utcnow() > self.ends_at
+
     @property
     def countdown(self):
-        TIME_LIMIT = dt.datetime.utcnow() + dt.timedelta(days=30)
-        if self.starts_at > dt.datetime.utcnow():
-            if self.starts_at > TIME_LIMIT: return None
-            return self.starts_at # + dt.timedelta(hours=-1) # TODO: timezones...
-        elif self.ends_at > dt.datetime.utcnow():
-            if self.ends_at > TIME_LIMIT: return None
-            return self.ends_at # + dt.timedelta(hours=-1)
+        # Normalizing dates & timezones.
+        timezone = pytz.timezone(current_app.config['TIME_ZONE'])
+        utc_now = dt.datetime.now(tz=pytz.utc)
+
+        starts_at = self.starts_at.astimezone(timezone)
+        ends_at = self.ends_at.astimezone(timezone)
+        TIME_LIMIT = utc_now + dt.timedelta(days=30)
+
+        if starts_at > utc_now:
+            if starts_at > TIME_LIMIT: return None
+            return starts_at
+        elif ends_at > utc_now:
+            if ends_at > TIME_LIMIT: return None
+            return ends_at
         else:
             return None
+
     @property
     def date(self):
         return format_date_range(self.starts_at, self.ends_at)
@@ -214,7 +227,8 @@ class Project(SurrogatePK, Model):
     summary = Column(db.String(120), nullable=True)
     image_url = Column(db.String(255), nullable=True)
     source_url = Column(db.String(255), nullable=True)
-    webpage_url = Column(db.String(255), nullable=True)
+    webpage_url = Column(db.String(2048), nullable=True)
+    is_webembed = Column(db.Boolean(), default=False)
     contact_url = Column(db.String(255), nullable=True)
     autotext_url = Column(db.String(255), nullable=True)
     is_autoupdate = Column(db.Boolean(), default=True)
@@ -240,6 +254,10 @@ class Project(SurrogatePK, Model):
     category_id = reference_col('categories', nullable=True)
     category = relationship('Category', backref='projects')
 
+    # Self-assessment and total score
+    progress = Column(db.Integer(), nullable=True, default=-1)
+    score = Column(db.Integer(), nullable=True, default=0)
+
     # Convenience query for latest activity
     def latest_activity(self):
         return Activity.query.filter_by(project_id=self.id).order_by(Activity.timestamp.desc()).limit(5)
@@ -250,8 +268,7 @@ class Project(SurrogatePK, Model):
         if event is not None: return event.categories_for_event()
         return Category.query.order_by('name')
 
-    # Self-assessment
-    progress = Column(db.Integer(), nullable=True, default=0)
+    # Self-assessment (progress)
     @property
     def phase(self):
         if self.progress is None: return ""
@@ -260,8 +277,9 @@ class Project(SurrogatePK, Model):
     def is_challenge(self):
         return self.progress < 0
 
-    # Current tally
-    score = Column(db.Integer(), nullable=True, default=0)
+    @property
+    def webembed(self):
+        return format_webembed(self.webpage_url)
 
     @property
     def url(self):
@@ -278,6 +296,8 @@ class Project(SurrogatePK, Model):
             'hashtag': self.hashtag,
             'contact_url': self.contact_url,
             'image_url': self.image_url,
+            'source_url': self.source_url,
+            'progress': self.progress,
         }
         if self.category is not None:
             d['category'] = self.category.data

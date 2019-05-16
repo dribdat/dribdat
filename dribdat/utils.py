@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 """Helper utilities and decorators."""
-from flask import flash
+from flask import flash, current_app
 from datetime import datetime
 from math import floor
-
+import pytz
+import logging
 def random_password():
     import string, random
     return ''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(20))
@@ -20,7 +21,9 @@ def timesince(dt, default="just now", until=False):
     3 days ago, 5 hours ago etc.
     - from http://flask.pocoo.org/snippets/33/
     """
-    now = datetime.utcnow()
+    timezone = pytz.timezone(current_app.config["TIME_ZONE"])
+    now = datetime.now().astimezone(timezone)
+    dt = dt.astimezone(timezone)
     if dt is None: return ""
     if until and dt > now:
         diff = dt - now
@@ -68,3 +71,11 @@ def format_date_range(starts_at, ends_at):
             ends_at.day,
             ends_at.year,
         )
+
+def format_webembed(url):
+    if url.lower().startswith('<iframe '):
+        return url
+    if url.startswith('https://query.wikidata.org/'):
+        url = url.replace('https://query.wikidata.org/', 'https://query.wikidata.org/embed.html')
+    # TODO: add more embeddables
+    return '<iframe src="%s"></iframe>' % url

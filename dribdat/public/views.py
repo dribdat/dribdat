@@ -48,7 +48,10 @@ def event(event_id):
     if request.args.get('embed'):
         return render_template("public/embed.html", current_event=event, projects=projects)
     summaries = [ p.data for p in projects ]
-    summaries.sort(key=lambda x: x['score'], reverse=True)
+    # Sort projects by reverse score, then name
+    summaries.sort(key=lambda x: (
+        -x['score'] if isinstance(x['score'], int) else 0, 
+        x['name'].lower()))
     return render_template("public/event.html",  current_event=event, projects=summaries)
 
 @blueprint.route('/project/<int:project_id>')
@@ -77,15 +80,17 @@ def project_edit(project_id):
         db.session.commit()
         cache.clear()
         flash('Project updated.', 'success')
-        # TODO: return redirect(url_for('project', project_id=project.id))
-        return project_action(project_id, 'update')
+        project_action(project_id, 'update', False)
+        return redirect(url_for('public.project', project_id=project.id))
     return render_template('public/projectedit.html', current_event=event, project=project, form=form)
 
-def project_action(project_id, of_type):
+def project_action(project_id, of_type, as_view=True):
     project = Project.query.filter_by(id=project_id).first_or_404()
     event = project.event
     if of_type is not None:
         ProjectActivity(project, of_type, current_user)
+    if not as_view:
+        return True
     starred = IsProjectStarred(project, current_user)
     allow_edit = starred or (not current_user.is_anonymous and current_user.is_admin)
     project_stars = GetProjectTeam(project)
@@ -113,6 +118,7 @@ def project_new(event_id):
     if current_user and current_user.is_authenticated:
         project = Project()
         project.user_id = current_user.id
+        project.progress = -1
         form = ProjectForm(obj=project, next=request.args.get('next'))
         form.progress.choices = projectProgressList(event.has_started)
         form.category_id.choices = [(c.id, c.name) for c in project.categories_all(event)]
@@ -125,9 +131,10 @@ def project_new(event_id):
             db.session.add(project)
             db.session.commit()
             flash('Project added.', 'success')
-            project_action(project.id, 'create')
+            project_action(project.id, 'create', False)
             cache.clear()
-            return project_action(project.id, 'star')
+            project_action(project.id, 'star', False)
+            return redirect(url_for('public.project', project_id=project.id))
         del form.logo_icon
         del form.logo_color
     return render_template('public/projectnew.html', current_event=event, form=form)

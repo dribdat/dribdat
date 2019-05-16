@@ -59,8 +59,10 @@ class ProjectForm(FlaskForm):
         description="Optional, max. 120 characters, appearing at the top of the project page.")
     longtext = TextAreaField(u'Description',
         description="Use plain text, Markdown or HTML to document your project. Shown above the README, if Sync is used.")
-    webpage_url = StringField(u'Project home link', [length(max=255)],
+    webpage_url = StringField(u'Project home link', [length(max=2048)],
         description="Optional - a live demo or information page.")
+    is_webembed = BooleanField(u'Embed this',
+        description="Show contents of web page link directly in the project page.")
     source_url = StringField(u'Source code link', [length(max=255)],
         description="Optional - location of your repository.")
     contact_url = StringField(u'Contact link', [length(max=255)],

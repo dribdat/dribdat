@@ -1,0 +1,31 @@
+{
+  "name": "jquery-resizable",
+  "version": "0.20.0",
+  "main": "jquery-resizable.js",
+  "license": "MIT",
+  "ignore": [
+    "*.sln",
+    ".*",
+    "gulpfile.js",
+    "package.json",
+    "sample"
+  ],
+  "keywords": [
+    "resizable",
+    "jquery"
+  ],
+  "homepage": "https://github.com/RickStrahl/jquery-resizable",
+  "dependencies": {
+    "jquery": "~2.1.4"
+  },
+  "_release": "0.20.0",
+  "_resolution": {
+    "type": "version",
+    "tag": "0.20.0",
+    "commit": "23ace7913ed4590aee836e7632b0919335d781fb"
+  },
+  "_source": "https://github.com/RickStrahl/jquery-resizable.git",
+  "_target": "^0.20.0",
+  "_originalSource": "jquery-resizable",
+  "_direct": true
+}
