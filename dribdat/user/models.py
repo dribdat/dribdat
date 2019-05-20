@@ -9,8 +9,10 @@ import re
 import hashlib
 import datetime as dt
 from time import mktime
+import pytz
 
 from flask_login import UserMixin
+from flask import current_app
 
 from dribdat.extensions import hashing
 from dribdat.database import (
@@ -174,17 +176,26 @@ class Event(SurrogatePK, Model):
     @property
     def has_finished(self):
         return dt.datetime.utcnow() > self.ends_at
+
     @property
     def countdown(self):
-        TIME_LIMIT = dt.datetime.utcnow() + dt.timedelta(days=30)
-        if self.starts_at > dt.datetime.utcnow():
-            if self.starts_at > TIME_LIMIT: return None
-            return self.starts_at # + dt.timedelta(hours=-1) # TODO: timezones...
-        elif self.ends_at > dt.datetime.utcnow():
-            if self.ends_at > TIME_LIMIT: return None
-            return self.ends_at # + dt.timedelta(hours=-1)
+        # Normalizing dates & timezones.
+        timezone = pytz.timezone(current_app.config['TIME_ZONE'])
+        utc_now = dt.datetime.now(tz=pytz.utc)
+
+        starts_at = self.starts_at.astimezone(timezone)
+        ends_at = self.ends_at.astimezone(timezone)
+        TIME_LIMIT = utc_now + dt.timedelta(days=30)
+
+        if starts_at > utc_now:
+            if starts_at > TIME_LIMIT: return None
+            return starts_at
+        elif ends_at > utc_now:
+            if ends_at > TIME_LIMIT: return None
+            return ends_at
         else:
             return None
+
     @property
     def date(self):
         return format_date_range(self.starts_at, self.ends_at)
@@ -285,6 +296,8 @@ class Project(SurrogatePK, Model):
             'hashtag': self.hashtag,
             'contact_url': self.contact_url,
             'image_url': self.image_url,
+            'source_url': self.source_url,
+            'progress': self.progress,
         }
         if self.category is not None:
             d['category'] = self.category.data

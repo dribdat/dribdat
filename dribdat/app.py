@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """The app module, containing the app factory function."""
 from flask import Flask, render_template
+from flask_cors import CORS
 
 from dribdat import commands, public, user, admin
 from dribdat.assets import assets
@@ -9,7 +10,6 @@ from dribdat.extensions import (
     cache,
     db,
     login_manager,
-    login_oauth,
     migrate,
 )
 from dribdat.settings import ProdConfig
@@ -23,6 +23,10 @@ def init_app(config_object=ProdConfig):
     """
     app = Flask(__name__)
     app.config.from_object(config_object)
+
+    cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
+    app.config['CORS_HEADERS'] = 'Content-Type'
+
     register_extensions(app)
     register_blueprints(app)
     register_errorhandlers(app)
