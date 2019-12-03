@@ -496,6 +496,15 @@ pre { color: #333; background: white; }
 .event-info {
   margin-top: 40px;
 }
+.event-participants h1 {
+  margin: 2em 0 0;
+  text-align: center;
+}
+.event-participants .participant-box {
+  padding: 2em;
+  margin-bottom: 2em;
+  text-align: center;
+}
 
 @media (max-width: 760px) {
   .category-info {
