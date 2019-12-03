@@ -49,7 +49,7 @@ class ProjectForm(FlaskForm):
     id = HiddenField('id')
     progress = RadioField(u'Progress', coerce=int)
     autotext_url = StringField(u'Sync', [length(max=255)],
-        description="A supported repository from which to fetch project details.")
+        description="An optional code repository (GitLab, GitHub, Bitbucket) from which to fetch project data.")
     # is_autoupdate = BooleanField(u'Sync project data')
     name = StringField(u'Title', [required(), length(max=80), UniqueValidator(Project, 'name')],
         description="* Required, though you may change this at any time.")
