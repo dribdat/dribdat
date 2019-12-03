@@ -3,7 +3,6 @@
 {% block page_title %}{{current_event.name}} / Participants{% endblock %}
 
 {% block content %}
-{% cache 300, 'event-%d' % current_event.id %}
 <div class="event-participants">
 {% if participants %}
   <h1>Awesome supporters</h1>
@@ -34,5 +33,4 @@
   Now is a good time to start some, and encourage participants to <b>JOIN</b> them!</h2>
 {% endif %}
 </div><!-- /event-participants -->
-{% endcache %}
 {% endblock %}
