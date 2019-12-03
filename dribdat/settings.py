@@ -20,7 +20,7 @@ class Config(object):
     CACHE_NO_NULL_WARNING = True
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SERVER_NAME = os_env.get('SERVER_URL', '127.0.0.1:5000')
-    TIME_ZONE = 'Europe/Zurich'
+    TIME_ZONE = 'UTC'
 
 class ProdConfig(Config):
     """Production configuration."""
