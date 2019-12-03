@@ -140,6 +140,9 @@
       <i class="fa fa-info-circle" aria-hidden="true"></i>
       Information &raquo;</a>
   {% endif %}
+  <a href="{{ url_for('public.event_participants', event_id=current_event.id) }}" class="btn btn-default btn-sm">
+    <i class="fa fa-user" aria-hidden="true"></i>
+    Participants</a>
   {% if current_user and current_user.is_authenticated and current_user.is_admin %}
     <a href="{{ url_for('public.event', event_id=current_event.id, _external=True) }}?embed=1" class="btn btn-default btn-sm" id="embed-link">
       <i class="fa fa-external-link" aria-hidden="true"></i>

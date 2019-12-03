@@ -7,8 +7,11 @@ from flask_login import login_required, current_user
 from dribdat.user.models import User, Event, Project
 from dribdat.public.forms import ProjectForm
 from dribdat.database import db
-from dribdat.aggregation import GetProjectData, ProjectActivity, IsProjectStarred, GetProjectTeam
 from dribdat.extensions import cache
+from dribdat.aggregation import (
+    GetProjectData, ProjectActivity, IsProjectStarred,
+    GetProjectTeam, GetEventUsers
+)
 from dribdat.user import projectProgressList
 
 blueprint = Blueprint('public', __name__, static_folder="../static")
@@ -50,9 +53,17 @@ def event(event_id):
     summaries = [ p.data for p in projects ]
     # Sort projects by reverse score, then name
     summaries.sort(key=lambda x: (
-        -x['score'] if isinstance(x['score'], int) else 0, 
+        -x['score'] if isinstance(x['score'], int) else 0,
         x['name'].lower()))
     return render_template("public/event.html",  current_event=event, projects=summaries)
+
+@blueprint.route("/event/<int:event_id>/participants")
+def event_participants(event_id):
+    event = Event.query.filter_by(id=event_id).first_or_404()
+    users = GetEventUsers(event)
+    usercount = len(users)
+    return render_template("public/eventusers.html",
+        current_event=event, participants=users, usercount=usercount)
 
 @blueprint.route('/project/<int:project_id>')
 def project(project_id):
