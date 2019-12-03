@@ -182,9 +182,8 @@ class Event(SurrogatePK, Model):
         # Normalizing dates & timezones.
         timezone = pytz.timezone(current_app.config['TIME_ZONE'])
         utc_now = dt.datetime.now(tz=pytz.utc)
-
-        starts_at = self.starts_at.astimezone(timezone)
-        ends_at = self.ends_at.astimezone(timezone)
+        starts_at = timezone.localize(self.starts_at)
+        ends_at = timezone.localize(self.ends_at)
         TIME_LIMIT = utc_now + dt.timedelta(days=30)
 
         if starts_at > utc_now:

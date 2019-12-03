@@ -36,7 +36,6 @@ flask-cors = "*"
 pytz = "*"
 
 [dev-packages]
-pytest = "*"
 WebTest = "*"
 factory-boy = "*"
 flake8 = "*"
@@ -48,3 +47,4 @@ flake8-quotes = "*"
 isort = "*"
 pep8-naming = "*"
 Flask-DebugToolbar = "*"
+pytest = "*"

@@ -22,7 +22,7 @@ def timesince(dt, default="just now", until=False):
     - from http://flask.pocoo.org/snippets/33/
     """
     timezone = pytz.timezone(current_app.config["TIME_ZONE"])
-    now = datetime.now().astimezone(timezone)
+    now = timezone.localize(datetime.now())
     dt = dt.astimezone(timezone)
     if dt is None: return ""
     if until and dt > now:
