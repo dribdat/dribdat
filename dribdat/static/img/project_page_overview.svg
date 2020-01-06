@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="165.55006mm"
+   height="261.4693mm"
+   viewBox="0 0 165.55006 261.4693"
+   version="1.1"
+   id="svg8"
+   inkscape:version="0.92.4 (unknown)"
+   sodipodi:docname="project_page_overview.svg"
+   inkscape:export-filename="/home/oleg/Localdev/Dribdat/dribdat/dribdat/static/img/project_page_overview.png"
+   inkscape:export-xdpi="129.97778"
+   inkscape:export-ydpi="129.97778">
+  <defs
+     id="defs2">
+    <filter
+       style="color-interpolation-filters:sRGB"
+       inkscape:label="Blur"
+       id="filter107">
+      <feGaussianBlur
+         stdDeviation="0.812059 1.35"
+         result="blur"
+         id="feGaussianBlur105" />
+    </filter>
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.49497475"
+     inkscape:cx="-306.39672"
+     inkscape:cy="792.27842"
+     inkscape:document-units="mm"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     inkscape:window-width="1920"
+     inkscape:window-height="1016"
+     inkscape:window-x="0"
+     inkscape:window-y="27"
+     inkscape:window-maximized="1"
+     fit-margin-top="-5"
+     fit-margin-left="5"
+     fit-margin-right="5"
+     fit-margin-bottom="-5" />
+  <metadata
+     id="metadata5">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-16.26912,-12.543155)">
+    <rect
+       style="opacity:0.2;vector-effect:none;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.79374999;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;filter:url(#filter107)"
+       id="rect75"
+       width="78.956703"
+       height="227.75972"
+       x="29.217562"
+       y="30.266563"
+       ry="2.265569"
+       transform="matrix(1.0011139,0,0,0.99325905,-0.07652216,0.1030574)" />
+    <image
+       sodipodi:absref="/home/oleg/Downloads/Screenshot_2020-01-06 Dribdat.png"
+       y="28.149895"
+       x="28.688395"
+       id="image72"
+       xlink:href="file:///home/oleg/Downloads/Screenshot_2020-01-06%20Dribdat.png"
+       preserveAspectRatio="none"
+       height="227.75972"
+       width="78.956703" />
+    <path
+       style="fill:none;stroke:#999999;stroke-width:0.20290574px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 112.39221,36.412931 h 1.21743 v 7.276284 h -1.21743"
+       id="path109"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cccc" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.4048245px;line-height:1.25;font-family:NanumGothic;-inkscape-font-specification:NanumGothic;text-align:start;letter-spacing:0px;word-spacing:0px;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.21280153"
+       x="117.41264"
+       y="40.908539"
+       id="text113"><tspan
+         sodipodi:role="line"
+         id="tspan111"
+         x="117.41264"
+         y="40.908539"
+         style="text-align:start;text-anchor:start;stroke-width:0.21280153">Event logo and headline</tspan></text>
+    <path
+       sodipodi:nodetypes="cc"
+       inkscape:connector-curvature="0"
+       id="path115"
+       d="M 113.797,47.905521 103.23985,44.758293"
+       style="fill:none;stroke:#999999;stroke-width:0.20290574px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+    <text
+       id="text119"
+       y="49.904373"
+       x="117.41264"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.4048245px;line-height:1.25;font-family:NanumGothic;-inkscape-font-specification:NanumGothic;text-align:start;letter-spacing:0px;word-spacing:0px;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.21280153"
+       xml:space="preserve"><tspan
+         style="text-align:start;text-anchor:start;stroke-width:0.21280153"
+         y="49.904373"
+         x="117.41264"
+         id="tspan117"
+         sodipodi:role="line">Join and Edit a project or challenge</tspan></text>
+    <path
+       sodipodi:nodetypes="cccc"
+       inkscape:connector-curvature="0"
+       id="path121"
+       d="m 112.39221,52.287932 h 1.21743 v 12.567951 h -1.21743"
+       style="fill:none;stroke:#999999;stroke-width:0.20290574px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+    <text
+       id="text125"
+       y="59.958546"
+       x="117.41264"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.4048245px;line-height:1.25;font-family:NanumGothic;-inkscape-font-specification:NanumGothic;text-align:start;letter-spacing:0px;word-spacing:0px;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.21280153"
+       xml:space="preserve"><tspan
+         style="text-align:start;text-anchor:start;stroke-width:0.21280153"
+         y="59.958546"
+         x="117.41264"
+         id="tspan123"
+         sodipodi:role="line">Project title, summary &amp; status</tspan></text>
+    <path
+       style="fill:none;stroke:#999999;stroke-width:0.20290574px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 112.39221,69.750431 h 1.21743 v 33.734619 h -1.21743"
+       id="path127"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cccc" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.4048245px;line-height:1.25;font-family:NanumGothic;-inkscape-font-specification:NanumGothic;text-align:start;letter-spacing:0px;word-spacing:0px;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.21280153"
+       x="117.41264"
+       y="87.475204"
+       id="text131"><tspan
+         sodipodi:role="line"
+         id="tspan129"
+         x="117.41264"
+         y="87.475204"
+         style="text-align:start;text-anchor:start;stroke-width:0.21280153">Rich text documentation</tspan></text>
+    <path
+       sodipodi:nodetypes="cccc"
+       inkscape:connector-curvature="0"
+       id="path133"
+       d="m 112.39221,106.7921 h 1.21743 v 39.0263 h -1.21743"
+       style="fill:none;stroke:#999999;stroke-width:0.20290574px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+    <text
+       id="text137"
+       y="127.69189"
+       x="117.41264"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.4048245px;line-height:1.25;font-family:NanumGothic;-inkscape-font-specification:NanumGothic;text-align:start;letter-spacing:0px;word-spacing:0px;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.21280153"
+       xml:space="preserve"><tspan
+         style="text-align:start;text-anchor:start;stroke-width:0.21280153"
+         y="127.69189"
+         x="117.41264"
+         id="tspan135"
+         sodipodi:role="line">Graded challenges (optional)</tspan></text>
+    <path
+       sodipodi:nodetypes="cccc"
+       inkscape:connector-curvature="0"
+       id="path139"
+       d="m 112.39221,159.56373 h 1.21743 v 12.56795 h -1.21743"
+       style="fill:none;stroke:#999999;stroke-width:0.20290574px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+    <text
+       id="text143"
+       y="167.23434"
+       x="117.41264"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.4048245px;line-height:1.25;font-family:NanumGothic;-inkscape-font-specification:NanumGothic;text-align:start;letter-spacing:0px;word-spacing:0px;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.21280153"
+       xml:space="preserve"><tspan
+         style="text-align:start;text-anchor:start;stroke-width:0.21280153"
+         y="167.23434"
+         x="117.41264"
+         id="tspan141"
+         sodipodi:role="line">Live issue feeds (optional)</tspan></text>
+    <path
+       style="fill:none;stroke:#999999;stroke-width:0.20290574px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 112.39221,179.1429 h 1.21743 v 7.27628 h -1.21743"
+       id="path145"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cccc" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.4048245px;line-height:1.25;font-family:NanumGothic;-inkscape-font-specification:NanumGothic;text-align:start;letter-spacing:0px;word-spacing:0px;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.21280153"
+       x="117.41264"
+       y="183.6386"
+       id="text149"><tspan
+         sodipodi:role="line"
+         id="tspan147"
+         x="117.41264"
+         y="183.6386"
+         style="text-align:start;text-anchor:start;stroke-width:0.21280153">Project links</tspan></text>
+    <path
+       sodipodi:nodetypes="cccc"
+       inkscape:connector-curvature="0"
+       id="path151"
+       d="m 112.39221,189.72624 h 1.21743 v 28.44295 h -1.21743"
+       style="fill:none;stroke:#999999;stroke-width:0.20290574px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+    <text
+       id="text155"
+       y="204.27612"
+       x="117.41264"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.4048245px;line-height:1.25;font-family:NanumGothic;-inkscape-font-specification:NanumGothic;text-align:start;letter-spacing:0px;word-spacing:0px;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.21280153"
+       xml:space="preserve"><tspan
+         style="text-align:start;text-anchor:start;stroke-width:0.21280153"
+         y="204.27612"
+         x="117.41264"
+         id="tspan153"
+         sodipodi:role="line">Category description (optional)</tspan></text>
+    <path
+       sodipodi:nodetypes="cccc"
+       inkscape:connector-curvature="0"
+       id="path157"
+       d="m 112.39221,232.05963 h 1.21743 v 7.27628 h -1.21743"
+       style="fill:none;stroke:#999999;stroke-width:0.20290574px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+    <text
+       id="text161"
+       y="236.55524"
+       x="117.41264"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.4048245px;line-height:1.25;font-family:NanumGothic;-inkscape-font-specification:NanumGothic;text-align:start;letter-spacing:0px;word-spacing:0px;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.21280153"
+       xml:space="preserve"><tspan
+         style="text-align:start;text-anchor:start;stroke-width:0.21280153"
+         y="236.55524"
+         x="117.41264"
+         id="tspan159"
+         sodipodi:role="line">Team members</tspan></text>
+    <path
+       style="fill:none;stroke:#999999;stroke-width:0.20290574px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 112.39221,242.64297 h 1.21743 v 7.27628 h -1.21743"
+       id="path163"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cccc" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.4048245px;line-height:1.25;font-family:NanumGothic;-inkscape-font-specification:NanumGothic;text-align:start;letter-spacing:0px;word-spacing:0px;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.21280153"
+       x="117.41264"
+       y="247.13858"
+       id="text167"><tspan
+         sodipodi:role="line"
+         id="tspan165"
+         x="117.41264"
+         y="247.13858"
+         style="text-align:start;text-anchor:start;stroke-width:0.21280153">Page log</tspan></text>
+  </g>
+</svg>
