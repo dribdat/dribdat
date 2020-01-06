@@ -10,7 +10,7 @@
   "repository": "https://github.com/dataletsch/dribdat",
   "success_url": "/admin",
   "scripts": {
-    "postdeploy": "yarn && python manage.py db init && python manage.py db migrate && python manage.py db upgrade"
+    "postdeploy": "python manage.py db init && python manage.py db migrate && python manage.py db upgrade"
   },
   "buildpacks": [
     { "url": "heroku/nodejs" },
