@@ -1,10 +1,12 @@
 This document summarises the current status and makes some vision statements about possible future developments as discussed in [issue #100](https://github.com/datalets/dribdat/issues/100).
 
+For more background and references, see the [User's Guide](USAGE.md) and [README](README.md).
+
 # About Dribdat
 
 [![](https://blog.datalets.ch/workshops/2017/dribdat/dribdat.png)](https://github.com/datalets/dribdat/)
 
-Dribdat (from "Driven By Data") is an open source tool for data-driven team collaboration such as Hackathons. It provides an open source website and project board for running events, and integrates popular community platforms and open source code repositories. It is the official platform of Opendata.ch hackathons and School of Data Switzerland workshops.
+Dribdat (originally from "Driven By Data") is an open source tool for data-driven team collaboration, such as Hackathons. It provides an open source website and project board for running events, and integrates popular community platforms and open source code repositories. It is the official platform of [Opendata.ch hackathons](https://hack.opendata.ch) and has been used to host many other events in the Swiss open data and open source community.
 
 ## Screenshots
 
