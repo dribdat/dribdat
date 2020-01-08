@@ -147,4 +147,20 @@ If you get errors like *ERROR [alembic.env] Can't locate revision identified by 
 
 # Credits
 
-Developed by [Oleg Lavrovsky](http://datalets.ch) based on Steven Loria's [flask-cookiecutter](https://github.com/sloria/cookiecutter-flask). With thanks to the Swiss communities for [Open Data](https://opendata.ch), [Open Networking](https://opennetworkinfrastructure.org/) and [Open Source](https://dinacon.ch) for their many contributions, and to [Swisscom](http://swisscom.com) via F. Wieser and M.-C. Gasser for conceptual inputs and financial support of the first release of this project.
+See [Contributors](https://github.com/dataletsch/dribdat/graphs/contributors) for a list of people who have made changes to the code, and [Forks](https://github.com/dataletsch/dribdat/network/members) to find some other users of this project.
+
+Mantained by [@loleg](https://github.com/loleg) and [@gonzalocasas](https://github.com/gonzalocasas), with special thanks to the Swiss communities for [Open Data](https://opendata.ch), [Open Networking](https://opennetworkinfrastructure.org/) and [Open Source](https://dinacon.ch) for the many trials and feedbacks. We are also grateful to F. Wieser and M.-C. Gasser at [Swisscom](http://swisscom.com) for conceptual inputs and financial support of the first alpha release of this project.
+
+This code is originally based on Steven Loria's [flask-cookiecutter](https://github.com/sloria/cookiecutter-flask), which we encourage you to use in YOUR next hackathon!
+
+Additional and :heart:-felt thanks for testing and feedback to:
+
+- [Alexandre Cotting](https://github.com/Cotting)
+- [Anthony Ritz](https://github.com/RitzAnthony)
+- [Chris Mutel](https://github.com/cmutel)
+- [Fabien Schwob](https://github.com/jibaku)
+- [Jonathan Sobel](https://github.com/JonathanSOBEL)
+- [@jonhesso](https://github.com/jonHESSO)
+- [@khashashin](https://github.com/khashashin)
+- [@philshem](https://github.com/philshem)
+- [Thomas Amberg](https://github.com/tamberg)
