@@ -37,7 +37,7 @@
   {% endif %}
 
   {% if project_starred %}<!-- Already starred -->
-    <a title="You are a member of the project. Click to leave." class="btn btn-default" href="{{ url_for('public.project_unstar', project_id=project.id) }}" class="project-star" title="Click to leave the project" onclick="return confirm('Are you sure you wish to leave the team?')">
+    <a title="You are a member of the project. Click to leave." class="btn btn-warning" href="{{ url_for('public.project_unstar', project_id=project.id) }}" class="project-star" title="Click to leave the project" onclick="return confirm('Are you sure you wish to leave the team?')">
       <i class="fa fa-star"></i>
     </a>
   {% elif current_user and current_user.is_authenticated %}
@@ -95,6 +95,7 @@
       {{ project.webembed|safe }}
       <div class="win-size-grip"></div>
     </div>
+    <a href="{{ project.webpage_url }}" class="btn btn-small btn-default" target="_blank">&#x26F6; Full screen</a>
     {% endif %}
 
     {% if project.longtext %}
@@ -114,17 +115,17 @@
     </div>
     {% endif %}
   </div>
-  <div class="btn-group project-buttons" role="group" aria-label="Hackathon navigation">
+  <div class="project-buttons" role="group" aria-label="Hackathon navigation">
     {% if project.contact_url %}
-      <a href="{{ project.contact_url }}" target="_blank" class="btn btn-default">
+      <a href="{{ project.contact_url }}" target="_blank" class="btn btn-secondary">
         <i class="fa fa-envelope-o" aria-hidden="true"></i>
         Contact</a>
     {% endif %}
     {% if project.webpage_url %}
-      <a href="{{ project.webpage_url }}" class="btn btn-primary" target="_blank">Homepage &raquo;</a>
+      <a href="{{ project.webpage_url }}" class="btn btn-success" target="_blank">&#x1f310; Explore</a>
     {% endif %}
     {% if project.source_url %}
-      <a href="{{ project.source_url }}" class="btn btn-success" target="_blank">Source &raquo;</a>
+      <a href="{{ project.source_url }}" class="btn btn-primary" target="_blank">Source &raquo;</a>
     {% endif %}
   </div>
   <div class="panel panel-default community-embed">
@@ -164,10 +165,9 @@
   {% endif %}
 
   <div class="details">
-    <hr>
     <p>Updated
     <a href="#" id="show-history">{{ project.updated_at|format_datetime }}</a>
-    / Maintained by
+    <br>Maintained by
     <b><a href="{{project.user.webpage_url}}" target="_blank">{{ project.user.username }}</a></b>
     </p>
     <ul class="history">
