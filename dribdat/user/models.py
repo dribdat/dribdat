@@ -318,7 +318,7 @@ class Project(SurrogatePK, Model):
     def update(self):
         # Correct fields
         if self.category_id == -1: self.category_id = None
-        if self.logo_icon.startswith('fa-'):
+        if self.logo_icon and self.logo_icon.startswith('fa-'):
             self.logo_icon = self.logo_icon.replace('fa-', '')
         if self.logo_color == '#000000':
             self.logo_color = ''
