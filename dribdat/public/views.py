@@ -146,7 +146,7 @@ def project_new(event_id):
             cache.clear()
             project_action(project.id, 'star', False)
             return redirect(url_for('public.project', project_id=project.id))
-        del form.logo_icon
+        # del form.logo_icon
         del form.logo_color
     return render_template('public/projectnew.html', current_event=event, form=form)
 

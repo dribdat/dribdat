@@ -150,7 +150,7 @@ nav .navbar-nav .nav-item {
   clear: none;
   display: inherit;
 }
-@media (max-width: 750px) {
+@media (max-width: 760px) {
   .community-embed .fa-comment {
     display: none !important;
   }
@@ -168,6 +168,14 @@ nav .navbar-nav .nav-item {
   margin: 2em 0px;
   text-align: center;
   display: block;
+}
+
+.with-event form > .checkbox {
+  margin-top: 1rem;
+}
+.with-event form > .form-group {
+  margin-top: 4rem;
+  margin-bottom: 0px;
 }
 
 .event-page .honeycomb {
@@ -478,6 +486,10 @@ pre { color: #333; background: white; }
 .project-edit-buttons * {
   box-shadow: none !important;
   opacity: 0.8;
+}
+@media only screen and (max-width:460px){
+  .section-header-content { display: none; }
+  .project-edit-buttons { margin: 1em; }
 }
 .category-info {
   padding: 0 1em;
