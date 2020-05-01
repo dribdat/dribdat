@@ -23,6 +23,7 @@ def timesince(dt, default="just now", until=False):
     """
     timezone = pytz.timezone(current_app.config["TIME_ZONE"])
     now = timezone.localize(datetime.now())
+    if dt is None: return ""
     dt = dt.astimezone(timezone)
     if dt is None: return ""
     if until and dt > now:

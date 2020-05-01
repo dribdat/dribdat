@@ -63,7 +63,7 @@ def gen_csv(csvdata):
 # API: Outputs JSON about the current event
 @blueprint.route('/event/current/info.json')
 def info_current_event_json():
-    event = Event.query.filter_by(is_current=True).first()
+    event = Event.query.filter_by(is_current=True).first_or_404()
     return jsonify(event=event.data, timeuntil=timesince(event.countdown, until=True))
 
 # API: Outputs JSON about an event
