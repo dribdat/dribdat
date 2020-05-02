@@ -1,12 +1,12 @@
 # USAGE
 
-This document explains the basic functions of _Dribdat_, an open source platform for data-driven team collaboration, such as *Hackathons*.
+This document explains the basic functions of _} dribdat {_, an open source platform for data-driven team collaboration, such as *Hackathons*.
 
 For more background and references, see [ABOUT](ABOUT.md) and [README](README.md).
 
 ## How does it look?
 
-Dribdat works as a website and project board for running exciting, productive events, and allows organizers and participants to collect their project details in one place, displaying the challenges and projects in Web dashboards, and plugging in community tools such as [Discourse](https://www.discourse.org/), [Slack](http://slack.com), or [Let's Chat](http://sdelements.github.io/lets-chat/) - or using the [remote API](#api) for additional interfaces such as [chatbots](https://github.com/schoolofdata-ch/sodabot) to enhance the hackathon.
+} dribdat { works as a website and project board for running exciting, productive events, and allows organizers and participants to collect their project details in one place, displaying the challenges and projects in Web dashboards, and plugging in community tools such as [Discourse](https://www.discourse.org/), [Slack](http://slack.com), or [Let's Chat](http://sdelements.github.io/lets-chat/) - or using the [remote API](#api) for additional interfaces such as [chatbots](https://github.com/schoolofdata-ch/dridbot) to enhance the hackathon.
 
 Logged-in users can submit challenges, ideas and projects by linking their document or repository, or entering details directly into a form. You can change or customize these [instructions](dribdat/templates/quickstart.html) as you see fit.
 
