@@ -194,7 +194,6 @@ def project_search_json():
 # API: Pushes data into a project
 @blueprint.route('/project/push.json', methods=["PUT", "POST"])
 def project_push_json():
-
     data = request.get_json(force=True)
     if not 'key' in data or data['key'] != current_app.config['DRIBDAT_APIKEY']:
         return jsonify(error='Invalid key')
@@ -203,6 +202,7 @@ def project_push_json():
         project = Project()
         project.user_id = 1
         project.progress = 0
+        project.autotext_url = "#bot"
         project.is_autoupdate = True
         project.event = Event.query.filter_by(is_current=True).first()
     elif project.user_id != 1 or project.is_hidden or not project.is_autoupdate:
