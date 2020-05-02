@@ -202,10 +202,10 @@ def project_push_json():
         project = Project()
         project.user_id = 1
         project.progress = 0
-        project.autotext_url = "#bot"
-        project.is_autoupdate = True
+        # project.autotext_url = "#bot"
+        # project.is_autoupdate = True
         project.event = Event.query.filter_by(is_current=True).first()
-    elif project.user_id != 1 or project.is_hidden or not project.is_autoupdate:
+    elif project.user_id != 1 or project.is_hidden:
         return jsonify(error='Access denied')
     project.hashtag = data['hashtag']
     if 'name' in data and len(data['name']) > 0:
