@@ -28,6 +28,8 @@ If you would like to use external clients, like the chatbot, to remote control D
 
 * `DRIBDAT_APIKEY` - for connecting clients to the remote [API](#api)
 
+Use `.flaskenv` or `.env` to store environment variables for local development.
+
 OAuth 2.0 support is currently not available. For information see [issue #118](https://github.com/dataletsch/dribdat/issues/118)
 
 ## API

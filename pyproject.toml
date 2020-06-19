@@ -37,6 +37,7 @@ requests = ">=2.18.4"
 sqlalchemy = ">=1.1.14"
 werkzeug = ">=0.12"
 wtforms = ">=2.1"
+python-dotenv = "^0.13.0"
 
 [tool.poetry.dev-dependencies]
 factory-boy = "*"
