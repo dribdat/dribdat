@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """The app module, containing the app factory function."""
-from flask import Flask, render_template
+from flask import Flask, render_template, redirect, url_for
 from flask_cors import CORS
 
 from dribdat import commands, public, user, admin
@@ -15,6 +15,7 @@ from dribdat.extensions import (
 from dribdat.settings import ProdConfig
 from dribdat.utils import timesince
 from flask_misaka import Misaka
+from flask_dance.contrib.slack import make_slack_blueprint, slack
 
 def init_app(config_object=ProdConfig):
     """An application factory, as explained here: http://flask.pocoo.org/docs/patterns/appfactories/.
@@ -29,6 +30,7 @@ def init_app(config_object=ProdConfig):
 
     register_extensions(app)
     register_blueprints(app)
+    register_oauth_slack(app)
     register_errorhandlers(app)
     register_filters(app)
     register_loggers(app)
@@ -57,6 +59,19 @@ def register_blueprints(app):
     app.register_blueprint(admin.views.blueprint)
     return None
 
+def register_oauth_slack(app):
+    blueprint = make_slack_blueprint(
+        client_id=app.config["DRIBDAT_SLACK_ID"],
+        client_secret=app.config["DRIBDAT_SLACK_SECRET"],
+        scope=None,
+        redirect_url=None, #url_for("auth.hi", _external=True),
+        redirect_to=None,
+        login_url=None,
+        authorized_url=None,
+        session_class=None,
+        storage=None
+    )
+    app.register_blueprint(blueprint, url_prefix="/oauth")
 
 def register_errorhandlers(app):
     """Register error handlers."""

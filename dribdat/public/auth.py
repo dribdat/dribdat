@@ -13,6 +13,8 @@ from dribdat.public.forms import LoginForm, UserForm
 from dribdat.user.forms import RegisterForm
 from dribdat.database import db
 
+from flask_dance.contrib.slack import slack
+
 blueprint = Blueprint('auth', __name__, static_folder="../static")
 
 def current_event():
@@ -26,6 +28,53 @@ def load_user(user_id):
 def slack_enabled():
     dsi = current_app.config["DRIBDAT_SLACK_ID"]
     return dsi is not None and dsi != ""
+
+
+@blueprint.route("/hi", methods=["GET", "POST"])
+def hi():
+    if not slack.authorized:
+        return redirect(url_for("slack.login"))
+    resp = slack.get("/user")
+    assert resp.ok
+    return "You are @{login} on Slack".format(login=resp.json()["login"])
+
+# current_app.config["DRIBDAT_SLACK_ID"]
+# current_app.config["DRIBDAT_SLACK_SECRET"]
+#     return slack_oauth.authorize(
+#         callback=url_for("auth.slack_oauth_callback", _external=True)
+#     )
+#
+# blueprint = make_slack_blueprint(
+#     client_id="my-key-here",
+#     client_secret="my-secret-here",
+# )
+# app.register_blueprint(blueprint, url_prefix="/login")
+#
+# @blueprint.route("/slack_callback")
+# @slack_oauth.authorized_handler
+# def slack_oauth_callback(resp):
+#     if resp is None or not resp["ok"]:
+#         flash('Access denied to Slack', 'error')
+#         return redirect(url_for("public.home"))
+#     user = User.query.filter_by(sso_id=resp['user']['id']).first()
+#     if not user:
+#         if current_user and current_user.is_authenticated:
+#             user = current_user
+#             user.sso_id = resp['user']['id']
+#         else:
+#             user = User.create(
+#                 username=resp['user']['name'].lower().replace(" ", "_"),
+#                 sso_id=resp['user']['id'],
+#                 email=resp['user']['email'],
+#                 password=random_password(),
+#                 active=True)
+#             user.socialize()
+#             login_user(user, remember=True)
+#             flash("Please complete your user account", 'info')
+#             return redirect(url_for("auth.user_profile"))
+#     login_user(user, remember=True)
+#     flash(u'Logged in via Slack')
+#     return redirect(url_for("public.home"))
 
 @blueprint.route("/login/", methods=["GET", "POST"])
 def login():
@@ -83,7 +132,7 @@ def logout():
     logout_user()
     flash('You are logged out.', 'info')
     return redirect(url_for('public.home'))
-    
+
 
 @blueprint.route('/user/profile', methods=['GET', 'POST'])
 @login_required

@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 """Application configuration."""
 import os
+from dotenv import load_dotenv
 
+load_dotenv()
 os_env = os.environ
 
 class Config(object):
