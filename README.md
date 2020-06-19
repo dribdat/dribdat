@@ -62,16 +62,15 @@ For more details see [api.py](dribdat/public/api.py)
 
 ## Developer guide
 
-Install Python, Virtualenv and Pip or Pipenv to start working with the code.
+Install Python, Virtualenv and Pip or [Poetry](https://python-poetry.org/) to start working with the code.
 
 You may need to install additional libraries (`libffi`) for the [misaka](http://misaka.61924.nl/) package, which depends on [CFFI](https://cffi.readthedocs.io/en/latest/installation.html#platform-specific-instructions), e.g. `sudo dnf install libffi-devel`
 
-Run the following commands from the repository root folder to bootstrap your environment using [Pipenv](https://pipenv.readthedocs.io/):
+Run the following commands from the repository root folder to bootstrap your environment:
 
 ```
-pipenv --three
-pipenv shell
-pipenv install
+poetry shell
+poetry install
 ```
 
 Or using plain pip:
