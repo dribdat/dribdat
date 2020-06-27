@@ -33,7 +33,7 @@
           </a>
         </li>
         {% endif %}
-        {% if event.has_started %}
+        {% if not event.has_finished and not config.DRIBDAT_NOT_CREATE %}
         <li class="nav-item">
           <a href="{{ url_for('public.project_new', event_id=event.id) }}">
             Get started<i class="fa fa-rocket"></i>
@@ -85,7 +85,7 @@
 </nav>
 
 {% if event %}
-<div class="container">
+<div class="container event-header">
   <div class="section section-centered section-header">
     <a href="{{ url_for('public.event', event_id=event.id) }}#top">
     {% if event.logo_url %}

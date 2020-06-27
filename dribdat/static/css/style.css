@@ -177,6 +177,9 @@ nav .navbar-nav .nav-item {
   /* margin-top: 4rem; */
   margin-bottom: 0px;
 }
+.help-inline {
+  font-style: italic;
+}
 
 .event-page .honeycomb {
   margin: 30px 0px 100px 0px;

@@ -18,7 +18,7 @@ class UserForm(FlaskForm):
     username = StringField(u'Username', [required(), length(max=80), UniqueValidator(User, 'username')])
     email = StringField(u'E-mail', [required(), length(max=80)])
     webpage_url = StringField(u'Online profile', [length(max=128)])
-    password = PasswordField(u'New password', [length(max=128)])
+    password = PasswordField(u'New password (optional)', [length(max=128)])
     is_admin = BooleanField(u"Administrator", default=False)
     active = BooleanField(u"Active", default=True)
     submit = SubmitField(u'Save')
