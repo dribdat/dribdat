@@ -40,6 +40,7 @@ wtforms = ">=2.1"
 python-dotenv = "^0.13.0"
 flask-dance = "^3.0.0"
 flask_sslify = "^0.1.5"
+email_validator = "^1.1.1"
 
 [tool.poetry.dev-dependencies]
 factory-boy = "*"
