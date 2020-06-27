@@ -108,12 +108,12 @@ def project_post(project_id):
         return project_action(project_id, None)
     form = ProjectPost(obj=project, next=request.args.get('next'))
     form.progress.choices = projectProgressList(event.has_started or event.has_finished)
+    if not form.note.data:
+        form.note.data = "---\n`%s` " % datetime.utcnow().strftime("%d.%m.%Y %H:%M")
     if form.validate_on_submit():
         del form.id
         form.populate_obj(project)
-        project_status = "\n\n---\n`%s`\n\n" % datetime.utcnow().strftime("%d.%m.%Y %H:%M")
-        project_status += form.note.data
-        project.longtext += project_status
+        project.longtext += "\n\n" + form.note.data
         project.update()
         db.session.add(project)
         db.session.commit()
