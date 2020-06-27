@@ -170,8 +170,11 @@
         </p>
         <ul class="history">
           {% for activity in latest_activity %}
-            <li><span>{{activity.timestamp|format_datetime}}</span> /
-              <b>{{activity.user.username}}</b> / {{activity.name}}</li>
+            <li>
+              <b>{{activity.user.username}}</b> /
+              {{activity.name}} /
+              <span>{{activity.timestamp|format_datetime}}</span>
+            </li>
           {% endfor %}
         </ul>
       </div>
