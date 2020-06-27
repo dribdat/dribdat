@@ -15,7 +15,7 @@ from dribdat.extensions import (
 from dribdat.settings import ProdConfig
 from dribdat.utils import timesince
 from flask_misaka import Misaka
-from flask_sslify import SSLify
+from flask_talisman import Talisman
 from flask_dance.contrib.slack import make_slack_blueprint, slack
 
 def init_app(config_object=ProdConfig):
@@ -48,7 +48,7 @@ def register_extensions(app):
     db.init_app(app)
     login_manager.init_app(app)
     migrate.init_app(app, db)
-    if 'SSLIFY' in app.config: sslify = SSLify(app)
+    if 'SERVER_SSL' in app.config: Talisman(app)
     return None
 
 

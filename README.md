@@ -19,14 +19,11 @@ This project can be deployed to any server capable of serving Python application
 You can configure your instance with the following basic environment variables:
 
 * `SERVER_URL` - fully qualified domain name where the site is hosted
+* `SERVER_SSL` - in production, add this to make the app redirect all visitors to the HTTPS address
 * `DRIBDAT_ENV` - 'dev' to enable debugging, 'prod' to optimise assets etc.
 * `DRIBDAT_SECRET` - a long scary string for hashing your passwords - in Heroku this is set automatically
 * `DATABASE_URL` - if you are using the Postgres add-on, this would be postgres://username:password@... - in Heroku this is set automatically
 * `CACHE_TYPE` - in production, you can use built-in, Redis, Memcache to speed up your site (see `settings.py`)
-* `SSLIFY` - in production, add this to make the app redirect all visitors to the HTTPS address
-
-If you would like to use external clients, like the chatbot, to remote control Dribdat you need to set:
-
 * `DRIBDAT_APIKEY` - for connecting clients to the remote [API](#api)
 
 Use `.flaskenv` or `.env` to store environment variables for local development.
@@ -60,6 +57,8 @@ Search project contents:
 Push data into projects (WIP):
 
 - `/api/project/push.json`
+
+If you would like to use external clients, like the chatbot, to remote control Dribdat you need to set `DRIBDAT_APIKEY`.
 
 For more details see [api.py](dribdat/public/api.py)
 

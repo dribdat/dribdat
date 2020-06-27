@@ -20,7 +20,7 @@ Flask-Login==0.5.0
 Flask-Migrate==2.5.3
 Flask-Misaka==1.0.0
 Flask-SQLAlchemy==2.4.3
-Flask-SSLify==0.1.5
+flask-talisman==0.7.0
 Flask-WTF==0.14.3
 future==0.18.2
 graphene==2.1.8

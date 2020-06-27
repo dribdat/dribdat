@@ -455,14 +455,14 @@ SQLAlchemy = ">=0.8.0"
 
 [[package]]
 category = "main"
-description = "Force SSL on your Flask app."
-name = "flask-sslify"
+description = "HTTP security headers for Flask."
+name = "flask-talisman"
 optional = false
 python-versions = "*"
-version = "0.1.5"
+version = "0.7.0"
 
 [package.dependencies]
-Flask = "*"
+six = ">=1.9.0"
 
 [[package]]
 category = "main"
@@ -1129,7 +1129,7 @@ docs = ["sphinx", "jaraco.packaging (>=3.2)", "rst.linker (>=1.9)"]
 testing = ["jaraco.itertools", "func-timeout"]
 
 [metadata]
-content-hash = "4b71e65a66922e6b2f818ec661c673b831616df5492a06aada315f98f8bbf376"
+content-hash = "be4effe96bb1a9e1055d78006590e8b6489230a9614bd0d3a689c922dd03d604"
 python-versions = ">=3.6"
 
 [metadata.files]
@@ -1324,8 +1324,9 @@ flask-sqlalchemy = [
     {file = "Flask-SQLAlchemy-2.4.3.tar.gz", hash = "sha256:0b656fbf87c5f24109d859bafa791d29751fabbda2302b606881ae5485b557a5"},
     {file = "Flask_SQLAlchemy-2.4.3-py2.py3-none-any.whl", hash = "sha256:fcfe6df52cd2ed8a63008ca36b86a51fa7a4b70cef1c39e5625f722fca32308e"},
 ]
-flask-sslify = [
-    {file = "Flask-SSLify-0.1.5.tar.gz", hash = "sha256:d33e1d3c09cd95154176aa8a7319418e52129fc482dd56d8a8ad7c24500d543e"},
+flask-talisman = [
+    {file = "flask-talisman-0.7.0.tar.gz", hash = "sha256:468131464a249274ed226efc21b372518f442487e58918ccab8357eaa638fd1f"},
+    {file = "flask_talisman-0.7.0-py2.py3-none-any.whl", hash = "sha256:eaa754f4b771dfbe473843391d69643b79e3a38c865790011ac5e4179c68e3ec"},
 ]
 flask-wtf = [
     {file = "Flask-WTF-0.14.3.tar.gz", hash = "sha256:d417e3a0008b5ba583da1763e4db0f55a1269d9dd91dcc3eb3c026d3c5dbd720"},
