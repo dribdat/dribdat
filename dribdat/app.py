@@ -119,7 +119,7 @@ def register_filters(app):
     def format_date(value, format='%d.%m.%Y'):
         return value.strftime(format)
     @app.template_filter()
-    def format_datetime(value, format='%H:%M %d.%m.%Y'):
+    def format_datetime(value, format='%d.%m.%Y %H:%M'):
         return value.strftime(format)
 
 

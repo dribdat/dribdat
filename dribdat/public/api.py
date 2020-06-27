@@ -229,17 +229,17 @@ def project_push_json():
         data = GetProjectData(project.autotext_url)
         if 'name' in data:
             if len(data['name']) > 0:
-                project.name = data['name']
+                project.name = data['name'][0:80]
             if 'summary' in data and len(data['summary']) > 0:
-                project.summary = data['summary']
+                project.summary = data['summary'][0:120]
             if 'description' in data and len(data['description']) > 0:
                 project.longtext = data['description']
             if 'homepage_url' in data and len(data['homepage_url']) > 0:
-                project.webpage_url = data['homepage_url']
+                project.webpage_url = data['homepage_url'][0:2048]
             if 'source_url' in data and len(data['source_url']) > 0:
-                project.source_url = data['source_url']
+                project.source_url = data['source_url'][0:255]
             if 'image_url' in data and len(data['image_url']) > 0:
-                project.image_url = data['image_url']
+                project.image_url = data['image_url'][0:255]
     project.update()
     db.session.add(project)
     db.session.commit()

@@ -5,7 +5,7 @@ from flask import (Blueprint, request, render_template, flash, url_for,
 from flask_login import login_required, current_user
 
 from dribdat.user.models import User, Event, Project
-from dribdat.public.forms import ProjectForm
+from dribdat.public.forms import *
 from dribdat.database import db
 from dribdat.extensions import cache
 from dribdat.aggregation import (
@@ -13,6 +13,8 @@ from dribdat.aggregation import (
     GetProjectTeam, GetEventUsers
 )
 from dribdat.user import projectProgressList
+
+from datetime import datetime
 
 blueprint = Blueprint('public', __name__, static_folder="../static")
 
@@ -80,7 +82,6 @@ def project_edit(project_id):
         flash('You do not have access to edit this project.', 'warning')
         return project_action(project_id, None)
     form = ProjectForm(obj=project, next=request.args.get('next'))
-    form.progress.choices = projectProgressList(event.has_started or event.has_finished)
     form.category_id.choices = [(c.id, c.name) for c in project.categories_all()]
     form.category_id.choices.insert(0, (-1, ''))
     if form.validate_on_submit():
@@ -94,6 +95,33 @@ def project_edit(project_id):
         project_action(project_id, 'update', False)
         return redirect(url_for('public.project', project_id=project.id))
     return render_template('public/projectedit.html', current_event=event, project=project, form=form)
+
+@blueprint.route('/project/<int:project_id>/post', methods=['GET', 'POST'])
+@login_required
+def project_post(project_id):
+    project = Project.query.filter_by(id=project_id).first_or_404()
+    event = project.event
+    starred = IsProjectStarred(project, current_user)
+    allow_edit = starred or (not current_user.is_anonymous and current_user.is_admin)
+    if not allow_edit:
+        flash('You do not have access to edit this project.', 'warning')
+        return project_action(project_id, None)
+    form = ProjectPost(obj=project, next=request.args.get('next'))
+    form.progress.choices = projectProgressList(event.has_started or event.has_finished)
+    if form.validate_on_submit():
+        del form.id
+        form.populate_obj(project)
+        project_status = "\n\n---\n`%s`\n\n" % datetime.utcnow().strftime("%d.%m.%Y %H:%M")
+        project_status += form.note.data
+        project.longtext += project_status
+        project.update()
+        db.session.add(project)
+        db.session.commit()
+        cache.clear()
+        flash('Project updated.', 'success')
+        project_action(project_id, 'update', False)
+        return redirect(url_for('public.project', project_id=project.id))
+    return render_template('public/projectpost.html', current_event=event, project=project, form=form)
 
 def project_action(project_id, of_type, as_view=True):
     project = Project.query.filter_by(id=project_id).first_or_404()
@@ -129,9 +157,8 @@ def project_new(event_id):
     if current_user and current_user.is_authenticated:
         project = Project()
         project.user_id = current_user.id
-        project.progress = -1
-        form = ProjectForm(obj=project, next=request.args.get('next'))
-        form.progress.choices = projectProgressList(event.has_started)
+        project.progress = 0
+        form = ProjectNew(obj=project, next=request.args.get('next'))
         form.category_id.choices = [(c.id, c.name) for c in project.categories_all(event)]
         form.category_id.choices.insert(0, (-1, ''))
         if form.validate_on_submit():
@@ -146,8 +173,6 @@ def project_new(event_id):
             cache.clear()
             project_action(project.id, 'star', False)
             return redirect(url_for('public.project', project_id=project.id))
-        # del form.logo_icon
-        del form.logo_color
     return render_template('public/projectnew.html', current_event=event, form=form)
 
 @blueprint.route('/project/<int:project_id>/autoupdate')

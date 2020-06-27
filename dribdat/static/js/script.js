@@ -118,6 +118,11 @@
     $(this).addClass('active');
   });
 
+  // Post a project update
+  $('.project-post').click(function() {
+
+  });
+
   // Clickable categories navigation
   var $navCategories = $('.nav-categories .btn-group label').click(function(e) {
     $(this).parent().find('.active').removeClass('active');
