@@ -113,14 +113,18 @@ def slack_login():
     if not slack.authorized:
         flash('Access denied to Slack', 'error')
         return redirect(url_for("auth.login"))
-    resp = slack.get("/user")
+
+    resp = slack.get("https://slack.com/api/users.identity")
     if not resp.ok:
         flash('Unable to access Slack data', 'error')
         return redirect(url_for("auth.login"))
     resp_data = resp.json()
-    print(resp_data)
+    if not 'user' in resp_data:
+        flash('Invalid Slack data format', 'error')
+        print(resp_data)
+        return redirect(url_for("auth.login"))
+
     resp_user = resp_data['user']
-    
     user = User.query.filter_by(sso_id=resp_user['id']).first()
     if not user:
         if current_user and current_user.is_authenticated:
