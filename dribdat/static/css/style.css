@@ -47,6 +47,16 @@ h1 {
           box-sizing: border-box;
 }
 
+.form-project-post h4 {
+  margin-top: 1em;
+  font-weight: normal;
+  text-align: center;
+  font-size: 250%;
+}
+.form-project-post textarea {
+  height: 4em;
+}
+
 /* footer */
 
 footer {
@@ -174,7 +184,7 @@ nav .navbar-nav .nav-item {
   margin-top: 1rem;
 }
 .with-event form > .form-group {
-  /* margin-top: 4rem; */
+  margin-top: 1rem;
   margin-bottom: 0px;
 }
 .help-inline {
@@ -300,8 +310,6 @@ nav .navbar-nav .nav-item {
 }
 .project-page .project-category {
   font-size: 70%;
-  color: #999;
-  font-style: italic;
 }
 .project-page .project-team {
   font-weight: normal;
@@ -313,10 +321,13 @@ nav .navbar-nav .nav-item {
   float: left;
   margin-right: 40px;
 }
-.project-page .details p {
-  float: right;
+.project-page .details {
   font-size: 80%;
+  margin-top: 1em;
   text-align: right;
+}
+.project-page .details p {
+  margin: 0px;
 }
 .project-page .details a {
   font-size: 120%;
@@ -358,8 +369,9 @@ nav .navbar-nav .nav-item {
 .project-page .project-info thead { border-bottom: 1px solid black; }
 
 .project-page .project-longtext { margin: 2em 0; font-size: 125%; }
-.project-page .project-autotext { padding-top: 2em; border-top: 1px solid #ccc; }
+.project-page .project-autotext { padding-top: 2em; }
 .project-page .project-buttons { display: block; text-align: center; }
+.project-page .project-buttons .btn { font-size: 140%; }
 
 /* Autotext fader */
 .project-page .project-autotext.active {

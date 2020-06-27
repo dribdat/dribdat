@@ -18,32 +18,38 @@
         <li class="nav-item">
           <a href="{{ url_for('public.event', event_id=event.id) }}#top">
             {% if event.has_finished %}
-              Results<i class="fa fa-bars" aria-hidden="true"></i>
+              <i class="fa fa-bars" aria-hidden="true"></i>
+              Results
             {% elif event.has_started %}
-              Projects<i class="fa fa-bars" aria-hidden="true"></i>
+              <i class="fa fa-bars" aria-hidden="true"></i>
+              Projects
             {% else %}
-              Challenges<i class="fa fa-trophy" aria-hidden="true"></i>
+              <i class="fa fa-trophy" aria-hidden="true"></i>
+              Challenges
             {% endif %}
           </a>
         </li>
         {% if event.resources %}
         <li class="nav-item">
           <a href="{{ url_for('public.event', event_id=event.id) }}#resources">
-            Resources<i class="fa fa-cart-plus" aria-hidden="true"></i>
+            <i class="fa fa-cart-plus" aria-hidden="true"></i>
+            Resources
           </a>
         </li>
         {% endif %}
         {% if not event.has_finished and not config.DRIBDAT_NOT_CREATE %}
         <li class="nav-item">
           <a href="{{ url_for('public.project_new', event_id=event.id) }}">
-            Get started<i class="fa fa-rocket"></i>
+            <i class="fa fa-rocket"></i>
+            Get started
           </a>
         </li>
         {% endif %}
         {% if event.community_url %}
         <li class="nav-item">
           <a href="{{ event.community_url }}">
-            Community<i class="fa fa-comment"></i>
+            <i class="fa fa-comment"></i>
+            Community
           </a>
         </li>
         {% endif %}
@@ -59,24 +65,34 @@
 
       {% if current_user and current_user.is_authenticated %}
           <li class="nav-item">
-            <a class="navbar-link" href="{{ url_for('auth.user_profile') }}">Profile<i class="fa fa-child"></i>
+            <a class="navbar-link" href="{{ url_for('auth.user_profile') }}">
+              <i class="fa fa-child"></i>
+              Profile
+              <b>{{ current_user.username }}</b>
             </a>
           </li>
           {% if current_user.is_admin %}
             <li class="nav-item">
-              <a class="navbar-link" href="{{ url_for('admin.index') }}">Admin<i class="fa fa-gear"></i>
+              <a class="navbar-link" href="{{ url_for('admin.index') }}">
+                <i class="fa fa-gear"></i>
+                Admin
               </a>
             </li>
           {% endif %}
           <li class="nav-item">
             <a class="navbar-link" href="{{ url_for('auth.logout') }}">
-              Logout <b>{{ current_user.username }}</b><i class="fa fa-sign-out"></i>
+              <i class="fa fa-sign-out"></i>
+              Logout
             </a>
           </li>
       {% else %}
         <li class="nav-item"><a href="{{ url_for('auth.login') }}">Log in<i class="fa fa-sign-in"></i></a></li>
         {% if not config.DRIBDAT_NOT_REGISTER %}
-          <li class="nav-item"><a href="{{ url_for('auth.register') }}">Create account<i class="fa fa-child"></i></a></li>
+          <li class="nav-item">
+            <a href="{{ url_for('auth.register') }}">
+              <i class="fa fa-child"></i>
+              Create account
+            </a></li>
         {% endif %}
       {% endif %}
     </ul>

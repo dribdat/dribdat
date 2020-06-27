@@ -45,14 +45,26 @@ class UserForm(FlaskForm):
     password = PasswordField(u'New password (optional)', [length(max=128)])
     submit = SubmitField(u'Save changes')
 
-class ProjectForm(FlaskForm):
+class ProjectNew(FlaskForm):
     id = HiddenField('id')
-    progress = RadioField(u'Progress', coerce=int)
     autotext_url = StringField(u'Sync', [length(max=255)],
-        description="Optional - a repository (GitLab, GitHub, Bitbucket, ..) to fetch project data.")
-    # is_autoupdate = BooleanField(u'Sync project data')
+        description="Optional - an external source (GitLab, GitHub, Bitbucket, ..) to fetch project data.")
     name = StringField(u'Title', [required(), length(max=80), UniqueValidator(Project, 'name')],
         description="* Required - max 80 characters - you may change this at any time.")
+    summary = StringField(u'Summary', [length(max=120)],
+        description="Max 120 characters.")
+    category_id = SelectField(u'Category', coerce=int)
+    contact_url = StringField(u'Contact link', [length(max=255)],
+        description="How to best contact your team.")
+    submit = SubmitField(u'Save')
+
+class ProjectForm(FlaskForm):
+    id = HiddenField('id')
+    autotext_url = StringField(u'Sync', [length(max=255)],
+        description="Optional - an external source (GitLab, GitHub, Bitbucket, ..) to fetch project data.")
+    # is_autoupdate = BooleanField(u'Sync project data')
+    name = StringField(u'Title', [required(), length(max=80), UniqueValidator(Project, 'name')],
+        description="* Required - max 80 characters.")
     summary = StringField(u'Summary', [length(max=120)],
         description="Max 120 characters.")
     longtext = TextAreaField(u'Description',
@@ -73,3 +85,10 @@ class ProjectForm(FlaskForm):
     # logo_icon = StringField(u'<a target="_blank" href="http://fontawesome.io/icons/#search">Custom icon</a>',
     #     [length(max=20)], description="A FontAwesome icon for the project browser.")
     submit = SubmitField(u'Save changes')
+
+class ProjectPost(FlaskForm):
+    id = HiddenField('id')
+    progress = SelectField(u'Progress', coerce=int)
+    note = TextAreaField(u'Note',
+        description="A brief note describing your status.")
+    submit = SubmitField(u'Submit')

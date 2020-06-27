@@ -117,7 +117,9 @@
 
 <a name="info"></a>
 <div class="jumbotron event-info">
-  <small>{{current_event.description|markdown}}</small><br>
+  <div class="content">
+    {{current_event.description|markdown}}
+  </div>
 
   {% if current_event.community_embed %}
   <div class="panel panel-default community-embed">
