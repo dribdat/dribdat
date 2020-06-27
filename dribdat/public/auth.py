@@ -120,6 +120,7 @@ def slack_login():
     resp_data = resp.json()
     print(resp_data)
     resp_user = resp_data['user']
+    
     user = User.query.filter_by(sso_id=resp_user['id']).first()
     if not user:
         if current_user and current_user.is_authenticated:

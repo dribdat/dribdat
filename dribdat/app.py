@@ -68,8 +68,8 @@ def register_oauthhandlers(app):
             client_id=app.config["DRIBDAT_SLACK_ID"],
             client_secret=app.config["DRIBDAT_SLACK_SECRET"],
             redirect_to="public.home",
-            login_url="/slack_login",
-            authorized_url=None,
+            login_url="/login",
+            authorized_url="/slack_login",
             session_class=None,
             storage=None,
             scope="identity.basic,identity.email"
