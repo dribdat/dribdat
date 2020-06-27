@@ -13,6 +13,8 @@ from dribdat.public.forms import LoginForm, UserForm
 from dribdat.user.forms import RegisterForm
 from dribdat.database import db
 
+from flask_dance.contrib.slack import slack
+
 blueprint = Blueprint('auth', __name__, static_folder="../static")
 
 def current_event():
@@ -24,8 +26,10 @@ def load_user(user_id):
     return User.get_by_id(int(user_id))
 
 def slack_enabled():
+    """Check if Slack has been configured"""
     dsi = current_app.config["DRIBDAT_SLACK_ID"]
     return dsi is not None and dsi != ""
+
 
 @blueprint.route("/login/", methods=["GET", "POST"])
 def login():
@@ -83,7 +87,7 @@ def logout():
     logout_user()
     flash('You are logged out.', 'info')
     return redirect(url_for('public.home'))
-    
+
 
 @blueprint.route('/user/profile', methods=['GET', 'POST'])
 @login_required
@@ -101,4 +105,43 @@ def user_profile():
         db.session.commit()
         user.socialize()
         flash('Profile updated.', 'success')
+        return redirect(url_for('public.home'))
     return render_template('public/user.html', user=user, form=form)
+
+
+@blueprint.route("/slack_login", methods=["GET", "POST"])
+def slack_login():
+    if not slack.authorized:
+        flash('Access denied to Slack', 'error')
+        return redirect(url_for("auth.login"))
+
+    resp = slack.get("https://slack.com/api/users.identity")
+    if not resp.ok:
+        flash('Unable to access Slack data', 'error')
+        return redirect(url_for("auth.login"))
+    resp_data = resp.json()
+    if not 'user' in resp_data:
+        flash('Invalid Slack data format', 'error')
+        print(resp_data)
+        return redirect(url_for("auth.login"))
+
+    resp_user = resp_data['user']
+    user = User.query.filter_by(sso_id=resp_user['id']).first()
+    if not user:
+        if current_user and current_user.is_authenticated:
+            user = current_user
+            user.sso_id = resp_user['id']
+        else:
+            user = User.create(
+                username=resp_user['name'].lower().replace(" ", "_"),
+                sso_id=resp_user['id'],
+                email=resp_user['email'],
+                password=random_password(),
+                active=True)
+            user.socialize()
+            login_user(user, remember=True)
+            flash("Please complete your user account", 'info')
+            return redirect(url_for("auth.user_profile"))
+    login_user(user, remember=True)
+    flash(u'Logged in via Slack')
+    return redirect(url_for("public.home"))

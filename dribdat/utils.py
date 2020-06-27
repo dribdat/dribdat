@@ -4,7 +4,7 @@ from flask import flash, current_app
 from datetime import datetime
 from math import floor
 import pytz
-import logging
+
 def random_password():
     import string, random
     return ''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(20))

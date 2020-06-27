@@ -6,8 +6,8 @@ python:
   - "3.7"
 
 install:
-  - pip install pipenv
-  - pipenv install --dev
+  - pip install poetry
+  - poetry install
 
 script:
-  - pipenv run py.test tests
+  - poetry run py.test tests

@@ -19,14 +19,16 @@ This project can be deployed to any server capable of serving Python application
 You can configure your instance with the following basic environment variables:
 
 * `SERVER_URL` - fully qualified domain name where the site is hosted
+* `SERVER_SSL` - in production, add this to make the app redirect all visitors to the HTTPS address
 * `DRIBDAT_ENV` - 'dev' to enable debugging, 'prod' to optimise assets etc.
 * `DRIBDAT_SECRET` - a long scary string for hashing your passwords - in Heroku this is set automatically
 * `DATABASE_URL` - if you are using the Postgres add-on, this would be postgres://username:password@... - in Heroku this is set automatically
 * `CACHE_TYPE` - in production, you can use built-in, Redis, Memcache to speed up your site (see `settings.py`)
-
-If you would like to use external clients, like the chatbot, to remote control Dribdat you need to set:
-
 * `DRIBDAT_APIKEY` - for connecting clients to the remote [API](#api)
+* `DRIBDAT_NOT_REGISTER` - set to True to disallow creating accounts
+* `DRIBDAT_NOT_CREATE` - set to True to disallow creating projects
+
+Use `.flaskenv` or `.env` to store environment variables for local development.
 
 OAuth 2.0 support is currently not available. For information see [issue #118](https://github.com/dataletsch/dribdat/issues/118)
 
@@ -58,20 +60,21 @@ Push data into projects (WIP):
 
 - `/api/project/push.json`
 
+If you would like to use external clients, like the chatbot, to remote control Dribdat you need to set `DRIBDAT_APIKEY`.
+
 For more details see [api.py](dribdat/public/api.py)
 
 ## Developer guide
 
-Install Python, Virtualenv and Pip or Pipenv to start working with the code.
+Install Python, Virtualenv and Pip or [Poetry](https://python-poetry.org/) to start working with the code.
 
 You may need to install additional libraries (`libffi`) for the [misaka](http://misaka.61924.nl/) package, which depends on [CFFI](https://cffi.readthedocs.io/en/latest/installation.html#platform-specific-instructions), e.g. `sudo dnf install libffi-devel`
 
-Run the following commands from the repository root folder to bootstrap your environment using [Pipenv](https://pipenv.readthedocs.io/):
+Run the following commands from the repository root folder to bootstrap your environment:
 
 ```
-pipenv --three
-pipenv shell
-pipenv install
+poetry shell
+poetry install
 ```
 
 Or using plain pip:

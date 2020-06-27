@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 """Application configuration."""
 import os
+from dotenv import load_dotenv
 
+load_dotenv()
 os_env = os.environ
 
 class Config(object):
@@ -11,6 +13,8 @@ class Config(object):
     DRIBDAT_APIKEY = os_env.get('DRIBDAT_APIKEY', None)
     DRIBDAT_SLACK_ID = os_env.get('DRIBDAT_SLACK_ID', None)
     DRIBDAT_SLACK_SECRET = os_env.get('DRIBDAT_SLACK_SECRET', None)
+    DRIBDAT_NOT_REGISTER = os_env.get('DRIBDAT_NOT_REGISTER', False)
+    DRIBDAT_NOT_CREATE = os_env.get('DRIBDAT_NOT_CREATE', False)
     APP_DIR = os.path.abspath(os.path.dirname(__file__))  # This directory
     PROJECT_ROOT = os.path.abspath(os.path.join(APP_DIR, os.pardir))
     ASSETS_DEBUG = False
@@ -20,6 +24,7 @@ class Config(object):
     CACHE_NO_NULL_WARNING = True
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SERVER_NAME = os_env.get('SERVER_URL', '127.0.0.1:5000')
+    SERVER_SSL = os_env.get('SERVER_SSL', None)
     TIME_ZONE = 'UTC'
 
 class ProdConfig(Config):

@@ -94,7 +94,7 @@
 {% endif %}
 </div><!-- /category-info -->
 
-{% if not current_event.has_finished %}
+{% if not current_event.has_finished and not config.DRIBDAT_NOT_CREATE %}
   <div class="start-project">
     <a href="{{ url_for('public.project_new', event_id=current_event.id) }}" class="btn btn-lg btn-success">
       {% if current_event.has_started %}
