@@ -22,7 +22,7 @@ class Config(object):
     CACHE_NO_NULL_WARNING = True
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SERVER_NAME = os_env.get('SERVER_URL', '127.0.0.1:5000')
-    SERVER_SSL = os_env.get('SERVER_SSL', os_env.get('DYNO', None))
+    SERVER_SSL = os_env.get('SERVER_SSL', None)
     TIME_ZONE = 'UTC'
 
 class ProdConfig(Config):
