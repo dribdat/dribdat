@@ -7,7 +7,7 @@
   <h1>Log in</h1>
   <br/>
   {% if slack_enabled %}
-    <p><a class="btn signin-slack" href="/hi"> <!-- url_for('auth.site_slack_oauth') }}"> -->
+    <p><a class="btn signin-slack" href="{{ url_for('slack.login') }}">
       Sign in with Slack
     </a></p>
   {% endif %}

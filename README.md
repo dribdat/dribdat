@@ -23,6 +23,7 @@ You can configure your instance with the following basic environment variables:
 * `DRIBDAT_SECRET` - a long scary string for hashing your passwords - in Heroku this is set automatically
 * `DATABASE_URL` - if you are using the Postgres add-on, this would be postgres://username:password@... - in Heroku this is set automatically
 * `CACHE_TYPE` - in production, you can use built-in, Redis, Memcache to speed up your site (see `settings.py`)
+* `SSLIFY` - in production, add this to make the app redirect all visitors to the HTTPS address
 
 If you would like to use external clients, like the chatbot, to remote control Dribdat you need to set:
 

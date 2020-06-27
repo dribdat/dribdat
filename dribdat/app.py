@@ -15,6 +15,7 @@ from dribdat.extensions import (
 from dribdat.settings import ProdConfig
 from dribdat.utils import timesince
 from flask_misaka import Misaka
+from flask_sslify import SSLify
 from flask_dance.contrib.slack import make_slack_blueprint, slack
 
 def init_app(config_object=ProdConfig):
@@ -30,7 +31,7 @@ def init_app(config_object=ProdConfig):
 
     register_extensions(app)
     register_blueprints(app)
-    register_oauth_slack(app)
+    register_oauthhandlers(app)
     register_errorhandlers(app)
     register_filters(app)
     register_loggers(app)
@@ -47,6 +48,8 @@ def register_extensions(app):
     db.init_app(app)
     login_manager.init_app(app)
     migrate.init_app(app, db)
+    if 'DYNO' in os.environ or 'SSLIFY' in app.config:
+        sslify = SSLify(app)
     return None
 
 
@@ -59,19 +62,19 @@ def register_blueprints(app):
     app.register_blueprint(admin.views.blueprint)
     return None
 
-def register_oauth_slack(app):
-    blueprint = make_slack_blueprint(
-        client_id=app.config["DRIBDAT_SLACK_ID"],
-        client_secret=app.config["DRIBDAT_SLACK_SECRET"],
-        scope=None,
-        redirect_url=None, #url_for("auth.hi", _external=True),
-        redirect_to=None,
-        login_url=None,
-        authorized_url=None,
-        session_class=None,
-        storage=None
-    )
-    app.register_blueprint(blueprint, url_prefix="/oauth")
+def register_oauthhandlers(app):
+    if "DRIBDAT_SLACK_ID" in app.config:
+        blueprint = make_slack_blueprint(
+            client_id=app.config["DRIBDAT_SLACK_ID"],
+            client_secret=app.config["DRIBDAT_SLACK_SECRET"],
+            redirect_to="public.home",
+            login_url="/slack_login",
+            authorized_url=None,
+            session_class=None,
+            storage=None,
+            scope=None
+        )
+        app.register_blueprint(blueprint, url_prefix="/oauth")
 
 def register_errorhandlers(app):
     """Register error handlers."""

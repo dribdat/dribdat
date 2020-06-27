@@ -39,6 +39,7 @@ werkzeug = ">=0.12"
 wtforms = ">=2.1"
 python-dotenv = "^0.13.0"
 flask-dance = "^3.0.0"
+flask_sslify = "^0.1.5"
 
 [tool.poetry.dev-dependencies]
 factory-boy = "*"
