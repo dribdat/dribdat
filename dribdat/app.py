@@ -72,7 +72,7 @@ def register_oauthhandlers(app):
             authorized_url=None,
             session_class=None,
             storage=None,
-            scope="identify,identity.basic,identity.email"
+            scope="identity.email"
         )
         app.register_blueprint(blueprint, url_prefix="/oauth")
 
