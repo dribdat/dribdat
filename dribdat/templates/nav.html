@@ -75,7 +75,9 @@
           </li>
       {% else %}
         <li class="nav-item"><a href="{{ url_for('auth.login') }}">Log in<i class="fa fa-sign-in"></i></a></li>
-        <li class="nav-item"><a href="{{ url_for('auth.register') }}">Create account<i class="fa fa-child"></i></a></li>
+        {% if not config.DRIBDAT_NOT_REGISTER %}
+          <li class="nav-item"><a href="{{ url_for('auth.register') }}">Create account<i class="fa fa-child"></i></a></li>
+        {% endif %}
       {% endif %}
     </ul>
   </div><!-- /.navbar-collapse -->

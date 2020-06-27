@@ -25,6 +25,7 @@ You can configure your instance with the following basic environment variables:
 * `DATABASE_URL` - if you are using the Postgres add-on, this would be postgres://username:password@... - in Heroku this is set automatically
 * `CACHE_TYPE` - in production, you can use built-in, Redis, Memcache to speed up your site (see `settings.py`)
 * `DRIBDAT_APIKEY` - for connecting clients to the remote [API](#api)
+* `DRIBDAT_NOT_REGISTER` - set to True to disallow creating accounts
 
 Use `.flaskenv` or `.env` to store environment variables for local development.
 

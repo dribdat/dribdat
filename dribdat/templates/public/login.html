@@ -19,16 +19,11 @@
       <button type="submit" class="btn btn-default btn-primary">Confirm</button>
     </div>
   </form>
-  <br>
-  <p>Not yet registered?
-    <a href="{{ url_for('auth.register') }}">Create an account</a>.
-  </p>
-  <p>Lost password? Delete my account?
-    <script>document.write(
-      '<a href="mailto:' + 'info' + '@' + 'datalets' + '.ch?'
-        + 'subject=Help with ' + location.host + '">'
-      )</script>
-      Bug an admin</a>.
-  </p>
+  {% if not config.DRIBDAT_NOT_REGISTER %}
+    <br>
+    <p>Not yet registered?
+      <a href="{{ url_for('auth.register') }}">Create an account</a>.
+    </p>
+  {% endif %}
 </div>
 {% endblock %}
