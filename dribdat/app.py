@@ -48,8 +48,7 @@ def register_extensions(app):
     db.init_app(app)
     login_manager.init_app(app)
     migrate.init_app(app, db)
-    if 'DYNO' in os.environ or 'SSLIFY' in app.config:
-        sslify = SSLify(app)
+    if 'SSLIFY' in app.config: sslify = SSLify(app)
     return None
 
 
