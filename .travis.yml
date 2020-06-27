@@ -8,6 +8,7 @@ python:
 install:
   - pip install poetry
   - poetry install
+  - yarn
 
 script:
   - poetry run py.test tests
