@@ -132,6 +132,7 @@ def project_action(project_id, of_type, as_view=True):
         return True
     starred = IsProjectStarred(project, current_user)
     allow_edit = starred or (not current_user.is_anonymous and current_user.is_admin)
+    allow_edit = allow_edit and not event.lock_editing
     project_stars = GetProjectTeam(project)
     latest_activity = project.latest_activity()
     return render_template('public/project.html', current_event=event, project=project,
@@ -154,6 +155,9 @@ def project_unstar(project_id):
 def project_new(event_id):
     form = None
     event = Event.query.filter_by(id=event_id).first_or_404()
+    if event.lock_starting:
+        flash('Starting a new project is disabled for this event.', 'error')
+        return redirect(url_for('public.event', event_id=event.id))
     if current_user and current_user.is_authenticated:
         project = Project()
         project.user_id = current_user.id

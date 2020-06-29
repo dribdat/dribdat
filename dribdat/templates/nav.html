@@ -37,7 +37,7 @@
           </a>
         </li>
         {% endif %}
-        {% if not event.has_finished and not config.DRIBDAT_NOT_CREATE %}
+        {% if event.can_start_project %}
         <li class="nav-item">
           <a href="{{ url_for('public.project_new', event_id=event.id) }}">
             <i class="fa fa-rocket"></i>
@@ -97,7 +97,7 @@
       {% endif %}
     </ul>
   </div><!-- /.navbar-collapse -->
-  </div><!-- /.container -->
+
 </nav>
 
 {% if event %}
