@@ -123,7 +123,7 @@ def project_post(project_id):
         return redirect(url_for('public.project', project_id=project.id))
     return render_template('public/projectpost.html', current_event=event, project=project, form=form)
 
-def project_action(project_id, of_type, as_view=True):
+def project_action(project_id, of_type, as_view=True, then_redirect=False):
     project = Project.query.filter_by(id=project_id).first_or_404()
     event = project.event
     if of_type is not None:
@@ -135,6 +135,8 @@ def project_action(project_id, of_type, as_view=True):
     allow_edit = allow_edit and not event.lock_editing
     project_stars = GetProjectTeam(project)
     latest_activity = project.latest_activity()
+    if then_redirect:
+        return redirect(url_for('public.project', project_id=project.id))
     return render_template('public/project.html', current_event=event, project=project,
         project_starred=starred, project_stars=project_stars,
         allow_edit=allow_edit, latest_activity=latest_activity)
@@ -143,13 +145,13 @@ def project_action(project_id, of_type, as_view=True):
 @login_required
 def project_star(project_id):
     flash('Thanks for your support!', 'success')
-    return project_action(project_id, 'star')
+    return project_action(project_id, 'star', then_redirect=True)
 
 @blueprint.route('/project/<int:project_id>/unstar', methods=['GET', 'POST'])
 @login_required
 def project_unstar(project_id):
     flash('Project un-starred', 'success')
-    return project_action(project_id, 'unstar')
+    return project_action(project_id, 'unstar', then_redirect=True)
 
 @blueprint.route('/event/<int:event_id>/project/new', methods=['GET', 'POST'])
 def project_new(event_id):
