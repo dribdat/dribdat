@@ -63,7 +63,8 @@ def gen_csv(csvdata):
 # API: Outputs JSON about the current event
 @blueprint.route('/event/current/info.json')
 def info_current_event_json():
-    event = Event.query.filter_by(is_current=True).first_or_404()
+    event = Event.query.filter_by(is_current=True).first() or \
+            Event.query.order_by(Event.id.desc()).first_or_404()
     return jsonify(event=event.data, timeuntil=timesince(event.countdown, until=True))
 
 # API: Outputs JSON about an event
@@ -72,7 +73,7 @@ def info_event_json(event_id):
     event = Event.query.filter_by(id=event_id).first_or_404()
     return jsonify(event=event.data, timeuntil=timesince(event.countdown, until=True))
 
-# API: Outputs JSON-LD about an Event according to https://schema.org/Event specification
+# API: Outputs JSON-LD about an Event according to https://schema.org/Hackathon
 @blueprint.route('/event/<int:event_id>/hackathon.json')
 def info_event_hackathon_json(event_id):
     event = Event.query.filter_by(id=event_id).first_or_404()
@@ -83,7 +84,8 @@ def info_event_hackathon_json(event_id):
 # API: Outputs JSON of projects in the current event, along with its info
 @blueprint.route('/event/current/projects.json')
 def project_list_current_json():
-    event = Event.query.filter_by(is_current=True).first()
+    event = Event.query.filter_by(is_current=True).first() or \
+            Event.query.order_by(Event.id.desc()).first_or_404()
     return jsonify(projects=project_list(event.id), event=event.data)
 
 # API: Outputs JSON of all projects at a specific event
@@ -97,6 +99,13 @@ def project_list_csv(event_id):
     return Response(stream_with_context(gen_csv(project_list(event_id))),
                     mimetype='text/csv',
                     headers={'Content-Disposition': 'attachment; filename=project_list.csv'})
+
+# API: Outputs CSV of projects in the current event
+@blueprint.route('/event/current/projects.csv')
+def project_list_current_csv():
+    event = Event.query.filter_by(is_current=True).first() or \
+            Event.query.order_by(Event.id.desc()).first_or_404()
+    return project_list_csv(event.id)
 
 # API: Outputs JSON of ideas/challenges in the current event, along with its info
 @blueprint.route('/event/current/challenges.json')
@@ -133,14 +142,16 @@ def event_activity_csv(event_id):
 # API: Outputs JSON of recent activity
 @blueprint.route('/project/activity.json')
 def projects_activity_json():
-    activities = [a.data for a in Activity.query.order_by(Activity.id.desc()).limit(30).all()]
+    limit = request.args.get('limit') or 10
+    activities = [a.data for a in Activity.query.order_by(Activity.id.desc()).limit(limit).all()]
     return jsonify(activities=activities)
 
 # API: Outputs JSON of recent activity of a project
 @blueprint.route('/project/<int:project_id>/activity.json')
 def project_activity_json(project_id):
+    limit = request.args.get('limit') or 10
     project = Project.query.filter_by(id=project_id).first_or_404()
-    query = Activity.query.filter_by(project_id=project.id).order_by(Activity.id.desc()).limit(30).all()
+    query = Activity.query.filter_by(project_id=project.id).order_by(Activity.id.desc()).limit(limit).all()
     activities = [a.data for a in query]
     return jsonify(project=project.data, activities=activities)
 

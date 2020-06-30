@@ -1,0 +1,28 @@
+{% if config.ANALYTICS_FATHOM %}
+<!-- Fathom - beautiful, simple website analytics -->
+    {% if config.ANALYTICS_FATHOM_SITE %}
+    <script src="https://{{ config.ANALYTICS_FATHOM_SITE }}/script.js" site="{{ config.ANALYTICS_FATHOM }}" async defer></script>
+    {% else %}
+    <script src="https://cdn.usefathom.com/script.js" site="{{ config.ANALYTICS_FATHOM }}" async defer></script>
+    {% endif %}
+<!-- / Fathom -->
+{% endif %}
+
+{% if config.ANALYTICS_SIMPLE %}
+<!-- Simple Analytics - Simple, clean, privacy-friendly analytics -->
+<script async defer src="https://scripts.simpleanalyticscdn.com/latest.js"></script>
+<noscript><img src="https://queue.simpleanalyticscdn.com/noscript.gif" alt=""
+/></noscript>
+{% endif %}
+
+{% if config.ANALYTICS_GOOGLE %}
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id={{ config.ANALYTICS_GOOGLE }}"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', '{{ config.ANALYTICS_GOOGLE }}');
+</script>
+<!-- / Google Analytics -->
+{% endif %}

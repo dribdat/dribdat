@@ -8,8 +8,9 @@ from wtforms import (
 from dribdat.user.models import User, Project
 # from wtforms.fields.html5 import DateTimeField
 from wtforms.validators import AnyOf, required, length
-from wtforms.ext.dateutil.fields import DateTimeField
+from wtforms.fields.html5 import DateField, TimeField
 
+from datetime import time, datetime
 from ..user.validators import UniqueValidator
 from ..user import USER_ROLE, USER_STATUS, projectProgressList
 
@@ -27,11 +28,10 @@ class UserForm(FlaskForm):
 class EventForm(FlaskForm):
     next = HiddenField()
     name = StringField(u'Title', [required(), length(max=80)])
-    starts_at = DateTimeField(u'Starts at', description="2020-09-25 09:00:00")
-    ends_at = DateTimeField(u'Finishes at', description="2020-09-26 17:00:00")
-    is_current = BooleanField(u'Current event shown on homepage', default=False)
-    lock_editing = BooleanField(u'Disallow editing of projects', default=False)
-    lock_starting = BooleanField(u'Disallow starting new projects', default=False)
+    starts_date = DateField(u'Starts date', default=datetime.now())
+    starts_time = TimeField(u'Starts time', default=time(9,0,0))
+    ends_date = DateField(u'Finish date', default=datetime.now())
+    ends_time = TimeField(u'Finish time', default=time(16,0,0))
     hostname = StringField(u'Hosted by', [length(max=80)])
     location = StringField(u'Located at', [length(max=255)])
     description = TextAreaField(u'Description', description=u'Markdown and HTML supported')
@@ -42,6 +42,9 @@ class EventForm(FlaskForm):
     community_url = StringField(u'Community link', [length(max=255)])
     community_embed = TextAreaField(u'Community code, bottom of event and project page', description=u'HTML and embedded scripts supported')
     custom_css = TextAreaField(u'Custom CSS', description=u'External stylesheets: @import url(https://...);')
+    is_current = BooleanField(u'Current event shown on homepage', default=False)
+    lock_editing = BooleanField(u'Disallow editing of projects', default=False)
+    lock_starting = BooleanField(u'Disallow starting new projects', default=False)
     submit = SubmitField(u'Save')
 
 class ProjectForm(FlaskForm):

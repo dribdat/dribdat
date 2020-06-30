@@ -11,6 +11,11 @@
       </li><li>
         <a href="https://github.com/datalets/dribdat/issues">Issues</a>
       </li>
+      {% if config.ANALYTICS_HREF %}
+      <li>
+        <a href="{{ config.ANALYTICS_HREF }}">Analytics</a>
+      </li>
+      {% endif %}
     </ul>
   </small>
 </footer>
