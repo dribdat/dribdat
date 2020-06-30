@@ -1,19 +1,19 @@
 {% if config.ANALYTICS_FATHOM %}
 <!-- Fathom - beautiful, simple website analytics -->
     {% if config.ANALYTICS_FATHOM_SITE %}
-    <script src="https://{{ config.ANALYTICS_FATHOM_SITE }}/script.js" site="{{ config.ANALYTICS_FATHOM }}" defer></script>
+    <script src="https://{{ config.ANALYTICS_FATHOM_SITE }}/script.js" site="{{ config.ANALYTICS_FATHOM }}" async defer></script>
     {% else %}
-    <script src="https://cdn.usefathom.com/script.js" site="{{ config.ANALYTICS_FATHOM }}" defer></script>
-    {% end if %}
+    <script src="https://cdn.usefathom.com/script.js" site="{{ config.ANALYTICS_FATHOM }}" async defer></script>
+    {% endif %}
 <!-- / Fathom -->
-{% end if %}
+{% endif %}
 
 {% if config.ANALYTICS_SIMPLE %}
 <!-- Simple Analytics - Simple, clean, privacy-friendly analytics -->
 <script async defer src="https://scripts.simpleanalyticscdn.com/latest.js"></script>
 <noscript><img src="https://queue.simpleanalyticscdn.com/noscript.gif" alt=""
 /></noscript>
-{% end if %}
+{% endif %}
 
 {% if config.ANALYTICS_GOOGLE %}
 <!-- Global site tag (gtag.js) - Google Analytics -->
@@ -25,4 +25,4 @@
   gtag('config', '{{ config.ANALYTICS_GOOGLE }}');
 </script>
 <!-- / Google Analytics -->
-{% end if %}
+{% endif %}
