@@ -40,9 +40,9 @@ Easiest of all is to sign up for an upcoming [hackathon](http://hack.opendata.c
 
 ### Links / contacts
 
-- Source: [github.com/datalets/dribdat](https://github.com/datalets/dribdat)
-- Website: [datalets.ch/dribdat](https://datalets.ch/dribdat)
-- Discuss:  [forum.schoolofdata.ch](https://forum.schoolofdata.ch/search?q=dribdat)
+- Source: [github.com/hackathons-ftw/dribdat](https://github.com/hackathons-ftw/dribdat)
+- Website: [dribdat.cc](https://dribdat.cc)
+- Discuss: [forum.opendata.ch](https://forum.schoolofdata.ch/search?q=dribdat)
 
 ## FAQ
 

@@ -27,11 +27,17 @@ You can configure your instance with the following basic environment variables:
 * `DRIBDAT_APIKEY` - for connecting clients to the remote [API](#api)
 * `DRIBDAT_NOT_REGISTER` - set to True to disallow creating accounts on this server
 
-Additionally, support for Web analytics can be configured using one of the following variables: `ANALYTICS_FATHOM` ([Fathom](https://usefathom.com/), with optional `ANALYTICS_FATHOM_SITE` if you use a custom site), `ANALYTICS_SIMPLE` ([Simple Analytics](https://simpleanalytics.com)), `ANALYTICS_GOOGLE` (starts with "UA-..."). If you have a public dashboard for your analytics, you can add the link to the footer with `ANALYTICS_HREF`.
+Support for Web analytics can be configured using one of the following variables:
+
+* `ANALYTICS_FATHOM` ([Fathom](https://usefathom.com/), with optional `ANALYTICS_FATHOM_SITE` if you use a custom site)
+* `ANALYTICS_SIMPLE` ([Simple Analytics](https://simpleanalytics.com))
+* `ANALYTICS_GOOGLE` (starts with "UA-...")
+
+If you have a public dashboard for your analytics, you can add the link to the footer by setting it in `ANALYTICS_HREF`.
+
+OAuth 2.0 support is currently available in limited but expandable form. For information see [issue #118](https://github.com/hackathons-ftw/dribdat/issues/118)
 
 Use `.flaskenv` or `.env` to store environment variables for local development.
-
-OAuth 2.0 support is currently not available. For information see [issue #118](https://github.com/dataletsch/dribdat/issues/118)
 
 ## API
 
@@ -57,17 +63,17 @@ Search project contents:
 
 - `/api/project/search.json?q=<text_query>`
 
-Push data into projects (experimental):
+Use the `limit` query parameter to get more or less than 10 results.
+
+If you would like to use external clients, like the chatbot, to remote control Dribdat you need to set `DRIBDAT_APIKEY`. The (experimental) call used to push data into projects is:
 
 - `/api/project/push.json`
-
-If you would like to use external clients, like the chatbot, to remote control Dribdat you need to set `DRIBDAT_APIKEY`.
 
 For more details see [api.py](dribdat/public/api.py)
 
 ## Developer guide
 
-Install Python, Virtualenv and Pip or [Poetry](https://python-poetry.org/) to start working with the code.
+Install Python, Virtualenv and Pip, or [Poetry](https://python-poetry.org/) to start working with the code.
 
 You may need to install additional libraries (`libffi`) for the [misaka](http://misaka.61924.nl/) package, which depends on [CFFI](https://cffi.readthedocs.io/en/latest/installation.html#platform-specific-instructions), e.g. `sudo dnf install libffi-devel`
 

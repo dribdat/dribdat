@@ -191,13 +191,14 @@ def project_info_json(project_id):
 def project_search_json():
     q = request.args.get('q')
     if q is None or len(q) < 3: return jsonify(projects=[])
+    limit = request.args.get('limit') or 10
     q = "%%%s%%" % q
     projects = Project.query.filter(or_(
         Project.name.like(q),
         Project.summary.like(q),
         Project.longtext.like(q),
         Project.autotext.like(q),
-    )).limit(5).all()
+    )).limit(limit).all()
     return jsonify(projects=[p.data for p in projects])
 
 # ------ UPDATE ---------
