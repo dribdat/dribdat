@@ -26,7 +26,6 @@ You can configure your instance with the following basic environment variables:
 * `CACHE_TYPE` - in production, you can use built-in, Redis, Memcache to speed up your site (see `settings.py`)
 * `DRIBDAT_APIKEY` - for connecting clients to the remote [API](#api)
 * `DRIBDAT_NOT_REGISTER` - set to True to disallow creating accounts
-* `DRIBDAT_NOT_CREATE` - set to True to disallow creating projects
 
 Use `.flaskenv` or `.env` to store environment variables for local development.
 

@@ -126,7 +126,10 @@ class Event(SurrogatePK, Model):
 
     starts_at = Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)
     ends_at = Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)
+
     is_current = Column(db.Boolean(), default=False)
+    lock_editing = Column(db.Boolean(), default=False)
+    lock_starting = Column(db.Boolean(), default=False)
 
     @property
     def data(self):
@@ -176,6 +179,9 @@ class Event(SurrogatePK, Model):
     @property
     def has_finished(self):
         return dt.datetime.utcnow() > self.ends_at
+    @property
+    def can_start_project(self):
+        return not self.has_finished and not self.lock_starting
 
     @property
     def countdown(self):

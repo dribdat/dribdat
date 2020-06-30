@@ -6,8 +6,9 @@ from wtforms import (
     TextAreaField
 )
 from dribdat.user.models import User, Project
-from wtforms.fields.html5 import DateTimeField
+# from wtforms.fields.html5 import DateTimeField
 from wtforms.validators import AnyOf, required, length
+from wtforms.ext.dateutil.fields import DateTimeField
 
 from ..user.validators import UniqueValidator
 from ..user import USER_ROLE, USER_STATUS, projectProgressList
@@ -29,6 +30,8 @@ class EventForm(FlaskForm):
     starts_at = DateTimeField(u'Starts at', description="2020-09-25 09:00:00")
     ends_at = DateTimeField(u'Finishes at', description="2020-09-26 17:00:00")
     is_current = BooleanField(u'Current event shown on homepage', default=False)
+    lock_editing = BooleanField(u'Disallow editing of projects', default=False)
+    lock_starting = BooleanField(u'Disallow starting new projects', default=False)
     hostname = StringField(u'Hosted by', [length(max=80)])
     location = StringField(u'Located at', [length(max=255)])
     description = TextAreaField(u'Description', description=u'Markdown and HTML supported')
