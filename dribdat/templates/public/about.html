@@ -42,30 +42,33 @@
         <a href="https://github.com/hackathons-ftw/dribdat" class="btn btn-default">Source code</a>
       </p>
     </div>
-    <div class="row" class="api"><a name="api"></a>
-      <h3 style="width:100%">API</h3>
-      <p>There is a simple API for accessing data from this site in machine-readable form. See the README for additional details.</p>
-      <p>Basic data on the current frontpage event:</p>
-      <ul>
-      <li><a href="/hackathon.json">/hackathon.json</a> (JSON <a href="https://schema.org/Hackathon">Schema</a>)</li>
-      <li><a href="/api/event/current/info.json">/api/event/current/info</a> (JSON)</li>
-      </ul>
-      <p>Retrieve all projects from an event:</p>
-      <ul>
-      <li><a href="/api/event/current/projects.json">/api/event/current/projects</a> (JSON)</li>
-      <li><a href="/api/event/current/projects.csv">/api/event/current/projects</a> (CSV)</li>
-      </ul>
-      <p>Recent activity (default <tt>limit</tt> = 10):</p>
-      <ul>
-      <li><a href="/api/project/activity.json">/api/project/activity.json</a> (JSON)</li>
-      </ul>
-      <p>Search projects:</p>
-      <ul>
-      <li><form action="/api/project/search.json">
-        <input name="q" placeholder="Search term ...">
-        <input type="submit" value="Get JSON">
-      </form></li>
-      </ul>
+    <div class="row" class="api">
+      <a name="api"></a>
+      <div class="content">
+        <h3>API</h3>
+        <p>There is a simple API for accessing data from this site in machine-readable form. See the README for additional details.</p>
+        <p>Basic data on the current frontpage event:</p>
+        <ul>
+        <li><a href="/hackathon.json">/hackathon.json</a> (JSON <a href="https://schema.org/Hackathon">Schema</a>)</li>
+        <li><a href="/api/event/current/info.json">/api/event/current/info</a> (JSON)</li>
+        </ul>
+        <p>Retrieve all projects from an event:</p>
+        <ul>
+        <li><a href="/api/event/current/projects.json">/api/event/current/projects</a> (JSON)</li>
+        <li><a href="/api/event/current/projects.csv">/api/event/current/projects</a> (CSV)</li>
+        </ul>
+        <p>Recent activity (default <tt>limit</tt> = 10):</p>
+        <ul>
+        <li><a href="/api/project/activity.json">/api/project/activity.json</a> (JSON)</li>
+        </ul>
+        <p>Search projects:</p>
+        <ul>
+        <li><form action="/api/project/search.json">
+          <input name="q" placeholder="Search term ...">
+          <input type="submit" value="Get JSON">
+        </form></li>
+        </ul>
+      </div>
     </div>
   </div>
 </div>
