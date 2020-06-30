@@ -1,9 +1,28 @@
-<!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
+{% if config.ANALYTICS_FATHOM %}
+<!-- Fathom - beautiful, simple website analytics -->
+    {% if config.ANALYTICS_FATHOM_SITE %}
+    <script src="https://{{ config.ANALYTICS_FATHOM_SITE }}/script.js" site="{{ config.ANALYTICS_FATHOM }}" defer></script>
+    {% else %}
+    <script src="https://cdn.usefathom.com/script.js" site="{{ config.ANALYTICS_FATHOM }}" defer></script>
+    {% end if %}
+<!-- / Fathom -->
+{% end if %}
+
+{% if config.ANALYTICS_SIMPLE %}
+<!-- Simple Analytics - Simple, clean, privacy-friendly analytics -->
+<script async defer src="https://scripts.simpleanalyticscdn.com/latest.js"></script>
+<noscript><img src="https://queue.simpleanalyticscdn.com/noscript.gif" alt=""
+/></noscript>
+{% end if %}
+
+{% if config.ANALYTICS_GOOGLE %}
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id={{ config.ANALYTICS_GOOGLE }}"></script>
 <script>
-    (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
-    function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
-    e=o.createElement(i);r=o.getElementsByTagName(i)[0];
-    e.src='//www.google-analytics.com/analytics.js';
-    r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
-    ga('create','UA-XXXXX-X');ga('send','pageview');
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', '{{ config.ANALYTICS_GOOGLE }}');
 </script>
+<!-- / Google Analytics -->
+{% end if %}

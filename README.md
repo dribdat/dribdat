@@ -25,7 +25,9 @@ You can configure your instance with the following basic environment variables:
 * `DATABASE_URL` - if you are using the Postgres add-on, this would be postgres://username:password@... - in Heroku this is set automatically
 * `CACHE_TYPE` - in production, you can use built-in, Redis, Memcache to speed up your site (see `settings.py`)
 * `DRIBDAT_APIKEY` - for connecting clients to the remote [API](#api)
-* `DRIBDAT_NOT_REGISTER` - set to True to disallow creating accounts
+* `DRIBDAT_NOT_REGISTER` - set to True to disallow creating accounts on this server
+
+Additionally, support for Web analytics can be configured using one of the following variables: `ANALYTICS_FATHOM` ([Fathom](https://usefathom.com/), with optional `ANALYTICS_FATHOM_SITE` if you use a custom site), `ANALYTICS_SIMPLE` ([Simple Analytics](https://simpleanalytics.com)), `ANALYTICS_GOOGLE` (starts with "UA-..."). If you have a public dashboard for your analytics, you can add the link to the footer with `ANALYTICS_HREF`.
 
 Use `.flaskenv` or `.env` to store environment variables for local development.
 
