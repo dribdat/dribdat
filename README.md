@@ -35,7 +35,7 @@ OAuth 2.0 support is currently not available. For information see [issue #118](h
 
 ## API
 
-There are a number of API calls that admins can use to easily get to the data in Dribdat in CSV or JSON format. See GitHub issues for [development status](https://github.com/datalets/dribdat/issues?utf8=%E2%9C%93&q=is%3Aissue+is%3Aopen+API).
+There are a number of API calls that admins can use to easily get to the data in Dribdat in CSV or JSON format. These are linked in the About page in a running app. Additionally, the site has a  See GitHub issues for development status.
 
 Basic data on an event:
 
@@ -57,7 +57,7 @@ Search project contents:
 
 - `/api/project/search.json?q=<text_query>`
 
-Push data into projects (WIP):
+Push data into projects (experimental):
 
 - `/api/project/push.json`
 

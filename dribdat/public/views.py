@@ -39,7 +39,7 @@ def dashboard():
 # Outputs JSON-LD about the current event (see also api.py/info_event_hackathon_json)
 @blueprint.route('/hackathon.json')
 def info_current_hackathon_json():
-    event = Event.query.filter_by(is_current=True).first()
+    event = Event.query.filter_by(is_current=True).first() or Event.query.order_by(Event.id.desc()).first()
     return jsonify(event.get_schema(request.host_url))
 
 @blueprint.route("/about/")

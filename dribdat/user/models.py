@@ -294,6 +294,7 @@ class Project(SurrogatePK, Model):
     def data(self):
         d = {
             'id': self.id,
+            'url': self.url,
             'name': self.name,
             'score': self.score,
             'phase': self.phase,
@@ -302,7 +303,11 @@ class Project(SurrogatePK, Model):
             'contact_url': self.contact_url,
             'image_url': self.image_url,
             'source_url': self.source_url,
+            'webpage_url': self.webpage_url,
             'progress': self.progress,
+            'maintainer': self.user.username,
+            'event_url': self.event.url,
+            'event_name': self.event.name,
         }
         if self.category is not None:
             d['category'] = self.category.data
