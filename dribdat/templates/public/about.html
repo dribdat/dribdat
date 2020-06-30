@@ -5,12 +5,15 @@
 {% block content %}
 <div class="jumbotron">
   <div class="container">
-    <div class="row"><center style="width:100%;margin-bottom:4em">
-      <img title="D R I B D A T _" src="/static/img/logo7_gray.png"><br>
-      <i><b>All your hack are belong to us.</b></i>
+    <div class="row"><center style="width:100%">
+      <h1 style="font-weight:bold">
+        ! D R
+        I B D
+        A T _
+      </h1>
     </center></div>
     <div class="row">
-      <p>This is an open source project board designed for splendid collaboration. 
+      <p>Dribdat is an <a href="https://github.com/hackathons-ftw/dribdat">open source</a> project board for splendid collaboration. 
         On this site we <b>collect and showcase all projects</b> from hackathon event in one place, under shared conditions. 
         This platform helps hackathon teams sustain and document their efforts, streamline things for the organisers, let
         everyone to focus on driving their ideas forward.</p>
@@ -25,7 +28,22 @@
       <h3>Quickstart</h3>
       {% include "includes/quickstart.html" %}
     </div><div class="row">
-      <h3>API</h3>
+      <h3>For organisers</h3>
+      <p>All of the content on the site, including presentation and the Quickstart above, can be edited by the site administrator in the 
+        <b>Admin</b> menu linked in the header if you have access: from where you can edit general details under <b>Events</b>, 
+        publish <b>Categories</b>, and edit or sync <b>Projects</b> and 
+        <b>Challenges</b> (which are either a Category, or just a project in challenge status).</p>
+      <p>If you would like to use this platform for your event,
+        contact the organisers of the events listed here and they
+        should be able to help you - or just fork the open source project
+        and set it up to your liking:</p>
+      <p>
+        <a href="https://github.com/hackathons-ftw/dribdat/issues" class="btn btn-primary">Issues &raquo;</a>
+        <a href="https://github.com/hackathons-ftw/dribdat" class="btn btn-default">Source code</a>
+      </p>
+    </div>
+    <div class="row">
+      <h3 style="width:100%">API</h3>
       <p>There is a simple API for accessing data from this site in machine-readable form. See the README for additional details.</p>
       <ul class="api">
       <p>Basic data on the current frontpage event:</p>
@@ -42,21 +60,11 @@
         <input type="submit" value="Get JSON">
       </form></li>
       </ul>
-    </div><div class="row">
-      <h3>For organisers</h3>
-      <p>All of the content on the site, including presentation and the Quickstart above, can be edited by the site administrator in the 
-        <b>Admin</b> menu linked in the header if you have access: from where you can edit general details under <b>Events</b>, 
-        publish <b>Categories</b>, and edit or sync <b>Projects</b> and 
-        <b>Challenges</b> (which are either a Category, or just a project in challenge status).</p>
-      <p>If you would like to use this platform for your event,
-        contact the organisers of the events listed here and they
-        should be able to help you - or just fork the open source project
-        and set it up to your liking:</p>
-      <p>
-        <a href="https://github.com/hackathons-ftw/dribdat/issues" class="btn btn-primary">Issues &raquo;</a>
-        <a href="https://github.com/hackathons-ftw/dribdat" class="btn btn-default">Source code</a>
-      </p>
     </div>
   </div>
 </div>
+<center style="margin-top:1em">
+  <img title="D R I B D A T _" src="/static/img/logo7_gray.png" width="66"><br>
+  <i><b>All your hack are belong to us.</b></i>
+</center>
 {% endblock %}
