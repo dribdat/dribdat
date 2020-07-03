@@ -132,12 +132,19 @@ def slack_login():
             user = current_user
             user.sso_id = resp_user['id']
         else:
-            user = User.create(
-                username=resp_user['name'].lower().replace(" ", "_"),
-                sso_id=resp_user['id'],
-                email=resp_user['email'],
-                password=random_password(),
-                active=True)
+            user = User.query.filter_by(email=resp_user['email']).first()
+            if user:
+                # Update SSO identifier
+                user.sso_id = resp_user['id']
+                db.session.add(user)
+                db.session.commit()
+            else:
+                user = User.create(
+                    username=resp_user['name'].lower().replace(" ", "_"),
+                    sso_id=resp_user['id'],
+                    email=resp_user['email'],
+                    password=random_password(),
+                    active=True)
             user.socialize()
             login_user(user, remember=True)
             flash("Please complete your user account", 'info')
