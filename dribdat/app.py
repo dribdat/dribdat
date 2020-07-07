@@ -67,6 +67,7 @@ def register_oauthhandlers(app):
         blueprint = make_slack_blueprint(
             client_id=app.config["DRIBDAT_SLACK_ID"],
             client_secret=app.config["DRIBDAT_SLACK_SECRET"],
+            subdomain=app.config["DRIBDAT_SLACK_DOMAIN"],
             scope="identity.basic,identity.email",
             redirect_to="auth.slack_login",
             login_url="/login",

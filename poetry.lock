@@ -363,7 +363,7 @@ Six = "*"
 [[package]]
 category = "main"
 description = "Doing the OAuth dance with style using Flask, requests, and oauthlib"
-name = "flask-dance"
+name = "Flask-Dance"
 optional = false
 python-versions = "*"
 version = "3.0.0"
@@ -380,6 +380,10 @@ urlobject = "*"
 signals = ["blinker"]
 sqla = ["sqlalchemy", "sqlalchemy-utils"]
 
+[package.source]
+reference = "eefb5093b4af24e77ea15ab4747a79ac07e29a80"
+type = "git"
+url = "https://github.com/loleg/flask-dance.git"
 [[package]]
 category = "dev"
 description = "A toolbar overlay for debugging Flask applications."
@@ -1127,7 +1131,7 @@ docs = ["sphinx", "jaraco.packaging (>=3.2)", "rst.linker (>=1.9)"]
 testing = ["jaraco.itertools", "func-timeout"]
 
 [metadata]
-content-hash = "6e001dbba03015eb4c2440ed7abab410d7e86bca1abaae70ad5dc80f9d2df6e0"
+content-hash = "c0f016aae6ebd265e56d5c29b4d2261952041d37e6ce0f4ef858626f4e9d0742"
 python-versions = ">=3.6,<4"
 
 [metadata.files]
@@ -1292,11 +1296,7 @@ flask-cors = [
     {file = "Flask-Cors-3.0.8.tar.gz", hash = "sha256:72170423eb4612f0847318afff8c247b38bd516b7737adfc10d1c2cdbb382d16"},
     {file = "Flask_Cors-3.0.8-py2.py3-none-any.whl", hash = "sha256:f4d97201660e6bbcff2d89d082b5b6d31abee04b1b3003ee073a6fd25ad1d69a"},
 ]
-flask-dance = [
-    {file = "Flask-Dance-3.0.0.tar.gz", hash = "sha256:5ec8fae543ef93aab96d6a4c6d34ed835c793e2f6a211212a89a4e9c31c42bed"},
-    {file = "Flask_Dance-3.0.0-py2.py3-none-any.whl", hash = "sha256:1b30ea6765ca2a9c5c15eb00a18e18f8c347a4bf2f9947b68ff0024c4c7d1dfa"},
-    {file = "Flask_Dance-3.0.0-py3.7.egg", hash = "sha256:8f567087e8308bdeb225638d581b93e3b1d671871f8de394beb6c45923497e89"},
-]
+Flask-Dance = []
 flask-debugtoolbar = [
     {file = "Flask-DebugToolbar-0.11.0.tar.gz", hash = "sha256:3c4e79d354ede014e6657c545a536d4fb273cc89e3fd6b4835b02e346dd3aab4"},
     {file = "Flask_DebugToolbar-0.11.0-py2.py3-none-any.whl", hash = "sha256:0e9a80d4c599233c68376e81cc99976200b5ac5248cfb24f18935cc5b69ac5b3"},

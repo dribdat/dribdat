@@ -13,6 +13,7 @@ class Config(object):
     DRIBDAT_APIKEY = os_env.get('DRIBDAT_APIKEY', None)
     DRIBDAT_SLACK_ID = os_env.get('DRIBDAT_SLACK_ID', None)
     DRIBDAT_SLACK_SECRET = os_env.get('DRIBDAT_SLACK_SECRET', None)
+    DRIBDAT_SLACK_DOMAIN = os_env.get('DRIBDAT_SLACK_DOMAIN', None)
     DRIBDAT_NOT_REGISTER = os_env.get('DRIBDAT_NOT_REGISTER', False)
     APP_DIR = os.path.abspath(os.path.dirname(__file__))  # This directory
     PROJECT_ROOT = os.path.abspath(os.path.join(APP_DIR, os.pardir))
