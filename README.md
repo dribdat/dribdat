@@ -26,7 +26,6 @@ You can configure your instance with the following basic environment variables:
 * `DRIBDAT_SECRET` - a long scary string for hashing your passwords - in Heroku this is set automatically
 * `DRIBDAT_APIKEY` - for connecting clients to the remote [API](#api)
 * `DRIBDAT_NOT_REGISTER` - set to True to disallow creating accounts on this server
-* `DRIBDAT_SLACK_ID`, `.._SECRET`, `.._DOMAIN` - use Slack to authenticate your users
 
 Support for Web analytics can be configured using one of the following variables:
 
@@ -36,7 +35,12 @@ Support for Web analytics can be configured using one of the following variables
 
 If you have a public dashboard for your analytics, you can add the link to the footer by setting it in `ANALYTICS_HREF`.
 
-OAuth 2.0 support is currently available in limited but expandable form. For information see [issue #118](https://github.com/hackathons-ftw/dribdat/issues/118)
+OAuth 2.0 support is currently available using [Flask Dance](https://flask-dance.readthedocs.io/) (see [issue #118](https://github.com/hackathons-ftw/dribdat/issues/118)). To authenticate your users, the following variables should be set:
+
+* `OAUTH_TYPE` - e.g. 'Slack'
+* `OAUTH_ID` - the Client ID of your app (e.g. from [api.slack.com](https://api.slack.com/apps/))
+* `OAUTH_SECRET` - the Client Secret of your app
+* `OAUTH_DOMAIN` - (optional) subdomain of your Slack instance
 
 Use `.flaskenv` or `.env` to store environment variables for local development.
 

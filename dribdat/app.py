@@ -63,19 +63,20 @@ def register_blueprints(app):
     return None
 
 def register_oauthhandlers(app):
-    if "DRIBDAT_SLACK_ID" in app.config:
-        blueprint = make_slack_blueprint(
-            client_id=app.config["DRIBDAT_SLACK_ID"],
-            client_secret=app.config["DRIBDAT_SLACK_SECRET"],
-            subdomain=app.config["DRIBDAT_SLACK_DOMAIN"],
-            scope="identity.basic,identity.email",
-            redirect_to="auth.slack_login",
-            login_url="/login",
-            # authorized_url=None,
-            # session_class=None,
-            # storage=None,
-        )
-        app.register_blueprint(blueprint, url_prefix="/oauth")
+    if app.config["OAUTH_TYPE"]:
+        if app.config["OAUTH_TYPE"] == 'slack':
+            blueprint = make_slack_blueprint(
+                client_id=app.config["OAUTH_ID"],
+                client_secret=app.config["OAUTH_SECRET"],
+                subdomain=app.config["OAUTH_DOMAIN"],
+                scope="identity.basic,identity.email",
+                redirect_to="auth.slack_login",
+                login_url="/login",
+                # authorized_url=None,
+                # session_class=None,
+                # storage=None,
+            )
+            app.register_blueprint(blueprint, url_prefix="/oauth")
 
 def register_errorhandlers(app):
     """Register error handlers."""
