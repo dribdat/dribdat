@@ -381,7 +381,7 @@ signals = ["blinker"]
 sqla = ["sqlalchemy", "sqlalchemy-utils"]
 
 [package.source]
-reference = "eefb5093b4af24e77ea15ab4747a79ac07e29a80"
+reference = "9c4f3a3fbd0138c2a5352368bee86d92d8bb132d"
 type = "git"
 url = "https://github.com/loleg/flask-dance.git"
 [[package]]

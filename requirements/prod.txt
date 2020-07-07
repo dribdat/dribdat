@@ -14,7 +14,7 @@ Flask-Assets==2.0
 Flask-Bcrypt==0.7.1
 Flask-Caching==1.9.0
 Flask-Cors==3.0.8
--e git+https://github.com/loleg/flask-dance.git@eefb5093b4af24e77ea15ab4747a79ac07e29a80#egg=flask-dance
+-e git+https://github.com/loleg/flask-dance.git@9c4f3a3fbd0138c2a5352368bee86d92d8bb132d#egg=flask-dance
 Flask-Hashing==1.1
 Flask-Login==0.5.0
 Flask-Migrate==2.5.3
