@@ -20,10 +20,10 @@ You can configure your instance with the following basic environment variables:
 
 * `SERVER_URL` - fully qualified domain name where the site is hosted
 * `SERVER_SSL` - in production, add this to make the app redirect all visitors to the HTTPS address
-* `DRIBDAT_ENV` - 'dev' to enable debugging, 'prod' to optimise assets etc.
-* `DRIBDAT_SECRET` - a long scary string for hashing your passwords - in Heroku this is set automatically
 * `DATABASE_URL` - if you are using the Postgres add-on, this would be postgres://username:password@... - in Heroku this is set automatically
 * `CACHE_TYPE` - in production, you can use built-in, Redis, Memcache to speed up your site (see `settings.py`)
+* `DRIBDAT_ENV` - 'dev' to enable debugging, 'prod' to optimise assets etc.
+* `DRIBDAT_SECRET` - a long scary string for hashing your passwords - in Heroku this is set automatically
 * `DRIBDAT_APIKEY` - for connecting clients to the remote [API](#api)
 * `DRIBDAT_NOT_REGISTER` - set to True to disallow creating accounts on this server
 
@@ -35,7 +35,12 @@ Support for Web analytics can be configured using one of the following variables
 
 If you have a public dashboard for your analytics, you can add the link to the footer by setting it in `ANALYTICS_HREF`.
 
-OAuth 2.0 support is currently available in limited but expandable form. For information see [issue #118](https://github.com/hackathons-ftw/dribdat/issues/118)
+OAuth 2.0 support is currently available using [Flask Dance](https://flask-dance.readthedocs.io/) (see [issue #118](https://github.com/hackathons-ftw/dribdat/issues/118)). To authenticate your users, the following variables should be set:
+
+* `OAUTH_TYPE` - e.g. 'Slack'
+* `OAUTH_ID` - the Client ID of your app (e.g. from [api.slack.com](https://api.slack.com/apps/))
+* `OAUTH_SECRET` - the Client Secret of your app
+* `OAUTH_DOMAIN` - (optional) subdomain of your Slack instance
 
 Use `.flaskenv` or `.env` to store environment variables for local development.
 

@@ -37,7 +37,7 @@ requests = ">=2.18.4"
 sqlalchemy = ">=1.1.14"
 werkzeug = ">=0.12"
 wtforms = ">=2.1"
-flask-dance = "^3.0.0"
+flask-dance = { git = "https://github.com/loleg/flask-dance.git", branch = "master" }
 email_validator = "^1.1.1"
 python-dotenv = "^0.13.0"
 flask-talisman = "^0.7.0"

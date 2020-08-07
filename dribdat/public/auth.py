@@ -27,7 +27,7 @@ def load_user(user_id):
 
 def slack_enabled():
     """Check if Slack has been configured"""
-    dsi = current_app.config["DRIBDAT_SLACK_ID"]
+    dsi = current_app.config["OAUTH_TYPE"] and current_app.config["OAUTH_TYPE"].lower() == 'slack'
     return dsi is not None and dsi != ""
 
 

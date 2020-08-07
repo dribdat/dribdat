@@ -11,9 +11,11 @@ class Config(object):
 
     SECRET_KEY = os_env.get('DRIBDAT_SECRET', 'A-big-scary-Secret-goes-HERE.')
     DRIBDAT_APIKEY = os_env.get('DRIBDAT_APIKEY', None)
-    DRIBDAT_SLACK_ID = os_env.get('DRIBDAT_SLACK_ID', None)
-    DRIBDAT_SLACK_SECRET = os_env.get('DRIBDAT_SLACK_SECRET', None)
     DRIBDAT_NOT_REGISTER = os_env.get('DRIBDAT_NOT_REGISTER', False)
+    OAUTH_ID = os_env.get('OAUTH_ID', None)
+    OAUTH_TYPE = os_env.get('OAUTH_TYPE', '').lower()
+    OAUTH_SECRET = os_env.get('OAUTH_SECRET', None)
+    OAUTH_DOMAIN = os_env.get('OAUTH_DOMAIN', None)
     APP_DIR = os.path.abspath(os.path.dirname(__file__))  # This directory
     PROJECT_ROOT = os.path.abspath(os.path.join(APP_DIR, os.pardir))
     ASSETS_DEBUG = False
