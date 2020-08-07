@@ -38,6 +38,7 @@ def challenges_list(event_id):
 
 # Generate a CSV file
 def gen_csv(csvdata):
+    if len(csvdata) < 1: return ""
     headerline = csvdata[0].keys()
     if PY3:
         output = io.StringIO()
@@ -51,8 +52,10 @@ def gen_csv(csvdata):
         for l in rk.values():
             if l is None:
                 rkline.append("")
-            elif isinstance(l, (int, float, datetime)):
-                rkline.append(l)
+            elif isinstance(l, (int, float, datetime, str)):
+                rkline.append(str(l))
+            elif isinstance(l, (dict)):
+                rkline.append(json.dumps(l))
             else:
                 rkline.append(l.encode('utf-8'))
         writer.writerow(rkline)
