@@ -4,7 +4,7 @@
 
     // Detect and recommend SSL connection
     if ('https:' != document.location.protocol)
-      $('.navbar').after('<center class="alert alert-danger" role="alert">Your connection to this website is insecure. <a href="https:' + window.location.href.substring(window.location.protocol.length) + '" class="btn btn-sm btn-warning"><b>Switch to HTTPS</b></a></center>');
+      $('footer').before('<center class="alert alert-danger" role="alert">Your connection to this website is insecure. <a href="https:' + window.location.href.substring(window.location.protocol.length) + '" class="btn btn-sm btn-warning"><b>Switch to HTTPS</b></a></center>');
 
     // Initialise home page countdown
     $('.event-countdown').each(function() {
@@ -116,6 +116,11 @@
   // Open up the README on click
   $('.project-autotext').click(function() {
     $(this).addClass('active');
+  });
+
+  // Post a project update
+  $('.project-post').click(function() {
+
   });
 
   // Clickable categories navigation

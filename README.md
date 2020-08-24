@@ -4,42 +4,13 @@
 [![Coveralls](https://coveralls.io/repos/github/datalets/dribdat/badge.svg?branch=master)](https://coveralls.io/github/datalets/dribdat?branch=master)
 [![Mattermost](https://img.shields.io/badge/Mattermost-chat-blue.svg)](https://team.opendata.ch/signup_user_complete/?id=74yuxwruaby9fpoukx9bmoxday)
 
-An open platform for data-driven team collaboration, such as *Hackathons*.
+An open source platform for data-driven team collaboration, such as *Hackathons*.
 
-This project is being developed by [Datalets](https://datalets.ch), a small studio in Bern, with support from the Swiss open data and open source community. If you need help or advice in setting up your event, or would like to contribute to the project: **get in touch** via our [team chat](https://team.opendata.ch/signup_user_complete/?id=74yuxwruaby9fpoukx9bmoxday) and [GitHub Issues](https://github.com/datalets/dribdat/issues). For more background and references, see [ABOUT](ABOUT.md).
+If you need help or advice in setting up your event, or would like to contribute to the project: please get in touch via [datalets.ch](https://datalets.ch) or [GitHub Issues](https://github.com/datalets/dribdat/issues).
 
-## How does it look?
+For more background and references, see [USAGE](USAGE.md) and [ABOUT](ABOUT.md). The rest of this document has details for deploying the application.
 
-_Dribdat_ works as a website and project board for running exciting, productive events, and allows organizers and participants to collect their project details in one place, displaying the challenges and projects in Web dashboards, and plugging in community tools such as [Discourse](https://www.discourse.org/), [Slack](http://slack.com), or [Let's Chat](http://sdelements.github.io/lets-chat/) - or using the [remote API](#api) for additional interfaces such as [chatbots](https://github.com/schoolofdata-ch/sodabot) to enhance the hackathon.
-
-Logged-in users can submit challenges, ideas and projects by linking their document or repository, or entering details directly into a form. You can change or customize these [instructions](dribdat/templates/quickstart.html) as you see fit.
-
-![](dribdat/static/img/screenshot_start.png)
-
-Data on projects can be entered into the application directly using [Markdown](https://www.markdowntutorial.com/) formatting, or aggregated simply by putting in a URL to a public project hosted on one of these supported platforms:
-
-- [GitHub](https://github.com) (README / README.md)
-- [GitLab](https://gitlab.com) (README.md)
-- [BitBucket](https://bitbucket.org)
-- [Etherpad Lite](http://etherpad.org)
-- [Google Docs](https://support.google.com/docs/answer/183965?co=GENIE.Platform%3DDesktop&hl=en) (Publish to Web)
-- [DokuWiki](http://make.opendata.ch/wiki/project:home)
-
-The administrative interface shown below allows defining details of the event and managing project data.
-
-![](dribdat/static/img/screenshot_admin_projects.png)
-
-The look and feel of the project view can be customized with CSS, and shows challenges and projects, with a rating of how completely they are documented. In the `Events` screen there are links to a *Print* view for a summary of all projects on one page, and the ability to *Embed* results into another website.
-
-![](dribdat/static/img/screenshot_makezurich.jpg)
-
-And, as we're really into making the most of those time constraints, the homepage and dashboard feature a big animated countdown clock.
-
-![](dribdat/static/img/screenshot_countdown.png)
-
-Tick tock!
-
-## Deployment Quickstart
+## Quickstart
 
 This project can be deployed to any server capable of serving Python applications, and is set up for fast deployment to the [Heroku](http://heroku.com) cloud:
 
@@ -48,20 +19,34 @@ This project can be deployed to any server capable of serving Python application
 You can configure your instance with the following basic environment variables:
 
 * `SERVER_URL` - fully qualified domain name where the site is hosted
-* `DRIBDAT_ENV` - 'dev' to enable debugging, 'prod' to optimise assets etc.
-* `DRIBDAT_SECRET` - a long scary string for hashing your passwords - in Heroku this is set automatically
+* `SERVER_SSL` - in production, add this to make the app redirect all visitors to the HTTPS address
 * `DATABASE_URL` - if you are using the Postgres add-on, this would be postgres://username:password@... - in Heroku this is set automatically
 * `CACHE_TYPE` - in production, you can use built-in, Redis, Memcache to speed up your site (see `settings.py`)
-
-If you would like to use external clients, like the chatbot, to remote control Dribdat you need to set:
-
+* `DRIBDAT_ENV` - 'dev' to enable debugging, 'prod' to optimise assets etc.
+* `DRIBDAT_SECRET` - a long scary string for hashing your passwords - in Heroku this is set automatically
 * `DRIBDAT_APIKEY` - for connecting clients to the remote [API](#api)
+* `DRIBDAT_NOT_REGISTER` - set to True to disallow creating accounts on this server
 
-OAuth 2.0 support is currently not available. For information see [issue #118](https://github.com/dataletsch/dribdat/issues/118)
+Support for Web analytics can be configured using one of the following variables:
+
+* `ANALYTICS_FATHOM` ([Fathom](https://usefathom.com/), with optional `ANALYTICS_FATHOM_SITE` if you use a custom site)
+* `ANALYTICS_SIMPLE` ([Simple Analytics](https://simpleanalytics.com))
+* `ANALYTICS_GOOGLE` (starts with "UA-...")
+
+If you have a public dashboard for your analytics, you can add the link to the footer by setting it in `ANALYTICS_HREF`.
+
+OAuth 2.0 support is currently available using [Flask Dance](https://flask-dance.readthedocs.io/) (see [issue #118](https://github.com/hackathons-ftw/dribdat/issues/118)). To authenticate your users, the following variables should be set:
+
+* `OAUTH_TYPE` - e.g. 'Slack'
+* `OAUTH_ID` - the Client ID of your app (e.g. from [api.slack.com](https://api.slack.com/apps/))
+* `OAUTH_SECRET` - the Client Secret of your app
+* `OAUTH_DOMAIN` - (optional) subdomain of your Slack instance
+
+Use `.flaskenv` or `.env` to store environment variables for local development.
 
 ## API
 
-There are a number of API calls that admins can use to easily get to the data in Dribdat in CSV or JSON format. See GitHub issues for [development status](https://github.com/datalets/dribdat/issues?utf8=%E2%9C%93&q=is%3Aissue+is%3Aopen+API).
+There are a number of API calls that admins can use to easily get to the data in Dribdat in CSV or JSON format. These are linked in the About page in a running app. Additionally, the site has a  See GitHub issues for development status.
 
 Basic data on an event:
 
@@ -83,7 +68,9 @@ Search project contents:
 
 - `/api/project/search.json?q=<text_query>`
 
-Push data into projects (WIP):
+Use the `limit` query parameter to get more or less than 10 results.
+
+If you would like to use external clients, like the chatbot, to remote control Dribdat you need to set `DRIBDAT_APIKEY`. The (experimental) call used to push data into projects is:
 
 - `/api/project/push.json`
 
@@ -91,16 +78,15 @@ For more details see [api.py](dribdat/public/api.py)
 
 ## Developer guide
 
-Install Python, Virtualenv and Pip or Pipenv to start working with the code.
+Install Python, Virtualenv and Pip, or [Poetry](https://python-poetry.org/) to start working with the code.
 
 You may need to install additional libraries (`libffi`) for the [misaka](http://misaka.61924.nl/) package, which depends on [CFFI](https://cffi.readthedocs.io/en/latest/installation.html#platform-specific-instructions), e.g. `sudo dnf install libffi-devel`
 
-Run the following commands from the repository root folder to bootstrap your environment using [Pipenv](https://pipenv.readthedocs.io/):
+Run the following commands from the repository root folder to bootstrap your environment:
 
 ```
-pipenv --three
-pipenv shell
-pipenv install
+poetry shell
+poetry install
 ```
 
 Or using plain pip:
@@ -117,6 +103,12 @@ Run the following to create your app's database tables and perform the initial m
 python manage.py db init
 python manage.py db migrate
 python manage.py db upgrade
+```
+
+Install frontend resources using [Yarn](https://yarnpkg.com/en/docs/getting-started):
+
+```
+yarn install
 ```
 
 Finally, run this command to start the server:
@@ -168,6 +160,22 @@ If you get errors like *ERROR [alembic.env] Can't locate revision identified by 
 
 `heroku pg:psql -c "drop table alembic_version" -a my-dribdat-instance`
 
-## Credits
+# Credits
 
-Developed by [Oleg Lavrovsky](http://datalets.ch) based on Steven Loria's [flask-cookiecutter](https://github.com/sloria/cookiecutter-flask). With thanks to the Swiss communities for [Open Data](https://opendata.ch), [Open Networking](https://opennetworkinfrastructure.org/) and [Open Source](https://dinacon.ch) for their many contributions, and to [Swisscom](http://swisscom.com) via F. Wieser and M.-C. Gasser for conceptual inputs and financial support of the first release of this project.
+See [Contributors](https://github.com/dataletsch/dribdat/graphs/contributors) for a list of people who have made changes to the code, and [Forks](https://github.com/dataletsch/dribdat/network/members) to find some other users of this project.
+
+Mantained by [@loleg](https://github.com/loleg) and [@gonzalocasas](https://github.com/gonzalocasas), with special thanks to the Swiss communities for [Open Data](https://opendata.ch), [Open Networking](https://opennetworkinfrastructure.org/) and [Open Source](https://dinacon.ch) for the many trials and feedbacks. We are also grateful to F. Wieser and M.-C. Gasser at [Swisscom](http://swisscom.com) for conceptual inputs and financial support of the first alpha release of this project.
+
+This code is originally based on Steven Loria's [flask-cookiecutter](https://github.com/sloria/cookiecutter-flask), which we encourage you to use in YOUR next hackathon!
+
+Additional and :heart:-felt thanks for testing and feedback to:
+
+- [Alexandre Cotting](https://github.com/Cotting)
+- [Anthony Ritz](https://github.com/RitzAnthony)
+- [Chris Mutel](https://github.com/cmutel)
+- [Fabien Schwob](https://github.com/jibaku)
+- [Jonathan Sobel](https://github.com/JonathanSOBEL)
+- [@jonhesso](https://github.com/jonHESSO)
+- [@khashashin](https://github.com/khashashin)
+- [@philshem](https://github.com/philshem)
+- [Thomas Amberg](https://github.com/tamberg)

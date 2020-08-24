@@ -3,10 +3,12 @@
 language: python
 
 python:
-  - "3.6"
+  - "3.7"
 
 install:
-  - pip install -r requirements.txt
-  - pip install -r requirements/dev.txt
+  - pip install poetry
+  - poetry install
+  - yarn
 
-script: py.test tests
+script:
+  - poetry run py.test tests

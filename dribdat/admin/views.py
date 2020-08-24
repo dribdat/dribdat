@@ -110,6 +110,8 @@ def event(event_id):
 
     if form.validate_on_submit():
         form.populate_obj(event)
+        event.starts_at = datetime.combine(form.starts_date.data, form.starts_time.data)
+        event.ends_at = datetime.combine(form.ends_date.data, form.ends_time.data)
 
         db.session.add(event)
         db.session.commit()
@@ -120,6 +122,10 @@ def event(event_id):
         cache.clear()
         return events()
 
+    form.starts_date.data = event.starts_at
+    form.starts_time.data = event.starts_at
+    form.ends_date.data = event.ends_at
+    form.ends_time.data = event.ends_at
     return render_template('admin/event.html', event=event, form=form)
 
 @blueprint.route('/event/new', methods=['GET', 'POST'])
@@ -131,6 +137,8 @@ def event_new():
 
     if form.validate_on_submit():
         form.populate_obj(event)
+        event.starts_at = datetime.combine(form.starts_date.data, form.starts_time.data)
+        event.ends_at = datetime.combine(form.ends_date.data, form.ends_time.data)
 
         db.session.add(event)
         db.session.commit()

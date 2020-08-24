@@ -69,6 +69,7 @@ class TestEvent:
     """Event tests."""
 
     def test_countdown_10_days(self, db):
+        timezone = pytz.timezone(Config.TIME_ZONE)
         now = dt.datetime.now()
         event_dt = now + dt.timedelta(days=10)
         event = Event(name="test", starts_at=event_dt)
@@ -77,11 +78,12 @@ class TestEvent:
         assert event.starts_at == event_dt  # store as naive
         assert event.name == "test"
         assert event.countdown is not None
-        assert event.countdown == event_dt.astimezone(pytz.timezone(Config.TIME_ZONE))
+        assert event.countdown == timezone.localize(event_dt)
         assert timesince(event.countdown, until=True) == "1 weeks to go"
-    
+
     def test_countdown_24_days(self, db):
         now = dt.datetime.now()
+        timezone = pytz.timezone(Config.TIME_ZONE)
         event_dt = now + dt.timedelta(days=24)
         event = Event(name="test", starts_at=event_dt)
         event.save()
@@ -89,11 +91,12 @@ class TestEvent:
         assert event.starts_at == event_dt  # store as naive
         assert event.name == "test"
         assert event.countdown is not None
-        assert event.countdown == event_dt.astimezone(pytz.timezone(Config.TIME_ZONE))
+        assert event.countdown == timezone.localize(event_dt)
         assert timesince(event.countdown, until=True) == "3 weeks to go"
-    
+
     def test_countdown_4_hours(self, db):
         now = dt.datetime.now()
+        timezone = pytz.timezone(Config.TIME_ZONE)
         # need to add 10 seconds to avoid timesince to compute 3.9999h
         # formated to 3 by timesince
         event_dt = now + dt.timedelta(hours=4, seconds=10)
@@ -103,6 +106,5 @@ class TestEvent:
         assert event.starts_at == event_dt  # store as naive
         assert event.name == "test"
         assert event.countdown is not None
-        assert event.countdown == event_dt.astimezone(pytz.timezone(Config.TIME_ZONE))
+        assert event.countdown == timezone.localize(event_dt)
         assert timesince(event.countdown, until=True) == "4 hours to go"
-        

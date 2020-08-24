@@ -4,7 +4,7 @@ from flask import flash, current_app
 from datetime import datetime
 from math import floor
 import pytz
-import logging
+
 def random_password():
     import string, random
     return ''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(20))
@@ -22,7 +22,8 @@ def timesince(dt, default="just now", until=False):
     - from http://flask.pocoo.org/snippets/33/
     """
     timezone = pytz.timezone(current_app.config["TIME_ZONE"])
-    now = datetime.now().astimezone(timezone)
+    now = timezone.localize(datetime.now())
+    if dt is None: return ""
     dt = dt.astimezone(timezone)
     if dt is None: return ""
     if until and dt > now:

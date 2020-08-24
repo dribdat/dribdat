@@ -1,0 +1,13 @@
+{% from "macros/_form.html" import render_form %}
+
+{% extends "layout.html" %}
+
+{% block page_title %}Post: {{project.name}}{% endblock %}
+
+{% block content %}
+  <h2>Project update</h2>
+  <div class="form-project-post">
+    <h4>{{project.name}}</h4>
+    {{ render_form(url_for('public.project_post', project_id=project.id), form) }}
+  </div>
+{% endblock %}

@@ -126,7 +126,10 @@ class Event(SurrogatePK, Model):
 
     starts_at = Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)
     ends_at = Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)
+
     is_current = Column(db.Boolean(), default=False)
+    lock_editing = Column(db.Boolean(), default=False)
+    lock_starting = Column(db.Boolean(), default=False)
 
     @property
     def data(self):
@@ -176,15 +179,17 @@ class Event(SurrogatePK, Model):
     @property
     def has_finished(self):
         return dt.datetime.utcnow() > self.ends_at
+    @property
+    def can_start_project(self):
+        return not self.has_finished and not self.lock_starting
 
     @property
     def countdown(self):
         # Normalizing dates & timezones.
         timezone = pytz.timezone(current_app.config['TIME_ZONE'])
         utc_now = dt.datetime.now(tz=pytz.utc)
-
-        starts_at = self.starts_at.astimezone(timezone)
-        ends_at = self.ends_at.astimezone(timezone)
+        starts_at = timezone.localize(self.starts_at)
+        ends_at = timezone.localize(self.ends_at)
         TIME_LIMIT = utc_now + dt.timedelta(days=30)
 
         if starts_at > utc_now:
@@ -289,6 +294,7 @@ class Project(SurrogatePK, Model):
     def data(self):
         d = {
             'id': self.id,
+            'url': self.url,
             'name': self.name,
             'score': self.score,
             'phase': self.phase,
@@ -297,7 +303,11 @@ class Project(SurrogatePK, Model):
             'contact_url': self.contact_url,
             'image_url': self.image_url,
             'source_url': self.source_url,
+            'webpage_url': self.webpage_url,
             'progress': self.progress,
+            'maintainer': self.user.username,
+            'event_url': self.event.url,
+            'event_name': self.event.name,
         }
         if self.category is not None:
             d['category'] = self.category.data
@@ -319,7 +329,7 @@ class Project(SurrogatePK, Model):
     def update(self):
         # Correct fields
         if self.category_id == -1: self.category_id = None
-        if self.logo_icon.startswith('fa-'):
+        if self.logo_icon and self.logo_icon.startswith('fa-'):
             self.logo_icon = self.logo_icon.replace('fa-', '')
         if self.logo_color == '#000000':
             self.logo_color = ''
