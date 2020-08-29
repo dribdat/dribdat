@@ -53,8 +53,8 @@ def FetchGithubProject(project_url):
         readme
     )
     readme = re.sub(
-        r"\!\[\]\((?!http)",
-        "![](https://raw.githubusercontent.com/" + json['full_name'] + '/master/',
+        r"\!\[(.*)\]\((?!http)",
+        "![\g<1>](https://raw.githubusercontent.com/" + json['full_name'] + '/master/',
         readme
     )
     return {
