@@ -57,7 +57,30 @@
 </div><br clear="all">
 
 <div class="jumbotron project-page phase-{{ project.phase }}" {% if project.logo_color %} style="background-color:{{project.logo_color}}"{% endif %}>
-  <div class="project-info">
+
+  <ul class="nav nav-tabs md-tabs" id="projectTabs" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link active" id="project-tab-md" data-toggle="tab" href="#project-md" role="tab" aria-controls="project-md"
+        aria-selected="true">Presentation</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" id="doc-tab-md" data-toggle="tab" href="#doc-md" role="tab" aria-controls="doc-md"
+        aria-selected="false">Documentation</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" id="readme-tab-md" data-toggle="tab" href="#readme-md" role="tab" aria-controls="readme-md"
+        aria-selected="false">README</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" id="signals-tab-md" data-toggle="tab" href="#signals-md" role="tab" aria-controls="signals-md"
+        aria-selected="false">Signals</a>
+    </li>
+  </ul>
+
+<div class="project-info tab-content card pt-5" id="projectContent">
+
+  <div class="tab-pane fade show active" id="project-md" role="tabpanel" aria-labelledby="project-tab-md">
+
     {% if project.image_url %}
       <img class="project-image" src="{{project.image_url}}">
     {% endif %}
@@ -103,6 +126,9 @@
     <a href="{{ project.webpage_url }}" class="btn btn-small btn-default" target="_blank">&#x26F6; Full screen</a>
     {% endif %}
 
+  </div>
+  <div class="tab-pane fade" id="doc-md" role="tabpanel" aria-labelledby="doc-tab-md">
+
     {% if project.longtext %}
     <div class="project-longtext">
       {{project.longtext|markdown}}
@@ -114,12 +140,22 @@
       <script src="//cdn.jsdelivr.net/github-cards/latest/widget.js"></script>
     {% endif %}
 
+  </div>
+  <div class="tab-pane fade" id="readme-md" role="tabpanel" aria-labelledby="readme-tab-md">
+
     {% if project.autotext %}
     <div class="project-autotext"><div class="cover"></div>
       {{project.autotext|markdown}}
     </div>
     {% endif %}
+
   </div>
+  <div class="tab-pane fade" id="signals-md" role="tabpanel" aria-labelledby="signals-tab-md">
+    WIP
+  </div>
+
+</div>
+
   <div class="project-buttons" role="group" aria-label="Hackathon navigation">
     {% if project.contact_url %}
       <a href="{{ project.contact_url }}" target="_blank" class="btn btn-secondary">
@@ -130,7 +166,7 @@
       <a href="{{ project.webpage_url }}" class="btn btn-success" target="_blank">&#x1f310; Explore</a>
     {% endif %}
     {% if project.source_url %}
-      <a href="{{ project.source_url }}" class="btn btn-primary" target="_blank">Source &raquo;</a>
+      <a href="{{ project.source_url }}" class="btn btn-primary" target="_blank">&raquo; Source</a>
     {% endif %}
   </div>
   <div class="panel panel-default community-embed">
