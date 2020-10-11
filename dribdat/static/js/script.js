@@ -42,7 +42,7 @@
         .removeClass('fa-circle-o fa-check-circle-o')
         .addClass(!supported ? 'fa-circle-o' : 'fa-check-circle-o')
         .css('color', (supported ? 'green' : 'red'));
-      $ind.find('.autotext-indicator')
+      $ind
         .css('visibility', (supported ? '' : 'hidden'));
       $('#is_autoupdate').click(function() {
         if ($(this).is(':checked'))
