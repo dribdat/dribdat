@@ -224,13 +224,13 @@
 
   <div class="project-buttons" role="group" aria-label="Hackathon navigation">
     {% if project.contact_url %}
-      <a href="{{ project.contact_url }}" target="_blank" class="btn btn-lg btn-primary" title="Contact the team"><span>&#x1f44b;</span> Contact</a>
+      <a href="{{ project.contact_url }}" target="_blank" class="btn btn-lg" title="Contact the team"><span>&#x1f44b;</span> Contact</a>
     {% endif %}
     {% if project.webpage_url %}
-      <a href="{{ project.webpage_url }}" class="btn btn-lg btn-success" target="_blank" title="Project web link"><span>&#x1f310;</span> Explore</a>
+      <a href="{{ project.webpage_url }}" class="btn btn-lg" target="_blank" title="Project web link"><span>&#x1f310;</span> Explore</a>
     {% endif %}
     {% if project.source_url %}
-      <a href="{{ project.source_url }}" class="btn btn-lg btn-warning" target="_blank" title="Source code"><span>&#x1f4bb;</span> Source</a>
+      <a href="{{ project.source_url }}" class="btn btn-lg" target="_blank" title="Source code"><span>&#x1f4bb;</span> Source</a>
     {% endif %}
   </div>
 

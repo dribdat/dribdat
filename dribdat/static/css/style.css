@@ -345,6 +345,7 @@ nav .navbar-nav .nav-item {
   /* When shown in tabs */
   border-top: none;
   border-radius: 0px;
+  clear: both;
 }
 .project-page .project-info a {
   color: #15a;
@@ -376,9 +377,12 @@ nav .navbar-nav .nav-item {
 .project-page .project-buttons .btn {
   display: inline-block;
   text-align: center;
-  color: white;
-  font-size: 150%;
+  font-size: 140%;
   width: 5em;
+  background: rgba(255, 255, 255, 0.5);
+}
+.project-page .project-buttons .btn:hover {
+  background: #dde;
 }
 .project-page .project-buttons .btn span {
   font-size: 300%; display: block;
