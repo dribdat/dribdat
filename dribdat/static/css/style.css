@@ -180,17 +180,7 @@ nav .navbar-nav .nav-item {
   display: block;
 }
 
-.with-event form > .checkbox {
-  margin-top: 1rem;
-}
-.with-event form > .form-group {
-  margin-top: 1rem;
-  margin-bottom: 0px;
-}
-.help-inline {
-  font-style: italic;
-}
-
+/* Honeycomb customizations */
 .event-page .honeycomb {
   margin: 30px 0px 100px 0px;
   left: 50%;
@@ -257,7 +247,7 @@ nav .navbar-nav .nav-item {
   overflow: visible;
   position: relative;
   transform: none;
-  left: 30%;
+  left: 10%;
   width: auto;
   text-align: left;
   margin-bottom: 10px;
@@ -285,16 +275,16 @@ nav .navbar-nav .nav-item {
 .progress-bar {
   background-color: #3399f3;
 }
-.project-info .project-tools {
+.project-info .project-score {
   display: inline-block;
   text-align: center;
   margin-left: 1em;
   margin-right: 5px;
 }
-.project-tools .label-info {
+.project-score .label-info {
   color: #aaa;
 }
-.project-tools .progress-bar {
+.project-score .progress-bar {
   min-width: 2em;
 }
 .hexagon {
@@ -306,7 +296,12 @@ nav .navbar-nav .nav-item {
 
 .project-page .project-name {
   font-weight: bold;
-  margin-top: 1.5em;
+  margin-top: 0.5em;
+}
+.project-page .project-name h2 {
+  text-shadow: 1px 1px 1px white;
+  font-weight: bold;
+  font-size: 3rem;
 }
 .project-page .project-category {
   font-size: 70%;
@@ -343,9 +338,14 @@ nav .navbar-nav .nav-item {
 }
 .project-page .project-info {
   min-height: 240px;
-  background-color: rgba(255, 255, 255, 0.8); color: black;
-  padding: 20px;
+  background-color: rgba(255, 255, 255, 0.8);
+  color: black;
+  padding: 5px;
   margin-bottom: 10px;
+  /* When shown in tabs */
+  border-top: none;
+  border-radius: 0px;
+  clear: both;
 }
 .project-page .project-info a {
   color: #15a;
@@ -363,17 +363,59 @@ nav .navbar-nav .nav-item {
 }
 @media (min-width: 576px) {
   .project-page.jumbotron { padding: 2rem; }
+  .project.hexalist .hexagontent {
+    left: 35%;
+  }
 }
 .project-page .project-info td,
 .project-page .project-info th { padding: 0.2em 1.4em 0 0; }
 .project-page .project-info thead { border-bottom: 1px solid black; }
 
-.project-page .project-longtext { margin: 2em 0; font-size: 125%; }
-.project-page .project-autotext { padding-top: 2em; }
+.project-page .project-longtext { margin: 2em; font-size: 125%; }
+.project-page .project-autotext { margin: 2em; }
 .project-page .project-buttons { display: block; text-align: center; }
-.project-page .project-buttons .btn { font-size: 140%; }
+.project-page .project-buttons .btn {
+  display: inline-block;
+  text-align: center;
+  font-size: 140%;
+  width: 5em;
+  background: rgba(255, 255, 255, 0.5);
+}
+.project-page .project-buttons .btn:hover {
+  background: #dde;
+}
+.project-page .project-buttons .btn span {
+  font-size: 300%; display: block;
+}
 
-/* Autotext fader */
+.project-page .widget {
+  text-align: center;
+  margin: 1em;
+}
+.project-page .widget iframe {
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.project-page .nav {
+  clear: both;
+  padding: 20px 5px 5px;
+  border-bottom: 1px solid lightgrey;
+}
+.project-page .nav a {
+  text-shadow: 1px 1px 4px white;
+  font-weight: bold;
+  color: #007bff;
+}
+.project-page .nav a:not(.active):hover {
+  background-color: rgba(200, 200, 200, 0.8);
+}
+.project-page .nav a.active {
+  text-shadow: none;
+  border-bottom: 1px solid white;
+}
+
+/* Autotext fader
 .project-page .project-autotext.active {
   max-height: none;
   overflow: visible;
@@ -402,6 +444,7 @@ nav .navbar-nav .nav-item {
   background: linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 92%, rgba(255,255,255,1) 100%);
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#ffffff', GradientType=0 );
 }
+/- Autotext fader */
 
 /* Project embedded content */
 .project-page .resizable {
@@ -436,11 +479,48 @@ nav .navbar-nav .nav-item {
 /* Project entry form */
 .fld-progress .radio-inline { display: block; }
 .fld-progress { border-width: 25px; padding-left: 5px; border-top: none !important; border-bottom: none !important; border-right: none !important; border-style: solid; -webkit-border-image: -webkit-gradient(linear, 0 100%, 0 0, from(black), to(rgba(0, 0, 0, 0))) 1 100%; -webkit-border-image: -webkit-linear-gradient(bottom, black, rgba(0, 0, 0, 0)) 1 100%; -moz-border-image: -moz-linear-gradient(bottom, black, rgba(0, 0, 0, 0)) 1 100%; -o-border-image: -o-linear-gradient(bottom, black, rgba(0, 0, 0, 0)) 1 100%; border-image: linear-gradient(to top, black, rgba(0, 0, 0, 0)) 1 100%; }
-.with-event form .control-label { font-weight: 600; font-size: 140%; }
-.with-event form .checkbox label[for="is_autoupdate"] { margin-left:30%; margin-top:20px; padding:10px; border-radius:10px; box-shadow: 0 0 0 10px cyan; }
-.with-event form .checkbox label[for="is_autoupdate"] input { margin-right: 1em; }
-.with-event form .checkbox label[for="is_webembed"] { font-weight: bold; display: block; margin-bottom: 1em; }
-.with-event form .checkbox label[for="is_webembed"] input { margin-right: 0.4em; }
+.fld-progress select { font-size: 150%; }
+.with-event form .control-label[for='note'] { margin-top: 0px; }
+.with-event form .control-label {
+  font-weight: 600; font-size: 140%;
+  display: block;
+  text-align: center;
+  margin-top: 4em;
+}
+.with-event form .checkbox label[for="is_autoupdate"] {
+  margin-left:30%; margin-top:20px; padding:10px;
+  border-radius:10px; box-shadow: 0 0 0 10px cyan;
+}
+.with-event form .checkbox label[for="is_autoupdate"] input {
+  margin-right: 1em;
+}
+.with-event form .checkbox label[for="is_webembed"] {
+  font-weight: bold; display: block; margin-bottom: 1em;
+}
+.with-event form .checkbox label[for="is_webembed"] input {
+  margin-right: 0.4em;
+}
+.with-event form > .checkbox {
+  margin-top: 1rem;
+}
+.with-event form > .form-group {
+  margin-top: 1rem;
+  margin-bottom: 0px;
+  text-align: center;
+}
+.with-event form .help-inline {
+  color: #555;
+  display: block;
+  margin-top: 1em;
+}
+.with-event form .form-control {
+  font-size: 125%;
+  box-shadow: 5px 5px 5px #ccc;
+}
+.with-event form .autotext-indicator {
+  margin-top: 2em;
+  display: block;
+}
 
 /* Code blocks */
 pre { color: #333; background: white; }
@@ -489,7 +569,7 @@ pre { color: #333; background: white; }
 .nav-categories {
   margin: 10px;
 }
-.project-tools {
+.project-score {
   float: right;
   margin-right: 15px;
   text-align: right;
@@ -541,7 +621,7 @@ pre { color: #333; background: white; }
   .category-info {
     margin-top: none;
   }
-  .project-tools {
+  .project-score {
     float: none;
   }
 }
@@ -558,7 +638,7 @@ pre { color: #333; background: white; }
   height: 60px;
   display: inline-block;
   background: white;
-  border: 2px solid #eee;
+  border: 2px solid #ff9;
   padding: 2px; margin-right: 5px;
   overflow: hidden;
 }

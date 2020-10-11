@@ -4,7 +4,7 @@
 
     // Detect and recommend SSL connection
     if ('https:' != document.location.protocol)
-      $('footer').before('<center class="alert alert-danger" role="alert">Your connection to this website is insecure. <a href="https:' + window.location.href.substring(window.location.protocol.length) + '" class="btn btn-sm btn-warning"><b>Switch to HTTPS</b></a></center>');
+      $('footer').before('<center class="alert alert-default" style="margin-top:2em" role="alert">&#x1f525; Your connection to this website is insecure. <a href="https:' + window.location.href.substring(window.location.protocol.length) + '" class="btn btn-sm btn-warning"><b>Switch to HTTPS</b></a></center>');
 
     // Initialise home page countdown
     $('.event-countdown').each(function() {
@@ -42,7 +42,7 @@
         .removeClass('fa-circle-o fa-check-circle-o')
         .addClass(!supported ? 'fa-circle-o' : 'fa-check-circle-o')
         .css('color', (supported ? 'green' : 'red'));
-      $ind.find('button')
+      $ind
         .css('visibility', (supported ? '' : 'hidden'));
       $('#is_autoupdate').click(function() {
         if ($(this).is(':checked'))
@@ -53,9 +53,9 @@
     // Toggle status indicator
     var $inputfield = $(this);
     var $indicator = $inputfield.parent()
-      .append('<span class="autotext-indicator">' +
+      .append('<span class="autotext-indicator" style="visibility:hidden">' +
         '<i style="color:red" class="fa fa-circle-o"></i>&nbsp;' +
-        '<button type="button" style="visibility:hidden">Update now</button>' +
+        '<button type="button">Update now</button>' +
       '</span>')
       .find('.autotext-indicator');
 

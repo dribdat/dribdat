@@ -48,47 +48,46 @@ class UserForm(FlaskForm):
 class ProjectNew(FlaskForm):
     id = HiddenField('id')
     autotext_url = StringField(u'Sync', [length(max=255)],
-        description="Optional - an external source (GitLab, GitHub, Bitbucket, ..) to fetch project data.")
+        description="URL to external source of documentation in GitLab, GitHub, Bitbucket, Data Package or Website")
     name = StringField(u'Title', [required(), length(max=80), UniqueValidator(Project, 'name')],
-        description="* Required - max 80 characters - you may change this at any time.")
+        description="[Required] a short project name, max 80 characters - you may change this later")
     summary = StringField(u'Summary', [length(max=120)],
-        description="Max 120 characters.")
-    category_id = SelectField(u'Category', coerce=int)
+        description="Max 120 characters")
     contact_url = StringField(u'Contact link', [length(max=255)],
-        description="How to best contact your team.")
+        description="How best to contact your team")
+    category_id = SelectField(u'Challenge category', coerce=int)
     submit = SubmitField(u'Save')
 
 class ProjectForm(FlaskForm):
     id = HiddenField('id')
-    autotext_url = StringField(u'Sync', [length(max=255)],
-        description="Optional - an external source (GitLab, GitHub, Bitbucket, ..) to fetch project data.")
     # is_autoupdate = BooleanField(u'Sync project data')
     name = StringField(u'Title', [required(), length(max=80), UniqueValidator(Project, 'name')],
-        description="* Required - max 80 characters.")
+        description="[Required] a short project name, max 80 characters")
     summary = StringField(u'Summary', [length(max=120)],
-        description="Max 120 characters.")
+        description="Max 120 characters")
     longtext = TextAreaField(u'Description',
-        description="Text, Markdown or HTML to describe your project. Shown above the README, if Sync is used.")
-    category_id = SelectField(u'Category', coerce=int)
+        description="Plain text, Markdown or HTML to describe your project. Use a service like pixelfed.org or imgur.com to upload images")
     webpage_url = StringField(u'Project link', [length(max=2048)],
-        description="URL to a live demo, presentation, or link to further information.")
-    is_webembed = BooleanField(u'Embed this',
-        description="Show contents of project home directly in the project page.")
+        description="URL to a live demo, presentation, or link to further information")
+    is_webembed = BooleanField(u'Embed project link')
+    autotext_url = StringField(u'Sync', [length(max=255)],
+        description="URL to external source of documentation in GitLab, GitHub, Bitbucket, Data Package or Web site")
     source_url = StringField(u'Source link', [length(max=255)],
-        description="URL of your repository.")
+        description="URL of your repository")
     contact_url = StringField(u'Contact link', [length(max=255)],
-        description="URL of an issues page, forum thread, chat channel, hashtag, etc.")
+        description="URL of an issues page, forum thread, chat channel, e-mail, hashtag, ...")
     image_url = StringField(u'Image link', [length(max=255)],
-        description="URL to an image to display at the top of the project page.")
+        description="URL to an image to display at the top")
     logo_color = StringField(u'Custom color', [length(max=7)],
-        description="A custom background color for your project page.")
+        description="Background color of your project page")
     # logo_icon = StringField(u'<a target="_blank" href="http://fontawesome.io/icons/#search">Custom icon</a>',
     #     [length(max=20)], description="A FontAwesome icon for the project browser.")
+    category_id = SelectField(u'Challenge category', coerce=int)
     submit = SubmitField(u'Save changes')
 
 class ProjectPost(FlaskForm):
     id = HiddenField('id')
     progress = SelectField(u'Progress', coerce=int)
-    note = TextAreaField(u'Note',
-        description="A brief note describing your status.")
+    note = TextAreaField(u'Note', [required(), length(max=140)],
+        description="What are you working on right now?")
     submit = SubmitField(u'Submit')

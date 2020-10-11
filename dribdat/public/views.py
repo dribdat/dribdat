@@ -108,26 +108,23 @@ def project_post(project_id):
         return project_action(project_id, None)
     form = ProjectPost(obj=project, next=request.args.get('next'))
     form.progress.choices = projectProgressList(event.has_started or event.has_finished)
-    if not form.note.data:
-        form.note.data = "---\n`%s` " % datetime.utcnow().strftime("%d.%m.%Y %H:%M")
     if form.validate_on_submit():
         del form.id
         form.populate_obj(project)
-        project.longtext += "\n\n" + form.note.data
         project.update()
         db.session.add(project)
         db.session.commit()
         cache.clear()
-        flash('Project updated.', 'success')
-        project_action(project_id, 'update', False)
+        flash('Thanks for your commit!', 'success')
+        project_action(project_id, 'update', action='post', text=form.note.data)
         return redirect(url_for('public.project', project_id=project.id))
     return render_template('public/projectpost.html', current_event=event, project=project, form=form)
 
-def project_action(project_id, of_type, as_view=True, then_redirect=False):
+def project_action(project_id, of_type=None, as_view=True, then_redirect=False, action=None, text=None):
     project = Project.query.filter_by(id=project_id).first_or_404()
     event = project.event
     if of_type is not None:
-        ProjectActivity(project, of_type, current_user)
+        ProjectActivity(project, of_type, current_user, action, text)
     if not as_view:
         return True
     starred = IsProjectStarred(project, current_user)
@@ -135,22 +132,23 @@ def project_action(project_id, of_type, as_view=True, then_redirect=False):
     allow_edit = allow_edit and not event.lock_editing
     project_stars = GetProjectTeam(project)
     latest_activity = project.latest_activity()
+    project_signals = project.all_signals()
     if then_redirect:
         return redirect(url_for('public.project', project_id=project.id))
     return render_template('public/project.html', current_event=event, project=project,
-        project_starred=starred, project_stars=project_stars,
+        project_starred=starred, project_stars=project_stars, project_signals=project_signals,
         allow_edit=allow_edit, latest_activity=latest_activity)
 
 @blueprint.route('/project/<int:project_id>/star', methods=['GET', 'POST'])
 @login_required
 def project_star(project_id):
-    flash('Thanks for your support!', 'success')
+    flash('Welcome to the team!', 'success')
     return project_action(project_id, 'star', then_redirect=True)
 
 @blueprint.route('/project/<int:project_id>/unstar', methods=['GET', 'POST'])
 @login_required
 def project_unstar(project_id):
-    flash('Project un-starred', 'success')
+    flash('You have left the project', 'success')
     return project_action(project_id, 'unstar', then_redirect=True)
 
 @blueprint.route('/event/<int:event_id>/project/new', methods=['GET', 'POST'])
@@ -174,7 +172,7 @@ def project_new(event_id):
             project.update()
             db.session.add(project)
             db.session.commit()
-            flash('Project added.', 'success')
+            flash('New challenge added.', 'success')
             project_action(project.id, 'create', False)
             cache.clear()
             project_action(project.id, 'star', False)
@@ -189,11 +187,11 @@ def project_autoupdate(project_id):
     allow_edit = starred or (not current_user.is_anonymous and current_user.is_admin)
     if not allow_edit or project.is_hidden or not project.is_autoupdate:
         flash('You may not sync this project.', 'warning')
-        return project_action(project_id, None)
+        return project_action(project_id)
     data = GetProjectData(project.autotext_url)
     if not 'name' in data:
-        flash("Project could not be synced: check the Remote Link.", 'warning')
-        return project_action(project_id, None)
+        flash("Could not sync: check the Remote Link.", 'warning')
+        return project_action(project_id)
     # Project name is not updated
     # if 'name' in data and data['name']: project.name = data['name']
     # Always update "autotext" field
@@ -215,4 +213,4 @@ def project_autoupdate(project_id):
     db.session.add(project)
     db.session.commit()
     flash("Project data synced.", 'success')
-    return project_action(project.id, 'update')
+    return project_action(project.id, 'update', action='sync', text=str(len(project.autotext)) + ' bytes')
