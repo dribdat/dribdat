@@ -88,6 +88,6 @@ class ProjectForm(FlaskForm):
 class ProjectPost(FlaskForm):
     id = HiddenField('id')
     progress = SelectField(u'Progress', coerce=int)
-    note = TextAreaField(u'Note',
-        description="A brief note describing your status.")
+    note = TextAreaField(u'Note', [required(), length(max=140)],
+        description="What are you working on right now?")
     submit = SubmitField(u'Submit')

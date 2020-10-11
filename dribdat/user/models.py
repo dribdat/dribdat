@@ -273,6 +273,7 @@ class Project(SurrogatePK, Model):
         signals = []
         prev = None
         for a in activities:
+            title = text = None
             if a.action == 'sync':
                 title = "Synchronized"
                 text = "Readme fetched from source by " + a.user.username

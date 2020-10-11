@@ -94,12 +94,12 @@
   </div>
 
   <ul class="nav nav-pills nav-fill md-tabs" id="projectTabs" role="tablist">
-    {% if project.is_webembed or project.source_url %}
     <li class="nav-item">
-      <a class="nav-link active" id="project-tab-md" data-toggle="tab" href="#project-md" role="tab" aria-controls="project-md"
-        aria-selected="true">Pitch</a>
+      <a class="nav-link active" id="project-tab-md" data-toggle="tab" href="#project-md"
+        role="tab" aria-controls="project-md" aria-selected="true">
+        {% if project.phase == 0 %}Challenge{% else %}Pitch{% endif %}
+      </a>
     </li>
-    {% endif %}
     {% if project.longtext %}
     <li class="nav-item">
       <a class="nav-link" id="doc-tab-md" data-toggle="tab" href="#doc-md" role="tab" aria-controls="doc-md"
