@@ -97,7 +97,7 @@
     <li class="nav-item">
       <a class="nav-link active" id="project-tab-md" data-toggle="tab" href="#project-md"
         role="tab" aria-controls="project-md" aria-selected="true">
-        {% if project.phase == 0 %}Challenge{% else %}Pitch{% endif %}
+        {% if project.phase == 'Challenge' %}Challenge{% else %}Pitch{% endif %}
       </a>
     </li>
     {% if project.longtext %}
