@@ -93,16 +93,15 @@
   {% endif %}
   </div>
 
+  {% if not project.is_challenge %}
   <ul class="nav nav-pills nav-fill md-tabs" id="projectTabs" role="tablist">
     <li class="nav-item">
-      <a class="nav-link active" id="project-tab-md" data-toggle="tab" href="#project-md"
-        role="tab" aria-controls="project-md" aria-selected="true">
-        {% if project.phase == 'Challenge' %}Challenge{% else %}Pitch{% endif %}
-      </a>
+      <a class="nav-link active" id="project-tab-md" data-toggle="tab" href="#project-md" role="tab" aria-controls="project-md"
+        aria-selected="true">Pitch</a>
     </li>
     {% if project.longtext %}
     <li class="nav-item">
-      <a class="nav-link" id="doc-tab-md" data-toggle="tab" href="#doc-md" role="tab" aria-controls="doc-md"
+      <a class="nav-link{{ ' active' if project.is_challenge }}" id="doc-tab-md" data-toggle="tab" href="#doc-md" role="tab" aria-controls="doc-md"
         aria-selected="false">Docs</a>
     </li>
     {% endif %}
@@ -112,14 +111,18 @@
         aria-selected="false">Readme</a>
     </li>
     {% endif %}
+    {% if not project.is_challenge %}
     <li class="nav-item">
       <a class="nav-link" id="signals-tab-md" data-toggle="tab" href="#signals-md" role="tab" aria-controls="signals-md"
         aria-selected="false">Log</a>
     </li>
+    {% endif %}
   </ul>
+  {% endif %}
 
 <div class="project-info tab-content" id="projectContent">
 
+{% if not project.is_challenge %}
   <div class="tab-pane fade show active" id="project-md" role="tabpanel" aria-labelledby="project-tab-md">
 
   {% if project.is_webembed %}
@@ -164,8 +167,9 @@
   {% endif %}
 
   </div>
+{% endif %}
 {% if project.longtext %}
-  <div class="tab-pane fade" id="doc-md" role="tabpanel" aria-labelledby="doc-tab-md">
+  <div class="tab-pane {{ 'show active' if project.is_challenge else 'fade' }}" id="doc-md" role="tabpanel" aria-labelledby="doc-tab-md">
 
     <div class="project-longtext">
       {{project.longtext|markdown}}
