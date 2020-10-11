@@ -3,7 +3,8 @@
 from flask_assets import Bundle, Environment
 
 css = Bundle(
-    "libs/bootstrap/css/bootstrap.css",
+    "libs/bootstrap/css/bootstrap.min.css",
+    "libs/font-awesome/css/font-awesome.min.css",
     "libs/FlipClock/flipclock.css",
     "css/honeycomb.css",
     "css/timeline.css",
