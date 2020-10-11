@@ -271,8 +271,16 @@ class Project(SurrogatePK, Model):
     def all_signals(self):
         activities = Activity.query.filter_by(project_id=self.id).order_by(Activity.timestamp.desc())
         signals = []
+        prev = None
         for a in activities:
-            if a.name == 'star':
+            if a.action == 'sync':
+                title = "Synchronized"
+                text = "Readme fetched from source by " + a.user.username
+            elif a.action == 'post':
+                title = "Progress made"
+                if a.content is not None:
+                    text = a.content + "\n\n-- " + a.user.username
+            elif a.name == 'star':
                 title = "Team forming"
                 text = a.user.username + " has joined"
             elif a.name == 'update':
@@ -282,17 +290,18 @@ class Project(SurrogatePK, Model):
                 title = "Project started"
                 text = "Initialized by " + a.user.username
             # Check if last signal very similar
-            skip = False
-            if len(signals) > 1:
-                prev = signals[-1]
-                skip = (prev['title'] == title and prev['text'] == text
-                        and (prev['date']-a.timestamp).total_seconds() < 120)
-            if not skip:
-                signals.append({
-                    'title': title,
-                    'text': text,
-                    'date': a.timestamp
-                })
+            if prev is not None:
+                if (
+                    prev['title'] == title and prev['text'] == text and
+                    (prev['date']-a.timestamp).total_seconds() < 120
+                ):
+                    continue
+            prev = {
+                'title': title,
+                'text': text,
+                'date': a.timestamp
+            }
+            signals.append(prev)
         if self.event.has_started or self.event.has_finished:
             signals.append({
                 'title': "Hackathon started",
@@ -455,13 +464,16 @@ class Category(SurrogatePK, Model):
 class Activity(SurrogatePK, Model):
     __tablename__ = 'activities'
     name = Column(db.Enum(
-        'external',
         'create',
         'update',
-        'boost',
         'star',
-        'post',
         name="activity_type"))
+    action = Column(db.String(32), nullable=True)
+        # 'external',
+        # 'boost',
+        # 'sync',
+        # 'post',
+        # ...
     timestamp = Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)
     content = Column(db.UnicodeText, nullable=True)
     user_id = reference_col('users', nullable=False)

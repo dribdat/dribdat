@@ -285,16 +285,16 @@ nav .navbar-nav .nav-item {
 .progress-bar {
   background-color: #3399f3;
 }
-.project-info .project-tools {
+.project-info .project-score {
   display: inline-block;
   text-align: center;
   margin-left: 1em;
   margin-right: 5px;
 }
-.project-tools .label-info {
+.project-score .label-info {
   color: #aaa;
 }
-.project-tools .progress-bar {
+.project-score .progress-bar {
   min-width: 2em;
 }
 .hexagon {
@@ -343,9 +343,13 @@ nav .navbar-nav .nav-item {
 }
 .project-page .project-info {
   min-height: 240px;
-  background-color: rgba(255, 255, 255, 0.8); color: black;
+  background-color: rgba(255, 255, 255, 0.8);
+  color: black;
   padding: 20px;
   margin-bottom: 10px;
+  /* When shown in tabs */
+  border-top: none;
+  border-radius: 0px;
 }
 .project-page .project-info a {
   color: #15a;
@@ -372,6 +376,17 @@ nav .navbar-nav .nav-item {
 .project-page .project-autotext { padding-top: 2em; }
 .project-page .project-buttons { display: block; text-align: center; }
 .project-page .project-buttons .btn { font-size: 140%; }
+
+.project-page .widget {
+  text-align: center;
+  margin: 1em;
+}
+.project-page .widget * { text-align: left; }
+
+.project-page .nav-tabs {
+  clear: both;
+  padding-top: 1em;
+}
 
 /* Autotext fader
 .project-page .project-autotext.active {
@@ -490,7 +505,7 @@ pre { color: #333; background: white; }
 .nav-categories {
   margin: 10px;
 }
-.project-tools {
+.project-score {
   float: right;
   margin-right: 15px;
   text-align: right;
@@ -542,7 +557,7 @@ pre { color: #333; background: white; }
   .category-info {
     margin-top: none;
   }
-  .project-tools {
+  .project-score {
     float: none;
   }
 }
@@ -559,7 +574,7 @@ pre { color: #333; background: white; }
   height: 60px;
   display: inline-block;
   background: white;
-  border: 2px solid #eee;
+  border: 2px solid #ff9;
   padding: 2px; margin-right: 5px;
   overflow: hidden;
 }
