@@ -57,128 +57,181 @@
 </div><br clear="all">
 
 <div class="jumbotron project-page phase-{{ project.phase }}" {% if project.logo_color %} style="background-color:{{project.logo_color}}"{% endif %}>
-  <div class="project-info">
-    {% if project.image_url %}
-      <img class="project-image" src="{{project.image_url}}">
-    {% endif %}
 
-    <div class="project-tools">
-      <span class="label label-info">{{ project.phase }}</span>
-      <div class="progress" title="A score based on profile completeness and voting results">
-        <div class="progress-bar" role="progressbar" aria-valuenow="{{project.score}}" aria-valuemin="0" aria-valuemax="70" style="width:{{project.score}}%">
-          {{project.score}}
-        </div>
+  {% if project.image_url %}
+    <img class="project-image" src="{{project.image_url}}">
+  {% endif %}
+
+  <div class="project-score">
+    <span class="label label-info">{{ project.phase }}</span>
+    <div class="progress" title="A score based on profile completeness and voting results">
+      <div class="progress-bar" role="progressbar" aria-valuenow="{{project.score}}" aria-valuemin="0" aria-valuemax="70" style="width:{{project.score}}%">
+        {{project.score}}
       </div>
     </div>
+  </div>
 
-    <h2 class="project-name">
-      {% if project.logo_icon %}
-        <i class="fa fa-{{project.logo_icon}}"></i>
+  <div class="project-name">
+  {% if project.logo_icon %}
+      <i class="fa fa-{{project.logo_icon}}"></i>
+  {% endif %}
+    <h2>{{project.name}}</h2>
+
+  {% if project.category %}
+    <div class="project-category">
+      {% if project.category.logo_icon %}
+        <i class="fa fa-{{project.category.logo_icon}}"></i>
       {% endif %}
-      <span>{{project.name}}</span>
+      <a href="#category">{{ project.category.name }}</a>
+    </div>
+  {% endif %}
 
-      {% if project.category %}
-      <div class="project-category">
-        {% if project.category.logo_icon %}
-          <i class="fa fa-{{project.category.logo_icon}}"></i>
-        {% endif %}
-        <a href="#category">{{ project.category.name }}</a>
-      </div>
-      {% endif %}
-    </h2>
-
-    {% if project.summary %}
+  {% if project.summary %}
     <p class="project-summary">
       {{project.summary}}
     </p>
+  {% endif %}
+  </div>
+
+  {% if not project.is_challenge %}
+  <ul class="nav nav-pills nav-fill md-tabs" id="projectTabs" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link active" id="project-tab-md" data-toggle="tab" href="#project-md" role="tab" aria-controls="project-md"
+        aria-selected="true">Pitch</a>
+    </li>
+    {% if project.longtext %}
+    <li class="nav-item">
+      <a class="nav-link{{ ' active' if project.is_challenge }}" id="doc-tab-md" data-toggle="tab" href="#doc-md" role="tab" aria-controls="doc-md"
+        aria-selected="false">Docs</a>
+    </li>
     {% endif %}
+    {% if project.autotext %}
+    <li class="nav-item">
+      <a class="nav-link" id="readme-tab-md" data-toggle="tab" href="#readme-md" role="tab" aria-controls="readme-md"
+        aria-selected="false">Readme</a>
+    </li>
+    {% endif %}
+    {% if not project.is_challenge %}
+    <li class="nav-item">
+      <a class="nav-link" id="signals-tab-md" data-toggle="tab" href="#signals-md" role="tab" aria-controls="signals-md"
+        aria-selected="false">Log</a>
+    </li>
+    {% endif %}
+  </ul>
+  {% endif %}
 
-    <br clear="all">
+<div class="project-info tab-content" id="projectContent">
 
-    {% if project.is_webembed %}
+{% if not project.is_challenge %}
+  <div class="tab-pane fade show active" id="project-md" role="tabpanel" aria-labelledby="project-tab-md">
+
+  {% if project.is_webembed %}
     <div class="project-webembed resizable">
       {{ project.webembed|safe }}
       <div class="win-size-grip"></div>
     </div>
     <a href="{{ project.webpage_url }}" class="btn btn-small btn-default" target="_blank">&#x26F6; Full screen</a>
-    {% endif %}
+  {% endif %}
 
-    {% if project.longtext %}
+  {% if 'github.com' in project.source_url %}
+    <div class="widget widget-github">
+      <div data-theme="default" data-width="400" data-height="150" data-github="{{ project.source_url|replace('https://github.com/','') }}" class="github-card"></div>
+      <script src="//cdn.jsdelivr.net/github-cards/latest/widget.js"></script>
+    </div>
+  {% endif %}
+
+  {% if project_stars %}
+    <a name="team"></a>
+    <div class="widget widget-team">
+    {% for activity in project_stars %}
+      <a href="{% if activity.user.webpage_url %}{{activity.user.webpage_url}}{% else %}{{ project.contact_url }}{% endif %}" title="{{activity.user.username}}" alt=":-)" target="_blank" class="team-gravatar">
+        <img width="40" height="40" src="https://www.gravatar.com/avatar/{{activity.user.carddata}}"/>
+        {% if activity.user.cardtype == 'github' %}
+          <img src="{{ url_for('static', filename='img/GitHub-Mark.png') }}" width="30" height="30">
+        {% elif activity.user.cardtype == 'twitter' %}
+          <img src="{{ url_for('static', filename='img/Twitter_Social_Icon_Circle_Color.png') }}" width="30" height="30">
+        {% endif %}
+
+        <span>{{activity.user.username}}</span>
+      </a>
+    {% endfor %}
+      <p class="started-at">
+        <small>
+          Launched this at
+          <a href="{{ url_for('public.event', event_id=project.event.id) }}">
+            <b>{{ project.event.name }}</b>
+          </a>
+        </small>
+      </p>
+    </div>
+  {% endif %}
+
+  </div>
+{% endif %}
+{% if project.longtext %}
+  <div class="tab-pane {{ 'show active' if project.is_challenge else 'fade' }}" id="doc-md" role="tabpanel" aria-labelledby="doc-tab-md">
+
     <div class="project-longtext">
       {{project.longtext|markdown}}
     </div>
-    {% endif %}
 
-    {% if github_project %}
-      <div data-theme="default" data-width="400" data-height="150" data-github="{{ github_project }}" class="github-card"></div>
-      <script src="//cdn.jsdelivr.net/github-cards/latest/widget.js"></script>
-    {% endif %}
+  </div>
+{% endif %}
+{% if project.autotext %}
+  <div class="tab-pane fade" id="readme-md" role="tabpanel" aria-labelledby="readme-tab-md">
 
-    {% if project.autotext %}
     <div class="project-autotext"><div class="cover"></div>
       {{project.autotext|markdown}}
     </div>
-    {% endif %}
+
   </div>
+{% endif %}
+  <div class="tab-pane fade" id="signals-md" role="tabpanel" aria-labelledby="signals-tab-md">
+
+    <section class="timeline">
+      {% for s in project_signals %}
+      <div class="timeline-item">
+        <div class="timeline-img"></div>
+        <div class="timeline-content timeline-card js--fadeInBottom">
+          <div class="date">{{s.date|format_datetime}}</div>
+          {% if s.title %}
+          <div class="timeline-img-header">
+            <h2>{{s.title}}</h2>
+          </div>
+          {% endif %}
+          {% if s.text %}
+            {{s.text|markdown}}
+          {% endif %}
+        </div>
+      </div>
+      {% endfor %}
+    </section>
+
+    <!-- <p class="details-basic">
+      <span class="updated">
+        Updated
+        <a href="#" id="show-history">{{ project.updated_at|format_datetime }}</a>
+      </span>
+      <span class="maintainer">
+        Maintainer:
+        <b><a href="{{project.user.webpage_url}}" target="_blank">{{ project.user.username }}</a></b>
+      </span>
+    </p> -->
+
+  </div>
+
+</div>
+
   <div class="project-buttons" role="group" aria-label="Hackathon navigation">
     {% if project.contact_url %}
-      <a href="{{ project.contact_url }}" target="_blank" class="btn btn-secondary">
-        <i class="fa fa-envelope-o" aria-hidden="true"></i>
-        Contact</a>
+      <a href="{{ project.contact_url }}" target="_blank" class="btn btn-lg" title="Contact the team"><span>&#x1f44b;</span> Contact</a>
     {% endif %}
     {% if project.webpage_url %}
-      <a href="{{ project.webpage_url }}" class="btn btn-success" target="_blank">&#x1f310; Explore</a>
+      <a href="{{ project.webpage_url }}" class="btn btn-lg" target="_blank" title="Project web link"><span>&#x1f310;</span> Explore</a>
     {% endif %}
     {% if project.source_url %}
-      <a href="{{ project.source_url }}" class="btn btn-primary" target="_blank">Source &raquo;</a>
+      <a href="{{ project.source_url }}" class="btn btn-lg" target="_blank" title="Source code"><span>&#x1f4bb;</span> Source</a>
     {% endif %}
-  </div>
-  <div class="panel panel-default community-embed">
-    <div class="panel-body">
-
-      {% if project_stars %}
-        <p class="started-at">
-          <small>
-            Launched at
-            <a href="{{ url_for('public.event', event_id=project.event.id) }}">
-              <b>{{ project.event.name }}</b>
-            </a> by
-          </small>
-        </p>
-        {% for activity in project_stars %}
-          <a href="{% if activity.user.webpage_url %}{{activity.user.webpage_url}}{% else %}{{ project.contact_url }}{% endif %}" title="{{activity.user.username}}" alt=":-)" target="_blank" class="team-gravatar">
-            <img width="40" height="40" src="https://www.gravatar.com/avatar/{{activity.user.carddata}}"/>
-            {% if activity.user.cardtype == 'github' %}
-              <img src="{{ url_for('static', filename='img/GitHub-Mark.png') }}" width="30" height="30">
-            {% elif activity.user.cardtype == 'twitter' %}
-              <img src="{{ url_for('static', filename='img/Twitter_Social_Icon_Circle_Color.png') }}" width="30" height="30">
-            {% endif %}
-
-            <span>{{activity.user.username}}</span>
-          </a>
-        {% endfor %}
-      {% endif %}
-
-      <div class="details">
-        <p class="maintainer">
-          Maintainer
-          <b><a href="{{project.user.webpage_url}}" target="_blank">{{ project.user.username }}</a></b>
-        </p>
-        <p class="updated">
-          Updated
-          <a href="#" id="show-history">{{ project.updated_at|format_datetime }}</a>
-        </p>
-        <ul class="history">
-          {% for activity in latest_activity %}
-            <li>
-              <b>{{activity.user.username}}</b> /
-              {{activity.name}} /
-              <span>{{activity.timestamp|format_datetime}}</span>
-            </li>
-          {% endfor %}
-        </ul>
-      </div>
-    </div>
   </div>
 
   {% if project.category %}
