@@ -292,8 +292,8 @@ class Project(SurrogatePK, Model):
             # Check if last signal very similar
             if prev is not None:
                 if (
-                    prev['title'] == title and prev['text'] == text and
-                    (prev['date']-a.timestamp).total_seconds() < 120
+                    prev['title'] == title and prev['text'] == text
+                    # and (prev['date']-a.timestamp).total_seconds() < 120
                 ):
                     continue
             prev = {

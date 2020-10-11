@@ -57,7 +57,6 @@ class ProjectForm(FlaskForm):
     autotext_url = StringField(u'Sync', [length(max=255)])
     # is_autoupdate = BooleanField(u'Autoupdate project data')
     name = StringField(u'Title', [required(), length(max=80), UniqueValidator(Project, 'name')])
-    category_id = SelectField(u'Category', coerce=int)
     summary = StringField(u'Short summary', [length(max=120)])
     longtext = TextAreaField(u'Description')
     autotext = TextAreaField(u'Readme content')
@@ -68,6 +67,7 @@ class ProjectForm(FlaskForm):
     image_url = StringField(u'Image link', [length(max=255)])
     logo_color = StringField(u'Custom color', [length(max=7)])
     logo_icon = StringField(u'Custom icon', [length(max=20)])
+    category_id = SelectField(u'Challenge category', coerce=int)
     submit = SubmitField(u'Save')
 
 class CategoryForm(FlaskForm):
