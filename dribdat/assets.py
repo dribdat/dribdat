@@ -6,6 +6,7 @@ css = Bundle(
     "libs/bootstrap/css/bootstrap.css",
     "libs/FlipClock/flipclock.css",
     "css/honeycomb.css",
+    "css/timeline.css",
     "css/style.css",
     filters="cssmin",
     output="public/css/common.css"

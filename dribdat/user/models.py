@@ -273,21 +273,38 @@ class Project(SurrogatePK, Model):
         signals = []
         for a in activities:
             if a.name == 'star':
-                title = a.user.username
-                subtl = "has joined"
+                title = "Team forming"
+                text = a.user.username + " has joined"
             elif a.name == 'update':
-                title = "Documentation updated"
-                subtl = "by " + a.user.username
+                title = "Documentation"
+                text = "Worked on by " + a.user.username
             elif a.name == 'create':
                 title = "Project started"
-                subtl = "by " + a.user.username
-
+                text = "Initialized by " + a.user.username
+            # Check if last signal very similar
+            skip = False
+            if len(signals) > 1:
+                prev = signals[-1]
+                skip = (prev['title'] == title and prev['text'] == text
+                        and (prev['date']-a.timestamp).total_seconds() < 120)
+            if not skip:
+                signals.append({
+                    'title': title,
+                    'text': text,
+                    'date': a.timestamp
+                })
+        if self.event.has_started or self.event.has_finished:
             signals.append({
-                'title': title,
-                'text': subtl,
-                'date': a.timestamp
+                'title': "Hackathon started",
+                'text': self.event.location,
+                'date': self.event.starts_at
             })
-        return signals
+        if self.event.has_finished:
+            signals.append({
+                'title': "Hackathon finished",
+                'date': self.event.ends_at
+            })
+        return sorted(signals, key=lambda x: x['date'], reverse=True)
 
     # Convenience query for all categories
     def categories_all(self, event=None):
