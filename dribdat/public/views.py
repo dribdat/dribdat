@@ -135,10 +135,11 @@ def project_action(project_id, of_type, as_view=True, then_redirect=False):
     allow_edit = allow_edit and not event.lock_editing
     project_stars = GetProjectTeam(project)
     latest_activity = project.latest_activity()
+    project_signals = project.all_signals()
     if then_redirect:
         return redirect(url_for('public.project', project_id=project.id))
     return render_template('public/project.html', current_event=event, project=project,
-        project_starred=starred, project_stars=project_stars,
+        project_starred=starred, project_stars=project_stars, project_signals=project_signals,
         allow_edit=allow_edit, latest_activity=latest_activity)
 
 @blueprint.route('/project/<int:project_id>/star', methods=['GET', 'POST'])

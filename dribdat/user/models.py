@@ -267,6 +267,28 @@ class Project(SurrogatePK, Model):
     def latest_activity(self):
         return Activity.query.filter_by(project_id=self.id).order_by(Activity.timestamp.desc()).limit(5)
 
+    # Query which formats the project's timeline
+    def all_signals(self):
+        activities = Activity.query.filter_by(project_id=self.id).order_by(Activity.timestamp.desc())
+        signals = []
+        for a in activities:
+            if a.name == 'star':
+                title = a.user.username
+                subtl = "has joined"
+            elif a.name == 'update':
+                title = "Documentation updated"
+                subtl = "by " + a.user.username
+            elif a.name == 'create':
+                title = "Project started"
+                subtl = "by " + a.user.username
+
+            signals.append({
+                'title': title,
+                'text': subtl,
+                'date': a.timestamp
+            })
+        return signals
+
     # Convenience query for all categories
     def categories_all(self, event=None):
         if self.event: return self.event.categories_for_event()
@@ -344,26 +366,31 @@ class Project(SurrogatePK, Model):
             # Calculate score based on base progress
             score = self.progress or 0
             cqu = Activity.query.filter_by(project_id=self.id)
-            c_s = cqu.filter_by(name="star").count()
-            score = score + (2 * c_s)
-            # c_a = cqu.filter_by(name="boost").count()
-            # score = score + (10 * c_a)
+            c_s = cqu.count()
+            # Get a point for every (join, update, ..) activity in the project's signals
+            score = score + (1 * c_s)
+            # Triple the score for every boost (upvote)
+            c_a = cqu.filter_by(name="boost").count()
+            score = score + (2 * c_a)
+            # Add to the score for every complete documentation field
             if self.summary is None: self.summary = ''
             if len(self.summary) > 3: score = score + 3
             if self.image_url is None: self.image_url = ''
             if len(self.image_url) > 3: score = score + 3
             if self.source_url is None: self.source_url = ''
-            if len(self.source_url) > 3: score = score + 10
+            if len(self.source_url) > 3: score = score + 3
             if self.webpage_url is None: self.webpage_url = ''
-            if len(self.webpage_url) > 3: score = score + 10
+            if len(self.webpage_url) > 3: score = score + 3
             if self.logo_color is None: self.logo_color = ''
-            if len(self.logo_color) > 3: score = score + 1
+            if len(self.logo_color) > 3: score = score + 3
             if self.logo_icon is None: self.logo_icon = ''
-            if len(self.logo_icon) > 3: score = score + 1
+            if len(self.logo_icon) > 3: score = score + 3
             if self.longtext is None: self.longtext = ''
+            # Get more points based on how much content you share
             if len(self.longtext) > 3: score = score + 1
             if len(self.longtext) > 100: score = score + 4
             if len(self.longtext) > 500: score = score + 10
+            # Points for external (Readme) content
             if self.autotext is not None:
                 if len(self.autotext) > 3: score = score + 1
                 if len(self.autotext) > 100: score = score + 4
@@ -387,8 +414,8 @@ class Category(SurrogatePK, Model):
     # If specific to an event
     event_id = reference_col('events', nullable=True)
     event = relationship('Event', backref='categories')
-
-    @property
+    #
+    # @property
     def project_count(self):
         if not self.projects: return 0
         return len(self.projects)
@@ -411,12 +438,15 @@ class Category(SurrogatePK, Model):
 class Activity(SurrogatePK, Model):
     __tablename__ = 'activities'
     name = Column(db.Enum(
+        'external',
         'create',
         'update',
-        # 'boost',
+        'boost',
         'star',
+        'post',
         name="activity_type"))
     timestamp = Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)
+    content = Column(db.UnicodeText, nullable=True)
     user_id = reference_col('users', nullable=False)
     user = relationship('User', backref='activities')
     project_id = reference_col('projects', nullable=False)

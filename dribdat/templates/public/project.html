@@ -151,7 +151,35 @@
 
   </div>
   <div class="tab-pane fade" id="signals-md" role="tabpanel" aria-labelledby="signals-tab-md">
-    WIP
+
+    <section class="timeline">
+      {% for s in project_signals %}
+      <div class="timeline-item">
+        <div class="timeline-img"></div>
+        <div class="timeline-content timeline-card js--fadeInBottom">
+          {% if s.title %}
+          <div class="timeline-img-header" style="background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.52), rgba(0, 0, 0, 0.73)), url()">
+            <h2>{{s.title}}</h2>
+          </div>
+          {% endif %}
+          <div class="date">{{s.date|format_datetime}}</div>
+          {% if s.text %}
+          <p>{{s.text|markdown}}</p>
+          {% endif %}
+        </div>
+      </div>
+      {% endfor %}
+    </section>
+
+    <p class="maintainer">
+      Maintainer
+      <b><a href="{{project.user.webpage_url}}" target="_blank">{{ project.user.username }}</a></b>
+    </p>
+    <p class="updated">
+      Updated
+      <a href="#" id="show-history">{{ project.updated_at|format_datetime }}</a>
+    </p>
+
   </div>
 
 </div>
@@ -195,25 +223,6 @@
         {% endfor %}
       {% endif %}
 
-      <div class="details">
-        <p class="maintainer">
-          Maintainer
-          <b><a href="{{project.user.webpage_url}}" target="_blank">{{ project.user.username }}</a></b>
-        </p>
-        <p class="updated">
-          Updated
-          <a href="#" id="show-history">{{ project.updated_at|format_datetime }}</a>
-        </p>
-        <ul class="history">
-          {% for activity in latest_activity %}
-            <li>
-              <b>{{activity.user.username}}</b> /
-              {{activity.name}} /
-              <span>{{activity.timestamp|format_datetime}}</span>
-            </li>
-          {% endfor %}
-        </ul>
-      </div>
     </div>
   </div>
 
