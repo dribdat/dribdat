@@ -18,7 +18,7 @@ class UserForm(FlaskForm):
     next = HiddenField()
     id = HiddenField('id')
     username = StringField(u'Username', [required(), length(max=80), UniqueValidator(User, 'username')])
-    email = StringField(u'E-mail', [required(), length(max=80)])
+    email = StringField(u'E-mail address', [required(), length(max=80)])
     webpage_url = StringField(u'Online profile', [length(max=128)])
     password = PasswordField(u'New password (optional)', [length(max=128)])
     is_admin = BooleanField(u"Administrator", default=False)
