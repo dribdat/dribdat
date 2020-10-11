@@ -42,7 +42,7 @@
         .removeClass('fa-circle-o fa-check-circle-o')
         .addClass(!supported ? 'fa-circle-o' : 'fa-check-circle-o')
         .css('color', (supported ? 'green' : 'red'));
-      $ind.find('button')
+      $ind
         .css('visibility', (supported ? '' : 'hidden'));
       $('#is_autoupdate').click(function() {
         if ($(this).is(':checked'))
@@ -53,9 +53,9 @@
     // Toggle status indicator
     var $inputfield = $(this);
     var $indicator = $inputfield.parent()
-      .append('<span class="autotext-indicator">' +
+      .append('<span class="autotext-indicator" style="visibility:hidden">' +
         '<i style="color:red" class="fa fa-circle-o"></i>&nbsp;' +
-        '<button type="button" style="visibility:hidden">Update now</button>' +
+        '<button type="button">Update now</button>' +
       '</span>')
       .find('.autotext-indicator');
 
