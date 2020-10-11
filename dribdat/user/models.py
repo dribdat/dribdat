@@ -397,8 +397,8 @@ class Project(SurrogatePK, Model):
             # Get a point for every (join, update, ..) activity in the project's signals
             score = score + (1 * c_s)
             # Triple the score for every boost (upvote)
-            c_a = cqu.filter_by(name="boost").count()
-            score = score + (2 * c_a)
+            # c_a = cqu.filter_by(name="boost").count()
+            # score = score + (2 * c_a)
             # Add to the score for every complete documentation field
             if self.summary is None: self.summary = ''
             if len(self.summary) > 3: score = score + 3
