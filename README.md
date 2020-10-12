@@ -6,7 +6,7 @@
 
 An open source platform for data-driven team collaboration, such as *Hackathons*.
 
-If you need help or advice in setting up your event, or would like to contribute to the project: please get in touch via [datalets.ch](https://datalets.ch) or [GitHub Issues](https://github.com/datalets/dribdat/issues).
+If you need help or advice in setting up your event, or would like to contribute to the project: please get in touch via [datalets.ch](https://datalets.ch) or [GitHub Issues](https://github.com/hackathons-ftw/dribdat/issues).
 
 For more background and references, see [USAGE](USAGE.md) and [ABOUT](ABOUT.md). The rest of this document has details for deploying the application.
 
@@ -44,6 +44,8 @@ OAuth 2.0 support is currently available using [Flask Dance](https://flask-dance
 * `OAUTH_DOMAIN` - (optional) subdomain of your Slack instance
 
 Use `.flaskenv` or `.env` to store environment variables for local development.
+
+The first user that registers becomes an admin, so don't delay!
 
 ## API
 
@@ -112,15 +114,13 @@ Install frontend resources using [Yarn](https://yarnpkg.com/en/docs/getting-star
 yarn install
 ```
 
-Finally, run this command to start the server:
+Finally, run this command (or just `debug.sh`) to start the server:
 
 ```
 FLASK_DEBUG=1 python manage.py run
 ```
 
-You will see a pretty welcome screen at http://localhost:5000
-
-The first user that registers becomes an admin, so don't delay!
+You will see a pretty welcome screen at http://127.0.0.1:5000
 
 ### Shell access
 
@@ -165,9 +165,9 @@ If you get errors like *ERROR [alembic.env] Can't locate revision identified by 
 
 See [Contributors](https://github.com/dataletsch/dribdat/graphs/contributors) for a list of people who have made changes to the code, and [Forks](https://github.com/dataletsch/dribdat/network/members) to find some other users of this project.
 
-Mantained by [@loleg](https://github.com/loleg) and [@gonzalocasas](https://github.com/gonzalocasas), with special thanks to the Swiss communities for [Open Data](https://opendata.ch), [Open Networking](https://opennetworkinfrastructure.org/) and [Open Source](https://dinacon.ch) for the many trials and feedbacks. We are also grateful to F. Wieser and M.-C. Gasser at [Swisscom](http://swisscom.com) for conceptual inputs and financial support of the first alpha release of this project.
+This project is currently mantained by [@loleg](https://github.com/loleg) and [@gonzalocasas](https://github.com/gonzalocasas).
 
-This code is originally based on Steven Loria's [flask-cookiecutter](https://github.com/sloria/cookiecutter-flask), which we encourage you to use in YOUR next hackathon!
+Special thanks to the [Open Data](https://opendata.ch), [Open Networking](https://opennetworkinfrastructure.org/) and [Open Source](https://dinacon.ch) communities in Switzerland for the many trials and feedbacks. We are also grateful to F. Wieser and M.-C. Gasser at [Swisscom](http://swisscom.com) for conceptual inputs and financial support at an early stage of this project. This code is originally based on Steven Loria's [flask-cookiecutter](https://github.com/sloria/cookiecutter-flask), which we encourage you to use in YOUR next hackathon!
 
 Additional and :heart:-felt thanks for testing and feedback to:
 
