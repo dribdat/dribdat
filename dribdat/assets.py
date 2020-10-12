@@ -1,9 +1,14 @@
 # -*- coding: utf-8 -*-
 """Application assets."""
 from flask_assets import Bundle, Environment
+from os import environ
+
+theme = environ.get("DRIBDAT_THEME")
+theme = 'bootswatch/%s' % theme.lower() if theme else 'bootstrap/css'
 
 css = Bundle(
-    "libs/bootstrap/css/bootstrap.css",
+    "libs/%s/bootstrap.min.css" % theme,
+    "libs/font-awesome/css/font-awesome.min.css",
     "libs/FlipClock/flipclock.css",
     "css/honeycomb.css",
     "css/timeline.css",
