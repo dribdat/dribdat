@@ -161,7 +161,6 @@ def project_new(event_id):
     if current_user and current_user.is_authenticated:
         project = Project()
         project.user_id = current_user.id
-        project.progress = 0
         form = ProjectNew(obj=project, next=request.args.get('next'))
         form.category_id.choices = [(c.id, c.name) for c in project.categories_all(event)]
         form.category_id.choices.insert(0, (-1, ''))
@@ -169,6 +168,10 @@ def project_new(event_id):
             del form.id
             form.populate_obj(project)
             project.event = event
+            if event.has_started:
+                project.progress = 0
+            else:
+                project.progress = -1 # Start as challenge
             project.update()
             db.session.add(project)
             db.session.commit()

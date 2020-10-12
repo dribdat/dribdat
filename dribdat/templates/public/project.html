@@ -124,6 +124,7 @@
 
 {% if not project.is_challenge %}
   <div class="tab-pane fade show active" id="project-md" role="tabpanel" aria-labelledby="project-tab-md">
+{% endif %}
 
   {% if project.is_webembed %}
     <div class="project-webembed resizable">
@@ -133,13 +134,14 @@
     <a href="{{ project.webpage_url }}" class="btn btn-small btn-default" target="_blank">&#x26F6; Full screen</a>
   {% endif %}
 
-  {% if 'github.com' in project.source_url %}
+  {% if project.source_url and 'github.com' in project.source_url %}
     <div class="widget widget-github">
       <div data-theme="default" data-width="400" data-height="150" data-github="{{ project.source_url|replace('https://github.com/','') }}" class="github-card"></div>
       <script src="//cdn.jsdelivr.net/github-cards/latest/widget.js"></script>
     </div>
   {% endif %}
 
+{% if not project.is_challenge %}
   {% if project_stars %}
     <a name="team"></a>
     <div class="widget widget-team">
