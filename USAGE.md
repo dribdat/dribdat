@@ -12,11 +12,11 @@ Dribdat works as a website and project board for running exciting, productive ev
 
 Logged-in users can submit challenges, ideas and projects by linking their document or repository, or entering details directly into a form. You can change or customize these [instructions](dribdat/templates/includes/quickstart.html) as you see fit.
 
-As we're really into making the most of those time constraints, the homepage and dashboard feature a big animated countdown clock:
+As we are really into making the most of those time constraints, the homepage and dashboard feature a big animated countdown clock:
 
 ![](dribdat/static/img/screenshot_countdown.png)
 
-Here is how a Dribdat event page looks like in the heat of the hackathon:
+Here is how a dribdat-powered event looks like in the heat of the hackathon:
 
 ![](dribdat/static/img/screenshot_makezurich.jpg)
 
@@ -41,9 +41,11 @@ Content may also be aggregated (**Sync**-ed) from an external location by puttin
 
 For more details on entering content, see the [usage steps](#content).
 
-## Why should we use Dribdat?
+## Why should we use dribdat?
 
 Hackathons are a playground for creative individuals, and events which focus on sustainable solutions need to encourage good documentation and evaluation. Dribdat is used in hackathon series that involve a diverse user base, in particular those of the Swiss NGO [Opendata.ch](https://opendata.ch/events/) - in fact, the platform was built by this community. This open source platform has developed over time into a unique solution to such needs, and every contribution helps to assure the future development of this project.
+
+And also, as you are such a very cool person, amazing experiences and lasting friendships will emerge from your use of dribdat. Word.
 
 ## How do I use this effectively?
 
@@ -65,7 +67,7 @@ If you have issues logging into the platform, please contact the organizing team
 
 ### 2. Find your team
 
-Every team should have a public project page on Dribdat.
+Every hackathon team should have a public project page on dribdat.
 
 These are sometimes categorized according to the challenge topic they address at the top of the event page, which is a kind of map of the hackathon. The button at the far right (&#9776;) switches to a list mode, which can also help you to find your team if there are a lot of challenges. Here is an example from a recent Dribdat event which uses categories:
 
@@ -79,9 +81,9 @@ Once you have found your group, open the project page, and tap on the blue **Joi
 
 ![Join button](https://us-east-1.linodeobjects.com/dribdat/uploads/upload_989ab9d17413b416810311f1de341f9e.png)
 
-You should then see your name along with any other team members listed underneath.
+You should then see your name along with any other team members listed underneath. You can also Leave (click the ★ blue star) the project if you joined one by accident.
 
-You can also Leave (click the ★ blue star) the project if you joined one by accident. And if you need to make changes or link your name to somewhere on the Internet, click **Profile** in the top of the page.
+If you need to make changes or link your name to somewhere on the Internet, click **Profile** in the top of the page.
 
 ### 3. Post an update
 
@@ -101,7 +103,7 @@ If you need to make other changes to your project, click the **Edit** button. Yo
 
 In the large **Description** field you can post notes on your final results, such as a video or slide presentation, summarizing in free form your solution to the challenge. This can be plain text, in HTML or Markdown. If you need to add an image, use a cloud hosting service like Imgur and paste the link in like this: `![Title of my image](https://link-to-my-image.jpg)`
 
-As noted at the top of this guide: if you are using GitHub, Google Docs, a wiki, etc., to write your documentation, you don't need to copy and paste it into Dribdat to submit your project. Use the **Sync** capability to automatically scrape the contents of your README or webpage into the hackathon. Pretty hacky, huh? `;-)`
+As noted at the top of this guide: if you are using GitHub, Google Docs, a wiki, etc., to write your documentation, you don't need to copy and paste it into dribdat to submit your project. Use the **Sync** capability to automatically scrape the contents of your README or webpage into the hackathon. Pretty hacky, huh? `;-)`
 
 You can also use the **Project link** to embed documentation you are working on elsewhere into a frame on your project page. This could be a demo of your application, or - in the early phases at least - collaboration tools for your team.
 
@@ -125,13 +127,13 @@ Remember: _there is no such thing as a stupid question._
 
 Dribdat helps us to keep things fun and unpredictable at our events. We love hacking on the platform itself, and would love to hear your feedback.
 
-Here we cover some ways of extending Dribdat's functions with additional tools. If you have any other questions or suggestions, please leave them in our [Issues](https://github.com/hackathons-ftw/dribdat/issues).
+Here we cover some ways of extending dribdat's functions with additional tools. If you have any other questions or suggestions, please leave them in our [Issues](https://github.com/hackathons-ftw/dribdat/issues).
 
 ## How is the work evaluated?
 
 At the bottom of the project page (administrators: use the Community Code field) you may find a tool with which visitors to your project can leave a quick public commentary or just an Emoji in response to what they see. Leave your own suggestions and constructive commentary to motivate your fellow participants!
 
-For example, here is how [Disqus](https://disqus.com) was integrated with Dribdat at a recent event:
+For example, here is how [Disqus](https://disqus.com) was integrated with dribdat at a recent event:
 
 ![Comments](https://us-east-1.linodeobjects.com/dribdat/uploads/upload_6a8a08937ba4e85f9dd508d1b9c0df19.png)
 
@@ -139,7 +141,11 @@ For example, here is how [Disqus](https://disqus.com) was integrated with Dribda
 
 The teams are free to decide for themselves which license conditions apply to their work. However, open access allows for the best evaluation, so we are stipulating a *Creative Commons license by default* which will apply to any project documentation which is not explicitly adherent to a different license or conditions.
 
-We typically encourage organizers to adopt the [Hack Code of Conduct](), which you can add with this snippet in your **Community code**:
+We typically encourage organizers to adopt the [Hack Code of Conduct](https://hackcodeofconduct.org/), which you can add with this snippet in your **Community code**:
+
+```
+<div class="codeofconduct">All attendees, sponsors, partners, volunteers and staff at our events are required to agree with the <a href="https://hackcodeofconduct.org/" target="_blank">Hack Code of Conduct</a>. Organisers will enforce this code throughout. We expect cooperation from all participants to ensure a safe environment for everybody.</div>
+```
 
 ## Show me the back end
 
@@ -151,4 +157,6 @@ The look and feel of the project view can be customized with CSS, and shows chal
 
 ## I want to use this elsewhere
 
-Please contact the Dribdat project through the [homepage](https://dribdat.cc/), where you can find links to get a free copy of the software, or ask the organising team at a Dribdat hackathon for leads. We will be happy to get you any help you need to get started.
+Please contact the dribdat maintainers through the [homepage](https://dribdat.cc/), where you can find links to get a free copy of the software - or just ask the organising team at a dribdat-powered hackathon for leads. We will be happy to get you any help you need to get started.
+
+Happy hacking!
