@@ -141,10 +141,14 @@ For example, here is how [Disqus](https://disqus.com) was integrated with dribda
 
 The teams are free to decide for themselves which license conditions apply to their work. However, open access allows for the best evaluation, so we are stipulating a *Creative Commons license by default* which will apply to any project documentation which is not explicitly adherent to a different license or conditions.
 
-We typically encourage organizers to adopt the [Hack Code of Conduct](https://hackcodeofconduct.org/), which you can add with this snippet in your **Community code**:
+We also typically encourage organizers to adopt the [Hack Code of Conduct](https://hackcodeofconduct.org/).
+
+You can add both with this snippet in your event's **Community code**:
 
 ```
 <div class="codeofconduct">All attendees, sponsors, partners, volunteers and staff at our events are required to agree with the <a href="https://hackcodeofconduct.org/" target="_blank">Hack Code of Conduct</a>. Organisers will enforce this code throughout. We expect cooperation from all participants to ensure a safe environment for everybody.</div>
+
+<br><p><a rel="license" href="http://creativecommons.org/licenses/by/4.0/" target="_blank"><img align="left" style="margin-right:1em" alt="Creative Commons Licence" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/88x31.png" /></a>The contents of this website, unless otherwise stated, are licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/" target="_blank">Creative Commons Attribution 4.0 International License</a>.</p>
 ```
 
 ## Show me the back end
