@@ -544,7 +544,7 @@ pre { color: #333; background: white; }
   text-align: right;
 }
 .project-edit-buttons {
-  margin: -2em 0 0 0;
+  /* margin: -2em 0 0 0; */
   float: right;
 }
 .project-edit-buttons * {

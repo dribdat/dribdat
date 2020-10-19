@@ -52,6 +52,7 @@ class ProjectForm(FlaskForm):
     id = HiddenField('id')
     user_id = SelectField(u'Owner (team user)', coerce=int)
     event_id = SelectField(u'Event', coerce=int)
+    category_id = SelectField(u'Challenge category', coerce=int)
     progress = SelectField(u'Progress', coerce=int, choices=projectProgressList())
     hashtag = StringField(u'Hashtag or channel', [length(max=255)])
     autotext_url = StringField(u'Sync', [length(max=255)])
@@ -67,7 +68,6 @@ class ProjectForm(FlaskForm):
     image_url = StringField(u'Image link', [length(max=255)])
     logo_color = StringField(u'Custom color', [length(max=7)])
     logo_icon = StringField(u'Custom icon', [length(max=20)])
-    category_id = SelectField(u'Challenge category', coerce=int)
     submit = SubmitField(u'Save')
 
 class CategoryForm(FlaskForm):
