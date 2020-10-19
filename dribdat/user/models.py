@@ -9,8 +9,10 @@ import re
 import hashlib
 import datetime as dt
 from time import mktime
+import pytz
 
 from flask_login import UserMixin
+from flask import current_app
 
 from dribdat.extensions import hashing
 from dribdat.database import (
@@ -21,8 +23,10 @@ from dribdat.database import (
     relationship,
     SurrogatePK,
 )
-
-from dribdat.utils import format_date_range, format_date
+from dribdat.utils import (
+    format_date_range, format_date,
+    format_webembed,
+)
 from dribdat.user import PROJECT_PROGRESS_PHASE
 
 from sqlalchemy import or_
@@ -122,7 +126,10 @@ class Event(SurrogatePK, Model):
 
     starts_at = Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)
     ends_at = Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)
+
     is_current = Column(db.Boolean(), default=False)
+    lock_editing = Column(db.Boolean(), default=False)
+    lock_starting = Column(db.Boolean(), default=False)
 
     @property
     def data(self):
@@ -173,16 +180,27 @@ class Event(SurrogatePK, Model):
     def has_finished(self):
         return dt.datetime.utcnow() > self.ends_at
     @property
+    def can_start_project(self):
+        return not self.has_finished and not self.lock_starting
+
+    @property
     def countdown(self):
-        TIME_LIMIT = dt.datetime.utcnow() + dt.timedelta(days=30)
-        if self.starts_at > dt.datetime.utcnow():
-            if self.starts_at > TIME_LIMIT: return None
-            return self.starts_at # + dt.timedelta(hours=-1) # TODO: timezones...
-        elif self.ends_at > dt.datetime.utcnow():
-            if self.ends_at > TIME_LIMIT: return None
-            return self.ends_at # + dt.timedelta(hours=-1)
+        # Normalizing dates & timezones.
+        timezone = pytz.timezone(current_app.config['TIME_ZONE'])
+        utc_now = dt.datetime.now(tz=pytz.utc)
+        starts_at = timezone.localize(self.starts_at)
+        ends_at = timezone.localize(self.ends_at)
+        TIME_LIMIT = utc_now + dt.timedelta(days=30)
+
+        if starts_at > utc_now:
+            if starts_at > TIME_LIMIT: return None
+            return starts_at
+        elif ends_at > utc_now:
+            if ends_at > TIME_LIMIT: return None
+            return ends_at
         else:
             return None
+
     @property
     def date(self):
         return format_date_range(self.starts_at, self.ends_at)
@@ -194,6 +212,12 @@ class Event(SurrogatePK, Model):
             Category.event_id==None,
             Category.event_id==event_id
         )).order_by('name')
+
+    # Number of projects
+    @property
+    def project_count(self):
+        if not self.projects: return 0
+        return len(self.projects)
 
     def __init__(self, name=None, **kwargs):
         if name:
@@ -208,15 +232,17 @@ class Project(SurrogatePK, Model):
     summary = Column(db.String(120), nullable=True)
     image_url = Column(db.String(255), nullable=True)
     source_url = Column(db.String(255), nullable=True)
-    webpage_url = Column(db.String(255), nullable=True)
+    webpage_url = Column(db.String(2048), nullable=True)
+    is_webembed = Column(db.Boolean(), default=False)
     contact_url = Column(db.String(255), nullable=True)
     autotext_url = Column(db.String(255), nullable=True)
     is_autoupdate = Column(db.Boolean(), default=True)
+    autotext = Column(db.UnicodeText(), nullable=True, default=u"")
+    longtext = Column(db.UnicodeText(), nullable=False, default=u"")
+    hashtag = Column(db.String(40), nullable=True)
     logo_color = Column(db.String(7), nullable=True)
     logo_icon = Column(db.String(40), nullable=True)
-    longtext = Column(db.UnicodeText(), nullable=False, default=u"")
 
-    hashtag = Column(db.String(40), nullable=True)
     created_at = Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)
     updated_at = Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)
     is_hidden = Column(db.Boolean(), default=False)
@@ -233,14 +259,70 @@ class Project(SurrogatePK, Model):
     category_id = reference_col('categories', nullable=True)
     category = relationship('Category', backref='projects')
 
+    # Self-assessment and total score
+    progress = Column(db.Integer(), nullable=True, default=-1)
+    score = Column(db.Integer(), nullable=True, default=0)
+
+    # Convenience query for latest activity
+    def latest_activity(self):
+        return Activity.query.filter_by(project_id=self.id).order_by(Activity.timestamp.desc()).limit(5)
+
+    # Query which formats the project's timeline
+    def all_signals(self):
+        activities = Activity.query.filter_by(project_id=self.id).order_by(Activity.timestamp.desc())
+        signals = []
+        prev = None
+        for a in activities:
+            title = text = None
+            if a.action == 'sync':
+                title = "Synchronized"
+                text = "Readme fetched from source by " + a.user.username
+            elif a.action == 'post':
+                title = "Progress made"
+                if a.content is not None:
+                    text = a.content + "\n\n-- " + a.user.username
+            elif a.name == 'star':
+                title = "Team forming"
+                text = a.user.username + " has joined"
+            elif a.name == 'update':
+                title = "Documentation"
+                text = "Worked on by " + a.user.username
+            elif a.name == 'create':
+                title = "Project started"
+                text = "Initialized by " + a.user.username
+            # Check if last signal very similar
+            if prev is not None:
+                if (
+                    prev['title'] == title and prev['text'] == text
+                    # and (prev['date']-a.timestamp).total_seconds() < 120
+                ):
+                    continue
+            prev = {
+                'title': title,
+                'text': text,
+                'date': a.timestamp
+            }
+            signals.append(prev)
+        if self.event.has_started or self.event.has_finished:
+            signals.append({
+                'title': "Hackathon started",
+                'text': self.event.location,
+                'date': self.event.starts_at
+            })
+        if self.event.has_finished:
+            signals.append({
+                'title': "Hackathon finished",
+                'date': self.event.ends_at
+            })
+        return sorted(signals, key=lambda x: x['date'], reverse=True)
+
     # Convenience query for all categories
     def categories_all(self, event=None):
         if self.event: return self.event.categories_for_event()
         if event is not None: return event.categories_for_event()
         return Category.query.order_by('name')
 
-    # Self-assessment
-    progress = Column(db.Integer(), nullable=True, default=0)
+    # Self-assessment (progress)
     @property
     def phase(self):
         if self.progress is None: return ""
@@ -249,8 +331,9 @@ class Project(SurrogatePK, Model):
     def is_challenge(self):
         return self.progress < 0
 
-    # Current tally
-    score = Column(db.Integer(), nullable=True, default=0)
+    @property
+    def webembed(self):
+        return format_webembed(self.webpage_url)
 
     @property
     def url(self):
@@ -260,6 +343,7 @@ class Project(SurrogatePK, Model):
     def data(self):
         d = {
             'id': self.id,
+            'url': self.url,
             'name': self.name,
             'score': self.score,
             'phase': self.phase,
@@ -267,6 +351,12 @@ class Project(SurrogatePK, Model):
             'hashtag': self.hashtag,
             'contact_url': self.contact_url,
             'image_url': self.image_url,
+            'source_url': self.source_url,
+            'webpage_url': self.webpage_url,
+            'progress': self.progress,
+            'maintainer': self.user.username,
+            'event_url': self.event.url,
+            'event_name': self.event.name,
         }
         if self.category is not None:
             d['category'] = self.category.data
@@ -288,10 +378,13 @@ class Project(SurrogatePK, Model):
     def update(self):
         # Correct fields
         if self.category_id == -1: self.category_id = None
-        if self.logo_icon.startswith('fa-'):
+        if self.logo_icon and self.logo_icon.startswith('fa-'):
             self.logo_icon = self.logo_icon.replace('fa-', '')
         if self.logo_color == '#000000':
             self.logo_color = ''
+        # Check update status
+        self.is_autoupdate = bool(self.autotext_url and self.autotext_url.strip())
+        if not self.is_autoupdate: self.autotext = ''
         # Set the timestamp
         self.updated_at = dt.datetime.utcnow()
         if self.is_challenge:
@@ -300,26 +393,35 @@ class Project(SurrogatePK, Model):
             # Calculate score based on base progress
             score = self.progress or 0
             cqu = Activity.query.filter_by(project_id=self.id)
-            c_s = cqu.filter_by(name="star").count()
-            score = score + (2 * c_s)
+            c_s = cqu.count()
+            # Get a point for every (join, update, ..) activity in the project's signals
+            score = score + (1 * c_s)
+            # Triple the score for every boost (upvote)
             # c_a = cqu.filter_by(name="boost").count()
-            # score = score + (10 * c_a)
+            # score = score + (2 * c_a)
+            # Add to the score for every complete documentation field
             if self.summary is None: self.summary = ''
             if len(self.summary) > 3: score = score + 3
             if self.image_url is None: self.image_url = ''
             if len(self.image_url) > 3: score = score + 3
             if self.source_url is None: self.source_url = ''
-            if len(self.source_url) > 3: score = score + 10
+            if len(self.source_url) > 3: score = score + 3
             if self.webpage_url is None: self.webpage_url = ''
-            if len(self.webpage_url) > 3: score = score + 10
+            if len(self.webpage_url) > 3: score = score + 3
             if self.logo_color is None: self.logo_color = ''
-            if len(self.logo_color) > 3: score = score + 1
+            if len(self.logo_color) > 3: score = score + 3
             if self.logo_icon is None: self.logo_icon = ''
-            if len(self.logo_icon) > 3: score = score + 1
+            if len(self.logo_icon) > 3: score = score + 3
             if self.longtext is None: self.longtext = ''
+            # Get more points based on how much content you share
             if len(self.longtext) > 3: score = score + 1
             if len(self.longtext) > 100: score = score + 4
             if len(self.longtext) > 500: score = score + 10
+            # Points for external (Readme) content
+            if self.autotext is not None:
+                if len(self.autotext) > 3: score = score + 1
+                if len(self.autotext) > 100: score = score + 4
+                if len(self.autotext) > 500: score = score + 10
             self.score = score
 
     def __init__(self, name=None, **kwargs):
@@ -327,7 +429,7 @@ class Project(SurrogatePK, Model):
             db.Model.__init__(self, name=name, **kwargs)
 
     def __repr__(self):
-        return '<Event({name})>'.format(name=self.name)
+        return '<Project({name})>'.format(name=self.name)
 
 class Category(SurrogatePK, Model):
     __tablename__ = 'categories'
@@ -339,8 +441,8 @@ class Category(SurrogatePK, Model):
     # If specific to an event
     event_id = reference_col('events', nullable=True)
     event = relationship('Event', backref='categories')
-
-    @property
+    #
+    # @property
     def project_count(self):
         if not self.projects: return 0
         return len(self.projects)
@@ -365,10 +467,16 @@ class Activity(SurrogatePK, Model):
     name = Column(db.Enum(
         'create',
         'update',
-        # 'boost',
         'star',
         name="activity_type"))
+    action = Column(db.String(32), nullable=True)
+        # 'external',
+        # 'boost',
+        # 'sync',
+        # 'post',
+        # ...
     timestamp = Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)
+    content = Column(db.UnicodeText, nullable=True)
     user_id = reference_col('users', nullable=False)
     user = relationship('User', backref='activities')
     project_id = reference_col('projects', nullable=False)

@@ -7,11 +7,13 @@ from flask import (Blueprint, request, render_template, flash, url_for,
 from flask_login import login_user, logout_user, login_required, current_user
 
 from dribdat.user.models import User, Event
-from dribdat.extensions import login_manager, login_oauth
+from dribdat.extensions import login_manager
 from dribdat.utils import flash_errors, random_password
 from dribdat.public.forms import LoginForm, UserForm
 from dribdat.user.forms import RegisterForm
 from dribdat.database import db
+
+from flask_dance.contrib.slack import slack
 
 blueprint = Blueprint('auth', __name__, static_folder="../static")
 
@@ -24,8 +26,10 @@ def load_user(user_id):
     return User.get_by_id(int(user_id))
 
 def slack_enabled():
-    dsi = current_app.config["DRIBDAT_SLACK_ID"]
+    """Check if Slack has been configured"""
+    dsi = current_app.config["OAUTH_TYPE"] and current_app.config["OAUTH_TYPE"].lower() == 'slack'
     return dsi is not None and dsi != ""
+
 
 @blueprint.route("/login/", methods=["GET", "POST"])
 def login():
@@ -85,64 +89,6 @@ def logout():
     return redirect(url_for('public.home'))
 
 
-slack_oauth = login_oauth.remote_app("slack",
-    base_url = "https://slack.com/api/",
-    request_token_url = "",
-    access_token_url = "https://slack.com/api/oauth.access",
-    authorize_url = "https://slack.com/oauth/authorize",
-    consumer_key = "",
-    consumer_secret = "",
-    request_token_params = {"scope": "identity.basic,identity.email"},
-)
-
-@slack_oauth.tokengetter
-def slack_tokengetter():
-    return session.get("slack_token")
-
-@blueprint.route("/slack_oauth")
-def site_slack_oauth():
-    slack_oauth.consumer_key = current_app.config["DRIBDAT_SLACK_ID"]
-    slack_oauth.consumer_secret = current_app.config["DRIBDAT_SLACK_SECRET"]
-    return slack_oauth.authorize(
-        callback=url_for("auth.slack_oauth_callback", _external=True)
-    )
-
-@blueprint.route("/slack_callback")
-@slack_oauth.authorized_handler
-def slack_oauth_callback(resp):
-    if resp is None or not resp["ok"]:
-        flash('Access denied: make sure to select the appropriate Slack', 'error')
-        return redirect(url_for("public.home"))
-    # Match user using the client ID
-    user = User.query.filter_by(sso_id=resp['user']['id']).first()
-    # Match user by e-mail address
-    if not user:
-        user = User.query.filter_by(email=resp['user']['email']).first()
-        if user:
-            user.sso_id = resp['user']['id']
-            db.session.add(user)
-            db.session.commit()
-    if user:
-        login_user(user, remember=True)
-        flash(u'Logged in via Slack - welcome back!')
-        return redirect(url_for("public.home"))
-    # Check for conflicting username
-    username = resp['user']['name'].lower().replace(" ", "_")
-    if User.query.filter_by(username=username).first():
-        username = "%s_%s" % (username, resp['user']['id'][:4])
-    # Finally, create a new user account
-    user = User.create(
-        username=username,
-        sso_id=resp['user']['id'],
-        email=resp['user']['email'],
-        password=random_password(),
-        active=True)
-    user.socialize()
-    login_user(user, remember=True)
-    flash("Welcome! Here is some information to get you started", 'info')
-    return redirect(url_for("public.about"))
-
-
 @blueprint.route('/user/profile', methods=['GET', 'POST'])
 @login_required
 def user_profile():
@@ -159,4 +105,50 @@ def user_profile():
         db.session.commit()
         user.socialize()
         flash('Profile updated.', 'success')
+        return redirect(url_for('public.home'))
     return render_template('public/user.html', user=user, form=form)
+
+
+@blueprint.route("/slack_login", methods=["GET", "POST"])
+def slack_login():
+    if not slack.authorized:
+        flash('Access denied to Slack', 'error')
+        return redirect(url_for("auth.login"))
+
+    resp = slack.get("https://slack.com/api/users.identity")
+    if not resp.ok:
+        flash('Unable to access Slack data', 'error')
+        return redirect(url_for("auth.login"))
+    resp_data = resp.json()
+    if not 'user' in resp_data:
+        flash('Invalid Slack data format', 'error')
+        print(resp_data)
+        return redirect(url_for("auth.login"))
+
+    resp_user = resp_data['user']
+    user = User.query.filter_by(sso_id=resp_user['id']).first()
+    if not user:
+        if current_user and current_user.is_authenticated:
+            user = current_user
+            user.sso_id = resp_user['id']
+        else:
+            user = User.query.filter_by(email=resp_user['email']).first()
+            if user:
+                # Update SSO identifier
+                user.sso_id = resp_user['id']
+                db.session.add(user)
+                db.session.commit()
+            else:
+                user = User.create(
+                    username=resp_user['name'].lower().replace(" ", "_"),
+                    sso_id=resp_user['id'],
+                    email=resp_user['email'],
+                    password=random_password(),
+                    active=True)
+            user.socialize()
+            login_user(user, remember=True)
+            flash("Please complete your user account", 'info')
+            return redirect(url_for("auth.user_profile"))
+    login_user(user, remember=True)
+    flash(u'Logged in via Slack')
+    return redirect(url_for("public.home"))

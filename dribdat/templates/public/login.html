@@ -6,23 +6,24 @@
 <div class="container-narrow">
   <h1>Log in</h1>
   <br/>
+  {% if slack_enabled %}
+    <p><a class="btn signin-slack" href="{{ url_for('slack.login') }}">
+      Sign in with Slack
+    </a></p>
+  {% endif %}
   <form id="loginForm" method="POST" class="navbar-form form-inline navbar-right" action="/login/" role="login">
     {{ form.hidden_tag() }}
     <div class="form-group">
       {{ form.username(placeholder="Username", class_="form-control") }}
       {{ form.password(placeholder="Password", class_="form-control") }}
+      <button type="submit" class="btn btn-default btn-primary">Confirm</button>
     </div>
-    <button type="submit" class="btn btn-default">Confirm</button>
   </form>
-  {% if slack_enabled %}
-  <p><a class="btn signin-slack" href="{{ url_for('auth.site_slack_oauth') }}">
-    Sign in with Slack
-  </a></p>
-  {% else %}
-  <p>
-    <!-- <i>Please note, this is <b>not</b> the same login as for the Community board.</i> -->
-  </p><p>Not yet registered?
-    <a href="{{ url_for('auth.register') }}">Create an account</a>.</p>
+  {% if not config.DRIBDAT_NOT_REGISTER %}
+    <br>
+    <p>Not yet registered?
+      <a href="{{ url_for('auth.register') }}">Create an account</a>.
+    </p>
   {% endif %}
 </div>
 {% endblock %}

@@ -1,0 +1,186 @@
+/* Timeline for Bootstrap
+   Customized by @oleg for Dribdat
+   Author: @sandroanderes
+   Project: https://hack.glam.opendata.ch/project/14
+   Source: https://github.com/sandroanderes/GLAMhack2020/blob/master/assets/css/style.scss
+*/
+
+.timeline {
+  position: relative;
+  /* a {
+		background: $primary;
+		color: $text;
+		padding: 8px 20px;
+		text-transform: uppercase;
+		font-size: 14px;
+		margin-bottom: 20px;
+		margin-top: 10px;
+		display: inline-block;
+		border-radius: 2px;
+		box-shadow: 0 1px 3px -1px rgba(0, 0, 0, .6);
+
+		&:hover,
+		&:active,
+		&:focus {
+			background: darken($primary, 10%);
+			color: $text;
+			text-decoration: none;
+		}
+
+	} */ }
+  .timeline::before {
+    content: '';
+    background: #888;
+    top: 0;
+    width: 5px;
+    height: 95%;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%); }
+
+.padding-facts {
+  padding: 16px;
+  margin-bottom: 0px; }
+
+.timeline-item {
+  width: 100%;
+  margin-bottom: 50px; }
+  .timeline-item:nth-child(odd) .timeline-content {
+    float: right;
+    padding: 40px 30px 10px 30px; }
+    .timeline-item:nth-child(odd) .timeline-content .date {
+      right: auto;
+      left: 0; }
+    .timeline-item:nth-child(odd) .timeline-content::after {
+      content: '';
+      position: absolute;
+      border-style: solid;
+      width: 0;
+      height: 0;
+      top: 20px;
+      left: -15px;
+      border-width: 10px 15px 10px 0;
+      border-color: transparent #aaa transparent transparent; }
+  .timeline-item::after {
+    content: '';
+    display: block;
+    clear: both; }
+
+.timeline-content {
+  position: relative;
+  width: 45%;
+  padding: 10px 30px;
+  border-radius: 4px;
+  background: #f5f5f5;
+  box-shadow: 0 20px 25px -15px rgba(0, 0, 0, 0.3); }
+  .timeline-content::after {
+    content: '';
+    position: absolute;
+    border-style: solid;
+    width: 0;
+    height: 0;
+    top: 20px;
+    right: -15px;
+    border-width: 10px 0 10px 15px;
+    border-color: transparent transparent transparent #aaa; }
+
+.timeline-img {
+  width: 30px;
+  height: 30px;
+  background: #888;
+  border-radius: 50%;
+  position: absolute;
+  left: 50%;
+  margin-top: 15px;
+  margin-left: -15px; }
+
+.timeline-card {
+  padding: 0 !important; }
+  .timeline-card p {
+    color: #000 !important;
+    padding: 0 20px;
+    padding-bottom: 16px;
+    margin-bottom: 0; }
+  .timeline-card a {
+    margin-left: 20px; }
+
+.timeline-item {
+  cursor: pointer; }
+  .timeline-item .timeline-img-header {
+    /* background: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, .4)), url('https://picsum.photos/1000/800/?random') center center no-repeat; */
+    background-size: cover; }
+
+.timeline-img-header {
+  height: auto;
+  padding: 10px 15px;
+  position: relative;
+  margin-bottom: 20px; }
+  .timeline-img-header h2 {
+    text-shadow: 2px 2px #888;
+    color: #fff; }
+
+@media screen and (max-width: 768px) {
+  .timeline::before {
+    left: 50px; }
+  .timeline .timeline-img {
+    left: 50px; }
+  .timeline .timeline-content {
+    width: 100%;
+    margin-left: 70px; }
+  .timeline .timeline-item:nth-child(odd) .timeline-content {
+    float: left; }
+  .timeline .timeline-item:nth-child(even) .timeline-content::after {
+    content: '';
+    position: absolute;
+    border-style: solid;
+    width: 0;
+    height: 0;
+    top: 20px;
+    left: -15px;
+    border-width: 10px 15px 10px 0;
+    border-color: transparent #aaa transparent transparent; }
+}
+
+/* Dribdat customizations */
+
+.timeline {
+  padding-top: 1.5em;
+}
+
+.timeline-img-header {
+  height: auto;
+  padding: 10px 15px 5px;
+  margin-bottom: 0px;
+  background: #aaa;
+  /* background-image: linear-gradient(to bottom, rgba(100, 100, 100, 0.52), rgba(80, 80, 80, 0.73)); */
+}
+
+.timeline-img-header h2 {
+  text-shadow: 2px 2px #777;
+}
+
+.timeline-content .date {
+  position: absolute;
+  font-size: 0.9rem;
+  color: #aaa;
+  margin-top: -1.5em;
+}
+
+.timeline-item .timeline-content p {
+  margin: 1em 0px;
+  padding-bottom: 0px;
+}
+
+.timeline-item .timeline-content {
+  float: left;
+}
+
+@media screen and (max-width: 400px) {
+  .timeline::before {
+    left: 0px; }
+  .timeline .timeline-img {
+    left: 0px; }
+  .timeline .timeline-content {
+    width: 100%;
+    margin-left: 20px; }
+}

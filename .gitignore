@@ -1,4 +1,6 @@
+node_modules/
 *.py[cod]
+.flaskenv
 
 # C extensions
 *.so
@@ -20,12 +22,13 @@ lib64
 # Installer logs
 pip-log.txt
 
-# Unit test / coverage reports
+# Unit test /  coverage reports
 .coverage
 .tox
 nosetests.xml
 .cache
 tests/.cache
+.pytest_cache/
 
 # Translations
 *.mo

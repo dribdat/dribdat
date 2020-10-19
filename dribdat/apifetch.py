@@ -45,10 +45,22 @@ def FetchGithubProject(project_url):
     if readmedata.text.find('{') < 0: return {}
     readme = readmedata.json()
     if not 'content' in readme: return {}
+    readme = b64decode(readme['content']).decode('utf-8')
+    # Fix relative links in text
+    readme = re.sub(
+        r"<img src=\"(?!http)",
+        "<img src=\"https://raw.githubusercontent.com/" + json['full_name'] + '/master/',
+        readme
+    )
+    readme = re.sub(
+        r"\!\[(.*)\]\((?!http)",
+        "![\g<1>](https://raw.githubusercontent.com/" + json['full_name'] + '/master/',
+        readme
+    )
     return {
         'name': json['name'],
         'summary': json['description'],
-        'description': b64decode(readme['content']).decode('utf-8'),
+        'description': readme,
         'homepage_url': json['homepage'],
         'source_url': json['html_url'],
         'image_url': json['owner']['avatar_url'],

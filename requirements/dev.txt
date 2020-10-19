@@ -1,20 +1,32 @@
-# Everything the developer needs in addition to the production requirements
--r prod.txt
-
-# Testing
-pytest
-WebTest
+-i https://pypi.org/simple
+atomicwrites
+attrs
+beautifulsoup4
+blinker
 factory-boy
-
-# Lint and code style
-flake8
+faker
 flake8-blind-except
 flake8-debugger
 flake8-docstrings
 flake8-isort
+flake8-polyfill
 flake8-quotes
+flake8
+flask-debugtoolbar
+flask
 isort
+mccabe
+more-itertools
 pep8-naming
-
-# Debug toolbar
-Flask-DebugToolbar
+pluggy
+py
+pycodestyle
+pydocstyle
+pyflakes
+pytest
+snowballstemmer
+testfixtures
+text-unidecode
+waitress
+webob
+webtest

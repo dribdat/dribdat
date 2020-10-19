@@ -8,3 +8,9 @@
     ("categories", url_for('admin.categories')),
     ("events", url_for('admin.events')),
 ]%}
+
+{% block css %}
+<style type="text/css">
+.container > a.btn:first-child { float:right; margin:1em 0 }
+</style>
+{% endblock %}

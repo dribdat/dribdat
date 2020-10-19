@@ -3,7 +3,7 @@ from flask_wtf import FlaskForm
 from wtforms import (
     SubmitField, BooleanField,
     StringField, PasswordField,
-    TextAreaField, TextField,
+    TextAreaField,
     SelectField, HiddenField,
     RadioField
 )
@@ -39,35 +39,55 @@ class LoginForm(FlaskForm):
 class UserForm(FlaskForm):
     id = HiddenField('id')
     username = StringField(u'Username', [required(), length(max=80), UniqueValidator(User, 'username')])
-    email = StringField(u'E-mail', [required(), length(max=80)])
+    email = StringField(u'E-mail address', [required(), length(max=80)])
     webpage_url = StringField(u'Online profile', [length(max=128)],
-        description="URL to website or social profile - GitHub, Twitter supported with cards.")
-    password = PasswordField(u'New password', [length(max=128)])
+        description="Link to a website or social media profile.")
+    password = PasswordField(u'New password (optional)', [length(max=128)])
     submit = SubmitField(u'Save changes')
+
+class ProjectNew(FlaskForm):
+    id = HiddenField('id')
+    autotext_url = StringField(u'Sync', [length(max=255)],
+        description="URL to external source of documentation in GitLab, GitHub, Bitbucket, Data Package or Website")
+    name = StringField(u'Title', [required(), length(max=80), UniqueValidator(Project, 'name')],
+        description="[Required] a short project name, max 80 characters - you may change this later")
+    summary = StringField(u'Summary', [length(max=120)],
+        description="Max 120 characters")
+    contact_url = StringField(u'Contact link', [length(max=255)],
+        description="How best to contact your team")
+    category_id = SelectField(u'Challenge category', coerce=int)
+    submit = SubmitField(u'Save')
 
 class ProjectForm(FlaskForm):
     id = HiddenField('id')
-    category_id = SelectField(u'Category', coerce=int)
-    progress = RadioField(u'Progress', coerce=int)
-    autotext_url = StringField(u'Remote link', [length(max=255)],
-        description="A supported repository from which to fetch project details.")
-    is_autoupdate = BooleanField(u'Autoupdate project data')
+    # is_autoupdate = BooleanField(u'Sync project data')
     name = StringField(u'Title', [required(), length(max=80), UniqueValidator(Project, 'name')],
-        description="Required, though you may change this any time.")
-    summary = StringField(u'Short summary', [length(max=120)],
-        description="Optional, max. 120 characters, appearing at the top of the project page.")
-    longtext = TextAreaField(u'Full description',
-        description="Use plain text, Markdown or HTML as you wish to document your project.")
-    webpage_url = StringField(u'Project home link', [length(max=255)],
-        description="Optional - a live demo or information page.")
-    source_url = StringField(u'Source code link', [length(max=255)],
-        description="Optional - location of your repository.")
+        description="[Required] a short project name, max 80 characters")
+    summary = StringField(u'Summary', [length(max=120)],
+        description="Max 120 characters")
+    longtext = TextAreaField(u'Description',
+        description="Plain text, Markdown or HTML to describe your project. Use a service like pixelfed.org or imgur.com to upload images")
+    webpage_url = StringField(u'Project link', [length(max=2048)],
+        description="URL to a live demo, presentation, or link to further information")
+    is_webembed = BooleanField(u'Embed project link')
+    autotext_url = StringField(u'Sync', [length(max=255)],
+        description="URL to external source of documentation in GitLab, GitHub, Bitbucket, Data Package or Web site")
+    source_url = StringField(u'Source link', [length(max=255)],
+        description="URL of your repository")
     contact_url = StringField(u'Contact link', [length(max=255)],
-        description="Optional - hashtag search, issues page, forum thread, chat channel.")
-    image_url = StringField(u'Banner image link', [length(max=255)],
-        description="Optional - an image to display at the top of the project page.")
+        description="URL of an issues page, forum thread, chat channel, e-mail, hashtag, ...")
+    image_url = StringField(u'Image link', [length(max=255)],
+        description="URL to an image to display at the top")
     logo_color = StringField(u'Custom color', [length(max=7)],
-        description="Optional - hexadecimal background color for your project page.")
-    logo_icon = StringField(u'<a target="_blank" href="http://fontawesome.io/icons/#search">Custom icon</a>',
-        [length(max=20)], description="Optional - a FontAwesome icon for the project browser.")
+        description="Background color of your project page")
+    # logo_icon = StringField(u'<a target="_blank" href="http://fontawesome.io/icons/#search">Custom icon</a>',
+    #     [length(max=20)], description="A FontAwesome icon for the project browser.")
+    category_id = SelectField(u'Challenge category', coerce=int)
     submit = SubmitField(u'Save changes')
+
+class ProjectPost(FlaskForm):
+    id = HiddenField('id')
+    progress = SelectField(u'Progress', coerce=int)
+    note = TextAreaField(u'Note', [required(), length(max=140)],
+        description="What are you working on right now?")
+    submit = SubmitField(u'Submit')

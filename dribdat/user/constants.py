@@ -25,13 +25,13 @@ PR_PROTOTYPED = 30
 PR_LAUNCHED = 40
 PR_LIVE = 50
 PROJECT_PROGRESS = {
-    PR_CHALLENGE:   'This is an idea or challenge description',
-    PR_NEW:         'A team has formed and started a project',
-    PR_RESEARCHED:  'Research has been done to define the scope',
-    PR_SKETCHED:    'Initial designs have been sketched and shared',
-    PR_PROTOTYPED:  'A prototype of the idea has been developed',
-    PR_LAUNCHED:    'The prototype has been deployed and presented',
-    PR_LIVE:        'This project is live and available to the public',
+    PR_CHALLENGE:   '🚧 This is an idea or challenge description',
+    PR_NEW:         '👪 A team has formed and started a project',
+    PR_RESEARCHED:  '⚗️ Research has been done to define the scope',
+    PR_SKETCHED:    '🎨 Initial designs have been sketched and shared',
+    PR_PROTOTYPED:  '🐣 A prototype of the idea has been developed',
+    PR_LAUNCHED:    '🎈 The prototype has been deployed and presented',
+    PR_LIVE:        '🚀 This project is live and available to the public',
 }
 PROJECT_PROGRESS_PHASE = {
     PR_NEW:         'Researching',

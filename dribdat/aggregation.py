@@ -33,7 +33,7 @@ def GetProjectData(url):
 
 def IsProjectStarred(project, current_user):
     if not current_user or current_user.is_anonymous or not current_user.is_authenticated:
-        return False 
+        return False
     return Activity.query.filter_by(
         name='star',
         project_id=project.id,
@@ -46,12 +46,27 @@ def GetProjectTeam(project):
         project_id=project.id
     ).all()
 
-def ProjectActivity(project, of_type, current_user):
+def GetEventUsers(event):
+    if not event.projects: return None
+    users = []
+    userlist = []
+    for p in event.projects:
+        for activity in GetProjectTeam(p):
+            u = activity.user
+            if not u.id in userlist:
+                userlist.append(u.id)
+                users.append(u)
+    return sorted(users, key=lambda x: x.username)
+
+def ProjectActivity(project, of_type, current_user, action=None, comments=None):
     activity = Activity(
         name=of_type,
         project_id=project.id,
-        user_id=current_user.id
+        user_id=current_user.id,
+        action=action
     )
+    if comments is not None and len(comments) > 3:
+        activity.content=comments
     score = 0
     if project.score is None: project.score = 0
     allstars = Activity.query.filter_by(

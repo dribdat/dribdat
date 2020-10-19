@@ -5,11 +5,16 @@ from flask import (Blueprint, request, render_template, flash, url_for,
 from flask_login import login_required, current_user
 
 from dribdat.user.models import User, Event, Project
-from dribdat.public.forms import ProjectForm
+from dribdat.public.forms import *
 from dribdat.database import db
-from dribdat.aggregation import GetProjectData, ProjectActivity, IsProjectStarred, GetProjectTeam
 from dribdat.extensions import cache
+from dribdat.aggregation import (
+    GetProjectData, ProjectActivity, IsProjectStarred,
+    GetProjectTeam, GetEventUsers
+)
 from dribdat.user import projectProgressList
+
+from datetime import datetime
 
 blueprint = Blueprint('public', __name__, static_folder="../static")
 
@@ -34,7 +39,7 @@ def dashboard():
 # Outputs JSON-LD about the current event (see also api.py/info_event_hackathon_json)
 @blueprint.route('/hackathon.json')
 def info_current_hackathon_json():
-    event = Event.query.filter_by(is_current=True).first()
+    event = Event.query.filter_by(is_current=True).first() or Event.query.order_by(Event.id.desc()).first()
     return jsonify(event.get_schema(request.host_url))
 
 @blueprint.route("/about/")
@@ -48,8 +53,19 @@ def event(event_id):
     if request.args.get('embed'):
         return render_template("public/embed.html", current_event=event, projects=projects)
     summaries = [ p.data for p in projects ]
-    summaries.sort(key=lambda x: x['score'], reverse=True)
+    # Sort projects by reverse score, then name
+    summaries.sort(key=lambda x: (
+        -x['score'] if isinstance(x['score'], int) else 0,
+        x['name'].lower()))
     return render_template("public/event.html",  current_event=event, projects=summaries)
+
+@blueprint.route("/event/<int:event_id>/participants")
+def event_participants(event_id):
+    event = Event.query.filter_by(id=event_id).first_or_404()
+    users = GetEventUsers(event)
+    usercount = len(users)
+    return render_template("public/eventusers.html",
+        current_event=event, participants=users, usercount=usercount)
 
 @blueprint.route('/project/<int:project_id>')
 def project(project_id):
@@ -66,7 +82,6 @@ def project_edit(project_id):
         flash('You do not have access to edit this project.', 'warning')
         return project_action(project_id, None)
     form = ProjectForm(obj=project, next=request.args.get('next'))
-    form.progress.choices = projectProgressList(event.has_started or event.has_finished)
     form.category_id.choices = [(c.id, c.name) for c in project.categories_all()]
     form.category_id.choices.insert(0, (-1, ''))
     if form.validate_on_submit():
@@ -77,42 +92,77 @@ def project_edit(project_id):
         db.session.commit()
         cache.clear()
         flash('Project updated.', 'success')
-        # TODO: return redirect(url_for('project', project_id=project.id))
-        return project_action(project_id, 'update')
+        project_action(project_id, 'update', False)
+        return redirect(url_for('public.project', project_id=project.id))
     return render_template('public/projectedit.html', current_event=event, project=project, form=form)
 
-def project_action(project_id, of_type):
+@blueprint.route('/project/<int:project_id>/post', methods=['GET', 'POST'])
+@login_required
+def project_post(project_id):
+    project = Project.query.filter_by(id=project_id).first_or_404()
+    event = project.event
+    starred = IsProjectStarred(project, current_user)
+    allow_edit = starred or (not current_user.is_anonymous and current_user.is_admin)
+    if not allow_edit:
+        flash('You do not have access to edit this project.', 'warning')
+        return project_action(project_id, None)
+    form = ProjectPost(obj=project, next=request.args.get('next'))
+    form.progress.choices = projectProgressList(event.has_started or event.has_finished)
+    if form.validate_on_submit():
+        del form.id
+        form.populate_obj(project)
+        project.update()
+        db.session.add(project)
+        db.session.commit()
+        cache.clear()
+        flash('Thanks for your commit!', 'success')
+        project_action(project_id, 'update', action='post', text=form.note.data)
+        return redirect(url_for('public.project', project_id=project.id))
+    return render_template('public/projectpost.html', current_event=event, project=project, form=form)
+
+def project_action(project_id, of_type=None, as_view=True, then_redirect=False, action=None, text=None):
     project = Project.query.filter_by(id=project_id).first_or_404()
     event = project.event
     if of_type is not None:
-        ProjectActivity(project, of_type, current_user)
+        ProjectActivity(project, of_type, current_user, action, text)
+    if not as_view:
+        return True
     starred = IsProjectStarred(project, current_user)
     allow_edit = starred or (not current_user.is_anonymous and current_user.is_admin)
+    allow_edit = allow_edit and not event.lock_editing
     project_stars = GetProjectTeam(project)
+    latest_activity = project.latest_activity()
+    project_signals = project.all_signals()
+    if then_redirect:
+        return redirect(url_for('public.project', project_id=project.id))
     return render_template('public/project.html', current_event=event, project=project,
-        project_starred=starred, project_stars=project_stars, allow_edit=allow_edit)
+        project_starred=starred, project_stars=project_stars, project_signals=project_signals,
+        allow_edit=allow_edit, latest_activity=latest_activity)
 
 @blueprint.route('/project/<int:project_id>/star', methods=['GET', 'POST'])
 @login_required
 def project_star(project_id):
-    flash('Thanks for your support!', 'success')
-    return project_action(project_id, 'star')
+    flash('Welcome to the team!', 'success')
+    return project_action(project_id, 'star', then_redirect=True)
 
 @blueprint.route('/project/<int:project_id>/unstar', methods=['GET', 'POST'])
 @login_required
 def project_unstar(project_id):
-    flash('Project un-starred', 'success')
-    return project_action(project_id, 'unstar')
+    flash('You have left the project', 'success')
+    return project_action(project_id, 'unstar', then_redirect=True)
 
 @blueprint.route('/event/<int:event_id>/project/new', methods=['GET', 'POST'])
 def project_new(event_id):
     form = None
     event = Event.query.filter_by(id=event_id).first_or_404()
+    if event.lock_starting:
+        flash('Starting a new project is disabled for this event.', 'error')
+        return redirect(url_for('public.event', event_id=event.id))
     if current_user and current_user.is_authenticated:
         project = Project()
         project.user_id = current_user.id
-        form = ProjectForm(obj=project, next=request.args.get('next'))
-        form.progress.choices = projectProgressList(event.has_started)
+        project.progress = 0
+        form = ProjectNew(obj=project, next=request.args.get('next'))
         form.category_id.choices = [(c.id, c.name) for c in project.categories_all(event)]
         form.category_id.choices.insert(0, (-1, ''))
         if form.validate_on_submit():
@@ -122,12 +172,11 @@ def project_new(event_id):
             project.update()
             db.session.add(project)
             db.session.commit()
-            flash('Project added.', 'success')
-            project_action(project.id, 'create')
+            flash('New challenge added.', 'success')
+            project_action(project.id, 'create', False)
             cache.clear()
-            return project_action(project.id, 'star')
-        del form.logo_icon
-        del form.logo_color
+            project_action(project.id, 'star', False)
+            return redirect(url_for('public.project', project_id=project.id))
     return render_template('public/projectnew.html', current_event=event, form=form)
 
 @blueprint.route('/project/<int:project_id>/autoupdate')
@@ -138,27 +187,30 @@ def project_autoupdate(project_id):
     allow_edit = starred or (not current_user.is_anonymous and current_user.is_admin)
     if not allow_edit or project.is_hidden or not project.is_autoupdate:
         flash('You may not sync this project.', 'warning')
-        return project_action(project_id, None)
+        return project_action(project_id)
     data = GetProjectData(project.autotext_url)
     if not 'name' in data:
-        flash("Project could not be synced: check the autoupdate link.", 'warning')
-        return project_action(project_id, None)
-    if 'name' in data and data['name']:
-        project.name = data['name']
-    if 'summary' in data and data['summary']:
-        project.summary = data['summary']
+        flash("Could not sync: check the Remote Link.", 'warning')
+        return project_action(project_id)
+    # Project name is not updated
+    # if 'name' in data and data['name']: project.name = data['name']
+    # Always update "autotext" field
     if 'description' in data and data['description']:
-        project.longtext = data['description']
-    if 'homepage_url' in data and data['homepage_url']:
+        project.autotext = data['description']
+    # Update following fields only if blank
+    if 'summary' in data and data['summary']:
+        if not project.summary or not project.summary.strip():
+            project.summary = data['summary']
+    if 'homepage_url' in data and data['homepage_url'] and not project.webpage_url:
         project.webpage_url = data['homepage_url']
-    if 'contact_url' in data and data['contact_url']:
+    if 'contact_url' in data and data['contact_url'] and not project.contact_url:
         project.contact_url = data['contact_url']
-    if 'source_url' in data and data['source_url']:
+    if 'source_url' in data and data['source_url'] and not project.source_url:
         project.source_url = data['source_url']
-    if 'image_url' in data and data['image_url']:
+    if 'image_url' in data and data['image_url'] and not project.image_url:
         project.image_url = data['image_url']
     project.update()
     db.session.add(project)
     db.session.commit()
     flash("Project data synced.", 'success')
-    return project_action(project.id, 'update')
+    return project_action(project.id, 'update', action='sync', text=str(len(project.autotext)) + ' bytes')

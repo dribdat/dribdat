@@ -1,24 +1,11 @@
 /* =============================================================================
-   App specific CSS file.
+    dribdat custom styles
    ========================================================================== */
 
 /* universal */
 
-html {
-  /*overflow-y: scroll;*/
-}
-
-section {
-  overflow: auto;
-}
-
-textarea {
-  resize: vertical;
-}
-
-h1 {
-  color: #999;
-}
+section { overflow: auto; }
+textarea { resize: vertical; }
 
 .container-narrow {
   margin: 0 auto;
@@ -31,12 +18,9 @@ h1 {
 .navbar-form input[type="password"] {
   width: 180px;
 }
-
-
 .form-register {
   width: 50%;
 }
-
 .form-register .form-control {
   position: relative;
   font-size: 16px;
@@ -45,6 +29,15 @@ h1 {
   -webkit-box-sizing: border-box;
      -moz-box-sizing: border-box;
           box-sizing: border-box;
+}
+.form-project-post h4 {
+  margin-top: 1em;
+  font-weight: normal;
+  text-align: center;
+  font-size: 250%;
+}
+.form-project-post textarea {
+  height: 4em;
 }
 
 /* footer */
@@ -55,39 +48,29 @@ footer {
   /*border-top: 1px solid #eaeaea;*/
   /*color: #999999;*/
 }
-
 footer a {
   color: #999999;
 }
-
 footer p {
   float: right;
   margin-right: 25px;
 }
-
 footer ul {
   list-style: none;
 }
-
 footer ul li {
   float: left;
   margin-left: 10px;
 }
-
 footer .company {
   float: left;
   margin-left: 25px;
 }
-
 footer .footer-nav {
   float: right;
   margin-right: 25px;
   list-style: none;
 }
-
-/*
-Dribdat custom styles
-*/
 
 ul.help-block {
   background-color: red; color: white; padding: 5px;
@@ -103,7 +86,12 @@ ul.help-block {
 nav.navbar {
   margin-bottom: 1em;
   box-shadow: 0px 0px 20px rgba(0,0,0,0.5);
-  background: #f7f7f7;
+  /* background: #f7f7f7; */
+}
+nav.navbar .navbar-brand {
+    color: black;
+    background: white;
+    border-radius: 10px;
 }
 nav .navbar-nav .fa {
   margin-left:  0.2em;
@@ -150,7 +138,7 @@ nav .navbar-nav .nav-item {
   clear: none;
   display: inherit;
 }
-@media (max-width: 750px) {
+@media (max-width: 760px) {
   .community-embed .fa-comment {
     display: none !important;
   }
@@ -170,6 +158,7 @@ nav .navbar-nav .nav-item {
   display: block;
 }
 
+/* Honeycomb customizations */
 .event-page .honeycomb {
   margin: 30px 0px 100px 0px;
   left: 50%;
@@ -183,7 +172,6 @@ nav .navbar-nav .nav-item {
 }
 
 .project-page.phase-Challenge .progress,
-.project-page.phase-Challenge .project-star,
 .hide-challenges .challenge,
 .challenge.hexagon .progress { display: none; }
 .challenge.hexagon .hexagontent { color: #35a; font-weight: normal; }
@@ -237,7 +225,7 @@ nav .navbar-nav .nav-item {
   overflow: visible;
   position: relative;
   transform: none;
-  left: 30%;
+  left: 10%;
   width: auto;
   text-align: left;
   margin-bottom: 10px;
@@ -251,17 +239,30 @@ nav .navbar-nav .nav-item {
   position: initial;
   margin-right: 20px;
 }
-.project-info .progress {
-  width: 100px;
+.progress-container {
   display: inline-block;
+  text-align: center;
   margin-bottom: -5px;
   margin-left: 1em;
   margin-right: 5px;
 }
+.project-info .progress {
+  width: 100px;
+  display: block;
+}
 .progress-bar {
   background-color: #3399f3;
 }
-.project-tools .progress-bar {
+.project-info .project-score {
+  display: inline-block;
+  text-align: center;
+  margin-left: 1em;
+  margin-right: 5px;
+}
+.project-score .label-info {
+  color: #aaa;
+}
+.project-score .progress-bar {
   min-width: 2em;
 }
 .hexagon {
@@ -273,12 +274,15 @@ nav .navbar-nav .nav-item {
 
 .project-page .project-name {
   font-weight: bold;
-  margin-top: 1.5em;
+  margin-top: 0.5em;
+}
+.project-page .project-name h2 {
+  text-shadow: 1px 1px 1px white;
+  font-weight: bold;
+  font-size: 3rem;
 }
 .project-page .project-category {
   font-size: 70%;
-  color: #999;
-  font-style: italic;
 }
 .project-page .project-team {
   font-weight: normal;
@@ -291,35 +295,202 @@ nav .navbar-nav .nav-item {
   margin-right: 40px;
 }
 .project-page .details {
-  float: right;
-  font-size: 100%;
+  font-size: 80%;
+  margin-top: 1em;
   text-align: right;
+}
+.project-page .details p {
+  margin: 0px;
+}
+.project-page .details a {
+  font-size: 120%;
 }
 .project-page .project-info {
   min-height: 240px;
-  background-color: rgba(255, 255, 255, 0.8); color: black;
-  padding: 20px;
+  background-color: rgba(255, 255, 255, 0.8);
+  color: black;
+  padding: 5px;
   margin-bottom: 10px;
+  /* When shown in tabs */
+  border-top: none;
+  border-radius: 0px;
+  clear: both;
 }
 .project-page .project-info a {
   color: #15a;
 }
+.project-page a.project-star.btn-primary { color: white; }
 .project-page .project-star i {
   padding-right: 5px;
 }
-.project-page .project-longtext img {
+.project-page img {
   max-width: 100%;
 }
-.project-page.jumbotron { padding: 1rem; }
+.project-page.jumbotron {
+  background-color: white;
+  color: black;
+  padding: 1rem;
+}
 @media (min-width: 576px) {
   .project-page.jumbotron { padding: 2rem; }
+  .project.hexalist .hexagontent {
+    left: 35%;
+  }
 }
+.project-page .project-info td,
+.project-page .project-info th { padding: 0.2em 1.4em 0 0; }
+.project-page .project-info thead { border-bottom: 1px solid black; }
+
+.project-page .project-longtext { margin: 2em; font-size: 125%; }
+.project-page .project-autotext { margin: 2em; }
+.project-page .project-buttons { display: block; text-align: center; }
+.project-page .project-buttons .btn {
+  display: inline-block;
+  text-align: center;
+  font-size: 140%;
+  width: 5em;
+  background: rgba(255, 255, 255, 0.5);
+}
+.project-page .project-buttons .btn:hover {
+  background: #dde;
+}
+.project-page .project-buttons .btn span {
+  font-size: 300%; display: block;
+}
+
+.project-page .widget {
+  text-align: center;
+  margin: 1em;
+}
+.project-page .widget iframe {
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.project-page .nav {
+  clear: both;
+  padding: 20px 5px 5px;
+  border-bottom: 1px solid lightgrey;
+}
+.project-page .nav a {
+  text-shadow: 1px 1px 4px white;
+  font-weight: bold;
+  color: #007bff;
+}
+.project-page .nav a:not(.active):hover {
+  background-color: rgba(200, 200, 200, 0.8);
+}
+.project-page .nav a.active {
+  text-shadow: none;
+  border-bottom: 1px solid white;
+}
+
+/* Autotext fader
+.project-page .project-autotext.active {
+  max-height: none;
+  overflow: visible;
+}
+.project-page .project-autotext.active .cover {
+  display: none;
+}
+.project-page .project-autotext {
+  max-height: 500px;
+  overflow: hidden;
+  position: relative;
+  margin-bottom: 0;
+}
+.project-page .project-autotext .cover {
+  position: absolute;
+  top: 0px; left: 0px;
+  width: 100%; height: 100%;
+  cursor: pointer; cursor: hand;
+
+  background: rgba(255,255,255,0);
+  background: -moz-linear-gradient(top, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 92%, rgba(255,255,255,1) 100%);
+  background: -webkit-gradient(left top, left bottom, color-stop(0%, rgba(255,255,255,0)), color-stop(92%, rgba(255,255,255,1)), color-stop(100%, rgba(255,255,255,1)));
+  background: -webkit-linear-gradient(top, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 92%, rgba(255,255,255,1) 100%);
+  background: -o-linear-gradient(top, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 92%, rgba(255,255,255,1) 100%);
+  background: -ms-linear-gradient(top, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 92%, rgba(255,255,255,1) 100%);
+  background: linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 92%, rgba(255,255,255,1) 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#ffffff', GradientType=0 );
+}
+/- Autotext fader */
+
+/* Project embedded content */
+.project-page .resizable {
+  width: 100%;
+  height: 600px;
+  box-shadow: 5px 5px 10px #535353;
+  border: 1px silver;
+  border-radius: 4px;
+  overflow: hidden;
+  position: sticky;
+}
+.project-page .resizable iframe {
+  width: 100% !important; height: 100% !important;
+  border: none !important;
+}
+@media (max-width: 1000px) {
+  .project-page .resizable {
+    height: 300px;
+  }
+}
+.win-size-grip {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  padding: 4px;
+  bottom: 0;
+  right: 0;
+  cursor: nwse-resize;
+  background: url(https://raw.githubusercontent.com/RickStrahl/jquery-resizable/master/assets/wingrip.png) no-repeat;
+ }
 
 /* Project entry form */
 .fld-progress .radio-inline { display: block; }
 .fld-progress { border-width: 25px; padding-left: 5px; border-top: none !important; border-bottom: none !important; border-right: none !important; border-style: solid; -webkit-border-image: -webkit-gradient(linear, 0 100%, 0 0, from(black), to(rgba(0, 0, 0, 0))) 1 100%; -webkit-border-image: -webkit-linear-gradient(bottom, black, rgba(0, 0, 0, 0)) 1 100%; -moz-border-image: -moz-linear-gradient(bottom, black, rgba(0, 0, 0, 0)) 1 100%; -o-border-image: -o-linear-gradient(bottom, black, rgba(0, 0, 0, 0)) 1 100%; border-image: linear-gradient(to top, black, rgba(0, 0, 0, 0)) 1 100%; }
-.with-event form .control-label { font-weight: 600; font-size: 140%; }
-.with-event form .checkbox label[for="is_autoupdate"] { margin-left:30%; margin-top:20px; padding:10px; border-radius:10px; box-shadow: 0 0 0 10px cyan; }
+.fld-progress select { font-size: 150%; }
+.with-event form .control-label[for='note'] { margin-top: 0px; }
+.with-event form .control-label {
+  font-weight: 600; font-size: 140%;
+  display: block;
+  text-align: center;
+  margin-top: 4em;
+}
+.with-event form .checkbox label[for="is_autoupdate"] {
+  margin-left:30%; margin-top:20px; padding:10px;
+  border-radius:10px; box-shadow: 0 0 0 10px cyan;
+}
+.with-event form .checkbox label[for="is_autoupdate"] input {
+  margin-right: 1em;
+}
+.with-event form .checkbox label[for="is_webembed"] {
+  font-weight: bold; display: block; margin-bottom: 1em;
+}
+.with-event form .checkbox label[for="is_webembed"] input {
+  margin-right: 0.4em;
+}
+.with-event form > .checkbox {
+  margin-top: 1rem;
+}
+.with-event form > .form-group {
+  margin-top: 1rem;
+  margin-bottom: 0px;
+  text-align: center;
+}
+.with-event form .help-inline {
+  color: #555;
+  display: block;
+  margin-top: 1em;
+}
+.with-event form .form-control {
+  font-size: 125%;
+  box-shadow: 5px 5px 5px #ccc;
+}
+.with-event form .autotext-indicator {
+  margin-top: 2em;
+  display: block;
+}
 
 /* Code blocks */
 pre { color: #333; background: white; }
@@ -355,13 +526,34 @@ pre { color: #333; background: white; }
   margin-bottom: 10px;
   min-height: 64px;
 }
+.nav-categories label {
+  border: 1px solid #ddd;
+}
+.nav-categories label.active {
+  border: 1px solid #777;
+}
+.nav-categories label input {
+  display: none;
+}
 .nav-categories {
   margin: 10px;
 }
-.project-tools, .edit-buttons {
+.project-score {
   float: right;
   margin-right: 15px;
   text-align: right;
+}
+.project-edit-buttons {
+  margin: -2em 0 0 0;
+  float: right;
+}
+.project-edit-buttons * {
+  box-shadow: none !important;
+  opacity: 0.8;
+}
+@media only screen and (max-width:460px){
+  .section-header-content { display: none; }
+  .project-edit-buttons { margin: 1em; }
 }
 .category-info {
   padding: 0 1em;
@@ -370,6 +562,10 @@ pre { color: #333; background: white; }
 }
 .category-info img {
   width: 100%;
+}
+.category-container {
+  margin-top: 15px;
+  padding-top: 10px;
 }
 
 .event-resources {
@@ -380,27 +576,44 @@ pre { color: #333; background: white; }
 .event-info {
   margin-top: 40px;
 }
+.event-participants h1 {
+  margin: 2em 0 0;
+  text-align: center;
+}
+.event-participants .participant-box {
+  padding: 2em;
+  margin-bottom: 2em;
+  text-align: center;
+}
 
 @media (max-width: 760px) {
   .category-info {
     margin-top: none;
   }
-  .project-tools {
+  .project-score {
     float: none;
   }
 }
 
 .team-gravatar img {
-  margin-right: 5px;
-  margin-bottom: 5px;
-  padding: 2px;
-  border: 2px solid #eee;
+  margin: 5px;
 }
-
-.signin-slack {
-  font-size: 0px; border: 0px !important;
-  background: url(../img/btn-sign-in-with-slack.png) no-repeat;
-  width: 173px; height: 41px;
+.team-gravatar span {
+  width: 48%;
+  display: inline-block;
+}
+.team-gravatar {
+  width: 200px;
+  height: 60px;
+  display: inline-block;
+  background: white;
+  border: 2px solid #ff9;
+  padding: 2px; margin-right: 5px;
+  overflow: hidden;
+}
+.team-gravatar:hover {
+  text-decoration: none;
+  border: 2px solid #dde;
 }
 
 /* Embed view of the projects */
@@ -417,6 +630,125 @@ pre { color: #333; background: white; }
   background: none !important;
 }
 .embed-view .honeycomb {
-  transform-origin: 50% 0%;
-  transform: scale(0.5);
+  transform: scale(0.4);
+  transform-origin: top center;
+  margin-top: 20px;
 }
+.embed-event .event-countdown {
+  bottom: 0px;
+  position: absolute;
+  transform: scale(0.5);
+  display: block;
+}
+.embed-event .honeycomb .project {
+  display: inline-block;
+}
+.embed-event .hexagon {
+  margin-top: 20px;
+}
+.embed-view .section-header { display: none; }
+
+/* Dashboard */
+.dashboard-page #event-logo { width: 28%; }
+#schedule { color: transparent; margin-top: 1em; }
+#schedule dashboard { color: #eee; display: initial !important; }
+#schedule > * { display: none; }
+#announcements {
+    margin: 0 4em;
+    font-size: 50px;
+    font-weight: bold;
+    color: yellow;
+    background: darkblue;
+}
+
+
+/* ------------
+Code of Conduct
+--------------- */
+.codeofconduct { margin-top:20px; padding:10px; border-radius:10px; box-shadow:
+		0 0 0 4px orange,
+		0 0 0 6px yellow,
+		0 0 0 10px cyan; }
+
+/* ------------
+Challenges view
+--------------- */
+#ideas-list .list-group-item { border: none !important; }
+.list-data .list-group-item {
+    border-left: none; border-right: none; border-top: none;
+    border-bottom: 1px solid #333; border-radius: 0px;
+    margin-right: 1em;
+}
+.list-data .list-group-item img {
+    height: 1em;
+    padding-right: 0.5em;
+}
+@media (min-width: 1000px) {
+.list-data .list-group-item {
+    width: 48%;
+    display: inline-block;
+    overflow: hidden;
+    height: 3em;
+    line-height: 2em;
+    padding-top: 0.4em;
+}
+.list-data a.list-group-item:nth-child(2) {
+    border-top: 1px solid #333;
+}
+}
+.list-data a.list-group-item:nth-child(1) {
+    border-top: 1px solid #333;
+}
+
+/* ------------
+Data Packages view
+--------------- */
+
+/* .list-datapackage { max-height: 14.7em; overflow: auto } */
+#datacentral .btn { color: white; }
+
+.list-datapackage .list-group-item {
+    border-left: none; border-right: none; border-top: none;
+    border-bottom: 1px solid #333; border-radius: 0px;
+    background: transparent;
+}
+@media (min-width: 1000px) {
+.list-datapackage .list-group-item {
+    width: 100%;
+    display: inline-block;
+    min-height: 3em;
+    line-height: 2em;
+    padding-top: 0.4em;
+}
+.list-datapackage a.list-group-item:nth-child(2) {
+    border-top: 1px solid #333;
+}
+}
+.list-datapackage a.list-group-item:nth-child(1) {
+    border-top: 1px solid #333;
+}
+.list-datapackage .list-infos {
+    font-size: 80%; color: #999;
+}
+
+/* -----------
+SlackIn button
+-------------- */
+
+.signin-slack {
+  font-size: 0px; border: 0px !important;
+  background: url('/static/img/btn-sign-in-with-slack.png') no-repeat;
+  width: 173px; height: 41px;
+}
+
+.__slackin { margin-bottom: 10px; display: block; }
+
+/* .signin-slack, .signin-slack:hover {
+    background-image: url(https://upload.wikimedia.org/wikipedia/commons/7/76/Slack_Icon.png);
+    background-repeat: no-repeat;
+    background-size: 24px 24px;
+    background-position: 10px 8px;
+    line-height: 41px;
+    box-shadow: inset 0 0 0 2px #e5e5e5;
+    padding: 0 42px;
+} */

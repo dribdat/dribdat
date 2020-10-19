@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """The app module, containing the app factory function."""
-from flask import Flask, render_template
+from flask import Flask, render_template, redirect, url_for
+from flask_cors import CORS
 
 from dribdat import commands, public, user, admin
 from dribdat.assets import assets
@@ -9,12 +10,13 @@ from dribdat.extensions import (
     cache,
     db,
     login_manager,
-    login_oauth,
     migrate,
 )
 from dribdat.settings import ProdConfig
 from dribdat.utils import timesince
 from flask_misaka import Misaka
+from flask_talisman import Talisman
+from flask_dance.contrib.slack import make_slack_blueprint, slack
 
 def init_app(config_object=ProdConfig):
     """An application factory, as explained here: http://flask.pocoo.org/docs/patterns/appfactories/.
@@ -23,8 +25,13 @@ def init_app(config_object=ProdConfig):
     """
     app = Flask(__name__)
     app.config.from_object(config_object)
+
+    cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
+    app.config['CORS_HEADERS'] = 'Content-Type'
+
     register_extensions(app)
     register_blueprints(app)
+    register_oauthhandlers(app)
     register_errorhandlers(app)
     register_filters(app)
     register_loggers(app)
@@ -41,6 +48,8 @@ def register_extensions(app):
     db.init_app(app)
     login_manager.init_app(app)
     migrate.init_app(app, db)
+    if 'SERVER_SSL' in app.config and app.config['SERVER_SSL']:
+        Talisman(app)
     return None
 
 
@@ -53,6 +62,21 @@ def register_blueprints(app):
     app.register_blueprint(admin.views.blueprint)
     return None
 
+def register_oauthhandlers(app):
+    if app.config["OAUTH_TYPE"]:
+        if app.config["OAUTH_TYPE"] == 'slack':
+            blueprint = make_slack_blueprint(
+                client_id=app.config["OAUTH_ID"],
+                client_secret=app.config["OAUTH_SECRET"],
+                subdomain=app.config["OAUTH_DOMAIN"],
+                scope="identity.basic,identity.email",
+                redirect_to="auth.slack_login",
+                login_url="/login",
+                # authorized_url=None,
+                # session_class=None,
+                # storage=None,
+            )
+            app.register_blueprint(blueprint, url_prefix="/oauth")
 
 def register_errorhandlers(app):
     """Register error handlers."""
@@ -86,7 +110,7 @@ def register_commands(app):
 
 
 def register_filters(app):
-    Misaka(app, autolink=True, fenced_code=True, strikethrough=True)
+    Misaka(app, autolink=True, fenced_code=True, strikethrough=True, tables=True)
     @app.template_filter()
     def since_date(value):
         return timesince(value)
@@ -94,7 +118,10 @@ def register_filters(app):
     def until_date(value):
         return timesince(value, default="now!", until=True)
     @app.template_filter()
-    def format_date(value, format='%Y-%m-%d'):
+    def format_date(value, format='%d.%m.%Y'):
+        return value.strftime(format)
+    @app.template_filter()
+    def format_datetime(value, format='%d.%m.%Y %H:%M'):
         return value.strftime(format)
 
 

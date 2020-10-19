@@ -110,6 +110,8 @@ def event(event_id):
 
     if form.validate_on_submit():
         form.populate_obj(event)
+        event.starts_at = datetime.combine(form.starts_date.data, form.starts_time.data)
+        event.ends_at = datetime.combine(form.ends_date.data, form.ends_time.data)
 
         db.session.add(event)
         db.session.commit()
@@ -120,6 +122,10 @@ def event(event_id):
         cache.clear()
         return events()
 
+    form.starts_date.data = event.starts_at
+    form.starts_time.data = event.starts_at
+    form.ends_date.data = event.ends_at
+    form.ends_time.data = event.ends_at
     return render_template('admin/event.html', event=event, form=form)
 
 @blueprint.route('/event/new', methods=['GET', 'POST'])
@@ -131,6 +137,8 @@ def event_new():
 
     if form.validate_on_submit():
         form.populate_obj(event)
+        event.starts_at = datetime.combine(form.starts_date.data, form.starts_time.data)
+        event.ends_at = datetime.combine(form.ends_date.data, form.ends_time.data)
 
         db.session.add(event)
         db.session.commit()
@@ -193,7 +201,8 @@ def event_projects(event_id):
 def event_print(event_id):
     now = datetime.utcnow().strftime("%d.%m.%Y %H:%M")
     event = Event.query.filter_by(id=event_id).first_or_404()
-    projects = Project.query.filter_by(event_id=event_id, is_hidden=False).order_by(Project.name)
+    projects = Project.query.filter_by(event_id=event_id, is_hidden=False)
+    projects = projects.filter(Project.progress>0).order_by(Project.name)
     return render_template('admin/eventprint.html', event=event, projects=projects, curdate=now, active='projects')
 
 @blueprint.route('/project/<int:project_id>', methods=['GET', 'POST'])

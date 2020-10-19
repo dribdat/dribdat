@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from flask_wtf import FlaskForm
-from wtforms import TextField, PasswordField, StringField
+from wtforms import PasswordField, StringField
 from wtforms.validators import DataRequired, Email, EqualTo, Length
 
 from .models import User
@@ -17,7 +17,7 @@ class RegisterForm(FlaskForm):
                              validators=[DataRequired(), Length(min=6, max=40)])
     confirm = PasswordField('Verify password',
                             [DataRequired(), EqualTo('password', message='Passwords must match')])
-    webpage_url = TextField(u'Online profile')
+    webpage_url = StringField(u'Online profile')
 
     def __init__(self, *args, **kwargs):
         """Create instance."""
