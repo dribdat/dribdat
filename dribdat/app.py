@@ -14,6 +14,7 @@ from dribdat.extensions import (
 )
 from dribdat.settings import ProdConfig
 from dribdat.utils import timesince
+from dribdat.onebox import make_onebox
 from flask_misaka import Misaka
 from flask_talisman import Talisman
 from flask_dance.contrib.slack import make_slack_blueprint, slack
@@ -128,6 +129,9 @@ def register_filters(app):
     @app.template_filter()
     def format_datetime(value, format='%d.%m.%Y %H:%M'):
         return value.strftime(format)
+    @app.template_filter()
+    def onebox(value):
+        return make_onebox(value)
 
 
 def register_loggers(app):

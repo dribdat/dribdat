@@ -4,7 +4,7 @@ from factory import PostGenerationMethodCall, Sequence
 from factory.alchemy import SQLAlchemyModelFactory
 
 from dribdat.database import db
-from dribdat.user.models import User
+from dribdat.user.models import User, Project
 
 
 class BaseFactory(SQLAlchemyModelFactory):
@@ -29,3 +29,17 @@ class UserFactory(BaseFactory):
         """Factory configuration."""
 
         model = User
+
+class ProjectFactory(BaseFactory):
+    """Project factory."""
+
+    name = Sequence(lambda n: 'Project {0}'.format(n))
+    summary = "Just a test project"
+    image_url = "http://image.local/something.png"
+    webpage_url = "http://webpage.localhost"
+    logo_color = "red"
+
+    class Meta:
+        """Factory configuration."""
+
+        model = Project

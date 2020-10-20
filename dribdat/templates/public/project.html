@@ -125,7 +125,7 @@
 
 {% endif %}
 
-  {% if project.is_webembed %}
+  {% if project.is_webembed and project.webpage_url %}
     <div class="project-webembed resizable">
       {{ project.webembed|safe }}
       <div class="win-size-grip"></div>
@@ -135,7 +135,7 @@
 
   {% if project.longtext %}
     <div class="project-longtext">
-      {{project.longtext|markdown}}
+      {{project.longtext|markdown|onebox|safe}}
     </div>
   {% endif %}
 

@@ -39,6 +39,7 @@ promise==2.3
 psycopg2-binary==2.8.6
 pycparser==2.20
 pyquery==1.4.1
+pystache==0.5.4
 python-dateutil==2.8.1
 python-dotenv==0.13.0
 python-editor==1.0.4

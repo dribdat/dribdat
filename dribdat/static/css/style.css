@@ -446,6 +446,44 @@ nav .navbar-nav .nav-item {
   background: url(https://raw.githubusercontent.com/RickStrahl/jquery-resizable/master/assets/wingrip.png) no-repeat;
  }
 
+/* Oneboxes in content */
+.onebox {
+  display: inline-block;
+  border: 2px solid #ddd;
+  background: #f0f0f0;
+  box-shadow: 5px 5px 8px rgba(0,0,0,0.3);
+  color: black;
+  padding: 0.5em;
+  margin: 0.5em 1em 1em 0px;
+  opacity: 0.8;
+  min-height: 8em;
+  max-width: 50%;
+  clear: both;
+}
+.onebox * {
+  text-decoration: none !important;
+  color: black;
+}
+.onebox:hover {
+  opacity: 1.0;
+}
+.onebox h5 {
+  display: inline-block;
+  color: #007bff;
+  clear: none;
+}
+.onebox .phase {
+  font-size: 80%; color: #999;
+}
+.onebox p {
+  font-size: 90%;
+}
+.onebox img {
+  width: 5em;
+  float: left;
+  margin-right: 1em;
+}
+
 /* Project entry form */
 .fld-progress .radio-inline { display: block; }
 .fld-progress { border-width: 25px; padding-left: 5px; border-top: none !important; border-bottom: none !important; border-right: none !important; border-style: solid; -webkit-border-image: -webkit-gradient(linear, 0 100%, 0 0, from(black), to(rgba(0, 0, 0, 0))) 1 100%; -webkit-border-image: -webkit-linear-gradient(bottom, black, rgba(0, 0, 0, 0)) 1 100%; -moz-border-image: -moz-linear-gradient(bottom, black, rgba(0, 0, 0, 0)) 1 100%; -o-border-image: -o-linear-gradient(bottom, black, rgba(0, 0, 0, 0)) 1 100%; border-image: linear-gradient(to top, black, rgba(0, 0, 0, 0)) 1 100%; }
