@@ -448,7 +448,6 @@ nav .navbar-nav .nav-item {
 
 /* Oneboxes in content */
 .onebox {
-  display: inline-block;
   border: 2px solid #ddd;
   background: #f0f0f0;
   box-shadow: 5px 5px 8px rgba(0,0,0,0.3);
@@ -456,8 +455,10 @@ nav .navbar-nav .nav-item {
   padding: 0.5em;
   margin: 0.5em 1em 1em 0px;
   opacity: 0.8;
-  min-height: 8em;
-  max-width: 50%;
+  min-height: 6em;
+
+  width: 50%;
+  display: block;
   clear: both;
 }
 .onebox * {
