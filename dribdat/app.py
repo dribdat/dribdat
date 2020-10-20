@@ -48,9 +48,14 @@ def register_extensions(app):
     db.init_app(app)
     login_manager.init_app(app)
     migrate.init_app(app, db)
-    if 'SERVER_SSL' in app.config and app.config['SERVER_SSL']:
-        Talisman(app)
+    init_talisman(app)
     return None
+
+
+def init_talisman(app):
+    if 'SERVER_SSL' in app.config and app.config['SERVER_SSL']:
+        csp = { 'default-src': '\'*\'' }
+        Talisman(app, content_security_policy=csp, frame_options_allow_from='*')
 
 
 def register_blueprints(app):
