@@ -65,7 +65,7 @@ class ProjectForm(FlaskForm):
         description="[Required] a short project name, max 80 characters")
     summary = StringField(u'Summary', [length(max=120)],
         description="Max 120 characters")
-    longtext = TextAreaField(u'Description',
+    longtext = TextAreaField(u'Pitch',
         description="Plain text, Markdown or HTML to describe your project. Use a service like pixelfed.org or imgur.com to upload images")
     webpage_url = StringField(u'Project link', [length(max=2048)],
         description="URL to a live demo, presentation, or link to further information")
