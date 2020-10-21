@@ -674,13 +674,13 @@ pre { color: #333; background: white; }
   height: 60px;
   display: inline-block;
   background: white;
-  border: 2px solid #ff9;
+  border: 2px solid #fff;
   padding: 2px; margin-right: 5px;
   overflow: hidden;
 }
 .team-gravatar:hover {
   text-decoration: none;
-  border: 2px solid #dde;
+  border: 2px solid blue;
 }
 
 /* Embed view of the projects */
