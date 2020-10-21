@@ -23,7 +23,7 @@
 <div class="jumbotron home-page">
   {% if current_event %}
     <p>{{current_event.description|markdown}}</p>
-    <center>
+    <div class="home-nav">
       <div class="btn-group" role="group" aria-label="Hackathon navigation">
         <a href="{{ current_event.webpage_url }}" class="btn btn-lg btn-primary">
           <i class="fa fa-ticket" aria-hidden="true"></i>
@@ -44,7 +44,7 @@
             Start a Project</a>
         {% endif %}
       </div>
-    </center>
+    </div>
     {% if current_event.countdown %}
     <div class="event-countdown" data-start="{{ current_event.countdown }}"></div>
     {% endif %}

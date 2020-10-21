@@ -78,6 +78,7 @@ ul.help-block {
   background-color: red; color: white; padding: 5px;
 }
 
+/* Overall layout headings and navigation */
 .section-header .section-header-logo {
   float: left;
   margin-right: 45px;
@@ -134,6 +135,11 @@ nav .navbar-nav .nav-item {
     left: 50%;
     width: 360px;
     margin-left: -180px;
+  }
+  .home-page h1,
+  .home-page .home-nav {
+    display: block;
+    text-align: center;
   }
 }
 @media (max-width: 400px) {
