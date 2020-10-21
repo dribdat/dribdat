@@ -84,7 +84,16 @@ ul.help-block {
   margin-right: 45px;
 }
 .section-header .section-header-logo img {
-  height: 80px;
+  height: 6em;
+}
+.section-header .event-location {
+  font-size: 120%; color: #555;
+}
+.section-header .event-date {
+  font-size: 120%; color: #000;
+}
+.section-header a:hover {
+  text-decoration: none;
 }
 @media (max-width: 760px) {
   .section-header .section-header-logo {

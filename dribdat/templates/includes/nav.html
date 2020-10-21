@@ -109,11 +109,14 @@
         <img id="event-logo" src="{{ event.logo_url }}" alt="{{ event.hostname }}">
       </div>
     {% endif %}
-    <div class="section-header-content">
-      <h3>{{ event.name }}</h3>
-      <h4>{{ event.date }}<br>{{ event.location }}</h4>
+      <div class="section-header-content">
+        <h3 class="event-name">{{ event.name }}</h3>
+        {% if event.location %}
+          <div class="event-location">{{ event.location }}</div>
+        {% endif %}
+        <div class="event-date">{{ event.date }}</div>
+      </div>
     </a>
-    </div>
   </div>
 </div>
 <style type="text/css">{{ event.custom_css }}</style>
