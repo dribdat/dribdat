@@ -115,6 +115,9 @@
           <div class="event-location">{{ event.location }}</div>
         {% endif %}
         <div class="event-date">{{ event.date }}</div>
+        {% if event.hostname %}
+          <div class="event-hostname">{{ event.hostname }}</div>
+        {% endif %}
       </div>
     </a>
   </div>
