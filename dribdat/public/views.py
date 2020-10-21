@@ -18,20 +18,10 @@ from datetime import datetime
 
 blueprint = Blueprint('public', __name__, static_folder="../static")
 
-def current_event():
-    return Event.query.filter_by(is_current=True).first()
+def current_event(): return Event.query.filter_by(is_current=True).first()
 
-@blueprint.route("/")
-def home():
-    cur_event = current_event()
-    if cur_event is not None:
-        events = Event.query.filter(Event.id != cur_event.id)
-    else:
-        events = Event.query
-    events = events.order_by(Event.id.desc()).all()
-    return render_template("public/home.html",
-        events=events, current_event=cur_event)
 
+# Renders a static dashboard
 @blueprint.route("/dashboard/")
 def dashboard():
     return render_template("public/dashboard.html", current_event=current_event())
@@ -42,9 +32,27 @@ def info_current_hackathon_json():
     event = Event.query.filter_by(is_current=True).first() or Event.query.order_by(Event.id.desc()).first()
     return jsonify(event.get_schema(request.host_url))
 
+# Renders a simple about page
 @blueprint.route("/about/")
 def about():
     return render_template("public/about.html", current_event=current_event())
+
+# Favicon just points to a file
+@blueprint.route("/favicon.ico")
+def favicon():
+    return redirect(url_for('static', filename='img/favicon.ico'))
+
+# Home page
+@blueprint.route("/")
+def home():
+    cur_event = current_event()
+    if cur_event is not None:
+        events = Event.query.filter(Event.id != cur_event.id)
+    else:
+        events = Event.query
+    events = events.order_by(Event.id.desc()).all()
+    return render_template("public/home.html",
+        events=events, current_event=cur_event)
 
 @blueprint.route("/event/<int:event_id>")
 def event(event_id):

@@ -29,6 +29,7 @@ def init_app(config_object=ProdConfig):
     app = Flask(__name__)
     app.config.from_object(config_object)
 
+    # Set up cross-site access to the API
     cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
     app.config['CORS_HEADERS'] = 'Content-Type'
 
@@ -136,7 +137,7 @@ def register_filters(app):
     @app.template_filter()
     def format_datetime(value, format='%d.%m.%Y %H:%M'):
         return value.strftime(format)
-    # TODO this could be replaced by a custom oembed provider registered in micawber 
+    # TODO this could be replaced by a custom oembed provider registered in micawber
     @app.template_filter()
     def onebox(value):
         return make_onebox(value)
