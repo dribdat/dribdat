@@ -4,7 +4,7 @@
 
     // Detect and recommend SSL connection
     if ('https:' != document.location.protocol)
-      $('footer').before('<center class="alert alert-default" style="margin-top:2em" role="alert">&#x1f525; Your connection to this website is insecure. <a href="https:' + window.location.href.substring(window.location.protocol.length) + '" class="btn btn-sm btn-warning"><b>Switch to HTTPS</b></a></center>');
+      $('footer').before('<center class="alert alert-primary" style="margin-top:2em" role="alert">&#x1f525; Your connection to this website is insecure. <a href="https:' + window.location.href.substring(window.location.protocol.length) + '" class="btn btn-sm btn-warning"><b>Switch to HTTPS</b></a></center>');
 
   });
 
