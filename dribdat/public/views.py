@@ -9,8 +9,7 @@ from dribdat.public.forms import *
 from dribdat.database import db
 from dribdat.extensions import cache
 from dribdat.aggregation import (
-    GetProjectData, ProjectActivity, IsProjectStarred,
-    GetProjectTeam, GetEventUsers
+    GetProjectData, ProjectActivity, IsProjectStarred, GetEventUsers
 )
 from dribdat.user import projectProgressList
 
@@ -138,7 +137,7 @@ def project_action(project_id, of_type=None, as_view=True, then_redirect=False, 
     starred = IsProjectStarred(project, current_user)
     allow_edit = starred or (not current_user.is_anonymous and current_user.is_admin)
     allow_edit = allow_edit and not event.lock_editing
-    project_stars = GetProjectTeam(project)
+    project_stars = project.team()
     latest_activity = project.latest_activity()
     project_signals = project.all_signals()
     if then_redirect:

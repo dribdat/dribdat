@@ -9,7 +9,7 @@ from ..extensions import db
 from ..utils import timesince
 
 from ..user.models import Event, Project, Category, Activity
-from ..aggregation import GetProjectData, GetProjectTeam
+from ..aggregation import GetProjectData
 
 from datetime import datetime
 from flask import Response, stream_with_context
@@ -162,7 +162,7 @@ def project_activity_json(project_id):
 @blueprint.route('/project/<int:project_id>/info.json')
 def project_info_json(project_id):
     project = Project.query.filter_by(id=project_id).first_or_404()
-    project_stars = GetProjectTeam(project)
+    project_stars = project.team()
     activities = []
     for a in project_stars:
         user = {

@@ -267,6 +267,12 @@ class Project(SurrogatePK, Model):
     def latest_activity(self):
         return Activity.query.filter_by(project_id=self.id).order_by(Activity.timestamp.desc()).limit(5)
 
+    # Return all starring users (A team)
+    def team(self):
+        return Activity.query.filter_by(
+            name='star', project_id=self.id
+        ).all()
+
     # Query which formats the project's timeline
     def all_signals(self):
         activities = Activity.query.filter_by(project_id=self.id).order_by(Activity.timestamp.desc())
