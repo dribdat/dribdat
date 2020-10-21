@@ -85,6 +85,13 @@ ul.help-block {
 .section-header .section-header-logo img {
   height: 80px;
 }
+@media (max-width: 760px) {
+  .section-header .section-header-logo {
+    position: relative;
+    margin: 0px;
+  }
+}
+
 nav.navbar {
   margin-bottom: 1em;
   box-shadow: 0px 0px 20px rgba(0,0,0,0.5);
@@ -108,26 +115,30 @@ nav .navbar-nav .nav-item {
   font-weight: bold;
 }
 
+/* Customize the flipclock widget */
 .event-countdown .flip-clock {
-  left: 50%;
-  width: 700px;
-  height: 120px;
-  overflow: hidden;
-  position: relative;
   margin-top: 20px;
-  margin-left: -350px;
 }
 .event-countdown .flip-clock-label {
   display: none;
 }
-@media (max-width: 760px) {
+@media (max-width: 1200px) {
+  .event-countdown .flip-clock .flip-clock-group * {
+    width: 38px;
+  }
+  .event-countdown .flip-clock {
+    background: #335;
+    border: 5px solid #333;
+    box-shadow: 1px 1px 5px rgba(0,0,0,0.3);
+    position: relative;
+    left: 50%;
+    width: 360px;
+    margin-left: -180px;
+  }
+}
+@media (max-width: 400px) {
   .event-countdown {
     display: none;
-  }
-
-  .section-header .section-header-logo {
-    position: relative;
-    margin: 0px;
   }
 }
 
