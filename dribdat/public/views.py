@@ -215,5 +215,6 @@ def project_autoupdate(project_id):
     project.update()
     db.session.add(project)
     db.session.commit()
+    project_action(project.id, 'update', action='sync', text=str(len(project.autotext)) + ' bytes')
     flash("Project data synced.", 'success')
-    return project_action(project.id, 'update', action='sync', text=str(len(project.autotext)) + ' bytes')
+    return redirect(url_for('public.project', project_id=project.id))
