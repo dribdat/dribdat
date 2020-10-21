@@ -125,7 +125,8 @@ def FetchDataProject(project_url):
 # Basis: https://github.com/mozilla/bleach/blob/master/bleach/sanitizer.py#L16
 ALLOWED_HTML_TAGS = ALLOWED_TAGS + [
     u'h1', u'h2', u'h3', u'h4', u'h5',
-    u'p', u'img', u'font', u'center', u'u',
+    u'img', u'font', u'center',
+    u'p', u'u', u'b',
 ]
 ALLOWED_HTML_ATTR = ALLOWED_ATTRIBUTES
 ALLOWED_HTML_ATTR['a'] = ['href', 'title', 'class']
