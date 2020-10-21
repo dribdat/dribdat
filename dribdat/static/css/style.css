@@ -106,14 +106,14 @@ nav .navbar-nav .nav-item {
   font-weight: bold;
 }
 
-.event-countdown {
+.event-countdown .flip-clock {
   left: 50%;
-  width: 624px;
-  height: 100px;
+  width: 700px;
+  height: 120px;
   overflow: hidden;
   position: relative;
   margin-top: 20px;
-  margin-left: -312px;
+  margin-left: -350px;
 }
 .event-countdown .flip-clock-label {
   display: none;

@@ -6,19 +6,6 @@
     if ('https:' != document.location.protocol)
       $('footer').before('<center class="alert alert-default" style="margin-top:2em" role="alert">&#x1f525; Your connection to this website is insecure. <a href="https:' + window.location.href.substring(window.location.protocol.length) + '" class="btn btn-sm btn-warning"><b>Switch to HTTPS</b></a></center>');
 
-    // Initialise home page countdown
-    $('.event-countdown').each(function() {
-      var clock = $(this).FlipClock({
-        clockFace: 'DailyCounter'
-      });
-      var startdate = $(this).data('start');
-      var datenow = Date.now();
-      var datesched = Date.parse(startdate.replace(' ', 'T'));
-      var timeleft = datesched - datenow;
-      if (isNaN(timeleft)) return;
-      clock.setTime(timeleft/1000);
-      clock.setCountdown(true);
-    });
   });
 
   // Initialize project data loader
