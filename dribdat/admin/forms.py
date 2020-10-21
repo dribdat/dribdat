@@ -7,7 +7,7 @@ from wtforms import (
 )
 from dribdat.user.models import User, Project
 # from wtforms.fields.html5 import DateTimeField
-from wtforms.validators import AnyOf, required, length
+from wtforms.validators import AnyOf, DataRequired, length
 from wtforms.fields.html5 import DateField, TimeField
 
 from datetime import time, datetime
@@ -17,8 +17,8 @@ from ..user import USER_ROLE, USER_STATUS, projectProgressList
 class UserForm(FlaskForm):
     next = HiddenField()
     id = HiddenField('id')
-    username = StringField(u'Username', [required(), length(max=80), UniqueValidator(User, 'username')])
-    email = StringField(u'E-mail address', [required(), length(max=80)])
+    username = StringField(u'Username', [length(max=80), UniqueValidator(User, 'username'), DataRequired()])
+    email = StringField(u'E-mail address', [length(max=80), DataRequired()])
     webpage_url = StringField(u'Online profile', [length(max=128)])
     password = PasswordField(u'New password (optional)', [length(max=128)])
     is_admin = BooleanField(u"Administrator", default=False)
@@ -27,7 +27,7 @@ class UserForm(FlaskForm):
 
 class EventForm(FlaskForm):
     next = HiddenField()
-    name = StringField(u'Title', [required(), length(max=80)])
+    name = StringField(u'Title', [length(max=80), DataRequired()])
     starts_date = DateField(u'Starts date', default=datetime.now())
     starts_time = TimeField(u'Starts time', default=time(9,0,0))
     ends_date = DateField(u'Finish date', default=datetime.now())
@@ -57,7 +57,7 @@ class ProjectForm(FlaskForm):
     hashtag = StringField(u'Hashtag or channel', [length(max=255)])
     autotext_url = StringField(u'Sync', [length(max=255)])
     # is_autoupdate = BooleanField(u'Autoupdate project data')
-    name = StringField(u'Title', [required(), length(max=80), UniqueValidator(Project, 'name')])
+    name = StringField(u'Title', [length(max=80), UniqueValidator(Project, 'name'), DataRequired()])
     summary = StringField(u'Short summary', [length(max=120)])
     longtext = TextAreaField(u'Description')
     autotext = TextAreaField(u'Readme content')
@@ -72,7 +72,7 @@ class ProjectForm(FlaskForm):
 
 class CategoryForm(FlaskForm):
     next = HiddenField()
-    name = StringField(u'Name', [required(), length(max=80)])
+    name = StringField(u'Name', [length(max=80), DataRequired()])
     description = TextAreaField(u'Description', description=u'Markdown and HTML supported')
     logo_color = StringField(u'Custom color', [length(max=7)])
     logo_icon = StringField(u'<a target="_blank" href="http://fontawesome.io/icons/#search">Custom icon</a>', [length(max=20)])

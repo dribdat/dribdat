@@ -13,7 +13,9 @@ textarea { resize: vertical; }
 }
 
 /* Forms */
-
+form input[type="checkbox"] {
+  margin-right: 0.5em;
+}
 .navbar-form input[type="text"],
 .navbar-form input[type="password"] {
   width: 180px;
