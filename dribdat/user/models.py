@@ -24,9 +24,9 @@ from dribdat.database import (
     SurrogatePK,
 )
 from dribdat.utils import (
-    format_date_range, format_date,
-    format_webembed,
+    format_date_range, format_date
 )
+from dribdat.onebox import format_webembed
 from dribdat.user import PROJECT_PROGRESS_PHASE
 
 from sqlalchemy import or_
@@ -347,17 +347,19 @@ class Project(SurrogatePK, Model):
             'name': self.name,
             'score': self.score,
             'phase': self.phase,
+            'progress': self.progress,
             'summary': self.summary,
             'hashtag': self.hashtag,
             'contact_url': self.contact_url,
             'image_url': self.image_url,
             'source_url': self.source_url,
             'webpage_url': self.webpage_url,
-            'progress': self.progress,
-            'maintainer': self.user.username,
-            'event_url': self.event.url,
-            'event_name': self.event.name,
         }
+        if self.user is not None:
+            d['maintainer'] = self.user.username
+        if self.event is not None:
+            d['event_url'] = self.event.url
+            d['event_name'] = self.event.name
         if self.category is not None:
             d['category'] = self.category.data
         return d

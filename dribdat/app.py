@@ -14,6 +14,7 @@ from dribdat.extensions import (
 )
 from dribdat.settings import ProdConfig
 from dribdat.utils import timesince
+from dribdat.onebox import make_onebox
 from flask_misaka import Misaka
 from flask_talisman import Talisman
 from flask_dance.contrib.slack import make_slack_blueprint, slack
@@ -48,9 +49,14 @@ def register_extensions(app):
     db.init_app(app)
     login_manager.init_app(app)
     migrate.init_app(app, db)
-    if 'SERVER_SSL' in app.config and app.config['SERVER_SSL']:
-        Talisman(app)
+    init_talisman(app)
     return None
+
+
+def init_talisman(app):
+    if 'SERVER_SSL' in app.config and app.config['SERVER_SSL']:
+        csp = { 'default-src': '\'*\'' }
+        Talisman(app, content_security_policy=csp, frame_options_allow_from='*')
 
 
 def register_blueprints(app):
@@ -123,6 +129,9 @@ def register_filters(app):
     @app.template_filter()
     def format_datetime(value, format='%d.%m.%Y %H:%M'):
         return value.strftime(format)
+    @app.template_filter()
+    def onebox(value):
+        return make_onebox(value)
 
 
 def register_loggers(app):
