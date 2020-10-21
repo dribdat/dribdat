@@ -18,6 +18,8 @@ from dribdat.onebox import make_onebox
 from flask_misaka import Misaka
 from flask_talisman import Talisman
 from flask_dance.contrib.slack import make_slack_blueprint, slack
+from micawber.providers import bootstrap_basic
+from micawber.contrib.mcflask import add_oembed_filters
 
 def init_app(config_object=ProdConfig):
     """An application factory, as explained here: http://flask.pocoo.org/docs/patterns/appfactories/.
@@ -116,7 +118,12 @@ def register_commands(app):
 
 
 def register_filters(app):
+    # Markdown filters
     Misaka(app, autolink=True, fenced_code=True, strikethrough=True, tables=True)
+    # micawber filters
+    oembed_providers = bootstrap_basic()
+    add_oembed_filters(app, oembed_providers)
+    # Custom filters
     @app.template_filter()
     def since_date(value):
         return timesince(value)
@@ -129,6 +136,7 @@ def register_filters(app):
     @app.template_filter()
     def format_datetime(value, format='%d.%m.%Y %H:%M'):
         return value.strftime(format)
+    # TODO this could be replaced by a custom oembed provider registered in micawber 
     @app.template_filter()
     def onebox(value):
         return make_onebox(value)

@@ -685,6 +685,14 @@ version = "0.6.1"
 
 [[package]]
 category = "main"
+description = "a small library for extracting rich content from urls"
+name = "micawber"
+optional = false
+python-versions = "*"
+version = "0.5.1"
+
+[[package]]
+category = "main"
 description = "A CFFI binding for Hoedown, a markdown parsing library."
 name = "misaka"
 optional = false
@@ -1149,7 +1157,7 @@ docs = ["sphinx", "jaraco.packaging (>=3.2)", "rst.linker (>=1.9)"]
 testing = ["pytest (>=3.5,<3.7.3 || >3.7.3)", "pytest-checkdocs (>=1.2.3)", "pytest-flake8", "pytest-cov", "jaraco.test (>=3.2.0)", "jaraco.itertools", "func-timeout", "pytest-black (>=0.3.7)", "pytest-mypy"]
 
 [metadata]
-content-hash = "68e884eee0f8a23148acd9ff4905d1733d52bf24c3e8633314ff229c10bd53f5"
+content-hash = "fd484b9f25f1a3ac9532ac6560db87b2f26f46ecb3487206b0ea66cea0a9dd9f"
 python-versions = ">=3.6,<4"
 
 [metadata.files]
@@ -1472,6 +1480,9 @@ markupsafe = [
 mccabe = [
     {file = "mccabe-0.6.1-py2.py3-none-any.whl", hash = "sha256:ab8a6258860da4b6677da4bd2fe5dc2c659cff31b3ee4f7f5d64e79735b80d42"},
     {file = "mccabe-0.6.1.tar.gz", hash = "sha256:dd8d182285a0fe56bace7f45b5e7d1a6ebcbf524e8f3bd87eb0f125271b8831f"},
+]
+micawber = [
+    {file = "micawber-0.5.1.tar.gz", hash = "sha256:5e1e6fbab5bfc1edc6d575b900707c24a3484c51cf2e01f059a7e070724a3633"},
 ]
 misaka = [
     {file = "misaka-2.1.1.tar.gz", hash = "sha256:62f35254550095d899fc2ab8b33e156fc5e674176f074959cbca43cf7912ecd7"},
