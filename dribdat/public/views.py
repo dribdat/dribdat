@@ -63,7 +63,7 @@ def event(event_id):
 def event_participants(event_id):
     event = Event.query.filter_by(id=event_id).first_or_404()
     users = GetEventUsers(event)
-    usercount = len(users)
+    usercount = len(users) if users else 0
     return render_template("public/eventusers.html",
         current_event=event, participants=users, usercount=usercount)
 
