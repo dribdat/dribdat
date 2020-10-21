@@ -119,8 +119,13 @@
 {% if not project.is_challenge %}
   <div class="tab-pane fade show active" id="project-md" role="tabpanel" aria-labelledby="project-tab-md">
 
-    {% if not project.webpage_url and not project.source_url and not project.longtext and not project.autotext %}
-    <div class="alert alert-success" role="alert">This is a new project! You can <b>Post</b> to the Log or <b>Edit</b> the pitch to share something here.</div>
+    {% if current_user and current_user.is_authenticated and not project.webpage_url and not project.longtext %}
+    <div class="alert alert-success" role="alert">
+      <!-- Helpful comment for new projects -->
+      This is a new project. How exciting! Join it so that you can <b>Post</b>
+      to the Log or <b>Edit</b> the pitch to share something. If you are working
+      in another site or tool, you can <b>Sync</b> or <b>Embed</b> the content.
+    </div>
     {% endif %}
 
 {% endif %}
@@ -175,13 +180,17 @@
 
   </div>
 {% endif %}
-{% if project.autotext %}
+{% if not project.is_challenge %}
   <div class="tab-pane fade" id="readme-md" role="tabpanel" aria-labelledby="readme-tab-md">
+{% endif %}
 
+    {% if project.autotext %}
     <div class="project-autotext"><div class="cover"></div>
       {{project.autotext|markdown}}
     </div>
+    {% endif %}
 
+{% if not project.is_challenge %}
   </div>
 {% endif %}
   <div class="tab-pane fade" id="signals-md" role="tabpanel" aria-labelledby="signals-tab-md">
