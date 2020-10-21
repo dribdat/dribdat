@@ -443,8 +443,7 @@ class Category(SurrogatePK, Model):
     # If specific to an event
     event_id = reference_col('events', nullable=True)
     event = relationship('Event', backref='categories')
-    #
-    # @property
+
     def project_count(self):
         if not self.projects: return 0
         return len(self.projects)
