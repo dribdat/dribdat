@@ -207,7 +207,7 @@
           </div>
           {% endif %}
           {% if s.text %}
-            {{s.text|oembed(html=False, maxwidth=600, maxheight=400)|markdown|onebox|safe}}
+            {{s.text|markdown|safe}}
           {% endif %}
         </div>
       </div>
