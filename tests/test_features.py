@@ -17,9 +17,11 @@ class TestProjects:
     def test_onebox(self, project, testapp):
         """Generate one box."""
 
+        srv = url_for('.home', _external=True)
+        url = "%sproject/%d" % (srv, project.id)
         test_markdown = """Some project content
-<p><a href="http://127.0.0.1:5000/project/%d">http://127.0.0.1:5000/project/%d</a></p>
-EOF""" % (project.id, project.id)
+<p><a href="%s">%s</a></p>
+EOF""" % (url, url)
 
         result = make_onebox(test_markdown)
         assert 'onebox' in result

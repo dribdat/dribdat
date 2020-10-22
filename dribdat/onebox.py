@@ -13,7 +13,7 @@ def format_webembed(url):
     # TODO: add more embeddables
     return '<iframe src="%s"></iframe>' % url
 
-boxhtml = r"""
+TEMPLATE_PROJECT = r"""
 <div class="onebox">
 <a href="{{link}}">
 <img src="{{image_url}}" />
@@ -39,7 +39,7 @@ def repl_onebox(mat=None, li=[]):
             if not project: return mat.group()
             pd = project.data
             pd['link'] = project_link
-            return pystache.render(boxhtml, pd)
+            return pystache.render(TEMPLATE_PROJECT, pd)
     return mat.group()
 
 def make_onebox(raw_html):
