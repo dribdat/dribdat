@@ -3,6 +3,7 @@
 
 import re
 import pystache
+from flask import url_for
 
 def format_webembed(url):
     if url.lower().startswith('<iframe '):
@@ -27,10 +28,9 @@ def repl_onebox(mat=None, li=[]):
     if mat == None:
         li[:] = []
         return
-    if mat.group(1) and mat.group(2):
+    if mat.group(1):
         url = mat.group(1).strip()
-        if url != mat.group(2).strip(): return mat.group()
-        # Try to parse a server link
+        # Try to parse a project link
         if '/project/' in url:
             project_link = mat.group(1)
             project_id = int(url.split('/')[-1])
@@ -43,5 +43,6 @@ def repl_onebox(mat=None, li=[]):
     return mat.group()
 
 def make_onebox(raw_html):
-    regexp = re.compile('<p><a href="(.+?)">(.+?)</a></p>')
+    url = re.escape(url_for('.home', _external=True))
+    regexp = re.compile('<a href="(%s.+?)">(%s.+?)</a>' % (url, url))
     return re.sub(regexp, repl_onebox, raw_html)
