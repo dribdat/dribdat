@@ -186,7 +186,10 @@ def project_new(event_id):
             project_action(project.id, 'create', False)
             cache.clear()
             project_action(project.id, 'star', False)
-            return redirect(url_for('public.project', project_id=project.id))
+            if len(project.autotext_url)>1:
+                return project_autoupdate(project.id)
+            else:
+                return redirect(url_for('public.project', project_id=project.id))
     return render_template('public/projectnew.html', current_event=event, form=form)
 
 @blueprint.route('/project/<int:project_id>/autoupdate')
@@ -223,5 +226,5 @@ def project_autoupdate(project_id):
     db.session.add(project)
     db.session.commit()
     project_action(project.id, 'update', action='sync', text=str(len(project.autotext)) + ' bytes')
-    flash("Project data synced.", 'success')
+    flash("Project data synced from %s" % data['type'], 'success')
     return redirect(url_for('public.project', project_id=project.id))

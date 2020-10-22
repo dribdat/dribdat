@@ -26,6 +26,7 @@ def FetchGitlabProject(project_url):
     readmedata = requests.get(readmeurl)
     readme = readmedata.text or ""
     return {
+        'type': 'GitLab',
         'name': json['name'],
         'summary': json['description'],
         'description': readme,
@@ -60,6 +61,7 @@ def FetchGithubProject(project_url):
         readme
     )
     return {
+        'type': 'GitHub',
         'name': json['name'],
         'summary': json['description'],
         'description': readme,
@@ -91,6 +93,7 @@ def FetchBitbucketProject(project_url):
         image_url = json['links']['avatar']['href']
     html_content = bleach.clean(content.html().strip())
     return {
+        'type': 'Bitbucket',
         'name': json['name'],
         'summary': json['description'],
         'description': html_content,
@@ -114,6 +117,7 @@ def FetchDataProject(project_url):
     if 'maintainers' in json and len(json['maintainers'])>0 and 'web' in json['maintainers'][0]:
         contact_url = json['maintainers'][0]['web']
     return {
+        'type': 'Data Package',
         'name': json['name'],
         'summary': json['title'],
         'description': text_content,
@@ -125,19 +129,20 @@ def FetchDataProject(project_url):
 
 # Basis: https://github.com/mozilla/bleach/blob/master/bleach/sanitizer.py#L16
 ALLOWED_HTML_TAGS = ALLOWED_TAGS + [
-    u'h1', u'h2', u'h3', u'h4', u'h5',
-    u'img', u'font', u'center',
-    u'p', u'u', u'b',
+    'img', 'font', 'center', 'sub', 'sup',
+    'h1', 'h2', 'h3', 'h4', 'h5',
+    'p', 'u', 'b', 'em', 'i',
 ]
 ALLOWED_HTML_ATTR = ALLOWED_ATTRIBUTES
 ALLOWED_HTML_ATTR['a'] = ['href', 'title', 'class']
-ALLOWED_HTML_ATTR['img'] = ['src', 'width', 'height', 'class']
+ALLOWED_HTML_ATTR['img'] = ['src', 'width', 'height', 'alt', 'class']
 ALLOWED_HTML_ATTR['font'] = ['color']
 
 def FetchWebProject(project_url):
     data = requests.get(project_url)
     obj = {}
     # {
+    #     'type': 'Google', ...
     #     'name': name,
     #     'summary': summary,
     #     'description': html_content,
@@ -145,23 +150,8 @@ def FetchWebProject(project_url):
     #     'source_url': project_url,
     # }
 
-    # DokuWiki
-    if data.text.find('<div class="dw-content">')>0:
-        doc = pq(data.text)
-        ptitle = doc("p.pageId span")
-        if len(ptitle) < 1: return {}
-        content = doc("div.dw-content")
-        if len(content) < 1: return {}
-        html_content = bleach.clean(content.html().strip(), strip=True,
-            tags=ALLOWED_HTML_TAGS, attributes=ALLOWED_HTML_ATTR)
-
-        obj['name'] = ptitle.text().replace('project:', '')
-        obj['description'] = html_content
-        obj['source_url'] = project_url
-        obj['image_url'] = "/static/img/dokuwiki_icon.png"
-
-    # Google Drive
-    elif data.text.find('.com/docs/documents/images/kix-favicon')>0:
+    # Google Document
+    if project_url.startswith('https://docs.google.com/document'):
         doc = pq(data.text)
         doc("style").remove()
         ptitle = doc("div#title") or doc("div#header")
@@ -171,10 +161,27 @@ def FetchWebProject(project_url):
         html_content = bleach.clean(content.html().strip(), strip=True,
             tags=ALLOWED_HTML_TAGS, attributes=ALLOWED_HTML_ATTR)
 
+        obj['type'] = 'Google Docs'
         obj['name'] = ptitle.text()
         obj['description'] = html_content
         obj['source_url'] = project_url
         obj['image_url'] = "/static/img/document_icon.png"
+
+    # DokuWiki
+    elif data.text.find('<meta name="generator" content="DokuWiki"/>')>0:
+        doc = pq(data.text)
+        ptitle = doc("p.pageId span")
+        if len(ptitle) < 1: return {}
+        content = doc("div.dw-content")
+        if len(content) < 1: return {}
+        html_content = bleach.clean(content.html().strip(), strip=True,
+            tags=ALLOWED_HTML_TAGS, attributes=ALLOWED_HTML_ATTR)
+
+        obj['type'] = 'DokuWiki'
+        obj['name'] = ptitle.text().replace('project:', '')
+        obj['description'] = html_content
+        obj['source_url'] = project_url
+        obj['image_url'] = "/static/img/dokuwiki_icon.png"
 
     # Etherpad
     elif data.text.find('pad.importExport.exportetherpad')>0:
@@ -182,6 +189,7 @@ def FetchWebProject(project_url):
         if len(ptitle) < 1: return {}
         text_content = requests.get("%s/export/txt" % project_url).text
 
+        obj['type'] = 'Etherpad'
         obj['name'] = ptitle.replace('_', ' ')
         obj['description'] = text_content
         obj['source_url'] = project_url
