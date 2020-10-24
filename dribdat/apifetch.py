@@ -215,7 +215,7 @@ def FetchWebProject(project_url):
             step_content = pq(step).find('.step-body')
             if step_content is None: continue
             for elem in pq(step_content).children():
-                if elem.tag is 'pre':
+                if elem.tag == 'pre':
                     if elem.text is None: continue
                     html_content += '<pre>' + elem.text + '</pre>'
                 else:
