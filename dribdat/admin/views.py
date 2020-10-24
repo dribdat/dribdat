@@ -26,11 +26,14 @@ def index():
 
 
 @blueprint.route('/users')
+@blueprint.route('/users/pp/<int:page>')
 @login_required
 @admin_required
-def users():
-    users = User.query.all()
-    return render_template('admin/users.html', users=users, active='users')
+def users(page=1):
+    users = User.query.order_by(
+        User.username.asc()
+    ).paginate(page, per_page=20)
+    return render_template('admin/users.html', data=users, endpoint='admin.users', active='users')
 
 
 @blueprint.route('/user/<int:user_id>', methods=['GET', 'POST'])
@@ -191,12 +194,15 @@ def event_delete(event_id):
 
 
 @blueprint.route('/projects')
+@blueprint.route('/projects/pp/<int:page>')
 @login_required
 @admin_required
-def projects():
-    # TODO: pagination...
-    projects = Project.query.order_by(Project.updated_at.desc()).all()
-    return render_template('admin/projects.html', projects=projects, active='projects')
+def projects(page=1):
+    projects = Project.query.order_by(
+        Project.updated_at.desc()
+    ).paginate(page, per_page=20)
+    return render_template('admin/projects.html', data=projects, endpoint='admin.projects', active='projects')
+
 
 @blueprint.route('/category/<int:category_id>/projects')
 @login_required
