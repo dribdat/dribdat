@@ -312,7 +312,6 @@ class Project(SurrogatePK, Model):
         if self.event.has_started or self.event.has_finished:
             signals.append({
                 'title': "Hackathon started",
-                'text': self.event.location,
                 'date': self.event.starts_at
             })
         if self.event.has_finished:
