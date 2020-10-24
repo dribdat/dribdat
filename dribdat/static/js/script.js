@@ -11,26 +11,15 @@
   // Initialize project data loader
   $('#autotext_url').each(function() {
 
-    var supported = false;
-
     var checkAutotext = function(val, $ind) {
       if (typeof val !== 'string') return;
       if (val.trim() === '') return;
-      supported = (
-        val.indexOf('datapackage.json') > 0 ||
-        val.indexOf('//github.com/') > 0 ||
-        val.indexOf('//gitlab.com/') > 0 ||
-        val.indexOf('//bitbucket.org/') > 0 ||
-        val.indexOf('document') > 0 ||
-        val.indexOf('wiki') > 0 ||
-        val.indexOf('/p/') > 0
-      );
       $ind.find('i')
         .removeClass('fa-circle-o fa-check-circle-o')
-        .addClass(!supported ? 'fa-circle-o' : 'fa-check-circle-o')
-        .css('color', (supported ? 'green' : 'red'));
+        .addClass('fa-check-circle-o')
+        .css('color', 'red');
       $ind
-        .css('visibility', (supported ? '' : 'hidden'));
+        .css('visibility', '');
       $('#is_autoupdate').click(function() {
         if ($(this).is(':checked'))
           if (!$indicator.find('button').click())
@@ -42,7 +31,7 @@
     var $indicator = $inputfield.parent()
       .append('<span class="autotext-indicator" style="visibility:hidden">' +
         '<i style="color:red" class="fa fa-circle-o"></i>&nbsp;' +
-        '<button type="button">Update now</button>' +
+        '<button type="button">Fetch content</button>' +
       '</span>')
       .find('.autotext-indicator');
 

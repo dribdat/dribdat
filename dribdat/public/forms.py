@@ -38,11 +38,13 @@ class LoginForm(FlaskForm):
 
 class UserForm(FlaskForm):
     id = HiddenField('id')
-    username = StringField(u'Username', [length(max=80), UniqueValidator(User, 'username'), DataRequired()])
-    email = StringField(u'E-mail address', [length(max=80), DataRequired()])
+    username = StringField(u'Username', [length(max=25), UniqueValidator(User, 'username'), DataRequired()])
+    email = StringField(u'E-mail address', [length(max=80), DataRequired()],
+        description="For a profile image link to this address at Gravatar.com")
     webpage_url = StringField(u'Online profile', [length(max=128)],
-        description="Link to a website or social media profile.")
-    password = PasswordField(u'New password (optional)', [length(max=128)])
+        description="Link to your website or a social media profile.")
+    password = PasswordField(u'Change password', [length(max=128)],
+        description="Leave blank to keep your password as it is.")
     submit = SubmitField(u'Save changes')
 
 class ProjectNew(FlaskForm):
