@@ -40,18 +40,12 @@ def IsProjectStarred(project, current_user):
         user_id=current_user.id
     ).count() > 0
 
-def GetProjectTeam(project):
-    return Activity.query.filter_by(
-        name='star',
-        project_id=project.id
-    ).all()
-
 def GetEventUsers(event):
     if not event.projects: return None
     users = []
     userlist = []
     for p in event.projects:
-        for activity in GetProjectTeam(p):
+        for activity in p.team():
             u = activity.user
             if not u.id in userlist:
                 userlist.append(u.id)

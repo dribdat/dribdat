@@ -9,8 +9,7 @@ from dribdat.public.forms import *
 from dribdat.database import db
 from dribdat.extensions import cache
 from dribdat.aggregation import (
-    GetProjectData, ProjectActivity, IsProjectStarred,
-    GetProjectTeam, GetEventUsers
+    GetProjectData, ProjectActivity, IsProjectStarred, GetEventUsers
 )
 from dribdat.user import projectProgressList
 
@@ -18,20 +17,10 @@ from datetime import datetime
 
 blueprint = Blueprint('public', __name__, static_folder="../static")
 
-def current_event():
-    return Event.query.filter_by(is_current=True).first()
+def current_event(): return Event.query.filter_by(is_current=True).first()
 
-@blueprint.route("/")
-def home():
-    cur_event = current_event()
-    if cur_event is not None:
-        events = Event.query.filter(Event.id != cur_event.id)
-    else:
-        events = Event.query
-    events = events.order_by(Event.id.desc()).all()
-    return render_template("public/home.html",
-        events=events, current_event=cur_event)
 
+# Renders a static dashboard
 @blueprint.route("/dashboard/")
 def dashboard():
     return render_template("public/dashboard.html", current_event=current_event())
@@ -42,9 +31,27 @@ def info_current_hackathon_json():
     event = Event.query.filter_by(is_current=True).first() or Event.query.order_by(Event.id.desc()).first()
     return jsonify(event.get_schema(request.host_url))
 
+# Renders a simple about page
 @blueprint.route("/about/")
 def about():
     return render_template("public/about.html", current_event=current_event())
+
+# Favicon just points to a file
+@blueprint.route("/favicon.ico")
+def favicon():
+    return redirect(url_for('static', filename='img/favicon.ico'))
+
+# Home page
+@blueprint.route("/")
+def home():
+    cur_event = current_event()
+    if cur_event is not None:
+        events = Event.query.filter(Event.id != cur_event.id)
+    else:
+        events = Event.query
+    events = events.order_by(Event.id.desc()).all()
+    return render_template("public/home.html",
+        events=events, current_event=cur_event)
 
 @blueprint.route("/event/<int:event_id>")
 def event(event_id):
@@ -63,7 +70,7 @@ def event(event_id):
 def event_participants(event_id):
     event = Event.query.filter_by(id=event_id).first_or_404()
     users = GetEventUsers(event)
-    usercount = len(users)
+    usercount = len(users) if users else 0
     return render_template("public/eventusers.html",
         current_event=event, participants=users, usercount=usercount)
 
@@ -130,7 +137,7 @@ def project_action(project_id, of_type=None, as_view=True, then_redirect=False, 
     starred = IsProjectStarred(project, current_user)
     allow_edit = starred or (not current_user.is_anonymous and current_user.is_admin)
     allow_edit = allow_edit and not event.lock_editing
-    project_stars = GetProjectTeam(project)
+    project_stars = project.team()
     latest_activity = project.latest_activity()
     project_signals = project.all_signals()
     if then_redirect:
@@ -179,7 +186,10 @@ def project_new(event_id):
             project_action(project.id, 'create', False)
             cache.clear()
             project_action(project.id, 'star', False)
-            return redirect(url_for('public.project', project_id=project.id))
+            if len(project.autotext_url)>1:
+                return project_autoupdate(project.id)
+            else:
+                return redirect(url_for('public.project', project_id=project.id))
     return render_template('public/projectnew.html', current_event=event, form=form)
 
 @blueprint.route('/project/<int:project_id>/autoupdate')
@@ -215,5 +225,6 @@ def project_autoupdate(project_id):
     project.update()
     db.session.add(project)
     db.session.commit()
-    flash("Project data synced.", 'success')
-    return project_action(project.id, 'update', action='sync', text=str(len(project.autotext)) + ' bytes')
+    project_action(project.id, 'update', action='sync', text=str(len(project.autotext)) + ' bytes')
+    flash("Project data synced from %s" % data['type'], 'success')
+    return redirect(url_for('public.project', project_id=project.id))

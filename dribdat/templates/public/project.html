@@ -99,12 +99,6 @@
       <a class="nav-link active" id="project-tab-md" data-toggle="tab" href="#project-md" role="tab" aria-controls="project-md"
         aria-selected="true">Pitch</a>
     </li>
-    {% if project.longtext %}
-    <li class="nav-item">
-      <a class="nav-link{{ ' active' if project.is_challenge }}" id="doc-tab-md" data-toggle="tab" href="#doc-md" role="tab" aria-controls="doc-md"
-        aria-selected="false">Docs</a>
-    </li>
-    {% endif %}
     {% if project.autotext %}
     <li class="nav-item">
       <a class="nav-link" id="readme-tab-md" data-toggle="tab" href="#readme-md" role="tab" aria-controls="readme-md"
@@ -124,14 +118,30 @@
 
 {% if not project.is_challenge %}
   <div class="tab-pane fade show active" id="project-md" role="tabpanel" aria-labelledby="project-tab-md">
+
+    {% if current_user and current_user.is_authenticated and not project.webpage_url and not project.longtext %}
+    <div class="alert alert-success" role="alert">
+      <!-- Helpful comment for new projects -->
+      This is a new project. How exciting! Join it so that you can <b>Post</b>
+      to the Log or <b>Edit</b> the pitch to share something. If you are working
+      in another site or tool, you can <b>Sync</b> or <b>Embed</b> the content.
+    </div>
+    {% endif %}
+
 {% endif %}
 
-  {% if project.is_webembed %}
+  {% if project.is_webembed and project.webpage_url %}
     <div class="project-webembed resizable">
       {{ project.webembed|safe }}
       <div class="win-size-grip"></div>
     </div>
     <a href="{{ project.webpage_url }}" class="btn btn-small btn-default" target="_blank">&#x26F6; Full screen</a>
+  {% endif %}
+
+  {% if project.longtext %}
+    <div class="project-longtext">
+      {{project.longtext|oembed(html=False, maxwidth=600, maxheight=400)|markdown|onebox|safe}}
+    </div>
   {% endif %}
 
   {% if project.source_url and 'github.com' in project.source_url %}
@@ -170,22 +180,17 @@
 
   </div>
 {% endif %}
-{% if project.longtext %}
-  <div class="tab-pane {{ 'show active' if project.is_challenge else 'fade' }}" id="doc-md" role="tabpanel" aria-labelledby="doc-tab-md">
-
-    <div class="project-longtext">
-      {{project.longtext|markdown}}
-    </div>
-
-  </div>
-{% endif %}
-{% if project.autotext %}
+{% if not project.is_challenge %}
   <div class="tab-pane fade" id="readme-md" role="tabpanel" aria-labelledby="readme-tab-md">
+{% endif %}
 
+    {% if project.autotext %}
     <div class="project-autotext"><div class="cover"></div>
       {{project.autotext|markdown}}
     </div>
+    {% endif %}
 
+{% if not project.is_challenge %}
   </div>
 {% endif %}
   <div class="tab-pane fade" id="signals-md" role="tabpanel" aria-labelledby="signals-tab-md">
@@ -202,7 +207,7 @@
           </div>
           {% endif %}
           {% if s.text %}
-            {{s.text|markdown}}
+            {{s.text|markdown|safe}}
           {% endif %}
         </div>
       </div>

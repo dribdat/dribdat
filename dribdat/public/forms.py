@@ -7,7 +7,7 @@ from wtforms import (
     SelectField, HiddenField,
     RadioField
 )
-from wtforms.validators import DataRequired, AnyOf, required, length
+from wtforms.validators import DataRequired, AnyOf, length
 from ..user.validators import UniqueValidator
 from dribdat.user.models import User, Project
 
@@ -38,8 +38,8 @@ class LoginForm(FlaskForm):
 
 class UserForm(FlaskForm):
     id = HiddenField('id')
-    username = StringField(u'Username', [required(), length(max=80), UniqueValidator(User, 'username')])
-    email = StringField(u'E-mail address', [required(), length(max=80)])
+    username = StringField(u'Username', [length(max=80), UniqueValidator(User, 'username'), DataRequired()])
+    email = StringField(u'E-mail address', [length(max=80), DataRequired()])
     webpage_url = StringField(u'Online profile', [length(max=128)],
         description="Link to a website or social media profile.")
     password = PasswordField(u'New password (optional)', [length(max=128)])
@@ -49,7 +49,7 @@ class ProjectNew(FlaskForm):
     id = HiddenField('id')
     autotext_url = StringField(u'Sync', [length(max=255)],
         description="URL to external source of documentation in GitLab, GitHub, Bitbucket, Data Package or Website")
-    name = StringField(u'Title', [required(), length(max=80), UniqueValidator(Project, 'name')],
+    name = StringField(u'Title', [length(max=80), UniqueValidator(Project, 'name'), DataRequired()],
         description="[Required] a short project name, max 80 characters - you may change this later")
     summary = StringField(u'Summary', [length(max=120)],
         description="Max 120 characters")
@@ -61,11 +61,11 @@ class ProjectNew(FlaskForm):
 class ProjectForm(FlaskForm):
     id = HiddenField('id')
     # is_autoupdate = BooleanField(u'Sync project data')
-    name = StringField(u'Title', [required(), length(max=80), UniqueValidator(Project, 'name')],
+    name = StringField(u'Title', [length(max=80), UniqueValidator(Project, 'name'), DataRequired()],
         description="[Required] a short project name, max 80 characters")
     summary = StringField(u'Summary', [length(max=120)],
         description="Max 120 characters")
-    longtext = TextAreaField(u'Description',
+    longtext = TextAreaField(u'Pitch',
         description="Plain text, Markdown or HTML to describe your project. Use a service like pixelfed.org or imgur.com to upload images")
     webpage_url = StringField(u'Project link', [length(max=2048)],
         description="URL to a live demo, presentation, or link to further information")
@@ -88,6 +88,6 @@ class ProjectForm(FlaskForm):
 class ProjectPost(FlaskForm):
     id = HiddenField('id')
     progress = SelectField(u'Progress', coerce=int)
-    note = TextAreaField(u'Note', [required(), length(max=140)],
+    note = TextAreaField(u'Note', [length(max=140), DataRequired()],
         description="What are you working on right now?")
     submit = SubmitField(u'Submit')

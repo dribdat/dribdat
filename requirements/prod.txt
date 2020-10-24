@@ -32,13 +32,15 @@ idna==2.10
 itsdangerous==1.1.0
 jinja2==2.11.2
 jsmin==2.2.2
-lxml==4.5.1
+lxml==4.6.1
 mako==1.1.3
 markupsafe==1.1.1
+micawber==0.5.1
 promise==2.3
 psycopg2-binary==2.8.6
 pycparser==2.20
 pyquery==1.4.1
+pystache==0.5.4
 python-dateutil==2.8.1
 python-dotenv==0.13.0
 python-editor==1.0.4
@@ -48,7 +50,7 @@ requests==2.24.0
 requests-oauthlib==1.3.0
 rx==1.6.1
 six==1.15.0
-sqlalchemy==1.3.19
+sqlalchemy==1.3.20
 urllib3==1.24.2
 urlobject==2.4.3
 webassets==2.0

@@ -13,7 +13,9 @@ textarea { resize: vertical; }
 }
 
 /* Forms */
-
+form input[type="checkbox"] {
+  margin-right: 0.5em;
+}
 .navbar-form input[type="text"],
 .navbar-form input[type="password"] {
   width: 180px;
@@ -76,13 +78,31 @@ ul.help-block {
   background-color: red; color: white; padding: 5px;
 }
 
+/* Overall layout headings and navigation */
 .section-header .section-header-logo {
   float: left;
   margin-right: 45px;
 }
 .section-header .section-header-logo img {
-  height: 80px;
+  height: 6em;
 }
+.section-header .event-hostname,
+.section-header .event-location {
+  font-size: 110%; color: #555;
+}
+.section-header .event-date {
+  font-size: 120%; color: #000;
+}
+.section-header a:hover {
+  text-decoration: none;
+}
+@media (max-width: 760px) {
+  .section-header .section-header-logo {
+    position: relative;
+    margin: 0px;
+  }
+}
+
 nav.navbar {
   margin-bottom: 1em;
   box-shadow: 0px 0px 20px rgba(0,0,0,0.5);
@@ -106,26 +126,35 @@ nav .navbar-nav .nav-item {
   font-weight: bold;
 }
 
-.event-countdown {
-  left: 50%;
-  width: 624px;
-  height: 100px;
-  overflow: hidden;
-  position: relative;
+/* Customize the flipclock widget */
+.event-countdown .flip-clock {
   margin-top: 20px;
-  margin-left: -312px;
 }
 .event-countdown .flip-clock-label {
   display: none;
 }
-@media (max-width: 760px) {
+@media (max-width: 1200px) {
+  .event-countdown .flip-clock .flip-clock-group * {
+    width: 38px;
+  }
+  .event-countdown .flip-clock {
+    background: #335;
+    border: 5px solid #333;
+    box-shadow: 1px 1px 5px rgba(0,0,0,0.3);
+    position: relative;
+    left: 50%;
+    width: 360px;
+    margin-left: -180px;
+  }
+  .home-page h1,
+  .home-page .home-nav {
+    display: block;
+    text-align: center;
+  }
+}
+@media (max-width: 400px) {
   .event-countdown {
     display: none;
-  }
-
-  .section-header .section-header-logo {
-    position: relative;
-    margin: 0px;
   }
 }
 
@@ -446,6 +475,45 @@ nav .navbar-nav .nav-item {
   background: url(https://raw.githubusercontent.com/RickStrahl/jquery-resizable/master/assets/wingrip.png) no-repeat;
  }
 
+/* Oneboxes in content */
+.onebox {
+  border: 2px solid #ddd;
+  background: #f0f0f0;
+  box-shadow: 5px 5px 8px rgba(0,0,0,0.3);
+  color: black;
+  padding: 0.5em;
+  margin: 0.5em 1em 1em 0px;
+  opacity: 0.8;
+  min-height: 6em;
+
+  width: 50%;
+  display: block;
+  clear: both;
+}
+.onebox * {
+  text-decoration: none !important;
+  color: black;
+}
+.onebox:hover {
+  opacity: 1.0;
+}
+.onebox h5 {
+  display: inline-block;
+  color: #007bff;
+  clear: none;
+}
+.onebox .phase {
+  font-size: 80%; color: #999;
+}
+.onebox p {
+  font-size: 90%;
+}
+.onebox img {
+  width: 5em;
+  float: left;
+  margin-right: 1em;
+}
+
 /* Project entry form */
 .fld-progress .radio-inline { display: block; }
 .fld-progress { border-width: 25px; padding-left: 5px; border-top: none !important; border-bottom: none !important; border-right: none !important; border-style: solid; -webkit-border-image: -webkit-gradient(linear, 0 100%, 0 0, from(black), to(rgba(0, 0, 0, 0))) 1 100%; -webkit-border-image: -webkit-linear-gradient(bottom, black, rgba(0, 0, 0, 0)) 1 100%; -moz-border-image: -moz-linear-gradient(bottom, black, rgba(0, 0, 0, 0)) 1 100%; -o-border-image: -o-linear-gradient(bottom, black, rgba(0, 0, 0, 0)) 1 100%; border-image: linear-gradient(to top, black, rgba(0, 0, 0, 0)) 1 100%; }
@@ -607,13 +675,13 @@ pre { color: #333; background: white; }
   height: 60px;
   display: inline-block;
   background: white;
-  border: 2px solid #ff9;
+  border: 2px solid #fff;
   padding: 2px; margin-right: 5px;
   overflow: hidden;
 }
 .team-gravatar:hover {
   text-decoration: none;
-  border: 2px solid #dde;
+  border: 2px solid blue;
 }
 
 /* Embed view of the projects */

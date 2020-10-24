@@ -68,5 +68,7 @@ class TestConfig(Config):
     DEBUG = True
     SQLALCHEMY_DATABASE_URI = 'sqlite://'
     SERVER_NAME = 'localhost'
+    # Pytest complains, but not sure how to fully change server name 
+    # SERVER_NAME = 'localhost.localdomain'
     WTF_CSRF_ENABLED = False  # Allows form testing
     PRESERVE_CONTEXT_ON_EXCEPTION = False
