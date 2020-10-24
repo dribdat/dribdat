@@ -122,9 +122,8 @@
     {% if current_user and current_user.is_authenticated and not project.webpage_url and not project.longtext %}
     <div class="alert alert-success" role="alert">
       <!-- Helpful comment for new projects -->
-      This is a new project. How exciting! Join it so that you can <b>Post</b>
-      to the Log or <b>Edit</b> the pitch to share something. If you are working
-      in another site or tool, you can <b>Sync</b> or <b>Embed</b> the content.
+      Join this project to <b>Post</b> on the Log or to <b>Edit</b> the pitch.
+      Remember to <b>Sync</b> or embed any external content.
     </div>
     {% endif %}
 
@@ -185,6 +184,12 @@
 {% endif %}
 
     {% if project.autotext %}
+    <div class="alert alert-warning">
+      These contents were scraped from an external site.
+      Visit the
+      <a href="{{ project.autotext_url }}" target="_blank" title="Source link">original location</a>
+      to see all the formatting.
+    </div>
     <div class="project-autotext"><div class="cover"></div>
       {{project.autotext|markdown}}
     </div>
