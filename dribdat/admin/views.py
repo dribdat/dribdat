@@ -10,6 +10,7 @@ from ..user.models import User, Event, Project, Category
 from .forms import UserForm, EventForm, ProjectForm, CategoryForm
 
 from datetime import datetime
+import random, string
 
 from ..aggregation import GetProjectData
 
@@ -88,6 +89,24 @@ def user_delete(user_id):
         user.delete()
         flash('User deleted.', 'success')
     return users()
+
+
+# Get a reasonably secure password
+def get_random_alphanumeric_string(length=24):
+    return ''.join((random.SystemRandom().choice(string.ascii_letters + string.digits) for i in range(length)))
+
+@blueprint.route('/user/<int:user_id>/reset/')
+@login_required
+@admin_required
+def reset(user_id):
+    """Reset user password."""
+    user = User.query.filter_by(id=user_id).first_or_404()
+    newpw = get_random_alphanumeric_string()
+    user.set_password(newpw)
+    db.session.add(user)
+    db.session.commit()
+    return render_template('admin/reset.html', newpw=newpw, email=user.email)
+
 
 ##############
 ##############

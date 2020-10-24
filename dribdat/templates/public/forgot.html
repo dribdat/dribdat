@@ -1,0 +1,24 @@
+{% extends "layout.html" %}
+
+{% block page_title %}I forgot{% endblock %}
+{% block body_class %}userform{% endblock %}
+
+{% block content %}
+<div class="container-narrow">
+  <h1>I forgot ...</h1>
+  <br/>
+  {% if slack_enabled %}
+     <p>This site has &#x1f511; <b>Single Sign On</b>
+      - try to reset your password with the provider:</p>
+     <p><a class="btn signin-slack" href="{{ url_for('slack.login') }}">
+       Sign in with Slack
+     </a></p>
+  {% endif %}
+  {% if not config.DRIBDAT_NOT_REGISTER %}
+    <br>
+    <p>This application does not have a reset password function. How very hacky of us.
+      Please contact the organizers and ask them to change your password in the <b>Admin</b>.
+    </p>
+  {% endif %}
+</div>
+{% endblock %}

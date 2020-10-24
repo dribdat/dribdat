@@ -25,6 +25,9 @@
     <p>Not yet registered?
       <a href="{{ url_for('auth.register') }}">Create an account</a>.
     </p>
+    <p>Forgot your password?
+      <a href="{{ url_for('auth.forgot') }}">Instructions</a>.
+    </p>
   {% endif %}
 </div>
 {% endblock %}
