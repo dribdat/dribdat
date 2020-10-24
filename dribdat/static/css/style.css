@@ -78,6 +78,7 @@ footer .footer-nav {
   margin-right: 25px;
   list-style: none;
 }
+footer .footer-nav a { text-decoration: none }
 
 ul.help-block {
   background-color: red; color: white; padding: 5px;
