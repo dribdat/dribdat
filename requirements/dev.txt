@@ -1,7 +1,6 @@
 -i https://pypi.org/simple
 atomicwrites
 attrs
-beautifulsoup4
 blinker
 factory-boy
 faker
