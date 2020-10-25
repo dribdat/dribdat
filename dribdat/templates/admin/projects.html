@@ -9,8 +9,8 @@
     <table class='table table-bordered table-hover'>
         <thead>
             <tr>
-              <th>Name</th>
-              <th>Phase</th>
+              <th>Name (Phase)</th>
+              <th>Category</th>
               <th>Created</th>
               <th>Updated</th>
               <th></th>
@@ -22,8 +22,9 @@
               <a href="{{ url_for('admin.project_view', project_id=project.id) }}">
                 {{ project.name }}
               </a>
+              <small>({{ project.phase }})</small>
             </td>
-            <td>{{ project.phase }}</td>
+            <td>{{ project.category.name }}</td>
             <td>{{ project.created_at|format_date }}
               <small>by {{ project.user.username }}</small></td>
             <td>{{ project.updated_at|since_date }}</td>
