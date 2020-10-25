@@ -129,7 +129,7 @@ def FetchDataProject(project_url):
 
 # Basis: https://github.com/mozilla/bleach/blob/master/bleach/sanitizer.py#L16
 ALLOWED_HTML_TAGS = ALLOWED_TAGS + [
-    'img', 'font', 'center', 'sub', 'sup',
+    'img', 'font', 'center', 'sub', 'sup', 'pre',
     'h1', 'h2', 'h3', 'h4', 'h5',
     'p', 'u', 'b', 'em', 'i',
 ]
@@ -194,5 +194,41 @@ def FetchWebProject(project_url):
         obj['description'] = text_content
         obj['source_url'] = project_url
         obj['image_url'] = "/static/img/document_white.png"
+
+    # Instructables
+    elif project_url.startswith('https://www.instructables.com/'):
+        doc = pq(data.text)
+        ptitle = doc(".header-title")
+        if len(ptitle) < 1: return {}
+        content = doc(".main-content")
+        if len(content) < 1: return {}
+        html_content = ""
+        for step in content.find(".step"):
+            step_title = pq(step).find('.step-title')
+            if step_title is not None:
+                html_content += '<h3>' + step_title.text() + '</h3>'
+            # Grab photos
+            for img in pq(step).find('noscript'):
+                if not '{{ file' in pq(img).html():
+                    html_content += pq(img).html()
+            # Iterate through body
+            step_content = pq(step).find('.step-body')
+            if step_content is None: continue
+            for elem in pq(step_content).children():
+                if elem.tag == 'pre':
+                    if elem.text is None: continue
+                    html_content += '<pre>' + elem.text + '</pre>'
+                else:
+                    p = pq(elem).html()
+                    if p is None: continue
+                    p = bleach.clean(p.strip(), strip=True,
+                        tags=ALLOWED_HTML_TAGS, attributes=ALLOWED_HTML_ATTR)
+                    html_content += '<' + elem.tag + '>' + p + '</' + elem.tag + '>'
+
+        obj['type'] = 'Instructables'
+        obj['name'] = ptitle.text()
+        obj['description'] = html_content
+        obj['source_url'] = project_url
+        obj['image_url'] = "https://upload.wikimedia.org/wikipedia/fr/thumb/c/c6/InstructsblesRobot.png/150px-InstructsblesRobot.png"
 
     return obj

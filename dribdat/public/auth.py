@@ -89,6 +89,12 @@ def logout():
     return redirect(url_for('public.home'))
 
 
+@blueprint.route('/forgot/')
+def forgot():
+    """Forgot password."""
+    return render_template('public/forgot.html', current_event=current_event(), slack_enabled=slack_enabled())
+
+
 @blueprint.route('/user/profile', methods=['GET', 'POST'])
 @login_required
 def user_profile():

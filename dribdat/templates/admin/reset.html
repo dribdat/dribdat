@@ -1,0 +1,19 @@
+{% from "macros/_form.html" import render_form %}
+
+{% extends "admin/layout.html" %}
+
+{% block content %}
+<div class="container">
+    <h2>New password</h2>
+
+    <p style="background:#eee;padding:1em"><tt id="hidden" style="opacity:0">{{ newpw }}</tt></p>
+
+    <a href="#" class="btn btn-warning"
+      onclick="$('#hidden').css('opacity',1)">
+      Show
+    </a>
+    <a href="mailto:{{ email }}?subject=Dribdat+account+details&body=Your+new+password+is:+{{ newpw }}" class="btn btn-primary">
+      Send E-mail
+    </a>
+</div>
+{% endblock %}

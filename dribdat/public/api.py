@@ -202,7 +202,11 @@ def project_search_json():
         Project.longtext.like(q),
         Project.autotext.like(q),
     )).limit(limit).all()
-    return jsonify(projects=[p.data for p in projects])
+    projects = [p.data for p in projects]
+    for p in projects:
+        p['event_url'] = request.host_url + p['event_url']
+        p['url'] = request.host_url + p['url']
+    return jsonify(projects=projects)
 
 # ------ UPDATE ---------
 

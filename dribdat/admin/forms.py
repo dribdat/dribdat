@@ -75,6 +75,6 @@ class CategoryForm(FlaskForm):
     name = StringField(u'Name', [length(max=80), DataRequired()])
     description = TextAreaField(u'Description', description=u'Markdown and HTML supported')
     logo_color = StringField(u'Custom color', [length(max=7)])
-    logo_icon = StringField(u'<a target="_blank" href="http://fontawesome.io/icons/#search">Custom icon</a>', [length(max=20)])
+    logo_icon = StringField(u'Custom icon (fontawesome.io/icons)', [length(max=20)])
     event_id = SelectField(u'Specific to an event, or global if blank', coerce=int)
     submit = SubmitField(u'Save')

@@ -1,6 +1,6 @@
 {
   "name": "dribdat",
-  "version": "0.4.2",
+  "version": "0.4.4",
   "description": "Open source hackathon platform",
   "repository": "git@github.com:datalets/dribdat.git",
   "author": "Oleg Lavrovsky <oleg@datalets.ch>",

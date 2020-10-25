@@ -1,37 +1,49 @@
 {% extends "layout.html" %}
 
 {% block page_title %}Registration{% endblock %}
+{% block body_class %}userform{% endblock %}
 
 {% block content %}
 <div class="container-narrow">
-  <h1>Register</h1>
-  <p>Create an account to be able to submit projects.</p>
-  <br/>
+    <h1>Register</h1>
+    <p>Already registered? <a href="{{ url_for('auth.login') }}">Log in here</a>.</p>
+    <br/>
+
+  {% if slack_enabled %}
+    <p>You can also use &#x1f511; <b>Single Sign On</b> </p>
+    <p><a class="btn signin-slack" href="{{ url_for('slack.login') }}">
+      Sign in with Slack
+    </a></p>
+  {% endif %}
 
     <form id="registerForm" class="form form-register" method="POST" action="" role="form">
-            {{ form.hidden_tag() }}
-            <div class="form-group">
-                {{form.username.label}}
-                {{form.username(placeholder="Username", class_="form-control")}}
-            </div>
-            <div class="form-group">
-                {{form.email.label}}
-                {{form.email(placeholder="Email", class_="form-control")}}
-            </div>
-            <div class="form-group">
-                {{form.webpage_url.label}}
-                {{form.webpage_url(placeholder="https://", class_="form-control")}}
-            </div>
-            <div class="form-group">
-                {{form.password.label}}
-                {{form.password(placeholder="Password", class_="form-control")}}
-            </div>
-            <div class="form-group">
-                {{form.confirm.label}}
-                {{form.confirm(placeholder="Password (again)", class_="form-control")}}
-            </div>
-            <p><input class="btn btn-primary btn-lg btn-submit" type="submit" value="Register"></p>
+        {{ form.hidden_tag() }}
+        <div class="form-group">
+            {{form.username.label}}
+            {{form.username(placeholder="Username", class_="form-control")}}
+        </div>
+        <div class="form-group">
+            {{form.email.label}}
+            <p><i>For a profile image, link to <br>this address at
+                <a href="https://gravatar.com" target="_blank">Gravatar.com</a>
+            </i></p>
+            {{form.email(placeholder="Email", class_="form-control")}}
+        </div>
+        <div class="form-group">
+            {{form.webpage_url.label}}
+            {{form.webpage_url(placeholder="https://", class_="form-control")}}
+        </div>
+        <div class="form-group">
+            {{form.password.label}}
+            {{form.password(placeholder="Password", class_="form-control")}}
+        </div>
+        <div class="form-group">
+            {{form.confirm.label}}
+            {{form.confirm(placeholder="Password (again)", class_="form-control")}}
+        </div>
+        <div class="form-actions">
+            <input class="btn btn-primary btn-lg btn-submit" type="submit" value="Register">
+        </div>
     </form>
-    <p>Already registered? Click <a href="{{ url_for('auth.login') }}">here</a> to login.</p>
 </div>
 {% endblock %}

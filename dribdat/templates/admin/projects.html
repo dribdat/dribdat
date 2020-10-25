@@ -16,7 +16,7 @@
               <th></th>
             </tr>
         </thead>
-        {% for project in projects %}
+        {% for project in projects or data.items %}
         <tr>
             <td>
               <a href="{{ url_for('admin.project_view', project_id=project.id) }}">
@@ -46,5 +46,8 @@
         </tr>
         {% endfor %}
     </table>
+  {% if data %}
+    {% include "includes/pagination.html" %}
+  {% endif %}
 </div>
 {% endblock %}

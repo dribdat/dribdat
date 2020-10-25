@@ -3,8 +3,12 @@
 {% extends "layout.html" %}
 
 {% block page_title %}User profile{% endblock %}
+{% block body_class %}userform{% endblock %}
 
 {% block content %}
   <h2>My account</h2>
+  {% if user.sso_id == 'oleg' %}
+    &#x1f511; <b>Single Sign On</b> active
+  {% endif %}
   {{ render_form(url_for('auth.user_profile'), form) }}
 {% endblock %}
