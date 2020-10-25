@@ -42,6 +42,10 @@
                   Sync
                 </a>
                 {% endif %}
+                <a href="{{ url_for('admin.project_toggle', project_id=project.id) }}" title="Hide" class="btn btn-sm btn-danger"
+                   onclick="if(!window.confirm('Are you sure you wish to hide this project?')) return false">
+                  <i class="fa fa-eye"></i>
+                </a>
               {% endif %}
             </td>
         </tr>
