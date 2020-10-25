@@ -22,18 +22,13 @@ def get_projects_by_event(event_id):
     return Project.query.filter_by(event_id=event_id, is_hidden=False)
 
 def get_project_summaries(projects):
-    summaries = [ p.data for p in projects ]
+    summaries = expand_project_urls([ p.data for p in projects ])
     summaries.sort(key=lambda x: x['score'], reverse=True)
     return summaries
 
-# Collect all projects for an event
+# Collect all projects and challenges for an event
 def project_list(event_id):
-    projects = get_projects_by_event(event_id).filter(Project.progress >= 0)
-    return get_project_summaries(projects)
-
-# Collect all challenges for an event
-def challenges_list(event_id):
-    projects = get_projects_by_event(event_id).filter(Project.progress < 0)
+    projects = get_projects_by_event(event_id)
     return get_project_summaries(projects)
 
 # Generate a CSV file
@@ -96,25 +91,23 @@ def project_list_current_json():
 def project_list_json(event_id):
     return jsonify(projects=project_list(event_id))
 
-# API: Outputs CSV of all projects in an event
-@blueprint.route('/event/<int:event_id>/projects.csv')
-def project_list_csv(event_id):
+def project_list_csv(event_id, event_name):
     return Response(stream_with_context(gen_csv(project_list(event_id))),
                     mimetype='text/csv',
-                    headers={'Content-Disposition': 'attachment; filename=project_list.csv'})
+                    headers={'Content-Disposition': 'attachment; filename=' + event_name + '_dribdat.csv'})
 
-# API: Outputs CSV of projects in the current event
+# API: Outputs CSV of all projects in an event
+@blueprint.route('/event/<int:event_id>/projects.csv')
+def project_list_event_csv(event_id):
+    event = Event.query.filter_by(id=event_id).first_or_404()
+    return project_list_csv(event.id, event.name)
+
+# API: Outputs CSV of projects and challenges in the current event
 @blueprint.route('/event/current/projects.csv')
 def project_list_current_csv():
     event = Event.query.filter_by(is_current=True).first() or \
             Event.query.order_by(Event.id.desc()).first_or_404()
-    return project_list_csv(event.id)
-
-# API: Outputs JSON of ideas/challenges in the current event, along with its info
-@blueprint.route('/event/current/challenges.json')
-def challenges_list_current_json():
-    event = Event.query.filter_by(is_current=True).first()
-    return jsonify(challenges=challenges_list(event.id), event=event.data)
+    return project_list_csv(event.id, event.name)
 
 # API: Outputs JSON of categories in the current event
 @blueprint.route('/event/current/categories.json')
@@ -189,6 +182,12 @@ def project_info_json(project_id):
 
 # ------ SEARCH ---------
 
+def expand_project_urls(projects):
+    for p in projects:
+        p['event_url'] = request.host_url + p['event_url']
+        p['url'] = request.host_url + p['url']
+    return projects
+
 # API: Full text search projects
 @blueprint.route('/project/search.json')
 def project_search_json():
@@ -202,10 +201,7 @@ def project_search_json():
         Project.longtext.like(q),
         Project.autotext.like(q),
     )).limit(limit).all()
-    projects = [p.data for p in projects]
-    for p in projects:
-        p['event_url'] = request.host_url + p['event_url']
-        p['url'] = request.host_url + p['url']
+    projects = expand_project_urls([p.data for p in projects])
     return jsonify(projects=projects)
 
 # ------ UPDATE ---------
