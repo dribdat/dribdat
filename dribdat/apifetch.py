@@ -134,7 +134,12 @@ ALLOWED_HTML_TAGS = ALLOWED_TAGS + [
     'p', 'u', 'b', 'em', 'i',
 ]
 ALLOWED_HTML_ATTR = ALLOWED_ATTRIBUTES
-ALLOWED_HTML_ATTR['a'] = ['href', 'title', 'class']
+ALLOWED_HTML_ATTR['h1'] = ['id']
+ALLOWED_HTML_ATTR['h2'] = ['id']
+ALLOWED_HTML_ATTR['h3'] = ['id']
+ALLOWED_HTML_ATTR['h4'] = ['id']
+ALLOWED_HTML_ATTR['h5'] = ['id']
+ALLOWED_HTML_ATTR['a'] = ['href', 'title', 'class', 'name']
 ALLOWED_HTML_ATTR['img'] = ['src', 'width', 'height', 'alt', 'class']
 ALLOWED_HTML_ATTR['font'] = ['color']
 
@@ -144,7 +149,7 @@ def FetchWebProject(project_url):
     except:
         print("Could not connect to %s" % project_url)
         return {}
-        
+
     obj = {}
     # {
     #     'type': 'Google', ...
