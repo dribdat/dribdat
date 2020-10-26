@@ -237,6 +237,12 @@ nav .navbar-nav .nav-item {
   text-shadow: 1px 1px 0px #fff;
   line-height: 1.5;
 }
+.project .hexagontent.with-icon div {
+  font-size: 90%;
+}
+.project .hexagontent div {
+  max-height: 5.4em;
+}
 .project .hexagontent .fa {
   font-size: 240%;
 }

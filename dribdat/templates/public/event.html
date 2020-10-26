@@ -55,13 +55,11 @@
        class="hexagon project{% if project.phase=='Challenge' %} challenge{% endif %} category-highlight"
        {% if project.category %}category-id="{{project.category.id}}"{% endif %}
        style="background-color:{{project.logo_color}}; background-image:url('{{project.image_url}}')">
-      <div class="hexagontent">
+      <div class="hexagontent{{ ' with-icon' if project.logo_icon }}">
         {% if project.logo_icon %}
           <i class="fa fa-{{project.logo_icon}}"></i><br>
-          <small>{{ project.name }}</small>
-        {% else %}
-          {{ project.name }}
         {% endif %}
+        <div>{{ project.name }}</div>
         <div class="progress">
           <div class="progress-bar" role="progressbar" aria-valuenow="{{project.score}}" aria-valuemin="0" aria-valuemax="70" style="width:{{project.score}}%">
           </div>
