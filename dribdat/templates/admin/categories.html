@@ -9,7 +9,7 @@
             <tr>
               <th>Name</th>
               <th>Event</th>
-              <th>Projects count</th>
+              <th>Manage</th>
             </tr>
         </thead>
         {% for category in categories %}
@@ -22,7 +22,7 @@
             <td>{{ category.event.name }}</td>
             <td>
               <a href="{{ url_for('admin.category_projects', category_id=category.id) }}" class="btn btn-sm btn-primary">
-                {{ category.project_count() }} items
+                {{ category.project_count() }}&nbsp;projects
               </a>
             </td>
         </tr>

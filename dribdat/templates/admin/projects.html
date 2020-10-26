@@ -5,7 +5,11 @@
     <a href="{{ url_for('admin.project_new') }}" class="btn btn-success btn-lg">Add project</a>
     <h2>Projects</h2>
     {% if category_name %}<h4>Category: <b>{{ category_name }}</b></h4>{% endif %}
-    {% if event %}<h4><b>{{ event.name }}</b></h4>{% endif %}
+    {% if event %}
+      <h4><b>{{ event.name }}</b></h4>
+    {% else %}
+      Visit the projects admin for a specific event for more options.
+    {% endif %}
     <table class='table table-bordered table-hover'>
         <thead>
             <tr>

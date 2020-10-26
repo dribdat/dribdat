@@ -8,8 +8,9 @@
         <thead>
             <tr>
               <th width="100%">Username</th>
-              <th>Created</th>
               <th>Admin</th>
+              <th>SSO</th>
+              <th>Created</th>
               <th>Contact</th>
               <th>Password</th>
             </tr>
@@ -21,8 +22,9 @@
                 {{ user.username }}
               </a>
             </td>
-            <td>{{ user.created_at|format_date }}</td>
             <td>{% if user.is_admin %}&#10003;{% endif %}</td>
+            <td>{% if user.sso_id %}&#10003;{% endif %}</td>
+            <td>{{ user.created_at|format_date }}</td>
             <td>
               <a href="mailto:{{ user.email }}" class="btn btn-sm btn-info">
                 Email

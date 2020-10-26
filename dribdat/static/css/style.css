@@ -47,6 +47,8 @@ form input[type="checkbox"] {
 .pagination { margin-bottom: 1em; }
 .pagination > * { margin-right: 0.5em; padding: 0.5em 0.8em; background: #eee; }
 
+.admin .container table td { vertical-align: middle; }
+
 /* footer */
 
 footer {
