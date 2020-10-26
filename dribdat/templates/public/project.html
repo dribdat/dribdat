@@ -39,20 +39,22 @@
     {% endif %}
   {% endif %}
 
-  {% if project_starred %}<!-- Already starred -->
-    <a title="You are a member of the project. Click to leave." class="btn btn-primary" href="{{ url_for('public.project_unstar', project_id=project.id) }}" class="project-star" title="Click to leave the project" onclick="return confirm('Are you sure you wish to leave the team?')">
-      <i class="fa fa-star"></i>
-    </a>
-  {% elif current_user and current_user.is_authenticated %}
-    <a href="{{ url_for('public.project_star', project_id=project.id) }}" class="btn btn-primary project-star" title="Join project to show your profile below">
-     <i class="fa fa-star-o"></i>
-     Join
-    </a>
-  {% else %}
-    <a href="{{ url_for('auth.login') }}" class="btn btn-primary project-star" title="Login to join this project">
-     <i class="fa fa-star-o"></i>
-     Join
-    </a>
+  {% if allow_edit %}
+    {% if project_starred %}<!-- Already starred -->
+      <a title="You are a member of the project. Click to leave." class="btn btn-primary" href="{{ url_for('public.project_unstar', project_id=project.id) }}" class="project-star" title="Click to leave the project" onclick="return confirm('Are you sure you wish to leave the team?')">
+        <i class="fa fa-star"></i>
+      </a>
+    {% elif current_user and current_user.is_authenticated %}
+      <a href="{{ url_for('public.project_star', project_id=project.id) }}" class="btn btn-primary project-star" title="Join project to show your profile below">
+       <i class="fa fa-star-o"></i>
+       Join
+      </a>
+    {% else %}
+      <a href="{{ url_for('auth.login') }}" class="btn btn-primary project-star" title="Login to join this project">
+       <i class="fa fa-star-o"></i>
+       Join
+      </a>
+    {% endif %}
   {% endif %}
 </div><br clear="all">
 
