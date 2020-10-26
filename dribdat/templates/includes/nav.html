@@ -13,7 +13,7 @@
 
   <!-- Collect the nav links, forms, and other content for toggling -->
   <div class="collapse navbar-collapse" id="navbar-main-collapse">
-    <ul class="navbar-nav navbar-left mr-auto">
+    <ul class="navbar-nav navbar-left mr-auto nav-fill">
       {% if event %}
         <li class="nav-item">
           <a href="{{ url_for('public.event', event_id=event.id) }}#top">
@@ -57,15 +57,15 @@
 
       {% if tabs %}
         {% for tab, link in tabs %}
-        <li class="nav-item" class="{% if active == tab %}active{% endif %}">
-          <a href="{{ link }}">{{ tab|capitalize }}</a>
+        <li class="nav-item">
+          <a class="nav-link {% if active == tab %}active{% endif %}" href="{{ link }}">{{ tab|capitalize }}</a>
         </li>
         {% endfor %}
       {% endif %}
 
       {% if current_user and current_user.is_authenticated %}
           <li class="nav-item">
-            <a class="navbar-link" href="{{ url_for('auth.user_profile') }}">
+            <a class="nav-link{{ ' active' if active == 'profile' }}" href="{{ url_for('auth.user_profile') }}">
               <i class="fa fa-child"></i>
               Profile
               <b>{{ current_user.username }}</b>
@@ -73,23 +73,25 @@
           </li>
           {% if current_user.is_admin %}
             <li class="nav-item">
-              <a class="navbar-link" href="{{ url_for('admin.index') }}">
+              <a class="nav-link" href="{{ url_for('admin.index') }}">
                 <i class="fa fa-gear"></i>
                 Admin
               </a>
             </li>
           {% endif %}
           <li class="nav-item">
-            <a class="navbar-link" href="{{ url_for('auth.logout') }}">
+            <a class="nav-link" href="{{ url_for('auth.logout') }}">
               <i class="fa fa-sign-out"></i>
               Logout
             </a>
           </li>
       {% else %}
-        <li class="nav-item"><a href="{{ url_for('auth.login') }}">Log in<i class="fa fa-sign-in"></i></a></li>
+        <li class="nav-item">
+          <a class="nav-link" href="{{ url_for('auth.login') }}">Log in<i class="fa fa-sign-in"></i></a>
+        </li>
         {% if not config.DRIBDAT_NOT_REGISTER %}
           <li class="nav-item">
-            <a href="{{ url_for('auth.register') }}">
+            <a class="nav-link" href="{{ url_for('auth.register') }}">
               <i class="fa fa-child"></i>
               Create account
             </a></li>

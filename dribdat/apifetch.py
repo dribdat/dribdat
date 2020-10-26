@@ -139,7 +139,12 @@ ALLOWED_HTML_ATTR['img'] = ['src', 'width', 'height', 'alt', 'class']
 ALLOWED_HTML_ATTR['font'] = ['color']
 
 def FetchWebProject(project_url):
-    data = requests.get(project_url)
+    try:
+        data = requests.get(project_url)
+    except:
+        print("Could not connect to %s" % project_url)
+        return {}
+        
     obj = {}
     # {
     #     'type': 'Google', ...

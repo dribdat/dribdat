@@ -2,7 +2,84 @@
 
 {% block content %}
 <div class="container">
-    <h2>Welcome to the Backoffice</h2>
-    <p>Here we add users, manage patients, and manage operations.</p>
+<p>
+{% if default_event %}
+    Set up
+    <a href="{{ url_for('admin.event', event_id=default_event.id) }}">
+        your event</a>,
+    browse
+    <a href="{{ url_for('admin.event_projects', event_id=default_event.id) }}">
+        the projects</a>,
+{% else %}
+    <a href="{{ url_for('admin.event_new') }}">
+      Start an event</a>, then
+{% endif %}
+ manage
+ <a href="{{ url_for('admin.categories') }}">
+     categories</a> and
+ <a href="{{ url_for('admin.users') }}">
+     user accounts</a> here.
+</p>
+
+<div class="jumbotron">
+  <h2>dashboard</h2>
+{% for stat in stats %}
+    <div class="card stat" style="width: 20%; display: inline-block">
+    {% if stat.img %}
+        <img src="{{ stat.img }}" class="card-img-top">
+    {% endif %}
+        <div class="card-body">
+            <h5 class="card-title">{{ stat.value }}</h5>
+            <p class="card-text">{{ stat.text }}</p>
+        </div>
+    </div>
+{% endfor %}
+  <hr/>
+  <div class="chart-activities">
+    <h5>dribdat pulse</h5>
+    <div id="activities"></div>
+  </div>
+</div><!-- /jumbotron -->
+
 </div>
+{% endblock %}
+
+{% block js %}
+<script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
+<script src="https://cdn.jsdelivr.net/npm/vega-lite@4"></script>
+<script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
+<script>
+$.getJSON('/api/project/activity.json?limit=100', function(data) {
+    var yourVlSpec = {
+      "width": 525,
+      "$schema": "https://vega.github.io/schema/vega-lite/v2.0.json",
+      "description": "Project activities",
+      "data": {
+        "values": data.activities
+      },
+      "mark": {
+        "type": "area",
+        "interpolate": "monotone"
+      },
+      "encoding": {
+        "x": {
+          "field": "date",
+          "type": "temporal",
+          "scale": { "rangeStep": null }
+        },
+        "y": {
+          "aggregate": "mean",
+          "field": "project_score",
+          "type": "quantitative",
+          "axis": { "title": null, "labels": false }
+        }
+      },
+      "config": {
+        "autosize": { "type": "fit", "contains": "padding" },
+        "axis": { "grid": false, "ticks": false }
+      }
+    }
+    vegaEmbed("#activities", yourVlSpec);
+    });
+</script>
 {% endblock %}

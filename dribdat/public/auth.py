@@ -112,7 +112,7 @@ def user_profile():
         user.socialize()
         flash('Profile updated.', 'success')
         return redirect(url_for('public.home'))
-    return render_template('public/user.html', user=user, form=form)
+    return render_template('public/user.html', user=user, form=form, active='profile')
 
 
 @blueprint.route("/slack_login", methods=["GET", "POST"])
