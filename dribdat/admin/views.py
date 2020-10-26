@@ -65,8 +65,9 @@ def user(user_id):
         originalhash = user.password
         del form.id
 
-        # for r in form.roles:
-        # del form.roles
+        for r in form.roles:
+            user.roles.append(r.value)
+        del form.roles
 
         form.populate_obj(user)
         if form.password.data:
@@ -85,7 +86,7 @@ def user(user_id):
 @login_required
 @admin_required
 def user_new():
-    user = User()
+    user = User(active=True)
     form = UserForm(obj=user, next=request.args.get('next'))
     form.roles.choices = [(e.id, e.name) for e in Role.query.order_by('name')]
 
