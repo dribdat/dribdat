@@ -29,15 +29,18 @@ from dribdat.utils import (
 from dribdat.onebox import format_webembed
 from dribdat.user import PROJECT_PROGRESS_PHASE
 
-from sqlalchemy import or_
+from sqlalchemy import Table, or_
+
+users_roles = Table('users_roles', db.metadata,
+    Column('user_id', db.Integer, db.ForeignKey('users.id'), primary_key=True),
+    Column('role_id', db.Integer, db.ForeignKey('roles.id'), primary_key=True)
+)
 
 class Role(PkModel):
     """A role of the contributor."""
 
     __tablename__ = 'roles'
     name = Column(db.String(80), unique=True, nullable=False)
-    user_id = reference_col('users', nullable=True)
-    user = relationship('User', backref='roles')
 
     def __init__(self, name=None, **kwargs):
         """Create instance."""
@@ -48,10 +51,9 @@ class Role(PkModel):
         return f"<Role({self.name})>"
 
     # Number of users
-    @property
     def user_count(self):
-        if not self.users: return 0
-        return len(self.users)
+        users = User.query.filter(User.roles.contains(self))
+        return users.count()
 
 class User(UserMixin, PkModel):
     """A user of the app."""
@@ -71,6 +73,7 @@ class User(UserMixin, PkModel):
     # External profile
     cardtype = Column(db.String(80), nullable=True)
     carddata = Column(db.String(255), nullable=True)
+    roles = relationship('Role', secondary=users_roles, backref='users')
 
     @property
     def data(self):
