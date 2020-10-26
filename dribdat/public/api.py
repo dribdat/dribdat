@@ -117,21 +117,23 @@ def categories_list_current_json():
 
 # ------ ACTIVITY FEEDS ---------
 
-def get_event_activities(event_id):
+def get_event_activities(event_id, limit=50):
     event = Event.query.filter_by(id=event_id).first_or_404()
     return [a.data for a in Activity.query
               .filter(Activity.timestamp>=event.starts_at)
-              .order_by(Activity.id.desc()).all()]
+              .order_by(Activity.id.desc()).limit(limit).all()]
 
 # API: Outputs JSON of recent activity in an event
 @blueprint.route('/event/<int:event_id>/activity.json')
 def event_activity_json(event_id):
-    return jsonify(activities=get_event_activities(event_id))
+    limit = request.args.get('limit') or 50
+    return jsonify(activities=get_event_activities(event_id, limit))
 
 # API: Outputs CSV of an event activity
 @blueprint.route('/event/<int:event_id>/activity.csv')
 def event_activity_csv(event_id):
-    return Response(stream_with_context(gen_csv(get_event_activities(event_id))),
+    limit = request.args.get('limit') or 50
+    return Response(stream_with_context(gen_csv(get_event_activities(event_id, limit))),
                     mimetype='text/csv',
                     headers={'Content-Disposition': 'attachment; filename=activity_list.csv'})
 
@@ -262,7 +264,7 @@ def project_push_json():
 
 # ------ FRONTEND -------
 
-# API routine used to sync project data
+# API routine used to help sync project data
 @blueprint.route('/project/autofill', methods=['GET', 'POST'])
 @login_required
 def project_autofill():
