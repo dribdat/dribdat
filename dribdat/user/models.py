@@ -37,7 +37,7 @@ class Role(SurrogatePK, Model):
     user_id = reference_col('users', nullable=True)
     user = relationship('User', backref='roles')
 
-    def __init__(self, name, **kwargs):
+    def __init__(self, name=None, **kwargs):
         """Create instance."""
         db.Model.__init__(self, name=name, **kwargs)
 
@@ -45,6 +45,11 @@ class Role(SurrogatePK, Model):
         """Represent instance as a unique string."""
         return '<Role({name})>'.format(name=self.name)
 
+    # Number of users
+    @property
+    def user_count(self):
+        if not self.users: return 0
+        return len(self.users)
 
 class User(UserMixin, SurrogatePK, Model):
     """A user of the app."""
@@ -53,6 +58,7 @@ class User(UserMixin, SurrogatePK, Model):
     username = Column(db.String(80), unique=True, nullable=False)
     email = Column(db.String(80), unique=True, nullable=False)
     webpage_url = Column(db.String(128), nullable=True)
+
     sso_id = Column(db.String(128), nullable=True)
     #: The hashed password
     password = Column(db.String(128), nullable=True)
@@ -60,6 +66,7 @@ class User(UserMixin, SurrogatePK, Model):
     active = Column(db.Boolean(), default=False)
     is_admin = Column(db.Boolean(), default=False)
 
+    # External profile
     cardtype = Column(db.String(80), nullable=True)
     carddata = Column(db.String(255), nullable=True)
 

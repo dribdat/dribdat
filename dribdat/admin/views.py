@@ -6,8 +6,8 @@ from flask_login import login_required, current_user
 from ..extensions import db, cache
 from ..decorators import admin_required
 
-from ..user.models import User, Event, Project, Category
-from .forms import UserForm, EventForm, ProjectForm, CategoryForm
+from ..user.models import Role, User, Event, Project, Category
+from .forms import RoleForm, UserForm, EventForm, ProjectForm, CategoryForm
 
 from datetime import datetime
 import random, string
@@ -59,10 +59,15 @@ def users(page=1):
 def user(user_id):
     user = User.query.filter_by(id=user_id).first_or_404()
     form = UserForm(obj=user, next=request.args.get('next'))
+    form.roles.choices = [(e.id, e.name) for e in Role.query.order_by('name')]
 
     if form.validate_on_submit():
         originalhash = user.password
         del form.id
+
+        # for r in form.roles:
+        # del form.roles
+
         form.populate_obj(user)
         if form.password.data:
             user.set_password(form.password.data)
@@ -82,6 +87,7 @@ def user(user_id):
 def user_new():
     user = User()
     form = UserForm(obj=user, next=request.args.get('next'))
+    form.roles.choices = [(e.id, e.name) for e in Role.query.order_by('name')]
 
     if form.validate_on_submit():
         del form.id
@@ -414,3 +420,68 @@ def category_delete(category_id):
         category.delete()
         flash('Category deleted.', 'success')
     return categories()
+
+
+##############
+##############
+##############
+
+@blueprint.route('/roles')
+@login_required
+@admin_required
+def roles():
+    roles = Role.query.all()
+    return render_template('admin/roles.html', roles=roles, active='roles')
+
+
+@blueprint.route('/role/<int:role_id>', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def role(role_id):
+    role = Role.query.filter_by(id=role_id).first_or_404()
+    form = RoleForm(obj=role, next=request.args.get('next'))
+
+    if form.validate_on_submit():
+        form.populate_obj(role)
+
+        db.session.add(role)
+        db.session.commit()
+
+        cache.clear()
+        flash('Role updated.', 'success')
+        return roles()
+
+    return render_template('admin/role.html', role=role, form=form)
+
+@blueprint.route('/role/new', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def role_new():
+    role = Role()
+    form = RoleForm(obj=role, next=request.args.get('next'))
+
+    if form.validate_on_submit():
+        form.populate_obj(role)
+
+        db.session.add(role)
+        db.session.commit()
+
+        cache.clear()
+        flash('Role added.', 'success')
+        return roles()
+
+    return render_template('admin/rolenew.html', form=form)
+
+
+@blueprint.route('/role/<int:role_id>/delete', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def role_delete(role_id):
+    role = Role.query.filter_by(id=role_id).first_or_404()
+    if len(role.users) > 0:
+        flash('No users may be assigned to role in order to delete.', 'warning')
+    else:
+        cache.clear()
+        role.delete()
+        flash('Role deleted.', 'success')
+    return roles()
