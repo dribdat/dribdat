@@ -21,8 +21,8 @@
      user accounts</a> here.
 </p>
 
-<div class="jumbotron">
-  <h2>dashboard</h2>
+<div class="jumbotron" style="background:none">
+  <h2>dribdat</h2>
 {% for stat in stats %}
     <div class="card stat" style="width: 20%; display: inline-block">
     {% if stat.img %}
@@ -34,9 +34,8 @@
         </div>
     </div>
 {% endfor %}
-  <hr/>
-  <div class="chart-activities">
-    <h5>dribdat pulse</h5>
+  <div class="chart-activities" style="margin-top:2em">
+    <h5>pulse</h5>
     <div id="activities"></div>
   </div>
 </div><!-- /jumbotron -->
@@ -58,8 +57,7 @@ $.getJSON('/api/project/activity.json?limit=100', function(data) {
         "values": data.activities
       },
       "mark": {
-        "type": "area",
-        "interpolate": "monotone"
+        "type": "line"
       },
       "encoding": {
         "x": {
@@ -76,7 +74,7 @@ $.getJSON('/api/project/activity.json?limit=100', function(data) {
       },
       "config": {
         "autosize": { "type": "fit", "contains": "padding" },
-        "axis": { "grid": false, "ticks": false }
+        "axis": { "grid": true, "ticks": false }
       }
     }
     vegaEmbed("#activities", yourVlSpec);

@@ -74,10 +74,11 @@
 </div><!-- /honeycomb -->
 
 <div class="category-info">
-{% if current_event.categories %}
-  <div category-id="infobox" class="category-container">
-    <center><h4><i class="fa fa-arrow-circle-o-up"></i> Explore challenges and projects</h4></center>
-  </div>
+  {% if current_event.has_started and not current_event.has_finished %}
+    <div category-id="infobox" class="category-container category-tip">
+      <center><h4><i class="fa fa-arrow-circle-o-up"></i> Explore challenges and projects</h4></center>
+    </div>
+  {% endif %}
   {% for category in current_event.categories_for_event() %}
   <div category-id="{{category.id}}" class="category-container" style="border-top:5px solid {{category.logo_color}}; display:none">
     <h3>{{ category.name }}</h3>
@@ -89,7 +90,6 @@
     {% endif %}
   </div>
   {% endfor %}
-{% endif %}
 </div><!-- /category-info -->
 
 {% if current_event.can_start_project %}
