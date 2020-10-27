@@ -12,7 +12,9 @@ from .forms import UserForm, EventForm, ProjectForm, CategoryForm
 from datetime import datetime
 import random, string
 
-from ..aggregation import GetProjectData
+from ..aggregation import (
+    GetProjectData, SyncProjectData
+)
 
 blueprint = Blueprint('admin', __name__, url_prefix='/admin')
 
@@ -21,8 +23,23 @@ blueprint = Blueprint('admin', __name__, url_prefix='/admin')
 @login_required
 @admin_required
 def index():
-    users = User.query.all()
-    return render_template('admin/index.html', users=users, active='index')
+    event = Event.query.filter_by(is_current=True).first()
+    stats = [
+        {
+            'value': User.query.count(),
+            'text': 'users registered'
+        },{
+            'value': Event.query.count(),
+            'text': 'active events'
+        },{
+            'value': Project.query.filter(Project.progress<0).count(),
+            'text': 'challenges posted'
+        },{
+            'value': Project.query.filter(Project.progress>=0).count(),
+            'text': 'projects started'
+        },
+    ]
+    return render_template('admin/index.html', stats=stats, default_event=event, active='index')
 
 
 @blueprint.route('/users')
@@ -188,6 +205,24 @@ def event_delete(event_id):
         flash('Event deleted.', 'success')
     return events()
 
+@blueprint.route('/event/<int:event_id>/autosync', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def event_autosync(event_id):
+    event = Event.query.filter_by(id=event_id).first_or_404()
+    count = 0
+    for project in event.projects:
+        if not project.is_autoupdate: continue
+        data = GetProjectData(project.autotext_url)
+        if not 'name' in data:
+            flash("Could not sync: %s" % project.name, 'warning')
+            continue
+        SyncProjectData(project, data)
+        count += 1
+    flash("%d projects synced." % count, 'success')
+    return event_projects(event.id)
+
+
 ##############
 ##############
 ##############
@@ -200,7 +235,7 @@ def event_delete(event_id):
 def projects(page=1):
     projects = Project.query.order_by(
         Project.updated_at.desc()
-    ).paginate(page, per_page=20)
+    ).paginate(page, per_page=10)
     return render_template('admin/projects.html', data=projects, endpoint='admin.projects', active='projects')
 
 
@@ -218,7 +253,7 @@ def category_projects(category_id):
 def event_projects(event_id):
     event = Event.query.filter_by(id=event_id).first_or_404()
     projects = Project.query.filter_by(event_id=event_id).order_by(Project.id.desc())
-    return render_template('admin/projects.html', projects=projects, event_name=event.name, active='projects')
+    return render_template('admin/projects.html', projects=projects, event=event, active='projects')
 
 @blueprint.route('/event/<int:event_id>/print')
 @login_required
@@ -227,7 +262,7 @@ def event_print(event_id):
     now = datetime.utcnow().strftime("%d.%m.%Y %H:%M")
     event = Event.query.filter_by(id=event_id).first_or_404()
     projects = Project.query.filter_by(event_id=event_id, is_hidden=False)
-    projects = projects.filter(Project.progress>0).order_by(Project.name)
+    projects = projects.filter(Project.progress>=0).order_by(Project.name)
     return render_template('admin/eventprint.html', event=event, projects=projects, curdate=now, active='projects')
 
 @blueprint.route('/project/<int:project_id>', methods=['GET', 'POST'])

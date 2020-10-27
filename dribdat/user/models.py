@@ -353,12 +353,12 @@ class Project(SurrogatePK, Model):
             'score': self.score,
             'phase': self.phase,
             'progress': self.progress,
-            'summary': self.summary,
-            'hashtag': self.hashtag,
-            'contact_url': self.contact_url,
-            'image_url': self.image_url,
-            'source_url': self.source_url,
-            'webpage_url': self.webpage_url,
+            'summary': self.summary or '',
+            'hashtag': self.hashtag or '',
+            'contact_url': self.contact_url or '',
+            'image_url': self.image_url or '',
+            'source_url': self.source_url or '',
+            'webpage_url': self.webpage_url or '',
         }
         if self.user is not None:
             d['maintainer'] = self.user.username
@@ -366,7 +366,9 @@ class Project(SurrogatePK, Model):
             d['event_url'] = self.event.url
             d['event_name'] = self.event.name
         if self.category is not None:
-            d['category'] = self.category.data
+            d['category_name'] = self.category.name
+        else:
+            d['category_name'] = ''
         return d
 
     def get_schema(self, host_url=''):
