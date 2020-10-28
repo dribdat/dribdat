@@ -16,12 +16,12 @@ from flask import current_app
 
 from dribdat.extensions import hashing
 from dribdat.database import (
-    Column,
     db,
     Model,
-    reference_col,
+    Column,
+    PkModel,
     relationship,
-    SurrogatePK,
+    reference_col,
 )
 from dribdat.utils import (
     format_date_range, format_date
@@ -29,29 +29,33 @@ from dribdat.utils import (
 from dribdat.onebox import format_webembed
 from dribdat.user import PROJECT_PROGRESS_PHASE
 
-from sqlalchemy import or_
+from sqlalchemy import Table, or_
 
-class Role(SurrogatePK, Model):
+users_roles = Table('users_roles', db.metadata,
+    Column('user_id', db.Integer, db.ForeignKey('users.id'), primary_key=True),
+    Column('role_id', db.Integer, db.ForeignKey('roles.id'), primary_key=True)
+)
+
+class Role(PkModel):
+    """A role of the contributor."""
+
     __tablename__ = 'roles'
     name = Column(db.String(80), unique=True, nullable=False)
-    user_id = reference_col('users', nullable=True)
-    user = relationship('User', backref='roles')
 
     def __init__(self, name=None, **kwargs):
         """Create instance."""
-        db.Model.__init__(self, name=name, **kwargs)
+        super().__init__(name=name, **kwargs)
 
     def __repr__(self):
         """Represent instance as a unique string."""
-        return '<Role({name})>'.format(name=self.name)
+        return f"<Role({self.name})>"
 
     # Number of users
-    @property
     def user_count(self):
-        if not self.users: return 0
-        return len(self.users)
+        users = User.query.filter(User.roles.contains(self))
+        return users.count()
 
-class User(UserMixin, SurrogatePK, Model):
+class User(UserMixin, PkModel):
     """A user of the app."""
 
     __tablename__ = 'users'
@@ -69,6 +73,7 @@ class User(UserMixin, SurrogatePK, Model):
     # External profile
     cardtype = Column(db.String(80), nullable=True)
     carddata = Column(db.String(255), nullable=True)
+    roles = relationship('Role', secondary=users_roles, backref='users')
 
     @property
     def data(self):
@@ -115,7 +120,7 @@ class User(UserMixin, SurrogatePK, Model):
         return '<User({username!r})>'.format(username=self.username)
 
 
-class Event(SurrogatePK, Model):
+class Event(PkModel):
     __tablename__ = 'events'
     name = Column(db.String(80), unique=True, nullable=False)
     hostname = Column(db.String(80), nullable=True)
@@ -233,7 +238,7 @@ class Event(SurrogatePK, Model):
     def __repr__(self):
         return '<Event({name})>'.format(name=self.name)
 
-class Project(SurrogatePK, Model):
+class Project(PkModel):
     __tablename__ = 'projects'
     name = Column(db.String(80), unique=True, nullable=False)
     summary = Column(db.String(120), nullable=True)
@@ -446,7 +451,7 @@ class Project(SurrogatePK, Model):
     def __repr__(self):
         return '<Project({name})>'.format(name=self.name)
 
-class Category(SurrogatePK, Model):
+class Category(PkModel):
     __tablename__ = 'categories'
     name = Column(db.String(80), nullable=False)
     description = Column(db.UnicodeText(), nullable=True)
@@ -476,7 +481,7 @@ class Category(SurrogatePK, Model):
     def __repr__(self):
         return '<Category({name})>'.format(name=self.name)
 
-class Activity(SurrogatePK, Model):
+class Activity(PkModel):
     __tablename__ = 'activities'
     name = Column(db.Enum(
         'create',

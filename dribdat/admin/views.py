@@ -59,14 +59,15 @@ def users(page=1):
 def user(user_id):
     user = User.query.filter_by(id=user_id).first_or_404()
     form = UserForm(obj=user, next=request.args.get('next'))
-    form.roles.choices = [(e.id, e.name) for e in Role.query.order_by('name')]
+    form.roles.choices = [(r.id, r.name) for r in Role.query.order_by('name')]
+    # form.roles.data = [(r.id) for r in user.roles]
 
     if form.validate_on_submit():
         originalhash = user.password
         del form.id
 
-        # for r in form.roles:
-        # del form.roles
+        user.roles = [Role.query.filter_by(id=r).first() for r in form.roles.data]
+        del form.roles
 
         form.populate_obj(user)
         if form.password.data:
@@ -79,15 +80,17 @@ def user(user_id):
         flash('User updated.', 'success')
         return users()
 
+    form.roles.data = [(r.id) for r in user.roles]
     return render_template('admin/user.html', user=user, form=form)
 
 @blueprint.route('/user/new', methods=['GET', 'POST'])
 @login_required
 @admin_required
 def user_new():
-    user = User()
+    user = User(active=True)
     form = UserForm(obj=user, next=request.args.get('next'))
     form.roles.choices = [(e.id, e.name) for e in Role.query.order_by('name')]
+    form.roles.data = [(r.id) for r in user.roles]
 
     if form.validate_on_submit():
         del form.id
@@ -426,13 +429,13 @@ def category_delete(category_id):
 ##############
 ##############
 
-@blueprint.route('/roles')
+@blueprint.route('/presets')
 @login_required
 @admin_required
-def roles():
+def presets():
     roles = Role.query.all()
-    return render_template('admin/roles.html', roles=roles, active='roles')
-
+    categories = Category.query.order_by(Category.event_id.desc()).all()
+    return render_template('admin/presets.html', categories=categories, roles=roles, active='roles')
 
 @blueprint.route('/role/<int:role_id>', methods=['GET', 'POST'])
 @login_required
@@ -449,7 +452,7 @@ def role(role_id):
 
         cache.clear()
         flash('Role updated.', 'success')
-        return roles()
+        return redirect(url_for("admin.presets"))
 
     return render_template('admin/role.html', role=role, form=form)
 
@@ -468,7 +471,7 @@ def role_new():
 
         cache.clear()
         flash('Role added.', 'success')
-        return roles()
+        return redirect(url_for("admin.presets"))
 
     return render_template('admin/rolenew.html', form=form)
 
@@ -484,4 +487,4 @@ def role_delete(role_id):
         cache.clear()
         role.delete()
         flash('Role deleted.', 'success')
-    return roles()
+    return redirect(url_for("admin.presets"))
