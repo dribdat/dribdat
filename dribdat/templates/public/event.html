@@ -52,8 +52,8 @@
   <div class="ibws-fix">
   {% for project in projects %}
     <a href="{{ url_for('public.project', project_id=project.id) }}"
-       class="hexagon project{% if project.phase=='Challenge' %} challenge{% endif %} category-highlight"
-       {% if project.category %}category-id="{{project.category.id}}"{% endif %}
+       class="hexagon project{{ ' challenge' if project.phase=='Challenge' }} category-highlight"
+       category-id="{{ project.category_id }}"
        style="background-color:{{project.logo_color}}; background-image:url('{{project.image_url}}')">
       <div class="hexagontent{{ ' with-icon' if project.logo_icon }}">
         {% if project.logo_icon %}

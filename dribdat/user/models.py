@@ -366,9 +366,8 @@ class Project(SurrogatePK, Model):
             d['event_url'] = self.event.url
             d['event_name'] = self.event.name
         if self.category is not None:
+            d['category_id'] = self.category.id
             d['category_name'] = self.category.name
-        else:
-            d['category_name'] = ''
         return d
 
     def get_schema(self, host_url=''):
