@@ -29,6 +29,7 @@ You can configure your instance with the following basic environment variables:
 * `DRIBDAT_APIKEY` - for connecting clients to the remote [API](#api)
 * `DRIBDAT_NOT_REGISTER` - set to True to disallow creating accounts on this server
 * `DRIBDAT_THEME` - can be set to one of the [Bootswatch themes](https://bootswatch.com/)
+* `DRIBDAT_CLOCK` - use 'up' or 'down' to change the position, and 'off' to hide the countdown everywhere
 
 Support for Web analytics can be configured using one of the following variables:
 

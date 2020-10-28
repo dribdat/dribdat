@@ -165,6 +165,12 @@ nav .navbar-nav .nav-item {
     display: none;
   }
 }
+.home .footer-clock { display: none; }
+.footer-clock.event-countdown {
+  transform: scale(0.5);
+  float: left;
+  z-index: 1000;
+}
 
 .community-embed { margin-top: 60px; }
 .community-embed .fa-comment {

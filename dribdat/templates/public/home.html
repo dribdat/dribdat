@@ -14,14 +14,14 @@
 {% endif %}
 {% endblock %}
 
-{% block js %}
-  <script type="text/javascript" src="{{ url_for('static', filename='libs/FlipClock/flipclock.min.js') }}"></script>
-  <script type="text/javascript" src="{{ url_for('static', filename='js/home.js') }}"></script>
-{% endblock %}
+{% block body_class %}home{% endblock %}
 
 {% block content %}
 <div class="jumbotron home-page">
   {% if current_event %}
+    {% if current_event.countdown and 'up' in config.DRIBDAT_CLOCK %}
+    <div class="event-countdown" data-start="{{ current_event.countdown }}"></div>
+    {% endif %}
     <p>{{current_event.description|markdown}}</p>
     <div class="home-nav">
       <div class="btn-group" role="group" aria-label="Hackathon navigation">
@@ -45,7 +45,7 @@
         {% endif %}
       </div>
     </div>
-    {% if current_event.countdown %}
+    {% if current_event.countdown and 'down' in config.DRIBDAT_CLOCK %}
     <div class="event-countdown" data-start="{{ current_event.countdown }}"></div>
     {% endif %}
   {% endif %}

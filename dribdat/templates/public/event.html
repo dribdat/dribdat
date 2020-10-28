@@ -12,6 +12,8 @@
   <script type="application/ld+json">{{ current_event.get_schema(request.host_url)|safe }}</script>
 {% endblock %}
 
+{% block body_class %}event-home{% endblock %}
+
 {% block content %}
 {% cache 300, 'event-%d' % current_event.id %}
 <center class="nav-categories">
@@ -135,7 +137,7 @@
 
 <center><div role="group" aria-label="Hackathon navigation">
   {% if current_event.countdown %}
-    <a href="{{ url_for('public.home') }}" class="btn btn-sm btn-primary">{{ current_event.countdown|until_date }}</a>
+    <a href="{{ url_for('public.home') }}" class="btn btn-sm btn-default">{{ current_event.countdown|until_date }}</a>
   {% endif %}
   {% if current_event.webpage_url %}
     <a href="{{ current_event.webpage_url }}" class="btn btn-sm btn-default">
