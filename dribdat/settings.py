@@ -27,12 +27,16 @@ class Config(object):
     SERVER_NAME = os_env.get('SERVER_URL', '127.0.0.1:5000')
     SERVER_SSL = os_env.get('SERVER_SSL', None)
     TIME_ZONE = 'UTC'
+
     # Configure web analytics providers
     ANALYTICS_HREF = os_env.get('ANALYTICS_HREF', None)
     ANALYTICS_SIMPLE = os_env.get('ANALYTICS_SIMPLE', None)
     ANALYTICS_GOOGLE = os_env.get('ANALYTICS_GOOGLE', None)
     ANALYTICS_FATHOM = os_env.get('ANALYTICS_FATHOM', None)
     ANALYTICS_FATHOM_SITE = os_env.get('ANALYTICS_FATHOM_SITE', None)
+
+    # Pure vanity: can contain words like up, down, event, projects
+    DRIBDAT_CLOCK = os_env.get('DRIBDAT_CLOCK', 'down')
 
 class ProdConfig(Config):
     """Production configuration."""
@@ -68,7 +72,7 @@ class TestConfig(Config):
     DEBUG = True
     SQLALCHEMY_DATABASE_URI = 'sqlite://'
     SERVER_NAME = 'localhost'
-    # Pytest complains, but not sure how to fully change server name 
+    # Pytest complains, but not sure how to fully change server name
     # SERVER_NAME = 'localhost.localdomain'
     WTF_CSRF_ENABLED = False  # Allows form testing
     PRESERVE_CONTEXT_ON_EXCEPTION = False

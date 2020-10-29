@@ -16,12 +16,12 @@ from flask import current_app
 
 from dribdat.extensions import hashing
 from dribdat.database import (
-    Column,
     db,
     Model,
-    reference_col,
+    Column,
+    PkModel,
     relationship,
-    SurrogatePK,
+    reference_col,
 )
 from dribdat.utils import (
     format_date_range, format_date
@@ -29,30 +29,40 @@ from dribdat.utils import (
 from dribdat.onebox import format_webembed
 from dribdat.user import PROJECT_PROGRESS_PHASE
 
-from sqlalchemy import or_
+from sqlalchemy import Table, or_
 
-class Role(SurrogatePK, Model):
+users_roles = Table('users_roles', db.metadata,
+    Column('user_id', db.Integer, db.ForeignKey('users.id'), primary_key=True),
+    Column('role_id', db.Integer, db.ForeignKey('roles.id'), primary_key=True)
+)
+
+class Role(PkModel):
+    """A role of the contributor."""
+
     __tablename__ = 'roles'
     name = Column(db.String(80), unique=True, nullable=False)
-    user_id = reference_col('users', nullable=True)
-    user = relationship('User', backref='roles')
 
-    def __init__(self, name, **kwargs):
+    def __init__(self, name=None, **kwargs):
         """Create instance."""
-        db.Model.__init__(self, name=name, **kwargs)
+        super().__init__(name=name, **kwargs)
 
     def __repr__(self):
         """Represent instance as a unique string."""
-        return '<Role({name})>'.format(name=self.name)
+        return f"<Role({self.name})>"
 
+    # Number of users
+    def user_count(self):
+        users = User.query.filter(User.roles.contains(self))
+        return users.count()
 
-class User(UserMixin, SurrogatePK, Model):
+class User(UserMixin, PkModel):
     """A user of the app."""
 
     __tablename__ = 'users'
     username = Column(db.String(80), unique=True, nullable=False)
     email = Column(db.String(80), unique=True, nullable=False)
     webpage_url = Column(db.String(128), nullable=True)
+
     sso_id = Column(db.String(128), nullable=True)
     #: The hashed password
     password = Column(db.String(128), nullable=True)
@@ -60,8 +70,14 @@ class User(UserMixin, SurrogatePK, Model):
     active = Column(db.Boolean(), default=False)
     is_admin = Column(db.Boolean(), default=False)
 
+    # External profile
     cardtype = Column(db.String(80), nullable=True)
     carddata = Column(db.String(255), nullable=True)
+
+    # Internal profile
+    roles = relationship('Role', secondary=users_roles, backref='users')
+    my_story = Column(db.UnicodeText(), nullable=True)
+    my_goals = Column(db.UnicodeText(), nullable=True)
 
     @property
     def data(self):
@@ -71,22 +87,34 @@ class User(UserMixin, SurrogatePK, Model):
         }
 
     def socialize(self):
+        self.cardtype = ""
         if self.webpage_url is None:
             self.webpage_url = ""
-        if 'github.com/' in self.webpage_url:
+        elif 'github.com/' in self.webpage_url:
             self.cardtype = 'github'
-            self.carddata = self.webpage_url.strip('/').split('/')[-1]
+            # self.carddata = self.webpage_url.strip('/').split('/')[-1]
         elif 'twitter.com/' in self.webpage_url:
-            self.cardtype = 'twitter'
-            self.carddata = self.webpage_url.strip('/').split('/')[-1]
-        else:
-            gr_size = 40
-            email = self.email.lower().encode('utf-8')
-            gravatar_url = hashlib.md5(email).hexdigest() + "?"
-            gravatar_url += urlencode({'s':str(gr_size)})
-            self.cardtype = 'gravatar'
-            self.carddata = gravatar_url
+            self.cardtype = 'twitter-square'
+            # self.carddata = self.webpage_url.strip('/').split('/')[-1]
+        elif 'linkedin.com/' in self.webpage_url:
+            self.cardtype = 'linkedin-square'
+        elif 'stackoverflow.com/' in self.webpage_url:
+            self.cardtype = 'stack-overflow'
+        gr_size = 40
+        email = self.email.lower().encode('utf-8')
+        gravatar_url = hashlib.md5(email).hexdigest() + "?"
+        gravatar_url += urlencode({'s':str(gr_size)})
+        self.carddata = gravatar_url
         self.save()
+
+    # Retrieve all projects user has joined
+    def joined_projects(self):
+        activities = Activity.query.filter_by(user_id=self.id).order_by(Activity.timestamp.desc()).all()
+        projects = []
+        for a in activities:
+            if not a.project in projects:
+                projects.append(a.project)
+        return projects
 
     def __init__(self, username=None, email=None, password=None, **kwargs):
         """Create instance."""
@@ -108,7 +136,7 @@ class User(UserMixin, SurrogatePK, Model):
         return '<User({username!r})>'.format(username=self.username)
 
 
-class Event(SurrogatePK, Model):
+class Event(PkModel):
     __tablename__ = 'events'
     name = Column(db.String(80), unique=True, nullable=False)
     hostname = Column(db.String(80), nullable=True)
@@ -226,7 +254,7 @@ class Event(SurrogatePK, Model):
     def __repr__(self):
         return '<Event({name})>'.format(name=self.name)
 
-class Project(SurrogatePK, Model):
+class Project(PkModel):
     __tablename__ = 'projects'
     name = Column(db.String(80), unique=True, nullable=False)
     summary = Column(db.String(120), nullable=True)
@@ -366,9 +394,8 @@ class Project(SurrogatePK, Model):
             d['event_url'] = self.event.url
             d['event_name'] = self.event.name
         if self.category is not None:
+            d['category_id'] = self.category.id
             d['category_name'] = self.category.name
-        else:
-            d['category_name'] = ''
         return d
 
     def get_schema(self, host_url=''):
@@ -440,7 +467,7 @@ class Project(SurrogatePK, Model):
     def __repr__(self):
         return '<Project({name})>'.format(name=self.name)
 
-class Category(SurrogatePK, Model):
+class Category(PkModel):
     __tablename__ = 'categories'
     name = Column(db.String(80), nullable=False)
     description = Column(db.UnicodeText(), nullable=True)
@@ -470,7 +497,7 @@ class Category(SurrogatePK, Model):
     def __repr__(self):
         return '<Category({name})>'.format(name=self.name)
 
-class Activity(SurrogatePK, Model):
+class Activity(PkModel):
     __tablename__ = 'activities'
     name = Column(db.Enum(
         'create',

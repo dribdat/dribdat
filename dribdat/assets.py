@@ -22,6 +22,8 @@ js = Bundle(
     "libs/bootstrap/js/bootstrap.min.js",
     "js/plugins.js",
     "js/script.js",
+    "libs/FlipClock/flipclock.min.js",
+    "js/clock.js",
     filters='jsmin',
     output="public/js/common.js"
 )

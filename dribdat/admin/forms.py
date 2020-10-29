@@ -19,7 +19,6 @@ class UserForm(FlaskForm):
     id = HiddenField('id')
     username = StringField(u'Username', [length(max=80), UniqueValidator(User, 'username'), DataRequired()])
     email = StringField(u'E-mail address', [length(max=80), DataRequired()])
-    webpage_url = StringField(u'Online profile', [length(max=128)])
     password = PasswordField(u'New password (optional)', [length(max=128)])
     is_admin = BooleanField(u"Administrator", default=False)
     active = BooleanField(u"Active", default=True)
@@ -77,4 +76,9 @@ class CategoryForm(FlaskForm):
     logo_color = StringField(u'Custom color', [length(max=7)])
     logo_icon = StringField(u'Custom icon (fontawesome.io/icons)', [length(max=20)])
     event_id = SelectField(u'Specific to an event, or global if blank', coerce=int)
+    submit = SubmitField(u'Save')
+
+class RoleForm(FlaskForm):
+    next = HiddenField()
+    name = StringField(u'Name', [length(max=80), DataRequired()])
     submit = SubmitField(u'Save')

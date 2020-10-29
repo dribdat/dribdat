@@ -2,6 +2,32 @@
 
 {% block content %}
 <div class="container">
+    <a href="{{ url_for('admin.role_new') }}" class="btn btn-success btn-lg">Add role</a>
+    <h2>Roles</h2>
+    <span>List of possible participant specialties.</span>
+    <table class='table table-bordered table-hover'>
+        <thead>
+            <tr>
+              <th width="100%">Name</th>
+              <th></th>
+            </tr>
+        </thead>
+        {% for role in roles %}
+        <tr>
+            <td>
+              <a href="{{ url_for('admin.role', role_id=role.id) }}">
+                {{ role.name }}
+              </a>
+            </td>
+            <td>
+                {{ role.user_count() }}
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+<hr />
+<div class="container" id="categories">
     <a href="{{ url_for('admin.category_new') }}" class="btn btn-success btn-lg">Add category</a>
     <h2>Categories</h2>
     <table class='table table-bordered table-hover'>

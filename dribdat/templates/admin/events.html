@@ -11,7 +11,7 @@
               <th width="100%">Name</th>
               <th>Start</th>
               <th>Finish</th>
-              <th>Projects</th>
+              <th>Manage</th>
             </tr>
         </thead>
         {% for event in events %}
@@ -55,7 +55,7 @@
             <td>{{ event.ends_at|format_date }}</td>
             <td>
               <a href="{{ url_for('admin.event_projects', event_id=event.id) }}" class="btn btn-primary">
-                {{ event.project_count }} items
+                {{ event.project_count }}&nbsp;projects
               </a>
             </td>
         </tr>

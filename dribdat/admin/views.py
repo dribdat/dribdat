@@ -6,8 +6,8 @@ from flask_login import login_required, current_user
 from ..extensions import db, cache
 from ..decorators import admin_required
 
-from ..user.models import User, Event, Project, Category
-from .forms import UserForm, EventForm, ProjectForm, CategoryForm
+from ..user.models import Role, User, Event, Project, Category
+from .forms import RoleForm, UserForm, EventForm, ProjectForm, CategoryForm
 
 from datetime import datetime
 import random, string
@@ -59,7 +59,6 @@ def users(page=1):
 def user(user_id):
     user = User.query.filter_by(id=user_id).first_or_404()
     form = UserForm(obj=user, next=request.args.get('next'))
-
     if form.validate_on_submit():
         originalhash = user.password
         del form.id
@@ -81,8 +80,9 @@ def user(user_id):
 @admin_required
 def user_new():
     user = User()
+    user.active = True
     form = UserForm(obj=user, next=request.args.get('next'))
-
+    del form.active
     if form.validate_on_submit():
         del form.id
         form.populate_obj(user)
@@ -118,7 +118,7 @@ def get_random_alphanumeric_string(length=24):
 @blueprint.route('/user/<int:user_id>/reset/')
 @login_required
 @admin_required
-def reset(user_id):
+def user_reset(user_id):
     """Reset user password."""
     user = User.query.filter_by(id=user_id).first_or_404()
     newpw = get_random_alphanumeric_string()
@@ -126,6 +126,19 @@ def reset(user_id):
     db.session.add(user)
     db.session.commit()
     return render_template('admin/reset.html', newpw=newpw, email=user.email)
+
+
+@blueprint.route('/user/<int:user_id>/deactivate/')
+@login_required
+@admin_required
+def user_deactivate(user_id):
+    """Deactivate user account."""
+    user = User.query.filter_by(id=user_id).first_or_404()
+    user.active = False
+    db.session.add(user)
+    db.session.commit()
+    flash('User deactivated.', 'success')
+    return users()
 
 
 ##############
@@ -414,3 +427,68 @@ def category_delete(category_id):
         category.delete()
         flash('Category deleted.', 'success')
     return categories()
+
+
+##############
+##############
+##############
+
+@blueprint.route('/presets')
+@login_required
+@admin_required
+def presets():
+    roles = Role.query.all()
+    categories = Category.query.order_by(Category.event_id.desc()).all()
+    return render_template('admin/presets.html', categories=categories, roles=roles, active='roles')
+
+@blueprint.route('/role/<int:role_id>', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def role(role_id):
+    role = Role.query.filter_by(id=role_id).first_or_404()
+    form = RoleForm(obj=role, next=request.args.get('next'))
+
+    if form.validate_on_submit():
+        form.populate_obj(role)
+
+        db.session.add(role)
+        db.session.commit()
+
+        cache.clear()
+        flash('Role updated.', 'success')
+        return redirect(url_for("admin.presets"))
+
+    return render_template('admin/role.html', role=role, form=form)
+
+@blueprint.route('/role/new', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def role_new():
+    role = Role()
+    form = RoleForm(obj=role, next=request.args.get('next'))
+
+    if form.validate_on_submit():
+        form.populate_obj(role)
+
+        db.session.add(role)
+        db.session.commit()
+
+        cache.clear()
+        flash('Role added.', 'success')
+        return redirect(url_for("admin.presets"))
+
+    return render_template('admin/rolenew.html', form=form)
+
+
+@blueprint.route('/role/<int:role_id>/delete', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def role_delete(role_id):
+    role = Role.query.filter_by(id=role_id).first_or_404()
+    if len(role.users) > 0:
+        flash('No users may be assigned to role in order to delete.', 'warning')
+    else:
+        cache.clear()
+        role.delete()
+        flash('Role deleted.', 'success')
+    return redirect(url_for("admin.presets"))

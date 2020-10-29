@@ -1,6 +1,7 @@
 {% extends "layout.html" %}
+{% import "macros/_misc.html" as misc %}
 
-{% block page_title %}{{project.name}} ~{{project.event.name}}{% endblock %}
+{% block page_title %}{{project.name}} - {{project.event.name}}{% endblock %}
 
 {% block page_meta %}
   <meta property="og:type" content="website">
@@ -22,6 +23,8 @@
 <script type="text/javascript" src="{{ url_for('static', filename='css/rainbow/rainbow-custom.min.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('static', filename='libs/jquery-resizable/dist/jquery-resizable.min.js') }}"></script>
 {% endblock %}
+
+{% block body_class %}project-home{% endblock %}
 
 {% block content %}
 <div class="btn-group project-edit-buttons" role="group" aria-label="Project tools">
@@ -161,18 +164,9 @@
   {% if project_stars %}
     <a name="team"></a>
     <div class="widget widget-team">
-    {% for activity in project_stars %}
-      <a href="{% if activity.user.webpage_url %}{{activity.user.webpage_url}}{% else %}{{ project.contact_url }}{% endif %}" title="{{activity.user.username}}" alt=":-)" target="_blank" class="team-gravatar">
-        <img width="40" height="40" src="https://www.gravatar.com/avatar/{{activity.user.carddata}}"/>
-        {% if activity.user.cardtype == 'github' %}
-          <img src="{{ url_for('static', filename='img/GitHub-Mark.png') }}" width="30" height="30">
-        {% elif activity.user.cardtype == 'twitter' %}
-          <img src="{{ url_for('static', filename='img/Twitter_Social_Icon_Circle_Color.png') }}" width="30" height="30">
-        {% endif %}
-
-        <span>{{activity.user.username}}</span>
-      </a>
-    {% endfor %}
+      {% for activity in project_stars %}
+        {{ misc.render_user_profile(activity.user) }}
+      {% endfor %}
       <p class="started-at">
         <small>
           Launched this at
