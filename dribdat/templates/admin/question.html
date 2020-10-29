@@ -1,0 +1,15 @@
+{% from "macros/_form.html" import render_form %}
+
+{% extends "admin/layout.html" %}
+
+{% block content %}
+<div class="container">
+    <h2>Edit question</h2>
+    {{ render_form(url_for('admin.question', question_id=question.id), form) }}
+
+    <a href="{{ url_for('admin.question_delete', question_id=question.id) }}" class="btn btn-sm btn-danger"
+      onclick="if(!window.confirm('Are you sure you wish to delete this question?')) return false">
+      Delete
+    </a>
+</div>
+{% endblock %}

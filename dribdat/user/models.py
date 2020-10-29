@@ -451,6 +451,7 @@ class Project(PkModel):
     def __repr__(self):
         return '<Project({name})>'.format(name=self.name)
 
+
 class Category(PkModel):
     __tablename__ = 'categories'
     name = Column(db.String(80), nullable=False)
@@ -526,3 +527,40 @@ class Activity(PkModel):
 
     def __repr__(self):
         return '<Activity({name})>'.format(name=self.name)
+
+
+class Question(PkModel):
+    """Extra form fields."""
+
+    __tablename__ = 'questions'
+    title = Column(db.String(200), unique=True, nullable=False)
+    format = Column(db.Enum(
+        'line',
+        'number',
+        'paragraph',
+        name="question_format"))
+    type = Column(db.Enum(
+        'user',
+        'project',
+        'activity',
+        name="question_type"))
+    responses = relationship('Response', back_populates='question')
+
+
+class Response(PkModel):
+    """Extra form responses."""
+
+    __tablename__ = 'responses'
+    content = Column(db.UnicodeText(), nullable=True)
+    object_id = Column(db.Integer)
+    question_id = Column(db.Integer, db.ForeignKey('questions.id'))
+    question = relationship('Question', back_populates='responses')
+
+    def parent(self):
+        if self.question.type == 'user':
+            return User.query.filter_by(user_id=self.object_id).first()
+        if self.question.type == 'project':
+            return Project.query.filter_by(project_id=self.object_id).first()
+        if self.question.type == 'activity':
+            return Activity.query.filter_by(activity_id=self.object_id).first()
+        return None

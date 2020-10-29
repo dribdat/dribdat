@@ -1,7 +1,39 @@
 {% extends "admin/layout.html" %}
 
 {% block content %}
-<div class="container">
+<div class="container" id="categories">
+    <a href="{{ url_for('admin.category_new') }}" class="btn btn-success btn-lg">Add category</a>
+    <h2>Categories</h2>
+    <span>Themes or challenges assignable to projects.</span>
+    <table class='table table-bordered table-hover'>
+        <thead>
+            <tr>
+              <th>Name</th>
+              <th>Event</th>
+              <th>Manage</th>
+            </tr>
+        </thead>
+        {% for category in categories %}
+        <tr>
+            <td>
+              <a href="{{ url_for('admin.category', category_id=category.id) }}">
+                {{ category.name }}
+              </a>
+            </td>
+            <td>{{ category.event.name }}</td>
+            <td>
+              <a href="{{ url_for('admin.category_projects', category_id=category.id) }}" class="btn btn-sm btn-primary">
+                {{ category.project_count() }}&nbsp;projects
+              </a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+
+<hr />
+
+<div class="container" id="roles">
     <a href="{{ url_for('admin.role_new') }}" class="btn btn-success btn-lg">Add role</a>
     <h2>Roles</h2>
     <span>List of possible participant specialties.</span>
@@ -26,30 +58,33 @@
         {% endfor %}
     </table>
 </div>
+
 <hr />
-<div class="container" id="categories">
-    <a href="{{ url_for('admin.category_new') }}" class="btn btn-success btn-lg">Add category</a>
-    <h2>Categories</h2>
+
+<div class="container" id="roles">
+    <a href="{{ url_for('admin.question_new') }}" class="btn btn-success btn-lg">Add question</a>
+    <h2>Questions</h2>
+    <span>Additional form fields.</span>
     <table class='table table-bordered table-hover'>
         <thead>
             <tr>
-              <th>Name</th>
-              <th>Event</th>
-              <th>Manage</th>
+              <th width="100%">Title</th>
+              <th>Type</th>
+              <th>Count</th>
             </tr>
         </thead>
-        {% for category in categories %}
+        {% for q in questions %}
         <tr>
             <td>
-              <a href="{{ url_for('admin.category', category_id=category.id) }}">
-                {{ category.name }}
+              <a href="{{ url_for('admin.question', role_id=q.id) }}">
+                {{ q.name }}
               </a>
             </td>
-            <td>{{ category.event.name }}</td>
             <td>
-              <a href="{{ url_for('admin.category_projects', category_id=category.id) }}" class="btn btn-sm btn-primary">
-                {{ category.project_count() }}&nbsp;projects
-              </a>
+                {{ q.type }}
+            </td>
+            <td>
+                {{ q.responses.count() }}
             </td>
         </tr>
         {% endfor %}

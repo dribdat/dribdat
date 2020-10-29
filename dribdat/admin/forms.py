@@ -84,3 +84,10 @@ class RoleForm(FlaskForm):
     next = HiddenField()
     name = StringField(u'Name', [length(max=80), DataRequired()])
     submit = SubmitField(u'Save')
+
+class QuestionForm(FlaskForm):
+    next = HiddenField()
+    type = SelectField(u'Type', coerce=int)
+    title = StringField(u'Title', [length(max=200), DataRequired()])
+    format = SelectField(u'Format', coerce=int)
+    submit = SubmitField(u'Save')

@@ -6,7 +6,7 @@ from flask_login import login_required, current_user
 from ..extensions import db, cache
 from ..decorators import admin_required
 
-from ..user.models import Role, User, Event, Project, Category
+from ..user.models import Role, User, Event, Project, Category, Question, Response
 from .forms import RoleForm, UserForm, EventForm, ProjectForm, CategoryForm
 
 from datetime import datetime
@@ -435,7 +435,11 @@ def category_delete(category_id):
 def presets():
     roles = Role.query.all()
     categories = Category.query.order_by(Category.event_id.desc()).all()
-    return render_template('admin/presets.html', categories=categories, roles=roles, active='roles')
+    questions = Question.query.order_by(Question.type, Question.title.asc()).all()
+    return render_template('admin/presets.html',
+        categories=categories, roles=roles, questions=questions,
+        active='roles'
+    )
 
 @blueprint.route('/role/<int:role_id>', methods=['GET', 'POST'])
 @login_required
@@ -488,3 +492,58 @@ def role_delete(role_id):
         role.delete()
         flash('Role deleted.', 'success')
     return redirect(url_for("admin.presets"))
+
+
+
+
+@blueprint.route('/question/<int:question_id>', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def question(question_id):
+  question = Question.query.filter_by(id=question_id).first_or_404()
+  form = QuestionForm(obj=question, next=request.args.get('next'))
+
+  if form.validate_on_submit():
+      form.populate_obj(question)
+
+      db.session.add(question)
+      db.session.commit()
+
+      cache.clear()
+      flash('Question updated.', 'success')
+      return redirect(url_for("admin.presets"))
+
+  return render_template('admin/question.html', question=question, form=form)
+
+@blueprint.route('/question/new', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def question_new():
+  question = Question()
+  form = QuestionForm(obj=question, next=request.args.get('next'))
+
+  if form.validate_on_submit():
+      form.populate_obj(question)
+
+      db.session.add(question)
+      db.session.commit()
+
+      cache.clear()
+      flash('Question added.', 'success')
+      return redirect(url_for("admin.presets"))
+
+  return render_template('admin/questionnew.html', form=form)
+
+
+@blueprint.route('/question/<int:question_id>/delete', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def question_delete(question_id):
+  question = Question.query.filter_by(id=question_id).first_or_404()
+  if len(question.responses) > 0:
+      flash('No responses may be assigned to a question in order to delete.', 'warning')
+  else:
+      cache.clear()
+      question.delete()
+      flash('Question deleted.', 'success')
+  return redirect(url_for("admin.presets"))
