@@ -765,10 +765,10 @@ pre { color: #333; background: white; }
   display: inline-block;
 }
 .profile-projects .card .project-image {
-    height: 7em;
-    width: 6em;
-    float: left;
-    padding: 6px 0px;
+  width: 5em;
+  float: left;
+  padding: 6px 10px;
+  margin-bottom: 5em;
 }
 .profile-projects .card-body {
   padding: 10px;
