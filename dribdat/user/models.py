@@ -109,7 +109,9 @@ class User(UserMixin, PkModel):
 
     # Retrieve all projects user has joined
     def joined_projects(self):
-        activities = Activity.query.filter_by(user_id=self.id).order_by(Activity.timestamp.desc()).all()
+        activities = Activity.query.filter_by(
+                user_id=self.id, name='star'
+            ).order_by(Activity.timestamp.desc()).all()
         projects = []
         for a in activities:
             if not a.project in projects and not a.project.is_hidden:
