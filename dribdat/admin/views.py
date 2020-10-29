@@ -59,16 +59,9 @@ def users(page=1):
 def user(user_id):
     user = User.query.filter_by(id=user_id).first_or_404()
     form = UserForm(obj=user, next=request.args.get('next'))
-    form.roles.choices = [(r.id, r.name) for r in Role.query.order_by('name')]
-    # form.roles.data = [(r.id) for r in user.roles]
-
     if form.validate_on_submit():
         originalhash = user.password
         del form.id
-
-        user.roles = [Role.query.filter_by(id=r).first() for r in form.roles.data]
-        del form.roles
-
         form.populate_obj(user)
         if form.password.data:
             user.set_password(form.password.data)
@@ -80,18 +73,16 @@ def user(user_id):
         flash('User updated.', 'success')
         return users()
 
-    form.roles.data = [(r.id) for r in user.roles]
     return render_template('admin/user.html', user=user, form=form)
 
 @blueprint.route('/user/new', methods=['GET', 'POST'])
 @login_required
 @admin_required
 def user_new():
-    user = User(active=True)
+    user = User()
+    user.active = True
     form = UserForm(obj=user, next=request.args.get('next'))
-    form.roles.choices = [(e.id, e.name) for e in Role.query.order_by('name')]
-    form.roles.data = [(r.id) for r in user.roles]
-
+    del form.active
     if form.validate_on_submit():
         del form.id
         form.populate_obj(user)
@@ -127,7 +118,7 @@ def get_random_alphanumeric_string(length=24):
 @blueprint.route('/user/<int:user_id>/reset/')
 @login_required
 @admin_required
-def reset(user_id):
+def user_reset(user_id):
     """Reset user password."""
     user = User.query.filter_by(id=user_id).first_or_404()
     newpw = get_random_alphanumeric_string()
@@ -135,6 +126,19 @@ def reset(user_id):
     db.session.add(user)
     db.session.commit()
     return render_template('admin/reset.html', newpw=newpw, email=user.email)
+
+
+@blueprint.route('/user/<int:user_id>/deactivate/')
+@login_required
+@admin_required
+def user_deactivate(user_id):
+    """Deactivate user account."""
+    user = User.query.filter_by(id=user_id).first_or_404()
+    user.active = False
+    db.session.add(user)
+    db.session.commit()
+    flash('User deactivated.', 'success')
+    return users()
 
 
 ##############

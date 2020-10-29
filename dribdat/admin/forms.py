@@ -3,7 +3,7 @@ from flask_wtf import FlaskForm
 from wtforms import (
     HiddenField, SubmitField, BooleanField,
     StringField, PasswordField, SelectField,
-    TextAreaField, SelectMultipleField
+    TextAreaField
 )
 from dribdat.user.models import User, Project
 # from wtforms.fields.html5 import DateTimeField
@@ -19,8 +19,6 @@ class UserForm(FlaskForm):
     id = HiddenField('id')
     username = StringField(u'Username', [length(max=80), UniqueValidator(User, 'username'), DataRequired()])
     email = StringField(u'E-mail address', [length(max=80), DataRequired()])
-    webpage_url = StringField(u'Online profile (https://..)', [length(max=128)])
-    roles = SelectMultipleField(u'Roles', coerce=int)
     password = PasswordField(u'New password (optional)', [length(max=128)])
     is_admin = BooleanField(u"Administrator", default=False)
     active = BooleanField(u"Active", default=True)

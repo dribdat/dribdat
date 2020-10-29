@@ -73,7 +73,11 @@ class User(UserMixin, PkModel):
     # External profile
     cardtype = Column(db.String(80), nullable=True)
     carddata = Column(db.String(255), nullable=True)
+
+    # Internal profile
     roles = relationship('Role', secondary=users_roles, backref='users')
+    my_story = Column(db.UnicodeText(), nullable=True)
+    my_goals = Column(db.UnicodeText(), nullable=True)
 
     @property
     def data(self):

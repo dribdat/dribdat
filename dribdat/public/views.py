@@ -55,6 +55,13 @@ def home():
     return render_template("public/home.html",
         events=events, current_event=cur_event)
 
+@blueprint.route('/user/<int:user_id>', methods=['GET'])
+def user(user_id):
+    user = User.query.filter_by(id=user_id).first_or_404()
+    event = current_event()
+    return render_template("public/userprofile.html",
+        current_event=event, event=event, user=user)
+
 @blueprint.route("/event/<int:event_id>")
 def event(event_id):
     event = Event.query.filter_by(id=event_id).first_or_404()

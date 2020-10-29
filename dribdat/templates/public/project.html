@@ -164,7 +164,8 @@
     <a name="team"></a>
     <div class="widget widget-team">
     {% for activity in project_stars %}
-      <a href="{% if activity.user.webpage_url %}{{activity.user.webpage_url}}{% else %}{{ project.contact_url }}{% endif %}" title="{{activity.user.username}}" alt=":-)" target="_blank" class="team-gravatar">
+      <a href="{{ url_for('public.user', user_id=activity.user.id) }}" title="Show profile" class="team-gravatar">
+
         <img width="40" height="40" src="https://www.gravatar.com/avatar/{{activity.user.carddata}}"/>
         {% if activity.user.cardtype == 'github' %}
           <img src="{{ url_for('static', filename='img/GitHub-Mark.png') }}" width="30" height="30">

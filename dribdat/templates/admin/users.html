@@ -30,7 +30,7 @@
                 Email
               </a>
             </td><td>
-              <a href="{{ url_for('admin.reset', user_id=user.id) }}" class="btn btn-sm btn-danger" onclick="if(!window.confirm('Reset the password of this user?')) return false">
+              <a href="{{ url_for('admin.user_reset', user_id=user.id) }}" class="btn btn-sm btn-danger" onclick="if(!window.confirm('Reset the password of this user?')) return false">
                 Reset
               </a>
             </td>

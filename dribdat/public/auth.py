@@ -6,7 +6,7 @@ from flask import (Blueprint, request, render_template, flash, url_for,
 
 from flask_login import login_user, logout_user, login_required, current_user
 
-from dribdat.user.models import User, Event
+from dribdat.user.models import User, Event, Role
 from dribdat.extensions import login_manager
 from dribdat.utils import flash_errors, random_password
 from dribdat.public.forms import LoginForm, UserForm
@@ -100,18 +100,29 @@ def forgot():
 def user_profile():
     user = current_user
     form = UserForm(obj=user, next=request.args.get('next'))
+    form.roles.choices = [(r.id, r.name) for r in Role.query.order_by('name')]
+
     if form.validate_on_submit():
+        # Assign roles
+        user.roles = [Role.query.filter_by(id=r).first() for r in form.roles.data]
+        del form.roles
+
         originalhash = user.password
         form.populate_obj(user)
+
+        # Assign password if changed
         if form.password.data:
             user.set_password(form.password.data)
         else:
             user.password = originalhash
+
         db.session.add(user)
         db.session.commit()
         user.socialize()
         flash('Profile updated.', 'success')
         return redirect(url_for('public.home'))
+
+    form.roles.data = [(r.id) for r in user.roles]
     return render_template('public/user.html', user=user, form=form, active='profile')
 
 
