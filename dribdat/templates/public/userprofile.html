@@ -4,43 +4,94 @@
 {% block body_class %}userprofile{% endblock %}
 
 {% block content %}
-    <h2>{{ user.username }}</h2>
+{% cache 30, 'user-%d' % user.id %}
+<div class="row">
 
-    <a href="{% if user.webpage_url %}{{user.webpage_url}}{% else %}{{ project.contact_url }}{% endif %}" title="{{user.username}}" alt=":-)" target="_blank" class="team-gravatar">
-        <img width="40" height="40" src="https://www.gravatar.com/avatar/{{user.carddata}}"/>
-    {% if user.cardtype == 'github' %}
-        <img src="{{ url_for('static', filename='img/GitHub-Mark.png') }}" width="30" height="30">
-    {% elif user.cardtype == 'twitter' %}
-        <img src="{{ url_for('static', filename='img/Twitter_Social_Icon_Circle_Color.png') }}" width="30" height="30">
-    {% endif %}
-    </a>
+    <h1 class="profile-header">
+        <img src="https://www.gravatar.com/avatar/{{user.carddata}}"/>
+        <span>
+            {{ user.username }}
+        </span>
+    </h1>
 
-    <table border="0" cellpadding="10" style="margin-bottom:1em;">
-    {% if user.webpage_url %}
-    <tr><th style="width:10em">Web link</th><td>
-        <a href="{{ user.webpage_url }}" target="_blank">{{ user.webpage_url }}</a>
-    </td></tr>
-    {% endif %}
-    {% if user.cardtype and user.carddata %}
-    <tr><th>Social card</th><td>
-        {{ user.cardtype }} ({{ user.carddata.length }}b)
-    </td></tr>
-    {% endif %}
-    <tr><th>Roles</th><td><ul style="margin: 0; padding: 0 0 0 1em;">
+</div>
+<div class="row">
+
+    <div class="col-sm">
+        {% if user.webpage_url %}
+        <div class="profile-social">
+            <a href="{{ user.webpage_url }}" target="_blank">
+        {% if user.cardtype == '' %}
+            <i class="fa fa-globe"></i>
+            <span>Website</span>
+        {% else %}
+            <i class="fa fa-{{ user.cardtype }}"></i>
+            <span>Follow</span>
+        {% endif %}
+            </a>
+        </div>
+        {% endif %}
+    </div>
+    <div class="col-sm">
+        <ul class="profile-roles">
         {% for role in user.roles %}
-        <li>{{ role.name }}</li>
+            <li>{{ role.name }}</li>
         {% endfor %}
-    </ul></td></tr>
-    {% if user.my_story %}
-    <tr><th>My story</th><td>
-        {{ user.my_story }}
-    </td></tr>
-    {% endif %}
-    {% if user.my_goals %}
-    <tr><th>My goals</th><td>
-        {{ user.my_goals }}
-    </td></tr>
-    {% endif %}
-    </table>
+        </ul>
+    </div>
 
+</div>
+<div class="row jumbotron profile-projects">
+    {% for project in projects %}
+    <a class="card project"
+       href="{{ url_for('public.project', project_id=project.id) }}">
+
+      {% if project.image_url %}
+        <img class="project-image" src="{{project.image_url}}">
+      {% endif %}
+
+      <div class="project-score">
+        <div class="progress" title="A score based on profile completeness and voting results">
+          <div class="progress-bar" role="progressbar" aria-valuenow="{{project.score}}" aria-valuemin="0" aria-valuemax="70" style="width:{{project.score}}%">
+            {{project.score}}
+          </div>
+        </div>
+      </div>
+
+      <div class="card-body">
+        <h5 class="card-title">{{ project.name }}</h5>
+        <p class="card-text">{{ project.summary }}</p>
+      </div>
+
+    </a>
+    {% endfor %}
+</div>
+<div class="row">
+
+    {% if user.my_story %}
+    <div class="profile-story">
+        <h2>Story</h2>
+        <div class="profile-text">
+            {{ user.my_story|markdown }}
+        </div>
+    </div>
+    {% endif %}
+
+    {% if user.my_goals %}
+    <div class="profile-goals">
+        <h2>Goals</h2>
+        <div class="profile-text">
+            {{ user.my_story|markdown }}
+        </div>
+    </div>
+    {% endif %}
+
+    {% if current_user and current_user.is_authenticated and current_user.id == user.id %}
+    <a href="{{ url_for('auth.user_profile') }}" class="btn btn-warning">
+      <i class="fa fa-child"></i>
+      Edit Profile
+    </a>
+    {% endif %}
+</div>
+{% endcache %}
 {% endblock %}

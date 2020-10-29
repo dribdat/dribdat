@@ -120,7 +120,7 @@ def user_profile():
         db.session.commit()
         user.socialize()
         flash('Profile updated.', 'success')
-        return redirect(url_for('public.home'))
+        return redirect(url_for('public.user', user_id=user.id))
 
     form.roles.data = [(r.id) for r in user.roles]
     return render_template('public/user.html', user=user, form=form, active='profile')

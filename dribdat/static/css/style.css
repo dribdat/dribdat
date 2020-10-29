@@ -702,6 +702,8 @@ pre { color: #333; background: white; }
   }
 }
 
+/* avatar and profile styles */
+
 .team-gravatar img {
   margin: 5px;
 }
@@ -713,7 +715,7 @@ pre { color: #333; background: white; }
   width: 200px;
   height: 60px;
   display: inline-block;
-  background: white;
+  background: rgba(0,0,0,0.1);
   border: 2px solid #fff;
   padding: 2px; margin-right: 5px;
   overflow: hidden;
@@ -721,6 +723,77 @@ pre { color: #333; background: white; }
 .team-gravatar:hover {
   text-decoration: none;
   border: 2px solid blue;
+}
+.profile-header {
+  margin-top: 1em;
+}
+.profile-header img {
+  width: 80px;
+  border-radius: 50%;
+  -moz-border-radius: 50%;
+  -webkit-border-radius: 50%;
+  margin-right: 25px;
+}
+.profile-social img, .profile-social i {
+  width: 50px;
+  font-size: 50px;
+  margin-left: 160px;
+  display: inline-block;
+  float: left;
+  color: #333;
+}
+.profile-social span {
+  line-height: 50px;
+  color: #007bff;
+}
+.profile-roles {
+  margin: 0; padding: 0;
+}
+.profile-roles li {
+  list-style: none;
+  line-height: 2em;
+  font-size: 140%;
+  font-weight: bold;
+}
+.profile-projects { padding: 1em; }
+.profile-projects .card.project {
+  width: 30%;
+  height: 7em;
+  overflow: hidden;
+  display: inline-block;
+}
+.profile-projects .card-body {
+  padding: 10px;
+}
+.profile-projects .card-text {
+  font-size: 80%; color: #999;
+  height: 3em; overflow: hidden;
+}
+.profile-projects .card-body * {
+  color: #333;
+  margin: 0px;
+}
+.profile-projects a:hover {
+  text-decoration: none;
+}
+.profile-projects .project-score {
+  float: none; margin: 5px;
+  text-align: left;
+}
+.team-roles {
+  display: inline-block;
+  float: left;
+  margin: -2px;
+}
+.team-roles em {
+    display: block;
+    font-size: 70%;
+    font-style: normal;
+    color: #eee;
+    background: rgba(0,0,0,0.3);
+    padding: 1px 3px;
+    border-radius: 4px;
+    margin-bottom: 1px;
 }
 
 /* Embed view of the projects */

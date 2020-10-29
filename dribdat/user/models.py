@@ -87,22 +87,34 @@ class User(UserMixin, PkModel):
         }
 
     def socialize(self):
+        self.cardtype = ""
         if self.webpage_url is None:
             self.webpage_url = ""
-        if 'github.com/' in self.webpage_url:
+        elif 'github.com/' in self.webpage_url:
             self.cardtype = 'github'
-            self.carddata = self.webpage_url.strip('/').split('/')[-1]
+            # self.carddata = self.webpage_url.strip('/').split('/')[-1]
         elif 'twitter.com/' in self.webpage_url:
-            self.cardtype = 'twitter'
-            self.carddata = self.webpage_url.strip('/').split('/')[-1]
-        else:
-            gr_size = 40
-            email = self.email.lower().encode('utf-8')
-            gravatar_url = hashlib.md5(email).hexdigest() + "?"
-            gravatar_url += urlencode({'s':str(gr_size)})
-            self.cardtype = 'gravatar'
-            self.carddata = gravatar_url
+            self.cardtype = 'twitter-square'
+            # self.carddata = self.webpage_url.strip('/').split('/')[-1]
+        elif 'linkedin.com/' in self.webpage_url:
+            self.cardtype = 'linkedin-square'
+        elif 'stackoverflow.com/' in self.webpage_url:
+            self.cardtype = 'stack-overflow'
+        gr_size = 40
+        email = self.email.lower().encode('utf-8')
+        gravatar_url = hashlib.md5(email).hexdigest() + "?"
+        gravatar_url += urlencode({'s':str(gr_size)})
+        self.carddata = gravatar_url
         self.save()
+
+    # Retrieve all projects user has joined
+    def joined_projects(self):
+        activities = Activity.query.filter_by(user_id=self.id).order_by(Activity.timestamp.desc()).all()
+        projects = []
+        for a in activities:
+            if not a.project in projects:
+                projects.append(a.project)
+        return projects
 
     def __init__(self, username=None, email=None, password=None, **kwargs):
         """Create instance."""
