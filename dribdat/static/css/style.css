@@ -706,6 +706,7 @@ pre { color: #333; background: white; }
 
 .team-gravatar img {
   margin: 5px;
+  vertical-align: top;
 }
 .team-gravatar span {
   width: 48%;
@@ -758,10 +759,16 @@ pre { color: #333; background: white; }
 }
 .profile-projects { padding: 1em; }
 .profile-projects .card.project {
-  width: 30%;
+  width: 45%;
   height: 7em;
   overflow: hidden;
   display: inline-block;
+}
+.profile-projects .card .project-image {
+    height: 7em;
+    width: 6em;
+    float: left;
+    padding: 6px 0px;
 }
 .profile-projects .card-body {
   padding: 10px;
@@ -778,7 +785,8 @@ pre { color: #333; background: white; }
   text-decoration: none;
 }
 .profile-projects .project-score {
-  float: none; margin: 5px;
+  float: none;
+  margin: 5px;
   text-align: left;
 }
 .team-roles {
