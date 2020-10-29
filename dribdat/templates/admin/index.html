@@ -21,10 +21,11 @@
      user accounts</a> here.
 </p>
 
-<div class="jumbotron" style="background:none">
+<div class="jumbotron admin-stats" style="background:none; min-width: 600px;">
+  <img src="{{ url_for('static', filename='img/logo7_gray.png') }}" align="left" height="40">
   <h2>dribdat</h2>
 {% for stat in stats %}
-    <div class="card stat" style="width: 20%; display: inline-block">
+    <div class="card stat" style="height: {{ stat.height }}em">
     {% if stat.img %}
         <img src="{{ stat.img }}" class="card-img-top">
     {% endif %}
@@ -50,7 +51,7 @@
 <script>
 $.getJSON('/api/project/activity.json?limit=100', function(data) {
     var yourVlSpec = {
-      "width": 525,
+      "width": "600",
       "$schema": "https://vega.github.io/schema/vega-lite/v2.0.json",
       "description": "Project activities",
       "data": {

@@ -49,6 +49,13 @@ form input[type="checkbox"] {
 
 .admin .container table td { vertical-align: middle; }
 
+.admin .card.stat {
+  width: 20%;
+  display: inline-block;
+  vertical-align: bottom;
+  background: #f55; color: #fff;
+}
+
 /* footer */
 
 footer {
@@ -759,14 +766,22 @@ pre { color: #333; background: white; }
   font-weight: bold;
 }
 .profile-projects {
-  padding: 1em;
-  margin-top: 1em;
+  padding: 1em 2em;
+  margin: 1em -1em;
+  overflow-x: auto;
+  background: #eee;
+  width: 100%;
 }
-.profile-projects .card.project {
-  width: 45%;
-  height: 7em;
+.profile-projects::-webkit-scrollbar {
+  display: none;
+}
+.profile-projects .card {
+  height: 8em;
+  width: 20em;
+  margin-right: 5px;
   overflow: hidden;
   display: inline-block;
+  padding: 0px;
 }
 .profile-projects .card .project-image {
   width: 5em;
@@ -789,9 +804,13 @@ pre { color: #333; background: white; }
   text-decoration: none;
 }
 .profile-projects .project-score {
-  float: none;
+  float: right;
   margin: 5px;
-  text-align: left;
+  text-align: center;
+  width: 100px;
+}
+.profile-projects center {
+  margin-top: 5px;
 }
 .team-roles {
   display: inline-block;
@@ -807,6 +826,11 @@ pre { color: #333; background: white; }
     padding: 1px 3px;
     border-radius: 4px;
     margin-bottom: 1px;
+}
+@media (max-width: 1000px) {
+  .profile-projects .project-score,
+  .profile-projects .card .project-image
+  { display: none; }
 }
 
 /* Embed view of the projects */

@@ -50,33 +50,36 @@
     </div>
 
 </div>
-<div class="row jumbotron profile-projects">
+<div class="profile-projects container-fluid">
     {% if not projects and current_user and current_user.is_authenticated and current_user.id == user.id %}
         <h5><i>No projects here. Time to <b>Join</b> or <b>Start</b> something awesome!</i></h5>
     {% endif %}
+    <div class="row flex-row flex-nowrap">
     {% for project in projects %}
-    <a class="card project"
-       href="{{ url_for('public.project', project_id=project.id) }}">
+        <a class="col-5 card project"
+           href="{{ url_for('public.project', project_id=project.id) }}">
 
-      {% if project.image_url %}
-        <img class="project-image" src="{{project.image_url}}">
-      {% endif %}
+          {% if project.image_url %}
+            <img class="project-image" src="{{project.image_url}}">
+          {% endif %}
 
-      <div class="project-score">
-        <div class="progress" title="A score based on profile completeness and voting results">
-          <div class="progress-bar" role="progressbar" aria-valuenow="{{project.score}}" aria-valuemin="0" aria-valuemax="70" style="width:{{project.score}}%">
-            {{project.score}}
+          <div class="project-score">
+            <div class="progress" title="A score based on profile completeness and voting results">
+              <div class="progress-bar" role="progressbar" aria-valuenow="{{project.score}}" aria-valuemin="0" aria-valuemax="70" style="width:{{project.score}}%">
+                {{project.score}}
+              </div>
+            </div>
+            <center>{{ project.event.name }}</center>
           </div>
-        </div>
-      </div>
 
-      <div class="card-body">
-        <h5 class="card-title">{{ project.name }}</h5>
-        <p class="card-text">{{ project.summary }}</p>
-      </div>
+          <div class="card-body">
+            <h5 class="card-title">{{ project.name }}</h5>
+            <p class="card-text">{{ project.summary }}</p>
+          </div>
 
-    </a>
+        </a>
     {% endfor %}
+    </div>
 </div>
 
 {% if user.my_story %}

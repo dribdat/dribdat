@@ -26,17 +26,21 @@ def index():
     event = Event.query.filter_by(is_current=True).first()
     stats = [
         {
-            'value': User.query.count(),
-            'text': 'users registered'
-        },{
             'value': Event.query.count(),
-            'text': 'active events'
+            'text': 'active events',
+            'height': 6
+        },{
+            'value': User.query.count(),
+            'text': 'users registered',
+            'height': 7
         },{
             'value': Project.query.filter(Project.progress<0).count(),
-            'text': 'challenges posted'
+            'text': 'challenges posted',
+            'height': 8
         },{
             'value': Project.query.filter(Project.progress>=0).count(),
-            'text': 'projects started'
+            'text': 'projects started',
+            'height': 9
         },
     ]
     return render_template('admin/index.html', stats=stats, default_event=event, active='index')
