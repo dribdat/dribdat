@@ -179,8 +179,6 @@
   {% endif %}
 
   </div>
-{% endif %}
-{% if not project.is_challenge %}
   <div class="tab-pane fade" id="readme-md" role="tabpanel" aria-labelledby="readme-tab-md">
 {% endif %}
 
@@ -225,7 +223,7 @@
 
     <!-- <p class="details-basic">
       <span class="updated">
-        Updated
+        Last update
         <a href="#" id="show-history">{{ project.updated_at|format_datetime }}</a>
       </span>
       <span class="maintainer">
@@ -249,6 +247,12 @@
       <a href="{{ project.source_url }}" class="btn btn-lg" target="_blank" title="Source code"><span>&#x1f4bb;</span> Source</a>
     {% endif %}
   </div>
+
+  {% if project_starred and current_user.is_admin %}
+    <a class="btn btn-secondary" href="{{ url_for('public.project_unstar', project_id=project.id) }}" class="project-star">
+      <i class="fa fa-star"></i> Leave
+    </a>
+  {% endif %}
 
   {% if project.category %}
   <div class="panel panel-default category-details">

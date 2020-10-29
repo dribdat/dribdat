@@ -65,7 +65,7 @@
 
       {% if current_user and current_user.is_authenticated %}
           <li class="nav-item">
-            <a class="nav-link{{ ' active' if active == 'profile' }}" href="{{ url_for('public.user') }}">
+            <a class="nav-link{{ ' active' if active == 'profile' }}" href="{{ url_for('public.user', user_id=current_user.id) }}">
               <i class="fa fa-child"></i>
               Profile
               <b>{{ current_user.username }}</b>

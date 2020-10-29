@@ -758,7 +758,10 @@ pre { color: #333; background: white; }
   font-size: 140%;
   font-weight: bold;
 }
-.profile-projects { padding: 1em; }
+.profile-projects {
+  padding: 1em;
+  margin-top: 1em;
+}
 .profile-projects .card.project {
   width: 45%;
   height: 7em;

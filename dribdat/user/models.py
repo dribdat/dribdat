@@ -100,7 +100,7 @@ class User(UserMixin, PkModel):
             self.cardtype = 'linkedin-square'
         elif 'stackoverflow.com/' in self.webpage_url:
             self.cardtype = 'stack-overflow'
-        gr_size = 40
+        gr_size = 80
         email = self.email.lower().encode('utf-8')
         gravatar_url = hashlib.md5(email).hexdigest() + "?"
         gravatar_url += urlencode({'s':str(gr_size)})
@@ -112,7 +112,7 @@ class User(UserMixin, PkModel):
         activities = Activity.query.filter_by(user_id=self.id).order_by(Activity.timestamp.desc()).all()
         projects = []
         for a in activities:
-            if not a.project in projects:
+            if not a.project in projects and not a.project.is_hidden:
                 projects.append(a.project)
         return projects
 

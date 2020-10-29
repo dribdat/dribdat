@@ -39,7 +39,8 @@ class LoginForm(FlaskForm):
 
 class UserForm(FlaskForm):
     id = HiddenField('id')
-    roles = SelectMultipleField(u'Roles', coerce=int)
+    roles = SelectMultipleField(u'Roles', coerce=int,
+        description="Choose one or more team roles for yourself.")
     webpage_url = StringField(u'Online profile', [length(max=128)],
         description="Link to your website or a social media profile.")
     my_story = TextAreaField(u'My story',

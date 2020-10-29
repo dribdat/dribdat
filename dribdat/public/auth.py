@@ -122,7 +122,10 @@ def user_profile():
         flash('Profile updated.', 'success')
         return redirect(url_for('public.user', user_id=user.id))
 
-    form.roles.data = [(r.id) for r in user.roles]
+    if not form.roles.choices:
+        del form.roles
+    else:
+        form.roles.data = [(r.id) for r in user.roles]
     return render_template('public/useredit.html', user=user, form=form, active='profile')
 
 

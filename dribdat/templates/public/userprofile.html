@@ -4,7 +4,6 @@
 {% block body_class %}userprofile{% endblock %}
 
 {% block content %}
-{% cache 30, 'user-%d' % user.id %}
 <div class="row">
 
     <h1 class="profile-header">
@@ -17,8 +16,8 @@
 </div>
 <div class="row">
 
+    {% if user.webpage_url %}
     <div class="col-sm">
-        {% if user.webpage_url %}
         <div class="profile-social">
             <a href="{{ user.webpage_url }}" target="_blank">
         {% if user.cardtype == '' %}
@@ -30,8 +29,18 @@
         {% endif %}
             </a>
         </div>
-        {% endif %}
     </div>
+    {% endif %}
+
+    {% if current_user and current_user.is_authenticated and current_user.id == user.id %}
+    <div class="col-sm">
+        <a href="{{ url_for('auth.user_profile') }}" class="btn btn-warning">
+          <i class="fa fa-child"></i>
+          Edit Profile
+        </a>
+    </div>
+    {% endif %}
+
     <div class="col-sm">
         <ul class="profile-roles">
         {% for role in user.roles %}
@@ -42,6 +51,9 @@
 
 </div>
 <div class="row jumbotron profile-projects">
+    {% if not projects and current_user and current_user.is_authenticated and current_user.id == user.id %}
+        <h5><i>No projects here. Time to <b>Join</b> or <b>Start</b> something awesome!</i></h5>
+    {% endif %}
     {% for project in projects %}
     <a class="card project"
        href="{{ url_for('public.project', project_id=project.id) }}">
@@ -66,32 +78,25 @@
     </a>
     {% endfor %}
 </div>
+
+{% if user.my_story %}
 <div class="row">
-
-    {% if user.my_story %}
     <div class="profile-story">
-        <h2>Story</h2>
+        <h2>My Story</h2>
         <div class="profile-text">
             {{ user.my_story|markdown }}
         </div>
     </div>
-    {% endif %}
-
-    {% if user.my_goals %}
-    <div class="profile-goals">
-        <h2>Goals</h2>
-        <div class="profile-text">
-            {{ user.my_story|markdown }}
-        </div>
-    </div>
-    {% endif %}
-
-    {% if current_user and current_user.is_authenticated and current_user.id == user.id %}
-    <a href="{{ url_for('auth.user_profile') }}" class="btn btn-warning">
-      <i class="fa fa-child"></i>
-      Edit Profile
-    </a>
-    {% endif %}
 </div>
-{% endcache %}
+{% endif %}
+{% if user.my_goals %}
+<div class="row">
+    <div class="profile-goals">
+        <h2>My Goals</h2>
+        <div class="profile-text">
+            {{ user.my_goals|markdown }}
+        </div>
+    </div>
+</div>
+{% endif %}
 {% endblock %}
