@@ -707,6 +707,7 @@ pre { color: #333; background: white; }
 .team-gravatar img {
   margin: 5px;
   vertical-align: top;
+  width: 2.7em;
 }
 .team-gravatar span {
   width: 48%;
