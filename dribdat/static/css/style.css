@@ -719,6 +719,7 @@ pre { color: #333; background: white; }
   border: 2px solid #fff;
   padding: 2px; margin-right: 5px;
   overflow: hidden;
+  text-align: left;
 }
 .team-gravatar:hover {
   text-decoration: none;
@@ -737,7 +738,7 @@ pre { color: #333; background: white; }
 .profile-social img, .profile-social i {
   width: 50px;
   font-size: 50px;
-  margin-left: 160px;
+  margin-left: 60px;
   display: inline-block;
   float: left;
   color: #333;
@@ -782,7 +783,7 @@ pre { color: #333; background: white; }
 }
 .team-roles {
   display: inline-block;
-  float: left;
+  float: right;
   margin: -2px;
 }
 .team-roles em {
@@ -790,7 +791,7 @@ pre { color: #333; background: white; }
     font-size: 70%;
     font-style: normal;
     color: #eee;
-    background: rgba(0,0,0,0.3);
+    background: rgba(0,0,0,0.2);
     padding: 1px 3px;
     border-radius: 4px;
     margin-bottom: 1px;
