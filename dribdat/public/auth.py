@@ -123,7 +123,7 @@ def user_profile():
         return redirect(url_for('public.user', user_id=user.id))
 
     form.roles.data = [(r.id) for r in user.roles]
-    return render_template('public/user.html', user=user, form=form, active='profile')
+    return render_template('public/useredit.html', user=user, form=form, active='profile')
 
 
 @blueprint.route("/slack_login", methods=["GET", "POST"])

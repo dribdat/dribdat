@@ -73,7 +73,7 @@ def user(user_id):
         flash('User updated.', 'success')
         return users()
 
-    return render_template('admin/user.html', user=user, form=form)
+    return render_template('admin/useredit.html', user=user, form=form)
 
 @blueprint.route('/user/new', methods=['GET', 'POST'])
 @login_required
