@@ -55,9 +55,9 @@ def home():
     return render_template("public/home.html",
         events=events, current_event=cur_event)
 
-@blueprint.route('/user/<int:user_id>', methods=['GET'])
-def user(user_id):
-    user = User.query.filter_by(id=user_id).first_or_404()
+@blueprint.route('/user/<username>', methods=['GET'])
+def user(username):
+    user = User.query.filter_by(username=username).first_or_404()
     event = current_event()
     # projects = user.projects
     projects = user.joined_projects()

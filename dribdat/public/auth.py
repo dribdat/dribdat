@@ -120,7 +120,7 @@ def user_profile():
         db.session.commit()
         user.socialize()
         flash('Profile updated.', 'success')
-        return redirect(url_for('public.user', user_id=user.id))
+        return redirect(url_for('public.user', username=user.username))
 
     if not form.roles.choices:
         del form.roles

@@ -767,7 +767,7 @@ pre { color: #333; background: white; }
 }
 .profile-projects {
   padding: 1em 2em;
-  margin: 1em -1em;
+  margin: 1em 0em;
   overflow-x: auto;
   background: #eee;
   width: 100%;
@@ -811,6 +811,13 @@ pre { color: #333; background: white; }
 }
 .profile-projects center {
   margin-top: 5px;
+}
+.profile-story {
+  margin-top: 2em;
+}
+.profile-goals {
+  font-size: 120%;
+  margin-top: 1em;
 }
 .team-roles {
   display: inline-block;

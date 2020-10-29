@@ -50,6 +50,17 @@
     </div>
 
 </div>
+
+{% if user.my_story %}
+<div class="row">
+    <div class="profile-story col-12">
+        <div class="profile-text">
+            {{ user.my_story|markdown }}
+        </div>
+    </div>
+</div>
+{% endif %}
+
 <div class="profile-projects container-fluid">
     {% if not projects and current_user and current_user.is_authenticated and current_user.id == user.id %}
         <h5><i>No projects here. Time to <b>Join</b> or <b>Start</b> something awesome!</i></h5>
@@ -82,20 +93,9 @@
     </div>
 </div>
 
-{% if user.my_story %}
-<div class="row">
-    <div class="profile-story">
-        <h2>My Story</h2>
-        <div class="profile-text">
-            {{ user.my_story|markdown }}
-        </div>
-    </div>
-</div>
-{% endif %}
 {% if user.my_goals %}
 <div class="row">
-    <div class="profile-goals">
-        <h2>My Goals</h2>
+    <div class="profile-goals col-12">
         <div class="profile-text">
             {{ user.my_goals|markdown }}
         </div>
