@@ -63,7 +63,7 @@
 
 <div class="profile-projects container-fluid">
     {% if not projects and current_user and current_user.is_authenticated and current_user.id == user.id %}
-        <h5><i>No projects here. Time to <b>Join</b> or <b>Start</b> something awesome!</i></h5>
+        <i>No projects here. Time to <b>Join</b> or <b>Start</b> something awesome!</i>
     {% endif %}
     <div class="row flex-row flex-nowrap">
     {% for project in projects %}

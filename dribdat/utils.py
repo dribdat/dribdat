@@ -3,9 +3,14 @@
 from flask import flash, current_app
 from datetime import datetime
 from math import floor
-import pytz
+import pytz, re
+
+def sanitize_input(text):
+    """ Removes unsavoury characters """
+    return re.sub(r"[^a-zA-Z0-9_]+", '', text)
 
 def random_password():
+    """ A strongly secure random string """
     import string, random
     return ''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(20))
 

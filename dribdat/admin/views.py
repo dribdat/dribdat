@@ -3,18 +3,16 @@
 from flask import Blueprint, render_template, redirect, url_for, make_response, request, flash, jsonify
 from flask_login import login_required, current_user
 
+from ..utils import sanitize_input
 from ..extensions import db, cache
 from ..decorators import admin_required
-
+from ..aggregation import GetProjectData, SyncProjectData
 from ..user.models import Role, User, Event, Project, Category
 from .forms import RoleForm, UserForm, EventForm, ProjectForm, CategoryForm
 
 from datetime import datetime
 import random, string
 
-from ..aggregation import (
-    GetProjectData, SyncProjectData
-)
 
 blueprint = Blueprint('admin', __name__, url_prefix='/admin')
 
@@ -66,6 +64,8 @@ def user(user_id):
     if form.validate_on_submit():
         originalhash = user.password
         del form.id
+        user.username = sanitize_input(form.username.data)
+        del form.username
         form.populate_obj(user)
         if form.password.data:
             user.set_password(form.password.data)
@@ -89,8 +89,9 @@ def user_new():
     del form.active
     if form.validate_on_submit():
         del form.id
+        user.username = sanitize_input(form.username.data)
+        del form.username
         form.populate_obj(user)
-
         db.session.add(user)
         db.session.commit()
 

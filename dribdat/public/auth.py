@@ -8,7 +8,7 @@ from flask_login import login_user, logout_user, login_required, current_user
 
 from dribdat.user.models import User, Event, Role
 from dribdat.extensions import login_manager
-from dribdat.utils import flash_errors, random_password
+from dribdat.utils import flash_errors, random_password, sanitize_input
 from dribdat.public.forms import LoginForm, UserForm
 from dribdat.user.forms import RegisterForm
 from dribdat.database import db
@@ -61,7 +61,7 @@ def register():
         flash("A user account with this email already exists", 'warning')
     elif form.validate_on_submit():
         new_user = User.create(
-                        username=form.username.data,
+                        username=sanitize_input(form.username.data),
                         email=form.email.data,
                         webpage_url=form.webpage_url.data,
                         password=form.password.data,
@@ -107,10 +107,13 @@ def user_profile():
         user.roles = [Role.query.filter_by(id=r).first() for r in form.roles.data]
         del form.roles
 
-        originalhash = user.password
-        form.populate_obj(user)
+        # Sanitize username
+        user.username = sanitize_input(form.username.data)
+        del form.username
 
         # Assign password if changed
+        originalhash = user.password
+        form.populate_obj(user)
         if form.password.data:
             user.set_password(form.password.data)
         else:
