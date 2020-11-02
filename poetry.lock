@@ -373,7 +373,7 @@ description = "Doing the OAuth dance with style using Flask, requests, and oauth
 name = "Flask-Dance"
 optional = false
 python-versions = "*"
-version = "3.0.0"
+version = "3.1.0"
 
 [package.dependencies]
 Flask = ">=0.7"
@@ -388,7 +388,7 @@ signals = ["blinker"]
 sqla = ["sqlalchemy", "sqlalchemy-utils"]
 
 [package.source]
-reference = "9c4f3a3fbd0138c2a5352368bee86d92d8bb132d"
+reference = "9eca437aaa2c617aaea95b59dd7ebf64ba7bf620"
 type = "git"
 url = "https://github.com/loleg/flask-dance.git"
 [[package]]
@@ -1156,7 +1156,7 @@ docs = ["sphinx", "jaraco.packaging (>=3.2)", "rst.linker (>=1.9)"]
 testing = ["pytest (>=3.5,<3.7.3 || >3.7.3)", "pytest-checkdocs (>=1.2.3)", "pytest-flake8", "pytest-cov", "jaraco.test (>=3.2.0)", "jaraco.itertools", "func-timeout", "pytest-black (>=0.3.7)", "pytest-mypy"]
 
 [metadata]
-content-hash = "fd484b9f25f1a3ac9532ac6560db87b2f26f46ecb3487206b0ea66cea0a9dd9f"
+content-hash = "1111afc0642ee8d3bb9f078c2f90ebfa45f529990936692c6fe86dcf8d0e162d"
 python-versions = ">=3.6,<4"
 
 [metadata.files]
