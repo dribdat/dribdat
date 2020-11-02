@@ -22,7 +22,7 @@ You can configure your instance with the following basic environment variables:
 
 * `SERVER_URL` - fully qualified domain name where the site is hosted
 * `SERVER_SSL` - in production, add this to make the app redirect all visitors to the HTTPS address
-* `TIME_ZONE` - set this if your event is not in the default UTC zone (see [pytz docs](https://pythonhosted.org/pytz/))
+* `TIME_ZONE` - set if your event is not in UTC time (e.g. "Europe/Zurich" - see [pytz docs](https://pythonhosted.org/pytz/))
 * `DATABASE_URL` - if you are using the Postgres add-on, this would be postgres://username:password@... - in Heroku this is set automatically
 * `CACHE_TYPE` - in production, you can use built-in, Redis, Memcache to speed up your site (see `settings.py`)
 * `DRIBDAT_ENV` - 'dev' to enable debugging, 'prod' to optimise assets etc.
