@@ -26,16 +26,16 @@ def timesince(dt, default="just now", until=False):
     3 days ago, 5 hours ago etc.
     - from http://flask.pocoo.org/snippets/33/
     """
-    timezone = pytz.timezone(current_app.config["TIME_ZONE"])
-    now = timezone.localize(datetime.now())
+    tz = pytz.timezone(current_app.config["TIME_ZONE"])
+    tz_now = tz.localize(dt.utcnow())
     if dt is None: return ""
-    dt = dt.astimezone(timezone)
+    dt = dt.astimezone(tz)
     if dt is None: return ""
-    if until and dt > now:
-        diff = dt - now
+    if until and dt > tz_now:
+        diff = dt - tz_now
         suffix = "to go"
     else:
-        diff = now - dt
+        diff = tz_now - dt
         suffix = "ago"
     periods = (
         (diff.days / 365, "year", "years"),

@@ -213,19 +213,21 @@ class Event(PkModel):
     def can_start_project(self):
         return not self.has_finished and not self.lock_starting
 
+
     @property
     def countdown(self):
         # Normalizing dates & timezones.
-        timezone = pytz.timezone(current_app.config['TIME_ZONE'])
-        utc_now = dt.datetime.now(tz=pytz.utc)
-        starts_at = timezone.localize(self.starts_at)
-        ends_at = timezone.localize(self.ends_at)
-        TIME_LIMIT = utc_now + dt.timedelta(days=30)
-
-        if starts_at > utc_now:
+        tz = pytz.timezone(current_app.config['TIME_ZONE'])
+        starts_at = tz.localize(self.starts_at)
+        ends_at = tz.localize(self.ends_at)
+        # Check event time limit (hard coded to 30 days)
+        tz_now = tz.localize(dt.datetime.utcnow())
+        TIME_LIMIT = tz_now + dt.timedelta(days=30)
+        # Show countdown within limits
+        if starts_at > tz_now:
             if starts_at > TIME_LIMIT: return None
             return starts_at
-        elif ends_at > utc_now:
+        elif ends_at > tz_now:
             if ends_at > TIME_LIMIT: return None
             return ends_at
         else:
