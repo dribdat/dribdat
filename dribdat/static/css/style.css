@@ -651,6 +651,8 @@ pre { color: #333; background: white; }
 }
 .nav-categories {
   margin: 10px;
+  max-width: 97%;
+  overflow-x: auto;
 }
 .project-score {
   float: right;
