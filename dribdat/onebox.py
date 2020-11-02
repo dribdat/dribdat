@@ -35,7 +35,6 @@ def repl_onebox(mat=None, li=[]):
         return
     if mat.group(1):
         url = mat.group(1).strip()
-        print(url)
         # Try to parse a project link
         if '/project/' in url:
             project_link = mat.group(1)

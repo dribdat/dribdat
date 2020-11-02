@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """The app module, containing the app factory function."""
-from flask import Flask, Markup, render_template, redirect, url_for
+from flask import Flask, render_template, redirect, url_for
 from flask_cors import CORS
 
 from dribdat import commands, public, user, admin
