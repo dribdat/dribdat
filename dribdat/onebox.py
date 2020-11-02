@@ -3,7 +3,12 @@
 
 import re
 import pystache
+
 from flask import url_for
+
+from micawber import parse_text
+from micawber.parsers import standalone_url_re, full_handler
+
 
 def format_webembed(url):
     if url.lower().startswith('<iframe '):
@@ -30,6 +35,7 @@ def repl_onebox(mat=None, li=[]):
         return
     if mat.group(1):
         url = mat.group(1).strip()
+        print(url)
         # Try to parse a project link
         if '/project/' in url:
             project_link = mat.group(1)
@@ -46,3 +52,22 @@ def make_onebox(raw_html):
     url = re.escape(url_for('.home', _external=True))
     regexp = re.compile('<a href="(%s.+?)">(%s.+?)</a>' % (url, url))
     return re.sub(regexp, repl_onebox, raw_html)
+
+def make_oembedplus(text, oembed_providers, **params):
+    lines = text.splitlines()
+    parsed = []
+    home_url = re.escape(url_for('.home', _external=True))
+    home_url_re = re.compile('(%s.+)' % home_url)
+    for line in lines:
+        if home_url_re.match(line):
+            line = re.sub(home_url_re, repl_onebox, line)
+        elif standalone_url_re.match(line):
+            url = line.strip()
+            try:
+                response = oembed_providers.request(url, **params)
+            except ProviderException:
+                pass
+            else:
+                line = full_handler(url, response, **params)
+        parsed.append(line)
+    return '\n'.join(parsed)

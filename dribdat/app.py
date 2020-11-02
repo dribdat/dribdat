@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """The app module, containing the app factory function."""
-from flask import Flask, render_template, redirect, url_for
+from flask import Flask, Markup, render_template, redirect, url_for
 from flask_cors import CORS
 
 from dribdat import commands, public, user, admin
@@ -14,12 +14,12 @@ from dribdat.extensions import (
 )
 from dribdat.settings import ProdConfig
 from dribdat.utils import timesince
-from dribdat.onebox import make_onebox
+from dribdat.onebox import make_oembedplus
 from flask_misaka import Misaka
 from flask_talisman import Talisman
 from flask_dance.contrib.slack import make_slack_blueprint, slack
 from micawber.providers import bootstrap_basic
-from micawber.contrib.mcflask import add_oembed_filters
+
 
 def init_app(config_object=ProdConfig):
     """An application factory, as explained here: http://flask.pocoo.org/docs/patterns/appfactories/.
@@ -119,12 +119,16 @@ def register_commands(app):
 
 
 def register_filters(app):
-    # Markdown filters
+    # Library filters
     Misaka(app, autolink=True, fenced_code=True, strikethrough=True, tables=True)
-    # micawber filters
-    oembed_providers = bootstrap_basic()
-    add_oembed_filters(app, oembed_providers)
-    # Custom filters
+
+    # Registration of handlers for micawber
+    app.oembed_providers = bootstrap_basic()
+    @app.template_filter()
+    def onebox(value):
+        return make_oembedplus(value, app.oembed_providers, maxwidth=600, maxheight=400)
+
+    # Custom filterss
     @app.template_filter()
     def since_date(value):
         return timesince(value)
@@ -137,10 +141,6 @@ def register_filters(app):
     @app.template_filter()
     def format_datetime(value, format='%d.%m.%Y %H:%M'):
         return value.strftime(format)
-    # TODO this could be replaced by a custom oembed provider registered in micawber
-    @app.template_filter()
-    def onebox(value):
-        return make_onebox(value)
 
 
 def register_loggers(app):

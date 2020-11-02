@@ -144,7 +144,7 @@
 
   {% if project.longtext %}
     <div class="project-longtext">
-      {{project.longtext|oembed(html=False, urlize_all=False, maxwidth=600, maxheight=400)|markdown|onebox|safe}}
+      {{ project.longtext|onebox|markdown|safe }}
     </div>
   {% endif %}
 
