@@ -144,12 +144,7 @@
 
   {% if project.longtext %}
     <div class="project-longtext">
-      {% if '<' in project.longtext and '>' in project.longtext %}
-        <!-- HTML detected: disabling Markdown support -->
-        {{project.longtext|oembed(html=True, maxwidth=600, maxheight=400)|onebox|safe}}
-      {% else %}
-        {{project.longtext|oembed(html=False, maxwidth=600, maxheight=400)|markdown|onebox|safe}}
-      {% endif %}
+      {{project.longtext|oembed(html=False, urlize_all=False, maxwidth=600, maxheight=400)|markdown|onebox|safe}}
     </div>
   {% endif %}
 
