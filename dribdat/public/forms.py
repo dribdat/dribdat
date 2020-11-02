@@ -76,7 +76,7 @@ class ProjectForm(FlaskForm):
     summary = StringField(u'Summary', [length(max=120)],
         description="Max 120 characters")
     longtext = TextAreaField(u'Pitch',
-        description="To format, use Markdown or HTML (not both). Use a service like pixelfed.org or imgur.com to upload images")
+        description="To format, use Markdown or HTML. Links on their own line get previews for supported providers.")
     webpage_url = StringField(u'Project link', [length(max=2048)],
         description="URL to a live demo, presentation, or link to further information")
     is_webembed = BooleanField(u'Embed project link')
