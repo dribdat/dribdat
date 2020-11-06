@@ -373,6 +373,15 @@ class Project(PkModel):
         return format_webembed(self.webpage_url)
 
     @property
+    def longhtml(self):
+        """ Process project longtext and return HTML """
+        if not self.longtext or len(self.longtext) < 3:
+            return self.longtext
+        # TODO: apply onebox filter
+        # TODO: apply markdown filter
+        return self.longtext
+
+    @property
     def url(self):
         return "project/%d" % (self.id)
 

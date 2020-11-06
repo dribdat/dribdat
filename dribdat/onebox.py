@@ -3,6 +3,7 @@
 
 import re
 import pystache
+import logging
 
 from flask import url_for
 
@@ -64,8 +65,8 @@ def make_oembedplus(text, oembed_providers, **params):
             url = line.strip()
             try:
                 response = oembed_providers.request(url, **params)
-            except ProviderException:
-                pass
+            except Exception as e:
+                logging.warning("OEmbed provider could not be parsed <%s>" % url)
             else:
                 line = full_handler(url, response, **params)
         parsed.append(line)
