@@ -137,7 +137,9 @@
 
 <center><div role="group" aria-label="Hackathon navigation">
   {% if current_event.countdown %}
-    <a href="{{ url_for('public.home') }}" class="btn btn-sm btn-default">{{ current_event.countdown|until_date }}</a>
+    <a href="{{ url_for('public.dashboard') }}" class="btn btn-sm btn-default">
+      <i class="fa fa-id-card-o" aria-hidden="true"></i>
+      {{ current_event.countdown|until_date }}</a>
   {% endif %}
   {% if current_event.webpage_url %}
     <a href="{{ current_event.webpage_url }}" class="btn btn-sm btn-default">
