@@ -16,8 +16,7 @@
 
         {% if config.DRIBDAT_CERT_PATH %}
         <a href="{{ config.DRIBDAT_CERT_PATH }}{{ current_user.sso_id }}.pdf"
-            download="{{ current_user.username }}_cert_dribdat"
-            class="btn btn-success">
+            download class="btn btn-success">
           <i class="fa fa-download"></i>
           Certificate
         </a>
