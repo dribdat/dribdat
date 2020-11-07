@@ -93,9 +93,9 @@
   });
 
   // Post a project update
-  $('.project-post').click(function() {
-
-  });
+  // $('.project-post').click(function() {
+  //
+  // });
 
   // Clickable categories navigation
   var $navCategories = $('.nav-categories .btn-group label').click(function(e) {
@@ -154,6 +154,21 @@
         handleSelector: ".win-size-grip"
       });
     });
+  });
+
+  // Enable dark mode
+  $('.darkmode').click(function() {
+    if (window.darkmode) {
+      $('html').attr('style','');
+      return window.darkmode = false;
+    }
+    window.darkmode = true;
+    $('html').css('-webkit-filter','invert(100%)')
+             .css('-moz-filter','invert(100%)')
+             .css('-o-filter','invert(100%)')
+             .css('-ms-filter','invert(100%)')
+             .css('background', 'black')
+             .css('height', '100%');
   });
 
 }).call(this, jQuery, window);
