@@ -66,9 +66,8 @@ def GetEventUsers(event):
     users = []
     userlist = []
     for p in event.projects:
-        for activity in p.team():
-            u = activity.user
-            if not u.id in userlist:
+        for u in p.team():
+            if u.active and not u.id in userlist:
                 userlist.append(u.id)
                 users.append(u)
     return sorted(users, key=lambda x: x.username)

@@ -301,13 +301,20 @@ class Project(PkModel):
 
     # Return all starring users (A team)
     def team(self):
-        return Activity.query.filter_by(
+        activities = Activity.query.filter_by(
             name='star', project_id=self.id
         ).all()
+        members = []
+        for a in activities:
+            if not a.user in members and a.user.active:
+                members.append(a.user)
+        return members
 
     # Query which formats the project's timeline
     def all_signals(self):
-        activities = Activity.query.filter_by(project_id=self.id).order_by(Activity.timestamp.desc())
+        activities = Activity.query.filter_by(
+                        project_id=self.id
+                    ).order_by(Activity.timestamp.desc())
         signals = []
         prev = None
         for a in activities:
@@ -328,6 +335,8 @@ class Project(PkModel):
             elif a.name == 'create':
                 title = "Project started"
                 text = "Initialized by " + a.user.username
+            # Check if user is still active
+            if not a.user.active: continue
             # Check if last signal very similar
             if prev is not None:
                 if (

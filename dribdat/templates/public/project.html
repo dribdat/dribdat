@@ -156,11 +156,11 @@
   {% endif %}
 
 {% if not project.is_challenge %}
-  {% if project_stars %}
+  {% if project_team %}
     <a name="team"></a>
     <div class="widget widget-team">
-      {% for activity in project_stars %}
-        {{ misc.render_user_profile(activity.user) }}
+      {% for user in project_team %}
+        {{ misc.render_user_profile(user) }}
       {% endfor %}
       <p class="started-at">
         <small>

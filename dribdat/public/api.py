@@ -157,15 +157,13 @@ def project_activity_json(project_id):
 @blueprint.route('/project/<int:project_id>/info.json')
 def project_info_json(project_id):
     project = Project.query.filter_by(id=project_id).first_or_404()
-    project_stars = project.team()
     activities = []
-    for a in project_stars:
-        user = {
-            'id': a.user.id,
-            'name': a.user.username,
-            'link': a.user.webpage_url
-        }
-        activities.append(user)
+    for user in project.team():
+        activities.append({
+            'id': user.id,
+            'name': user.username,
+            'link': user.webpage_url
+        })
 
     data = {
         'project': project.data,
