@@ -145,14 +145,14 @@ def project_action(project_id, of_type=None, as_view=True, then_redirect=False, 
         ProjectActivity(project, of_type, current_user, action, text)
     if not as_view:
         return True
+    if then_redirect:
+        return redirect(url_for('public.project', project_id=project.id))
     starred = IsProjectStarred(project, current_user)
     allow_edit = starred or (not current_user.is_anonymous and current_user.is_admin)
     allow_edit = allow_edit and not event.lock_editing
     project_stars = project.team()
     latest_activity = project.latest_activity()
     project_signals = project.all_signals()
-    if then_redirect:
-        return redirect(url_for('public.project', project_id=project.id))
     return render_template('public/project.html', current_event=event, project=project,
         project_starred=starred, project_stars=project_stars, project_signals=project_signals,
         allow_edit=allow_edit, latest_activity=latest_activity)
