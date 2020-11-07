@@ -5,6 +5,28 @@
 
 {% block content %}
 <div class="row">
+    <div class="col-lg"></div>
+
+    {% if current_user and current_user.is_authenticated and current_user.id == user.id %}
+    <div class="col-sm btn-group">
+        <a href="{{ url_for('auth.user_profile') }}" class="btn btn-warning">
+          <i class="fa fa-child"></i>
+          Edit Profile
+        </a>
+
+        {% if config.DRIBDAT_CERT_PATH %}
+        <a href="{{ config.DRIBDAT_CERT_PATH }}{{ current_user.sso_id }}.pdf"
+            download="{{ current_user.username }}_cert_dribdat"
+            class="btn btn-success">
+          <i class="fa fa-download"></i>
+          Certificate
+        </a>
+        {% endif %}
+    </div>
+    {% endif %}
+
+</div>
+<div class="row">
 
     <h1 class="profile-header">
         <img src="https://www.gravatar.com/avatar/{{user.carddata}}"/>
@@ -29,24 +51,6 @@
         {% endif %}
             </a>
         </div>
-    </div>
-    {% endif %}
-
-    {% if current_user and current_user.is_authenticated and current_user.id == user.id %}
-    <div class="col-sm">
-        <a href="{{ url_for('auth.user_profile') }}" class="btn btn-warning">
-          <i class="fa fa-child"></i>
-          Edit Profile
-        </a>
-
-        {% if config.DRIBDAT_CERT_PATH %}
-        <a href="{{ config.DRIBDAT_CERT_PATH }}{{ current_user.sso_id }}.pdf"
-            download="{{ current_user.username }}_cert_dribdat"
-            class="btn btn-success">
-          <i class="fa fa-download"></i>
-          Download Certificate
-        </a>
-        {% endif %}
     </div>
     {% endif %}
 
