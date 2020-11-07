@@ -129,6 +129,13 @@ def event_activity_json(event_id):
     limit = request.args.get('limit') or 50
     return jsonify(activities=get_event_activities(event_id, limit))
 
+# API: Outputs JSON of categories in the current event
+@blueprint.route('/event/current/activity.json')
+def event_activity_current_json():
+    event = Event.query.filter_by(is_current=True).first()
+    if not event: return jsonify(activities=[])
+    return event_activity_json(event.id)
+
 # API: Outputs CSV of an event activity
 @blueprint.route('/event/<int:event_id>/activity.csv')
 def event_activity_csv(event_id):
@@ -137,12 +144,21 @@ def event_activity_csv(event_id):
                     mimetype='text/csv',
                     headers={'Content-Disposition': 'attachment; filename=activity_list.csv'})
 
-# API: Outputs JSON of recent activity
+# API: Outputs JSON of recent activity across all projects
 @blueprint.route('/project/activity.json')
 def projects_activity_json():
     limit = request.args.get('limit') or 10
-    activities = [a.data for a in Activity.query.order_by(Activity.id.desc()).limit(limit).all()]
-    return jsonify(activities=activities)
+    recent = Activity.query.order_by(Activity.id.desc()).limit(limit).all()
+    return jsonify(activities=[a.data for a in recent])
+
+# API: Outputs JSON of recent posts (a type of activity) across projects
+@blueprint.route('/project/posts.json')
+def projects_posts_json():
+    limit = request.args.get('limit') or 10
+    recent = Activity.query.filter(Activity.action=="post")
+    recent = recent.order_by(Activity.id.desc())
+    recent = recent.limit(limit).all()
+    return jsonify(activities=[a.data for a in recent])
 
 # API: Outputs JSON of recent activity of a project
 @blueprint.route('/project/<int:project_id>/activity.json')

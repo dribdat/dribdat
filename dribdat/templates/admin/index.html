@@ -49,7 +49,8 @@
 <script src="https://cdn.jsdelivr.net/npm/vega-lite@4"></script>
 <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
 <script>
-$.getJSON('/api/project/activity.json?limit=100', function(data) {
+$.getJSON('/api/event/current/activity.json?limit=100', function(data) {
+    if (data.activities.length == 0) return $('.chart-activities').hide();
     var yourVlSpec = {
       "width": "600",
       "$schema": "https://vega.github.io/schema/vega-lite/v2.0.json",

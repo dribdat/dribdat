@@ -25,7 +25,9 @@ def current_event(): return Event.query.filter_by(is_current=True).first()
 # Renders a static dashboard
 @blueprint.route("/dashboard/")
 def dashboard():
-    return render_template("public/dashboard.html", current_event=current_event())
+    event = current_event()
+    wall = 'twitter.com' in event.community_url
+    return render_template("public/dashboard.html", current_event=event, with_social_wall=wall)
 
 # Outputs JSON-LD about the current event (see also api.py/info_event_hackathon_json)
 @blueprint.route('/hackathon.json')

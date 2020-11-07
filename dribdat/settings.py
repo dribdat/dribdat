@@ -12,6 +12,7 @@ class Config(object):
     SECRET_KEY = os_env.get('DRIBDAT_SECRET', 'A-big-scary-Secret-goes-HERE.')
     DRIBDAT_APIKEY = os_env.get('DRIBDAT_APIKEY', None)
     DRIBDAT_NOT_REGISTER = os_env.get('DRIBDAT_NOT_REGISTER', False)
+    DRIBDAT_CERT_PATH = os_env.get('DRIBDAT_CERT_PATH', None)
     OAUTH_ID = os_env.get('OAUTH_ID', None)
     OAUTH_TYPE = os_env.get('OAUTH_TYPE', '').lower()
     OAUTH_SECRET = os_env.get('OAUTH_SECRET', None)

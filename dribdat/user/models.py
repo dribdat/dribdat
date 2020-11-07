@@ -24,7 +24,7 @@ from dribdat.database import (
     reference_col,
 )
 from dribdat.utils import (
-    format_date_range, format_date
+    format_date_range, format_date, timesince
 )
 from dribdat.onebox import format_webembed
 from dribdat.user import PROJECT_PROGRESS_PHASE
@@ -545,7 +545,9 @@ class Activity(PkModel):
             'id': self.id,
             'name': self.name,
             'time': int(mktime(self.timestamp.timetuple())),
+            'timesince': timesince(self.timestamp),
             'date': self.timestamp,
+            'content': self.content or '',
             'user_name': self.user.username,
             'user_id': self.user.id,
             'project_id': self.project.id,
