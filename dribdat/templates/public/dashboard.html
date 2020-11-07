@@ -9,7 +9,7 @@
         <title>DRIBDAT</title>
         <meta name="description" content="Project dashboard" />
         <!-- Refresh social media wall every ten minutes -->
-        {% if 'twitter.com' in current_event.community_url %}
+        {% if with_social_wall %}
           <meta http-equiv="refresh" content="600">
         {% endif %}
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
@@ -41,28 +41,29 @@
             </div> -->
           </nav>
 
-          <main role="main" class="container-countdown col-md-9 ml-sm-auto">
+          <main role="main" class="container-countdown col-md-{{ '6' if with_social_wall else '9' }} ml-sm-auto">
             <img id="event-logo" src="{{ current_event.logo_url }}">
+
+            <div class="panel-body">
+                <button class="show-announcements"
+                  onclick="$('#announcements').show();$(this).hide()">📣</button>
+                <div id="announcements" class="editable hidden">Attention!</div>
+            </div>
 
             {% if current_event.countdown %}
               <div class="event-countdown" data-start="{{ current_event.countdown }}"></div>
             {% endif %}
-
-            <div class="panel-body">
-                <button
-                  style="position: absolute; top:0px; border:0px; background:none;"
-                  onclick="$('#announcements').show();$(this).hide()">📣</button>
-                <div id="announcements" class="editable hidden">Attention!</div>
-            </div>
           </main>
 
-          <div class="col-md-3">
-            {% if 'twitter.com' in current_event.community_url %}
-              <a class="twitter-timeline" data-width="340" data-height="900" data-dnt="true" data-theme="dark" data-link-color="#E95F28" href="{{ current_event.community_url }}?ref_src=twsrc%5Etfw">Tweets</a> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
-            {% else %}
+          <div class="col-md-3" style="padding:0px">
               <div id="activities"></div>
-            {% endif %}
           </div>
+
+          {% if with_social_wall %}
+            <div class="col-md-3">
+              <a class="twitter-timeline" data-width="340" data-height="900" data-dnt="true" data-theme="dark" data-link-color="#E95F28" href="{{ current_event.community_url }}?ref_src=twsrc%5Etfw">Tweets</a> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+            </div>
+          {% endif %}
         </div>
       </div>
   </div>
@@ -79,6 +80,7 @@
   #projects {
     color: #DDA;
     font: 14pt/29pt sans-serif;
+    overflow: hidden;
   }
   #projects a {
     color: inherit;
@@ -94,6 +96,11 @@
     padding-left: 265px;
     text-align: center;
   }
+  @media (min-width: 1000px) {
+    .container-countdown {
+      padding-left: 400px;
+    }
+  }
 
   .container-fluid .sidebar {
     height: 100%;
@@ -104,7 +111,7 @@
 
   #event-logo {
     width: 40%;
-    margin-top: 100px;
+    margin: 100px 0px;
   }
 
   #metrics {
@@ -125,7 +132,16 @@
       background: darkblue;
       opacity: 0.8;
   }
+  .show-announcements {
+    position: absolute; top:0px; border:0px; background:none; opacity: 0.5;
+  }
+  .show-announcements:hover {
+    opacity: 1;
+  }
 
+  .event-countdown {
+    position: fixed; bottom: 25px;
+  }
 
   #activities {
     color: #333;
