@@ -151,7 +151,7 @@ def projects_activity_json():
     recent = Activity.query.order_by(Activity.id.desc()).limit(limit).all()
     return jsonify(activities=[a.data for a in recent])
 
-# API: Outputs JSON of recent posts (a type of activity) across unique projects
+# API: Outputs JSON of recent posts (a type of activity) across projects
 @blueprint.route('/project/posts.json')
 def projects_posts_json():
     limit = request.args.get('limit') or 10

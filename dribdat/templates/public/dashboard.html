@@ -9,7 +9,9 @@
         <title>DRIBDAT</title>
         <meta name="description" content="Project dashboard" />
         <!-- Refresh social media wall every ten minutes -->
-        <meta http-equiv="refresh" content="600">
+        {% if 'twitter.com' in current_event.community_url %}
+          <meta http-equiv="refresh" content="600">
+        {% endif %}
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 
         <link rel="stylesheet" href="/static/libs/font-awesome/css/font-awesome.min.css">
