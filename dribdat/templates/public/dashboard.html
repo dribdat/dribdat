@@ -8,7 +8,8 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <title>DRIBDAT</title>
         <meta name="description" content="Project dashboard" />
-        <meta DISABLED-http-equiv="refresh" content="360">
+        <!-- Refresh social media wall every ten minutes -->
+        <meta http-equiv="refresh" content="600">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 
         <link rel="stylesheet" href="/static/libs/font-awesome/css/font-awesome.min.css">
@@ -25,21 +26,17 @@
         <script type="text/javascript" src="/static/js/script.js"></script>
         <script type="text/javascript" src="/static/libs/FlipClock/flipclock.min.js"></script>
         <script type="text/javascript" src="/static/js/clock.js"></script>
-
-        <script src="https://cdn.jsdelivr.net/npm/vega@3"></script>
-        <script src="https://cdn.jsdelivr.net/npm/vega-lite@2"></script>
-        <script src="https://cdn.jsdelivr.net/npm/vega-embed@3"></script>
     </head>
 
     <body class="dashboard-page">
 
       <div class="container-fluid">
         <div class="row">
-          <nav class="col-md-2 bg-light sidebar">
+          <nav class="col-md-2 sidebar">
             <div class="sidebar-sticky" id="projects"></div>
-            <div class="sidebar-sticky" id="schedule">
+            <!-- <div class="sidebar-sticky" id="schedule">
               {{ current_event.description|safe }}
-            </div>
+            </div> -->
           </nav>
 
           <main role="main" class="container-countdown col-md-9 ml-sm-auto">
@@ -50,14 +47,18 @@
             {% endif %}
 
             <div class="panel-body">
-                <div id="announcements" class="editable">Hello, World!</div>
-                <div id="activities"></div>
+                <button
+                  style="position: absolute; top:0px; border:0px; background:none;"
+                  onclick="$('#announcements').show();$(this).hide()">📣</button>
+                <div id="announcements" class="editable hidden">Attention!</div>
             </div>
           </main>
 
-          <div class="col-md-3 sidebar-social">
+          <div class="col-md-3">
             {% if 'twitter.com' in current_event.community_url %}
               <a class="twitter-timeline" data-width="340" data-height="900" data-dnt="true" data-theme="dark" data-link-color="#E95F28" href="{{ current_event.community_url }}?ref_src=twsrc%5Etfw">Tweets</a> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+            {% else %}
+              <div id="activities"></div>
             {% endif %}
           </div>
         </div>
@@ -69,6 +70,9 @@
 <style>
   body {
     overflow: hidden;
+  }
+  .hidden {
+    display: none;
   }
   #projects {
     color: #DDA;
@@ -107,6 +111,53 @@
     top: 150px;
   }
 
+  .dashboard-page #event-logo { width: 28%; }
+  #schedule { color: transparent; margin-top: 1em; }
+  #schedule dashboard { color: #eee; display: initial !important; }
+  #schedule > * { display: none; }
+
+  #announcements {
+      font-size: 50px;
+      font-weight: bold;
+      color: yellow;
+      background: darkblue;
+      opacity: 0.8;
+  }
+
+
+  #activities {
+    color: #333;
+    font: 14pt/29pt sans-serif;
+    text-align: right;
+  }
+  #activities a {
+    color: inherit;
+    text-decoration: none;
+    display: inline-block;
+    margin: 0px;
+    padding: 0px 0.5em;
+    font-size: 80%;
+    line-height: 2em;
+    text-align: right;
+    background: white;
+  }
+  #activities div {
+    background:rgba(255,255,255,0.5);
+    box-shadow: 5px 5px 5px rgba(0,0,0,0.4);
+    font-size: 80%;
+    padding: 0 0.3em;
+    margin: 1em;
+    text-align: right;
+  }
+  #activities p {
+    padding-top: 0.5em;
+    margin: 0px 0.5em;
+    line-height: 1.2em;
+    color: #000;
+    font-size: 120%;
+    text-align: left;
+  }
+
   .vega-actions-wrapper, .vega-actions { display: none; }
 
 </style>
@@ -122,37 +173,14 @@ refreshProjects = function() {
     });
   });
 
-  $.getJSON('/api/project/activity.json', function(data) {
-    var yourVlSpec = {
-      "width": 525,
-      "$schema": "https://vega.github.io/schema/vega-lite/v2.0.json",
-      "description": "Project activities",
-      "data": {
-        "values": data.activities
-      },
-      "mark": {
-        "type": "area",
-        "interpolate": "monotone"
-      },
-      "encoding": {
-        "x": {
-          "field": "date",
-          "type": "temporal",
-          "scale": { "rangeStep": null }
-        },
-        "y": {
-          "aggregate": "mean",
-          "field": "project_score",
-          "type": "quantitative",
-          "axis": { "title": null, "labels": false }
-        }
-      },
-      "config": {
-        "autosize": { "type": "fit", "contains": "padding" },
-        "axis": { "grid": false, "ticks": false }
-      }
-    }
-    vegaEmbed("#activities", yourVlSpec);
+  $.getJSON('/api/project/posts.json', function(data) {
+    $pp = $('#activities').empty();
+    data.activities.forEach(function(a) {
+      $pp.append('<div>' +
+        '<p>'+a.content+'</p>' +
+        '<a href="/project/'+a.project_id+'">@'+a.user_name + ' / ' + a.timesince + '</a>' +
+      '</div>');
+    });
   });
 
   setTimeout(refreshProjects, 60 * 1000); // refresh every minute

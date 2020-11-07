@@ -79,7 +79,7 @@ class TestEvent:
         assert event.name == "test"
         assert event.countdown is not None
         assert event.countdown == timezone.localize(event_dt)
-        assert timesince(event.countdown, until=True) == "1 weeks to go"
+        assert timesince(event.countdown, until=True) == "1 week to go"
 
     def test_countdown_24_days(self, db):
         now = dt.datetime.now()

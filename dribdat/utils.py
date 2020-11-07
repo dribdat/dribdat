@@ -48,7 +48,7 @@ def timesince(dt, default="just now", until=False):
     )
     for period, singular, plural in periods:
         if floor(period) > 0:
-            return "%d %s %s" % (period, singular if period == 1 else plural, suffix)
+            return "%d %s %s" % (period, singular if int(period)==1 else plural, suffix)
     return default
 
 def format_date(value, format='%Y-%m-%d'):
