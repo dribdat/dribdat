@@ -31,6 +31,7 @@ You can configure your instance with the following basic environment variables:
 * `DRIBDAT_NOT_REGISTER` - set to True to disallow creating accounts on this server
 * `DRIBDAT_THEME` - can be set to one of the [Bootswatch themes](https://bootswatch.com/)
 * `DRIBDAT_CLOCK` - use 'up' or 'down' to change the position, and 'off' to hide the countdown everywhere
+* `DRIBDAT_CERT_PATH` - a URL that prefixes the download link for user certificates, followed by the SSO_ID and `.pdf` extension
 
 Support for Web analytics can be configured using one of the following variables:
 
