@@ -10,13 +10,22 @@ class Config(object):
     """Base configuration."""
 
     SECRET_KEY = os_env.get('DRIBDAT_SECRET', 'A-big-scary-Secret-goes-HERE.')
+
+    # Application options
+    DRIBDAT_CLOCK = os_env.get('DRIBDAT_CLOCK', 'down')
     DRIBDAT_APIKEY = os_env.get('DRIBDAT_APIKEY', None)
     DRIBDAT_NOT_REGISTER = os_env.get('DRIBDAT_NOT_REGISTER', False)
+
+    # TODO: per-event
     DRIBDAT_CERT_PATH = os_env.get('DRIBDAT_CERT_PATH', None)
+
+    # Single sign-on support
     OAUTH_ID = os_env.get('OAUTH_ID', None)
     OAUTH_TYPE = os_env.get('OAUTH_TYPE', '').lower()
     OAUTH_SECRET = os_env.get('OAUTH_SECRET', None)
     OAUTH_DOMAIN = os_env.get('OAUTH_DOMAIN', None)
+
+    # Application settings
     APP_DIR = os.path.abspath(os.path.dirname(__file__))  # This directory
     PROJECT_ROOT = os.path.abspath(os.path.join(APP_DIR, os.pardir))
     ASSETS_DEBUG = False
@@ -25,9 +34,12 @@ class Config(object):
     CACHE_TYPE = 'null'
     CACHE_NO_NULL_WARNING = True
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+
+    # Server settings
     SERVER_NAME = os_env.get('SERVER_URL', '127.0.0.1:5000')
     SERVER_SSL = os_env.get('SERVER_SSL', None)
     TIME_ZONE = os_env.get('TIME_ZONE', 'UTC')
+    MAX_CONTENT_LENGTH = os_env.get('MAX_CONTENT_LENGTH', 1 * 1024 * 1024)
 
     # Configure web analytics providers
     ANALYTICS_HREF = os_env.get('ANALYTICS_HREF', None)
@@ -36,8 +48,14 @@ class Config(object):
     ANALYTICS_FATHOM = os_env.get('ANALYTICS_FATHOM', None)
     ANALYTICS_FATHOM_SITE = os_env.get('ANALYTICS_FATHOM_SITE', None)
 
-    # Pure vanity: can contain words like up, down, event, projects
-    DRIBDAT_CLOCK = os_env.get('DRIBDAT_CLOCK', 'down')
+    # S3 uploads support
+    S3_KEY = os_env.get('S3_KEY', None)
+    S3_SECRET = os_env.get('S3_SECRET', None)
+    S3_REGION = os_env.get('S3_REGION', 'eu-west-1')
+    S3_BUCKET = os_env.get('S3_BUCKET', None)
+    S3_FOLDER = os_env.get('S3_FOLDER', '')
+    S3_HTTPS = os_env.get('S3_HTTPS', None)
+
 
 class ProdConfig(Config):
     """Production configuration."""

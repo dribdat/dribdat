@@ -93,9 +93,68 @@
   });
 
   // Post a project update
-  $('.project-post').click(function() {
+  // $('.project-post').click(function() {
+  //
+  // });
 
-  });
+  // Upload images
+  $('#uploadImage').each(function() {
+    var $togglebtn = $('button[data-target="#uploadImage"]');
+    $('.fld-longtext').append($togglebtn);
+    $('.fld-image_url').append($togglebtn.clone());
+    var $dialog = $(this);
+    var $inputfd = $dialog.find('input[type="file"]');
+    $inputfd.change(function() {
+      var imgfile = $inputfd[0].files[0];
+      // Check file size limits
+      var maxsize = parseInt($inputfd.data('maxsize'));
+      if (imgfile.size > maxsize) {
+        return alert("Please upload a smaller file (1 MB limit)");
+      }
+      // Create upload object
+      var fdd = new FormData();
+      fdd.append('file', imgfile);
+      $.ajax({
+        url: '/api/project/uploader',
+        type: 'post',
+        data: fdd,
+        processData: false,
+        contentType: false,
+        success: function(response) {
+          if (response.indexOf('http') !== 0) {
+             return alert('File could not be uploaded :(\n' + response);
+          }
+          $dialog.find(".preview img").attr("src", response);
+          $dialog.find(".preview input").val(response);
+          $dialog.find(".hidden").show();
+          $('#img-confirm').show().find('button').click(function() {
+            if ($(this).data('target') == 'cover') {
+              // Replace the cover
+              $('#image_url').val(response);
+              $dialog.modal('hide');
+            } else if ($(this).data('target') == 'pitch') {
+              // Append to pitch
+              $('#longtext').val($('#longtext').val() +
+                '\n\n' + '![Title](' + response + ')');
+              $dialog.modal('hide');
+            } else {
+              // Copy to clipboard
+              if (navigator.clipboard) {
+                navigator.clipboard.writeText(response);
+                $dialog.modal('hide');
+              } else {
+                $dialog.find(".preview input").click().select();
+                document.execCommand("copy");
+              }
+            }
+          });
+        },
+        error: function(e) {
+          alert("Sorry, an error has occurred.\n" + e.statusText);
+        }
+      }); // -ajax
+    }); // -change
+  }); // -#uploadImage
 
   // Clickable categories navigation
   var $navCategories = $('.nav-categories .btn-group label').click(function(e) {
@@ -154,6 +213,22 @@
         handleSelector: ".win-size-grip"
       });
     });
+  });
+
+  // Enable dark mode
+  $('.darkmode').click(function(e) {
+    e.preventDefault(); e.stopPropagation();
+    if (window.darkmode) {
+      $('html').attr('style','');
+      return window.darkmode = false;
+    }
+    window.darkmode = true;
+    $('html').css('-webkit-filter','invert(100%)')
+             .css('-moz-filter','invert(100%)')
+             .css('-o-filter','invert(100%)')
+             .css('-ms-filter','invert(100%)')
+             .css('background', 'black')
+             .css('height', '100%');
   });
 
 }).call(this, jQuery, window);

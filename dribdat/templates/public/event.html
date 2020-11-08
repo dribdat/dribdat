@@ -54,31 +54,31 @@
   <div class="ibws-fix">
   {% for project in projects %}
     <a href="{{ url_for('public.project', project_id=project.id) }}"
-       class="hexagon project{{ ' challenge' if project.phase=='Challenge' }} category-highlight"
+       class="hexagon {{ 'challenge' if project.phase=='Challenge' else 'project' }} category-highlight"
        category-id="{{ project.category_id }}"
        style="background-color:{{project.logo_color}}; background-image:url('{{project.image_url}}')">
       <div class="hexagontent{{ ' with-icon' if project.logo_icon }}">
         {% if project.logo_icon %}
           <i class="fa fa-{{project.logo_icon}}"></i><br>
         {% endif %}
-        <div>{{ project.name }}</div>
+        <span>{{ project.name }}</span>
         <div class="progress">
           <div class="progress-bar" role="progressbar" aria-valuenow="{{project.score}}" aria-valuemin="0" aria-valuemax="70" style="width:{{project.score}}%">
           </div>
         </div>
       </div>
     </a>
-    {% if loop.index % 7 == 0 %}
-  </div><div class="ibws-fix">
-    {% endif %}
   {% endfor %}
+  {% if project_count % 6 != 0 %}
+    <a class="hexagon" style="visibility:hidden"></a>
+  {% endif %}
   </div>
 </div><!-- /honeycomb -->
 
 <div class="category-info">
   {% if current_event.has_started and not current_event.has_finished %}
     <div category-id="infobox" class="category-container category-tip">
-      <center><h4><i class="fa fa-arrow-circle-o-up"></i> Explore challenges and projects</h4></center>
+      <center><h4><i class="fa fa-arrow-circle-o-up"></i> Explore challenges and join projects</h4></center>
     </div>
   {% endif %}
   {% for category in current_event.categories_for_event() %}
@@ -149,10 +149,10 @@
   <a href="{{ url_for('public.event_participants', event_id=current_event.id) }}" class="btn btn-default btn-sm">
     <i class="fa fa-user" aria-hidden="true"></i>
     Participants</a>
+  <a href="{{ url_for('public.event', event_id=current_event.id, _external=True) }}?embed=1" class="btn btn-default btn-sm" id="embed-link">
+    <i class="fa fa-external-link" aria-hidden="true"></i>
+    Embed</a>
   {% if current_user and current_user.is_authenticated and current_user.is_admin %}
-    <a href="{{ url_for('public.event', event_id=current_event.id, _external=True) }}?embed=1" class="btn btn-default btn-sm" id="embed-link">
-      <i class="fa fa-external-link" aria-hidden="true"></i>
-      Embed</a>
     <a href="{{ url_for('admin.event', event_id=current_event.id) }}" class="btn btn-warning btn-sm">
       <i class="fa fa-pencil" aria-hidden="true"></i>
       Edit event</a>

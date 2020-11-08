@@ -20,22 +20,21 @@
         <link rel="stylesheet" href="/static/css/honeycomb.css">
         <link rel="stylesheet" href="/static/css/style.css">
         <style type="text/css">{{ current_event.custom_css }}</style>
-
-        <script type="text/javascript" src="/static/libs/jquery/jquery.min.js"></script>
-        <script type="text/javascript" src="/static/libs/popper.js/umd/popper.min.js"></script>
-        <script type="text/javascript" src="/static/libs/bootstrap/js/bootstrap.min.js"></script>
-        <script type="text/javascript" src="/static/js/plugins.js"></script>
-        <script type="text/javascript" src="/static/js/script.js"></script>
-        <script type="text/javascript" src="/static/libs/FlipClock/flipclock.min.js"></script>
-        <script type="text/javascript" src="/static/js/clock.js"></script>
     </head>
 
     <body class="dashboard-page">
 
+      <div class="superpowers">
+        <button class="show-announcements"
+          onclick="$('#announcements').show();$(this).hide()">📣</button>
+        <button class="darkmode">☽</button>
+      </div>
+
       <div class="container-fluid">
         <div class="row">
+
           <nav class="col-md-2 sidebar">
-            <div class="sidebar-sticky" id="projects"></div>
+            <div id="projects"></div>
             <!-- <div class="sidebar-sticky" id="schedule">
               {{ current_event.description|safe }}
             </div> -->
@@ -45,9 +44,7 @@
             <img id="event-logo" src="{{ current_event.logo_url }}">
 
             <div class="panel-body">
-                <button class="show-announcements"
-                  onclick="$('#announcements').show();$(this).hide()">📣</button>
-                <div id="announcements" class="editable hidden">Attention!</div>
+              <textarea id="announcements" class="editable hidden">Attention! This is a public hackathon service broadcast.</textarea>
             </div>
 
             {% if current_event.countdown %}
@@ -78,14 +75,22 @@
     display: none;
   }
   #projects {
-    color: #DDA;
+    color: #fff;
     font: 14pt/29pt sans-serif;
     overflow: hidden;
+    list-style-type: none;
+    padding: 0px;
+  }
+  #projects div {
+    padding: 5px 0px;
+    margin: 10px 0px;
+    cursor: pointer;
+    line-height: 1.4em;
   }
   #projects a {
     color: inherit;
     text-decoration: none;
-    opacity: 0.9;
+    opacity: 1;
   }
   #projects sp {
     display: block;
@@ -126,14 +131,25 @@
   #schedule > * { display: none; }
 
   #announcements {
-      font-size: 50px;
-      font-weight: bold;
-      color: yellow;
-      background: darkblue;
-      opacity: 0.8;
+    width: 100%;
+    height: 6em;
+    font-size: 50px;
+    font-weight: bold;
+    padding: 0em 0.3em;
+    color: blue;
+    resize: both;
+    background: #ffd73e;
+    border-width: 10px;
+    border-image: url("data:image/svg+xml;charset=utf-8,%3Csvg width='100' height='100' viewBox='0 0 100 100' fill='none' xmlns='http://www.w3.org/2000/svg'%3E %3Cstyle%3Epath%7Banimation:stroke 5s infinite linear%3B%7D%40keyframes stroke%7Bto%7Bstroke-dashoffset:776%3B%7D%7D%3C/style%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='0%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%232d3561' /%3E%3Cstop offset='25%25' stop-color='%23c05c7e' /%3E%3Cstop offset='50%25' stop-color='%23f3826f' /%3E%3Cstop offset='100%25' stop-color='%23ffb961' /%3E%3C/linearGradient%3E %3Cpath d='M1.5 1.5 l97 0l0 97l-97 0 l0 -97' stroke-linecap='square' stroke='url(%23g)' stroke-width='3' stroke-dasharray='388'/%3E %3C/svg%3E") 1;
   }
-  .show-announcements {
-    position: absolute; top:0px; border:0px; background:none; opacity: 0.5;
+  .superpowers {
+    position: absolute;
+    bottom: 0px; right: 0px;
+  }
+  .superpowers button {
+    border: 0px;
+    background: none;
+    opacity: 0.5;
   }
   .show-announcements:hover {
     opacity: 1;
@@ -160,7 +176,7 @@
     background: white;
   }
   #activities div {
-    background:rgba(255,255,255,0.5);
+    background:rgba(200,200,200,0.5);
     box-shadow: 5px 5px 5px rgba(0,0,0,0.4);
     font-size: 80%;
     padding: 0 0.3em;
@@ -178,7 +194,21 @@
 
   .vega-actions-wrapper, .vega-actions { display: none; }
 
+  .blue-background-class {
+    background: rgba(100, 100, 255, 0.5);
+  }
+
 </style>
+
+<script type="text/javascript" src="/static/libs/jquery/jquery.min.js"></script>
+<script type="text/javascript" src="/static/libs/jquery-sortable/jquery-sortable-min.js"></script>
+<script type="text/javascript" src="/static/libs/popper.js/umd/popper.min.js"></script>
+<script type="text/javascript" src="/static/libs/bootstrap/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="/static/js/plugins.js"></script>
+<script type="text/javascript" src="/static/js/script.js"></script>
+<script type="text/javascript" src="/static/libs/FlipClock/flipclock.min.js"></script>
+<script type="text/javascript" src="/static/js/clock.js"></script>
+
 <script>
 refreshProjects = function() {
   $.getJSON('/api/event/current/projects.json', function(data) {
@@ -188,6 +218,9 @@ refreshProjects = function() {
         '<a href="/project/'+p.id+'">'+p.name+'</a>' +
         '<sp style="width:'+p.score+'px"></sp>' +
       '</div>');
+    });
+    $pp.sortable({
+      ghostClass: 'blue-background-class'
     });
   });
 

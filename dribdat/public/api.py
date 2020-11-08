@@ -6,14 +6,16 @@ from flask_login import login_required, current_user
 from sqlalchemy import or_
 
 from ..extensions import db
-from ..utils import timesince
+from ..utils import timesince, random_password
 
 from ..user.models import Event, Project, Category, Activity
 from ..aggregation import GetProjectData
 
 from datetime import datetime
 from flask import Response, stream_with_context
-import io, csv, json, sys
+
+import io, csv, json, sys, tempfile
+from os import path
 PY3 = sys.version_info[0] == 3
 
 blueprint = Blueprint('api', __name__, url_prefix='/api')
@@ -285,3 +287,35 @@ def project_autofill():
     url = request.args.get('url')
     data = GetProjectData(url)
     return jsonify(data)
+
+
+import boto3, botocore
+from botocore.exceptions import ClientError
+from botocore.client import Config
+
+# API: Enables uploading images into a project
+@blueprint.route('/project/uploader', methods=["POST"])
+@login_required
+def project_uploader():
+    if not current_app.config['S3_KEY']: return ''
+    if len(request.files) == 0: return 'No files selected'
+    img = request.files['file']
+    if not img or img.filename == '': return 'No filename'
+    ext = img.filename.split('.')[-1].lower()
+    if not ext in ['png','jpg','jpeg','gif']: return 'Invalid format'
+    filename = random_password(24) + '.' + ext
+    # with tempfile.TemporaryDirectory() as tmpdir:
+        # img.save(path.join(tmpdir, filename))
+    s3_filepath = '/'.join([current_app.config['S3_FOLDER'], filename])
+    print('Uploading to %s' % s3_filepath)
+    s3_obj = boto3.client('s3',
+      aws_access_key_id=current_app.config['S3_KEY'],
+      aws_secret_access_key=current_app.config['S3_SECRET'],
+      config=botocore.client.Config(region_name=current_app.config['S3_REGION']))
+    s3_obj.upload_fileobj(
+        img,
+        current_app.config['S3_BUCKET'],
+        s3_filepath,
+        ExtraArgs={ 'ContentType': img.content_type, 'ACL': 'public-read' }
+      )
+    return '/'.join([current_app.config['S3_HTTPS'], s3_filepath])

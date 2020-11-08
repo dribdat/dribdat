@@ -18,13 +18,20 @@ This project can be deployed to any server capable of serving Python application
 
 Add the **nodejs** build pack in the _Settings_ tab of Heroku to get everything working properly.
 
-You can configure your instance with the following basic environment variables:
+The first user that registers becomes an admin, so don't delay!
+
+## Configuration
+
+You can configure your instance with the following **basic environment** variables:
 
 * `SERVER_URL` - fully qualified domain name where the site is hosted
 * `SERVER_SSL` - in production, add this to make the app redirect all visitors to the HTTPS address
 * `TIME_ZONE` - set if your event is not in UTC time (e.g. "Europe/Zurich" - see [pytz docs](https://pythonhosted.org/pytz/))
 * `DATABASE_URL` - if you are using the Postgres add-on, this would be postgres://username:password@... - in Heroku this is set automatically
 * `CACHE_TYPE` - in production, you can use built-in, Redis, Memcache to speed up your site (see `settings.py`)
+
+The following options can be used to toggle **application features**:
+
 * `DRIBDAT_ENV` - 'dev' to enable debugging, 'prod' to optimise assets etc.
 * `DRIBDAT_SECRET` - a long scary string for hashing your passwords - in Heroku this is set automatically
 * `DRIBDAT_APIKEY` - for connecting clients to the remote [API](#api)
@@ -33,24 +40,31 @@ You can configure your instance with the following basic environment variables:
 * `DRIBDAT_CLOCK` - use 'up' or 'down' to change the position, and 'off' to hide the countdown everywhere
 * `DRIBDAT_CERT_PATH` - a URL that prefixes the download link for user certificates, followed by the SSO_ID and `.pdf` extension
 
-Support for Web analytics can be configured using one of the following variables:
+Support for **Web analytics** can be configured using one of the following variables:
 
-* `ANALYTICS_FATHOM` ([Fathom](https://usefathom.com/), with optional `ANALYTICS_FATHOM_SITE` if you use a custom site)
+* `ANALYTICS_FATHOM` ([Fathom](https://usefathom.com/) - with optional `ANALYTICS_FATHOM_SITE` if you use a custom site)
 * `ANALYTICS_SIMPLE` ([Simple Analytics](https://simpleanalytics.com))
 * `ANALYTICS_GOOGLE` (starts with "UA-...")
+* `ANALYTICS_HREF` - an optional link in the footer to a public dashboard for your analytics
 
-If you have a public dashboard for your analytics, you can add the link to the footer by setting it in `ANALYTICS_HREF`.
-
-OAuth 2.0 support is currently available using [Flask Dance](https://flask-dance.readthedocs.io/) (see [issue #118](https://github.com/hackathons-ftw/dribdat/issues/118)). To authenticate your users, the following variables should be set:
+OAuth 2.0 support for **Single Sign-On** is currently available using [Flask Dance](https://flask-dance.readthedocs.io/) (see [issue #118](https://github.com/hackathons-ftw/dribdat/issues/118)). To authenticate your users, the following variables should be set:
 
 * `OAUTH_TYPE` - e.g. 'Slack'
 * `OAUTH_ID` - the Client ID of your app (e.g. from [api.slack.com](https://api.slack.com/apps/))
 * `OAUTH_SECRET` - the Client Secret of your app
 * `OAUTH_DOMAIN` - (optional) subdomain of your Slack instance
 
-Use `.flaskenv` or `.env` to store environment variables for local development.
+For **uploading images** and other files directly within dribdat, you can configure S3 through Amazon and compatible providers:
 
-The first user that registers becomes an admin, so don't delay!
+* `S3_KEY` - the access key (20 characters, all caps)
+* `S3_SECRET` - the generated secret (long, mixed case)
+* `S3_BUCKET` - the name of your S3 bucket
+* `S3_REGION` - defaults to 'eu-west-1'
+* `S3_FOLDER` - leave blank unless you want to store to a subfolder
+* `S3_HTTPS` - the URL for web access to your bucket's public files
+* `MAX_CONTENT_LENGTH` - defaults to 1048576 bytes (1 MB) file size
+
+**Tip**: Use `.flaskenv` or `.env` to store environment variables for local development.
 
 ## API
 
