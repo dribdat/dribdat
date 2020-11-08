@@ -97,6 +97,53 @@
   //
   // });
 
+  // Upload images
+  $('#uploadImage').each(function() {
+    var $dialog = $(this);
+    var $inputfd = $dialog.find('input[type="file"]');
+    $inputfd.change(function() {
+      var imgfile = $inputfd[0].files[0];
+      var fdd = new FormData();
+      fdd.append('file', imgfile);
+      $.ajax({
+        url: '/api/project/uploader',
+        type: 'post',
+        data: fdd,
+        processData: false,
+        contentType: false,
+        success: function(response) {
+          if (response.indexOf('http') !== 0) {
+             return alert('File could not be uploaded :(\n' + response);
+          }
+          $dialog.find(".preview img").attr("src", response);
+          $dialog.find(".preview input").val(response);
+          $dialog.find(".hidden").show();
+          $('#img-confirm').show().find('button').click(function() {
+            if ($(this).attr('data-target') == 'cover') {
+              // Replace the cover
+              $('#image_url').val(response);
+              $dialog.modal('hide');
+            } else if ($(this).attr('data-target') == 'pitch') {
+              // Append to pitch
+              $('#longtext').val($('#longtext').val() +
+                '\n\n' + '![Title](' + response + ')');
+              $dialog.modal('hide');
+            } else {
+              // Copy to clipboard
+              if (navigator.clipboard) {
+                navigator.clipboard.writeText(response);
+                $dialog.modal('hide');
+              } else {
+                $dialog.find(".preview input").click().select();
+                document.execCommand("copy");
+              }
+            }
+          });
+        }
+      }); // -ajax
+    }); // -change
+  }); // -#uploadImage
+
   // Clickable categories navigation
   var $navCategories = $('.nav-categories .btn-group label').click(function(e) {
     $(this).parent().find('.active').removeClass('active');
@@ -157,7 +204,8 @@
   });
 
   // Enable dark mode
-  $('.darkmode').click(function() {
+  $('.darkmode').click(function(e) {
+    e.preventDefault(); e.stopPropagation();
     if (window.darkmode) {
       $('html').attr('style','');
       return window.darkmode = false;

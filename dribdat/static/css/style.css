@@ -12,6 +12,8 @@ textarea { resize: vertical; }
   max-width: 700px;
 }
 
+.hidden { display: none; }
+
 /* Forms */
 form input[type="checkbox"] {
   margin-right: 0.5em;
@@ -40,6 +42,11 @@ form input[type="checkbox"] {
 }
 .form-project-post textarea {
   height: 4em;
+}
+.upload-note {
+  font-size: 90%;
+  margin: 1em 0;
+  opacity: 0.8;
 }
 
 /* pagination */
@@ -224,9 +231,13 @@ nav .navbar-nav .nav-item {
 .project-page.phase-Challenge .progress,
 .hide-challenges .challenge,
 .challenge.hexagon .progress { display: none; }
-.challenge.hexagon .hexagontent { color: #35a; font-weight: normal; }
+.challenge.hexagon .hexagontent {
+  color: #35a;
+  font-weight: normal;
+  padding: 4px 0px;
+}
 .challenge.hexagon {
-  background-color: white !important;
+  background-color: white;
   border-top: 1px dashed rgba(0,0,200,0.4);
   border-bottom: 1px dashed rgba(0,0,200,0.4);
 }
@@ -238,11 +249,13 @@ nav .navbar-nav .nav-item {
   border-top: 1px dashed rgba(0,0,200,0.4);
   border-bottom: 1px dashed rgba(0,0,200,0.4);
 }
-
-.project.hexagon {
+.challenge.hexagon:hover {
+  box-shadow: none;
+}
+.hexagon {
   margin-bottom: 60px;
 }
-.project.hexagon:hover {
+.hexagon:hover {
   box-shadow: 0px 3px 3px lightblue;
 }
 .project .hexagontent {
@@ -325,8 +338,8 @@ nav .navbar-nav .nav-item {
   background-size: cover;
   background-position: center;
 }
-.hexagon:nth-child(even) { background-color: #f0e0a2; }
-.hexagon:nth-child(odd) { background-color: #adddcf; }
+.project.hexagon:nth-child(even) { background-color: #f0e0a2; }
+.project.hexagon:nth-child(odd) { background-color: #adddcf; }
 
 .project-page .project-name {
   font-weight: bold;
@@ -344,11 +357,16 @@ nav .navbar-nav .nav-item {
   font-weight: normal;
   color: #999;
 }
-.project-page .project-image {
-  max-height: 200px;
-  max-width: 30%;
-  float: left;
-  margin-right: 40px;
+.project-home .project-image {
+  margin-top: 10px;
+  margin-bottom: -10px;
+  height: 200px;
+  width: 100%;
+  display: block;
+  background-repeat: no-repeat;
+  background-position-x: center;
+  background-position-y: center;
+  background-size: cover;
 }
 .project-page .details {
   font-size: 80%;

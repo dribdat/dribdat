@@ -61,11 +61,13 @@
   {% endif %}
 </div><br clear="all">
 
-<div class="jumbotron project-page phase-{{ project.phase }}" {% if project.logo_color %} style="background-color:{{project.logo_color}}"{% endif %}>
+{% if project.image_url %}
+  <a class="project-image"
+    style="background-image:url('{{project.image_url}}')"
+    href="{{project.image_url}}" target="_blank"></a>
+{% endif %}
 
-  {% if project.image_url %}
-    <img class="project-image" src="{{project.image_url}}">
-  {% endif %}
+<div class="jumbotron project-page phase-{{ project.phase }}" {% if project.logo_color %} style="background-color:{{project.logo_color}}"{% endif %}>
 
   <div class="project-score">
     <span class="label label-info">{{ project.phase }}</span>

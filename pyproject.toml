@@ -41,9 +41,9 @@ flask-dance = { git = "https://github.com/loleg/flask-dance.git", branch = "main
 email_validator = "^1.1.1"
 python-dotenv = "^0.13.0"
 flask-talisman = "^0.7.0"
-urllib3 = "1.24.2"
 pystache = "^0.5.4"
 micawber = "^0.5.1"
+boto3 = "^1.16.13"
 
 [tool.poetry.dev-dependencies]
 factory-boy = "*"

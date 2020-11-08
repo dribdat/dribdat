@@ -9,10 +9,10 @@ def sanitize_input(text):
     """ Removes unsavoury characters """
     return re.sub(r"[^a-zA-Z0-9_]+", '', text)
 
-def random_password():
+def random_password(pwdlen=20):
     """ A strongly secure random string """
     import string, random
-    return ''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(20))
+    return ''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(pwdlen))
 
 def flash_errors(form, category='warning'):
     """Flash all errors for a form."""
