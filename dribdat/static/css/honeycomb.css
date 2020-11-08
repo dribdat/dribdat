@@ -5,7 +5,7 @@
   position: relative;
   display: inline-block;
   /* left/right margin approx. 25% of .hexagon width + spacing */
-  margin: 1px 18px;
+  margin: 1px 21px;
   background-color: hsl(220, 75%, 75%);
   text-align: center;
 }
@@ -13,8 +13,8 @@
   /* easy way: height is width * 1.732
   actual formula is 2*(width/(2*Math.tan(Math.PI/6)))
   remove border-radius for straight edges on hexagons */
-  width: 67px;
-  height: 116px;
+  width: 82px;
+  height: 142px;
   border-radius: 20%/5%;
 }
 .hexagon::before {
@@ -33,7 +33,7 @@
 }
 .hexagon:nth-child(even) {
   /* top approx. 50% of .hexagon height + spacing */
-  top: 59px;
+  top: 73px;
 }
 .hexagon:hover {
   background-color: hsla(60, 75%, 75%, 1.0);
@@ -43,16 +43,6 @@
 .hexagon:active {
   background-color: hsla(60, 75%, 50%, 1.0);
   z-index: 110;
-}
-.hexanone {
-  position: relative;
-  display: inline-block;
-  width: 67px;
-  height: 116px;
-  margin: 1px 18px;
-}
-.hexanone:nth-child(even) {
-  top: 59px;
 }
 .hexagontent {
   position: absolute;

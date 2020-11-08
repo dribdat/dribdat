@@ -79,7 +79,9 @@ def event(event_id):
     summaries.sort(key=lambda x: (
         -x['score'] if isinstance(x['score'], int) else 0,
         x['name'].lower()))
-    return render_template("public/event.html",  current_event=event, projects=summaries)
+    project_count = projects.count()
+    return render_template("public/event.html", current_event=event,
+        projects=summaries, project_count=project_count)
 
 @blueprint.route("/event/<int:event_id>/participants")
 def event_participants(event_id):

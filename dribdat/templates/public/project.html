@@ -42,6 +42,12 @@
     {% endif %}
   {% endif %}
 
+  {% if current_user.is_admin and project.event.lock_editing and project_starred %}
+    <a class="btn btn-secondary" href="{{ url_for('public.project_unstar', project_id=project.id) }}" class="project-star">
+      <i class="fa fa-star"></i>
+    </a>
+  {% endif %}
+
   {% if not project.event.lock_editing %}
     {% if project_starred %}<!-- Already starred -->
       <a title="You are a member of the project. Click to leave." class="btn btn-primary" href="{{ url_for('public.project_unstar', project_id=project.id) }}" class="project-star" title="Click to leave the project" onclick="return confirm('Are you sure you wish to leave the team?')">
@@ -244,12 +250,6 @@
       <a href="{{ project.source_url }}" class="btn btn-lg" target="_blank" title="Source code"><span>&#x1f4bb;</span> Source</a>
     {% endif %}
   </div>
-
-  {% if project_starred and current_user.is_admin %}
-    <a class="btn btn-secondary" href="{{ url_for('public.project_unstar', project_id=project.id) }}" class="project-star">
-      <i class="fa fa-star"></i> Leave
-    </a>
-  {% endif %}
 
   {% if project.category %}
   <div class="panel panel-default category-details">
