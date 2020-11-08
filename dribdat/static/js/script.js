@@ -99,6 +99,9 @@
 
   // Upload images
   $('#uploadImage').each(function() {
+    var $togglebtn = $('button[data-target="#uploadImage"]');
+    $('.fld-longtext').append($togglebtn);
+    $('.fld-image_url').append($togglebtn.clone());
     var $dialog = $(this);
     var $inputfd = $dialog.find('input[type="file"]');
     $inputfd.change(function() {
@@ -139,6 +142,13 @@
               }
             }
           });
+        },
+        error: function(e) {
+          if (e.statusText.indexOf('TOO LARGE')>0) {
+            alert("Please upload a smaller file (1 MB limit)");
+          } else {
+            alert("Sorry, an error has occurred.\n" + e.statusText);
+          }
         }
       }); // -ajax
     }); // -change
