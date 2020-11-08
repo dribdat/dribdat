@@ -44,8 +44,9 @@
               <span class="input-group-text" id="inputFileLabel">Select</span>
             </div>
             <div class="custom-file">
-              <input type="file" class="custom-file-input" id="inputImageFile" name="image"
-                aria-describedby="inputFileLabel" accept="image/*">
+              <input type="file" class="custom-file-input" id="inputImageFile"
+                name="image" aria-describedby="inputFileLabel" accept="image/*"
+                data-maxsize="{{ config.MAX_CONTENT_LENGTH }}">
               <label class="custom-file-label" for="inputImageFile">Choose file</label>
             </div>
           </div>
