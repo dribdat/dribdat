@@ -369,7 +369,7 @@ nav .navbar-nav .nav-item {
 }
 .project-home .project-image {
   margin-top: 10px;
-  margin-bottom: -10px;
+  margin-bottom: -15px;
   height: 200px;
   width: 100%;
   display: block;
@@ -377,6 +377,24 @@ nav .navbar-nav .nav-item {
   background-position-x: center;
   background-position-y: center;
   background-size: cover;
+  opacity: 0.1;
+}
+.project-home .jumbotron.project-page {
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+}
+.project-home .project-image.underlay {
+  filter: blur(2px);
+}
+.project-home .project-image.overlay {
+  opacity: 1.0;
+}
+.project-home #overlayImage {
+  position: absolute;
+  margin-top: -170px;
+  margin-left: 10px;
+  height: 160px;
+  overflow: hidden;
 }
 .project-page .details {
   font-size: 80%;

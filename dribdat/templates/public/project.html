@@ -68,9 +68,9 @@
 </div><br clear="all">
 
 {% if project.image_url %}
-  <a class="project-image"
-    style="background-image:url('{{project.image_url}}')"
-    href="{{project.image_url}}" target="_blank"></a>
+  <div class="project-image"
+    style="background-image:url('{{project.image_url}}'); {% if project.logo_color %}background-color:{{project.logo_color}}; opacity:1.0{% endif %}"
+    data-href="{{project.image_url}}"></div>
 {% endif %}
 
 <div class="jumbotron project-page phase-{{ project.phase }}" {% if project.logo_color %} style="background-color:{{project.logo_color}}"{% endif %}>

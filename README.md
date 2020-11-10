@@ -4,7 +4,7 @@
 [![Coveralls](https://coveralls.io/repos/github/datalets/dribdat/badge.svg?branch=master)](https://coveralls.io/github/datalets/dribdat?branch=master)
 [![Mattermost](https://img.shields.io/badge/Mattermost-chat-blue.svg)](https://team.opendata.ch/signup_user_complete/?id=74yuxwruaby9fpoukx9bmoxday)
 
-An open source platform for data-driven team collaboration, such as *Hackathons*.
+### An open source platform for time-limited team-based data-driven solutions-focused collaboration known as the *Hackathon*.
 
 If you need help or advice in setting up your event, or would like to contribute to the project: please get in touch via [datalets.ch](https://datalets.ch) or [GitHub Issues](https://github.com/hackathons-ftw/dribdat/issues).
 
@@ -24,10 +24,10 @@ The first user that registers becomes an admin, so don't delay!
 
 You can configure your instance with the following **basic environment** variables:
 
+* `TIME_ZONE` - set if your event is not in UTC time (e.g. "Europe/Zurich" - see [pytz docs](https://pythonhosted.org/pytz/))
 * `SERVER_URL` - fully qualified domain name where the site is hosted
 * `SERVER_SSL` - redirect all visitors to HTTPS, applying CSP
 * `CSP_DIRECTIVES` - configure content security policy - see [Talisman docs](https://github.com/GoogleCloudPlatform/flask-talisman#content-security-policy)
-* `TIME_ZONE` - set if your event is not in UTC time (e.g. "Europe/Zurich" - see [pytz docs](https://pythonhosted.org/pytz/))
 * `DATABASE_URL` - if you are using the Postgres add-on, this would be postgres://username:password@... - in Heroku this is set automatically
 * `CACHE_TYPE` - speed up the site with built-in, Redis, Memcache - see [Flask-Caching](https://pythonhosted.org/Flask-Caching/)
 

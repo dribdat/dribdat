@@ -57,7 +57,7 @@
                 <span title="Editing locked" class="btn btn-danger btn-sm">Edit</span>
               {% endif %}
               {% if event.lock_starting %}
-                <span title="Creating locked" class="btn btn-danger btn-sm">New</span>
+                <span title="Creating locked" class="btn btn-dark btn-sm">Lock</span>
               {% endif %}
             </td>
             <td>{{ event.starts_at|format_date }}</td>
