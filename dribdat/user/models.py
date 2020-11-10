@@ -87,6 +87,7 @@ class User(UserMixin, PkModel):
         }
 
     def socialize(self):
+        """ Parse the user's web profile """
         self.cardtype = ""
         if self.webpage_url is None:
             self.webpage_url = ""
@@ -107,8 +108,8 @@ class User(UserMixin, PkModel):
         self.carddata = gravatar_url
         self.save()
 
-    # Retrieve all projects user has joined
     def joined_projects(self):
+        """ Retrieve all projects user has joined """
         activities = Activity.query.filter_by(
                 user_id=self.id, name='star'
             ).order_by(Activity.timestamp.desc()).all()
@@ -117,6 +118,22 @@ class User(UserMixin, PkModel):
             if not a.project in projects and not a.project.is_hidden:
                 projects.append(a.project)
         return projects
+
+    @property
+    def last_active(self):
+        """ Retrieve last user activity """
+        act = Activity.query.filter_by(
+                user_id=self.id
+            ).order_by(Activity.timestamp.desc()).first()
+        if not act: return 'Never'
+        return act.timestamp
+
+    @property
+    def activity_count(self):
+        """ Retrieve count of a user's activities """
+        return Activity.query.filter_by(
+                user_id=self.id
+            ).count()
 
     def __init__(self, username=None, email=None, password=None, **kwargs):
         """Create instance."""
