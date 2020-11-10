@@ -20,12 +20,11 @@
         {% if project.contact_url %}
         <li>Contact: <a href="{{ project.contact_url }}">{{ project.contact_url }}</a></li>
         {% endif %}
-        <li>Last update: <span>{{ project.updated_at|format_date }}</span></li>
-        <li>Maintainer: <a href="{{project.user.webpage_url}}" target="_blank">{{ project.user.username }}</a></li>
+        <li>Updated: <span>{{ project.updated_at|format_date }}</span> ({{project.score}}%)</li>
+        <li>Created: <span>{{ project.created_at|format_date }}</span> by <a href="{{project.user.webpage_url}}" target="_blank">{{ project.user.username }}</a></li>
         {% if project.category_id %}
-        <li>Category: <span>{{ project.category.name }}</span></li>
+        <li>Category: <b>{{ project.category.name }}</b></li>
         {% endif %}
-        <li>Points: {{project.score}}</li>
       </ul>
 
       {% if project.image_url %}
@@ -49,6 +48,12 @@
         {{project.longtext|truncate(250)|markdown}}
       </div>
       {% endif %}
+
+      <ul class="project-team">
+      {% for user in project.team() %}
+        <li><a href="{{user.webpage_url}}" target="_blank">{{ user.username }}</a></li>
+      {% endfor %}
+      </ul>
     </div>
 
     <br clear="all">

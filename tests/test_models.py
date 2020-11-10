@@ -79,7 +79,7 @@ class TestEvent:
         assert event.name == "test"
         assert event.countdown is not None
         assert event.countdown == timezone.localize(event_dt)
-        assert timesince(event.countdown, until=True) == "1 weeks to go"
+        assert timesince(event.countdown, until=True) == "1 week to go"
 
     def test_countdown_24_days(self, db):
         now = dt.datetime.now()
@@ -95,16 +95,21 @@ class TestEvent:
         assert timesince(event.countdown, until=True) == "3 weeks to go"
 
     def test_countdown_4_hours(self, db):
-        now = dt.datetime.now()
         timezone = pytz.timezone(Config.TIME_ZONE)
+        now = dt.datetime.now()
+        tz_now = timezone.localize(dt.datetime.utcnow())
         # need to add 10 seconds to avoid timesince to compute 3.9999h
         # formated to 3 by timesince
         event_dt = now + dt.timedelta(hours=4, seconds=10)
         event = Event(name="test", starts_at=event_dt)
         event.save()
 
+        tz_event = timezone.localize(event_dt)
+        timediff = tz_event - tz_now
+        timediff_hours = timediff.total_seconds()//3600
+
         assert event.starts_at == event_dt  # store as naive
         assert event.name == "test"
         assert event.countdown is not None
-        assert event.countdown == timezone.localize(event_dt)
-        assert timesince(event.countdown, until=True) == "4 hours to go"
+        assert event.countdown == tz_event
+        assert timesince(event.countdown, until=True) == "%d hours to go" % timediff_hours

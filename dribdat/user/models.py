@@ -16,43 +16,53 @@ from flask import current_app
 
 from dribdat.extensions import hashing
 from dribdat.database import (
-    Column,
     db,
     Model,
-    reference_col,
+    Column,
+    PkModel,
     relationship,
-    SurrogatePK,
+    reference_col,
 )
 from dribdat.utils import (
-    format_date_range, format_date,
-    format_webembed,
+    format_date_range, format_date, timesince
 )
+from dribdat.onebox import format_webembed
 from dribdat.user import PROJECT_PROGRESS_PHASE
 
-from sqlalchemy import or_
+from sqlalchemy import Table, or_
 
-class Role(SurrogatePK, Model):
+users_roles = Table('users_roles', db.metadata,
+    Column('user_id', db.Integer, db.ForeignKey('users.id'), primary_key=True),
+    Column('role_id', db.Integer, db.ForeignKey('roles.id'), primary_key=True)
+)
+
+class Role(PkModel):
+    """A role of the contributor."""
+
     __tablename__ = 'roles'
     name = Column(db.String(80), unique=True, nullable=False)
-    user_id = reference_col('users', nullable=True)
-    user = relationship('User', backref='roles')
 
-    def __init__(self, name, **kwargs):
+    def __init__(self, name=None, **kwargs):
         """Create instance."""
-        db.Model.__init__(self, name=name, **kwargs)
+        super().__init__(name=name, **kwargs)
 
     def __repr__(self):
         """Represent instance as a unique string."""
-        return '<Role({name})>'.format(name=self.name)
+        return f"<Role({self.name})>"
 
+    # Number of users
+    def user_count(self):
+        users = User.query.filter(User.roles.contains(self))
+        return users.count()
 
-class User(UserMixin, SurrogatePK, Model):
+class User(UserMixin, PkModel):
     """A user of the app."""
 
     __tablename__ = 'users'
     username = Column(db.String(80), unique=True, nullable=False)
     email = Column(db.String(80), unique=True, nullable=False)
     webpage_url = Column(db.String(128), nullable=True)
+
     sso_id = Column(db.String(128), nullable=True)
     #: The hashed password
     password = Column(db.String(128), nullable=True)
@@ -60,8 +70,14 @@ class User(UserMixin, SurrogatePK, Model):
     active = Column(db.Boolean(), default=False)
     is_admin = Column(db.Boolean(), default=False)
 
+    # External profile
     cardtype = Column(db.String(80), nullable=True)
     carddata = Column(db.String(255), nullable=True)
+
+    # Internal profile
+    roles = relationship('Role', secondary=users_roles, backref='users')
+    my_story = Column(db.UnicodeText(), nullable=True)
+    my_goals = Column(db.UnicodeText(), nullable=True)
 
     @property
     def data(self):
@@ -71,22 +87,36 @@ class User(UserMixin, SurrogatePK, Model):
         }
 
     def socialize(self):
+        self.cardtype = ""
         if self.webpage_url is None:
             self.webpage_url = ""
-        if 'github.com/' in self.webpage_url:
+        elif 'github.com/' in self.webpage_url:
             self.cardtype = 'github'
-            self.carddata = self.webpage_url.strip('/').split('/')[-1]
+            # self.carddata = self.webpage_url.strip('/').split('/')[-1]
         elif 'twitter.com/' in self.webpage_url:
-            self.cardtype = 'twitter'
-            self.carddata = self.webpage_url.strip('/').split('/')[-1]
-        else:
-            gr_size = 40
-            email = self.email.lower().encode('utf-8')
-            gravatar_url = hashlib.md5(email).hexdigest() + "?"
-            gravatar_url += urlencode({'s':str(gr_size)})
-            self.cardtype = 'gravatar'
-            self.carddata = gravatar_url
+            self.cardtype = 'twitter-square'
+            # self.carddata = self.webpage_url.strip('/').split('/')[-1]
+        elif 'linkedin.com/' in self.webpage_url:
+            self.cardtype = 'linkedin-square'
+        elif 'stackoverflow.com/' in self.webpage_url:
+            self.cardtype = 'stack-overflow'
+        gr_size = 80
+        email = self.email.lower().encode('utf-8')
+        gravatar_url = hashlib.md5(email).hexdigest() + "?"
+        gravatar_url += urlencode({'s':str(gr_size)})
+        self.carddata = gravatar_url
         self.save()
+
+    # Retrieve all projects user has joined
+    def joined_projects(self):
+        activities = Activity.query.filter_by(
+                user_id=self.id, name='star'
+            ).order_by(Activity.timestamp.desc()).all()
+        projects = []
+        for a in activities:
+            if not a.project in projects and not a.project.is_hidden:
+                projects.append(a.project)
+        return projects
 
     def __init__(self, username=None, email=None, password=None, **kwargs):
         """Create instance."""
@@ -108,7 +138,7 @@ class User(UserMixin, SurrogatePK, Model):
         return '<User({username!r})>'.format(username=self.username)
 
 
-class Event(SurrogatePK, Model):
+class Event(PkModel):
     __tablename__ = 'events'
     name = Column(db.String(80), unique=True, nullable=False)
     hostname = Column(db.String(80), nullable=True)
@@ -183,19 +213,21 @@ class Event(SurrogatePK, Model):
     def can_start_project(self):
         return not self.has_finished and not self.lock_starting
 
+
     @property
     def countdown(self):
         # Normalizing dates & timezones.
-        timezone = pytz.timezone(current_app.config['TIME_ZONE'])
-        utc_now = dt.datetime.now(tz=pytz.utc)
-        starts_at = timezone.localize(self.starts_at)
-        ends_at = timezone.localize(self.ends_at)
-        TIME_LIMIT = utc_now + dt.timedelta(days=30)
-
-        if starts_at > utc_now:
+        tz = pytz.timezone(current_app.config['TIME_ZONE'])
+        starts_at = tz.localize(self.starts_at)
+        ends_at = tz.localize(self.ends_at)
+        # Check event time limit (hard coded to 30 days)
+        tz_now = tz.localize(dt.datetime.utcnow())
+        TIME_LIMIT = tz_now + dt.timedelta(days=30)
+        # Show countdown within limits
+        if starts_at > tz_now:
             if starts_at > TIME_LIMIT: return None
             return starts_at
-        elif ends_at > utc_now:
+        elif ends_at > tz_now:
             if ends_at > TIME_LIMIT: return None
             return ends_at
         else:
@@ -226,7 +258,7 @@ class Event(SurrogatePK, Model):
     def __repr__(self):
         return '<Event({name})>'.format(name=self.name)
 
-class Project(SurrogatePK, Model):
+class Project(PkModel):
     __tablename__ = 'projects'
     name = Column(db.String(80), unique=True, nullable=False)
     summary = Column(db.String(120), nullable=True)
@@ -267,6 +299,69 @@ class Project(SurrogatePK, Model):
     def latest_activity(self):
         return Activity.query.filter_by(project_id=self.id).order_by(Activity.timestamp.desc()).limit(5)
 
+    # Return all starring users (A team)
+    def team(self):
+        activities = Activity.query.filter_by(
+            name='star', project_id=self.id
+        ).all()
+        members = []
+        for a in activities:
+            if not a.user in members and a.user.active:
+                members.append(a.user)
+        return members
+
+    # Query which formats the project's timeline
+    def all_signals(self):
+        activities = Activity.query.filter_by(
+                        project_id=self.id
+                    ).order_by(Activity.timestamp.desc())
+        signals = []
+        prev = None
+        for a in activities:
+            title = text = None
+            if a.action == 'sync':
+                title = "Synchronized"
+                text = "Readme fetched from source by " + a.user.username
+            elif a.action == 'post':
+                title = "Progress made"
+                if a.content is not None:
+                    text = a.content + "\n\n-- " + a.user.username
+            elif a.name == 'star':
+                title = "Team forming"
+                text = a.user.username + " has joined"
+            elif a.name == 'update':
+                title = "Documentation"
+                text = "Worked on by " + a.user.username
+            elif a.name == 'create':
+                title = "Project started"
+                text = "Initialized by " + a.user.username
+            # Check if user is still active
+            if not a.user.active: continue
+            # Check if last signal very similar
+            if prev is not None:
+                if (
+                    prev['title'] == title and prev['text'] == text
+                    # and (prev['date']-a.timestamp).total_seconds() < 120
+                ):
+                    continue
+            prev = {
+                'title': title,
+                'text': text,
+                'date': a.timestamp
+            }
+            signals.append(prev)
+        if self.event.has_started or self.event.has_finished:
+            signals.append({
+                'title': "Hackathon started",
+                'date': self.event.starts_at
+            })
+        if self.event.has_finished:
+            signals.append({
+                'title': "Hackathon finished",
+                'date': self.event.ends_at
+            })
+        return sorted(signals, key=lambda x: x['date'], reverse=True)
+
     # Convenience query for all categories
     def categories_all(self, event=None):
         if self.event: return self.event.categories_for_event()
@@ -287,6 +382,15 @@ class Project(SurrogatePK, Model):
         return format_webembed(self.webpage_url)
 
     @property
+    def longhtml(self):
+        """ Process project longtext and return HTML """
+        if not self.longtext or len(self.longtext) < 3:
+            return self.longtext
+        # TODO: apply onebox filter
+        # TODO: apply markdown filter
+        return self.longtext
+
+    @property
     def url(self):
         return "project/%d" % (self.id)
 
@@ -298,19 +402,22 @@ class Project(SurrogatePK, Model):
             'name': self.name,
             'score': self.score,
             'phase': self.phase,
-            'summary': self.summary,
-            'hashtag': self.hashtag,
-            'contact_url': self.contact_url,
-            'image_url': self.image_url,
-            'source_url': self.source_url,
-            'webpage_url': self.webpage_url,
             'progress': self.progress,
-            'maintainer': self.user.username,
-            'event_url': self.event.url,
-            'event_name': self.event.name,
+            'summary': self.summary or '',
+            'hashtag': self.hashtag or '',
+            'contact_url': self.contact_url or '',
+            'image_url': self.image_url or '',
+            'source_url': self.source_url or '',
+            'webpage_url': self.webpage_url or '',
         }
+        if self.user is not None:
+            d['maintainer'] = self.user.username
+        if self.event is not None:
+            d['event_url'] = self.event.url
+            d['event_name'] = self.event.name
         if self.category is not None:
-            d['category'] = self.category.data
+            d['category_id'] = self.category.id
+            d['category_name'] = self.category.name
         return d
 
     def get_schema(self, host_url=''):
@@ -344,26 +451,31 @@ class Project(SurrogatePK, Model):
             # Calculate score based on base progress
             score = self.progress or 0
             cqu = Activity.query.filter_by(project_id=self.id)
-            c_s = cqu.filter_by(name="star").count()
-            score = score + (2 * c_s)
+            c_s = cqu.count()
+            # Get a point for every (join, update, ..) activity in the project's signals
+            score = score + (1 * c_s)
+            # Triple the score for every boost (upvote)
             # c_a = cqu.filter_by(name="boost").count()
-            # score = score + (10 * c_a)
+            # score = score + (2 * c_a)
+            # Add to the score for every complete documentation field
             if self.summary is None: self.summary = ''
             if len(self.summary) > 3: score = score + 3
             if self.image_url is None: self.image_url = ''
             if len(self.image_url) > 3: score = score + 3
             if self.source_url is None: self.source_url = ''
-            if len(self.source_url) > 3: score = score + 10
+            if len(self.source_url) > 3: score = score + 3
             if self.webpage_url is None: self.webpage_url = ''
-            if len(self.webpage_url) > 3: score = score + 10
+            if len(self.webpage_url) > 3: score = score + 3
             if self.logo_color is None: self.logo_color = ''
-            if len(self.logo_color) > 3: score = score + 1
+            if len(self.logo_color) > 3: score = score + 3
             if self.logo_icon is None: self.logo_icon = ''
-            if len(self.logo_icon) > 3: score = score + 1
+            if len(self.logo_icon) > 3: score = score + 3
             if self.longtext is None: self.longtext = ''
+            # Get more points based on how much content you share
             if len(self.longtext) > 3: score = score + 1
             if len(self.longtext) > 100: score = score + 4
             if len(self.longtext) > 500: score = score + 10
+            # Points for external (Readme) content
             if self.autotext is not None:
                 if len(self.autotext) > 3: score = score + 1
                 if len(self.autotext) > 100: score = score + 4
@@ -377,7 +489,7 @@ class Project(SurrogatePK, Model):
     def __repr__(self):
         return '<Project({name})>'.format(name=self.name)
 
-class Category(SurrogatePK, Model):
+class Category(PkModel):
     __tablename__ = 'categories'
     name = Column(db.String(80), nullable=False)
     description = Column(db.UnicodeText(), nullable=True)
@@ -388,7 +500,6 @@ class Category(SurrogatePK, Model):
     event_id = reference_col('events', nullable=True)
     event = relationship('Event', backref='categories')
 
-    @property
     def project_count(self):
         if not self.projects: return 0
         return len(self.projects)
@@ -408,15 +519,21 @@ class Category(SurrogatePK, Model):
     def __repr__(self):
         return '<Category({name})>'.format(name=self.name)
 
-class Activity(SurrogatePK, Model):
+class Activity(PkModel):
     __tablename__ = 'activities'
     name = Column(db.Enum(
         'create',
         'update',
-        # 'boost',
         'star',
         name="activity_type"))
+    action = Column(db.String(32), nullable=True)
+        # 'external',
+        # 'boost',
+        # 'sync',
+        # 'post',
+        # ...
     timestamp = Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)
+    content = Column(db.UnicodeText, nullable=True)
     user_id = reference_col('users', nullable=False)
     user = relationship('User', backref='activities')
     project_id = reference_col('projects', nullable=False)
@@ -428,7 +545,9 @@ class Activity(SurrogatePK, Model):
             'id': self.id,
             'name': self.name,
             'time': int(mktime(self.timestamp.timetuple())),
+            'timesince': timesince(self.timestamp),
             'date': self.timestamp,
+            'content': self.content or '',
             'user_name': self.user.username,
             'user_id': self.user.id,
             'project_id': self.project.id,

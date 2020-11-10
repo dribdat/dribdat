@@ -1,10 +1,12 @@
 -i https://pypi.org/simple
-alembic==1.4.2
+alembic==1.4.3
 aniso8601==7.0.0
-bcrypt==3.1.7
-bleach==3.1.5
+bcrypt==3.2.0
+beautifulsoup4==4.9.3
+bleach==3.2.1
+boto3==1.16.13
 certifi==2020.6.20
-cffi==1.14.0
+cffi==1.14.3
 chardet==3.0.4
 Click==7.1.2
 cssmin==0.2.0
@@ -13,13 +15,13 @@ Flask==1.1.2
 Flask-Assets==2.0
 Flask-Bcrypt==0.7.1
 Flask-Caching==1.9.0
-Flask-Cors==3.0.8
--e git+https://github.com/loleg/flask-dance.git@9c4f3a3fbd0138c2a5352368bee86d92d8bb132d#egg=flask-dance
+Flask-Cors==3.0.9
+-e git+https://github.com/loleg/flask-dance.git@9eca437aaa2c617aaea95b59dd7ebf64ba7bf620#egg=flask-dance
 Flask-Hashing==1.1
 Flask-Login==0.5.0
 Flask-Migrate==2.5.3
 Flask-Misaka==1.0.0
-Flask-SQLAlchemy==2.4.3
+Flask-SQLAlchemy==2.4.4
 flask-talisman==0.7.0
 Flask-WTF==0.14.3
 future==0.18.2
@@ -32,26 +34,27 @@ idna==2.10
 itsdangerous==1.1.0
 jinja2==2.11.2
 jsmin==2.2.2
-lxml==4.5.1
+lxml==4.6.1
 mako==1.1.3
 markupsafe==1.1.1
+micawber==0.5.1
 promise==2.3
-psycopg2-binary==2.8.5
+psycopg2-binary==2.8.6
 pycparser==2.20
 pyquery==1.4.1
+pystache==0.5.4
 python-dateutil==2.8.1
 python-dotenv==0.13.0
 python-editor==1.0.4
-pytz==2020.1
+pytz==2020.4
 redis==3.5.3
 requests==2.24.0
 requests-oauthlib==1.3.0
 rx==1.6.1
 six==1.15.0
-sqlalchemy==1.3.18
-urllib3==1.24.2
+sqlalchemy==1.3.20
 urlobject==2.4.3
 webassets==2.0
 webencodings==0.5.1
 werkzeug==1.0.1
-wtforms==2.3.1
+wtforms==2.3.3

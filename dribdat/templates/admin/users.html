@@ -8,26 +8,35 @@
         <thead>
             <tr>
               <th width="100%">Username</th>
-              <th>Contact</th>
-              <th>Created</th>
               <th>Admin</th>
+              <th>SSO</th>
+              <th>Created</th>
+              <th>Contact</th>
+              <th>Password</th>
             </tr>
         </thead>
-        {% for user in users %}
+        {% for user in data.items %}
         <tr>
             <td style="{% if not user.active %}text-decoration:line-through; color:red;{% endif %}">
               <a href="{{ url_for('admin.user', user_id=user.id) }}">
                 {{ user.username }}
               </a>
-            </td><td>
+            </td>
+            <td>{% if user.is_admin %}&#10003;{% endif %}</td>
+            <td>{% if user.sso_id %}&#10003;{% endif %}</td>
+            <td>{{ user.created_at|format_date }}</td>
+            <td>
               <a href="mailto:{{ user.email }}" class="btn btn-sm btn-info">
-                E-mail
+                Email
+              </a>
+            </td><td>
+              <a href="{{ url_for('admin.user_reset', user_id=user.id) }}" class="btn btn-sm btn-danger" onclick="if(!window.confirm('Reset the password of this user?')) return false">
+                Reset
               </a>
             </td>
-            <td>{{ user.created_at|format_date }}</td>
-            <td>{{ user.is_admin }}</td>
         </tr>
-        {% endfor %}
+      {% endfor %}
     </table>
+  {% include "includes/pagination.html" %}
 </div>
 {% endblock %}

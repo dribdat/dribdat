@@ -1,42 +1,30 @@
 /* =============================================================================
-   App specific CSS file.
+    dribdat custom styles
    ========================================================================== */
 
 /* universal */
 
-html {
-  /*overflow-y: scroll;*/
-}
-
-section {
-  overflow: auto;
-}
-
-textarea {
-  resize: vertical;
-}
-
-h1 {
-  color: #999;
-}
+section { overflow: auto; }
+textarea { resize: vertical; }
 
 .container-narrow {
   margin: 0 auto;
   max-width: 700px;
 }
 
-/* Forms */
+.hidden { display: none; }
 
+/* Forms */
+form input[type="checkbox"] {
+  margin-right: 0.5em;
+}
 .navbar-form input[type="text"],
 .navbar-form input[type="password"] {
   width: 180px;
 }
-
-
 .form-register {
   width: 50%;
 }
-
 .form-register .form-control {
   position: relative;
   font-size: 16px;
@@ -46,7 +34,6 @@ h1 {
      -moz-box-sizing: border-box;
           box-sizing: border-box;
 }
-
 .form-project-post h4 {
   margin-top: 1em;
   font-weight: normal;
@@ -55,6 +42,25 @@ h1 {
 }
 .form-project-post textarea {
   height: 4em;
+}
+.upload-note {
+  font-size: 90%;
+  margin: 1em 0;
+  opacity: 0.8;
+}
+
+/* pagination */
+
+.pagination { margin-bottom: 1em; }
+.pagination > * { margin-right: 0.5em; padding: 0.5em 0.8em; background: #eee; }
+
+.admin .container table td { vertical-align: middle; }
+
+.admin .card.stat {
+  width: 20%;
+  display: inline-block;
+  vertical-align: bottom;
+  background: #f55; color: #fff;
 }
 
 /* footer */
@@ -65,55 +71,69 @@ footer {
   /*border-top: 1px solid #eaeaea;*/
   /*color: #999999;*/
 }
-
 footer a {
   color: #999999;
 }
-
 footer p {
   float: right;
   margin-right: 25px;
 }
-
 footer ul {
   list-style: none;
 }
-
 footer ul li {
   float: left;
   margin-left: 10px;
 }
-
 footer .company {
   float: left;
   margin-left: 25px;
 }
-
 footer .footer-nav {
   float: right;
   margin-right: 25px;
   list-style: none;
 }
-
-/*
-dribdat custom styles
-*/
+footer .footer-nav a { text-decoration: none }
 
 ul.help-block {
   background-color: red; color: white; padding: 5px;
 }
 
+/* Overall layout headings and navigation */
 .section-header .section-header-logo {
   float: left;
   margin-right: 45px;
 }
 .section-header .section-header-logo img {
-  height: 80px;
+  height: 6em;
 }
+.section-header .event-hostname,
+.section-header .event-location {
+  font-size: 110%; color: #555;
+}
+.section-header .event-date {
+  font-size: 120%; color: #000;
+}
+.section-header a:hover {
+  text-decoration: none;
+}
+@media (max-width: 760px) {
+  .section-header .section-header-logo {
+    position: relative;
+    margin: 0px;
+  }
+}
+
 nav.navbar {
   margin-bottom: 1em;
   box-shadow: 0px 0px 20px rgba(0,0,0,0.5);
-  background: #f7f7f7;
+  /* background: #f7f7f7; */
+}
+nav.navbar .navbar-brand {
+    color: black;
+    background: white;
+    border-radius: 10px;
 }
 nav .navbar-nav .fa {
   margin-left:  0.2em;
@@ -128,27 +148,42 @@ nav .navbar-nav .nav-item {
   font-weight: bold;
 }
 
-.event-countdown {
-  left: 50%;
-  width: 624px;
-  height: 100px;
-  overflow: hidden;
-  position: relative;
+/* Customize the flipclock widget */
+.event-countdown .flip-clock {
   margin-top: 20px;
-  margin-left: -312px;
 }
 .event-countdown .flip-clock-label {
   display: none;
 }
-@media (max-width: 760px) {
+@media (max-width: 1200px) {
+  .event-countdown .flip-clock .flip-clock-group * {
+    width: 38px;
+  }
+  .event-countdown .flip-clock {
+    background: #335;
+    border: 5px solid #333;
+    box-shadow: 1px 1px 5px rgba(0,0,0,0.3);
+    position: relative;
+    left: 50%;
+    width: 360px;
+    margin-left: -180px;
+  }
+  .home-page h1,
+  .home-page .home-nav {
+    display: block;
+    text-align: center;
+  }
+}
+@media (max-width: 400px) {
   .event-countdown {
     display: none;
   }
-
-  .section-header .section-header-logo {
-    position: relative;
-    margin: 0px;
-  }
+}
+.home .footer-clock { display: none; }
+.footer-clock.event-countdown {
+  transform: scale(0.5);
+  float: left;
+  z-index: 1000;
 }
 
 .community-embed { margin-top: 60px; }
@@ -180,35 +215,39 @@ nav .navbar-nav .nav-item {
   display: block;
 }
 
-.with-event form > .checkbox {
-  margin-top: 1rem;
+/* Honeycomb customizations */
+.event-home .honeycomb {
+  /*margin: 30px 0px 100px 0px;
+  left: 50%;*/
+  width: 760px;
 }
-.with-event form > .form-group {
-  margin-top: 1rem;
-  margin-bottom: 0px;
-}
-.help-inline {
-  font-style: italic;
-}
-
-.event-page .honeycomb {
-  margin: 30px 0px 100px 0px;
-  left: 50%;
-  width: 722px;
-}
-@media (max-width: 760px) {
-  .event-page .honeycomb {
+@media (max-width: 980px) {
+  .event-home .honeycomb {
     width: auto;
-    left: inherit;
+    /* left: inherit; */
+  }
+}
+@media (max-width: 420px) {
+  .event-home .honeycomb .hexagon {
+    margin-bottom: 1px;
+  }
+  .event-home .honeycomb {
+    text-align: left;
+    clear: both;
+    padding-left: 6%;
   }
 }
 
 .project-page.phase-Challenge .progress,
 .hide-challenges .challenge,
 .challenge.hexagon .progress { display: none; }
-.challenge.hexagon .hexagontent { color: #35a; font-weight: normal; }
+.challenge.hexagon .hexagontent {
+  color: #35a;
+  font-weight: normal;
+  padding: 4px 0px;
+}
 .challenge.hexagon {
-  background-color: white !important;
+  background-color: white;
   border-top: 1px dashed rgba(0,0,200,0.4);
   border-bottom: 1px dashed rgba(0,0,200,0.4);
 }
@@ -220,11 +259,13 @@ nav .navbar-nav .nav-item {
   border-top: 1px dashed rgba(0,0,200,0.4);
   border-bottom: 1px dashed rgba(0,0,200,0.4);
 }
-
-.project.hexagon {
-  margin-bottom: 60px;
+.challenge.hexagon:hover {
+  box-shadow: none;
 }
-.project.hexagon:hover {
+.hexagon {
+  margin-bottom: 73px;
+}
+.hexagon:hover {
   box-shadow: 0px 3px 3px lightblue;
 }
 .project .hexagontent {
@@ -233,6 +274,12 @@ nav .navbar-nav .nav-item {
   font-weight: bold;
   text-shadow: 1px 1px 0px #fff;
   line-height: 1.5;
+}
+.project .hexagontent.with-icon div {
+  font-size: 90%;
+}
+.project .hexagontent div {
+  max-height: 5.4em;
 }
 .project .hexagontent .fa {
   font-size: 240%;
@@ -257,7 +304,7 @@ nav .navbar-nav .nav-item {
   overflow: visible;
   position: relative;
   transform: none;
-  left: 30%;
+  left: 10%;
   width: auto;
   text-align: left;
   margin-bottom: 10px;
@@ -285,28 +332,33 @@ nav .navbar-nav .nav-item {
 .progress-bar {
   background-color: #3399f3;
 }
-.project-info .project-tools {
+.project-info .project-score {
   display: inline-block;
   text-align: center;
   margin-left: 1em;
   margin-right: 5px;
 }
-.project-tools .label-info {
+.project-score .label-info {
   color: #aaa;
 }
-.project-tools .progress-bar {
+.project-score .progress-bar {
   min-width: 2em;
 }
 .hexagon {
   background-size: cover;
   background-position: center;
 }
-.hexagon:nth-child(even) { background-color: #f0e0a2; }
-.hexagon:nth-child(odd) { background-color: #adddcf; }
+.project.hexagon:nth-child(even) { background-color: #f0e0a2; }
+.project.hexagon:nth-child(odd) { background-color: #adddcf; }
 
 .project-page .project-name {
   font-weight: bold;
-  margin-top: 1.5em;
+  margin-top: 0.5em;
+}
+.project-page .project-name h2 {
+  text-shadow: 1px 1px 1px white;
+  font-weight: bold;
+  font-size: 3rem;
 }
 .project-page .project-category {
   font-size: 70%;
@@ -315,11 +367,16 @@ nav .navbar-nav .nav-item {
   font-weight: normal;
   color: #999;
 }
-.project-page .project-image {
-  max-height: 200px;
-  max-width: 30%;
-  float: left;
-  margin-right: 40px;
+.project-home .project-image {
+  margin-top: 10px;
+  margin-bottom: -10px;
+  height: 200px;
+  width: 100%;
+  display: block;
+  background-repeat: no-repeat;
+  background-position-x: center;
+  background-position-y: center;
+  background-size: cover;
 }
 .project-page .details {
   font-size: 80%;
@@ -332,20 +389,16 @@ nav .navbar-nav .nav-item {
 .project-page .details a {
   font-size: 120%;
 }
-.project-page .history {
-  list-style: none; color: #777;
-}
-.project-page .history span {
-  font-size: 90%; color: #aaa;
-}
-.project-page .history li:hover{
-  background: #fff;
-}
 .project-page .project-info {
   min-height: 240px;
-  background-color: rgba(255, 255, 255, 0.8); color: black;
-  padding: 20px;
+  background-color: rgba(255, 255, 255, 0.8);
+  color: black;
+  padding: 5px;
   margin-bottom: 10px;
+  /* When shown in tabs */
+  border-top: none;
+  border-radius: 0px;
+  clear: both;
 }
 .project-page .project-info a {
   color: #15a;
@@ -359,21 +412,64 @@ nav .navbar-nav .nav-item {
 }
 .project-page.jumbotron {
   background-color: white;
+  color: black;
   padding: 1rem;
 }
 @media (min-width: 576px) {
   .project-page.jumbotron { padding: 2rem; }
+  .project.hexalist .hexagontent {
+    left: 35%;
+  }
 }
 .project-page .project-info td,
 .project-page .project-info th { padding: 0.2em 1.4em 0 0; }
 .project-page .project-info thead { border-bottom: 1px solid black; }
 
-.project-page .project-longtext { margin: 2em 0; font-size: 125%; }
-.project-page .project-autotext { padding-top: 2em; }
+.project-page .project-longtext { margin: 2em; font-size: 125%; }
+.project-page .project-autotext { margin: 2em; }
 .project-page .project-buttons { display: block; text-align: center; }
-.project-page .project-buttons .btn { font-size: 140%; }
+.project-page .project-buttons .btn {
+  display: inline-block;
+  text-align: center;
+  font-size: 140%;
+  width: 5em;
+  background: rgba(255, 255, 255, 0.5);
+}
+.project-page .project-buttons .btn:hover {
+  background: #dde;
+}
+.project-page .project-buttons .btn span {
+  font-size: 300%; display: block;
+}
 
-/* Autotext fader */
+.project-page .widget {
+  text-align: center;
+  margin: 1em;
+}
+.project-page .widget iframe {
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.project-page .nav {
+  clear: both;
+  padding: 20px 5px 5px;
+  border-bottom: 1px solid lightgrey;
+}
+.project-page .nav a {
+  text-shadow: 1px 1px 4px white;
+  font-weight: bold;
+  color: #007bff;
+}
+.project-page .nav a:not(.active):hover {
+  background-color: rgba(200, 200, 200, 0.8);
+}
+.project-page .nav a.active {
+  text-shadow: none;
+  border-bottom: 1px solid white;
+}
+
+/* Autotext fader
 .project-page .project-autotext.active {
   max-height: none;
   overflow: visible;
@@ -402,6 +498,7 @@ nav .navbar-nav .nav-item {
   background: linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 92%, rgba(255,255,255,1) 100%);
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#ffffff', GradientType=0 );
 }
+/- Autotext fader */
 
 /* Project embedded content */
 .project-page .resizable {
@@ -433,14 +530,109 @@ nav .navbar-nav .nav-item {
   background: url(https://raw.githubusercontent.com/RickStrahl/jquery-resizable/master/assets/wingrip.png) no-repeat;
  }
 
+/* Oneboxes in content */
+.onebox {
+  border: 2px solid #ddd;
+  background: #f0f0f0;
+  box-shadow: 5px 5px 8px rgba(0,0,0,0.3);
+  color: black;
+  padding: 0.5em;
+  margin: 0.5em 1em 1em 0px;
+  opacity: 0.8;
+  min-height: 6em;
+
+  width: 50%;
+  display: block;
+  clear: both;
+}
+.onebox * {
+  text-decoration: none !important;
+  color: black;
+}
+.onebox:hover {
+  opacity: 1.0;
+}
+.onebox h5 {
+  display: inline-block;
+  color: #007bff;
+  clear: none;
+}
+.onebox .phase {
+  font-size: 80%; color: #999;
+}
+.onebox p {
+  font-size: 90%;
+}
+.onebox img {
+  width: 5em;
+  float: left;
+  margin-right: 1em;
+}
+
 /* Project entry form */
-.fld-progress .radio-inline { display: block; }
-.fld-progress { border-width: 25px; padding-left: 5px; border-top: none !important; border-bottom: none !important; border-right: none !important; border-style: solid; -webkit-border-image: -webkit-gradient(linear, 0 100%, 0 0, from(black), to(rgba(0, 0, 0, 0))) 1 100%; -webkit-border-image: -webkit-linear-gradient(bottom, black, rgba(0, 0, 0, 0)) 1 100%; -moz-border-image: -moz-linear-gradient(bottom, black, rgba(0, 0, 0, 0)) 1 100%; -o-border-image: -o-linear-gradient(bottom, black, rgba(0, 0, 0, 0)) 1 100%; border-image: linear-gradient(to top, black, rgba(0, 0, 0, 0)) 1 100%; }
-.with-event form .control-label { font-weight: 600; font-size: 140%; }
-.with-event form .checkbox label[for="is_autoupdate"] { margin-left:30%; margin-top:20px; padding:10px; border-radius:10px; box-shadow: 0 0 0 10px cyan; }
-.with-event form .checkbox label[for="is_autoupdate"] input { margin-right: 1em; }
-.with-event form .checkbox label[for="is_webembed"] { font-weight: bold; display: block; margin-bottom: 1em; }
-.with-event form .checkbox label[for="is_webembed"] input { margin-right: 0.4em; }
+.projectform .fld-progress .radio-inline { display: block; }
+.projectform .fld-progress { border-width: 25px; padding-left: 5px; border-top: none !important; border-bottom: none !important; border-right: none !important; border-style: solid; -webkit-border-image: -webkit-gradient(linear, 0 100%, 0 0, from(black), to(rgba(0, 0, 0, 0))) 1 100%; -webkit-border-image: -webkit-linear-gradient(bottom, black, rgba(0, 0, 0, 0)) 1 100%; -moz-border-image: -moz-linear-gradient(bottom, black, rgba(0, 0, 0, 0)) 1 100%; -o-border-image: -o-linear-gradient(bottom, black, rgba(0, 0, 0, 0)) 1 100%; border-image: linear-gradient(to top, black, rgba(0, 0, 0, 0)) 1 100%; }
+.projectform .fld-progress select { font-size: 150%; }
+.projectform form .control-label[for='note'] { margin-top: 0px; }
+.projectform form .checkbox label[for="is_autoupdate"] {
+  margin-left:30%; margin-top:20px; padding:10px;
+  border-radius:10px; box-shadow: 0 0 0 10px cyan;
+}
+.projectform form .checkbox label[for="is_autoupdate"] input {
+  margin-right: 1em;
+}
+.projectform form .checkbox label[for="is_webembed"] {
+  font-weight: bold; display: block; margin-bottom: 1em;
+}
+.projectform form .checkbox label[for="is_webembed"] input {
+  margin-right: 0.4em;
+}
+.projectform form .autotext-indicator {
+  margin-top: 2em;
+  display: block;
+}
+
+/* General form styles */
+.userform form label,
+.userform form .control-label,
+.projectform form .control-label {
+  font-weight: 400; font-size: 140%;
+  display: block;
+  text-align: center;
+  margin-top: 2em;
+}
+.projectform form > .checkbox {
+  margin-top: 1rem;
+}
+.userform form > .form-group,
+.projectform form > .form-group {
+  margin-top: 1rem;
+  margin-bottom: 0px;
+  text-align: center;
+}
+.userform form .help-inline,
+.projectform form .help-inline {
+  color: #555;
+  display: block;
+  margin-top: 1em;
+}
+.userform form .form-control,
+.projectform form .form-control {
+  font-size: 125%;
+  box-shadow: 5px 5px 5px #ccc;
+}
+.userform .form-group input {
+  margin-right: 0.5em;
+}
+.userform .form-actions {
+  clear: both;
+  display: block;
+  margin-top: 1em;
+  text-align: center;
+}
+.userform .btn-submit {
+  min-width: 7em;
+}
 
 /* Code blocks */
 pre { color: #333; background: white; }
@@ -478,7 +670,6 @@ pre { color: #333; background: white; }
 }
 .nav-categories label {
   border: 1px solid #ddd;
-  background: white;
 }
 .nav-categories label.active {
   border: 1px solid #777;
@@ -488,14 +679,16 @@ pre { color: #333; background: white; }
 }
 .nav-categories {
   margin: 10px;
+  max-width: 97%;
+  overflow-x: auto;
 }
-.project-tools {
+.project-score {
   float: right;
   margin-right: 15px;
   text-align: right;
 }
 .project-edit-buttons {
-  margin: -2em 0 0 0;
+  /* margin: -2em 0 0 0; */
   float: right;
 }
 .project-edit-buttons * {
@@ -541,13 +734,17 @@ pre { color: #333; background: white; }
   .category-info {
     margin-top: none;
   }
-  .project-tools {
+  .project-score {
     float: none;
   }
 }
 
+/* avatar and profile styles */
+
 .team-gravatar img {
   margin: 5px;
+  vertical-align: top;
+  width: 2.7em;
 }
 .team-gravatar span {
   width: 48%;
@@ -557,14 +754,120 @@ pre { color: #333; background: white; }
   width: 200px;
   height: 60px;
   display: inline-block;
-  background: white;
-  border: 2px solid #eee;
+  background: rgba(0,0,0,0.1);
+  border: 2px solid #fff;
   padding: 2px; margin-right: 5px;
   overflow: hidden;
+  text-align: left;
 }
 .team-gravatar:hover {
   text-decoration: none;
-  border: 2px solid #dde;
+  border: 2px solid blue;
+}
+.profile-header {
+  margin-top: 1em;
+}
+.profile-header img {
+  width: 80px;
+  border-radius: 50%;
+  -moz-border-radius: 50%;
+  -webkit-border-radius: 50%;
+  margin-right: 25px;
+}
+.profile-social img, .profile-social i {
+  width: 50px;
+  font-size: 50px;
+  margin-left: 60px;
+  display: inline-block;
+  float: left;
+  color: #333;
+}
+.profile-social span {
+  line-height: 50px;
+  color: #007bff;
+}
+.profile-roles {
+  margin: 0; padding: 0;
+}
+.profile-roles li {
+  list-style: none;
+  line-height: 2em;
+  font-size: 140%;
+  font-weight: bold;
+}
+.profile-projects {
+  padding: 1em 2em;
+  margin: 1em 0em;
+  overflow-x: auto;
+  background: #eee;
+  width: 100%;
+}
+.profile-projects::-webkit-scrollbar {
+  display: none;
+}
+.profile-projects .card {
+  height: 8em;
+  width: 20em;
+  margin-right: 5px;
+  overflow: hidden;
+  display: inline-block;
+  padding: 0px;
+}
+.profile-projects .card .project-image {
+  width: 5em;
+  float: left;
+  padding: 6px 10px;
+  margin-bottom: 5em;
+}
+.profile-projects .card-body {
+  padding: 10px;
+}
+.profile-projects .card-text {
+  font-size: 80%; color: #999;
+  height: 3em; overflow: hidden;
+}
+.profile-projects .card-body * {
+  color: #333;
+  margin: 0px;
+}
+.profile-projects a:hover {
+  text-decoration: none;
+}
+.profile-projects .project-score {
+  float: right;
+  margin: 5px;
+  text-align: center;
+  width: 100px;
+}
+.profile-projects center {
+  margin-top: 5px;
+}
+.profile-story {
+  margin-top: 2em;
+}
+.profile-goals {
+  font-size: 120%;
+  margin-top: 1em;
+}
+.team-roles {
+  display: inline-block;
+  float: right;
+  margin: -2px;
+}
+.team-roles em {
+    display: block;
+    font-size: 70%;
+    font-style: normal;
+    color: #eee;
+    background: rgba(0,0,0,0.2);
+    padding: 1px 3px;
+    border-radius: 4px;
+    margin-bottom: 1px;
+}
+@media (max-width: 1000px) {
+  .profile-projects .project-score,
+  .profile-projects .card .project-image
+  { display: none; }
 }
 
 /* Embed view of the projects */
@@ -598,19 +901,6 @@ pre { color: #333; background: white; }
   margin-top: 20px;
 }
 .embed-view .section-header { display: none; }
-
-/* Dashboard */
-.dashboard-page #event-logo { width: 28%; }
-#schedule { color: transparent; margin-top: 1em; }
-#schedule dashboard { color: #eee; display: initial !important; }
-#schedule > * { display: none; }
-#announcements {
-    margin: 0 4em;
-    font-size: 50px;
-    font-weight: bold;
-    color: yellow;
-    background: darkblue;
-}
 
 
 /* ------------

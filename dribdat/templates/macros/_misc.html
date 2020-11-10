@@ -19,6 +19,22 @@
 </table>
 {% endmacro %}
 
+{% macro render_user_profile(user) %}
+    <a href="{{ url_for('public.user', username=user.username) }}"
+        title="Show profile" class="team-gravatar"
+        data-id="{{ user.id }}">
+        {% if user.carddata %}
+            <img src="https://www.gravatar.com/avatar/{{user.carddata}}"/>
+        {% endif %}
+        <span>{{ user.username }}</span>
+        <div class="team-roles">
+        {% for role in user.roles %}
+            <em>{{ role.name[0:2] }}</em>
+        {% endfor %}
+        </div>
+    </a>
+{% endmacro %}
+
 {% macro render_pagination(pagination, endpoint) %}
     {% if pagination.pages > 1 %}
         <div class='pagination'>

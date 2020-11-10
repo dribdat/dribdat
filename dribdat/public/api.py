@@ -6,14 +6,16 @@ from flask_login import login_required, current_user
 from sqlalchemy import or_
 
 from ..extensions import db
-from ..utils import timesince
+from ..utils import timesince, random_password
 
 from ..user.models import Event, Project, Category, Activity
-from ..aggregation import GetProjectData, GetProjectTeam
+from ..aggregation import GetProjectData
 
 from datetime import datetime
 from flask import Response, stream_with_context
-import io, csv, json, sys
+
+import io, csv, json, sys, tempfile
+from os import path
 PY3 = sys.version_info[0] == 3
 
 blueprint = Blueprint('api', __name__, url_prefix='/api')
@@ -22,18 +24,13 @@ def get_projects_by_event(event_id):
     return Project.query.filter_by(event_id=event_id, is_hidden=False)
 
 def get_project_summaries(projects):
-    summaries = [ p.data for p in projects ]
+    summaries = expand_project_urls([ p.data for p in projects ])
     summaries.sort(key=lambda x: x['score'], reverse=True)
     return summaries
 
-# Collect all projects for an event
+# Collect all projects and challenges for an event
 def project_list(event_id):
-    projects = get_projects_by_event(event_id).filter(Project.progress >= 0)
-    return get_project_summaries(projects)
-
-# Collect all challenges for an event
-def challenges_list(event_id):
-    projects = get_projects_by_event(event_id).filter(Project.progress < 0)
+    projects = get_projects_by_event(event_id)
     return get_project_summaries(projects)
 
 # Generate a CSV file
@@ -96,25 +93,23 @@ def project_list_current_json():
 def project_list_json(event_id):
     return jsonify(projects=project_list(event_id))
 
-# API: Outputs CSV of all projects in an event
-@blueprint.route('/event/<int:event_id>/projects.csv')
-def project_list_csv(event_id):
+def project_list_csv(event_id, event_name):
     return Response(stream_with_context(gen_csv(project_list(event_id))),
                     mimetype='text/csv',
-                    headers={'Content-Disposition': 'attachment; filename=project_list.csv'})
+                    headers={'Content-Disposition': 'attachment; filename=' + event_name + '_dribdat.csv'})
 
-# API: Outputs CSV of projects in the current event
+# API: Outputs CSV of all projects in an event
+@blueprint.route('/event/<int:event_id>/projects.csv')
+def project_list_event_csv(event_id):
+    event = Event.query.filter_by(id=event_id).first_or_404()
+    return project_list_csv(event.id, event.name)
+
+# API: Outputs CSV of projects and challenges in the current event
 @blueprint.route('/event/current/projects.csv')
 def project_list_current_csv():
     event = Event.query.filter_by(is_current=True).first() or \
             Event.query.order_by(Event.id.desc()).first_or_404()
-    return project_list_csv(event.id)
-
-# API: Outputs JSON of ideas/challenges in the current event, along with its info
-@blueprint.route('/event/current/challenges.json')
-def challenges_list_current_json():
-    event = Event.query.filter_by(is_current=True).first()
-    return jsonify(challenges=challenges_list(event.id), event=event.data)
+    return project_list_csv(event.id, event.name)
 
 # API: Outputs JSON of categories in the current event
 @blueprint.route('/event/current/categories.json')
@@ -124,30 +119,48 @@ def categories_list_current_json():
 
 # ------ ACTIVITY FEEDS ---------
 
-def get_event_activities(event_id):
+def get_event_activities(event_id, limit=50):
     event = Event.query.filter_by(id=event_id).first_or_404()
     return [a.data for a in Activity.query
               .filter(Activity.timestamp>=event.starts_at)
-              .order_by(Activity.id.desc()).all()]
+              .order_by(Activity.id.desc()).limit(limit).all()]
 
 # API: Outputs JSON of recent activity in an event
 @blueprint.route('/event/<int:event_id>/activity.json')
 def event_activity_json(event_id):
-    return jsonify(activities=get_event_activities(event_id))
+    limit = request.args.get('limit') or 50
+    return jsonify(activities=get_event_activities(event_id, limit))
+
+# API: Outputs JSON of categories in the current event
+@blueprint.route('/event/current/activity.json')
+def event_activity_current_json():
+    event = Event.query.filter_by(is_current=True).first()
+    if not event: return jsonify(activities=[])
+    return event_activity_json(event.id)
 
 # API: Outputs CSV of an event activity
 @blueprint.route('/event/<int:event_id>/activity.csv')
 def event_activity_csv(event_id):
-    return Response(stream_with_context(gen_csv(get_event_activities(event_id))),
+    limit = request.args.get('limit') or 50
+    return Response(stream_with_context(gen_csv(get_event_activities(event_id, limit))),
                     mimetype='text/csv',
                     headers={'Content-Disposition': 'attachment; filename=activity_list.csv'})
 
-# API: Outputs JSON of recent activity
+# API: Outputs JSON of recent activity across all projects
 @blueprint.route('/project/activity.json')
 def projects_activity_json():
     limit = request.args.get('limit') or 10
-    activities = [a.data for a in Activity.query.order_by(Activity.id.desc()).limit(limit).all()]
-    return jsonify(activities=activities)
+    recent = Activity.query.order_by(Activity.id.desc()).limit(limit).all()
+    return jsonify(activities=[a.data for a in recent])
+
+# API: Outputs JSON of recent posts (a type of activity) across projects
+@blueprint.route('/project/posts.json')
+def projects_posts_json():
+    limit = request.args.get('limit') or 10
+    recent = Activity.query.filter(Activity.action=="post")
+    recent = recent.order_by(Activity.id.desc())
+    recent = recent.limit(limit).all()
+    return jsonify(activities=[a.data for a in recent])
 
 # API: Outputs JSON of recent activity of a project
 @blueprint.route('/project/<int:project_id>/activity.json')
@@ -162,15 +175,13 @@ def project_activity_json(project_id):
 @blueprint.route('/project/<int:project_id>/info.json')
 def project_info_json(project_id):
     project = Project.query.filter_by(id=project_id).first_or_404()
-    project_stars = GetProjectTeam(project)
     activities = []
-    for a in project_stars:
-        user = {
-            'id': a.user.id,
-            'name': a.user.username,
-            'link': a.user.webpage_url
-        }
-        activities.append(user)
+    for user in project.team():
+        activities.append({
+            'id': user.id,
+            'name': user.username,
+            'link': user.webpage_url
+        })
 
     data = {
         'project': project.data,
@@ -189,6 +200,12 @@ def project_info_json(project_id):
 
 # ------ SEARCH ---------
 
+def expand_project_urls(projects):
+    for p in projects:
+        p['event_url'] = request.host_url + p['event_url']
+        p['url'] = request.host_url + p['url']
+    return projects
+
 # API: Full text search projects
 @blueprint.route('/project/search.json')
 def project_search_json():
@@ -202,7 +219,8 @@ def project_search_json():
         Project.longtext.like(q),
         Project.autotext.like(q),
     )).limit(limit).all()
-    return jsonify(projects=[p.data for p in projects])
+    projects = expand_project_urls([p.data for p in projects])
+    return jsonify(projects=projects)
 
 # ------ UPDATE ---------
 
@@ -262,10 +280,42 @@ def project_push_json():
 
 # ------ FRONTEND -------
 
-# API routine used to sync project data
+# API routine used to help sync project data
 @blueprint.route('/project/autofill', methods=['GET', 'POST'])
 @login_required
 def project_autofill():
     url = request.args.get('url')
     data = GetProjectData(url)
     return jsonify(data)
+
+
+import boto3, botocore
+from botocore.exceptions import ClientError
+from botocore.client import Config
+
+# API: Enables uploading images into a project
+@blueprint.route('/project/uploader', methods=["POST"])
+@login_required
+def project_uploader():
+    if not current_app.config['S3_KEY']: return ''
+    if len(request.files) == 0: return 'No files selected'
+    img = request.files['file']
+    if not img or img.filename == '': return 'No filename'
+    ext = img.filename.split('.')[-1].lower()
+    if not ext in ['png','jpg','jpeg','gif']: return 'Invalid format'
+    filename = random_password(24) + '.' + ext
+    # with tempfile.TemporaryDirectory() as tmpdir:
+        # img.save(path.join(tmpdir, filename))
+    s3_filepath = '/'.join([current_app.config['S3_FOLDER'], filename])
+    print('Uploading to %s' % s3_filepath)
+    s3_obj = boto3.client('s3',
+      aws_access_key_id=current_app.config['S3_KEY'],
+      aws_secret_access_key=current_app.config['S3_SECRET'],
+      config=botocore.client.Config(region_name=current_app.config['S3_REGION']))
+    s3_obj.upload_fileobj(
+        img,
+        current_app.config['S3_BUCKET'],
+        s3_filepath,
+        ExtraArgs={ 'ContentType': img.content_type, 'ACL': 'public-read' }
+      )
+    return '/'.join([current_app.config['S3_HTTPS'], s3_filepath])

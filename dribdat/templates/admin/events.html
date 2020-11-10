@@ -11,7 +11,7 @@
               <th width="100%">Name</th>
               <th>Start</th>
               <th>Finish</th>
-              <th>Projects</th>
+              <th>Manage</th>
             </tr>
         </thead>
         {% for event in events %}
@@ -34,6 +34,12 @@
                   <a href="{{ url_for('public.event', event_id=event.id, _external=True) }}?embed=1" class="dropdown-item" id="embed-link">
                     Embed
                   </a>
+                  <a href="{{ url_for('api.info_event_hackathon_json', event_id=event.id) }}" class="dropdown-item">
+                    Download JSON
+                  </a>
+                  <a href="{{ url_for('api.project_list_event_csv', event_id=event.id) }}" class="dropdown-item">
+                    Download CSV
+                  </a>
                 </div>
               </div>
             </td>
@@ -49,7 +55,7 @@
             <td>{{ event.ends_at|format_date }}</td>
             <td>
               <a href="{{ url_for('admin.event_projects', event_id=event.id) }}" class="btn btn-primary">
-                {{ event.project_count }} items
+                {{ event.project_count }}&nbsp;projects
               </a>
             </td>
         </tr>

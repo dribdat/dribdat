@@ -3,11 +3,16 @@
 from flask import flash, current_app
 from datetime import datetime
 from math import floor
-import pytz
+import pytz, re
 
-def random_password():
+def sanitize_input(text):
+    """ Removes unsavoury characters """
+    return re.sub(r"[^a-zA-Z0-9_]+", '', text)
+
+def random_password(pwdlen=20):
+    """ A strongly secure random string """
     import string, random
-    return ''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(20))
+    return ''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(pwdlen))
 
 def flash_errors(form, category='warning'):
     """Flash all errors for a form."""
@@ -21,16 +26,16 @@ def timesince(dt, default="just now", until=False):
     3 days ago, 5 hours ago etc.
     - from http://flask.pocoo.org/snippets/33/
     """
-    timezone = pytz.timezone(current_app.config["TIME_ZONE"])
-    now = timezone.localize(datetime.now())
+    tz = pytz.timezone(current_app.config["TIME_ZONE"])
+    tz_now = tz.localize(dt.utcnow())
     if dt is None: return ""
-    dt = dt.astimezone(timezone)
+    dt = dt.astimezone(tz)
     if dt is None: return ""
-    if until and dt > now:
-        diff = dt - now
+    if until and dt > tz_now:
+        diff = dt - tz_now
         suffix = "to go"
     else:
-        diff = now - dt
+        diff = tz_now - dt
         suffix = "ago"
     periods = (
         (diff.days / 365, "year", "years"),
@@ -43,7 +48,7 @@ def timesince(dt, default="just now", until=False):
     )
     for period, singular, plural in periods:
         if floor(period) > 0:
-            return "%d %s %s" % (period, singular if period == 1 else plural, suffix)
+            return "%d %s %s" % (period, singular if int(period)==1 else plural, suffix)
     return default
 
 def format_date(value, format='%Y-%m-%d'):
@@ -72,11 +77,3 @@ def format_date_range(starts_at, ends_at):
             ends_at.day,
             ends_at.year,
         )
-
-def format_webembed(url):
-    if url.lower().startswith('<iframe '):
-        return url
-    if url.startswith('https://query.wikidata.org/'):
-        url = url.replace('https://query.wikidata.org/', 'https://query.wikidata.org/embed.html')
-    # TODO: add more embeddables
-    return '<iframe src="%s"></iframe>' % url

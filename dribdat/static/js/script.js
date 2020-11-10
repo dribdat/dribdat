@@ -3,47 +3,21 @@
   $(document).ready(function() {
 
     // Detect and recommend SSL connection
-    if ('https:' != document.location.protocol)
-      $('footer').before('<center class="alert alert-danger" role="alert">Your connection to this website is insecure. <a href="https:' + window.location.href.substring(window.location.protocol.length) + '" class="btn btn-sm btn-warning"><b>Switch to HTTPS</b></a></center>');
 
-    // Initialise home page countdown
-    $('.event-countdown').each(function() {
-      var clock = $(this).FlipClock({
-        clockFace: 'DailyCounter'
-      });
-      var startdate = $(this).data('start');
-      var datenow = Date.now();
-      var datesched = Date.parse(startdate.replace(' ', 'T'));
-      var timeleft = datesched - datenow;
-      if (isNaN(timeleft)) return;
-      clock.setTime(timeleft/1000);
-      clock.setCountdown(true);
-    });
   });
 
   // Initialize project data loader
   $('#autotext_url').each(function() {
 
-    var supported = false;
-
     var checkAutotext = function(val, $ind) {
       if (typeof val !== 'string') return;
       if (val.trim() === '') return;
-      supported = (
-        val.indexOf('datapackage.json') > 0 ||
-        val.indexOf('//github.com/') > 0 ||
-        val.indexOf('//gitlab.com/') > 0 ||
-        val.indexOf('//bitbucket.org/') > 0 ||
-        val.indexOf('document') > 0 ||
-        val.indexOf('wiki') > 0 ||
-        val.indexOf('/p/') > 0
-      );
       $ind.find('i')
         .removeClass('fa-circle-o fa-check-circle-o')
-        .addClass(!supported ? 'fa-circle-o' : 'fa-check-circle-o')
-        .css('color', (supported ? 'green' : 'red'));
-      $ind.find('button')
-        .css('visibility', (supported ? '' : 'hidden'));
+        .addClass('fa-check-circle-o')
+        .css('color', 'red');
+      $ind
+        .css('visibility', '');
       $('#is_autoupdate').click(function() {
         if ($(this).is(':checked'))
           if (!$indicator.find('button').click())
@@ -53,9 +27,9 @@
     // Toggle status indicator
     var $inputfield = $(this);
     var $indicator = $inputfield.parent()
-      .append('<span class="autotext-indicator">' +
+      .append('<span class="autotext-indicator" style="visibility:hidden">' +
         '<i style="color:red" class="fa fa-circle-o"></i>&nbsp;' +
-        '<button type="button" style="visibility:hidden">Update now</button>' +
+        '<button type="button">Fetch content</button>' +
       '</span>')
       .find('.autotext-indicator');
 
@@ -119,9 +93,68 @@
   });
 
   // Post a project update
-  $('.project-post').click(function() {
+  // $('.project-post').click(function() {
+  //
+  // });
 
-  });
+  // Upload images
+  $('#uploadImage').each(function() {
+    var $togglebtn = $('button[data-target="#uploadImage"]');
+    $('.fld-longtext').append($togglebtn);
+    $('.fld-image_url').append($togglebtn.clone());
+    var $dialog = $(this);
+    var $inputfd = $dialog.find('input[type="file"]');
+    $inputfd.change(function() {
+      var imgfile = $inputfd[0].files[0];
+      // Check file size limits
+      var maxsize = parseInt($inputfd.data('maxsize'));
+      if (imgfile.size > maxsize) {
+        return alert("Please upload a smaller file (1 MB limit)");
+      }
+      // Create upload object
+      var fdd = new FormData();
+      fdd.append('file', imgfile);
+      $.ajax({
+        url: '/api/project/uploader',
+        type: 'post',
+        data: fdd,
+        processData: false,
+        contentType: false,
+        success: function(response) {
+          if (response.indexOf('http') !== 0) {
+             return alert('File could not be uploaded :(\n' + response);
+          }
+          $dialog.find(".preview img").attr("src", response);
+          $dialog.find(".preview input").val(response);
+          $dialog.find(".hidden").show();
+          $('#img-confirm').show().find('button').click(function() {
+            if ($(this).data('target') == 'cover') {
+              // Replace the cover
+              $('#image_url').val(response);
+              $dialog.modal('hide');
+            } else if ($(this).data('target') == 'pitch') {
+              // Append to pitch
+              $('#longtext').val($('#longtext').val() +
+                '\n\n' + '![Title](' + response + ')');
+              $dialog.modal('hide');
+            } else {
+              // Copy to clipboard
+              if (navigator.clipboard) {
+                navigator.clipboard.writeText(response);
+                $dialog.modal('hide');
+              } else {
+                $dialog.find(".preview input").click().select();
+                document.execCommand("copy");
+              }
+            }
+          });
+        },
+        error: function(e) {
+          alert("Sorry, an error has occurred.\n" + e.statusText);
+        }
+      }); // -ajax
+    }); // -change
+  }); // -#uploadImage
 
   // Clickable categories navigation
   var $navCategories = $('.nav-categories .btn-group label').click(function(e) {
@@ -180,6 +213,22 @@
         handleSelector: ".win-size-grip"
       });
     });
+  });
+
+  // Enable dark mode
+  $('.darkmode').click(function(e) {
+    e.preventDefault(); e.stopPropagation();
+    if (window.darkmode) {
+      $('html').attr('style','');
+      return window.darkmode = false;
+    }
+    window.darkmode = true;
+    $('html').css('-webkit-filter','invert(100%)')
+             .css('-moz-filter','invert(100%)')
+             .css('-o-filter','invert(100%)')
+             .css('-ms-filter','invert(100%)')
+             .css('background', 'black')
+             .css('height', '100%');
   });
 
 }).call(this, jQuery, window);

@@ -14,9 +14,12 @@ from dribdat.extensions import (
 )
 from dribdat.settings import ProdConfig
 from dribdat.utils import timesince
+from dribdat.onebox import make_oembedplus
 from flask_misaka import Misaka
 from flask_talisman import Talisman
 from flask_dance.contrib.slack import make_slack_blueprint, slack
+from micawber.providers import bootstrap_basic
+
 
 def init_app(config_object=ProdConfig):
     """An application factory, as explained here: http://flask.pocoo.org/docs/patterns/appfactories/.
@@ -26,6 +29,7 @@ def init_app(config_object=ProdConfig):
     app = Flask(__name__)
     app.config.from_object(config_object)
 
+    # Set up cross-site access to the API
     cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
     app.config['CORS_HEADERS'] = 'Content-Type'
 
@@ -48,9 +52,14 @@ def register_extensions(app):
     db.init_app(app)
     login_manager.init_app(app)
     migrate.init_app(app, db)
-    if 'SERVER_SSL' in app.config and app.config['SERVER_SSL']:
-        Talisman(app)
+    init_talisman(app)
     return None
+
+
+def init_talisman(app):
+    if 'SERVER_SSL' in app.config and app.config['SERVER_SSL']:
+        csp = { 'default-src': '\'*\'' }
+        Talisman(app, content_security_policy=csp, frame_options_allow_from='*')
 
 
 def register_blueprints(app):
@@ -110,7 +119,16 @@ def register_commands(app):
 
 
 def register_filters(app):
+    # Library filters
     Misaka(app, autolink=True, fenced_code=True, strikethrough=True, tables=True)
+
+    # Registration of handlers for micawber
+    app.oembed_providers = bootstrap_basic()
+    @app.template_filter()
+    def onebox(value):
+        return make_oembedplus(value, app.oembed_providers, maxwidth=600, maxheight=400)
+
+    # Custom filterss
     @app.template_filter()
     def since_date(value):
         return timesince(value)

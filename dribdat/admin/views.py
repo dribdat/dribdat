@@ -3,15 +3,16 @@
 from flask import Blueprint, render_template, redirect, url_for, make_response, request, flash, jsonify
 from flask_login import login_required, current_user
 
+from ..utils import sanitize_input
 from ..extensions import db, cache
 from ..decorators import admin_required
-
-from ..user.models import User, Event, Project, Category
-from .forms import UserForm, EventForm, ProjectForm, CategoryForm
+from ..aggregation import GetProjectData, SyncProjectData
+from ..user.models import Role, User, Event, Project, Category
+from .forms import RoleForm, UserForm, EventForm, ProjectForm, CategoryForm
 
 from datetime import datetime
+import random, string
 
-from ..aggregation import GetProjectData
 
 blueprint = Blueprint('admin', __name__, url_prefix='/admin')
 
@@ -20,16 +21,38 @@ blueprint = Blueprint('admin', __name__, url_prefix='/admin')
 @login_required
 @admin_required
 def index():
-    users = User.query.all()
-    return render_template('admin/index.html', users=users, active='index')
+    event = Event.query.filter_by(is_current=True).first()
+    stats = [
+        {
+            'value': Event.query.count(),
+            'text': 'active events',
+            'height': 6
+        },{
+            'value': User.query.count(),
+            'text': 'users registered',
+            'height': 7
+        },{
+            'value': Project.query.filter(Project.progress<0).count(),
+            'text': 'challenges posted',
+            'height': 8
+        },{
+            'value': Project.query.filter(Project.progress>=0).count(),
+            'text': 'projects started',
+            'height': 9
+        },
+    ]
+    return render_template('admin/index.html', stats=stats, default_event=event, active='index')
 
 
 @blueprint.route('/users')
+@blueprint.route('/users/pp/<int:page>')
 @login_required
 @admin_required
-def users():
-    users = User.query.all()
-    return render_template('admin/users.html', users=users, active='users')
+def users(page=1):
+    users = User.query.order_by(
+        User.username.asc()
+    ).paginate(page, per_page=20)
+    return render_template('admin/users.html', data=users, endpoint='admin.users', active='users')
 
 
 @blueprint.route('/user/<int:user_id>', methods=['GET', 'POST'])
@@ -38,10 +61,11 @@ def users():
 def user(user_id):
     user = User.query.filter_by(id=user_id).first_or_404()
     form = UserForm(obj=user, next=request.args.get('next'))
-
     if form.validate_on_submit():
         originalhash = user.password
         del form.id
+        user.username = sanitize_input(form.username.data)
+        del form.username
         form.populate_obj(user)
         if form.password.data:
             user.set_password(form.password.data)
@@ -53,19 +77,21 @@ def user(user_id):
         flash('User updated.', 'success')
         return users()
 
-    return render_template('admin/user.html', user=user, form=form)
+    return render_template('admin/useredit.html', user=user, form=form)
 
 @blueprint.route('/user/new', methods=['GET', 'POST'])
 @login_required
 @admin_required
 def user_new():
     user = User()
+    user.active = True
     form = UserForm(obj=user, next=request.args.get('next'))
-
+    del form.active
     if form.validate_on_submit():
         del form.id
+        user.username = sanitize_input(form.username.data)
+        del form.username
         form.populate_obj(user)
-
         db.session.add(user)
         db.session.commit()
 
@@ -88,6 +114,37 @@ def user_delete(user_id):
         user.delete()
         flash('User deleted.', 'success')
     return users()
+
+
+# Get a reasonably secure password
+def get_random_alphanumeric_string(length=24):
+    return ''.join((random.SystemRandom().choice(string.ascii_letters + string.digits) for i in range(length)))
+
+@blueprint.route('/user/<int:user_id>/reset/')
+@login_required
+@admin_required
+def user_reset(user_id):
+    """Reset user password."""
+    user = User.query.filter_by(id=user_id).first_or_404()
+    newpw = get_random_alphanumeric_string()
+    user.set_password(newpw)
+    db.session.add(user)
+    db.session.commit()
+    return render_template('admin/reset.html', newpw=newpw, email=user.email)
+
+
+@blueprint.route('/user/<int:user_id>/deactivate/')
+@login_required
+@admin_required
+def user_deactivate(user_id):
+    """Deactivate user account."""
+    user = User.query.filter_by(id=user_id).first_or_404()
+    user.active = False
+    db.session.add(user)
+    db.session.commit()
+    flash('User deactivated.', 'success')
+    return users()
+
 
 ##############
 ##############
@@ -166,18 +223,39 @@ def event_delete(event_id):
         flash('Event deleted.', 'success')
     return events()
 
+@blueprint.route('/event/<int:event_id>/autosync', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def event_autosync(event_id):
+    event = Event.query.filter_by(id=event_id).first_or_404()
+    count = 0
+    for project in event.projects:
+        if not project.is_autoupdate: continue
+        data = GetProjectData(project.autotext_url)
+        if not 'name' in data:
+            flash("Could not sync: %s" % project.name, 'warning')
+            continue
+        SyncProjectData(project, data)
+        count += 1
+    flash("%d projects synced." % count, 'success')
+    return event_projects(event.id)
+
+
 ##############
 ##############
 ##############
 
 
 @blueprint.route('/projects')
+@blueprint.route('/projects/pp/<int:page>')
 @login_required
 @admin_required
-def projects():
-    # TODO: pagination...
-    projects = Project.query.order_by(Project.updated_at.desc()).all()
-    return render_template('admin/projects.html', projects=projects, active='projects')
+def projects(page=1):
+    projects = Project.query.order_by(
+        Project.updated_at.desc()
+    ).paginate(page, per_page=10)
+    return render_template('admin/projects.html', data=projects, endpoint='admin.projects', active='projects')
+
 
 @blueprint.route('/category/<int:category_id>/projects')
 @login_required
@@ -193,7 +271,7 @@ def category_projects(category_id):
 def event_projects(event_id):
     event = Event.query.filter_by(id=event_id).first_or_404()
     projects = Project.query.filter_by(event_id=event_id).order_by(Project.id.desc())
-    return render_template('admin/projects.html', projects=projects, event_name=event.name, active='projects')
+    return render_template('admin/projects.html', projects=projects, event=event, active='projects')
 
 @blueprint.route('/event/<int:event_id>/print')
 @login_required
@@ -202,7 +280,7 @@ def event_print(event_id):
     now = datetime.utcnow().strftime("%d.%m.%Y %H:%M")
     event = Event.query.filter_by(id=event_id).first_or_404()
     projects = Project.query.filter_by(event_id=event_id, is_hidden=False)
-    projects = projects.filter(Project.progress>0).order_by(Project.name)
+    projects = projects.filter(Project.progress>=0).order_by(Project.name)
     return render_template('admin/eventprint.html', event=event, projects=projects, curdate=now, active='projects')
 
 @blueprint.route('/project/<int:project_id>', methods=['GET', 'POST'])
@@ -354,3 +432,68 @@ def category_delete(category_id):
         category.delete()
         flash('Category deleted.', 'success')
     return categories()
+
+
+##############
+##############
+##############
+
+@blueprint.route('/presets')
+@login_required
+@admin_required
+def presets():
+    roles = Role.query.all()
+    categories = Category.query.order_by(Category.event_id.desc()).all()
+    return render_template('admin/presets.html', categories=categories, roles=roles, active='roles')
+
+@blueprint.route('/role/<int:role_id>', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def role(role_id):
+    role = Role.query.filter_by(id=role_id).first_or_404()
+    form = RoleForm(obj=role, next=request.args.get('next'))
+
+    if form.validate_on_submit():
+        form.populate_obj(role)
+
+        db.session.add(role)
+        db.session.commit()
+
+        cache.clear()
+        flash('Role updated.', 'success')
+        return redirect(url_for("admin.presets"))
+
+    return render_template('admin/role.html', role=role, form=form)
+
+@blueprint.route('/role/new', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def role_new():
+    role = Role()
+    form = RoleForm(obj=role, next=request.args.get('next'))
+
+    if form.validate_on_submit():
+        form.populate_obj(role)
+
+        db.session.add(role)
+        db.session.commit()
+
+        cache.clear()
+        flash('Role added.', 'success')
+        return redirect(url_for("admin.presets"))
+
+    return render_template('admin/rolenew.html', form=form)
+
+
+@blueprint.route('/role/<int:role_id>/delete', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def role_delete(role_id):
+    role = Role.query.filter_by(id=role_id).first_or_404()
+    if len(role.users) > 0:
+        flash('No users may be assigned to role in order to delete.', 'warning')
+    else:
+        cache.clear()
+        role.delete()
+        flash('Role deleted.', 'success')
+    return redirect(url_for("admin.presets"))

@@ -5,11 +5,11 @@
 {% block content %}
 <div class="container">
     <h2>Update event</h2>
-    <p>Visit the <a href="{{ url_for('admin.project_new', event_id=event.id) }}">Admin area</a> to add projects.</p>
+    <p>Visit the <a href="{{ url_for('admin.event_projects', event_id=event.id) }}">Project Admin</a> to manage entries from this event.</p>
 
     {{ render_form(url_for('admin.event', event_id=event.id), form) }}
 
-    <a href="{{ url_for('admin.event_delete', event_id=event.id) }}" class="btn btn-sm"
+    <a href="{{ url_for('admin.event_delete', event_id=event.id) }}" class="btn btn-sm btn-danger"
       onclick="if(!window.confirm('Are you sure you wish to delete this event?')) return false">
       Delete
     </a>

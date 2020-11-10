@@ -6,9 +6,9 @@ from flask import (Blueprint, request, render_template, flash, url_for,
 
 from flask_login import login_user, logout_user, login_required, current_user
 
-from dribdat.user.models import User, Event
+from dribdat.user.models import User, Event, Role
 from dribdat.extensions import login_manager
-from dribdat.utils import flash_errors, random_password
+from dribdat.utils import flash_errors, random_password, sanitize_input
 from dribdat.public.forms import LoginForm, UserForm
 from dribdat.user.forms import RegisterForm
 from dribdat.database import db
@@ -61,7 +61,7 @@ def register():
         flash("A user account with this email already exists", 'warning')
     elif form.validate_on_submit():
         new_user = User.create(
-                        username=form.username.data,
+                        username=sanitize_input(form.username.data),
                         email=form.email.data,
                         webpage_url=form.webpage_url.data,
                         password=form.password.data,
@@ -89,24 +89,47 @@ def logout():
     return redirect(url_for('public.home'))
 
 
+@blueprint.route('/forgot/')
+def forgot():
+    """Forgot password."""
+    return render_template('public/forgot.html', current_event=current_event(), slack_enabled=slack_enabled())
+
+
 @blueprint.route('/user/profile', methods=['GET', 'POST'])
 @login_required
 def user_profile():
     user = current_user
     form = UserForm(obj=user, next=request.args.get('next'))
+    form.roles.choices = [(r.id, r.name) for r in Role.query.order_by('name')]
+
     if form.validate_on_submit():
+        # Assign roles
+        user.roles = [Role.query.filter_by(id=r).first() for r in form.roles.data]
+        del form.roles
+
+        # Sanitize username
+        user.username = sanitize_input(form.username.data)
+        del form.username
+
+        # Assign password if changed
         originalhash = user.password
         form.populate_obj(user)
         if form.password.data:
             user.set_password(form.password.data)
         else:
             user.password = originalhash
+
         db.session.add(user)
         db.session.commit()
         user.socialize()
         flash('Profile updated.', 'success')
-        return redirect(url_for('public.home'))
-    return render_template('public/user.html', user=user, form=form)
+        return redirect(url_for('public.user', username=user.username))
+
+    if not form.roles.choices:
+        del form.roles
+    else:
+        form.roles.data = [(r.id) for r in user.roles]
+    return render_template('public/useredit.html', user=user, form=form, active='profile')
 
 
 @blueprint.route("/slack_login", methods=["GET", "POST"])

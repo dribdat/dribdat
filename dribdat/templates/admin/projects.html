@@ -5,28 +5,38 @@
     <a href="{{ url_for('admin.project_new') }}" class="btn btn-success btn-lg">Add project</a>
     <h2>Projects</h2>
     {% if category_name %}<h4>Category: <b>{{ category_name }}</b></h4>{% endif %}
-    {% if event_name %}<h4>Event: <b>{{ event_name }}</b></h4>{% endif %}
+    {% if event %}
+      <h4><b>{{ event.name }}</b></h4>
+    {% else %}
+      <span>Manage projects for a specific event for more options.</span>
+    {% endif %}
     <table class='table table-bordered table-hover'>
         <thead>
             <tr>
-              <th>Name</th>
-              <th>Owner</th>
+              <th>Name (Phase)</th>
+              <th>Category</th>
               <th>Created</th>
               <th>Updated</th>
-              <th></th>
+              <th>{% if event %}
+                <a href="{{ url_for('admin.event_autosync', event_id=event.id) }}" class="btn btn-sm btn-warning">
+                  Sync all
+                </a>
+              {% endif %}</th>
             </tr>
         </thead>
-        {% for project in projects %}
+        {% for project in projects or data.items %}
         <tr>
-            <td>
+            <td width="50%">
               <a href="{{ url_for('admin.project_view', project_id=project.id) }}">
                 {{ project.name }}
               </a>
+              <small><br>{{ project.phase }}</small>
             </td>
-            <td>{{ project.user.username }}</td>
-            <td>{{ project.created_at|format_date }}</td>
+            <td>{{ project.category.name }}</td>
+            <td>{{ project.created_at|format_date }}
+              <small><br>{{ project.user.username }}</small></td>
             <td>{{ project.updated_at|since_date }}</td>
-            <td>
+            <td><div class="btn-group">
               <a href="{{ url_for('public.project', project_id=project.id) }}" class="btn btn-sm btn-primary">
                 View
               </a>
@@ -40,10 +50,17 @@
                   Sync
                 </a>
                 {% endif %}
+                <a href="{{ url_for('admin.project_toggle', project_id=project.id) }}" title="Hide" class="btn btn-sm btn-danger"
+                   onclick="if(!window.confirm('Are you sure you wish to hide this project?')) return false">
+                  <i class="fa fa-eye"></i>
+                </a>
               {% endif %}
-            </td>
+            </div></td>
         </tr>
         {% endfor %}
     </table>
+  {% if data %}
+    {% include "includes/pagination.html" %}
+  {% endif %}
 </div>
 {% endblock %}

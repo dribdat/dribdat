@@ -1,12 +1,13 @@
 {% extends "layout.html" %}
 
 {% block page_title %}dribdat admin{% endblock %}
+{% block body_class %}admin{% endblock %}
 
 {% set tabs = [
-    ("users", url_for('admin.users')),
-    ("projects", url_for('admin.projects')),
-    ("categories", url_for('admin.categories')),
     ("events", url_for('admin.events')),
+    ("presets", url_for('admin.presets')),
+    ("projects", url_for('admin.projects')),
+    ("users", url_for('admin.users')),
 ]%}
 
 {% block css %}

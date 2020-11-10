@@ -6,7 +6,7 @@
 
 An open source platform for data-driven team collaboration, such as *Hackathons*.
 
-If you need help or advice in setting up your event, or would like to contribute to the project: please get in touch via [datalets.ch](https://datalets.ch) or [GitHub Issues](https://github.com/datalets/dribdat/issues).
+If you need help or advice in setting up your event, or would like to contribute to the project: please get in touch via [datalets.ch](https://datalets.ch) or [GitHub Issues](https://github.com/hackathons-ftw/dribdat/issues).
 
 For more background and references, see [USAGE](USAGE.md) and [ABOUT](ABOUT.md). The rest of this document has details for deploying the application.
 
@@ -16,33 +16,55 @@ This project can be deployed to any server capable of serving Python application
 
 [![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy)
 
-You can configure your instance with the following basic environment variables:
+Add the **nodejs** build pack in the _Settings_ tab of Heroku to get everything working properly.
+
+The first user that registers becomes an admin, so don't delay!
+
+## Configuration
+
+You can configure your instance with the following **basic environment** variables:
 
 * `SERVER_URL` - fully qualified domain name where the site is hosted
 * `SERVER_SSL` - in production, add this to make the app redirect all visitors to the HTTPS address
+* `TIME_ZONE` - set if your event is not in UTC time (e.g. "Europe/Zurich" - see [pytz docs](https://pythonhosted.org/pytz/))
 * `DATABASE_URL` - if you are using the Postgres add-on, this would be postgres://username:password@... - in Heroku this is set automatically
 * `CACHE_TYPE` - in production, you can use built-in, Redis, Memcache to speed up your site (see `settings.py`)
+
+The following options can be used to toggle **application features**:
+
 * `DRIBDAT_ENV` - 'dev' to enable debugging, 'prod' to optimise assets etc.
 * `DRIBDAT_SECRET` - a long scary string for hashing your passwords - in Heroku this is set automatically
 * `DRIBDAT_APIKEY` - for connecting clients to the remote [API](#api)
 * `DRIBDAT_NOT_REGISTER` - set to True to disallow creating accounts on this server
+* `DRIBDAT_THEME` - can be set to one of the [Bootswatch themes](https://bootswatch.com/)
+* `DRIBDAT_CLOCK` - use 'up' or 'down' to change the position, and 'off' to hide the countdown everywhere
+* `DRIBDAT_CERT_PATH` - a URL that prefixes the download link for user certificates, followed by the SSO_ID and `.pdf` extension
 
-Support for Web analytics can be configured using one of the following variables:
+Support for **Web analytics** can be configured using one of the following variables:
 
-* `ANALYTICS_FATHOM` ([Fathom](https://usefathom.com/), with optional `ANALYTICS_FATHOM_SITE` if you use a custom site)
+* `ANALYTICS_FATHOM` ([Fathom](https://usefathom.com/) - with optional `ANALYTICS_FATHOM_SITE` if you use a custom site)
 * `ANALYTICS_SIMPLE` ([Simple Analytics](https://simpleanalytics.com))
 * `ANALYTICS_GOOGLE` (starts with "UA-...")
+* `ANALYTICS_HREF` - an optional link in the footer to a public dashboard for your analytics
 
-If you have a public dashboard for your analytics, you can add the link to the footer by setting it in `ANALYTICS_HREF`.
-
-OAuth 2.0 support is currently available using [Flask Dance](https://flask-dance.readthedocs.io/) (see [issue #118](https://github.com/hackathons-ftw/dribdat/issues/118)). To authenticate your users, the following variables should be set:
+OAuth 2.0 support for **Single Sign-On** is currently available using [Flask Dance](https://flask-dance.readthedocs.io/) (see [issue #118](https://github.com/hackathons-ftw/dribdat/issues/118)). To authenticate your users, the following variables should be set:
 
 * `OAUTH_TYPE` - e.g. 'Slack'
 * `OAUTH_ID` - the Client ID of your app (e.g. from [api.slack.com](https://api.slack.com/apps/))
 * `OAUTH_SECRET` - the Client Secret of your app
 * `OAUTH_DOMAIN` - (optional) subdomain of your Slack instance
 
-Use `.flaskenv` or `.env` to store environment variables for local development.
+For **uploading images** and other files directly within dribdat, you can configure S3 through Amazon and compatible providers:
+
+* `S3_KEY` - the access key (20 characters, all caps)
+* `S3_SECRET` - the generated secret (long, mixed case)
+* `S3_BUCKET` - the name of your S3 bucket
+* `S3_REGION` - defaults to 'eu-west-1'
+* `S3_FOLDER` - leave blank unless you want to store to a subfolder
+* `S3_HTTPS` - the URL for web access to your bucket's public files
+* `MAX_CONTENT_LENGTH` - defaults to 1048576 bytes (1 MB) file size
+
+**Tip**: Use `.flaskenv` or `.env` to store environment variables for local development.
 
 ## API
 
@@ -111,15 +133,13 @@ Install frontend resources using [Yarn](https://yarnpkg.com/en/docs/getting-star
 yarn install
 ```
 
-Finally, run this command to start the server:
+Finally, run this command (or just `debug.sh`) to start the server:
 
 ```
 FLASK_DEBUG=1 python manage.py run
 ```
 
-You will see a pretty welcome screen at http://localhost:5000
-
-The first user that registers becomes an admin, so don't delay!
+You will see a pretty welcome screen at http://127.0.0.1:5000
 
 ### Shell access
 
@@ -156,17 +176,27 @@ To apply the migration. Watch out for any errors in the process.
 
 For a full migration command reference, run `python manage.py db --help`.
 
-If you get errors like *ERROR [alembic.env] Can't locate revision identified by 'aa969b4f9f51'*, usually the fix is to drop the migration history table, and again `db init .. db migrate .. db upgrade`. You can do this in your database client, or with a line like this in the case of Heroku:
+# Troubleshooting
 
-`heroku pg:psql -c "drop table alembic_version" -a my-dribdat-instance`
+A quick guide to a few common errors.
+
+## Cannot upgrade database
+
+If you get errors like *ERROR [alembic.env] Can't locate revision identified by 'aa969b4f9f51'*, usually the fix is to drop the migration history table (`psql -c "drop table alembic_version"`), and again `db init .. db migrate .. db upgrade`. You can do this in your database client.
+
+In the case of Heroku, there's a separate process called **Upgrade** which you can find in your _Resources_ tab. Run it and watch the logs for a minute until it completes, then turn it off again.
+
+## Front-end is broken
+
+If you are not seeing the icons and other things are not working on the front end, chances are you need to run a build. Just type `yarn` in the home folder, or run the **Build** command in your _Resources_ tab in Heroku.
 
 # Credits
 
 See [Contributors](https://github.com/dataletsch/dribdat/graphs/contributors) for a list of people who have made changes to the code, and [Forks](https://github.com/dataletsch/dribdat/network/members) to find some other users of this project.
 
-Mantained by [@loleg](https://github.com/loleg) and [@gonzalocasas](https://github.com/gonzalocasas), with special thanks to the Swiss communities for [Open Data](https://opendata.ch), [Open Networking](https://opennetworkinfrastructure.org/) and [Open Source](https://dinacon.ch) for the many trials and feedbacks. We are also grateful to F. Wieser and M.-C. Gasser at [Swisscom](http://swisscom.com) for conceptual inputs and financial support of the first alpha release of this project.
+This project is currently mantained by [@loleg](https://github.com/loleg) and [@gonzalocasas](https://github.com/gonzalocasas).
 
-This code is originally based on Steven Loria's [flask-cookiecutter](https://github.com/sloria/cookiecutter-flask), which we encourage you to use in YOUR next hackathon!
+Special thanks to the [Open Data](https://opendata.ch), [Open Networking](https://opennetworkinfrastructure.org/) and [Open Source](https://dinacon.ch) communities in Switzerland for the many trials and feedbacks. We are also grateful to F. Wieser and M.-C. Gasser at [Swisscom](http://swisscom.com) for conceptual inputs and financial support at an early stage of this project. This code is originally based on Steven Loria's [flask-cookiecutter](https://github.com/sloria/cookiecutter-flask), which we encourage you to use in YOUR next hackathon!
 
 Additional and :heart:-felt thanks for testing and feedback to:
 

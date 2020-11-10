@@ -1,0 +1,51 @@
+{% from "macros/_form.html" import render_form %}
+
+{% extends "admin/layout.html" %}
+
+{% block content %}
+<div class="container">
+    <h2>Update account</h2>
+    {{ render_form(url_for('admin.user', user_id=user.id), form) }}
+
+    <h2>User Profile</h2>
+    <table border="1" cellpadding="10" style="margin-bottom:1em;">
+    {% if user.webpage_url %}
+    <tr><th>Web link</th><td>
+        <a href="{{ user.webpage_url }}" target="_blank">{{ user.webpage_url }}</a>
+    </td></tr>
+    {% endif %}
+    {% if user.cardtype and user.carddata %}
+    <tr><th>Social card</th><td>
+        {{ user.cardtype }} ({{ user.carddata.length }}b)
+    </td></tr>
+    {% endif %}
+    <tr><th>Roles</th><td><ul style="margin: 0; padding: 0 0 0 1em;">
+        {% for role in user.roles %}
+        <li>{{ role.name }}</li>
+        {% endfor %}
+    </ul></td></tr>
+    {% if user.my_story %}
+    <tr><th>My story</th><td>
+        {{ user.my_story }}
+    </td></tr>
+    {% endif %}
+    {% if user.my_goals %}
+    <tr><th>My goals</th><td>
+        {{ user.my_goals }}
+    </td></tr>
+    {% endif %}
+    </table>
+
+    <div class="btn-group">
+        <a href="{{ url_for('admin.user_delete', user_id=user.id) }}" class="btn btn-sm btn-danger"
+          onclick="if(!window.confirm('Are you sure you wish to delete this user?')) return false">
+          Delete user
+        </a>
+        {% if user.active %}
+        <a href="{{ url_for('admin.user_deactivate', user_id=user.id) }}" class="btn btn-sm btn-warning">
+          Deactivate account
+        </a>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

@@ -9,6 +9,7 @@ import bleach
 from future.standard_library import install_aliases
 install_aliases()
 from urllib.parse import quote_plus
+from bleach.sanitizer import ALLOWED_TAGS, ALLOWED_ATTRIBUTES
 
 from base64 import b64decode
 from pyquery import PyQuery as pq
@@ -25,6 +26,7 @@ def FetchGitlabProject(project_url):
     readmedata = requests.get(readmeurl)
     readme = readmedata.text or ""
     return {
+        'type': 'GitLab',
         'name': json['name'],
         'summary': json['description'],
         'description': readme,
@@ -54,10 +56,12 @@ def FetchGithubProject(project_url):
     )
     readme = re.sub(
         r"\!\[(.*)\]\((?!http)",
+        # TODO check why we are using \g escape here?
         "![\g<1>](https://raw.githubusercontent.com/" + json['full_name'] + '/master/',
         readme
     )
     return {
+        'type': 'GitHub',
         'name': json['name'],
         'summary': json['description'],
         'description': readme,
@@ -89,6 +93,7 @@ def FetchBitbucketProject(project_url):
         image_url = json['links']['avatar']['href']
     html_content = bleach.clean(content.html().strip())
     return {
+        'type': 'Bitbucket',
         'name': json['name'],
         'summary': json['description'],
         'description': html_content,
@@ -99,7 +104,6 @@ def FetchBitbucketProject(project_url):
     }
 
 DP_VIEWER_URL = 'http://data.okfn.org/tools/view?url=%s'
-DP_IMAGE_URL = 'http://assets.okfn.org/p/data/img/icon-128.png'
 
 def FetchDataProject(project_url):
     data = requests.get(project_url)
@@ -113,25 +117,42 @@ def FetchDataProject(project_url):
     if 'maintainers' in json and len(json['maintainers'])>0 and 'web' in json['maintainers'][0]:
         contact_url = json['maintainers'][0]['web']
     return {
+        'type': 'Data Package',
         'name': json['name'],
         'summary': json['title'],
         'description': text_content,
         'homepage_url': DP_VIEWER_URL % project_url,
         'source_url': project_url,
-        'image_url': DP_IMAGE_URL,
+        'image_url': '/static/img/datapackage_icon.png',
         'contact_url': contact_url,
     }
 
-ALLOWED_HTML_TAGS = [
-    u'a', u'abbr', u'acronym', u'b', u'blockquote', u'code', u'em',
-    u'i', u'li', u'ol', u'strong', u'ul', u'h1', u'h2', u'h3',
-    u'h4', u'h5', u'p'
+# Basis: https://github.com/mozilla/bleach/blob/master/bleach/sanitizer.py#L16
+ALLOWED_HTML_TAGS = ALLOWED_TAGS + [
+    'img', 'font', 'center', 'sub', 'sup', 'pre',
+    'h1', 'h2', 'h3', 'h4', 'h5',
+    'p', 'u', 'b', 'em', 'i',
 ]
+ALLOWED_HTML_ATTR = ALLOWED_ATTRIBUTES
+ALLOWED_HTML_ATTR['h1'] = ['id']
+ALLOWED_HTML_ATTR['h2'] = ['id']
+ALLOWED_HTML_ATTR['h3'] = ['id']
+ALLOWED_HTML_ATTR['h4'] = ['id']
+ALLOWED_HTML_ATTR['h5'] = ['id']
+ALLOWED_HTML_ATTR['a'] = ['href', 'title', 'class', 'name']
+ALLOWED_HTML_ATTR['img'] = ['src', 'width', 'height', 'alt', 'class']
+ALLOWED_HTML_ATTR['font'] = ['color']
 
 def FetchWebProject(project_url):
-    data = requests.get(project_url)
+    try:
+        data = requests.get(project_url)
+    except:
+        print("Could not connect to %s" % project_url)
+        return {}
+
     obj = {}
     # {
+    #     'type': 'Google', ...
     #     'name': name,
     #     'summary': summary,
     #     'description': html_content,
@@ -139,36 +160,38 @@ def FetchWebProject(project_url):
     #     'source_url': project_url,
     # }
 
+    # Google Document
+    if project_url.startswith('https://docs.google.com/document'):
+        doc = pq(data.text)
+        doc("style").remove()
+        ptitle = doc("div#title") or doc("div#header")
+        if len(ptitle) < 1: return {}
+        content = doc("div#contents")
+        if len(content) < 1: return {}
+        html_content = bleach.clean(content.html().strip(), strip=True,
+            tags=ALLOWED_HTML_TAGS, attributes=ALLOWED_HTML_ATTR)
+
+        obj['type'] = 'Google Docs'
+        obj['name'] = ptitle.text()
+        obj['description'] = html_content
+        obj['source_url'] = project_url
+        obj['image_url'] = "/static/img/document_icon.png"
+
     # DokuWiki
-    if data.text.find('<div class="dw-content">')>0:
+    elif data.text.find('<meta name="generator" content="DokuWiki"/>')>0:
         doc = pq(data.text)
         ptitle = doc("p.pageId span")
         if len(ptitle) < 1: return {}
         content = doc("div.dw-content")
         if len(content) < 1: return {}
-        html_content = bleach.clean(content.html().strip(),
-            tags=ALLOWED_HTML_TAGS, strip=True)
+        html_content = bleach.clean(content.html().strip(), strip=True,
+            tags=ALLOWED_HTML_TAGS, attributes=ALLOWED_HTML_ATTR)
 
+        obj['type'] = 'DokuWiki'
         obj['name'] = ptitle.text().replace('project:', '')
         obj['description'] = html_content
         obj['source_url'] = project_url
-        obj['image_url'] = "http://make.opendata.ch/wiki/lib/tpl/bootstrap3/images/logo.png"
-
-    # Google Drive
-    elif data.text.find('.com/docs/documents/images/kix-favicon')>0:
-        doc = pq(data.text)
-        doc("style").remove()
-        ptitle = doc("div#header")
-        if len(ptitle) < 1: return {}
-        content = doc("div#contents")
-        if len(content) < 1: return {}
-        html_content = bleach.clean(content.html().strip(),
-            tags=ALLOWED_HTML_TAGS, strip=True)
-
-        obj['name'] = ptitle.text()
-        obj['description'] = html_content
-        obj['source_url'] = project_url
-        obj['image_url'] = "http://orig07.deviantart.net/f364/f/2015/170/1/0/google_docs_icon_for_locus_icon_pack_by_droidappsreviewer-d8xwimi.png"
+        obj['image_url'] = "/static/img/dokuwiki_icon.png"
 
     # Etherpad
     elif data.text.find('pad.importExport.exportetherpad')>0:
@@ -176,9 +199,46 @@ def FetchWebProject(project_url):
         if len(ptitle) < 1: return {}
         text_content = requests.get("%s/export/txt" % project_url).text
 
+        obj['type'] = 'Etherpad'
         obj['name'] = ptitle.replace('_', ' ')
         obj['description'] = text_content
         obj['source_url'] = project_url
-        obj['image_url'] = "https://avatars2.githubusercontent.com/u/181731?s=200&v=4"
+        obj['image_url'] = "/static/img/document_white.png"
+
+    # Instructables
+    elif project_url.startswith('https://www.instructables.com/'):
+        doc = pq(data.text)
+        ptitle = doc(".header-title")
+        if len(ptitle) < 1: return {}
+        content = doc(".main-content")
+        if len(content) < 1: return {}
+        html_content = ""
+        for step in content.find(".step"):
+            step_title = pq(step).find('.step-title')
+            if step_title is not None:
+                html_content += '<h3>' + step_title.text() + '</h3>'
+            # Grab photos
+            for img in pq(step).find('noscript'):
+                if not '{{ file' in pq(img).html():
+                    html_content += pq(img).html()
+            # Iterate through body
+            step_content = pq(step).find('.step-body')
+            if step_content is None: continue
+            for elem in pq(step_content).children():
+                if elem.tag == 'pre':
+                    if elem.text is None: continue
+                    html_content += '<pre>' + elem.text + '</pre>'
+                else:
+                    p = pq(elem).html()
+                    if p is None: continue
+                    p = bleach.clean(p.strip(), strip=True,
+                        tags=ALLOWED_HTML_TAGS, attributes=ALLOWED_HTML_ATTR)
+                    html_content += '<' + elem.tag + '>' + p + '</' + elem.tag + '>'
+
+        obj['type'] = 'Instructables'
+        obj['name'] = ptitle.text()
+        obj['description'] = html_content
+        obj['source_url'] = project_url
+        obj['image_url'] = "https://upload.wikimedia.org/wikipedia/fr/thumb/c/c6/InstructsblesRobot.png/150px-InstructsblesRobot.png"
 
     return obj

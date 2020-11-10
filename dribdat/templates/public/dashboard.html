@@ -8,7 +8,10 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <title>DRIBDAT</title>
         <meta name="description" content="Project dashboard" />
-        <meta DISABLED-http-equiv="refresh" content="360">
+        <!-- Refresh social media wall every ten minutes -->
+        {% if with_social_wall %}
+          <meta http-equiv="refresh" content="600">
+        {% endif %}
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 
         <link rel="stylesheet" href="/static/libs/font-awesome/css/font-awesome.min.css">
@@ -17,54 +20,47 @@
         <link rel="stylesheet" href="/static/css/honeycomb.css">
         <link rel="stylesheet" href="/static/css/style.css">
         <style type="text/css">{{ current_event.custom_css }}</style>
-
-        <script type="text/javascript" src="/static/libs/jquery/jquery.min.js"></script>
-        <script type="text/javascript" src="/static/libs/popper.js/umd/popper.min.js"></script>
-        <script type="text/javascript" src="/static/libs/bootstrap/js/bootstrap.min.js"></script>
-        <script type="text/javascript" src="/static/js/plugins.js"></script>
-        <script type="text/javascript" src="/static/js/script.js"></script>
-        <script type="text/javascript" src="/static/libs/FlipClock/flipclock.min.js"></script>
-
-        <script src="https://cdn.jsdelivr.net/npm/vega@3"></script>
-        <script src="https://cdn.jsdelivr.net/npm/vega-lite@2"></script>
-        <script src="https://cdn.jsdelivr.net/npm/vega-embed@3"></script>
     </head>
 
     <body class="dashboard-page">
 
-      <nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
-        <div class="navbar-brand col-sm-3 col-md-2 mr-0">
-          {{ current_event.hostname }}
-        </div>
-      </nav>
+      <div class="superpowers">
+        <button class="show-announcements"
+          onclick="$('#announcements').show();$(this).hide()">📣</button>
+        <button class="darkmode">☽</button>
+      </div>
 
       <div class="container-fluid">
         <div class="row">
-          <nav class="col-md-2 bg-light sidebar">
-            <div class="sidebar-sticky" id="projects"></div>
-            <div class="sidebar-sticky" id="schedule">
+
+          <nav class="col-md-2 sidebar">
+            <div id="projects"></div>
+            <!-- <div class="sidebar-sticky" id="schedule">
               {{ current_event.description|safe }}
-            </div>
+            </div> -->
           </nav>
 
-          <main role="main" class="container-countdown col-md-9 ml-sm-auto">
+          <main role="main" class="container-countdown col-md-{{ '6' if with_social_wall else '9' }} ml-sm-auto">
             <img id="event-logo" src="{{ current_event.logo_url }}">
+
+            <div class="panel-body">
+              <textarea id="announcements" class="editable hidden">Attention! This is a public hackathon service broadcast.</textarea>
+            </div>
 
             {% if current_event.countdown %}
               <div class="event-countdown" data-start="{{ current_event.countdown }}"></div>
             {% endif %}
-
-            <div class="panel-body">
-                <div id="announcements" class="editable">Hello, World!</div>
-                <div id="activities"></div>
-            </div>
           </main>
 
-          <div class="col-md-3 sidebar-social">
-            {% if 'twitter.com' in current_event.community_url %}
-              <a class="twitter-timeline" data-width="340" data-height="900" data-dnt="true" data-theme="dark" data-link-color="#E95F28" href="{{ current_event.community_url }}?ref_src=twsrc%5Etfw">Tweets</a> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
-            {% endif %}
+          <div class="col-md-3" style="padding:0px">
+              <div id="activities"></div>
           </div>
+
+          {% if with_social_wall %}
+            <div class="col-md-3">
+              <a class="twitter-timeline" data-width="340" data-height="900" data-dnt="true" data-theme="dark" data-link-color="#E95F28" href="{{ current_event.community_url }}?ref_src=twsrc%5Etfw">Tweets</a> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+            </div>
+          {% endif %}
         </div>
       </div>
   </div>
@@ -75,14 +71,26 @@
   body {
     overflow: hidden;
   }
+  .hidden {
+    display: none;
+  }
   #projects {
-    color: #DDA;
+    color: #fff;
     font: 14pt/29pt sans-serif;
+    overflow: hidden;
+    list-style-type: none;
+    padding: 0px;
+  }
+  #projects div {
+    padding: 5px 0px;
+    margin: 10px 0px;
+    cursor: pointer;
+    line-height: 1.4em;
   }
   #projects a {
     color: inherit;
     text-decoration: none;
-    opacity: 0.9;
+    opacity: 1;
   }
   #projects sp {
     display: block;
@@ -93,9 +101,10 @@
     padding-left: 265px;
     text-align: center;
   }
-
-  .container-fluid {
-    margin-top: 40px;
+  @media (min-width: 1000px) {
+    .container-countdown {
+      padding-left: 400px;
+    }
   }
 
   .container-fluid .sidebar {
@@ -107,7 +116,7 @@
 
   #event-logo {
     width: 40%;
-    margin-top: 100px;
+    margin: 100px 0px;
   }
 
   #metrics {
@@ -116,9 +125,90 @@
     top: 150px;
   }
 
+  .dashboard-page #event-logo { width: 28%; }
+  #schedule { color: transparent; margin-top: 1em; }
+  #schedule dashboard { color: #eee; display: initial !important; }
+  #schedule > * { display: none; }
+
+  #announcements {
+    width: 100%;
+    height: 6em;
+    font-size: 50px;
+    font-weight: bold;
+    padding: 0em 0.3em;
+    color: blue;
+    resize: both;
+    background: #ffd73e;
+    border-width: 10px;
+    border-image: url("data:image/svg+xml;charset=utf-8,%3Csvg width='100' height='100' viewBox='0 0 100 100' fill='none' xmlns='http://www.w3.org/2000/svg'%3E %3Cstyle%3Epath%7Banimation:stroke 5s infinite linear%3B%7D%40keyframes stroke%7Bto%7Bstroke-dashoffset:776%3B%7D%7D%3C/style%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='0%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%232d3561' /%3E%3Cstop offset='25%25' stop-color='%23c05c7e' /%3E%3Cstop offset='50%25' stop-color='%23f3826f' /%3E%3Cstop offset='100%25' stop-color='%23ffb961' /%3E%3C/linearGradient%3E %3Cpath d='M1.5 1.5 l97 0l0 97l-97 0 l0 -97' stroke-linecap='square' stroke='url(%23g)' stroke-width='3' stroke-dasharray='388'/%3E %3C/svg%3E") 1;
+  }
+  .superpowers {
+    position: absolute;
+    bottom: 0px; right: 0px;
+  }
+  .superpowers button {
+    border: 0px;
+    background: none;
+    opacity: 0.5;
+  }
+  .show-announcements:hover {
+    opacity: 1;
+  }
+
+  .event-countdown {
+    position: fixed; bottom: 25px;
+  }
+
+  #activities {
+    color: #333;
+    font: 14pt/29pt sans-serif;
+    text-align: right;
+  }
+  #activities a {
+    color: inherit;
+    text-decoration: none;
+    display: inline-block;
+    margin: 0px;
+    padding: 0px 0.5em;
+    font-size: 80%;
+    line-height: 2em;
+    text-align: right;
+    background: white;
+  }
+  #activities div {
+    background:rgba(200,200,200,0.5);
+    box-shadow: 5px 5px 5px rgba(0,0,0,0.4);
+    font-size: 80%;
+    padding: 0 0.3em;
+    margin: 1em;
+    text-align: right;
+  }
+  #activities p {
+    padding-top: 0.5em;
+    margin: 0px 0.5em;
+    line-height: 1.2em;
+    color: #000;
+    font-size: 120%;
+    text-align: left;
+  }
+
   .vega-actions-wrapper, .vega-actions { display: none; }
 
+  .blue-background-class {
+    background: rgba(100, 100, 255, 0.5);
+  }
+
 </style>
+
+<script type="text/javascript" src="/static/libs/jquery/jquery.min.js"></script>
+<script type="text/javascript" src="/static/libs/jquery-sortable/jquery-sortable-min.js"></script>
+<script type="text/javascript" src="/static/libs/popper.js/umd/popper.min.js"></script>
+<script type="text/javascript" src="/static/libs/bootstrap/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="/static/js/plugins.js"></script>
+<script type="text/javascript" src="/static/js/script.js"></script>
+<script type="text/javascript" src="/static/libs/FlipClock/flipclock.min.js"></script>
+<script type="text/javascript" src="/static/js/clock.js"></script>
+
 <script>
 refreshProjects = function() {
   $.getJSON('/api/event/current/projects.json', function(data) {
@@ -129,39 +219,19 @@ refreshProjects = function() {
         '<sp style="width:'+p.score+'px"></sp>' +
       '</div>');
     });
+    $pp.sortable({
+      ghostClass: 'blue-background-class'
+    });
   });
 
-  $.getJSON('/api/project/activity.json', function(data) {
-    var yourVlSpec = {
-      "width": 525,
-      "$schema": "https://vega.github.io/schema/vega-lite/v2.0.json",
-      "description": "Project activities",
-      "data": {
-        "values": data.activities
-      },
-      "mark": {
-        "type": "area",
-        "interpolate": "monotone"
-      },
-      "encoding": {
-        "x": {
-          "field": "date",
-          "type": "temporal",
-          "scale": { "rangeStep": null }
-        },
-        "y": {
-          "aggregate": "mean",
-          "field": "project_score",
-          "type": "quantitative",
-          "axis": { "title": null, "labels": false }
-        }
-      },
-      "config": {
-        "autosize": { "type": "fit", "contains": "padding" },
-        "axis": { "grid": false, "ticks": false }
-      }
-    }
-    vegaEmbed("#activities", yourVlSpec);
+  $.getJSON('/api/project/posts.json', function(data) {
+    $pp = $('#activities').empty();
+    data.activities.forEach(function(a) {
+      $pp.append('<div>' +
+        '<p>'+a.content+'</p>' +
+        '<a href="/project/'+a.project_id+'">@'+a.user_name + ' / ' + a.timesince + '</a>' +
+      '</div>');
+    });
   });
 
   setTimeout(refreshProjects, 60 * 1000); // refresh every minute

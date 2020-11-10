@@ -1,4 +1,5 @@
 {% extends "layout.html" %}
+{% import "macros/_misc.html" as misc %}
 
 {% block page_title %}{{current_event.name}} / Participants{% endblock %}
 
@@ -8,16 +9,7 @@
   <h1>Awesome supporters</h1>
   <div class="participant-box">
   {% for user in participants %}
-    <a href="{% if user.webpage_url %}{{user.webpage_url}}{% else %}#{% endif %}" title="{{user.username}}" target="_blank" class="team-gravatar">
-      <img width="40" height="40" src="https://www.gravatar.com/avatar/{{user.carddata}}"/>
-      {% if user.cardtype == 'github' %}
-        <img src="{{ url_for('static', filename='img/GitHub-Mark.png') }}" width="30" height="30">
-      {% elif user.cardtype == 'twitter' %}
-        <img src="{{ url_for('static', filename='img/Twitter_Social_Icon_Circle_Color.png') }}" width="30" height="30">
-      {% endif %}
-
-      <span>{{user.username}}</span>
-    </a>
+    {{ misc.render_user_profile(user) }}
   {% endfor %}
   </div>
 
