@@ -438,13 +438,15 @@ nav .navbar-nav .nav-item {
   .project.hexalist .hexagontent {
     left: 35%;
   }
+  .project-page .project-longtext { margin: 2em; }
+  .project-page .project-autotext { margin: 2em; }
 }
 .project-page .project-info td,
 .project-page .project-info th { padding: 0.2em 1.4em 0 0; }
 .project-page .project-info thead { border-bottom: 1px solid black; }
 
-.project-page .project-longtext { margin: 2em; font-size: 125%; }
-.project-page .project-autotext { margin: 2em; }
+.project-page .project-longtext { margin: 1em 0em; font-size: 125%; }
+.project-page .project-autotext { margin: 0em; }
 .project-page .project-buttons { display: block; text-align: center; }
 .project-page .project-buttons .btn {
   display: inline-block;
@@ -535,6 +537,9 @@ nav .navbar-nav .nav-item {
 @media (max-width: 1000px) {
   .project-page .resizable {
     height: 300px;
+  }
+  .timeline h2 {
+    font-size: 1.3rem;
   }
 }
 .win-size-grip {
