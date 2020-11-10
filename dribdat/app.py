@@ -58,11 +58,9 @@ def register_extensions(app):
 
 def init_talisman(app):
     if 'SERVER_SSL' in app.config and app.config['SERVER_SSL']:
-        csp = csp = {
-            'default-src': '\'self\'',
-            'script-src': '*',
-            'img-src': '*',
-            'media-src': '*',
+        csp = app.config['CSP_DIRECTIVES'] or {
+            'default-src': '\'self\'', 'script-src': '*', 'style-src': '*',
+            'img-src': '*', 'frame-src': '*', 'media-src': '*',
         }
         Talisman(app, content_security_policy=csp, frame_options_allow_from='*')
 
