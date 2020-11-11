@@ -49,6 +49,9 @@ def login():
 @blueprint.route("/register/", methods=['GET', 'POST'])
 def register():
     """Register new user."""
+    if current_app.config['DRIBDAT_NOT_REGISTER']:
+        flash("Registration currently not possible.", 'warning')
+        return redirect(url_for("auth.login"))
     form = RegisterForm(request.form)
     if request.args.get('name') and not form.username.data:
         form.username.data = request.args.get('name')
