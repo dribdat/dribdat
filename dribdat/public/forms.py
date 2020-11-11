@@ -8,6 +8,9 @@ from wtforms import (
     SelectField, HiddenField,
     RadioField
 )
+from wtforms.fields.html5 import (
+    URLField, EmailField,
+)
 from wtforms.validators import DataRequired, AnyOf, length
 from ..user.validators import UniqueValidator
 from dribdat.user.models import User, Project
@@ -41,7 +44,7 @@ class UserForm(FlaskForm):
     id = HiddenField('id')
     roles = SelectMultipleField(u'Roles', coerce=int,
         description="Choose one or more team roles for yourself.")
-    webpage_url = StringField(u'Online profile', [length(max=128)],
+    webpage_url = URLField(u'Online profile', [length(max=128)],
         description="Link to your website or a social media profile.")
     my_story = TextAreaField(u'My story',
         description="A brief bio and outline of the competencies you bring into the hackathon. The top portion of your profile.")
@@ -49,7 +52,7 @@ class UserForm(FlaskForm):
         description="What brings you here? Share a few words about your interests. This is the bottom portion of your profile.")
     username = StringField(u'Username', [length(max=25), UniqueValidator(User, 'username'), DataRequired()],
         description="Short and sweet.")
-    email = StringField(u'E-mail address', [length(max=80), DataRequired()],
+    email = EmailField(u'E-mail address', [length(max=80), DataRequired()],
         description="For a profile image, link to this address at Gravatar.com")
     password = PasswordField(u'Change password', [length(max=128)],
         description="Leave blank to keep your password as it is.")
@@ -57,15 +60,15 @@ class UserForm(FlaskForm):
 
 class ProjectNew(FlaskForm):
     id = HiddenField('id')
-    autotext_url = StringField(u'Sync', [length(max=255)],
-        description="URL to external source of documentation in GitLab, GitHub, Bitbucket, Data Package or Website")
     name = StringField(u'Title', [length(max=80), UniqueValidator(Project, 'name'), DataRequired()],
-        description="[Required] a short project name, max 80 characters - you may change this later")
+        description=u'A short team name or project title - you may change this later')
     summary = StringField(u'Summary', [length(max=120)],
-        description="Max 120 characters")
+        description="The headline of your project, in up to 120 characters")
+    category_id = SelectField(u'Category', coerce=int, description=u'If your event supports it, select the challenge you plan to address')
     contact_url = StringField(u'Contact link', [length(max=255)],
-        description="How best to contact your team")
-    category_id = SelectField(u'Challenge category', coerce=int)
+        description="How to best contact your team")
+    autotext_url = URLField(u'Sync', [length(max=255)],
+        description="URL to external source of documentation in GitLab, GitHub, Bitbucket, Data Package or Website")
     submit = SubmitField(u'Save')
 
 class ProjectForm(FlaskForm):
@@ -77,17 +80,18 @@ class ProjectForm(FlaskForm):
         description="Max 120 characters")
     longtext = TextAreaField(u'Pitch',
         description="To format, use Markdown or HTML. Links on their own line get previews for supported providers.")
-    webpage_url = StringField(u'Project link', [length(max=2048)],
+    webpage_url = URLField(u'Project link', [length(max=2048)],
         description="URL to a live demo, presentation, or link to further information")
     is_webembed = BooleanField(u'Embed project link')
-    autotext_url = StringField(u'Sync', [length(max=255)],
+    autotext_url = URLField(u'Sync', [length(max=255)],
         description="URL to external source of documentation in GitLab, GitHub, Bitbucket, Data Package or Web site")
-    source_url = StringField(u'Source link', [length(max=255)],
+    source_url = URLField(u'Source link', [length(max=255)],
         description="URL of your repository")
-    contact_url = StringField(u'Contact link', [length(max=255)],
-        description="URL of an issues page, forum thread, chat channel, e-mail, hashtag, ...")
+    contact_url = URLField(u'Contact link', [length(max=255)],
+        description="URL of an issues page, forum thread, chat channel, contact form, social media account, etc.")
+    # Note: relative links allowed in image_url -> StringField
     image_url = StringField(u'Image link', [length(max=255)],
-        description="URL to an image to display at the top")
+        description="URL of an image to display at the top")
     logo_color = StringField(u'Custom color', [length(max=7)],
         description="Background color of your project page")
     # logo_icon = StringField(u'<a target="_blank" href="http://fontawesome.io/icons/#search">Custom icon</a>',

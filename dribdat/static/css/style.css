@@ -22,14 +22,13 @@ form input[type="checkbox"] {
 .navbar-form input[type="password"] {
   width: 180px;
 }
-.form-register {
-  width: 50%;
-}
 .form-register .form-control {
   position: relative;
   font-size: 16px;
   height: auto;
   padding: 10px;
+  max-width: 25em;
+  display: inline-block;
   -webkit-box-sizing: border-box;
      -moz-box-sizing: border-box;
           box-sizing: border-box;
@@ -47,6 +46,12 @@ form input[type="checkbox"] {
   font-size: 90%;
   margin: 1em 0;
   opacity: 0.8;
+}
+.admin .form-group .control-label {
+  font-size: 125%; font-weight: bold;
+}
+.form-group .radio-inline {
+  margin-right: 1em;
 }
 
 /* pagination */

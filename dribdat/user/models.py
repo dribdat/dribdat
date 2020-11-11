@@ -27,7 +27,7 @@ from dribdat.utils import (
     format_date_range, format_date, timesince
 )
 from dribdat.onebox import format_webembed
-from dribdat.user import PROJECT_PROGRESS_PHASE
+from dribdat.user import getProjectPhase, getResourceType
 
 from sqlalchemy import Table, or_
 
@@ -37,7 +37,7 @@ users_roles = Table('users_roles', db.metadata,
 )
 
 class Role(PkModel):
-    """A role of the contributor."""
+    """ Loud and proud """
 
     __tablename__ = 'roles'
     name = Column(db.String(80), unique=True, nullable=False)
@@ -56,7 +56,7 @@ class Role(PkModel):
         return users.count()
 
 class User(UserMixin, PkModel):
-    """A user of the app."""
+    """ Just a regular Joe """
 
     __tablename__ = 'users'
     username = Column(db.String(80), unique=True, nullable=False)
@@ -156,6 +156,7 @@ class User(UserMixin, PkModel):
 
 
 class Event(PkModel):
+    """ Tell me what's a-happening """
     __tablename__ = 'events'
     name = Column(db.String(80), unique=True, nullable=False)
     hostname = Column(db.String(80), nullable=True)
@@ -230,7 +231,6 @@ class Event(PkModel):
     def can_start_project(self):
         return not self.has_finished and not self.lock_starting
 
-
     @property
     def countdown(self):
         # Normalizing dates & timezones.
@@ -276,6 +276,7 @@ class Event(PkModel):
         return '<Event({name})>'.format(name=self.name)
 
 class Project(PkModel):
+    """ You know, for kids! """
     __tablename__ = 'projects'
     name = Column(db.String(80), unique=True, nullable=False)
     summary = Column(db.String(120), nullable=True)
@@ -313,8 +314,8 @@ class Project(PkModel):
     score = Column(db.Integer(), nullable=True, default=0)
 
     # Convenience query for latest activity
-    def latest_activity(self):
-        return Activity.query.filter_by(project_id=self.id).order_by(Activity.timestamp.desc()).limit(5)
+    def latest_activity(self, max=5):
+        return Activity.query.filter_by(project_id=self.id).order_by(Activity.timestamp.desc()).limit(max)
 
     # Return all starring users (A team)
     def team(self):
@@ -388,14 +389,14 @@ class Project(PkModel):
     # Self-assessment (progress)
     @property
     def phase(self):
-        if self.progress is None: return ""
-        return PROJECT_PROGRESS_PHASE[self.progress]
+        return getProjectPhase(self)
     @property
     def is_challenge(self):
         return self.progress < 0
 
     @property
     def webembed(self):
+        """ Detect and return supported embed widgets """
         return format_webembed(self.webpage_url)
 
     @property
@@ -409,6 +410,7 @@ class Project(PkModel):
 
     @property
     def url(self):
+        """ Returns local server URL """
         return "project/%d" % (self.id)
 
     @property
@@ -438,6 +440,7 @@ class Project(PkModel):
         return d
 
     def get_schema(self, host_url=''):
+        """ Schema.org compatible metadata """
         return {
             "@type": "CreativeWork",
             "name": self.name,
@@ -451,6 +454,7 @@ class Project(PkModel):
         }
 
     def update(self):
+        """ Process data submission """
         # Correct fields
         if self.category_id == -1: self.category_id = None
         if self.logo_icon and self.logo_icon.startswith('fa-'):
@@ -507,6 +511,7 @@ class Project(PkModel):
         return '<Project({name})>'.format(name=self.name)
 
 class Category(PkModel):
+    """ Is it a bird? Is it a plane? """
     __tablename__ = 'categories'
     name = Column(db.String(80), nullable=False)
     description = Column(db.UnicodeText(), nullable=True)
@@ -536,7 +541,52 @@ class Category(PkModel):
     def __repr__(self):
         return '<Category({name})>'.format(name=self.name)
 
+class Resource(PkModel):
+    """ The kitchen larder """
+    __tablename__ = 'resources'
+    name = Column(db.String(80), unique=True, nullable=False)
+    type_id = Column(db.Integer(), nullable=True)
+    created_at = Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)
+    progress_tip = Column(db.Integer(), nullable=True)
+    source_url = Column(db.String(2048), nullable=True)
+    source_sync = Column(db.Boolean(), default=False)
+    content = Column(db.UnicodeText(), nullable=True)
+    summary = Column(db.String(140), nullable=True)
+
+    @property
+    def of_type(self):
+        return getResourceType(self)
+    @property
+    def since(self):
+        return timesince(self.created_at)
+
+    def get_comments(self, max=5):
+        return self.activities.order_by(Activity.timestamp.desc()).limit(max)
+    def get_project_count(self):
+        return self.activities.group_by(Project.id).count()
+
+    @property
+    def data(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'since': self.since,
+            'type': self.of_type,
+            'url': self.source_url,
+            'content': self.content,
+            'summary': self.summary,
+            'count': self.get_project_count()
+        }
+
+    def __init__(self, name=None, **kwargs):
+        if name:
+            db.Model.__init__(self, name=name, **kwargs)
+
+    def __repr__(self):
+        return '<Resource({name})>'.format(name=self.name)
+
 class Activity(PkModel):
+    """ Public, real time, conversational """
     __tablename__ = 'activities'
     name = Column(db.Enum(
         'create',
@@ -551,10 +601,17 @@ class Activity(PkModel):
         # ...
     timestamp = Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)
     content = Column(db.UnicodeText, nullable=True)
+
     user_id = reference_col('users', nullable=False)
     user = relationship('User', backref='activities')
+
     project_id = reference_col('projects', nullable=False)
     project = relationship('Project', backref='activities')
+    project_progress = Column(db.Integer, nullable=True)
+    project_score = Column(db.Integer, nullable=True)
+
+    resource_id = reference_col('resources', nullable=True)
+    resource = relationship('Resource', backref='activities')
 
     @property
     def data(self):
@@ -569,7 +626,10 @@ class Activity(PkModel):
             'user_id': self.user.id,
             'project_id': self.project.id,
             'project_name': self.project.name,
-            'project_score': self.project.score
+            'project_score': self.project_score,
+            'project_phase': getProjectPhase(self.project),
+            'resource_id': self.resource_id,
+            'resource_type': getResourceType(self.resource),
         }
 
     def __init__(self, name, user_id, project_id, **kwargs):

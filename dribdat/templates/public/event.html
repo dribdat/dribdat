@@ -139,7 +139,7 @@
 
   <div role="group" aria-label="Hackathon navigation">
     {% if current_event.countdown %}
-      <a href="{{ url_for('public.dashboard') }}" class="btn btn-sm btn-default">
+      <a href="{{ url_for('public.dashboard') }}" class="btn btn-sm btn-default" title="{{ current_event.countdown }}">
         <i class="fa fa-id-card-o" aria-hidden="true"></i>
         {{ current_event.countdown|until_date }}</a>
     {% endif %}

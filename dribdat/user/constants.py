@@ -16,6 +16,31 @@ USER_STATUS = {
     ACTIVE: 'active',
 }
 
+# Linked resources
+RESOURCE_TYPES = {
+    100: "Data",
+    # 101: "Geodata",
+    # 102: "Sensor data",
+    # 103: "Deep learning model",
+    200: "Code",
+    # 201: "Query code",
+    # 202: "Code framework",
+    # 203: "Programming library",
+    300: "Tool",
+    # 301: "Project planner",
+    # 302: "Wireframing app",
+    # 303: "Simulation tool",
+}
+
+def resourceTypeList():
+    pl = [(g, RESOURCE_TYPES[g]) for g in RESOURCE_TYPES]
+    return sorted(pl, key=lambda x: x[0])
+
+def getResourceType(resource):
+    if resource is None: return ""
+    if not resource.type_id in RESOURCE_TYPES: return ""
+    return RESOURCE_TYPES[resource.type_id]
+
 # Project progress
 PR_CHALLENGE = -1
 PR_NEW = 0
@@ -42,8 +67,14 @@ PROJECT_PROGRESS_PHASE = {
     PR_LIVE:        'Supporting',
     PR_CHALLENGE:   'Challenge',
 }
+
 def projectProgressList(All=True):
     if not All:
         return [(PR_CHALLENGE, PROJECT_PROGRESS[PR_CHALLENGE])]
     pl = [(g, PROJECT_PROGRESS[g]) for g in PROJECT_PROGRESS]
     return sorted(pl, key=lambda x: x[0])
+
+def getProjectPhase(project):
+    if project is None or project.progress is None: return ""
+    if not project.progress in PROJECT_PROGRESS_PHASE: return ""
+    return PROJECT_PROGRESS_PHASE[project.progress]
