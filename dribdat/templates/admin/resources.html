@@ -1,0 +1,40 @@
+{% extends "admin/layout.html" %}
+
+{% block content %}
+<div class="container">
+    <a href="{{ url_for('admin.resource_new') }}" class="btn btn-success btn-lg">Add resource</a>
+    <h2>Resources</h2>
+    <table class='table table-bordered table-hover'>
+        <thead>
+            <tr>
+              <th>Name</th>
+              <th>Type</th>
+              <th>Added</th>
+              <th>Manage</th>
+            </tr>
+        </thead>
+        {% for resource in resources %}
+        <tr>
+            <td>
+              <a href="{{ url_for('admin.resource', resource_id=resource.id) }}">
+                {{ resource.name }}
+              </a>
+            </td>
+            <td>{{ resource.of_type }}</td>
+            <td>
+              <i title="{{ resource.created_at }}">
+                {{ resource.since }}
+              </i>
+            </td>
+            <td>
+              {% if resource.source_sync %}
+              <a href="{{ url_for('admin.resource_sync', resource_id=resource.id) }}" class="btn btn-sm btn-warning">
+                Sync
+              </a>
+              {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+{% endblock %}
