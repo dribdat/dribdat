@@ -26,9 +26,9 @@ def timesince(dt, default="just now", until=False):
     3 days ago, 5 hours ago etc.
     - from http://flask.pocoo.org/snippets/33/
     """
+    if dt is None: return ""
     tz = pytz.timezone(current_app.config["TIME_ZONE"])
     tz_now = tz.localize(dt.utcnow())
-    if dt is None: return ""
     dt = dt.astimezone(tz)
     if dt is None: return ""
     if until and dt > tz_now:

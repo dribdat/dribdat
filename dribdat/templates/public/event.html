@@ -135,27 +135,34 @@
 
 {% endcache %}
 
-<center><div role="group" aria-label="Hackathon navigation">
-  {% if current_event.countdown %}
-    <a href="{{ url_for('public.dashboard') }}" class="btn btn-sm btn-default">
-      <i class="fa fa-id-card-o" aria-hidden="true"></i>
-      {{ current_event.countdown|until_date }}</a>
+<center class="event-footer">
+
+  <div role="group" aria-label="Hackathon navigation">
+    {% if current_event.countdown %}
+      <a href="{{ url_for('public.dashboard') }}" class="btn btn-sm btn-default">
+        <i class="fa fa-id-card-o" aria-hidden="true"></i>
+        {{ current_event.countdown|until_date }}</a>
+    {% endif %}
+    {% if current_event.webpage_url %}
+      <a href="{{ current_event.webpage_url }}" class="btn btn-sm btn-default">
+        <i class="fa fa-info-circle" aria-hidden="true"></i>
+        Information &raquo;</a>
+    {% endif %}
+    <a href="{{ url_for('public.event_participants', event_id=current_event.id) }}" class="btn btn-default btn-sm">
+      <i class="fa fa-user" aria-hidden="true"></i>
+      Participants</a>
+    <a href="{{ url_for('public.event', event_id=current_event.id, _external=True) }}?embed=1" class="btn btn-default btn-sm" id="embed-link">
+      <i class="fa fa-external-link" aria-hidden="true"></i>
+      Embed</a>
+    {% if current_user and current_user.is_authenticated and current_user.is_admin %}
+      <a href="{{ url_for('admin.event', event_id=current_event.id) }}" class="btn btn-warning btn-sm">
+        <i class="fa fa-pencil" aria-hidden="true"></i>
+        Edit event</a>
+    {% endif %}
+  </div>
+
+  {% if current_event and current_event.countdown and not 'off' in config.DRIBDAT_CLOCK %}
+    <div class="event-countdown" data-start="{{ current_event.countdown }}"></div>
   {% endif %}
-  {% if current_event.webpage_url %}
-    <a href="{{ current_event.webpage_url }}" class="btn btn-sm btn-default">
-      <i class="fa fa-info-circle" aria-hidden="true"></i>
-      Information &raquo;</a>
-  {% endif %}
-  <a href="{{ url_for('public.event_participants', event_id=current_event.id) }}" class="btn btn-default btn-sm">
-    <i class="fa fa-user" aria-hidden="true"></i>
-    Participants</a>
-  <a href="{{ url_for('public.event', event_id=current_event.id, _external=True) }}?embed=1" class="btn btn-default btn-sm" id="embed-link">
-    <i class="fa fa-external-link" aria-hidden="true"></i>
-    Embed</a>
-  {% if current_user and current_user.is_authenticated and current_user.is_admin %}
-    <a href="{{ url_for('admin.event', event_id=current_event.id) }}" class="btn btn-warning btn-sm">
-      <i class="fa fa-pencil" aria-hidden="true"></i>
-      Edit event</a>
-  {% endif %}
-</div></center>
+</center>
 {% endblock %}

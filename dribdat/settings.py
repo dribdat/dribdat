@@ -38,6 +38,7 @@ class Config(object):
     # Server settings
     SERVER_NAME = os_env.get('SERVER_URL', '127.0.0.1:5000')
     SERVER_SSL = os_env.get('SERVER_SSL', None)
+    CSP_DIRECTIVES = os_env.get('CSP_DIRECTIVES', None)
     TIME_ZONE = os_env.get('TIME_ZONE', 'UTC')
     MAX_CONTENT_LENGTH = os_env.get('MAX_CONTENT_LENGTH', 1 * 1024 * 1024)
 

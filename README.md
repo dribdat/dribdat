@@ -4,7 +4,7 @@
 [![Coveralls](https://coveralls.io/repos/github/datalets/dribdat/badge.svg?branch=master)](https://coveralls.io/github/datalets/dribdat?branch=master)
 [![Mattermost](https://img.shields.io/badge/Mattermost-chat-blue.svg)](https://team.opendata.ch/signup_user_complete/?id=74yuxwruaby9fpoukx9bmoxday)
 
-An open source platform for data-driven team collaboration, such as *Hackathons*.
+### An open source platform for time-limited team-based data-driven solutions-focused collaboration known as the *Hackathon*.
 
 If you need help or advice in setting up your event, or would like to contribute to the project: please get in touch via [datalets.ch](https://datalets.ch) or [GitHub Issues](https://github.com/hackathons-ftw/dribdat/issues).
 
@@ -24,11 +24,12 @@ The first user that registers becomes an admin, so don't delay!
 
 You can configure your instance with the following **basic environment** variables:
 
-* `SERVER_URL` - fully qualified domain name where the site is hosted
-* `SERVER_SSL` - in production, add this to make the app redirect all visitors to the HTTPS address
 * `TIME_ZONE` - set if your event is not in UTC time (e.g. "Europe/Zurich" - see [pytz docs](https://pythonhosted.org/pytz/))
+* `SERVER_URL` - fully qualified domain name where the site is hosted
+* `SERVER_SSL` - redirect all visitors to HTTPS, applying CSP
+* `CSP_DIRECTIVES` - configure content security policy - see [Talisman docs](https://github.com/GoogleCloudPlatform/flask-talisman#content-security-policy)
 * `DATABASE_URL` - if you are using the Postgres add-on, this would be postgres://username:password@... - in Heroku this is set automatically
-* `CACHE_TYPE` - in production, you can use built-in, Redis, Memcache to speed up your site (see `settings.py`)
+* `CACHE_TYPE` - speed up the site with built-in, Redis, Memcache - see [Flask-Caching](https://pythonhosted.org/Flask-Caching/)
 
 The following options can be used to toggle **application features**:
 
@@ -37,7 +38,7 @@ The following options can be used to toggle **application features**:
 * `DRIBDAT_APIKEY` - for connecting clients to the remote [API](#api)
 * `DRIBDAT_NOT_REGISTER` - set to True to disallow creating accounts on this server
 * `DRIBDAT_THEME` - can be set to one of the [Bootswatch themes](https://bootswatch.com/)
-* `DRIBDAT_CLOCK` - use 'up' or 'down' to change the position, and 'off' to hide the countdown everywhere
+* `DRIBDAT_CLOCK` - use 'up' or 'down' to change the position, and 'off' to hide the countdown
 * `DRIBDAT_CERT_PATH` - a URL that prefixes the download link for user certificates, followed by the SSO_ID and `.pdf` extension
 
 Support for **Web analytics** can be configured using one of the following variables:

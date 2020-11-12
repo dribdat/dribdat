@@ -1,11 +1,5 @@
 (function($, window) {
 
-  $(document).ready(function() {
-
-    // Detect and recommend SSL connection
-
-  });
-
   // Initialize project data loader
   $('#autotext_url').each(function() {
 
@@ -41,32 +35,24 @@
       checkAutotext($inputfield.val(), $indicator);
     });
 
+    // Update button
     $indicator.find('button').click(function(e) {
       e.preventDefault();
       e.stopPropagation();
       var url = $inputfield.val();
-
-      /* Warning no longer needed -
-      if ($('input#name').val() && !window.confirm('All project fields (Title, etc.) ' +
-        'will be overwritten with remote project data. Proceed?')) {
-          if ($('#is_autoupdate').is(':checked')) $('#is_autoupdate').click();
-          return false;
-        }
-      */
-
       var $button = $(this);
       $indicator.find('i').css('color', 'blue');
       $button.attr('disabled', 'disabled').html('Please wait ...');
+      // Call updater API
       $.getJSON('/api/project/autofill?url=' + url, function(data) {
         $indicator.find('i').css('color', 'green');
         $button.removeAttr('disabled').html('Update now');
-
         if (typeof data.name === 'undefined' || data.name === '') {
           window.alert('Project data could not be fetched - enter a valid Remote link.');
           $('#is_autoupdate').prop('checked', false);
           return;
         }
-
+        // Set form values
         if (!$('input#name').val())
           $('input#name').val(data.name);
         if (!$('input#summary').val())
@@ -92,10 +78,20 @@
     $(this).addClass('active');
   });
 
-  // Post a project update
-  // $('.project-post').click(function() {
-  //
-  // });
+  // Check image size on render
+  $('.project-home .project-image').each(function() {
+    var $self = $(this);
+    var url = $self.data('href');
+    if (url.length<6) return;
+    var img = new Image();
+    img.onload = function() {
+      if (this.width > this.height > 512 || this.width > 640)
+        return $self.addClass('overlay');
+      this.id = 'overlayImage';
+      $self.addClass('underlay').after(this);
+    }
+    img.src = url;
+  });
 
   // Upload images
   $('#uploadImage').each(function() {

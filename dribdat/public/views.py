@@ -26,6 +26,7 @@ def current_event(): return Event.query.filter_by(is_current=True).first()
 @blueprint.route("/dashboard/")
 def dashboard():
     event = current_event()
+    if not event: return 'No current event'
     wall = 'twitter.com' in event.community_url
     return render_template("public/dashboard.html", current_event=event, with_social_wall=wall)
 

@@ -29,7 +29,10 @@
                     Print
                   </a>
                   <a href="{{ url_for('public.event', event_id=event.id) }}" class="dropdown-item">
-                    Board
+                    Hexaboard
+                  </a>
+                  <a href="{{ url_for('public.dashboard', event_id=event.id) }}" class="dropdown-item">
+                    Dashboard
                   </a>
                   <a href="{{ url_for('public.event', event_id=event.id, _external=True) }}?embed=1" class="dropdown-item" id="embed-link">
                     Embed
@@ -46,10 +49,16 @@
             <td>
               <a href="{{ url_for('admin.event', event_id=event.id) }}">
                 {{ event.name }}
-                {% if event.is_current %}
-                  &nbsp; <span class="btn btn-warning btn-sm">Current event</span>
-                {% endif %}
               </a>
+              {% if event.is_current %}
+                &nbsp; <span class="btn btn-warning btn-sm">Current</span>
+              {% endif %}
+              {% if event.lock_editing %}
+                <span title="Editing locked" class="btn btn-danger btn-sm">Edit</span>
+              {% endif %}
+              {% if event.lock_starting %}
+                <span title="Creating locked" class="btn btn-dark btn-sm">Lock</span>
+              {% endif %}
             </td>
             <td>{{ event.starts_at|format_date }}</td>
             <td>{{ event.ends_at|format_date }}</td>

@@ -7,9 +7,9 @@
 section { overflow: auto; }
 textarea { resize: vertical; }
 
-.container-narrow {
-  margin: 0 auto;
-  max-width: 700px;
+.container.with-event {
+  margin-top: 1em;
+  clear: both;
 }
 
 .hidden { display: none; }
@@ -160,9 +160,6 @@ nav .navbar-nav .nav-item {
     width: 38px;
   }
   .event-countdown .flip-clock {
-    background: #335;
-    border: 5px solid #333;
-    box-shadow: 1px 1px 5px rgba(0,0,0,0.3);
     position: relative;
     left: 50%;
     width: 360px;
@@ -179,11 +176,22 @@ nav .navbar-nav .nav-item {
     display: none;
   }
 }
-.home .footer-clock { display: none; }
-.footer-clock.event-countdown {
-  transform: scale(0.5);
-  float: left;
-  z-index: 1000;
+.event-footer .event-countdown {
+  width: 600px;
+}
+@media (max-width: 1190px) {
+  .event-footer .event-countdown {
+    transform: scale(0.5);
+    position: initial;
+    left: initial;
+    margin: 0px;
+    width: 0px;
+  }
+}
+@media (min-width: 2000px) {
+  .event-footer .event-countdown {
+    display: none;
+  }
 }
 
 .community-embed { margin-top: 60px; }
@@ -232,9 +240,8 @@ nav .navbar-nav .nav-item {
     margin-bottom: 1px;
   }
   .event-home .honeycomb {
-    text-align: left;
+    text-align: center;
     clear: both;
-    padding-left: 6%;
   }
 }
 
@@ -369,7 +376,7 @@ nav .navbar-nav .nav-item {
 }
 .project-home .project-image {
   margin-top: 10px;
-  margin-bottom: -10px;
+  margin-bottom: -15px;
   height: 200px;
   width: 100%;
   display: block;
@@ -377,6 +384,24 @@ nav .navbar-nav .nav-item {
   background-position-x: center;
   background-position-y: center;
   background-size: cover;
+  opacity: 0.1;
+}
+.project-home .jumbotron.project-page {
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+}
+.project-home .project-image.underlay {
+  filter: blur(2px);
+}
+.project-home .project-image.overlay {
+  opacity: 1.0;
+}
+.project-home #overlayImage {
+  position: absolute;
+  margin-top: -170px;
+  margin-left: 10px;
+  height: 160px;
+  overflow: hidden;
 }
 .project-page .details {
   font-size: 80%;
@@ -403,7 +428,9 @@ nav .navbar-nav .nav-item {
 .project-page .project-info a {
   color: #15a;
 }
-.project-page a.project-star.btn-primary { color: white; }
+.project-page a.btn { color: white; }
+.project-page a.btn-warning,
+.project-page a.btn-light { color: black; }
 .project-page .project-star i {
   padding-right: 5px;
 }
@@ -420,13 +447,15 @@ nav .navbar-nav .nav-item {
   .project.hexalist .hexagontent {
     left: 35%;
   }
+  .project-page .project-longtext { margin: 2em; }
+  .project-page .project-autotext { margin: 2em; }
 }
 .project-page .project-info td,
 .project-page .project-info th { padding: 0.2em 1.4em 0 0; }
 .project-page .project-info thead { border-bottom: 1px solid black; }
 
-.project-page .project-longtext { margin: 2em; font-size: 125%; }
-.project-page .project-autotext { margin: 2em; }
+.project-page .project-longtext { margin: 1em 0em; font-size: 125%; }
+.project-page .project-autotext { margin: 0em; }
 .project-page .project-buttons { display: block; text-align: center; }
 .project-page .project-buttons .btn {
   display: inline-block;
@@ -517,6 +546,9 @@ nav .navbar-nav .nav-item {
 @media (max-width: 1000px) {
   .project-page .resizable {
     height: 300px;
+  }
+  .timeline h2 {
+    font-size: 1.3rem;
   }
 }
 .win-size-grip {
@@ -732,7 +764,7 @@ pre { color: #333; background: white; }
 
 @media (max-width: 760px) {
   .category-info {
-    margin-top: none;
+    margin-top: 0px;
   }
   .project-score {
     float: none;

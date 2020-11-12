@@ -4,8 +4,8 @@ aniso8601==7.0.0
 bcrypt==3.2.0
 beautifulsoup4==4.9.3
 bleach==3.2.1
-boto3==1.16.13
-certifi==2020.6.20
+boto3==1.16.15
+certifi==2020.11.8
 cffi==1.14.3
 chardet==3.0.4
 Click==7.1.2
@@ -29,7 +29,7 @@ graphene==2.1.8
 graphql-core==2.3.2
 graphql-relay==2.0.1
 gunicorn==20.0.4
-email_validator==1.1.1
+email_validator==1.1.2
 idna==2.10
 itsdangerous==1.1.0
 jinja2==2.11.2
