@@ -84,6 +84,11 @@ class User(UserMixin, PkModel):
         return {
             'id': self.id,
             'username': self.username,
+            'email': self.email,
+            'url': self.webpage_url,
+            'active': self.active,
+            'admin': self.is_admin,
+            'roles': ",".join([r.name for r in self.roles]),
         }
 
     def socialize(self):

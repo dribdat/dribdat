@@ -9,7 +9,7 @@ from ..extensions import db
 from ..utils import timesince, random_password
 
 from ..user.models import Event, Project, Category, Activity
-from ..aggregation import GetProjectData
+from ..aggregation import GetProjectData, GetEventUsers
 
 from datetime import datetime
 from flask import Response, stream_with_context
@@ -19,19 +19,6 @@ from os import path
 PY3 = sys.version_info[0] == 3
 
 blueprint = Blueprint('api', __name__, url_prefix='/api')
-
-def get_projects_by_event(event_id):
-    return Project.query.filter_by(event_id=event_id, is_hidden=False)
-
-def get_project_summaries(projects):
-    summaries = expand_project_urls([ p.data for p in projects ])
-    summaries.sort(key=lambda x: x['score'], reverse=True)
-    return summaries
-
-# Collect all projects and challenges for an event
-def project_list(event_id):
-    projects = get_projects_by_event(event_id)
-    return get_project_summaries(projects)
 
 # Generate a CSV file
 def gen_csv(csvdata):
@@ -80,6 +67,19 @@ def info_event_hackathon_json(event_id):
     return jsonify(event.get_schema(request.host_url))
 
 # ------ EVENT PROJECTS ---------
+
+def get_projects_by_event(event_id):
+    return Project.query.filter_by(event_id=event_id, is_hidden=False)
+
+def get_project_summaries(projects):
+    summaries = expand_project_urls([ p.data for p in projects ])
+    summaries.sort(key=lambda x: x['score'], reverse=True)
+    return summaries
+
+# Collect all projects and challenges for an event
+def project_list(event_id):
+    projects = get_projects_by_event(event_id)
+    return get_project_summaries(projects)
 
 # API: Outputs JSON of projects in the current event, along with its info
 @blueprint.route('/event/current/projects.json')
@@ -197,6 +197,18 @@ def project_info_json(project_id):
     }
 
     return jsonify(data)
+
+# ------ USERS ----------
+
+@blueprint.route('/event/<int:event_id>/participants.csv')
+def event_participants_csv(event_id):
+    event = Event.query.filter_by(id=event_id).first_or_404()
+    userlist = [u.data for u in GetEventUsers(event)]
+    return Response(stream_with_context(gen_csv(userlist)),
+                    mimetype='text/csv',
+                    headers={'Content-Disposition': 'attachment; filename=user_list_%d.csv' % event.id})
+
+
 
 # ------ SEARCH ---------
 
