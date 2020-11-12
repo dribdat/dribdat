@@ -178,6 +178,7 @@ class Event(PkModel):
     is_current = Column(db.Boolean(), default=False)
     lock_editing = Column(db.Boolean(), default=False)
     lock_starting = Column(db.Boolean(), default=False)
+    lock_resources = Column(db.Boolean(), default=False)
 
     @property
     def data(self):
@@ -365,7 +366,8 @@ class Project(PkModel):
             prev = {
                 'title': title,
                 'text': text,
-                'date': a.timestamp
+                'date': a.timestamp,
+                'resource': a.resource,
             }
             signals.append(prev)
         if self.event.has_started or self.event.has_finished:
@@ -550,8 +552,12 @@ class Resource(PkModel):
     progress_tip = Column(db.Integer(), nullable=True)
     source_url = Column(db.String(2048), nullable=True)
     source_sync = Column(db.Boolean(), default=False)
+    is_visible = Column(db.Boolean(), default=False)
     content = Column(db.UnicodeText(), nullable=True)
     summary = Column(db.String(140), nullable=True)
+
+    user_id = reference_col('users', nullable=True)
+    user = relationship('User', backref='resources')
 
     @property
     def of_type(self):
@@ -560,10 +566,21 @@ class Resource(PkModel):
     def since(self):
         return timesince(self.created_at)
 
+    @property
+    def icon(self):
+        if self.type_id >= 300: # tool
+            return 'cloud'
+        elif self.type_id >= 200: # code
+            return 'gear'
+        elif self.type_id >= 100: # data
+            return 'cube'
+        else:
+            return 'leaf'
+
     def get_comments(self, max=5):
-        return self.activities.order_by(Activity.timestamp.desc()).limit(max)
+        return Activity.query.filter_by(resource_id=self.id).order_by(Activity.id.desc()).limit(max)
     def get_project_count(self):
-        return self.activities.group_by(Project.id).count()
+        return Activity.query.filter_by(resource_id=self.id).group_by(Project.id).count()
 
     @property
     def data(self):

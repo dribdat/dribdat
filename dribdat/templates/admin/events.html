@@ -47,11 +47,9 @@
               </div>
             </td>
             <td>
-              <a href="{{ url_for('admin.event', event_id=event.id) }}">
-                {{ event.name }}
-              </a>
+              <a href="{{ url_for('admin.event', event_id=event.id) }}#EOF" style="float:right">
               {% if event.is_current %}
-                &nbsp; <span class="btn btn-warning btn-sm">Current</span>
+                <span class="btn btn-warning btn-sm">Current</span>
               {% endif %}
               {% if event.lock_editing %}
                 <span title="Editing locked" class="btn btn-dark btn-sm">Freeze</span>
@@ -59,6 +57,14 @@
               {% if event.lock_starting %}
                 <span title="Creating locked" class="btn btn-dark btn-sm">Lock</span>
               {% endif %}
+              {% if event.lock_resources %}
+                <span title="Suggesting locked" class="btn btn-dark btn-sm">Stun</span>
+              {% endif %}
+              </a>
+              
+              <a href="{{ url_for('admin.event', event_id=event.id) }}">
+                {{ event.name }}
+              </a>
             </td>
             <td>{{ event.starts_at|format_date }}</td>
             <td>{{ event.ends_at|format_date }}</td>

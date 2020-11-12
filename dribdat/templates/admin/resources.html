@@ -10,10 +10,10 @@
               <th>Name</th>
               <th>Type</th>
               <th>Added</th>
-              <th>Manage</th>
+              <th>By</th>
             </tr>
         </thead>
-        {% for resource in resources %}
+        {% for resource in resources or data.items %}
         <tr>
             <td>
               <a href="{{ url_for('admin.resource', resource_id=resource.id) }}">
@@ -27,14 +27,27 @@
               </i>
             </td>
             <td>
+              {% if resource.user_id %}
+                {{ resource.user.username }} &nbsp;
+              {% endif %}
+
               {% if resource.source_sync %}
               <a href="{{ url_for('admin.resource_sync', resource_id=resource.id) }}" class="btn btn-sm btn-warning">
                 Sync
               </a>
               {% endif %}
+
+              {% if not resource.is_visible %}
+                <a href="{{ url_for('admin.resource', resource_id=resource.id) }}#EOF"
+                   title="Please moderate and unhide if approved" class="btn btn-dark btn-sm">
+                    Hidden</a>
+              {% endif %}
             </td>
         </tr>
         {% endfor %}
     </table>
+  {% if data %}
+    {% include "includes/pagination.html" %}
+  {% endif %}
 </div>
 {% endblock %}

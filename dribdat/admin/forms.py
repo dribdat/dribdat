@@ -47,11 +47,12 @@ class EventForm(FlaskForm):
     webpage_url = URLField(u'Home page link', [length(max=255)])
     community_url = URLField(u'Community link', [length(max=255)])
     community_embed = TextAreaField(u'Community code, bottom of event and project page', description=u'HTML and embedded scripts supported')
-    custom_css = TextAreaField(u'Custom CSS', description=u'External stylesheets: @import url(https://...);')
+    custom_css = TextAreaField(u'Custom stylesheet', description=u'External CSS support: @import url(https://...);')
     is_current = BooleanField(u'Current event shown on homepage', default=False)
     # copy_template = BooleanField(u'Copy template pitch into new projects', default=False)
-    lock_editing = BooleanField(u'Disallow editing of projects (Freeze)', default=False)
-    lock_starting = BooleanField(u'Disallow starting new projects (Lock)', default=False)
+    lock_editing = BooleanField(u'Block editing of projects (Freeze)', default=False)
+    lock_starting = BooleanField(u'Block starting new projects (Lock)', default=False)
+    lock_resources = BooleanField(u'Block suggesting new resources (Stun)', default=False)
     submit = SubmitField(u'Save')
 
 class ProjectForm(FlaskForm):
@@ -92,10 +93,11 @@ class ResourceForm(FlaskForm):
     next = HiddenField()
     name = StringField(u'Name', [length(max=80), DataRequired()])
     type_id = RadioField(u'Type', coerce=int, choices=resourceTypeList())
-    source_url = URLField(u'Link', [length(max=2048)], description=u'Supported platforms will be automatically synced')
-    summary = TextAreaField(u'Summary', [length(max=140)], description=u'How is this useful, in 140 characters or less')
+    source_url = URLField(u'Link', [length(max=2048)], description=u'URL to download or get more information')
+    summary = TextAreaField(u'Summary', [length(max=140)], description=u'How is this useful: in 140 characters or less?')
     content = TextAreaField(u'Additional information', description=u'Describe this resource in detail, Markdown and HTML supported')
-    progress_tip = SelectField(u'Recommend at', coerce=int, choices=projectProgressList(), description=u'Progress level at which this resource should be suggested to teams')
+    progress_tip = SelectField(u'Recommend at', coerce=int, choices=projectProgressList(True, True), description=u'Progress level at which this resource should be suggested to teams')
+    is_visible = BooleanField(u'Show this resource to participants')
     submit = SubmitField(u'Save')
 
 class RoleForm(FlaskForm):

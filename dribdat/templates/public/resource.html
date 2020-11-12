@@ -1,0 +1,84 @@
+{% from "macros/_form.html" import render_form %}
+
+{% extends "layout.html" %}
+
+{% block page_title %}{{resource.name}} / Resources{% endblock %}
+{% block body_class %}resourcepage{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="jumbotron">
+        <b>Resource</b>
+        <h1>
+            <i title="{{resource.of_type}}"
+             class="fa fa-{{resource.icon}}"></i>
+             {{resource.name}}
+         </h1>
+        <h4 style="margin:2em">{{resource.summary}}</h4>
+
+        {% if resource.source_url %}
+        <center>
+          <a href="{{ resource.source_url }}" target="_blank">More information ...</a>
+         </center>
+        {% endif %}
+
+{% if projects %}
+<b>Applied by</b>
+<div class="profile-projects container-fluid">
+    <div class="row flex-row flex-nowrap">
+    {% for project in projects %}
+        <a class="col-5 card project"
+           href="{{ url_for('public.project', project_id=project.id) }}">
+
+          {% if project.image_url %}
+            <img class="project-image" src="{{project.image_url}}">
+          {% endif %}
+
+          {% if project.score and not project.is_challenge %}
+          <div class="project-score">
+            <div class="progress" title="A score based on profile completeness and voting results">
+              <div class="progress-bar" role="progressbar" aria-valuenow="{{project.score}}" aria-valuemin="0" aria-valuemax="70" style="width:{{project.score}}%">
+                {{project.score}}
+              </div>
+            </div>
+            <center>{{ project.event.name }}</center>
+          </div>
+          {% endif %}
+
+          <div class="card-body">
+            <h5 class="card-title">{{ project.name }}</h5>
+            <p class="card-text">{{ project.summary }}</p>
+          </div>
+
+        </a>
+    {% endfor %}
+    </div>
+</div>
+{% endif %}
+
+        <div class="resource-content">
+            {{resource.content|markdown|safe}}
+        </div>
+
+        <a href="javascript:window.history.back()" class="btn btn-lg btn-primary">
+        Back</a>
+        {% if resource.user_id == current_user.id or current_user.is_admin %}
+            <a href="{{ url_for('public.resource_edit', resource_id=resource.id) }}" class="btn btn-lg btn-warning">
+            Edit</a>
+        {% endif %}
+    </div>
+
+    <div class="project-buttons" role="group" aria-label="Resource navigation">
+        {% if resource.source_url %}
+          <a href="{{ resource.source_url }}" class="btn btn-lg" target="_blank" title="Web link"><span>&#x1f310;</span> Get</a>
+        {% endif %}
+    </div>
+
+    {% if resource.user_id %}
+        <p><i>Recommended by
+            <a href="{{ url_for('public.user', username=resource.user.username) }}">
+                {{resource.user.username}}</i></p>
+    {% endif %}
+
+</div>
+{% endblock %}

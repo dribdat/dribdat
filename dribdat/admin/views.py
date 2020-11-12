@@ -177,7 +177,7 @@ def event(event_id):
 
         flash('Event updated.', 'success')
         cache.clear()
-        return events()
+        return redirect(url_for("admin.events"))
 
     form.starts_date.data = event.starts_at
     form.starts_time.data = event.starts_at
@@ -202,7 +202,7 @@ def event_new():
 
         flash('Event added.', 'success')
         cache.clear()
-        return events()
+        return redirect(url_for("admin.events"))
 
     return render_template('admin/eventnew.html', form=form)
 
@@ -302,7 +302,7 @@ def project_view(project_id):
         db.session.add(project)
         db.session.commit()
         flash('Project updated.', 'success')
-        return projects()
+        return redirect(url_for("admin.event_projects", event_id=project.event.id))
 
     return render_template('admin/project.html', project=project, form=form)
 
@@ -315,10 +315,10 @@ def project_toggle(project_id):
     project.save()
     cache.clear()
     if project.is_hidden:
-        flash('Project is now hidden.', 'success')
+        flash('Project "%s" is now hidden.' % project.name, 'success')
     else:
-        flash('Project is now visible.', 'success')
-    return project_view(project_id)
+        flash('Project "%s" is now visible.' % project.name, 'success')
+    return redirect(url_for("admin.event_projects", event_id=project.event.id))
 
 @blueprint.route('/project/<int:project_id>/delete', methods=['GET', 'POST'])
 @login_required
@@ -331,7 +331,7 @@ def project_delete(project_id):
         for a in project.activities: a.delete()
         project.delete()
         flash('Project deleted.', 'success')
-    return projects()
+    return redirect(url_for("admin.projects"))
 
 @blueprint.route('/project/new', methods=['GET', 'POST'])
 @login_required
@@ -351,7 +351,7 @@ def project_new():
         db.session.commit()
         cache.clear()
         flash('Project added.', 'success')
-        return projects()
+        return redirect(url_for("admin.event_projects", event_id=project.event.id))
     return render_template('admin/projectnew.html', form=form)
 
 @blueprint.route('/project/<int:project_id>/autodata')
@@ -504,11 +504,14 @@ def role_delete(role_id):
 ##############
 
 @blueprint.route('/resources')
+@blueprint.route('/resources/pp/<int:page>')
 @login_required
 @admin_required
-def resources():
-    resources = Resource.query.order_by(Resource.type_id.asc()).all()
-    return render_template('admin/resources.html', resources=resources, active='resources')
+def resources(page=1):
+    resources = Resource.query.order_by(
+        Resource.type_id.asc()
+    ).paginate(page, per_page=10)
+    return render_template('admin/resources.html', data=resources, endpoint='admin.resources', active='resources')
 
 
 @blueprint.route('/resource/<int:resource_id>', methods=['GET', 'POST'])
@@ -538,6 +541,7 @@ def resource_new():
 
     if form.validate_on_submit():
         form.populate_obj(resource)
+        resource.is_visible = True
         db.session.add(resource)
         db.session.commit()
 
