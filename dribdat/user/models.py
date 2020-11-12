@@ -392,6 +392,7 @@ class Project(PkModel):
         return PROJECT_PROGRESS_PHASE[self.progress]
     @property
     def is_challenge(self):
+        if self.progress is None: return False
         return self.progress < 0
 
     @property
