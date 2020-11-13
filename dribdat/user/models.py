@@ -124,6 +124,19 @@ class User(UserMixin, PkModel):
                 projects.append(a.project)
         return projects
 
+    def latest_posts(self, max=None):
+        """ Retrieve the latest content from the user """
+        activities = Activity.query.filter_by(
+                user_id=self.id, action='post'
+            ).order_by(Activity.timestamp.desc())
+        if max is not None:
+            activities = activities.limit(max)
+        posts = []
+        for a in activities.all():
+            if not a.project.is_hidden:
+                posts.append(a.data)
+        return posts
+
     @property
     def last_active(self):
         """ Retrieve last user activity """

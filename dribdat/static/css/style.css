@@ -492,6 +492,7 @@ nav .navbar-nav .nav-item {
   overflow: hidden;
 }
 
+.userprofile .nav,
 .project-page .nav {
   clear: both;
   padding: 20px 5px 5px;
@@ -861,7 +862,6 @@ pre { color: #333; background: white; }
 }
 .profile-projects {
   padding: 1em 2em;
-  margin: 1em 0em;
   overflow-x: auto;
   background: #eee;
   width: 100%;

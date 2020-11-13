@@ -70,10 +70,11 @@ def user(username):
     event = current_event()
     # projects = user.projects
     projects = user.joined_projects()
+    posts = user.latest_posts()
     submissions = Resource.query.filter_by(user_id=user.id).order_by(Resource.id.desc()).all()
     return render_template("public/userprofile.html",
         current_event=event, event=event, user=user,
-        projects=projects, submissions=submissions)
+        projects=projects, submissions=submissions, posts=posts)
 
 @blueprint.route("/event/<int:event_id>")
 def event(event_id):
