@@ -568,12 +568,14 @@ class Resource(PkModel):
     name = Column(db.String(80), unique=True, nullable=False)
     type_id = Column(db.Integer(), nullable=True)
     created_at = Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)
+    is_visible = Column(db.Boolean(), default=False)
     progress_tip = Column(db.Integer(), nullable=True)
     source_url = Column(db.String(2048), nullable=True)
-    source_sync = Column(db.Boolean(), default=False)
-    is_visible = Column(db.Boolean(), default=False)
-    content = Column(db.UnicodeText(), nullable=True)
+    download_url = Column(db.String(2048), nullable=True)
     summary = Column(db.String(140), nullable=True)
+
+    sync_content = Column(db.UnicodeText(), nullable=True)
+    content = Column(db.UnicodeText(), nullable=True)
 
     user_id = reference_col('users', nullable=True)
     user = relationship('User', backref='resources')
@@ -601,6 +603,10 @@ class Resource(PkModel):
     def get_project_count(self):
         return Activity.query.filter_by(resource_id=self.id).group_by(Project.id).count()
 
+    def sync(self):
+        """ Synchronize supported resources """
+        SyncResourceData(self)
+
     @property
     def data(self):
         return {
@@ -609,7 +615,7 @@ class Resource(PkModel):
             'since': self.since,
             'type': self.of_type,
             'url': self.source_url,
-            'content': self.content,
+            # 'content': self.content,
             'summary': self.summary,
             'count': self.get_project_count()
         }
