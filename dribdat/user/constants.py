@@ -17,19 +17,24 @@ USER_STATUS = {
 }
 
 # Linked resources
+RESOURCE_CODES = {
+    'data': 100,
+    'code': 200,
+    'tool': 300
+}
 RESOURCE_TYPES = {
-    100: "Data",
-    # 101: "Geodata",
-    # 102: "Sensor data",
-    # 103: "Deep learning model",
-    200: "Code",
-    # 201: "Query code",
-    # 202: "Code framework",
-    # 203: "Programming library",
-    300: "Tool",
-    # 301: "Project planner",
-    # 302: "Wireframing app",
-    # 303: "Simulation tool",
+    RESOURCE_CODES['data']: "Data",
+    # 'data/geodata': "Geodata",
+    # 'data/thingspeak': "Sensor data",
+    # 'data/hdf5': "Deep learning model",
+    RESOURCE_CODES['code']: "Code",
+    # 'code/sparql': "Query code",
+    # 'code/framework': "Code framework",
+    # 'code/lib': "Programming library",
+    RESOURCE_CODES['tool']: "Tool",
+    # 'tool/kanban': "Project planner",
+    # 'tool/sim': "Simulation tool",
+    # 'tool/ux': "Wireframing app",
 }
 
 def resourceTypeList():
