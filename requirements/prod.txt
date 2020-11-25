@@ -4,7 +4,7 @@ aniso8601==7.0.0
 bcrypt==3.2.0
 beautifulsoup4==4.9.3
 bleach==3.2.1
-boto3==1.16.15
+boto3==1.16.25
 certifi==2020.11.8
 cffi==1.14.3
 chardet==3.0.4
