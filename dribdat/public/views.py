@@ -58,6 +58,7 @@ def home():
         events = Event.query.filter(Event.id != cur_event.id)
     else:
         events = Event.query
+    events = events.filter(Event.is_hidden != True)
     events = events.order_by(Event.id.desc()).all()
     return render_template("public/home.html",
         events=events, current_event=cur_event)

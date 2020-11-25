@@ -49,6 +49,7 @@ class EventForm(FlaskForm):
     community_embed = TextAreaField(u'Community code, bottom of event and project page', description=u'HTML and embedded scripts supported')
     custom_css = TextAreaField(u'Custom stylesheet', description=u'External CSS support: @import url(https://...);')
     is_current = BooleanField(u'Current event shown on homepage', default=False)
+    is_hidden = BooleanField(u'Hide this event on the homepage', default=False)
     # copy_template = BooleanField(u'Copy template pitch into new projects', default=False)
     lock_editing = BooleanField(u'Block editing of projects (Freeze)', default=False)
     lock_starting = BooleanField(u'Block starting new projects (Lock)', default=False)
@@ -81,7 +82,6 @@ class ProjectForm(FlaskForm):
 
 class CategoryForm(FlaskForm):
     next = HiddenField()
-    progress = SelectField(u'Progress', coerce=int, choices=projectProgressList())
     name = StringField(u'Name', [length(max=80), DataRequired()])
     description = TextAreaField(u'Description', description=u'Markdown and HTML supported')
     logo_color = StringField(u'Custom color', [length(max=7)])

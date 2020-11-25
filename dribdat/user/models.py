@@ -193,6 +193,7 @@ class Event(PkModel):
     starts_at = Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)
     ends_at = Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)
 
+    is_hidden = Column(db.Boolean(), default=False)
     is_current = Column(db.Boolean(), default=False)
     lock_editing = Column(db.Boolean(), default=False)
     lock_starting = Column(db.Boolean(), default=False)
