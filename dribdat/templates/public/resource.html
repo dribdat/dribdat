@@ -60,8 +60,6 @@
             {{resource.content|markdown|safe}}
         </div>
 
-        <a href="javascript:window.history.back()" class="btn btn-lg btn-primary">
-        Back</a>
         {% if resource.user_id == current_user.id or current_user.is_admin %}
             <a href="{{ url_for('public.resource_edit', resource_id=resource.id) }}" class="btn btn-lg btn-warning">
             Edit</a>
