@@ -32,7 +32,7 @@
    <a id="project-post" href="{{ url_for('public.project_post', project_id=project.id) }}" class="btn btn-success">
      <i class="fa fa-signal" aria-hidden="true"></i>
      Post</a>
-   <a href="{{ url_for('public.project_edit', project_id=project.id) }}" class="btn btn-warning">
+   <a href="{{ url_for('public.project_edit', project_id=project.id) }}" class="btn btn-secondary">
      <i class="fa fa-pencil" aria-hidden="true"></i>
      Edit</a>
     {% if project.is_autoupdate %}
@@ -227,7 +227,10 @@
       <div class="timeline-item">
         <div class="timeline-img"></div>
         <div class="timeline-content timeline-card js--fadeInBottom">
-          <div class="date">{{s.date|format_datetime}}</div>
+          <div class="date">
+            {{s.date|format_datetime}}
+            {% if s.author %} ~ <b>{{ s.author }}</b>{% endif %}
+          </div>
           {% if s.title %}
           <div class="timeline-img-header">
             <h2>{{s.title}}</h2>

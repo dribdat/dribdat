@@ -103,10 +103,10 @@ class ProjectForm(FlaskForm):
 class ProjectPost(FlaskForm):
     id = HiddenField('id')
     progress = SelectField(u'Progress', coerce=int)
-    note = TextAreaField(u'Note', [length(max=140), DataRequired()],
-        description=u'What are you working on right now?')
     resource = SelectField(u'Using', coerce=int,
         description=u'Are any particular resources being applied?')
+    note = TextAreaField(u'Note', [length(max=140), DataRequired()],
+        description=u'What are you working on right now?')
     submit = SubmitField(u'Submit')
 
 class ResourceForm(FlaskForm):

@@ -357,22 +357,26 @@ class Project(PkModel):
         prev = None
         for a in activities:
             title = text = None
+            author = a.user.username
             if a.action == 'sync':
                 title = "Synchronized"
-                text = "Readme fetched from source by " + a.user.username
-            elif a.action == 'post':
-                title = "Progress made"
-                if a.content is not None:
-                    text = a.content + "\n\n-- " + a.user.username
+                text = "Readme fetched from source"
+            elif a.action == 'post' and a.content is not None:
+                title = ""
+                text = a.content
             elif a.name == 'star':
                 title = "Team forming"
-                text = a.user.username + " has joined"
+                text = a.user.username + " has joined!"
+                author = ""
             elif a.name == 'update':
-                title = "Documentation"
-                text = "Worked on by " + a.user.username
+                title = ""
+                text = "Worked on documentation"
             elif a.name == 'create':
                 title = "Project started"
-                text = "Initialized by " + a.user.username
+                text = "Initialized by %s &#x1F389;" % a.user.username
+                author = ""
+            else:
+                continue
             # Check if user is still active
             if not a.user.active: continue
             # Check if last signal very similar
@@ -385,6 +389,7 @@ class Project(PkModel):
             prev = {
                 'title': title,
                 'text': text,
+                'author': author,
                 'date': a.timestamp,
                 'resource': a.resource,
             }

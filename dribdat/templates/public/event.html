@@ -157,7 +157,7 @@
     {% if current_user and current_user.is_authenticated and current_user.is_admin %}
       <a href="{{ url_for('admin.event', event_id=current_event.id) }}" class="btn btn-warning btn-sm">
         <i class="fa fa-pencil" aria-hidden="true"></i>
-        Edit event</a>
+        Settings</a>
     {% endif %}
   </div>
 

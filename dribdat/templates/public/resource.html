@@ -14,13 +14,14 @@
              class="fa fa-{{resource.icon}}"></i>
              {{resource.name}}
          </h1>
-        <h4 style="margin:2em">{{resource.summary}}</h4>
 
-        {% if resource.source_url %}
-        <center>
-          <a href="{{ resource.source_url }}" target="_blank">More information ...</a>
-         </center>
-        {% endif %}
+         {% if resource.source_url %}
+         <p class="resource-link" style="margin-left:3.3em">
+           <a href="{{ resource.source_url }}" target="_blank">{{ resource.source_url|truncate(36)|replace("https://", "")|replace("http://", "") }}</a>
+          </p>
+         {% endif %}
+
+        <h4 style="margin:2em">{{resource.summary}}</h4>
 
 {% if projects %}
 <b>Applied by</b>
@@ -59,11 +60,6 @@
         <div class="resource-content">
             {{resource.content|markdown|safe}}
         </div>
-
-        {% if resource.user_id == current_user.id or current_user.is_admin %}
-            <a href="{{ url_for('public.resource_edit', resource_id=resource.id) }}" class="btn btn-lg btn-warning">
-            Edit</a>
-        {% endif %}
     </div>
 
     <div class="project-buttons" role="group" aria-label="Resource navigation">
@@ -76,6 +72,11 @@
         <p><i>Recommended by
             <a href="{{ url_for('public.user', username=resource.user.username) }}">
                 {{resource.user.username}}</i></p>
+    {% endif %}
+
+    {% if resource.user_id == current_user.id or current_user.is_admin %}
+        <a href="{{ url_for('public.resource_edit', resource_id=resource.id) }}" class="btn btn-lg btn-secondary">
+        Edit resource</a>
     {% endif %}
 
 </div>
