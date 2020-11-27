@@ -10,7 +10,7 @@ If you need help or advice in setting up your event, or would like to contribute
 
 For more background and references, see [USAGE](USAGE.md) and [ABOUT](ABOUT.md). The rest of this document has details for deploying the application.
 
-## Quickstart
+# Quickstart
 
 This project can be deployed to any server capable of serving Python applications, and is set up for fast deployment to the [Heroku](http://heroku.com) cloud:
 
@@ -100,7 +100,7 @@ If you would like to use external clients, like the chatbot, to remote control D
 
 For more details see [api.py](dribdat/public/api.py)
 
-## Developer guide
+# Developer guide
 
 Install Python, Virtualenv and Pip, or [Poetry](https://python-poetry.org/) to start working with the code.
 
@@ -143,24 +143,19 @@ FLASK_DEBUG=1 python manage.py run
 
 You will see a pretty welcome screen at http://127.0.0.1:5000
 
+## Coding tips
+
+This section has some advice for developers and operators.
+
 ### Shell access
 
-To open the interactive shell, run: `python manage.py shell` (or, using the [Heroku toolchain](https://devcenter.heroku.com/categories/command-line), `heroku run python manage.py shell`)
-
-By default, you will have access to the `User` model, as well as Event, Project, Category, Activity. For example, to promote to admin and reset the password of the first user:
-
-```
-u = User.query.first()
-u.is_admin = True
-u.set_password('Ins@nEl*/c0mpl3x')
-u.save()
-```
+To open the interactive shell, run: `python manage.py shell` (or, using the [Heroku toolchain](https://devcenter.heroku.com/categories/command-line), `heroku run python manage.py shell`). By default, you will have access to the `User` model, as well as Event, Project, Category, Activity.
 
 ### Running Tests
 
-To run all tests, run: `python manage.py test`
+To run all tests, whose source is in the **tests** folder, run: `python manage.py test`
 
-## Migrations
+### Migrations
 
 Whenever a database migration needs to be made. Run the following commands:
 
@@ -178,19 +173,30 @@ To apply the migration. Watch out for any errors in the process.
 
 For a full migration command reference, run `python manage.py db --help`.
 
-# Troubleshooting
+## Troubleshooting
 
-A quick guide to a few common errors.
+A quick guide to a few common errors:
 
-## Cannot upgrade database
+### Front-end is broken
+
+If you are not seeing the icons and other things are not working on the front end, chances are you need to run a build. Just type `yarn` in the home folder, or run the **Build** command in your _Resources_ tab in Heroku.
+
+### Cannot upgrade database
 
 If you get errors like *ERROR [alembic.env] Can't locate revision identified by 'aa969b4f9f51'*, usually the fix is to drop the migration history table (`psql -c "drop table alembic_version"`), and again `db init .. db migrate .. db upgrade`. You can do this in your database client.
 
 In the case of Heroku, there's a separate process called **Upgrade** which you can find in your _Resources_ tab. Run it and watch the logs for a minute until it completes, then turn it off again.
 
-## Front-end is broken
+### Restore admin access
 
-If you are not seeing the icons and other things are not working on the front end, chances are you need to run a build. Just type `yarn` in the home folder, or run the **Build** command in your _Resources_ tab in Heroku.
+Create a user account if you do not already have one. From the console, run `./manage.py shell` then to promote to admin and/or reset the password of a user called "admin":
+
+```
+u = User.query.filter(User.username=='admin').first()
+u.is_admin = True
+u.set_password('Ins@nEl*/c0mpl3x')
+u.save()
+```
 
 # Credits
 
