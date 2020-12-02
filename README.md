@@ -198,6 +198,10 @@ u.set_password('Ins@nEl*/c0mpl3x')
 u.save()
 ```
 
+### Test locally using SSL
+
+Some development scenarios and OAuth providers require SSL. To use this in development with self-signed certificates (you will get a browser warning), start the server with `./manage.py run --cert=adhoc`
+
 # Credits
 
 See [Contributors](https://github.com/dataletsch/dribdat/graphs/contributors) for a list of people who have made changes to the code, and [Forks](https://github.com/dataletsch/dribdat/network/members) to find some other users of this project.
