@@ -14,6 +14,7 @@ from dribdat.user.forms import RegisterForm
 from dribdat.database import db
 
 from flask_dance.contrib.slack import slack
+from flask_dance.contrib.azure import azure
 
 blueprint = Blueprint('auth', __name__, static_folder="../static")
 
@@ -25,10 +26,12 @@ def load_user(user_id):
     """Load user by ID."""
     return User.get_by_id(int(user_id))
 
-def slack_enabled():
-    """Check if Slack has been configured"""
-    dsi = current_app.config["OAUTH_TYPE"] and current_app.config["OAUTH_TYPE"].lower() == 'slack'
-    return dsi is not None and dsi != ""
+def oauth_type():
+    """Check if Slack or another OAuth has been configured"""
+    if "OAUTH_TYPE" in current_app.config:
+        return current_app.config["OAUTH_TYPE"].lower()
+    else:
+        return None
 
 
 @blueprint.route("/login/", methods=["GET", "POST"])
@@ -43,7 +46,7 @@ def login():
             return redirect(redirect_url)
         else:
             flash_errors(form)
-    return render_template("public/login.html", current_event=current_event(), form=form, slack_enabled=slack_enabled())
+    return render_template("public/login.html", current_event=current_event(), form=form, oauth_type=oauth_type())
 
 
 @blueprint.route("/register/", methods=['GET', 'POST'])
@@ -80,7 +83,7 @@ def register():
         return redirect(url_for('public.home'))
     else:
         flash_errors(form)
-    return render_template('public/register.html', current_event=current_event(), form=form, slack_enabled=slack_enabled())
+    return render_template('public/register.html', current_event=current_event(), form=form, oauth_type=oauth_type())
 
 
 @blueprint.route('/logout/')
@@ -95,7 +98,7 @@ def logout():
 @blueprint.route('/forgot/')
 def forgot():
     """Forgot password."""
-    return render_template('public/forgot.html', current_event=current_event(), slack_enabled=slack_enabled())
+    return render_template('public/forgot.html', current_event=current_event(), oauth_type=oauth_type())
 
 
 @blueprint.route('/user/profile', methods=['GET', 'POST'])
@@ -177,4 +180,48 @@ def slack_login():
             return redirect(url_for("auth.user_profile"))
     login_user(user, remember=True)
     flash(u'Logged in via Slack')
+    return redirect(url_for("public.home"))
+
+
+@blueprint.route("/azure_login", methods=["GET", "POST"])
+def azure_login():
+    if not azure.authorized:
+        flash('Access denied to Azure', 'error')
+        return redirect(url_for("auth.login"))
+
+    resp = azure.get("https://graph.microsoft.com/v1.0/me/")
+    if not resp.ok:
+        flash('Unable to access Azure data', 'error')
+        return redirect(url_for("auth.login"))
+    resp_user = resp.json()
+    if not 'mail' in resp_user:
+        flash('Invalid Azure data format', 'error')
+        print(resp_user)
+        return redirect(url_for("auth.login"))
+
+    user = User.query.filter_by(sso_id=resp_user['id']).first()
+    if not user:
+        if current_user and current_user.is_authenticated:
+            user = current_user
+            user.sso_id = resp_user['id']
+        else:
+            user = User.query.filter_by(email=resp_user['mail']).first()
+            if user:
+                # Update SSO identifier
+                user.sso_id = resp_user['id']
+                db.session.add(user)
+                db.session.commit()
+            else:
+                user = User.create(
+                    username=resp_user['displayName'].lower().replace(" ", "_"),
+                    sso_id=resp_user['id'],
+                    email=resp_user['mail'],
+                    password=random_password(),
+                    active=True)
+            user.socialize()
+            login_user(user, remember=True)
+            flash("Please complete your user account", 'info')
+            return redirect(url_for("auth.user_profile"))
+    login_user(user, remember=True)
+    flash(u'Logged in via Azure')
     return redirect(url_for("public.home"))

@@ -54,7 +54,7 @@ OAuth 2.0 support for **Single Sign-On** is currently available using [Flask Dan
 * `OAUTH_TYPE` - e.g. 'Slack'
 * `OAUTH_ID` - the Client ID of your app (e.g. from [api.slack.com](https://api.slack.com/apps/))
 * `OAUTH_SECRET` - the Client Secret of your app
-* `OAUTH_DOMAIN` - (optional) subdomain of your Slack instance
+* `OAUTH_DOMAIN` - (optional) subdomain of your Slack instance, or AD tenant for Azure
 
 For **uploading images** and other files directly within dribdat, you can configure S3 through Amazon and compatible providers:
 

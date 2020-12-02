@@ -1045,6 +1045,13 @@ SlackIn button
   background: url('/static/img/btn-sign-in-with-slack.png') no-repeat;
   width: 173px; height: 41px;
 }
+.signin-azure {
+  border: 0px !important;
+  background: url('/static/img/Microsoft_Office_Teams.svg') no-repeat;
+  width: auto;
+  height: 41px;
+  padding-left: 50px;
+}
 
 .__slackin { margin-bottom: 10px; display: block; }
 

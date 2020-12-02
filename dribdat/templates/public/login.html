@@ -7,9 +7,13 @@
 <div class="container-narrow">
   <h1>Log in</h1>
   <br/>
-  {% if slack_enabled %}
+  {% if oauth_type == 'slack' %}
     <p><a class="btn signin-slack" href="{{ url_for('slack.login') }}">
       Sign in with Slack
+    </a></p>
+  {% elif oauth_type == 'azure' %}
+    <p><a class="btn signin-azure" href="{{ url_for('azure.login') }}">
+      Sign in with Microsoft Teams
     </a></p>
   {% endif %}
   <form id="loginForm" method="POST" action="/login/" role="login" class="navbar-form form-inline">
