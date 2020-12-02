@@ -419,10 +419,10 @@ Six = "*"
 [[package]]
 category = "main"
 description = "Doing the OAuth dance with style using Flask, requests, and oauthlib"
-name = "Flask-Dance"
+name = "flask-dance"
 optional = false
 python-versions = "*"
-version = "3.1.0"
+version = "3.2.0"
 
 [package.dependencies]
 Flask = ">=0.7"
@@ -436,10 +436,6 @@ urlobject = "*"
 signals = ["blinker"]
 sqla = ["sqlalchemy", "sqlalchemy-utils"]
 
-[package.source]
-reference = "9eca437aaa2c617aaea95b59dd7ebf64ba7bf620"
-type = "git"
-url = "https://github.com/loleg/flask-dance.git"
 [[package]]
 category = "dev"
 description = "A toolbar overlay for debugging Flask applications."
@@ -1240,7 +1236,7 @@ docs = ["sphinx", "jaraco.packaging (>=3.2)", "rst.linker (>=1.9)"]
 testing = ["pytest (>=3.5,<3.7.3 || >3.7.3)", "pytest-checkdocs (>=1.2.3)", "pytest-flake8", "pytest-cov", "jaraco.test (>=3.2.0)", "jaraco.itertools", "func-timeout", "pytest-black (>=0.3.7)", "pytest-mypy"]
 
 [metadata]
-content-hash = "fd8c7eacba81a541868fc6bc3ae0c960d4114d5bf0ea1fda981942eab8ca42e0"
+content-hash = "2127fe1c56b264411c85f0c55b02c3fa409a2ea5beb1774caabdc65d5ae4d786"
 python-versions = ">=3.6,<4"
 
 [metadata.files]
@@ -1433,7 +1429,11 @@ flask-cors = [
     {file = "Flask-Cors-3.0.9.tar.gz", hash = "sha256:6bcfc100288c5d1bcb1dbb854babd59beee622ffd321e444b05f24d6d58466b8"},
     {file = "Flask_Cors-3.0.9-py2.py3-none-any.whl", hash = "sha256:cee4480aaee421ed029eaa788f4049e3e26d15b5affb6a880dade6bafad38324"},
 ]
-Flask-Dance = []
+flask-dance = [
+    {file = "Flask-Dance-3.2.0.tar.gz", hash = "sha256:545458c778510210fa8bf28e39068e83ba84123552ffd2fcac4d2dfd34b904f7"},
+    {file = "Flask_Dance-3.2.0-py2.py3-none-any.whl", hash = "sha256:84d979fb165c560d49c2ff2c7bf808d568ec2f91211c080a22ae2df77c0d1cd0"},
+    {file = "Flask_Dance-3.2.0-py3.8.egg", hash = "sha256:a52703818618fd303a8da03b3744870d674b935966105fcca437f7cf824cc790"},
+]
 flask-debugtoolbar = [
     {file = "Flask-DebugToolbar-0.11.0.tar.gz", hash = "sha256:3c4e79d354ede014e6657c545a536d4fb273cc89e3fd6b4835b02e346dd3aab4"},
     {file = "Flask_DebugToolbar-0.11.0-py2.py3-none-any.whl", hash = "sha256:0e9a80d4c599233c68376e81cc99976200b5ac5248cfb24f18935cc5b69ac5b3"},
