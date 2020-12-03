@@ -141,6 +141,40 @@ def user_profile():
         form.roles.data = [(r.id) for r in user.roles]
     return render_template('public/useredit.html', user=user, form=form, active='profile')
 
+def get_or_create_sso_user(sso_id, sso_name, sso_email):
+    """ Matches a user account based on SSO_ID """
+    user = User.query.filter_by(sso_id=sso_id).first()
+    if not user:
+        if current_user and current_user.is_authenticated:
+            user = current_user
+            user.sso_id = sso_id
+        else:
+            user = User.query.filter_by(email=sso_email).first()
+            if user:
+                # Update SSO identifier
+                user.sso_id = sso_id
+                db.session.add(user)
+                db.session.commit()
+            else:
+                username = sso_name.lower().replace(" ", "_")
+                user = User.query.filter_by(username=username).first()
+                if user:
+                    flash('Duplicate username (%s), please try again or contact an admin.' % username, 'warning')
+                    return redirect(url_for("auth.login", local=1))
+                user = User.create(
+                    username=username,
+                    sso_id=sso_id,
+                    email=sso_email,
+                    password=random_password(),
+                    active=True)
+            user.socialize()
+            login_user(user, remember=True)
+            flash("Please complete your user account", 'info')
+            return redirect(url_for("auth.user_profile"))
+    login_user(user, remember=True)
+    flash(u'Logged in - welcome!')
+    return redirect(url_for("public.home"))
+
 
 @blueprint.route("/slack_login", methods=["GET", "POST"])
 def slack_login():
@@ -157,39 +191,12 @@ def slack_login():
         flash('Invalid Slack data format', 'danger')
         print(resp_data)
         return redirect(url_for("auth.login", local=1))
-
     resp_user = resp_data['user']
-    user = User.query.filter_by(sso_id=resp_user['id']).first()
-    if not user:
-        if current_user and current_user.is_authenticated:
-            user = current_user
-            user.sso_id = resp_user['id']
-        else:
-            user = User.query.filter_by(email=resp_user['email']).first()
-            if user:
-                # Update SSO identifier
-                user.sso_id = resp_user['id']
-                db.session.add(user)
-                db.session.commit()
-            else:
-                resp_username = resp_user['name'].lower().replace(" ", "_")
-                user = User.query.filter_by(username=resp_username).first()
-                if user:
-                    flash('Duplicate username (%s), please try again or contact an admin.' % resp_username, 'warning')
-                    return redirect(url_for("auth.login", local=1))
-                user = User.create(
-                    username=resp_username,
-                    sso_id=resp_user['id'],
-                    email=resp_user['email'],
-                    password=random_password(),
-                    active=True)
-            user.socialize()
-            login_user(user, remember=True)
-            flash("Please complete your user account", 'info')
-            return redirect(url_for("auth.user_profile"))
-    login_user(user, remember=True)
-    flash(u'Logged in via Slack')
-    return redirect(url_for("public.home"))
+    return get_or_create_sso_user(
+        resp_user['id'],
+        resp_user['name'],
+        resp_user['email'],
+    )
 
 
 @blueprint.route("/azure_login", methods=["GET", "POST"])
@@ -207,30 +214,8 @@ def azure_login():
         flash('Invalid Azure data format', 'danger')
         print(resp_user)
         return redirect(url_for("auth.login", local=1))
-
-    user = User.query.filter_by(sso_id=resp_user['id']).first()
-    if not user:
-        if current_user and current_user.is_authenticated:
-            user = current_user
-            user.sso_id = resp_user['id']
-        else:
-            user = User.query.filter_by(email=resp_user['mail']).first()
-            if user:
-                # Update SSO identifier
-                user.sso_id = resp_user['id']
-                db.session.add(user)
-                db.session.commit()
-            else:
-                user = User.create(
-                    username=resp_user['displayName'].lower().replace(" ", "_"),
-                    sso_id=resp_user['id'],
-                    email=resp_user['mail'],
-                    password=random_password(),
-                    active=True)
-            user.socialize()
-            login_user(user, remember=True)
-            flash("Please complete your user account", 'info')
-            return redirect(url_for("auth.user_profile"))
-    login_user(user, remember=True)
-    flash(u'Logged in via Azure')
-    return redirect(url_for("public.home"))
+    return get_or_create_sso_user(
+        resp_user['id'],
+        resp_user['displayName'],
+        resp_user['mail'],
+    )
