@@ -43,7 +43,7 @@ flask-talisman = "^0.7.0"
 pystache = "^0.5.4"
 micawber = "^0.5.1"
 boto3 = "^1.16.13"
-Flask-Dance = "3.2.0"
+flask-dance = {git = "https://github.com/singingwolfboy/flask-dance", rev = "81c7845"}
 
 [tool.poetry.dev-dependencies]
 factory-boy = "*"
