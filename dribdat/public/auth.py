@@ -36,6 +36,10 @@ def oauth_type():
 
 @blueprint.route("/login/", methods=["GET", "POST"])
 def login():
+    # Skip login form on forced SSO
+    if request.method == "GET" and current_app.config["DRIBDAT_NOT_REGISTER"]:
+        if not request.args.get('local') and oauth_type():
+            return redirect(url_for(oauth_type() + '.login'))
     form = LoginForm(request.form)
     # Handle logging in
     if request.method == 'POST':
