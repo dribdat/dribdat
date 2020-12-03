@@ -42,10 +42,14 @@
 <body class="{% block body_class %}{% endblock %}">
 {% block body %}
 {% with form=form, tabs=tabs, event=current_event %}
+{% if not request.args.get('clean') %}
 {% include "includes/nav.html" %}
+{% endif %}
+{% if event and not request.args.get('minimal') %}
+{% include "includes/header.html" %}
+{% endif %}
 {% endwith %}
 
-<header>{% block header %}{% endblock %}</header>
 <div class="{% block content_class %}container{% endblock content_class %} {% if current_event %}with-event{% endif %}">
 
   <div role="main">

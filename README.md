@@ -181,6 +181,10 @@ A quick guide to a few common errors:
 
 If you are not seeing the icons and other things are not working on the front end, chances are you need to run a build. Just type `yarn` in the home folder, or run the **Build** command in your _Resources_ tab in Heroku.
 
+### Embedding the front-end
+
+There is an Embed button in the event page and in the admin which provides you with code for an IFRAME that just contains the hexagrid. If you would like to embed the entire application, and find it more intuitive to hide the navigation, add `?clean=1` to the URL. To hide the top header, use `?minimal=1`. For both, use `?clean=1&minimal=1`
+
 ### Cannot upgrade database
 
 If you get errors like *ERROR [alembic.env] Can't locate revision identified by 'aa969b4f9f51'*, usually the fix is to drop the migration history table (`psql -c "drop table alembic_version"`), and again `db init .. db migrate .. db upgrade`. You can do this in your database client.
