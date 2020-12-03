@@ -204,7 +204,7 @@ u.save()
 
 ### Test locally using SSL
 
-Some development scenarios and OAuth providers require SSL. To use this in development with self-signed certificates (you will get a browser warning), start the server with `./manage.py run --cert=adhoc`
+Some development scenarios and OAuth testing requires SSL. To use this in development with self-signed certificates (you will get a browser warning), start the server with `./manage.py run --cert=adhoc`
 
 # Credits
 

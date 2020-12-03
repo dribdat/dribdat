@@ -58,7 +58,7 @@ def register():
     """Register new user."""
     if current_app.config['DRIBDAT_NOT_REGISTER']:
         flash("Registration currently not possible.", 'warning')
-        return redirect(url_for("auth.login"))
+        return redirect(url_for("auth.login", local=1))
     form = RegisterForm(request.form)
     if request.args.get('name') and not form.username.data:
         form.username.data = request.args.get('name')
@@ -145,18 +145,18 @@ def user_profile():
 @blueprint.route("/slack_login", methods=["GET", "POST"])
 def slack_login():
     if not slack.authorized:
-        flash('Access denied to Slack', 'error')
-        return redirect(url_for("auth.login"))
+        flash('Access denied to Slack', 'danger')
+        return redirect(url_for("auth.login", local=1))
 
     resp = slack.get("https://slack.com/api/users.identity")
     if not resp.ok:
-        flash('Unable to access Slack data', 'error')
-        return redirect(url_for("auth.login"))
+        flash('Unable to access Slack data', 'danger')
+        return redirect(url_for("auth.login", local=1))
     resp_data = resp.json()
     if not 'user' in resp_data:
-        flash('Invalid Slack data format', 'error')
+        flash('Invalid Slack data format', 'danger')
         print(resp_data)
-        return redirect(url_for("auth.login"))
+        return redirect(url_for("auth.login", local=1))
 
     resp_user = resp_data['user']
     user = User.query.filter_by(sso_id=resp_user['id']).first()
@@ -172,8 +172,13 @@ def slack_login():
                 db.session.add(user)
                 db.session.commit()
             else:
+                resp_username = resp_user['name'].lower().replace(" ", "_")
+                user = User.query.filter_by(username=resp_username).first()
+                if user:
+                    flash('Duplicate username (%s), please try again or contact an admin.' % resp_username, 'warning')
+                    return redirect(url_for("auth.login", local=1))
                 user = User.create(
-                    username=resp_user['name'].lower().replace(" ", "_"),
+                    username=resp_username,
                     sso_id=resp_user['id'],
                     email=resp_user['email'],
                     password=random_password(),
@@ -190,18 +195,18 @@ def slack_login():
 @blueprint.route("/azure_login", methods=["GET", "POST"])
 def azure_login():
     if not azure.authorized:
-        flash('Access denied to Azure', 'error')
-        return redirect(url_for("auth.login"))
+        flash('Access denied to Azure', 'danger')
+        return redirect(url_for("auth.login", local=1))
 
     resp = azure.get("https://graph.microsoft.com/v1.0/me/")
     if not resp.ok:
-        flash('Unable to access Azure data', 'error')
-        return redirect(url_for("auth.login"))
+        flash('Unable to access Azure data', 'danger')
+        return redirect(url_for("auth.login", local=1))
     resp_user = resp.json()
     if not 'mail' in resp_user:
-        flash('Invalid Azure data format', 'error')
+        flash('Invalid Azure data format', 'danger')
         print(resp_user)
-        return redirect(url_for("auth.login"))
+        return redirect(url_for("auth.login", local=1))
 
     user = User.query.filter_by(sso_id=resp_user['id']).first()
     if not user:
