@@ -172,8 +172,11 @@ def get_or_create_sso_user(sso_id, sso_name, sso_email):
             flash("Please complete your user account", 'info')
             return redirect(url_for("auth.user_profile"))
     login_user(user, remember=True)
-    flash(u'Logged in - welcome!')
-    return redirect(url_for("public.home"))
+    flash(u'Logged in - welcome!', 'success')
+    if current_event():
+        return redirect(url_for("public.event", event_id=current_event().id))
+    else:
+        return redirect(url_for("public.home"))
 
 
 @blueprint.route("/slack_login", methods=["GET", "POST"])
