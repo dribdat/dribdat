@@ -10,7 +10,7 @@ If you need help or advice in setting up your event, or would like to contribute
 
 For more background and references, see [USAGE](USAGE.md) and [ABOUT](ABOUT.md). The rest of this document has details for deploying the application.
 
-## Quickstart
+# Quickstart
 
 This project can be deployed to any server capable of serving Python applications, and is set up for fast deployment to the [Heroku](http://heroku.com) cloud:
 
@@ -37,6 +37,7 @@ The following options can be used to toggle **application features**:
 * `DRIBDAT_SECRET` - a long scary string for hashing your passwords - in Heroku this is set automatically
 * `DRIBDAT_APIKEY` - for connecting clients to the remote [API](#api)
 * `DRIBDAT_NOT_REGISTER` - set to True to disallow creating accounts on this server
+* `DRIBDAT_SHOW_SUBMITS` - set to False to moderate resource submissions on the site
 * `DRIBDAT_THEME` - can be set to one of the [Bootswatch themes](https://bootswatch.com/)
 * `DRIBDAT_CLOCK` - use 'up' or 'down' to change the position, and 'off' to hide the countdown
 * `DRIBDAT_CERT_PATH` - a URL that prefixes the download link for user certificates, followed by the SSO_ID and `.pdf` extension
@@ -53,7 +54,7 @@ OAuth 2.0 support for **Single Sign-On** is currently available using [Flask Dan
 * `OAUTH_TYPE` - e.g. 'Slack'
 * `OAUTH_ID` - the Client ID of your app (e.g. from [api.slack.com](https://api.slack.com/apps/))
 * `OAUTH_SECRET` - the Client Secret of your app
-* `OAUTH_DOMAIN` - (optional) subdomain of your Slack instance
+* `OAUTH_DOMAIN` - (optional) subdomain of your Slack instance, or AD tenant for Azure
 
 For **uploading images** and other files directly within dribdat, you can configure S3 through Amazon and compatible providers:
 
@@ -99,7 +100,7 @@ If you would like to use external clients, like the chatbot, to remote control D
 
 For more details see [api.py](dribdat/public/api.py)
 
-## Developer guide
+# Developer guide
 
 Install Python, Virtualenv and Pip, or [Poetry](https://python-poetry.org/) to start working with the code.
 
@@ -142,24 +143,19 @@ FLASK_DEBUG=1 python manage.py run
 
 You will see a pretty welcome screen at http://127.0.0.1:5000
 
+## Coding tips
+
+This section has some advice for developers and operators.
+
 ### Shell access
 
-To open the interactive shell, run: `python manage.py shell` (or, using the [Heroku toolchain](https://devcenter.heroku.com/categories/command-line), `heroku run python manage.py shell`)
-
-By default, you will have access to the `User` model, as well as Event, Project, Category, Activity. For example, to promote to admin and reset the password of the first user:
-
-```
-u = User.query.first()
-u.is_admin = True
-u.set_password('Ins@nEl*/c0mpl3x')
-u.save()
-```
+To open the interactive shell, run: `python manage.py shell` (or, using the [Heroku toolchain](https://devcenter.heroku.com/categories/command-line), `heroku run python manage.py shell`). By default, you will have access to the `User` model, as well as Event, Project, Category, Activity.
 
 ### Running Tests
 
-To run all tests, run: `python manage.py test`
+To run all tests, whose source is in the **tests** folder, run: `python manage.py test`
 
-## Migrations
+### Migrations
 
 Whenever a database migration needs to be made. Run the following commands:
 
@@ -177,19 +173,38 @@ To apply the migration. Watch out for any errors in the process.
 
 For a full migration command reference, run `python manage.py db --help`.
 
-# Troubleshooting
+## Troubleshooting
 
-A quick guide to a few common errors.
+A quick guide to a few common errors:
 
-## Cannot upgrade database
+### Front-end is broken
+
+If you are not seeing the icons and other things are not working on the front end, chances are you need to run a build. Just type `yarn` in the home folder, or run the **Build** command in your _Resources_ tab in Heroku.
+
+### Embedding the front-end
+
+There is an Embed button in the event page and in the admin which provides you with code for an IFRAME that just contains the hexagrid. If you would like to embed the entire application, and find it more intuitive to hide the navigation, add `?clean=1` to the URL. To hide the top header, use `?minimal=1`. For both, use `?clean=1&minimal=1`
+
+### Cannot upgrade database
 
 If you get errors like *ERROR [alembic.env] Can't locate revision identified by 'aa969b4f9f51'*, usually the fix is to drop the migration history table (`psql -c "drop table alembic_version"`), and again `db init .. db migrate .. db upgrade`. You can do this in your database client.
 
 In the case of Heroku, there's a separate process called **Upgrade** which you can find in your _Resources_ tab. Run it and watch the logs for a minute until it completes, then turn it off again.
 
-## Front-end is broken
+### Restore admin access
 
-If you are not seeing the icons and other things are not working on the front end, chances are you need to run a build. Just type `yarn` in the home folder, or run the **Build** command in your _Resources_ tab in Heroku.
+Create a user account if you do not already have one. From the console, run `./manage.py shell` then to promote to admin and/or reset the password of a user called "admin":
+
+```
+u = User.query.filter(User.username=='admin').first()
+u.is_admin = True
+u.set_password('Ins@nEl*/c0mpl3x')
+u.save()
+```
+
+### Test locally using SSL
+
+Some development scenarios and OAuth testing requires SSL. To use this in development with self-signed certificates (you will get a browser warning), start the server with `./manage.py run --cert=adhoc`
 
 # Credits
 

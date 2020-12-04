@@ -4,14 +4,18 @@ from flask import (Blueprint, request, render_template, flash, url_for,
                     redirect, session, current_app, jsonify)
 from flask_login import login_required, current_user
 
-from dribdat.user.models import User, Event, Project
-from dribdat.public.forms import *
+from dribdat.user.models import User, Event, Project, Resource
+from dribdat.public.forms import (
+    LoginForm, UserForm,
+    ProjectNew, ProjectForm,
+    ProjectPost, ResourceForm,
+)
 from dribdat.database import db
 from dribdat.extensions import cache
 from dribdat.aggregation import (
     SyncProjectData, GetProjectData,
     ProjectActivity, IsProjectStarred,
-    GetEventUsers
+    GetEventUsers, SuggestionsByProgress,
 )
 from dribdat.user import projectProgressList
 
@@ -54,6 +58,7 @@ def home():
         events = Event.query.filter(Event.id != cur_event.id)
     else:
         events = Event.query
+    events = events.filter(Event.is_hidden != True)
     events = events.order_by(Event.id.desc()).all()
     return render_template("public/home.html",
         events=events, current_event=cur_event)
@@ -66,8 +71,11 @@ def user(username):
     event = current_event()
     # projects = user.projects
     projects = user.joined_projects()
+    posts = user.latest_posts()
+    submissions = Resource.query.filter_by(user_id=user.id).order_by(Resource.id.desc()).all()
     return render_template("public/userprofile.html",
-        current_event=event, event=event, user=user, projects=projects)
+        current_event=event, event=event, user=user,
+        projects=projects, submissions=submissions, posts=posts)
 
 @blueprint.route("/event/<int:event_id>")
 def event(event_id):
@@ -132,7 +140,14 @@ def project_post(project_id):
         flash('You do not have access to edit this project.', 'warning')
         return project_action(project_id, None)
     form = ProjectPost(obj=project, next=request.args.get('next'))
+    # Populate progress dialog
     form.progress.choices = projectProgressList(event.has_started or event.has_finished)
+    # Populate resource list
+    resources = Resource.query.filter_by(is_visible=True).order_by(Resource.type_id).all()
+    resource_list = [(0, '')]
+    resource_list.extend([(r.id, r.of_type + ': ' + r.name) for r in resources])
+    form.resource.choices = resource_list
+    # Process form
     if form.validate_on_submit():
         del form.id
         form.populate_obj(project)
@@ -141,15 +156,15 @@ def project_post(project_id):
         db.session.commit()
         cache.clear()
         flash('Thanks for your commit!', 'success')
-        project_action(project_id, 'update', action='post', text=form.note.data)
+        project_action(project_id, 'update', action='post', text=form.note.data, resource=form.resource.data)
         return redirect(url_for('public.project', project_id=project.id))
     return render_template('public/projectpost.html', current_event=event, project=project, form=form)
 
-def project_action(project_id, of_type=None, as_view=True, then_redirect=False, action=None, text=None):
+def project_action(project_id, of_type=None, as_view=True, then_redirect=False, action=None, text=None, resource=None):
     project = Project.query.filter_by(id=project_id).first_or_404()
     event = project.event
     if of_type is not None:
-        ProjectActivity(project, of_type, current_user, action, text)
+        ProjectActivity(project, of_type, current_user, action, text, resource)
     if not as_view:
         return True
     if then_redirect:
@@ -160,8 +175,9 @@ def project_action(project_id, of_type=None, as_view=True, then_redirect=False, 
     project_team = project.team()
     latest_activity = project.latest_activity()
     project_signals = project.all_signals()
+    suggestions = SuggestionsByProgress(project.progress)
     return render_template('public/project.html', current_event=event, project=project,
-        project_starred=starred, project_team=project_team, project_signals=project_signals,
+        project_starred=starred, project_team=project_team, project_signals=project_signals, suggestions=suggestions,
         allow_edit=allow_edit, latest_activity=latest_activity)
 
 @blueprint.route('/project/<int:project_id>/star', methods=['GET', 'POST'])
@@ -227,3 +243,43 @@ def project_autoupdate(project_id):
     project_action(project.id, 'update', action='sync', text=str(len(project.autotext)) + ' bytes')
     flash("Project data synced from %s" % data['type'], 'success')
     return redirect(url_for('public.project', project_id=project.id))
+
+
+@blueprint.route('/resource/<int:resource_id>', methods=['GET'])
+def resource(resource_id):
+    resource = Resource.query.filter_by(id=resource_id).first_or_404()
+    projects = [ c.project for c in resource.get_comments() ]
+    return render_template('public/resource.html', resource=resource, projects=projects)
+
+@blueprint.route('/resource/post', methods=['GET', 'POST'])
+@login_required
+def resource_post():
+    resource = Resource()
+    form = ResourceForm(obj=resource)
+    if form.validate_on_submit():
+        form.populate_obj(resource)
+        resource.user_id = current_user.id
+        resource.is_visible = current_app.config['DRIBDAT_SHOW_SUBMITS']
+        db.session.add(resource)
+        db.session.commit()
+        flash('Thanks for the tip! Your suggestions are visible in your profile.', 'success')
+        return redirect(url_for('public.user', username=current_user.username))
+    return render_template('public/resourcenew.html', form=form)
+
+@blueprint.route('/resource/<int:resource_id>/edit', methods=['GET', 'POST'])
+@login_required
+def resource_edit(resource_id):
+    resource = Resource.query.filter_by(id=resource_id).first_or_404()
+    event = current_event()
+    allow_edit = not current_user.is_anonymous and current_user == resource.user or current_user.is_admin
+    if not allow_edit:
+        flash('You do not have access to edit this resource.', 'warning')
+        return redirect(url_for('public.home'))
+    form = ResourceForm(obj=resource)
+    if form.validate_on_submit():
+        form.populate_obj(resource)
+        db.session.add(resource)
+        db.session.commit()
+        flash('Changes saved.', 'success')
+        return redirect(url_for('public.user', username=current_user.username))
+    return render_template('public/resourceedit.html', resource=resource, form=form)

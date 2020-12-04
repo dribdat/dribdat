@@ -1,0 +1,13 @@
+{% from "macros/_form.html" import render_form %}
+
+{% extends "layout.html" %}
+
+{% block page_title %}Resource tip{% endblock %}
+{% block body_class %}projectform{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2>Edit resource</h2>
+    {{ render_form(url_for('public.resource_edit', resource_id=resource.id), form) }}
+</div>
+{% endblock %}

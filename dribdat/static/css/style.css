@@ -22,14 +22,13 @@ form input[type="checkbox"] {
 .navbar-form input[type="password"] {
   width: 180px;
 }
-.form-register {
-  width: 50%;
-}
 .form-register .form-control {
   position: relative;
   font-size: 16px;
   height: auto;
   padding: 10px;
+  max-width: 25em;
+  display: inline-block;
   -webkit-box-sizing: border-box;
      -moz-box-sizing: border-box;
           box-sizing: border-box;
@@ -47,6 +46,18 @@ form input[type="checkbox"] {
   font-size: 90%;
   margin: 1em 0;
   opacity: 0.8;
+}
+.admin .form-group .control-label {
+  font-size: 125%; font-weight: bold;
+}
+.form-group .radio-inline {
+  margin-right: 1em;
+}
+.admin .form-group .checkbox label {
+  font-weight: bold;
+}
+.admin .form-group .checkbox label:hover {
+  background: highlight;
 }
 
 /* pagination */
@@ -456,18 +467,19 @@ nav .navbar-nav .nav-item {
 
 .project-page .project-longtext { margin: 1em 0em; font-size: 125%; }
 .project-page .project-autotext { margin: 0em; }
-.project-page .project-buttons { display: block; text-align: center; }
-.project-page .project-buttons .btn {
+
+.project-buttons { display: block; text-align: center; }
+.project-buttons .btn {
   display: inline-block;
   text-align: center;
   font-size: 140%;
   width: 5em;
   background: rgba(255, 255, 255, 0.5);
 }
-.project-page .project-buttons .btn:hover {
+.project-buttons .btn:hover {
   background: #dde;
 }
-.project-page .project-buttons .btn span {
+.project-buttons .btn span {
   font-size: 300%; display: block;
 }
 
@@ -480,6 +492,7 @@ nav .navbar-nav .nav-item {
   overflow: hidden;
 }
 
+.userprofile .nav,
 .project-page .nav {
   clear: both;
   padding: 20px 5px 5px;
@@ -562,6 +575,25 @@ nav .navbar-nav .nav-item {
   background: url(https://raw.githubusercontent.com/RickStrahl/jquery-resizable/master/assets/wingrip.png) no-repeat;
  }
 
+/* Resources */
+.resource-card {
+  display: block;
+  background: rgba(0,0,0,0.06);
+  width: 90%;
+  padding: 0.1em 0.5em;
+  border-left: 1px solid #ccc;
+  border-top: 1px solid #ccc;
+}
+.resource-card:hover {
+  background: rgba(0,0,0,0.03);
+  text-decoration: none;
+}
+.resource-card p {
+  font-size: 80%;
+  line-height: normal;
+  color: #333;
+}
+
 /* Oneboxes in content */
 .onebox {
   border: 2px solid #ddd;
@@ -605,6 +637,7 @@ nav .navbar-nav .nav-item {
 .projectform .fld-progress .radio-inline { display: block; }
 .projectform .fld-progress { border-width: 25px; padding-left: 5px; border-top: none !important; border-bottom: none !important; border-right: none !important; border-style: solid; -webkit-border-image: -webkit-gradient(linear, 0 100%, 0 0, from(black), to(rgba(0, 0, 0, 0))) 1 100%; -webkit-border-image: -webkit-linear-gradient(bottom, black, rgba(0, 0, 0, 0)) 1 100%; -moz-border-image: -moz-linear-gradient(bottom, black, rgba(0, 0, 0, 0)) 1 100%; -o-border-image: -o-linear-gradient(bottom, black, rgba(0, 0, 0, 0)) 1 100%; border-image: linear-gradient(to top, black, rgba(0, 0, 0, 0)) 1 100%; }
 .projectform .fld-progress select { font-size: 150%; }
+.projectform form .control-label[for='resource'],
 .projectform form .control-label[for='note'] { margin-top: 0px; }
 .projectform form .checkbox label[for="is_autoupdate"] {
   margin-left:30%; margin-top:20px; padding:10px;
@@ -829,7 +862,6 @@ pre { color: #333; background: white; }
 }
 .profile-projects {
   padding: 1em 2em;
-  margin: 1em 0em;
   overflow-x: auto;
   background: #eee;
   width: 100%;
@@ -1012,6 +1044,13 @@ SlackIn button
   font-size: 0px; border: 0px !important;
   background: url('/static/img/btn-sign-in-with-slack.png') no-repeat;
   width: 173px; height: 41px;
+}
+.signin-azure {
+  border: 0px !important;
+  background: url('/static/img/Microsoft_Office_Teams.svg') no-repeat;
+  width: auto;
+  height: 41px;
+  padding-left: 50px;
 }
 
 .__slackin { margin-bottom: 10px; display: block; }

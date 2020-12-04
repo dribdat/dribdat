@@ -2,7 +2,7 @@
 """Utilities for aggregating data
 """
 
-from dribdat.user.models import Activity
+from dribdat.user.models import Activity, Resource
 from dribdat.database import db
 from dribdat.apifetch import * # TBR
 
@@ -52,6 +52,15 @@ def SyncProjectData(project, data):
     db.session.add(project)
     db.session.commit()
 
+def SyncResourceData(resource):
+    url = resource.source_url
+    if url.find('/datapackage.json') > 0:
+        dpdata = FetchDataProject(url)
+        resource.sync_content = dpdata.description
+        resource.download_url = dpdata.homepage_url
+        db.session.add(resource)
+        db.session.commit()
+
 def IsProjectStarred(project, current_user):
     if not current_user or current_user.is_anonymous or not current_user.is_authenticated:
         return False
@@ -60,6 +69,9 @@ def IsProjectStarred(project, current_user):
         project_id=project.id,
         user_id=current_user.id
     ).count() > 0
+
+def SuggestionsByProgress(progress):
+    return Resource.query.filter_by(is_visible=True, progress_tip=progress).order_by(Resource.type_id).all()
 
 def GetEventUsers(event):
     if not event.projects: return None
@@ -72,16 +84,19 @@ def GetEventUsers(event):
                 users.append(u)
     return sorted(users, key=lambda x: x.username)
 
-def ProjectActivity(project, of_type, current_user, action=None, comments=None):
+def ProjectActivity(project, of_type, current_user, action=None, comments=None, resource=None):
     activity = Activity(
         name=of_type,
         project_id=project.id,
         user_id=current_user.id,
         action=action
     )
+    score = 1
     if comments is not None and len(comments) > 3:
         activity.content=comments
-    score = 0
+    if resource is not None:
+        score = 2 # Double score for adding resources
+        activity.resource_id=resource
     if project.score is None: project.score = 0
     allstars = Activity.query.filter_by(
         name='star',
@@ -89,19 +104,15 @@ def ProjectActivity(project, of_type, current_user, action=None, comments=None):
         user_id=current_user.id
     )
     if of_type == 'star':
-        score = 2
         if allstars.count() > 0:
             return # One star per user
     elif of_type == 'unstar':
-        score = 2
         if allstars.count() > 0:
             allstars[0].delete()
-        #if current_user.is_admin:
-        #    score = 10
         project.score = project.score - score
         project.save()
         return
-    # Admin stars give projects special awards
+    # Booster stars to give projects special awards
     #if of_type == 'star' and current_user.is_admin:
     #    score = 10
     project.score = project.score + score

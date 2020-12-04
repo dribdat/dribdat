@@ -17,7 +17,8 @@ from dribdat.utils import timesince
 from dribdat.onebox import make_oembedplus
 from flask_misaka import Misaka
 from flask_talisman import Talisman
-from flask_dance.contrib.slack import make_slack_blueprint, slack
+from flask_dance.contrib.slack import make_slack_blueprint
+from flask_dance.contrib.azure import make_azure_blueprint
 from micawber.providers import bootstrap_basic
 
 
@@ -80,13 +81,23 @@ def register_oauthhandlers(app):
             blueprint = make_slack_blueprint(
                 client_id=app.config["OAUTH_ID"],
                 client_secret=app.config["OAUTH_SECRET"],
-                subdomain=app.config["OAUTH_DOMAIN"],
                 scope="identity.basic,identity.email",
                 redirect_to="auth.slack_login",
                 login_url="/login",
                 # authorized_url=None,
                 # session_class=None,
                 # storage=None,
+                subdomain=app.config["OAUTH_DOMAIN"],
+            )
+            app.register_blueprint(blueprint, url_prefix="/oauth")
+        elif app.config["OAUTH_TYPE"] == 'azure':
+            blueprint = make_azure_blueprint(
+                client_id=app.config["OAUTH_ID"],
+                client_secret=app.config["OAUTH_SECRET"],
+                tenant=app.config["OAUTH_DOMAIN"],
+                scope="profile email User.ReadBasic.All openid",
+                redirect_to="auth.azure_login",
+                login_url="/login",
             )
             app.register_blueprint(blueprint, url_prefix="/oauth")
 

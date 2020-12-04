@@ -32,7 +32,7 @@
    <a id="project-post" href="{{ url_for('public.project_post', project_id=project.id) }}" class="btn btn-success">
      <i class="fa fa-signal" aria-hidden="true"></i>
      Post</a>
-   <a href="{{ url_for('public.project_edit', project_id=project.id) }}" class="btn btn-warning">
+   <a href="{{ url_for('public.project_edit', project_id=project.id) }}" class="btn btn-secondary">
      <i class="fa fa-pencil" aria-hidden="true"></i>
      Edit</a>
     {% if project.is_autoupdate %}
@@ -132,12 +132,29 @@
 {% if not project.is_challenge %}
   <div class="tab-pane fade show active" id="project-md" role="tabpanel" aria-labelledby="project-tab-md">
 
-    {% if current_user and current_user.is_authenticated and not project.webpage_url and not project.longtext %}
+    {% if current_user and current_user.is_authenticated and not project.webpage_url and not project.longtext and not project_starred %}
     <div class="alert alert-success" role="alert">
+      <a class="close" title="Close" href="#" data-dismiss="alert">&times;</a>
       <!-- Helpful comment for new projects -->
-      Join this project to <b>Post</b> on the Log or to <b>Edit</b> the pitch.
-      Remember to <b>Sync</b> or embed any external content.
+      Join this project to <b>Post</b> on the Log, <b>Edit</b> the pitch or <b>Sync</b> any external content.
     </div>
+    {% endif %}
+
+    {% if project_starred and suggestions %}
+      <div class="alert alert-info resource-list col-12">
+        <a class="close" title="Close" href="#" data-dismiss="alert">&times;</a>
+          <p>For this stage of your project, we suggest:</p>
+      {% for resource in suggestions %}
+          {% if resource.is_visible %}
+          <a class="col-5 resource-card" href="{{ url_for('public.resource', resource_id=resource.id) }}">
+              <i title="{{resource.of_type}}"
+              class="fa fa-{{resource.icon}}"></i>
+              <b>{{resource.name}}</b>
+              <p>{{resource.summary}}</p>
+          </a>
+          {% endif %}
+      {% endfor %}
+      </div>
     {% endif %}
 
 {% endif %}
@@ -210,7 +227,10 @@
       <div class="timeline-item">
         <div class="timeline-img"></div>
         <div class="timeline-content timeline-card js--fadeInBottom">
-          <div class="date">{{s.date|format_datetime}}</div>
+          <div class="date">
+            {{s.date|format_datetime}}
+            {% if s.author %} ~ <b>{{ s.author }}</b>{% endif %}
+          </div>
           {% if s.title %}
           <div class="timeline-img-header">
             <h2>{{s.title}}</h2>
@@ -218,6 +238,14 @@
           {% endif %}
           {% if s.text %}
             {{s.text|markdown|safe}}
+          {% endif %}
+          {% if s.resource and s.resource.is_visible %}
+            <a class="resource-card" href="{{ url_for('public.resource', resource_id=s.resource.id) }}">
+              <i title="{{s.resource.of_type}}"
+                 class="fa fa-{{s.resource.icon}}"></i>
+              <b>{{s.resource.name}}</b>
+              <p>{{s.resource.summary}}</p>
+            </a>
           {% endif %}
         </div>
       </div>

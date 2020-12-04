@@ -16,6 +16,36 @@ USER_STATUS = {
     ACTIVE: 'active',
 }
 
+# Linked resources
+RESOURCE_CODES = {
+    'data': 100,
+    'code': 200,
+    'tool': 300
+}
+RESOURCE_TYPES = {
+    RESOURCE_CODES['data']: "Data",
+    # 'data/geodata': "Geodata",
+    # 'data/thingspeak': "Sensor data",
+    # 'data/hdf5': "Deep learning model",
+    RESOURCE_CODES['code']: "Code",
+    # 'code/sparql': "Query code",
+    # 'code/framework': "Code framework",
+    # 'code/lib': "Programming library",
+    RESOURCE_CODES['tool']: "Tool",
+    # 'tool/kanban': "Project planner",
+    # 'tool/sim': "Simulation tool",
+    # 'tool/ux': "Wireframing app",
+}
+
+def resourceTypeList():
+    pl = [(g, RESOURCE_TYPES[g]) for g in RESOURCE_TYPES]
+    return sorted(pl, key=lambda x: x[0])
+
+def getResourceType(resource):
+    if resource is None: return ""
+    if not resource.type_id in RESOURCE_TYPES: return ""
+    return RESOURCE_TYPES[resource.type_id]
+
 # Project progress
 PR_CHALLENGE = -1
 PR_NEW = 0
@@ -42,8 +72,15 @@ PROJECT_PROGRESS_PHASE = {
     PR_LIVE:        'Supporting',
     PR_CHALLENGE:   'Challenge',
 }
-def projectProgressList(All=True):
+
+def projectProgressList(All=True, WithEmpty=False):
     if not All:
         return [(PR_CHALLENGE, PROJECT_PROGRESS[PR_CHALLENGE])]
     pl = [(g, PROJECT_PROGRESS[g]) for g in PROJECT_PROGRESS]
+    pl.append((-100, ''))
     return sorted(pl, key=lambda x: x[0])
+
+def getProjectPhase(project):
+    if project is None or project.progress is None: return ""
+    if not project.progress in PROJECT_PROGRESS_PHASE: return ""
+    return PROJECT_PROGRESS_PHASE[project.progress]

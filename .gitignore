@@ -37,7 +37,9 @@ tests/.cache
 .mr.developer.cfg
 .project
 .pydevproject
-dev.db
+/*.db
+
+# Hmm ...
 migrations
 
 # Complexity
