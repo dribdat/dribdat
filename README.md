@@ -183,7 +183,7 @@ If you are not seeing the icons and other things are not working on the front en
 
 ### Embedding the front-end
 
-There is an Embed button in the event page and in the admin which provides you with code for an IFRAME that just contains the hexagrid. If you would like to embed the entire application, and find it more intuitive to hide the navigation, add `?clean=1` to the URL. To hide the top header, use `?minimal=1`. For both, use `?clean=1&minimal=1`
+There is an Embed button in the event page and in the admin which provides you with code for an IFRAME that just contains the hexagrid. If you would like to embed the entire application, and find it more intuitive to hide the navigation, add `?clean=1` to the URL. To also hide the top header, use `?minimal=1`.
 
 ### Cannot upgrade database
 
