@@ -13,7 +13,7 @@
 
     {{ render_form(url_for('public.project_post', project_id=project.id), form) }}
 
-    <p><b>&#128161; Tip</b>: suggest further
+    <p class="text-center mt-3"><b>&#128161; Tip</b>: suggest further
       <a href="{{ url_for('public.resource_post') }}" target="_blank">resources here</a>.</p>
   </div>
 {% endblock %}
