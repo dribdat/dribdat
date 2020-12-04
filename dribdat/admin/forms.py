@@ -13,7 +13,7 @@ from wtforms.validators import AnyOf, DataRequired, length
 
 from datetime import time, datetime
 
-from dribdat.user.models import User, Project
+from dribdat.user.models import User, Project, Event, Resource, Role
 from ..user.validators import UniqueValidator
 from ..user import (
     USER_ROLE, USER_STATUS,
@@ -33,7 +33,8 @@ class UserForm(FlaskForm):
 
 class EventForm(FlaskForm):
     next = HiddenField()
-    name = StringField(u'Title', [length(max=80), DataRequired()])
+    id = HiddenField('id')
+    name = StringField(u'Title', [length(max=80), UniqueValidator(Event, 'name'), DataRequired()])
     starts_date = DateField(u'Starts date', default=datetime.now())
     starts_time = TimeField(u'Starts time', default=time(9,0,0))
     ends_date = DateField(u'Finish date', default=datetime.now())
@@ -91,7 +92,8 @@ class CategoryForm(FlaskForm):
 
 class ResourceForm(FlaskForm):
     next = HiddenField()
-    name = StringField(u'Name', [length(max=80), DataRequired()])
+    id = HiddenField('id')
+    name = StringField(u'Name', [length(max=80), UniqueValidator(Resource, 'name'), DataRequired()])
     type_id = RadioField(u'Type', coerce=int, choices=resourceTypeList())
     source_url = URLField(u'Link', [length(max=2048)], description=u'URL to download or get more information')
     summary = TextAreaField(u'Summary', [length(max=140)], description=u'How is this useful: in 140 characters or less?')
@@ -102,5 +104,6 @@ class ResourceForm(FlaskForm):
 
 class RoleForm(FlaskForm):
     next = HiddenField()
-    name = StringField(u'Name', [length(max=80), DataRequired()])
+    id = HiddenField('id')
+    name = StringField(u'Name', [length(max=80), UniqueValidator(Role, 'name'), DataRequired()])
     submit = SubmitField(u'Save')

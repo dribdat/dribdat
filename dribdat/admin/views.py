@@ -193,6 +193,7 @@ def event_new():
     form = EventForm(obj=event, next=request.args.get('next'))
 
     if form.validate_on_submit():
+        del form.id
         form.populate_obj(event)
         event.starts_at = datetime.combine(form.starts_date.data, form.starts_time.data)
         event.ends_at = datetime.combine(form.ends_date.data, form.ends_time.data)
@@ -473,6 +474,7 @@ def role_new():
     form = RoleForm(obj=role, next=request.args.get('next'))
 
     if form.validate_on_submit():
+        del form.id
         form.populate_obj(role)
 
         db.session.add(role)
@@ -540,6 +542,7 @@ def resource_new():
     form = ResourceForm(obj=resource, next=request.args.get('next'))
 
     if form.validate_on_submit():
+        del form.id
         form.populate_obj(resource)
         resource.is_visible = True
         db.session.add(resource)
