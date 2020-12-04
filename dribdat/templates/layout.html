@@ -47,7 +47,7 @@
 {% endif %}
 {% if event and not request.args.get('minimal') %}
 {% include "includes/header.html" %}
-<style type="text/css">{{ event.custom_css }}</style>
+<style type="text/css">{{ event.custom_css|replace('<','')|safe }}</style>
 {% endif %}
 {% endwith %}
 
