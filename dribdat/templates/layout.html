@@ -42,11 +42,12 @@
 <body class="{% block body_class %}{% endblock %}">
 {% block body %}
 {% with form=form, tabs=tabs, event=current_event %}
-{% if not request.args.get('clean') %}
+{% if not request.args.get('clean') and not request.args.get('minimal') %}
 {% include "includes/nav.html" %}
 {% endif %}
 {% if event and not request.args.get('minimal') %}
 {% include "includes/header.html" %}
+<style type="text/css">{{ event.custom_css|replace('<','')|safe }}</style>
 {% endif %}
 {% endwith %}
 
