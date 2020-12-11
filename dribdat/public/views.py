@@ -150,6 +150,8 @@ def project_post(project_id):
     # Process form
     if form.validate_on_submit():
         del form.id
+        if form.resource.data == 0:
+            form.resource.data = None
         form.populate_obj(project)
         project.update()
         db.session.add(project)
