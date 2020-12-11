@@ -248,7 +248,8 @@ nav .navbar-nav .nav-item {
 }
 @media (max-width: 420px) {
   .event-home .honeycomb .hexagon {
-    margin-bottom: 1px;
+    margin-bottom: auto;
+    top: auto;
   }
   .event-home .honeycomb {
     text-align: center;
