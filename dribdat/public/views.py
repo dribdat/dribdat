@@ -101,6 +101,22 @@ def event_participants(event_id):
     return render_template("public/eventusers.html",
         current_event=event, participants=users, usercount=usercount)
 
+@blueprint.route("/event/<int:event_id>/resources")
+def event_resources(event_id):
+    event = Event.query.filter_by(id=event_id).first_or_404()
+    steps = []
+    for ix, p in enumerate(projectProgressList(True, False)):
+        steps.append({
+            'index': ix + 1, 'name': p[1],
+            'resources': SuggestionsByProgress(p[0])
+        })
+    steps.append({
+        'name': 'Other', 'index': -1,
+        'resources': SuggestionsByProgress(None)
+    })
+    return render_template("public/resources.html",
+        current_event=event, steps=steps)
+
 @blueprint.route('/project/<int:project_id>')
 def project(project_id):
     return project_action(project_id, None)
