@@ -116,6 +116,7 @@ def ProjectActivity(project, of_type, current_user, action=None, comments=None, 
     #if of_type == 'star' and current_user.is_admin:
     #    score = 10
     project.score = project.score + score
+    activity.project_score = project.score
     project.save()
     db.session.add(activity)
     db.session.commit()

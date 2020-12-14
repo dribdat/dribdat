@@ -675,7 +675,7 @@ class Activity(PkModel):
             'user_id': self.user.id,
             'project_id': self.project.id,
             'project_name': self.project.name,
-            'project_score': self.project_score,
+            'project_score': self.project_score or 0,
             'project_phase': getProjectPhase(self.project),
             'resource_id': self.resource_id,
             'resource_type': getResourceType(self.resource),
