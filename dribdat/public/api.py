@@ -7,6 +7,7 @@ from sqlalchemy import or_
 
 from ..extensions import db
 from ..utils import timesince, random_password
+from ..decorators import admin_required
 
 from ..user.models import Event, Project, Category, Activity
 from ..aggregation import GetProjectData, GetEventUsers
@@ -201,6 +202,7 @@ def project_info_json(project_id):
 # ------ USERS ----------
 
 @blueprint.route('/event/<int:event_id>/participants.csv')
+@admin_required
 def event_participants_csv(event_id):
     event = Event.query.filter_by(id=event_id).first_or_404()
     userlist = [u.data for u in GetEventUsers(event)]
