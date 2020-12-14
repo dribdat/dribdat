@@ -69,12 +69,13 @@ def user(username):
     if not user.active:
         return "User deactivated. Please contact an event organizer."
     event = current_event()
+    cert_path = user.get_cert_path(event)
     # projects = user.projects
     projects = user.joined_projects()
     posts = user.latest_posts()
     submissions = Resource.query.filter_by(user_id=user.id).order_by(Resource.id.desc()).all()
     return render_template("public/userprofile.html",
-        current_event=event, event=event, user=user,
+        current_event=event, event=event, user=user, cert_path=cert_path,
         projects=projects, submissions=submissions, posts=posts)
 
 @blueprint.route("/event/<int:event_id>")

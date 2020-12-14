@@ -17,9 +17,6 @@ class Config(object):
     DRIBDAT_NOT_REGISTER = os_env.get('DRIBDAT_NOT_REGISTER', False)
     DRIBDAT_SHOW_SUBMITS = os_env.get('DRIBDAT_SHOW_SUBMITS', True)
 
-    # TODO: per-event
-    DRIBDAT_CERT_PATH = os_env.get('DRIBDAT_CERT_PATH', None)
-
     # Single sign-on support
     OAUTH_ID = os_env.get('OAUTH_ID', None)
     OAUTH_TYPE = os_env.get('OAUTH_TYPE', '').lower()

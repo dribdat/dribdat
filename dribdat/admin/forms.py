@@ -47,6 +47,7 @@ class EventForm(FlaskForm):
     logo_url = URLField(u'Host logo link', [length(max=255)])
     webpage_url = URLField(u'Home page link', [length(max=255)])
     community_url = URLField(u'Community link', [length(max=255)])
+    certificate_path = URLField(u'Participant certificate link', [length(max=1024)], description='Include {username}, {email} or {sso} identifier')
     community_embed = TextAreaField(u'Community code, bottom of event and project page', description=u'HTML and embedded scripts supported')
     custom_css = TextAreaField(u'Custom stylesheet', description=u'External CSS support: @import url(https://...);')
     is_current = BooleanField(u'Current event shown on homepage', default=False)

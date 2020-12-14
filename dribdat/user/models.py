@@ -154,6 +154,18 @@ class User(UserMixin, PkModel):
                 user_id=self.id
             ).count()
 
+    def get_cert_path(self, event):
+        """ Generate URL to participation certificate """
+        if not event.certificate_path: return None
+        path = event.certificate_path
+        userdata = self.data
+        for m in ['sso', 'username', 'email']:
+            if m in userdata and userdata[m]:
+                path = path.replace('{%s}' % m, userdata[m])
+            else:
+                return None
+        return path
+
     def __init__(self, username=None, email=None, password=None, **kwargs):
         """Create instance."""
         if username and email:
@@ -190,6 +202,7 @@ class Event(PkModel):
     webpage_url = Column(db.String(255), nullable=True)
     community_url = Column(db.String(255), nullable=True)
     community_embed = Column(db.UnicodeText(), nullable=True)
+    certificate_path = Column(db.String(1024), nullable=True)
 
     starts_at = Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)
     ends_at = Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)
