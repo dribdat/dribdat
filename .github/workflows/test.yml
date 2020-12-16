@@ -28,7 +28,6 @@ jobs:
           - name: "ubuntu-py36"
             os: ubuntu-latest
             python-version: 3.6
-    name: Python ${{ matrix.python-version }} sample
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
