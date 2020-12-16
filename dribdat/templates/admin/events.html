@@ -63,6 +63,9 @@
               {% if event.lock_resources %}
                 <span title="Suggesting locked" class="btn btn-dark btn-sm">Stun</span>
               {% endif %}
+              {% if event.is_hidden %}
+                <span class="btn btn-dark btn-sm">Hidden</span>
+              {% endif %}
               </a>
 
               <a href="{{ url_for('admin.event', event_id=event.id) }}">

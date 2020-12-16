@@ -58,7 +58,7 @@ def home():
         events = Event.query.filter(Event.id != cur_event.id)
     else:
         events = Event.query
-    events = events.filter(Event.is_hidden == False)
+    events = events.filter(Event.is_hidden.isnot(True))
     events = events.order_by(Event.starts_at.desc())
     today = datetime.utcnow()
     events_next = events.filter(Event.starts_at > today).all()
