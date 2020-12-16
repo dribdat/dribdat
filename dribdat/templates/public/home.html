@@ -17,6 +17,7 @@
 {% block body_class %}home{% endblock %}
 
 {% block content %}
+{% cache 300, 'home-page' %}
 <div class="jumbotron home-page">
   {% if current_event %}
     {% if current_event.countdown and 'up' in config.DRIBDAT_CLOCK %}
@@ -55,35 +56,92 @@
   {% endif %}
 </div><!-- /.jumbotron -->
 
-<div class="body-content events-past">
-  <div class="row">
-    {% cache 300, 'pastevents' %}
-    {% if events or current_event %}
-      {% for event in events %}
-      <div class="col-lg-4">
-        <div class="panel panel-default">
-          <div class="panel-body">
-            <h2><i class="fa fa-code"></i><br>
-              <a href="{{ url_for('public.event', event_id=event.id) }}">
-                {{event.name}}</a>
-              </h2>
-            <div style="font-size:90%"><i>
-              <b>{{ event.date }}</b>
-              <span>{{ event.location }}</span>
-            </i></div>
-            <hr>
-            {{event.description|markdown}}
-          </div>
-        </div>
-      </div>
-      {% endfor %}
-    {% else %}
+<div class="body-content">
+
+  {% if not current_event and not events_next and not events_past %}
+    <div class="row start-hackathon">
       <div class="col-lg-12 text-center">
         <h3>Looks like you are new to this - welcome!</h3>
         <a href="/admin/event/new" class="btn btn-success">Start a Hackathon</a>
       </div>
-    {% endif %}
-    {% endcache %}
-  </div><!-- /.row -->
+    </div>
+  {% endif %}
+
+  {% if events_next %}
+  <h2 class="mt-4">Upcoming</h2>
+  <div class="row events-next">
+    {% for event in events_next %}
+    <div class="col-lg-4 an-event">
+      <div class="card">
+        {% if event.logo_url %}
+          <img src="{{ event.logo_url }}" title="{{ event.hostname }}">
+        {% endif %}
+        <div class="card-body">
+          <i class="fa fa-code" style="float:right"></i>
+          <h3 class="card-title">
+            <a href="{{ url_for('public.event', event_id=event.id) }}">
+              {{event.name}}</a>
+          </h3>
+          <div class="card-text">
+            <p class="an-event-meta">
+              <b>{{ event.date }}</b>
+              <span>{{ event.location }}</span>
+            </p>
+            <p class="an-event-description">
+              {{event.description|markdown}}
+            </p>
+          </div>
+          <div class="btn-group an-event-actions">
+            <a href="{{ current_event.webpage_url }}" class="btn btn-primary">
+              Information</a>
+            <a href="{{ url_for('public.event', event_id=event.id) }}" class="btn btn-info">
+              Challenges
+            </a>
+          </div>
+        </div><!-- /.card-body -->
+      </div>
+    </div>
+    {% endfor %}
+  </div><!-- /.row events-next -->
+  {% endif %}
+
+  {% if events_past %}
+  <h2 class="mt-4">Past events</h2>
+  <div class="row events-past">
+    {% for event in events_past %}
+    <div class="col-lg-4 an-event">
+      <div class="card">
+        {% if event.logo_url %}
+          <img src="{{ event.logo_url }}" title="{{ event.hostname }}">
+        {% endif %}
+        <div class="card-body">
+          <i class="fa fa-code" style="float:right"></i>
+          <h3 class="card-title">
+            <a href="{{ url_for('public.event', event_id=event.id) }}">
+              {{event.name}}</a>
+          </h3>
+          <div class="card-text">
+            <p class="an-event-meta">
+              <b>{{ event.date }}</b>
+              <span>{{ event.location }}</span>
+            </p>
+            <p class="an-event-description">
+              {{event.description|markdown}}
+            </p>
+          </div>
+          <div class="btn-group an-event-actions">
+            <a href="{{ url_for('public.event', event_id=event.id) }}" class="btn btn-warning">
+              Results
+            </a>
+          </div>
+        </div><!-- /.card-body -->
+      </div>
+    </div>
+    {% endfor %}
+  </div><!-- /.row events-past -->
+  {% endif %}
+
 </div>
+
+{% endcache %}
 {% endblock %}

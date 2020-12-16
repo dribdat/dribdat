@@ -58,10 +58,13 @@ def home():
         events = Event.query.filter(Event.id != cur_event.id)
     else:
         events = Event.query
-    events = events.filter(Event.is_hidden != True)
-    events = events.order_by(Event.id.desc()).all()
+    events = events.filter(Event.is_hidden == False)
+    events = events.order_by(Event.starts_at.desc())
+    today = datetime.utcnow()
+    events_next = events.filter(Event.starts_at > today).all()
+    events_past = events.filter(Event.ends_at < today).all()
     return render_template("public/home.html",
-        events=events, current_event=cur_event)
+        events_next=events_next, events_past=events_past, current_event=cur_event)
 
 @blueprint.route('/user/<username>', methods=['GET'])
 def user(username):

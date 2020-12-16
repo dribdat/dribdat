@@ -158,6 +158,9 @@ nav .navbar-nav .nav-item {
   text-align: center;
   font-weight: bold;
 }
+.home-page .an-event .card {
+  width: 100%;
+}
 
 /* Customize the flipclock widget */
 .event-countdown .flip-clock {
