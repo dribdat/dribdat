@@ -186,9 +186,7 @@ There is an Embed button in the event page and in the admin which provides you w
 
 ### Cannot upgrade database
 
-If you get errors like *ERROR [alembic.env] Can't locate revision identified by 'aa969b4f9f51'*, usually the fix is to drop the migration history table (`psql -c "drop table alembic_version"`), and again `db init .. db migrate .. db upgrade`. You can do this in your database client.
-
-In the case of Heroku, there's a separate process called **Upgrade** which you can find in your _Resources_ tab. Run it and watch the logs for a minute until it completes, then turn it off again.
+In local deployment, you will need to upgrade the databse using `./manage.py db upgrade`. On Heroku, a deployment process called **Release** runs automatically. If you get errors like *ERROR [alembic.env] Can't locate revision identified by 'aa969b4f9f51'*, usually the fix is to drop the migration history table (`psql -c "drop table alembic_version"`), and again `db init .. db migrate .. db upgrade`. You can also do this in your database client.
 
 ### Restore admin access
 
