@@ -1,0 +1,48 @@
+name: build
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        name: [
+          "windows-py38",
+          "macos-py37",
+          "ubuntu-py36",
+        ]
+        include:
+          - name: "windows-py38"
+            os: windows-latest
+            python-version: 3.8
+          - name: "macos-py37"
+            os: macos-latest
+            python-version: 3.7
+          - name: "ubuntu-py36"
+            os: ubuntu-latest
+            python-version: 3.6
+    name: Python ${{ matrix.python-version }} sample
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '12'
+      - name: Setup Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install
+        run: |
+          pip install poetry
+          poetry install
+          yarn
+      - name: Run tests
+        run: |
+          poetry run py.test tests
