@@ -1,8 +1,8 @@
 # USAGE
 
-This document explains the basic functions of `} dribdat {`, an open source platform for data-driven team collaboration, such as *Hackathons*. It is a FAQ covering the basic usage of the application.
+This document explains the basic functions of `} dribdat {`, an open source platform for data-driven team collaboration, such as *Hackathons*. It is a FAQ covering the basic usage of the application. For more background see [ABOUT](ABOUT.md), and for technical details visit the [README](README.md).
 
-For more background see [ABOUT](ABOUT.md), and for technical details visit the [README](README.md).
+We are also working on a new interactive manual at https://github.com/hackathons-ftw/handbook
 
 ## How does this work?
 

@@ -58,10 +58,13 @@ def home():
         events = Event.query.filter(Event.id != cur_event.id)
     else:
         events = Event.query
-    events = events.filter(Event.is_hidden != True)
-    events = events.order_by(Event.id.desc()).all()
+    events = events.filter(Event.is_hidden.isnot(True))
+    events = events.order_by(Event.starts_at.desc())
+    today = datetime.utcnow()
+    events_next = events.filter(Event.starts_at > today).all()
+    events_past = events.filter(Event.ends_at < today).all()
     return render_template("public/home.html",
-        events=events, current_event=cur_event)
+        events_next=events_next, events_past=events_past, current_event=cur_event)
 
 @blueprint.route('/user/<username>', methods=['GET'])
 def user(username):
@@ -69,12 +72,13 @@ def user(username):
     if not user.active:
         return "User deactivated. Please contact an event organizer."
     event = current_event()
+    cert_path = user.get_cert_path(event)
     # projects = user.projects
     projects = user.joined_projects()
     posts = user.latest_posts()
     submissions = Resource.query.filter_by(user_id=user.id).order_by(Resource.id.desc()).all()
     return render_template("public/userprofile.html",
-        current_event=event, event=event, user=user,
+        current_event=event, event=event, user=user, cert_path=cert_path,
         projects=projects, submissions=submissions, posts=posts)
 
 @blueprint.route("/event/<int:event_id>")
@@ -99,6 +103,22 @@ def event_participants(event_id):
     usercount = len(users) if users else 0
     return render_template("public/eventusers.html",
         current_event=event, participants=users, usercount=usercount)
+
+@blueprint.route("/event/<int:event_id>/resources")
+def event_resources(event_id):
+    event = Event.query.filter_by(id=event_id).first_or_404()
+    steps = []
+    for ix, p in enumerate(projectProgressList(True, False)):
+        steps.append({
+            'index': ix + 1, 'name': p[1],
+            'resources': SuggestionsByProgress(p[0])
+        })
+    steps.append({
+        'name': 'Other', 'index': -1,
+        'resources': SuggestionsByProgress(None)
+    })
+    return render_template("public/resources.html",
+        current_event=event, steps=steps)
 
 @blueprint.route('/project/<int:project_id>')
 def project(project_id):

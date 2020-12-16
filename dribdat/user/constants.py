@@ -73,11 +73,12 @@ PROJECT_PROGRESS_PHASE = {
     PR_CHALLENGE:   'Challenge',
 }
 
-def projectProgressList(All=True, WithEmpty=False):
+def projectProgressList(All=True, WithEmpty=True):
     if not All:
         return [(PR_CHALLENGE, PROJECT_PROGRESS[PR_CHALLENGE])]
     pl = [(g, PROJECT_PROGRESS[g]) for g in PROJECT_PROGRESS]
-    pl.append((-100, ''))
+    if WithEmpty:
+        pl.append((-100, ''))
     return sorted(pl, key=lambda x: x[0])
 
 def getProjectPhase(project):

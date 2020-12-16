@@ -14,8 +14,8 @@
           Edit Profile
         </a>
 
-        {% if config.DRIBDAT_CERT_PATH %}
-        <a href="{{ config.DRIBDAT_CERT_PATH }}{{ current_user.sso_id }}.pdf"
+        {% if cert_path %}
+        <a href="{{ cert_path }}"
             download class="btn btn-success">
           <i class="fa fa-download"></i>
           Certificate

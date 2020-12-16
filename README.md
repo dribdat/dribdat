@@ -39,8 +39,7 @@ The following options can be used to toggle **application features**:
 * `DRIBDAT_NOT_REGISTER` - set to True to disallow creating accounts on this server
 * `DRIBDAT_SHOW_SUBMITS` - set to False to moderate resource submissions on the site
 * `DRIBDAT_THEME` - can be set to one of the [Bootswatch themes](https://bootswatch.com/)
-* `DRIBDAT_CLOCK` - use 'up' or 'down' to change the position, and 'off' to hide the countdown
-* `DRIBDAT_CERT_PATH` - a URL that prefixes the download link for user certificates, followed by the SSO_ID and `.pdf` extension
+* `DRIBDAT_CLOCK` - use 'up' or 'down' to change the position, or 'off' to hide the countdown
 
 Support for **Web analytics** can be configured using one of the following variables:
 
@@ -187,9 +186,7 @@ There is an Embed button in the event page and in the admin which provides you w
 
 ### Cannot upgrade database
 
-If you get errors like *ERROR [alembic.env] Can't locate revision identified by 'aa969b4f9f51'*, usually the fix is to drop the migration history table (`psql -c "drop table alembic_version"`), and again `db init .. db migrate .. db upgrade`. You can do this in your database client.
-
-In the case of Heroku, there's a separate process called **Upgrade** which you can find in your _Resources_ tab. Run it and watch the logs for a minute until it completes, then turn it off again.
+In local deployment, you will need to upgrade the databse using `./manage.py db upgrade`. On Heroku, a deployment process called **Release** runs automatically. If you get errors like *ERROR [alembic.env] Can't locate revision identified by 'aa969b4f9f51'*, usually the fix is to drop the migration history table (`psql -c "drop table alembic_version"`), and again `db init .. db migrate .. db upgrade`. You can also do this in your database client.
 
 ### Restore admin access
 

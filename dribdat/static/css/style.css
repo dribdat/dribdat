@@ -158,6 +158,17 @@ nav .navbar-nav .nav-item {
   text-align: center;
   font-weight: bold;
 }
+.home .an-event .card {
+  width: 100%;
+}
+.home .an-event-meta {
+  font-size: 90%;
+  color: #777;
+  text-align: right;
+}
+.home .an-event-meta b {
+  display: block;
+}
 
 /* Customize the flipclock widget */
 .event-countdown .flip-clock {
@@ -578,12 +589,13 @@ nav .navbar-nav .nav-item {
 
 /* Resources */
 .resource-card {
-  display: block;
+  display: inline-block;
   background: rgba(0,0,0,0.06);
   width: 90%;
   padding: 0.1em 0.5em;
   border-left: 1px solid #ccc;
   border-top: 1px solid #ccc;
+  margin-right: 0.5em;
 }
 .resource-card:hover {
   background: rgba(0,0,0,0.03);
@@ -803,6 +815,42 @@ pre { color: #333; background: white; }
   .project-score {
     float: none;
   }
+}
+
+/* resource page */
+
+.resources-page .step {
+  margin-top: 0.5em;
+}
+.resources-page .step .title {
+  padding: 3px;
+  display: block; width: 100%;
+  border-bottom: 1px solid #999;
+  z-index: 1;
+}
+.resources-page .step .number {
+  font-size: 3rem;
+  position: absolute;
+  z-index: 0;
+  margin-top: -2rem;
+  margin-left: -1rem;
+  color: #bbb;
+  font-weight: bold;
+}
+.resources-page .step .resource-card {
+  background: white;
+}
+.resources-page .resource-list {
+  margin: 0; padding: 0;
+  margin-bottom: 1em;
+}
+.resources-page .event-resources {
+  padding: 2rem; margin: 0;
+  font-size: 125%;
+}
+.resources-page #intro {
+  border-top: 1px solid #ccc;
+  padding-top: 2em;
 }
 
 /* avatar and profile styles */
