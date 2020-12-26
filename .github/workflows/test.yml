@@ -17,6 +17,7 @@ jobs:
           "windows-py38",
           "macos-py37",
           "ubuntu-py36",
+          "ubuntu-py38",
         ]
         include:
           - name: "windows-py38"
@@ -26,8 +27,11 @@ jobs:
             os: macos-latest
             python-version: 3.7
           - name: "ubuntu-py36"
-            os: ubuntu-latest
+            os: ubuntu-18.04
             python-version: 3.6
+          - name: "ubuntu-py38"
+            os: ubuntu-20.04
+            python-version: 3.8
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
