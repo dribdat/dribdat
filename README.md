@@ -1,6 +1,6 @@
 # Dribdat
 
-[![Travis](https://travis-ci.org/datalets/dribdat.svg?branch=master)](https://travis-ci.org/datalets/dribdat)
+![Github Actions build](https://github.com/hackathons-ftw/dribdat/workflows/build/badge.svg)
 [![Coveralls](https://coveralls.io/repos/github/datalets/dribdat/badge.svg?branch=master)](https://coveralls.io/github/datalets/dribdat?branch=master)
 [![Mattermost](https://img.shields.io/badge/Mattermost-chat-blue.svg)](https://team.opendata.ch/signup_user_complete/?id=74yuxwruaby9fpoukx9bmoxday)
 
