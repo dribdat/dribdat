@@ -15,6 +15,7 @@ from dribdat.database import db
 
 from flask_dance.contrib.slack import slack
 from flask_dance.contrib.azure import azure
+from flask_dance.contrib.github import github
 
 blueprint = Blueprint('auth', __name__, static_folder="../static")
 
@@ -141,7 +142,7 @@ def user_profile():
         form.roles.data = [(r.id) for r in user.roles]
     return render_template('public/useredit.html', user=user, form=form, active='profile')
 
-def get_or_create_sso_user(sso_id, sso_name, sso_email):
+def get_or_create_sso_user(sso_id, sso_name, sso_email, sso_webpage=''):
     """ Matches a user account based on SSO_ID """
     user = User.query.filter_by(sso_id=sso_id).first()
     if not user:
@@ -165,11 +166,12 @@ def get_or_create_sso_user(sso_id, sso_name, sso_email):
                     username=username,
                     sso_id=sso_id,
                     email=sso_email,
+                    webpage_url=sso_webpage,
                     password=random_password(),
                     active=True)
             user.socialize()
             login_user(user, remember=True)
-            flash("Please complete your user account", 'info')
+            flash("Welcome! Please complete your user account.", 'info')
             return redirect(url_for("auth.user_profile"))
     login_user(user, remember=True)
     flash(u'Logged in - welcome!', 'success')
@@ -222,3 +224,34 @@ def azure_login():
         resp_user['displayName'],
         resp_user['mail'],
     )
+
+@blueprint.route("/github_login", methods=["GET", "POST"])
+def github_login():
+    if not github.authorized:
+        flash('Access denied to GitHub', 'danger')
+        return redirect(url_for("auth.login", local=1))
+
+    resp = github.get("/user")
+    if not resp.ok:
+        flash('Unable to access GitHub data', 'danger')
+        return redirect(url_for("auth.login", local=1))
+    resp_user = resp.json()
+    if not 'email' in resp_user or not 'login' in resp_user:
+        flash('Invalid GitHub data format', 'danger')
+        print(resp_user)
+        return redirect(url_for("auth.login", local=1))
+
+    resp_emails = github.get("/user/emails")
+    if not resp.ok:
+        flash('Unable to access GitHub e-mail data', 'danger')
+        return redirect(url_for("auth.login", local=1))
+    for u in resp_emails.json():
+        if u['primary'] and u['verified']:
+            return get_or_create_sso_user(
+                resp_user['id'],
+                resp_user['login'],
+                u['email'],
+                'https://github.com/%s' % resp_user['login']
+            )
+    flash('Please verify an e-mail with GitHub', 'danger')
+    return redirect(url_for("auth.login", local=1))

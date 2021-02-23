@@ -19,6 +19,7 @@ from flask_misaka import Misaka
 from flask_talisman import Talisman
 from flask_dance.contrib.slack import make_slack_blueprint
 from flask_dance.contrib.azure import make_azure_blueprint
+from flask_dance.contrib.github import make_github_blueprint
 from micawber.providers import bootstrap_basic
 
 
@@ -74,30 +75,39 @@ def register_blueprints(app):
     return None
 
 def register_oauthhandlers(app):
-    if app.config["OAUTH_TYPE"]:
-        if app.config["OAUTH_TYPE"] == 'slack':
-            blueprint = make_slack_blueprint(
-                client_id=app.config["OAUTH_ID"],
-                client_secret=app.config["OAUTH_SECRET"],
-                scope="identity.basic,identity.email",
-                redirect_to="auth.slack_login",
-                login_url="/login",
-                # authorized_url=None,
-                # session_class=None,
-                # storage=None,
-                subdomain=app.config["OAUTH_DOMAIN"],
-            )
-            app.register_blueprint(blueprint, url_prefix="/oauth")
-        elif app.config["OAUTH_TYPE"] == 'azure':
-            blueprint = make_azure_blueprint(
-                client_id=app.config["OAUTH_ID"],
-                client_secret=app.config["OAUTH_SECRET"],
-                tenant=app.config["OAUTH_DOMAIN"],
-                scope="profile email User.ReadBasic.All openid",
-                redirect_to="auth.azure_login",
-                login_url="/login",
-            )
-            app.register_blueprint(blueprint, url_prefix="/oauth")
+    blueprint = None
+    if not app.config["OAUTH_TYPE"]: return
+    if app.config["OAUTH_TYPE"] == 'slack':
+        blueprint = make_slack_blueprint(
+            client_id=app.config["OAUTH_ID"],
+            client_secret=app.config["OAUTH_SECRET"],
+            scope="identity.basic,identity.email",
+            redirect_to="auth.slack_login",
+            login_url="/login",
+            # authorized_url=None,
+            # session_class=None,
+            # storage=None,
+            subdomain=app.config["OAUTH_DOMAIN"],
+        )
+    elif app.config["OAUTH_TYPE"] == 'azure':
+        blueprint = make_azure_blueprint(
+            client_id=app.config["OAUTH_ID"],
+            client_secret=app.config["OAUTH_SECRET"],
+            tenant=app.config["OAUTH_DOMAIN"],
+            scope="profile email User.ReadBasic.All openid",
+            redirect_to="auth.azure_login",
+            login_url="/login",
+        )
+    elif app.config["OAUTH_TYPE"] == 'github':
+        blueprint = make_github_blueprint(
+            client_id=app.config["OAUTH_ID"],
+            client_secret=app.config["OAUTH_SECRET"],
+            # scope="user,read:user",
+            redirect_to="auth.github_login",
+            login_url="/login",
+        )
+    if blueprint is not None:
+        app.register_blueprint(blueprint, url_prefix="/oauth")
 
 def register_errorhandlers(app):
     """Register error handlers."""

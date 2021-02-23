@@ -15,6 +15,10 @@
     <p><a class="btn signin-azure" href="{{ url_for('azure.login') }}">
       Sign in with Microsoft Teams
     </a></p>
+  {% elif oauth_type == 'github' %}
+    <p><a class="btn signin-github" href="{{ url_for('github.login') }}">
+      Sign in with GitHub
+    </a></p>
   {% endif %}
   <form id="loginForm" method="POST" action="/login/" role="login" class="navbar-form form-inline">
     {{ form.hidden_tag() }}

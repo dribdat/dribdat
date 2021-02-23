@@ -48,10 +48,10 @@ Support for **Web analytics** can be configured using one of the following varia
 * `ANALYTICS_GOOGLE` (starts with "UA-...")
 * `ANALYTICS_HREF` - an optional link in the footer to a public dashboard for your analytics
 
-OAuth 2.0 support for **Single Sign-On** is currently available using [Flask Dance](https://flask-dance.readthedocs.io/) (see [issue #118](https://github.com/hackathons-ftw/dribdat/issues/118)). To authenticate your users, the following variables should be set:
+OAuth 2.0 support for **Single Sign-On** is currently available using [Flask Dance](https://flask-dance.readthedocs.io/). Register your app with the provider (see SSO tips below), and set the following variables:
 
-* `OAUTH_TYPE` - e.g. 'Slack'
-* `OAUTH_ID` - the Client ID of your app (e.g. from [api.slack.com](https://api.slack.com/apps/))
+* `OAUTH_TYPE` - e.g. 'Slack', 'GitHub', 'Azure'
+* `OAUTH_ID` - the Client ID of your app
 * `OAUTH_SECRET` - the Client Secret of your app
 * `OAUTH_DOMAIN` - (optional) subdomain of your Slack instance, or AD tenant for Azure
 
@@ -188,6 +188,12 @@ There is an Embed button in the event page and in the admin which provides you w
 
 In local deployment, you will need to upgrade the databse using `./manage.py db upgrade`. On Heroku, a deployment process called **Release** runs automatically. If you get errors like *ERROR [alembic.env] Can't locate revision identified by 'aa969b4f9f51'*, usually the fix is to drop the migration history table (`psql -c "drop table alembic_version"`), and again `db init .. db migrate .. db upgrade`. You can also do this in your database client.
 
+### Need help setting up SSO
+
+To get client keys, go to the [Slack API](https://api.slack.com/apps/), [Azure portal](https://portal.azure.com/#blade/Microsoft_AAD_RegisteredApps/ApplicationsListBlade), or add the [GitHub App](https://github.com/apps/dribdat) to your account or organization.
+
+Cannot determine SSO callback for app registration? Try `<my server url>/oauth/slack/authorized` (replace `slack` with your OAuth provider).
+
 ### Restore admin access
 
 Create a user account if you do not already have one. From the console, run `./manage.py shell` then to promote to admin and/or reset the password of a user called "admin":
@@ -202,6 +208,8 @@ u.save()
 ### Test locally using SSL
 
 Some development scenarios and OAuth testing requires SSL. To use this in development with self-signed certificates (you will get a browser warning), start the server with `./manage.py run --cert=adhoc`
+
+You can also try to test SSO providers with `OAUTHLIB_INSECURE_TRANSPORT=true` (do not use in production!)
 
 # Credits
 
