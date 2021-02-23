@@ -1103,7 +1103,7 @@ SlackIn button
 .signin-github {
   font-size: 0px; border: 0px !important;
   background: url('/static/img/sso/github-sign-in.png') no-repeat;
-  width: 448px; height: 77px;
+  width: 372px; height: 64px;
 }
 
 .__slackin { margin-bottom: 10px; display: block; }
