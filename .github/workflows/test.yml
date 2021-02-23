@@ -14,19 +14,19 @@ jobs:
     strategy:
       matrix:
         name: [
-          "windows",
           "macos",
+          "windows",
           "ubuntu",
         ]
         include:
-          - name: "windows"
-            os: windows-latest
-            python-version: 3.8
-          - name: "macos"
+          - name: "macos-3.7"
             os: macos-latest
             python-version: 3.7
-          - name: "ubuntu"
-            os: ubuntu-20.04
+          - name: "windows-3.8"
+            os: windows-latest
+            python-version: 3.8
+          - name: "ubuntu-3.9"
+            os: ubuntu-latest
             python-version: 3.9
     steps:
       - uses: actions/checkout@v2
