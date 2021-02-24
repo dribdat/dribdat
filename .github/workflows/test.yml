@@ -13,19 +13,15 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        name: [
-          "macos",
-          "windows",
-          "ubuntu",
-        ]
+        name: [ macos, windows, ubuntu ]
         include:
-          - name: "macos-3.7"
+          - name: macos
             os: macos-latest
             python-version: 3.7
-          - name: "windows-3.8"
+          - name: windows
             os: windows-latest
             python-version: 3.8
-          - name: "ubuntu-3.9"
+          - name: ubuntu
             os: ubuntu-latest
             python-version: 3.9
     steps:
