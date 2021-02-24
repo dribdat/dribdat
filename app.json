@@ -1,6 +1,6 @@
 {
   "name": "dribdat",
-  "logo": "https://raw.githubusercontent.com/hackathons-ftw/dribdat/master/dribdat/static/img/badge-black.png",
+  "logo": "https://raw.githubusercontent.com/hackathons-ftw/dribdat/main/dribdat/static/img/badge-black.png",
   "description": "An open source platform for data-driven team collaboration, such as Hackathons.",
   "keywords": [
     "teambuilding",

@@ -1091,15 +1091,19 @@ SlackIn button
 
 .signin-slack {
   font-size: 0px; border: 0px !important;
-  background: url('/static/img/btn-sign-in-with-slack.png') no-repeat;
+  background: url('/static/img/sso/slack-sign-in.png') no-repeat;
   width: 173px; height: 41px;
 }
 .signin-azure {
   border: 0px !important;
-  background: url('/static/img/Microsoft_Office_Teams.svg') no-repeat;
-  width: auto;
-  height: 41px;
+  background: url('/static/img/sso/azure_teams.svg') no-repeat;
+  width: auto; height: 41px;
   padding-left: 50px;
+}
+.signin-github {
+  font-size: 0px; border: 0px !important;
+  background: url('/static/img/sso/github-sign-in.png') no-repeat;
+  width: 372px; height: 64px;
 }
 
 .__slackin { margin-bottom: 10px; display: block; }
