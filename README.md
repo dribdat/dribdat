@@ -39,6 +39,7 @@ The following options can be used to toggle **application features**:
 * `DRIBDAT_NOT_REGISTER` - set to True to disallow creating accounts on this server
 * `DRIBDAT_SHOW_SUBMITS` - set to False to moderate resource submissions on the site
 * `DRIBDAT_THEME` - can be set to one of the [Bootswatch themes](https://bootswatch.com/)
+* `DRIBDAT_STYLE` - provide the address to a CSS stylesheet for custom global styles
 * `DRIBDAT_CLOCK` - use 'up' or 'down' to change the position, or 'off' to hide the countdown
 
 Support for **Web analytics** can be configured using one of the following variables:
@@ -183,6 +184,10 @@ If you are not seeing the icons and other things are not working on the front en
 ### Embedding the front-end
 
 There is an Embed button in the event page and in the admin which provides you with code for an IFRAME that just contains the hexagrid. If you would like to embed the entire application, and find it more intuitive to hide the navigation, add `?clean=1` to the URL. To also hide the top header, use `?minimal=1`.
+
+### Navigation is not visible
+
+Dark Bootswatch themes do not play well with the *navbar-light* component used in our layout (`nav.html`). Override the styles by hand using the `DRIBDAT_CSS_URL` environment variable.
 
 ### Cannot upgrade database
 

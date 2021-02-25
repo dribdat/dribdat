@@ -13,6 +13,8 @@ class Config(object):
 
     # Application options
     DRIBDAT_CLOCK = os_env.get('DRIBDAT_CLOCK', 'down')
+    DRIBDAT_THEME = os_env.get('DRIBDAT_THEME', None)
+    DRIBDAT_STYLE = os_env.get('DRIBDAT_STYLE', '')
     DRIBDAT_APIKEY = os_env.get('DRIBDAT_APIKEY', None)
     DRIBDAT_NOT_REGISTER = os_env.get('DRIBDAT_NOT_REGISTER', False)
     DRIBDAT_SHOW_SUBMITS = os_env.get('DRIBDAT_SHOW_SUBMITS', True)
