@@ -4,7 +4,7 @@ from flask import Flask, render_template, redirect, url_for
 from flask_cors import CORS
 
 from dribdat import commands, public, user, admin
-from dribdat.assets import assets
+from dribdat.assets import assets, compile_assets
 from dribdat.extensions import (
     hashing,
     cache,
@@ -34,6 +34,8 @@ def init_app(config_object=ProdConfig):
     # Set up cross-site access to the API
     cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
     app.config['CORS_HEADERS'] = 'Content-Type'
+
+    compile_assets(app.config)
 
     register_extensions(app)
     register_blueprints(app)
@@ -166,8 +168,6 @@ def register_filters(app):
 
 
 def register_loggers(app):
-    # if os.environ.get('HEROKU') is not None:
-        # app.logger.info('hello Heroku!')
     import logging
     stream_handler = logging.StreamHandler()
     app.logger.addHandler(stream_handler)
