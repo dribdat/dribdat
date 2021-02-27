@@ -57,7 +57,7 @@ def FetchGithubProject(project_url):
     readme = re.sub(
         r"\!\[(.*)\]\((?!http)",
         # TODO check why we are using \g escape here?
-        "![\g<1>](https://raw.githubusercontent.com/" + json['full_name'] + '/master/',
+        r"![\g<1>](https://raw.githubusercontent.com/" + json['full_name'] + '/master/',
         readme
     )
     return {
