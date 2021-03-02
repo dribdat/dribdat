@@ -522,6 +522,7 @@ def resources(page=1):
 def resource(resource_id):
     resource = Resource.query.filter_by(id=resource_id).first_or_404()
     form = ResourceForm(obj=resource, next=request.args.get('next'))
+    form.user_id.choices = [(e.id, "%s" % (e.username)) for e in User.query.filter_by(active=True).order_by('username')]
 
     if form.validate_on_submit():
         form.populate_obj(resource)
@@ -540,6 +541,7 @@ def resource(resource_id):
 def resource_new():
     resource = Resource()
     form = ResourceForm(obj=resource, next=request.args.get('next'))
+    form.user_id.choices = [(e.id, "%s" % (e.username)) for e in User.query.filter_by(active=True).order_by('username')]
 
     if form.validate_on_submit():
         del form.id
@@ -560,10 +562,10 @@ def resource_new():
 @admin_required
 def resource_delete(resource_id):
     resource = Resource.query.filter_by(id=resource_id).first_or_404()
-    if len(resource.get_project_count) > 0:
+    if resource.count_mentions() > 0:
         flash('No project activities may reference a resource in order to delete.', 'warning')
     else:
         cache.clear()
         resource.delete()
         flash('Resource deleted.', 'success')
-    return resources()
+    return redirect(url_for("admin.resources"))
