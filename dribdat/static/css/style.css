@@ -824,25 +824,31 @@ pre { color: #333; background: white; }
 }
 .resources-page .step .title {
   padding: 3px;
+  margin-left: 2rem;
   display: block; width: 100%;
   border-bottom: 1px solid #999;
   z-index: 1;
+}
+.resources-page .step.active .title {
+  color: blue;
+  cursor: pointer;
 }
 .resources-page .step .number {
   font-size: 3rem;
   position: absolute;
   z-index: 0;
-  margin-top: -2rem;
-  margin-left: -1rem;
+  margin-top: -1rem;
   color: #bbb;
   font-weight: bold;
 }
 .resources-page .step .resource-card {
   background: white;
+  margin: 0.5em 0.3em;
 }
 .resources-page .resource-list {
   margin: 0; padding: 0;
   margin-bottom: 1em;
+  margin-left: 2rem;
 }
 .resources-page .event-resources {
   padding: 2rem; margin: 0;

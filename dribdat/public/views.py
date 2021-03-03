@@ -114,7 +114,7 @@ def event_resources(event_id):
             'resources': SuggestionsByProgress(p[0])
         })
     steps.append({
-        'name': 'Other', 'index': -1,
+        'name': '/etc', 'index': -1,
         'resources': SuggestionsByProgress(None)
     })
     return render_template("public/resources.html",
