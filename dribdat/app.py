@@ -4,7 +4,7 @@ from flask import Flask, render_template, redirect, url_for
 from flask_cors import CORS
 
 from dribdat import commands, public, user, admin
-from dribdat.assets import assets, compile_assets
+from dribdat.assets import assets
 from dribdat.extensions import (
     hashing,
     cache,
@@ -17,9 +17,7 @@ from dribdat.utils import timesince
 from dribdat.onebox import make_oembedplus
 from flask_misaka import Misaka
 from flask_talisman import Talisman
-from flask_dance.contrib.slack import make_slack_blueprint
-from flask_dance.contrib.azure import make_azure_blueprint
-from flask_dance.contrib.github import make_github_blueprint
+from flask_dance.contrib import (slack, azure, github)
 from micawber.providers import bootstrap_basic
 
 
@@ -34,8 +32,6 @@ def init_app(config_object=ProdConfig):
     # Set up cross-site access to the API
     cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
     app.config['CORS_HEADERS'] = 'Content-Type'
-
-    compile_assets(app.config)
 
     register_extensions(app)
     register_blueprints(app)
@@ -80,7 +76,7 @@ def register_oauthhandlers(app):
     blueprint = None
     if not app.config["OAUTH_TYPE"]: return
     if app.config["OAUTH_TYPE"] == 'slack':
-        blueprint = make_slack_blueprint(
+        blueprint = slack.make_slack_blueprint(
             client_id=app.config["OAUTH_ID"],
             client_secret=app.config["OAUTH_SECRET"],
             scope="identity.basic,identity.email",
@@ -92,7 +88,7 @@ def register_oauthhandlers(app):
             subdomain=app.config["OAUTH_DOMAIN"],
         )
     elif app.config["OAUTH_TYPE"] == 'azure':
-        blueprint = make_azure_blueprint(
+        blueprint = azure.make_azure_blueprint(
             client_id=app.config["OAUTH_ID"],
             client_secret=app.config["OAUTH_SECRET"],
             tenant=app.config["OAUTH_DOMAIN"],
@@ -101,7 +97,7 @@ def register_oauthhandlers(app):
             login_url="/login",
         )
     elif app.config["OAUTH_TYPE"] == 'github':
-        blueprint = make_github_blueprint(
+        blueprint = github.make_github_blueprint(
             client_id=app.config["OAUTH_ID"],
             client_secret=app.config["OAUTH_SECRET"],
             # scope="user,read:user",
