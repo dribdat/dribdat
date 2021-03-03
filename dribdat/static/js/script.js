@@ -48,7 +48,7 @@
         $indicator.find('i').css('color', 'green');
         $button.removeAttr('disabled').html('Update now');
         if (typeof data.name === 'undefined' || data.name === '') {
-          window.alert('Project data could not be fetched - enter a valid Remote link.');
+          window.alert('Project data could not be fetched - enter a valid Sync link.');
           $('#is_autoupdate').prop('checked', false);
           return;
         }
@@ -182,6 +182,12 @@
   // Roll up categories if there is only one, and no projects
   if ($navCategories.length === 1)
     $navCategories.click().parent().parent().hide();
+
+  // Roll up resources on overview page
+  $('.resources-page .step .resource-list').hide().parent()
+    .addClass('active').click(function() {
+      $(this).find('.resource-list').slideDown();
+    });
 
   // Show embed code when button clicked
   $('#embed-link').click(function(e) {

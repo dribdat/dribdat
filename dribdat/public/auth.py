@@ -229,7 +229,7 @@ def azure_login():
 @blueprint.route("/github_login", methods=["GET", "POST"])
 def github_login():
     if not github.authorized:
-        flash('Access denied to GitHub', 'danger')
+        flash('Access denied - please try again', 'warning')
         return redirect(url_for("auth.login", local=1))
 
     resp = github.get("/user")

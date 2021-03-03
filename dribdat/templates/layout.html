@@ -32,10 +32,12 @@
   <title>{% block page_title %}{% endblock %}</title>
   {% block page_meta %}{% endblock %}
 
+  <link rel="stylesheet" href="{{ url_for('static', filename='libs/%s/bootstrap.min.css' % config.DRIBDAT_THEME)}}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='libs/font-awesome/css/font-awesome.min.css')}}">
   {% assets "css_all" %}
     <link rel="stylesheet" href="{{ ASSET_URL }}">
   {% endassets %}
-  <link rel="stylesheet" href="{{ url_for('static', filename='libs/font-awesome/css/font-awesome.min.css')}}">
+  <link rel="stylesheet" href="{{ config.DRIBDAT_STYLE }}">
   <link rel="shortcut icon" href="/favicon.ico">
 
 </head>

@@ -620,8 +620,8 @@ class Resource(PkModel):
 
     def get_comments(self, max=5):
         return Activity.query.filter_by(resource_id=self.id).order_by(Activity.id.desc()).limit(max)
-    def get_project_count(self):
-        return Activity.query.filter_by(resource_id=self.id).group_by(Project.id).count()
+    def count_mentions(self):
+        return Activity.query.filter_by(resource_id=self.id).group_by(Activity.id).count()
 
     def sync(self):
         """ Synchronize supported resources """
@@ -637,7 +637,7 @@ class Resource(PkModel):
             'url': self.source_url,
             # 'content': self.content,
             'summary': self.summary,
-            'count': self.get_project_count()
+            'count': self.count_mentions()
         }
 
     def __init__(self, name=None, **kwargs):

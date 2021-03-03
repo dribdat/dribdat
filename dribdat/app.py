@@ -17,9 +17,7 @@ from dribdat.utils import timesince
 from dribdat.onebox import make_oembedplus
 from flask_misaka import Misaka
 from flask_talisman import Talisman
-from flask_dance.contrib.slack import make_slack_blueprint
-from flask_dance.contrib.azure import make_azure_blueprint
-from flask_dance.contrib.github import make_github_blueprint
+from flask_dance.contrib import (slack, azure, github)
 from micawber.providers import bootstrap_basic
 
 
@@ -78,7 +76,7 @@ def register_oauthhandlers(app):
     blueprint = None
     if not app.config["OAUTH_TYPE"]: return
     if app.config["OAUTH_TYPE"] == 'slack':
-        blueprint = make_slack_blueprint(
+        blueprint = slack.make_slack_blueprint(
             client_id=app.config["OAUTH_ID"],
             client_secret=app.config["OAUTH_SECRET"],
             scope="identity.basic,identity.email",
@@ -90,7 +88,7 @@ def register_oauthhandlers(app):
             subdomain=app.config["OAUTH_DOMAIN"],
         )
     elif app.config["OAUTH_TYPE"] == 'azure':
-        blueprint = make_azure_blueprint(
+        blueprint = azure.make_azure_blueprint(
             client_id=app.config["OAUTH_ID"],
             client_secret=app.config["OAUTH_SECRET"],
             tenant=app.config["OAUTH_DOMAIN"],
@@ -99,7 +97,7 @@ def register_oauthhandlers(app):
             login_url="/login",
         )
     elif app.config["OAUTH_TYPE"] == 'github':
-        blueprint = make_github_blueprint(
+        blueprint = github.make_github_blueprint(
             client_id=app.config["OAUTH_ID"],
             client_secret=app.config["OAUTH_SECRET"],
             # scope="user,read:user",
@@ -166,8 +164,6 @@ def register_filters(app):
 
 
 def register_loggers(app):
-    # if os.environ.get('HEROKU') is not None:
-        # app.logger.info('hello Heroku!')
     import logging
     stream_handler = logging.StreamHandler()
     app.logger.addHandler(stream_handler)

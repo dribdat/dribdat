@@ -114,7 +114,7 @@ def event_resources(event_id):
             'resources': SuggestionsByProgress(p[0])
         })
     steps.append({
-        'name': 'Other', 'index': -1,
+        'name': '/etc', 'index': -1,
         'resources': SuggestionsByProgress(None)
     })
     return render_template("public/resources.html",
@@ -271,12 +271,15 @@ def project_autoupdate(project_id):
 def resource(resource_id):
     resource = Resource.query.filter_by(id=resource_id).first_or_404()
     projects = [ c.project for c in resource.get_comments() ]
-    return render_template('public/resource.html', resource=resource, projects=projects)
+    event = current_event()
+    return render_template('public/resource.html',
+        current_event=event, resource=resource, projects=projects)
 
 @blueprint.route('/resource/post', methods=['GET', 'POST'])
 @login_required
 def resource_post():
     resource = Resource()
+    event = current_event()
     form = ResourceForm(obj=resource)
     if form.validate_on_submit():
         form.populate_obj(resource)
@@ -286,7 +289,8 @@ def resource_post():
         db.session.commit()
         flash('Thanks for the tip! Your suggestions are visible in your profile.', 'success')
         return redirect(url_for('public.user', username=current_user.username))
-    return render_template('public/resourcenew.html', form=form)
+    return render_template('public/resourcenew.html',
+                current_event=event, form=form)
 
 @blueprint.route('/resource/<int:resource_id>/edit', methods=['GET', 'POST'])
 @login_required
@@ -304,4 +308,5 @@ def resource_edit(resource_id):
         db.session.commit()
         flash('Changes saved.', 'success')
         return redirect(url_for('public.user', username=current_user.username))
-    return render_template('public/resourceedit.html', resource=resource, form=form)
+    return render_template('public/resourceedit.html',
+                current_event=event, resource=resource, form=form)
