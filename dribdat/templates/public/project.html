@@ -132,11 +132,15 @@
 {% if not project.is_challenge %}
   <div class="tab-pane fade show active" id="project-md" role="tabpanel" aria-labelledby="project-tab-md">
 
-    {% if current_user and current_user.is_authenticated and not project.webpage_url and not project.longtext and not project_starred %}
+    {% if current_user and current_user.is_authenticated and not project.webpage_url and not project.longtext %}
     <div class="alert alert-success" role="alert">
       <a class="close" title="Close" href="#" data-dismiss="alert">&times;</a>
       <!-- Helpful comment for new projects -->
-      Join this project to <b>Post</b> on the Log, <b>Edit</b> the pitch or <b>Sync</b> any external content.
+      {% if not project_starred %}
+        Join this project to <b>Post</b> on the Log, <b>Edit</b> the pitch or <b>Sync</b> any external content.
+      {% else %}
+        <b>Edit</b> the pitch to add content, or to <b>Embed</b> your presentation or demo here.
+      {% endif %}
     </div>
     {% endif %}
 
