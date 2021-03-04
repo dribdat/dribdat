@@ -23,10 +23,13 @@
           </p>
          {% endif %}
 
-        <h4 style="margin:2em">{{resource.summary}}</h4>
+        <h4 class="resource-summary">{{resource.summary}}</h4>
 
+        <div class="resource-content">
+            {{resource.content|markdown|safe}}
+        </div>
 {% if projects %}
-<b>Applied by</b>
+<h5 class="resource-projects">Logged by</h5>
 <div class="profile-projects container-fluid">
     <div class="row flex-row flex-nowrap">
     {% for project in projects %}
@@ -59,9 +62,6 @@
 </div>
 {% endif %}
 
-        <div class="resource-content">
-            {{resource.content|markdown|safe}}
-        </div>
     </div>
 
     <div class="project-buttons" role="group" aria-label="Resource navigation">

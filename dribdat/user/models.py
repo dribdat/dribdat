@@ -465,10 +465,11 @@ class Project(PkModel):
             'progress': self.progress,
             'summary': self.summary or '',
             'hashtag': self.hashtag or '',
-            'contact_url': self.contact_url or '',
             'image_url': self.image_url or '',
             'source_url': self.source_url or '',
             'webpage_url': self.webpage_url or '',
+            'contact_url': self.contact_url or '',
+            'logo_color': self.logo_color or '',
         }
         if self.user is not None:
             d['maintainer'] = self.user.username
