@@ -106,6 +106,23 @@
   {% endif %}
   </div>
 
+  {% if not project.is_challenge and project_starred and suggestions %}
+    <div class="alert alert-info resource-list col-12">
+      <a class="close" title="Close" href="#" data-dismiss="alert">&times;</a>
+        <p>For this stage of your project, we suggest:</p>
+    {% for resource in suggestions %}
+        {% if resource.is_visible %}
+        <a class="col-5 resource-card" href="{{ url_for('public.resource', resource_id=resource.id) }}">
+            <i title="{{resource.of_type}}"
+            class="fa fa-{{resource.icon}}"></i>
+            <b>{{resource.name}}</b>
+            <p>{{resource.summary}}</p>
+        </a>
+        {% endif %}
+    {% endfor %}
+    </div>
+  {% endif %}
+
   {% if not project.is_challenge %}
   <ul class="nav nav-pills nav-fill md-tabs" id="projectTabs" role="tablist">
     <li class="nav-item">
@@ -142,23 +159,6 @@
         <b>Edit</b> the pitch to add content, or to <b>Embed</b> your presentation or demo here.
       {% endif %}
     </div>
-    {% endif %}
-
-    {% if project_starred and suggestions %}
-      <div class="alert alert-info resource-list col-12">
-        <a class="close" title="Close" href="#" data-dismiss="alert">&times;</a>
-          <p>For this stage of your project, we suggest:</p>
-      {% for resource in suggestions %}
-          {% if resource.is_visible %}
-          <a class="col-5 resource-card" href="{{ url_for('public.resource', resource_id=resource.id) }}">
-              <i title="{{resource.of_type}}"
-              class="fa fa-{{resource.icon}}"></i>
-              <b>{{resource.name}}</b>
-              <p>{{resource.summary}}</p>
-          </a>
-          {% endif %}
-      {% endfor %}
-      </div>
     {% endif %}
 
 {% endif %}
