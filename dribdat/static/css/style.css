@@ -293,7 +293,8 @@ nav .navbar-nav .nav-item {
   box-shadow: none;
 }
 .hexagon {
-  margin-bottom: 73px;
+  margin-bottom: 69px;
+  border-bottom: 4px solid transparent;
 }
 .hexagon:hover {
   box-shadow: 0px 3px 3px lightblue;
@@ -412,6 +413,8 @@ nav .navbar-nav .nav-item {
 .project-home .jumbotron.project-page {
   border-top-left-radius: 20px;
   border-top-right-radius: 20px;
+  border: 5px solid #ccc;
+  margin-top: 1em;
 }
 .project-home .project-image.underlay {
   filter: blur(2px);
@@ -711,6 +714,11 @@ nav .navbar-nav .nav-item {
 .userform .btn-submit {
   min-width: 7em;
 }
+.projectform .form-actions input {
+  margin-top: 1em;
+  font-size: 150%;
+  width: 100%;
+}
 
 /* Code blocks */
 pre { color: #333; background: white; }
@@ -845,6 +853,10 @@ pre { color: #333; background: white; }
   background: white;
   margin: 0.5em 0.3em;
 }
+.resources-page .join-tip {
+  opacity: 0.8;
+  margin: 1em;
+}
 .resources-page .resource-list {
   margin: 0; padding: 0;
   margin-bottom: 1em;
@@ -857,6 +869,14 @@ pre { color: #333; background: white; }
 .resources-page #intro {
   border-top: 1px solid #ccc;
   padding-top: 2em;
+}
+.resourcepage .resource-summary,
+.resourcepage .resource-content {
+  margin: 20pt;
+}
+.resourcepage .resource-projects {
+  padding-top: 1em;
+  border-top: 1px solid #999;
 }
 
 /* avatar and profile styles */
@@ -1058,6 +1078,17 @@ Challenges view
 }
 .list-data a.list-group-item:nth-child(1) {
     border-top: 1px solid #333;
+}
+
+/* ------------
+Search engine
+--------------- */
+
+.search-results {
+  list-style: none; margin: 0px; padding: 0px;
+}
+.search-results li {
+  margin: 1em; margin-left: 0px;
 }
 
 /* ------------
