@@ -102,12 +102,12 @@ class ProjectForm(FlaskForm):
 
 class ProjectPost(FlaskForm):
     id = HiddenField('id')
-    progress = SelectField(u'Progress', coerce=int)
-    resource = SelectField(u'Using', coerce=int,
-        description=u'Are any particular resources being applied?')
     note = TextAreaField(u'Note', [length(max=140), DataRequired()],
         description=u'What are you working on right now?')
-    submit = SubmitField(u'Submit')
+    resource = SelectField(u'Resources', coerce=int,
+        description=u'Are any of these data or tools being used?')
+    progress = SelectField(u'Progress', coerce=int)
+    submit = SubmitField(u'Save post')
 
 class ResourceForm(FlaskForm):
     """ For suggesting cool tools """

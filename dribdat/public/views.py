@@ -288,7 +288,7 @@ def resource_post():
         db.session.add(resource)
         db.session.commit()
         flash('Thanks for the tip! Your suggestions are visible in your profile.', 'success')
-        return redirect(url_for('public.user', username=current_user.username))
+        return redirect(url_for('public.resource', resource_id=resource.id))
     return render_template('public/resourcenew.html',
                 current_event=event, form=form)
 
@@ -307,6 +307,6 @@ def resource_edit(resource_id):
         db.session.add(resource)
         db.session.commit()
         flash('Changes saved.', 'success')
-        return redirect(url_for('public.user', username=current_user.username))
+        return redirect(url_for('public.resource', resource_id=resource.id))
     return render_template('public/resourceedit.html',
                 current_event=event, resource=resource, form=form)
