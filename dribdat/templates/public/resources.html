@@ -9,11 +9,11 @@
   <div class="container">
 
     <div class="row"><center style="width:100%">
-      <h1 style="font-weight:bold">
+      <h3 style="font-weight:bold; text-align: right;">
         R E S
         O U R
         C E S _
-      </h1>
+      </h3>
     </center></div>
 
     <a name="steps"></a>
@@ -26,8 +26,8 @@
           <h4 class="title">{{ step.name }}</h4>
         {% endif %}
         {% if step.index == 1 %}
-        <div class="container"><p>
-          <a href="#" class="btn btn-primary disabled btn-sm">Join</a> a team and click <a href="#" class="btn btn-success disabled btn-sm">Post</a> to progress past the initial challenge stage.
+        <div class="container join-tip"><p>
+          <a href="#" class="btn btn-primary disabled btn-sm">Join</a> a team and click <a href="#" class="btn btn-success disabled btn-sm">Post</a> to progress through challenge stages.
         </p></div>
         {% endif %}
         {% if step.resources %}
