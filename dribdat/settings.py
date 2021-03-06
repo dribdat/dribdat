@@ -57,6 +57,7 @@ class Config(object):
     S3_BUCKET = os_env.get('S3_BUCKET', None)
     S3_FOLDER = os_env.get('S3_FOLDER', '')
     S3_HTTPS = os_env.get('S3_HTTPS', None)
+    S3_ENDPOINT = os_env.get('S3_ENDPOINT', None)
 
 
 class ProdConfig(Config):

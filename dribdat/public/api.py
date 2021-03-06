@@ -320,14 +320,25 @@ def project_uploader():
     filename = random_password(24) + '.' + ext
     # with tempfile.TemporaryDirectory() as tmpdir:
         # img.save(path.join(tmpdir, filename))
-    s3_filepath = '/'.join([current_app.config['S3_FOLDER'], filename])
-    print('Uploading to %s' % s3_filepath)
-    s3_obj = boto3.client('s3',
-      aws_access_key_id=current_app.config['S3_KEY'],
-      aws_secret_access_key=current_app.config['S3_SECRET'],
-      config=botocore.client.Config(region_name=current_app.config['S3_REGION']))
-    s3_obj.upload_fileobj(
-        img,
+    if 'S3_FOLDER' in current_app.config:
+        s3_filepath = '/'.join([current_app.config['S3_FOLDER'], filename])
+    else:
+        s3_filepath = filename
+    # print('Uploading to %s' % s3_filepath)
+    if 'S3_ENDPOINT' in current_app.config:
+        s3_obj = boto3.client(service_name='s3',
+            endpoint_url=current_app.config['S3_ENDPOINT'],
+            aws_access_key_id=current_app.config['S3_KEY'],
+            aws_secret_access_key=current_app.config['S3_SECRET'],
+        )
+    else:
+        s3_obj = boto3.client(service_name='s3',
+            region_name=current_app.config['S3_REGION'],
+            aws_access_key_id=current_app.config['S3_KEY'],
+            aws_secret_access_key=current_app.config['S3_SECRET'],
+        )
+    # Commence upload
+    s3_obj.upload_fileobj(img,
         current_app.config['S3_BUCKET'],
         s3_filepath,
         ExtraArgs={ 'ContentType': img.content_type, 'ACL': 'public-read' }

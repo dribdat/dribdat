@@ -62,8 +62,9 @@ For **uploading images** and other files directly within dribdat, you can config
 * `S3_SECRET` - the generated secret (long, mixed case)
 * `S3_BUCKET` - the name of your S3 bucket
 * `S3_REGION` - defaults to 'eu-west-1'
-* `S3_FOLDER` - leave blank unless you want to store to a subfolder
-* `S3_HTTPS` - the URL for web access to your bucket's public files
+* `S3_FOLDER` - skip unless you want to store to a subfolder
+* `S3_HTTPS` - URL for web access to your bucket's public files
+* `S3_ENDPOINT` - alternative endpoint for self-hosted Object Storage
 * `MAX_CONTENT_LENGTH` - defaults to 1048576 bytes (1 MB) file size
 
 **Tip**: Use `.flaskenv` or `.env` to store environment variables for local development.
