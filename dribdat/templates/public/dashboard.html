@@ -1,72 +1,61 @@
-<!DOCTYPE html>
-<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
-<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
-<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
-    <head>
-        <meta charset="utf-8" />
-        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <title>DRIBDAT</title>
-        <meta name="description" content="Project dashboard" />
-        <!-- Refresh social media wall every ten minutes -->
-        {% if with_social_wall %}
-          <meta http-equiv="refresh" content="600">
-        {% endif %}
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+{% extends "layout.html" %}
 
-        <link rel="stylesheet" href="/static/libs/font-awesome/css/font-awesome.min.css">
-        <link rel="stylesheet" href="/static/libs/bootstrap/css/bootstrap.min.css">
-        <link rel="stylesheet" href="/static/libs/FlipClock/flipclock.css">
-        <link rel="stylesheet" href="/static/css/honeycomb.css">
-        <link rel="stylesheet" href="/static/css/style.css">
-        <style type="text/css">{{ current_event.custom_css }}</style>
-    </head>
+{% block page_title %}{{current_event.name}} dashboard{% endblock %}
 
-    <body class="dashboard-page">
+{% block body_class %}dashboard-page embed-view{% endblock %}
 
-      <div class="superpowers">
-        <button class="show-announcements"
-          onclick="$('#announcements').show();$(this).hide()">📣</button>
-        <button class="darkmode">☽</button>
+{% block content %}
+<script src="https://cdn.jsdelivr.net/npm/jquery-resizable-dom@0.35.0/dist/jquery-resizable.min.js"></script>
+
+<!-- Refresh social media wall every ten minutes -->
+{% if with_social_wall %}
+  <script language="JavaScript">
+  setTimeout(function() {
+    location.reload();
+  }, 1000 * 60 * 5);
+  </script>
+{% endif %}
+
+<div class="superpowers">
+  <button class="show-announcements"
+    onclick="$('#announcements').show();$(this).hide()">📣</button>
+  <button class="darkmode">☽</button>
+</div>
+
+<div class="container-fluid">
+  <div class="row">
+
+    <nav class="col-md-2 sidebar">
+      <div id="projects"></div>
+      <!-- <div class="sidebar-sticky" id="schedule">
+        {{ current_event.description|safe }}
+      </div> -->
+    </nav>
+
+    <main role="main" class="container-countdown col-md-{{ '6' if with_social_wall else '9' }} ml-sm-auto">
+      <img id="event-logo" src="{{ current_event.logo_url }}">
+
+      <div class="panel-body">
+        <textarea id="announcements" class="editable hidden">Attention! This is a public hackathon service broadcast.</textarea>
       </div>
 
-      <div class="container-fluid">
-        <div class="row">
+      {% if current_event.countdown %}
+        <div class="event-countdown" data-start="{{ current_event.countdown }}"></div>
+      {% endif %}
+    </main>
 
-          <nav class="col-md-2 sidebar">
-            <div id="projects"></div>
-            <!-- <div class="sidebar-sticky" id="schedule">
-              {{ current_event.description|safe }}
-            </div> -->
-          </nav>
+    <div class="col-md-3" style="padding:0px">
+        <div id="activities"></div>
+    </div>
 
-          <main role="main" class="container-countdown col-md-{{ '6' if with_social_wall else '9' }} ml-sm-auto">
-            <img id="event-logo" src="{{ current_event.logo_url }}">
-
-            <div class="panel-body">
-              <textarea id="announcements" class="editable hidden">Attention! This is a public hackathon service broadcast.</textarea>
-            </div>
-
-            {% if current_event.countdown %}
-              <div class="event-countdown" data-start="{{ current_event.countdown }}"></div>
-            {% endif %}
-          </main>
-
-          <div class="col-md-3" style="padding:0px">
-              <div id="activities"></div>
-          </div>
-
-          {% if with_social_wall %}
-            <div class="col-md-3">
-              <a class="twitter-timeline" data-width="340" data-height="900" data-dnt="true" data-theme="dark" data-link-color="#E95F28" href="{{ current_event.community_url }}?ref_src=twsrc%5Etfw">Tweets</a> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
-            </div>
-          {% endif %}
-        </div>
+    {% if with_social_wall %}
+      <div class="col-md-3">
+        <a class="twitter-timeline" data-width="340" data-height="900" data-dnt="true" data-theme="dark" data-link-color="#E95F28" href="{{ current_event.community_url }}?ref_src=twsrc%5Etfw">Tweets</a> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
       </div>
+    {% endif %}
   </div>
 </div>
 
-</body>
 <style>
   body {
     overflow: hidden;
@@ -202,14 +191,6 @@
 
 </style>
 
-<script type="text/javascript" src="/static/libs/jquery/jquery.min.js"></script>
-<script type="text/javascript" src="/static/libs/popper.js/umd/popper.min.js"></script>
-<script type="text/javascript" src="/static/libs/bootstrap/js/bootstrap.min.js"></script>
-<script type="text/javascript" src="/static/js/plugins.js"></script>
-<script type="text/javascript" src="/static/js/script.js"></script>
-<script type="text/javascript" src="/static/libs/FlipClock/flipclock.min.js"></script>
-<script type="text/javascript" src="/static/js/clock.js"></script>
-
 <script>
 refreshProjects = function() {
   $.getJSON('/api/event/current/projects.json', function(data) {
@@ -241,4 +222,5 @@ $('.editable').each(function() {
   this.contentEditable = 'true';
 });
 </script>
-</html>
+
+{% endblock %}

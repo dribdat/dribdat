@@ -32,8 +32,10 @@
   <title>{% block page_title %}{% endblock %}</title>
   {% block page_meta %}{% endblock %}
 
-  <link rel="stylesheet" href="{{ url_for('static', filename='libs/%s/bootstrap.min.css' % config.DRIBDAT_THEME)}}">
-  <link rel="stylesheet" href="{{ url_for('static', filename='libs/font-awesome/css/font-awesome.min.css')}}">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@4/dist/{{ config.DRIBDAT_THEME }}/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flipclock@0/dist/flipclock.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4/css/font-awesome.min.css">
+
   {% assets "css_all" %}
     <link rel="stylesheet" href="{{ ASSET_URL }}">
   {% endassets %}
@@ -80,7 +82,9 @@
 
 {% include "includes/footer.html" %}
 
-<!-- Standard scripts -->
+<script src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/flipclock@0/dist/flipclock.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js"></script>
 {% assets "js_all" %}
   <script type="text/javascript" src="{{ ASSET_URL }}"></script>
 {% endassets %}
