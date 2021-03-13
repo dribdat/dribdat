@@ -198,8 +198,13 @@ nav .navbar-nav .nav-item {
     display: none;
   }
 }
-.event-footer .event-countdown {
-  width: 600px;
+.container-countdown {
+  width: 100%;
+  display: block;
+  text-align: center;
+}
+.event-countdown {
+  display: inline-block;
 }
 @media (max-width: 1190px) {
   .event-footer .event-countdown {

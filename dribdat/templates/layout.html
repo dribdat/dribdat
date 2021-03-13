@@ -44,7 +44,6 @@
 
 </head>
 <body class="{% block body_class %}{% endblock %}">
-{% block body %}
 {% with form=form, tabs=tabs, event=current_event %}
 {% if not request.args.get('clean') and not request.args.get('minimal') %}
 {% include "includes/nav.html" %}
@@ -91,8 +90,6 @@
 {% block js %}{% endblock %}
 
 {% include "includes/analytics.html" %}
-
-{% endblock %}<!-- /body -->
 
 {% block css %}{% endblock %}
   <a name="EOF"></a>
