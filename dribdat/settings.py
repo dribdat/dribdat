@@ -10,13 +10,14 @@ class Config(object):
     """Base configuration."""
 
     SECRET_KEY = os_env.get('DRIBDAT_SECRET', 'A-big-scary-Secret-goes-HERE.')
+    SECRET_API = os_env.get('DRIBDAT_APIKEY', None)
 
-    # Application options
-    DRIBDAT_APIKEY = os_env.get('DRIBDAT_APIKEY', None)
+    # Customization options
     DRIBDAT_CLOCK = os_env.get('DRIBDAT_CLOCK', 'down')
     DRIBDAT_STYLE = os_env.get('DRIBDAT_STYLE', '')
-    DRIBDAT_THEME = os_env.get('DRIBDAT_THEME', None)
-    DRIBDAT_THEME = 'bootswatch/%s' % DRIBDAT_THEME.lower() if DRIBDAT_THEME else 'bootstrap/css'
+    DRIBDAT_THEME = os_env.get('DRIBDAT_THEME', 'simplex')
+
+    # Application options
     DRIBDAT_NOT_REGISTER = os_env.get('DRIBDAT_NOT_REGISTER', False)
     DRIBDAT_SHOW_SUBMITS = os_env.get('DRIBDAT_SHOW_SUBMITS', True)
 
