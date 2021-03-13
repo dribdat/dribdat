@@ -39,9 +39,6 @@ tests/.cache
 .pydevproject
 /*.db
 
-# Hmm ...
-migrations
-
 # Complexity
 output/*.html
 output/*/index.html
