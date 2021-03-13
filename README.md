@@ -130,7 +130,7 @@ python manage.py db migrate
 python manage.py db upgrade
 ```
 
-Install frontend resources using [Yarn](https://yarnpkg.com/en/docs/getting-started) `yarn install` or `npm install`.
+Install a local copy of frontend resources for offline development using [yarn install](https://yarnpkg.com/en/docs/getting-started). These will be used when `FLASK_ENV=dev`, otherwise a CDN will be used in production.
 
 Finally, run this command (or just `debug.sh`) to start the server:
 
@@ -173,10 +173,6 @@ For a full migration command reference, run `python manage.py db --help`.
 ## Troubleshooting
 
 A quick guide to a few common errors:
-
-### Front-end is broken
-
-If you are not seeing the icons and other things are not working on the front end, chances are you need to run a build. Just type `yarn` in the home folder, or run the **Build** command in your _Resources_ tab in Heroku.
 
 ### Embedding the front-end
 
