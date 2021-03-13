@@ -203,7 +203,6 @@
 </style>
 
 <script type="text/javascript" src="/static/libs/jquery/jquery.min.js"></script>
-<script type="text/javascript" src="/static/libs/jquery-sortable/jquery-sortable-min.js"></script>
 <script type="text/javascript" src="/static/libs/popper.js/umd/popper.min.js"></script>
 <script type="text/javascript" src="/static/libs/bootstrap/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="/static/js/plugins.js"></script>
@@ -220,9 +219,6 @@ refreshProjects = function() {
         '<a href="/project/'+p.id+'">'+p.name+'</a>' +
         '<sp style="width:'+p.score+'px"></sp>' +
       '</div>');
-    });
-    $pp.sortable({
-      ghostClass: 'blue-background-class'
     });
   });
 

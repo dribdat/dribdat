@@ -130,11 +130,7 @@ python manage.py db migrate
 python manage.py db upgrade
 ```
 
-Install frontend resources using [Yarn](https://yarnpkg.com/en/docs/getting-started):
-
-```
-yarn install
-```
+Install frontend resources using [Yarn](https://yarnpkg.com/en/docs/getting-started) `yarn install` or `npm install`.
 
 Finally, run this command (or just `debug.sh`) to start the server:
 

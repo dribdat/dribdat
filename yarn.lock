@@ -2,102 +2,39 @@
 # yarn lockfile v1
 
 
-bootstrap@^4.3.1:
-  version "4.6.0"
-  resolved "https://registry.yarnpkg.com/bootstrap/-/bootstrap-4.6.0.tgz#97b9f29ac98f98dfa43bf7468262d84392552fd7"
-  integrity sha512-Io55IuQY3kydzHtbGvQya3H+KorS/M9rSNyfCGCg9WZ4pyT/lCxIlpJgG1GXW/PswzC84Tr2fBYi+7+jFVQQBw==
+"bootstrap@^4.3.1":
+  "integrity" "sha512-Io55IuQY3kydzHtbGvQya3H+KorS/M9rSNyfCGCg9WZ4pyT/lCxIlpJgG1GXW/PswzC84Tr2fBYi+7+jFVQQBw=="
+  "resolved" "https://registry.yarnpkg.com/bootstrap/-/bootstrap-4.6.0.tgz"
+  "version" "4.6.0"
 
-bootswatch@^4.5.2:
-  version "4.6.0"
-  resolved "https://registry.yarnpkg.com/bootswatch/-/bootswatch-4.6.0.tgz#295237ed0e118decb3e3543f2ac14e9bb8ae48ea"
-  integrity sha512-Yr6YqFBC8jwTzoJoLViYlvO97IhPWGqZEm+6FXHfD/G6gbUok6sZkdXxdh4Zb6iCGEwr9p7zGCn38yKQD/bh2Q==
+"bootswatch@^4.5.2":
+  "integrity" "sha512-Yr6YqFBC8jwTzoJoLViYlvO97IhPWGqZEm+6FXHfD/G6gbUok6sZkdXxdh4Zb6iCGEwr9p7zGCn38yKQD/bh2Q=="
+  "resolved" "https://registry.yarnpkg.com/bootswatch/-/bootswatch-4.6.0.tgz"
+  "version" "4.6.0"
 
-colorx@*:
-  version "0.0.7"
-  resolved "https://registry.yarnpkg.com/colorx/-/colorx-0.0.7.tgz#2497fe00e247bb80559b8b80433ae6cd280db672"
-  integrity sha1-JJf+AOJHu4BVm4uAQzrmzSgNtnI=
+"flipclock@^0.10.5":
+  "integrity" "sha512-VFvWp4NCImfR2cjMyL4blEVofM2FzfRo+K15ZRxhUXEpleDAVJgDLueOfTtvPe8C7dJIz0gJeOFgC1PV0RZ5wg=="
+  "resolved" "https://registry.npmjs.org/flipclock/-/flipclock-0.10.5.tgz"
+  "version" "0.10.5"
 
-commander@*:
-  version "7.1.0"
-  resolved "https://registry.yarnpkg.com/commander/-/commander-7.1.0.tgz#f2eaecf131f10e36e07d894698226e36ae0eb5ff"
-  integrity sha512-pRxBna3MJe6HKnBGsDyMv8ETbptw3axEdYHoqNh7gu5oDcew8fs0xnivZGm06Ogk8zGAJ9VX+OPEr2GXEQK4dg==
+"font-awesome@^4.7.0":
+  "integrity" "sha1-j6jPBBGhoxr9B7BtKQK7n8gVoTM="
+  "resolved" "https://registry.yarnpkg.com/font-awesome/-/font-awesome-4.7.0.tgz"
+  "version" "4.7.0"
 
-flipclock@^0.10.8:
-  version "0.10.8"
-  resolved "https://registry.yarnpkg.com/flipclock/-/flipclock-0.10.8.tgz#4b25b33896921ffb8cf361b23104e705cf348282"
-  integrity sha512-IN91R+0LZvQG/uJVKOKHP9/L+ak2C4cD2A1bp21185+p6A+XGA75NrWTc66fE3y7hyieHQrqV3lIWdND3pAUaQ==
+"jquery-resizable-dom@^0.35.0":
+  "integrity" "sha512-AbZsJ+aKJnoIYNT4dPy9om72L/j/z3hBCAHz9yO2Ifn60tAkEti3KJ4Exb98OV3P9R4Mst4E1YEFKzHrDPy/Nw=="
+  "resolved" "https://registry.yarnpkg.com/jquery-resizable-dom/-/jquery-resizable-dom-0.35.0.tgz"
+  "version" "0.35.0"
   dependencies:
-    jsdocs "^1.0.0"
+    "jquery" "^3.4.0"
 
-font-awesome@^4.7.0:
-  version "4.7.0"
-  resolved "https://registry.yarnpkg.com/font-awesome/-/font-awesome-4.7.0.tgz#8fa8cf0411a1a31afd07b06d2902bb9fc815a133"
-  integrity sha1-j6jPBBGhoxr9B7BtKQK7n8gVoTM=
+"jquery@^3.4.0", "jquery@^3.4.1", "jquery@1.9.1 - 3":
+  "integrity" "sha512-JVzAR/AjBvVt2BmYhxRCSYysDsPcssdmTFnzyLEts9qNwmjmu4JTAMYubEfwVOSwpQ1I1sKKFcxhZCI2buerfw=="
+  "resolved" "https://registry.yarnpkg.com/jquery/-/jquery-3.6.0.tgz"
+  "version" "3.6.0"
 
-jquery-resizable-dom@^0.35.0:
-  version "0.35.0"
-  resolved "https://registry.yarnpkg.com/jquery-resizable-dom/-/jquery-resizable-dom-0.35.0.tgz#b562e5768c92fbcbd7544e30b6f3b6950169b020"
-  integrity sha512-AbZsJ+aKJnoIYNT4dPy9om72L/j/z3hBCAHz9yO2Ifn60tAkEti3KJ4Exb98OV3P9R4Mst4E1YEFKzHrDPy/Nw==
-  dependencies:
-    jquery "^3.4.0"
-
-jquery-sortable@^0.9.13:
-  version "0.9.13"
-  resolved "https://registry.yarnpkg.com/jquery-sortable/-/jquery-sortable-0.9.13.tgz#1cbfb655013a0747370571f06e22f524a00ffba2"
-  integrity sha1-HL+2VQE6B0c3BXHwbiL1JKAP+6I=
-  dependencies:
-    jquery "^2.1.2"
-
-jquery@^2.1.2:
-  version "2.2.4"
-  resolved "https://registry.yarnpkg.com/jquery/-/jquery-2.2.4.tgz#2c89d6889b5eac522a7eea32c14521559c6cbf02"
-  integrity sha1-LInWiJterFIqfuoywUUhVZxsvwI=
-
-jquery@^3.4.0, jquery@^3.4.1:
-  version "3.6.0"
-  resolved "https://registry.yarnpkg.com/jquery/-/jquery-3.6.0.tgz#c72a09f15c1bdce142f49dbf1170bdf8adac2470"
-  integrity sha512-JVzAR/AjBvVt2BmYhxRCSYysDsPcssdmTFnzyLEts9qNwmjmu4JTAMYubEfwVOSwpQ1I1sKKFcxhZCI2buerfw==
-
-jsdocs@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/jsdocs/-/jsdocs-1.0.0.tgz#c515696e05ed1ecbbc03d1c3268a1df20b8ce832"
-  integrity sha512-6GmPLgjwy1aDNohUauo/ALWuGGYZ7snhLpVj5n55nJMdULnWjlwJ0Zk0hmq0P94cU7P8mEDBGiMav9GEehXPrQ==
-  dependencies:
-    colorx "*"
-    commander "*"
-    marked "*"
-    minitpl "0.0.3"
-    mkdirp "0.5.0"
-    xutil "0.0.9"
-
-marked@*:
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/marked/-/marked-2.0.1.tgz#5e7ed7009bfa5c95182e4eb696f85e948cefcee3"
-  integrity sha512-5+/fKgMv2hARmMW7DOpykr2iLhl0NgjyELk5yn92iE7z8Se1IS9n3UsFm86hFXIkvMBmVxki8+ckcpjBeyo/hw==
-
-minimist@0.0.8:
-  version "0.0.8"
-  resolved "https://registry.yarnpkg.com/minimist/-/minimist-0.0.8.tgz#857fcabfc3397d2625b8228262e86aa7a011b05d"
-  integrity sha1-hX/Kv8M5fSYluCKCYuhqp6ARsF0=
-
-minitpl@0.0.3:
-  version "0.0.3"
-  resolved "https://registry.yarnpkg.com/minitpl/-/minitpl-0.0.3.tgz#7c603c1a24747a144c83c9a8d15c3fee563f6bf1"
-  integrity sha1-fGA8GiR0ehRMg8mo0Vw/7lY/a/E=
-
-mkdirp@0.5.0:
-  version "0.5.0"
-  resolved "https://registry.yarnpkg.com/mkdirp/-/mkdirp-0.5.0.tgz#1d73076a6df986cd9344e15e71fcc05a4c9abf12"
-  integrity sha1-HXMHam35hs2TROFecfzAWkyavxI=
-  dependencies:
-    minimist "0.0.8"
-
-popper.js@^1.15.0:
-  version "1.16.1"
-  resolved "https://registry.yarnpkg.com/popper.js/-/popper.js-1.16.1.tgz#2a223cb3dc7b6213d740e40372be40de43e65b1b"
-  integrity sha512-Wb4p1J4zyFTbM+u6WuO4XstYx4Ky9Cewe4DWrel7B0w6VVICvPwdOpotjzcf6eD8TsckVnIMNONQyPIUFOUbCQ==
-
-xutil@0.0.9:
-  version "0.0.9"
-  resolved "https://registry.yarnpkg.com/xutil/-/xutil-0.0.9.tgz#efcfe5e8dc4478ad6d463c23f0c4c081240973ec"
-  integrity sha1-78/l6NxEeK1tRjwj8MTAgSQJc+w=
+"popper.js@^1.15.0", "popper.js@^1.16.1":
+  "integrity" "sha512-Wb4p1J4zyFTbM+u6WuO4XstYx4Ky9Cewe4DWrel7B0w6VVICvPwdOpotjzcf6eD8TsckVnIMNONQyPIUFOUbCQ=="
+  "resolved" "https://registry.yarnpkg.com/popper.js/-/popper.js-1.16.1.tgz"
+  "version" "1.16.1"
