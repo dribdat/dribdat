@@ -77,7 +77,7 @@ def user(username):
     projects = user.joined_projects()
     posts = user.latest_posts()
     submissions = Resource.query.filter_by(user_id=user.id).order_by(Resource.id.desc()).all()
-    return render_template("public/userprofile.html",
+    return render_template("public/userprofile.html", active="profile",
         current_event=event, event=event, user=user, cert_path=cert_path,
         projects=projects, submissions=submissions, posts=posts)
 
@@ -94,7 +94,7 @@ def event(event_id):
         x['name'].lower()))
     project_count = projects.count()
     return render_template("public/event.html", current_event=event,
-        projects=summaries, project_count=project_count)
+        projects=summaries, project_count=project_count, active="projects")
 
 @blueprint.route("/event/<int:event_id>/participants")
 def event_participants(event_id):
@@ -102,7 +102,7 @@ def event_participants(event_id):
     users = GetEventUsers(event)
     usercount = len(users) if users else 0
     return render_template("public/eventusers.html",
-        current_event=event, participants=users, usercount=usercount)
+        current_event=event, participants=users, usercount=usercount, active="participants")
 
 @blueprint.route("/event/<int:event_id>/resources")
 def event_resources(event_id):
@@ -118,7 +118,7 @@ def event_resources(event_id):
         'resources': SuggestionsByProgress(None)
     })
     return render_template("public/resources.html",
-        current_event=event, steps=steps)
+        current_event=event, steps=steps, active="resources")
 
 @blueprint.route('/project/<int:project_id>')
 def project(project_id):
@@ -147,7 +147,8 @@ def project_edit(project_id):
         flash('Project updated.', 'success')
         project_action(project_id, 'update', False)
         return redirect(url_for('public.project', project_id=project.id))
-    return render_template('public/projectedit.html', current_event=event, project=project, form=form)
+    return render_template('public/projectedit.html',
+        current_event=event, project=project, form=form)
 
 @blueprint.route('/project/<int:project_id>/post', methods=['GET', 'POST'])
 @login_required
@@ -246,7 +247,7 @@ def project_new(event_id):
                 return project_autoupdate(project.id)
             else:
                 return redirect(url_for('public.project', project_id=project.id))
-    return render_template('public/projectnew.html', current_event=event, form=form)
+    return render_template('public/projectnew.html', active="projectnew", current_event=event, form=form)
 
 @blueprint.route('/project/<int:project_id>/autoupdate')
 @login_required

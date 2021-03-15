@@ -17,11 +17,6 @@
         {% if step.index > 0 or step.resources %}
           <h4 class="title">{{ step.name }}</h4>
         {% endif %}
-        {% if step.index == 1 %}
-        <div class="container join-tip"><p>
-          <a href="#" class="btn btn-primary disabled btn-sm">Join</a> a team and click <a href="#" class="btn btn-success disabled btn-sm">Post</a> to progress through challenge stages.
-        </p></div>
-        {% endif %}
         {% if step.resources %}
         <div class="resource-list col-12">
           {% for resource in step.resources %}
@@ -37,8 +32,12 @@
       </div>
     {% endfor %}
 
+    <div class="container join-tip"><p>
+      <a href="#" class="btn btn-primary disabled btn-sm">Join</a> a team and click <a href="#" class="btn btn-success disabled btn-sm">Post</a> to progress through challenge stages.
+    </p></div>
+
     <center class="mt-5">
-      <a class="btn btn-success btn-lg" href="{{ url_for('public.resource_post') }}">Suggest another</a>
+      <a class="btn btn-success btn-lg" href="{{ url_for('public.resource_post') }}">Suggest a resource</a>
     </center>
   </div>
 </div>
