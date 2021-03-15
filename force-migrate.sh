@@ -8,8 +8,8 @@ if [ "$1" = "psql" ]; then
 	python manage.py db init 2>&1 >/dev/null
 	python manage.py db migrate
 	python manage.py db upgrade
-	sleep 2
-	echo "Upgrade complete"
+	echo "Upgrade complete, 10 second cooldown"
+	sleep 10
 
 elif [ "$1" = "heroku" ]; then
 	if [ -z "$2" ]; then
