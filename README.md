@@ -186,7 +186,7 @@ Dark Bootswatch themes do not play well with the *navbar-light* component used i
 
 In local deployment, you will need to upgrade the database using `./manage.py db upgrade`. On Heroku, a deployment process called **Release** runs automatically. If you get errors like *ERROR [alembic.env] Can't locate revision identified by 'aa969b4f9f51'*, usually the fix is to drop the migration history table (`psql -c "drop table alembic_version"`), and again `db init .. db migrate .. db upgrade`. You can also do this in your database client.
 
-There is a `force-migrate.sh` script to do this, or in Heroku you can set `FORCE_MIGRATE` to `1` for this to happen during a release.
+See also instructions in the `force-migrate.sh` script.
 
 ### Need help setting up SSO
 
