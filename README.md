@@ -28,7 +28,7 @@ You can configure your instance with the following **basic environment** variabl
 * `SERVER_URL` - fully qualified domain name where the site is hosted
 * `SERVER_SSL` - redirect all visitors to HTTPS, applying CSP
 * `CSP_DIRECTIVES` - configure content security policy - see [Talisman docs](https://github.com/GoogleCloudPlatform/flask-talisman#content-security-policy)
-* `DATABASE_URL` - if you are using the Postgres add-on, this would be postgres://username:password@... - in Heroku this is set automatically
+* `DATABASE_URL` - connects to PostgreSQL or another database via `postgres://username:password@...` (in Heroku this is set automatically)
 * `CACHE_TYPE` - speed up the site with built-in, Redis, Memcache - see [Flask-Caching](https://pythonhosted.org/Flask-Caching/)
 
 The following options can be used to toggle **application features**:
@@ -121,6 +121,8 @@ pip install -r requirements/dev.txt
 ```
 
 By default in a dev environment, a SQLite database will be created in the root folder (`dev.db`). You can also install and configure your choice of DBMS [supported by SQLAlchemy](http://docs.sqlalchemy.org/en/rel_1_1/dialects/index.html).
+
+In production, the `DATABASE_URL` configures connectivity to an SQLAlchemy-compatible database engine. This requires a `DRIBDAT_ENV=prod` configuration.
 
 Run the following to create your app's database tables and perform the initial migration:
 
