@@ -156,6 +156,7 @@ class User(UserMixin, PkModel):
 
     def get_cert_path(self, event):
         """ Generate URL to participation certificate """
+        if not event: return None
         if not event.certificate_path: return None
         path = event.certificate_path
         userdata = self.data
