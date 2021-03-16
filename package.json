@@ -2,7 +2,7 @@
   "name": "dribdat",
   "version": "0.5",
   "description": "Open source hackathon platform",
-  "repository": "git@github.com:datalets/dribdat.git",
+  "repository": "git@github.com:hackathons-ftw/dribdat.git",
   "author": "Oleg Lavrovsky <oleg@datalets.ch>",
   "license": "MIT",
   "private": false,
@@ -12,6 +12,6 @@
     "flipclock": "^0.10.5",
     "font-awesome": "^4.7.0",
     "jquery": "^3.4.1",
-    "jquery-resizable-dom": "^0.35.0",
+    "jquery-resizable-dom": "^0.35.0"
   }
 }
