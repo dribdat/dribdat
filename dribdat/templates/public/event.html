@@ -168,7 +168,7 @@
   </div>
 
   {% if current_event and current_event.countdown and not 'off' in config.DRIBDAT_CLOCK %}
-    <a href="{{ url_for('public.dashboard') }}" title="{{ current_event.countdown }}">
+    <a class="container-countdown" href="{{ url_for('public.dashboard') }}" title="{{ current_event.countdown }}">
       <div class="event-countdown" data-start="{{ current_event.countdown }}"></div>
     </a>
   {% endif %}

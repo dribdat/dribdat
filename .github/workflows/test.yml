@@ -37,7 +37,7 @@ jobs:
         run: |
           pip install poetry
           poetry install
-          npx yarn
+          npm install
       - name: Run tests
         run: |
           poetry run pytest tests

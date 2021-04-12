@@ -1,4 +1,6 @@
 node_modules/
+package-lock.json
+yarn.lock
 *.py[cod]
 .flaskenv
 
@@ -38,9 +40,6 @@ tests/.cache
 .project
 .pydevproject
 /*.db
-
-# Hmm ...
-migrations
 
 # Complexity
 output/*.html

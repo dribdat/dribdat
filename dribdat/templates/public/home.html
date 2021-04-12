@@ -21,7 +21,7 @@
 <div class="jumbotron home-page">
   {% if current_event %}
     {% if current_event.countdown and 'up' in config.DRIBDAT_CLOCK %}
-      <a href="{{ url_for('public.dashboard') }}" title="{{ current_event.countdown }}">
+      <a class="container-countdown" href="{{ url_for('public.dashboard') }}" title="{{ current_event.countdown }}">
         <div class="event-countdown" data-start="{{ current_event.countdown }}"></div>
       </a>
     {% endif %}
@@ -51,7 +51,7 @@
       </div>
     </div>
     {% if current_event.countdown and 'down' in config.DRIBDAT_CLOCK %}
-      <a href="{{ url_for('public.dashboard') }}" title="{{ current_event.countdown }}">
+      <a class="container-countdown" href="{{ url_for('public.dashboard') }}" title="{{ current_event.countdown }}">
         <div class="event-countdown" data-start="{{ current_event.countdown }}"></div>
       </a>
     {% endif %}

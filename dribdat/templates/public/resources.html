@@ -8,14 +8,6 @@
 <div class="jumbotron">
   <div class="container">
 
-    <div class="row"><center style="width:100%">
-      <h3 style="font-weight:bold; text-align: right;">
-        R E S
-        O U R
-        C E S _
-      </h3>
-    </center></div>
-
     <a name="steps"></a>
     {% for step in steps %}
       <div class="row step">
@@ -24,11 +16,6 @@
         {% endif %}
         {% if step.index > 0 or step.resources %}
           <h4 class="title">{{ step.name }}</h4>
-        {% endif %}
-        {% if step.index == 1 %}
-        <div class="container join-tip"><p>
-          <a href="#" class="btn btn-primary disabled btn-sm">Join</a> a team and click <a href="#" class="btn btn-success disabled btn-sm">Post</a> to progress through challenge stages.
-        </p></div>
         {% endif %}
         {% if step.resources %}
         <div class="resource-list col-12">
@@ -45,15 +32,19 @@
       </div>
     {% endfor %}
 
+    <div class="container join-tip"><p>
+      <a href="#" class="btn btn-primary disabled btn-sm">Join</a> a team and click <a href="#" class="btn btn-success disabled btn-sm">Post</a> to progress through challenge stages.
+    </p></div>
+
     <center class="mt-5">
-      <a class="btn btn-success btn-lg" href="{{ url_for('public.resource_post') }}">Suggest another</a>
+      <a class="btn btn-success btn-lg" href="{{ url_for('public.resource_post') }}">Suggest a resource</a>
     </center>
   </div>
 </div>
 
 <p id="intro">
-  <a href="/about">dribdat</a> is developed by the open data community, and is geared towards impactful hackathons where the sustainability and real-world impact of projects is a key factor. We have hard-coded our 7-step hackathon pipeline into this platform, but YOU decide what constitutes the building blocks of every step. When you contribute
-  code, data or tool tips, the event organizers can check and assign them to one of the steps.
+  <a href="/about">dribdat</a> is developed by the open data community, and is geared towards impactful hackathons where the sustainability and real-world impact of projects is a key factor.
+  When you contribute code, data or tool tips here, the event organizers can check and assign them to one of the steps.
 </p>
 
 <center style="margin-top:1em">

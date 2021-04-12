@@ -28,7 +28,7 @@ You can configure your instance with the following **basic environment** variabl
 * `SERVER_URL` - fully qualified domain name where the site is hosted
 * `SERVER_SSL` - redirect all visitors to HTTPS, applying CSP
 * `CSP_DIRECTIVES` - configure content security policy - see [Talisman docs](https://github.com/GoogleCloudPlatform/flask-talisman#content-security-policy)
-* `DATABASE_URL` - if you are using the Postgres add-on, this would be postgres://username:password@... - in Heroku this is set automatically
+* `DATABASE_URL` - connects to PostgreSQL or another database via `postgresql://username:password@...` (in Heroku this is set automatically)
 * `CACHE_TYPE` - speed up the site with built-in, Redis, Memcache - see [Flask-Caching](https://pythonhosted.org/Flask-Caching/)
 
 The following options can be used to toggle **application features**:
@@ -62,8 +62,9 @@ For **uploading images** and other files directly within dribdat, you can config
 * `S3_SECRET` - the generated secret (long, mixed case)
 * `S3_BUCKET` - the name of your S3 bucket
 * `S3_REGION` - defaults to 'eu-west-1'
-* `S3_FOLDER` - leave blank unless you want to store to a subfolder
-* `S3_HTTPS` - the URL for web access to your bucket's public files
+* `S3_FOLDER` - skip unless you want to store to a subfolder
+* `S3_HTTPS` - URL for web access to your bucket's public files
+* `S3_ENDPOINT` - alternative endpoint for self-hosted Object Storage
 * `MAX_CONTENT_LENGTH` - defaults to 1048576 bytes (1 MB) file size
 
 **Tip**: Use `.flaskenv` or `.env` to store environment variables for local development.
@@ -121,6 +122,8 @@ pip install -r requirements/dev.txt
 
 By default in a dev environment, a SQLite database will be created in the root folder (`dev.db`). You can also install and configure your choice of DBMS [supported by SQLAlchemy](http://docs.sqlalchemy.org/en/rel_1_1/dialects/index.html).
 
+In production, the `DATABASE_URL` configures connectivity to an SQLAlchemy-compatible database engine. This requires a `DRIBDAT_ENV=prod` configuration.
+
 Run the following to create your app's database tables and perform the initial migration:
 
 ```
@@ -129,11 +132,7 @@ python manage.py db migrate
 python manage.py db upgrade
 ```
 
-Install frontend resources using [Yarn](https://yarnpkg.com/en/docs/getting-started):
-
-```
-yarn install
-```
+Install a local copy of frontend resources for offline development using [yarn install](https://yarnpkg.com/en/docs/getting-started). These will be used when `FLASK_ENV=dev`, otherwise a CDN will be used in production.
 
 Finally, run this command (or just `debug.sh`) to start the server:
 
@@ -177,10 +176,6 @@ For a full migration command reference, run `python manage.py db --help`.
 
 A quick guide to a few common errors:
 
-### Front-end is broken
-
-If you are not seeing the icons and other things are not working on the front end, chances are you need to run a build. Just type `yarn` in the home folder, or run the **Build** command in your _Resources_ tab in Heroku.
-
 ### Embedding the front-end
 
 There is an Embed button in the event page and in the admin which provides you with code for an IFRAME that just contains the hexagrid. If you would like to embed the entire application, and find it more intuitive to hide the navigation, add `?clean=1` to the URL. To also hide the top header, use `?minimal=1`.
@@ -191,7 +186,11 @@ Dark Bootswatch themes do not play well with the *navbar-light* component used i
 
 ### Cannot upgrade database
 
-In local deployment, you will need to upgrade the databse using `./manage.py db upgrade`. On Heroku, a deployment process called **Release** runs automatically. If you get errors like *ERROR [alembic.env] Can't locate revision identified by 'aa969b4f9f51'*, usually the fix is to drop the migration history table (`psql -c "drop table alembic_version"`), and again `db init .. db migrate .. db upgrade`. You can also do this in your database client.
+In local deployment, you will need to upgrade the database using `./manage.py db upgrade`. On Heroku, a deployment process called **Release** runs automatically.
+
+If you get errors like *ERROR [alembic.env] Can't locate revision identified by 'aa969b4f9f51'*, your migration history is out of sync. You can just set `FORCE_MIGRATE` to 1 when you run releases.
+
+See also instructions in the `force-migrate.sh` script.
 
 ### Need help setting up SSO
 

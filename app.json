@@ -14,7 +14,6 @@
     "postdeploy": "python manage.py db init && python manage.py db migrate && python manage.py db upgrade"
   },
   "buildpacks": [
-    { "url": "heroku/nodejs" },
     { "url": "heroku/python" }
   ],
   "env": {

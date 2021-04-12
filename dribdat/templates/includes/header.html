@@ -12,7 +12,7 @@
         {% if event.location %}
           <div class="event-location">{{ event.location }}</div>
         {% endif %}
-        {% if not event.logo_url and event.hostname %}
+        {% if event.hostname %}
           <div class="event-hostname">{{ event.hostname }}</div>
         {% endif %}
       </div>
