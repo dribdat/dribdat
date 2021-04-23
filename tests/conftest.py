@@ -11,7 +11,7 @@ from dribdat.settings import TestConfig
 from .factories import UserFactory, ProjectFactory
 
 
-@pytest.yield_fixture(scope='function')
+@pytest.fixture(scope='function')
 def app():
     """An application for the tests."""
     _app = init_app(TestConfig)
@@ -29,7 +29,7 @@ def testapp(app):
     return TestApp(app)
 
 
-@pytest.yield_fixture(scope='function')
+@pytest.fixture(scope='function')
 def db(app):
     """A database for the tests."""
     _db.app = app

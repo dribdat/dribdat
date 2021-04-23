@@ -48,7 +48,7 @@
         $indicator.find('i').css('color', 'green');
         $button.removeAttr('disabled').html('Update now');
         if (typeof data.name === 'undefined' || data.name === '') {
-          window.alert('Project data could not be fetched - enter a valid Remote link.');
+          window.alert('Project data could not be fetched - enter a valid Sync link.');
           $('#is_autoupdate').prop('checked', false);
           return;
         }
@@ -98,6 +98,7 @@
     var $togglebtn = $('button[data-target="#uploadImage"]');
     $('.fld-longtext').append($togglebtn);
     $('.fld-image_url').append($togglebtn.clone());
+    $('.fld-autotext_url').parent().prepend($('input#submit').parent().clone());
     var $dialog = $(this);
     var $inputfd = $dialog.find('input[type="file"]');
     $inputfd.change(function() {
@@ -152,6 +153,33 @@
     }); // -change
   }); // -#uploadImage
 
+  // Simple delay function, thanks to Christian C. Salvadó
+  function delay(callback, ms) {
+    var timer = 0;
+    return function() {
+      var context = this, args = arguments;
+      clearTimeout(timer);
+      timer = setTimeout(function () {
+        callback.apply(context, args);
+      }, ms || 0);
+    };
+  }
+
+  // About page simple stupid search
+  var lastSearch = null;
+  $('#search input[name=q]')
+    .keyup(delay(function(e) {
+      var q = $(this).val();
+      if (q.length < 4 || q.trim() == lastSearch) return;
+      lastSearch = q.trim();
+      $ul = $('.search-results').empty();
+      $.get($(this).parent().attr('action') + '?q=' + q, function(d) {
+        d.projects.forEach(function(p) {
+          $ul.append('<li><a href="' + p.url + '">' + p.name + '</a></li>');
+        });
+      });
+    }, 500));
+
   // Clickable categories navigation
   var $navCategories = $('.nav-categories .btn-group label').click(function(e) {
     $(this).parent().find('.active').removeClass('active');
@@ -182,6 +210,12 @@
   // Roll up categories if there is only one, and no projects
   if ($navCategories.length === 1)
     $navCategories.click().parent().parent().hide();
+
+  // Roll up resources on overview page
+  $('.resources-page .step .resource-list').hide().parent()
+    .addClass('active').click(function() {
+      $(this).find('.resource-list').slideDown();
+    });
 
   // Show embed code when button clicked
   $('#embed-link').click(function(e) {

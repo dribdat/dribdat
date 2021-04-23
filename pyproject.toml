@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "dribdat"
-version = "0.4.5"
+version = "0.5"
 description = "Open source hackathon platform"
 authors = ["Oleg Lavrovsky <oleg@datalets.ch>"]
 
@@ -37,13 +37,13 @@ requests = ">=2.18.4"
 sqlalchemy = ">=1.1.14"
 werkzeug = ">=0.12"
 wtforms = ">=2.1"
-flask-dance = { git = "https://github.com/loleg/flask-dance.git", branch = "main" }
 email_validator = "^1.1.1"
 python-dotenv = "^0.13.0"
 flask-talisman = "^0.7.0"
 pystache = "^0.5.4"
 micawber = "^0.5.1"
 boto3 = "^1.16.13"
+flask-dance = "^3.3.1"
 
 [tool.poetry.dev-dependencies]
 factory-boy = "*"
@@ -56,5 +56,6 @@ flake8-quotes = "*"
 Flask-DebugToolbar = "*"
 isort = "*"
 pep8-naming = "*"
+pyopenssl = "^20.0.0"
 pytest = "*"
 WebTest = "*"

@@ -22,14 +22,13 @@ form input[type="checkbox"] {
 .navbar-form input[type="password"] {
   width: 180px;
 }
-.form-register {
-  width: 50%;
-}
 .form-register .form-control {
   position: relative;
   font-size: 16px;
   height: auto;
   padding: 10px;
+  max-width: 25em;
+  display: inline-block;
   -webkit-box-sizing: border-box;
      -moz-box-sizing: border-box;
           box-sizing: border-box;
@@ -47,6 +46,18 @@ form input[type="checkbox"] {
   font-size: 90%;
   margin: 1em 0;
   opacity: 0.8;
+}
+.admin .form-group .control-label {
+  font-size: 125%; font-weight: bold;
+}
+.form-group .radio-inline {
+  margin-right: 1em;
+}
+.admin .form-group .checkbox label {
+  font-weight: bold;
+}
+.admin .form-group .checkbox label:hover {
+  background: highlight;
 }
 
 /* pagination */
@@ -111,6 +122,10 @@ ul.help-block {
 .section-header .event-hostname,
 .section-header .event-location {
   font-size: 110%; color: #555;
+  display: inline-block;
+}
+.section-header .event-hostname::before {
+  content: ' - ';
 }
 .section-header .event-date {
   font-size: 120%; color: #000;
@@ -128,7 +143,7 @@ ul.help-block {
 nav.navbar {
   margin-bottom: 1em;
   box-shadow: 0px 0px 20px rgba(0,0,0,0.5);
-  /* background: #f7f7f7; */
+  border: 0px;
 }
 nav.navbar .navbar-brand {
     color: black;
@@ -146,6 +161,17 @@ nav .navbar-nav .nav-item {
 .home-page h2 {
   text-align: center;
   font-weight: bold;
+}
+.home .an-event .card {
+  width: 100%;
+}
+.home .an-event-meta {
+  font-size: 90%;
+  color: #777;
+  text-align: right;
+}
+.home .an-event-meta b {
+  display: block;
 }
 
 /* Customize the flipclock widget */
@@ -176,8 +202,13 @@ nav .navbar-nav .nav-item {
     display: none;
   }
 }
-.event-footer .event-countdown {
-  width: 600px;
+.container-countdown {
+  width: 100%;
+  display: block;
+  text-align: center;
+}
+.event-countdown {
+  display: inline-block;
 }
 @media (max-width: 1190px) {
   .event-footer .event-countdown {
@@ -237,7 +268,8 @@ nav .navbar-nav .nav-item {
 }
 @media (max-width: 420px) {
   .event-home .honeycomb .hexagon {
-    margin-bottom: 1px;
+    margin-bottom: auto;
+    top: auto;
   }
   .event-home .honeycomb {
     text-align: center;
@@ -271,6 +303,7 @@ nav .navbar-nav .nav-item {
 }
 .hexagon {
   margin-bottom: 73px;
+  border-bottom: 4px solid transparent;
 }
 .hexagon:hover {
   box-shadow: 0px 3px 3px lightblue;
@@ -389,6 +422,8 @@ nav .navbar-nav .nav-item {
 .project-home .jumbotron.project-page {
   border-top-left-radius: 20px;
   border-top-right-radius: 20px;
+  border: 5px solid #ccc;
+  margin-top: 1em;
 }
 .project-home .project-image.underlay {
   filter: blur(2px);
@@ -456,18 +491,19 @@ nav .navbar-nav .nav-item {
 
 .project-page .project-longtext { margin: 1em 0em; font-size: 125%; }
 .project-page .project-autotext { margin: 0em; }
-.project-page .project-buttons { display: block; text-align: center; }
-.project-page .project-buttons .btn {
+
+.project-buttons { display: block; text-align: center; }
+.project-buttons .btn {
   display: inline-block;
   text-align: center;
   font-size: 140%;
   width: 5em;
   background: rgba(255, 255, 255, 0.5);
 }
-.project-page .project-buttons .btn:hover {
+.project-buttons .btn:hover {
   background: #dde;
 }
-.project-page .project-buttons .btn span {
+.project-buttons .btn span {
   font-size: 300%; display: block;
 }
 
@@ -480,6 +516,7 @@ nav .navbar-nav .nav-item {
   overflow: hidden;
 }
 
+.userprofile .nav,
 .project-page .nav {
   clear: both;
   padding: 20px 5px 5px;
@@ -562,6 +599,26 @@ nav .navbar-nav .nav-item {
   background: url(https://raw.githubusercontent.com/RickStrahl/jquery-resizable/master/assets/wingrip.png) no-repeat;
  }
 
+/* Resources */
+.resource-card {
+  display: inline-block;
+  background: rgba(0,0,0,0.06);
+  width: 90%;
+  padding: 0.1em 0.5em;
+  border-left: 1px solid #ccc;
+  border-top: 1px solid #ccc;
+  margin-right: 0.5em;
+}
+.resource-card:hover {
+  background: rgba(0,0,0,0.03);
+  text-decoration: none;
+}
+.resource-card p {
+  font-size: 80%;
+  line-height: normal;
+  color: #333;
+}
+
 /* Oneboxes in content */
 .onebox {
   border: 2px solid #ddd;
@@ -605,6 +662,7 @@ nav .navbar-nav .nav-item {
 .projectform .fld-progress .radio-inline { display: block; }
 .projectform .fld-progress { border-width: 25px; padding-left: 5px; border-top: none !important; border-bottom: none !important; border-right: none !important; border-style: solid; -webkit-border-image: -webkit-gradient(linear, 0 100%, 0 0, from(black), to(rgba(0, 0, 0, 0))) 1 100%; -webkit-border-image: -webkit-linear-gradient(bottom, black, rgba(0, 0, 0, 0)) 1 100%; -moz-border-image: -moz-linear-gradient(bottom, black, rgba(0, 0, 0, 0)) 1 100%; -o-border-image: -o-linear-gradient(bottom, black, rgba(0, 0, 0, 0)) 1 100%; border-image: linear-gradient(to top, black, rgba(0, 0, 0, 0)) 1 100%; }
 .projectform .fld-progress select { font-size: 150%; }
+.projectform form .control-label[for='resource'],
 .projectform form .control-label[for='note'] { margin-top: 0px; }
 .projectform form .checkbox label[for="is_autoupdate"] {
   margin-left:30%; margin-top:20px; padding:10px;
@@ -664,6 +722,11 @@ nav .navbar-nav .nav-item {
 }
 .userform .btn-submit {
   min-width: 7em;
+}
+.projectform .form-actions input {
+  margin-top: 1em;
+  font-size: 150%;
+  width: 100%;
 }
 
 /* Code blocks */
@@ -771,6 +834,56 @@ pre { color: #333; background: white; }
   }
 }
 
+/* resource page */
+
+.resources-page .step {
+  margin-top: 0.5em;
+}
+.resources-page .step .title {
+  padding: 3px;
+  margin-left: 2rem;
+  display: block; width: 100%;
+  border-bottom: 1px solid #999;
+  z-index: 1;
+}
+.resources-page .step.active .title {
+  color: blue;
+  cursor: pointer;
+}
+.resources-page .step .number {
+  font-size: 3rem;
+  position: absolute;
+  z-index: 0;
+  margin-top: -1rem;
+  color: #bbb;
+  font-weight: bold;
+}
+.resources-page .step .resource-card {
+  background: white;
+  margin: 0.5em 0.3em;
+}
+.resources-page .join-tip {
+  opacity: 0.8;
+  margin: 1em;
+}
+.resources-page .resource-list {
+  margin: 0; padding: 0;
+  margin-bottom: 1em;
+  margin-left: 2rem;
+}
+.resources-page .event-resources {
+  padding: 2rem; margin: 0;
+  font-size: 125%;
+}
+.resourcepage .resource-summary,
+.resourcepage .resource-content {
+  margin: 20pt;
+}
+.resourcepage .resource-projects {
+  padding-top: 1em;
+  border-top: 1px solid #999;
+}
+
 /* avatar and profile styles */
 
 .team-gravatar img {
@@ -829,7 +942,6 @@ pre { color: #333; background: white; }
 }
 .profile-projects {
   padding: 1em 2em;
-  margin: 1em 0em;
   overflow-x: auto;
   background: #eee;
   width: 100%;
@@ -974,6 +1086,17 @@ Challenges view
 }
 
 /* ------------
+Search engine
+--------------- */
+
+.search-results {
+  list-style: none; margin: 0px; padding: 0px;
+}
+.search-results li {
+  margin: 1em; margin-left: 0px;
+}
+
+/* ------------
 Data Packages view
 --------------- */
 
@@ -1010,8 +1133,19 @@ SlackIn button
 
 .signin-slack {
   font-size: 0px; border: 0px !important;
-  background: url('/static/img/btn-sign-in-with-slack.png') no-repeat;
+  background: url('/static/img/sso/slack-sign-in.png') no-repeat;
   width: 173px; height: 41px;
+}
+.signin-azure {
+  border: 0px !important;
+  background: url('/static/img/sso/azure_teams.svg') no-repeat;
+  width: auto; height: 41px;
+  padding-left: 50px;
+}
+.signin-github {
+  font-size: 0px; border: 0px !important;
+  background: url('/static/img/sso/github-sign-in.png') no-repeat;
+  width: 372px; height: 64px;
 }
 
 .__slackin { margin-bottom: 10px; display: block; }

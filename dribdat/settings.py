@@ -10,14 +10,16 @@ class Config(object):
     """Base configuration."""
 
     SECRET_KEY = os_env.get('DRIBDAT_SECRET', 'A-big-scary-Secret-goes-HERE.')
+    SECRET_API = os_env.get('DRIBDAT_APIKEY', None)
+
+    # Customization options
+    DRIBDAT_CLOCK = os_env.get('DRIBDAT_CLOCK', 'down')
+    DRIBDAT_STYLE = os_env.get('DRIBDAT_STYLE', '')
+    DRIBDAT_THEME = os_env.get('DRIBDAT_THEME', 'simplex')
 
     # Application options
-    DRIBDAT_CLOCK = os_env.get('DRIBDAT_CLOCK', 'down')
-    DRIBDAT_APIKEY = os_env.get('DRIBDAT_APIKEY', None)
     DRIBDAT_NOT_REGISTER = os_env.get('DRIBDAT_NOT_REGISTER', False)
-
-    # TODO: per-event
-    DRIBDAT_CERT_PATH = os_env.get('DRIBDAT_CERT_PATH', None)
+    DRIBDAT_SHOW_SUBMITS = os_env.get('DRIBDAT_SHOW_SUBMITS', True)
 
     # Single sign-on support
     OAUTH_ID = os_env.get('OAUTH_ID', None)
@@ -38,7 +40,7 @@ class Config(object):
     # Server settings
     SERVER_NAME = os_env.get('SERVER_URL', '127.0.0.1:5000')
     SERVER_SSL = os_env.get('SERVER_SSL', None)
-    CSP_DIRECTIVES = os_env.get('CSP_DIRECTIVES', None)
+    CSP_DIRECTIVES = os_env.get('CSP_DIRECTIVES', "default-src * 'unsafe-inline' 'unsafe-eval' data:")
     TIME_ZONE = os_env.get('TIME_ZONE', 'UTC')
     MAX_CONTENT_LENGTH = os_env.get('MAX_CONTENT_LENGTH', 1 * 1024 * 1024)
 
@@ -56,6 +58,7 @@ class Config(object):
     S3_BUCKET = os_env.get('S3_BUCKET', None)
     S3_FOLDER = os_env.get('S3_FOLDER', '')
     S3_HTTPS = os_env.get('S3_HTTPS', None)
+    S3_ENDPOINT = os_env.get('S3_ENDPOINT', None)
 
 
 class ProdConfig(Config):
@@ -63,12 +66,14 @@ class ProdConfig(Config):
 
     ENV = 'prod'
     DEBUG = False
+    DEBUG_TB_ENABLED = False  # Disable Debug toolbar
     CACHE_TYPE = os_env.get('DRIBDAT_CACHE_TYPE', 'simple')
     CACHE_MEMCACHED_SERVERS = os_env.get('MEMCACHED_SERVERS', '')
     CACHE_MEMCACHED_USERNAME = os_env.get('MEMCACHED_USERNAME', '')
     CACHE_MEMCACHED_PASSWORD = os_env.get('MEMCACHED_PASSWORD', '')
     SQLALCHEMY_DATABASE_URI = os_env.get('DATABASE_URL', 'postgresql://localhost/example')
-    DEBUG_TB_ENABLED = False  # Disable Debug toolbar
+    if SQLALCHEMY_DATABASE_URI.startswith('postgres:'):
+        SQLALCHEMY_DATABASE_URI = SQLALCHEMY_DATABASE_URI.replace('postgres:', 'postgresql:')
 
 
 class DevConfig(Config):

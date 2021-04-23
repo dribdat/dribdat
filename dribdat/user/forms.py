@@ -2,22 +2,22 @@
 from flask_wtf import FlaskForm
 from wtforms import PasswordField, StringField
 from wtforms.validators import DataRequired, Email, EqualTo, Length
+from wtforms.fields.html5 import URLField, EmailField
 
 from .models import User
 
 
 class RegisterForm(FlaskForm):
-    """Register form."""
-
+    """ Ye olde user registration form """
     username = StringField('Username',
                            validators=[DataRequired(), Length(min=3, max=25)])
-    email = StringField('Email',
+    email = EmailField('Email',
                         validators=[DataRequired(), Email(), Length(min=6, max=40)])
     password = PasswordField('Password',
                              validators=[DataRequired(), Length(min=6, max=40)])
     confirm = PasswordField('Verify password',
                             [DataRequired(), EqualTo('password', message='Passwords must match')])
-    webpage_url = StringField(u'Online profile')
+    webpage_url = URLField(u'Online profile')
 
     def __init__(self, *args, **kwargs):
         """Create instance."""

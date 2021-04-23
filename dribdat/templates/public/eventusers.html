@@ -4,9 +4,10 @@
 {% block page_title %}{{current_event.name}} / Participants{% endblock %}
 
 {% block content %}
+{% cache 300, 'eventusers-%d' % current_event.id %}
 <div class="event-participants">
 {% if participants %}
-  <h1>Awesome supporters</h1>
+  <h1>Awesome participants</h1>
   <div class="participant-box">
   {% for user in participants %}
     {{ misc.render_user_profile(user) }}
@@ -14,15 +15,21 @@
   </div>
 
   <div category-id="infobox">
-    <center><h4><i class="fa fa-arrow-circle-o-up"></i> Join a project or challenge to be listed here!</h4>
-    <p>As <b class="usercount">{{ usercount }}</b> have done in
-      <a href="{{ url_for('public.event', event_id=current_event.id) }}">
-      this event</a> already.</p></center>
+    {% if current_event.has_started and not current_event.has_finished %}
+      <center><h4><i class="fa fa-arrow-circle-o-up"></i> Join a project or challenge to be listed here!</h4>
+      <p>As <b class="usercount">{{ usercount }}</b> have done in
+        <a href="{{ url_for('public.event', event_id=current_event.id) }}">
+        this event</a> already.</p></center>
+    {% else %}
+      <center><b class="usercount">{{ usercount }}</b> contributors to this platform</center>
+    {% endif %}
   </div>
+
 {% else %}
 <h2>This event does not yet have any projects or challenges.
   Or perhaps nobody has joined any that exist.
   Now is a good time to start some, and encourage participants to <b>JOIN</b> them!</h2>
 {% endif %}
 </div><!-- /event-participants -->
+{% endcache %}
 {% endblock %}

@@ -7,11 +7,21 @@
       <i style="-moz-transform: scale(-1, 1); -webkit-transform: scale(-1, 1); -o-transform: scale(-1, 1); -ms-transform: scale(-1, 1); transform: scale(-1, 1);" class="fa fa-thumbs-up"></i>
       A T</small>
       </a>
-      <a class="darkmode" href="#">☽</a>
+      <a class="darkmode" href="#">☽<small>&nbsp;darkmode</small></a>
     </li>
+
     {% if config.ANALYTICS_HREF %}
     <li>
       <a href="{{ config.ANALYTICS_HREF }}">Analytics</a>
+    </li>
+    {% endif %}
+
+    {% if current_user and current_user.is_authenticated %}
+    <li>
+      <a href="{{ url_for('auth.logout') }}">
+        <i class="fa fa-sign-out"></i>
+        Logout
+      </a>
     </li>
     {% endif %}
   </ul>

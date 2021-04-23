@@ -18,9 +18,14 @@
               <th>Created</th>
               <th>Updated</th>
               <th>{% if event %}
-                <a href="{{ url_for('admin.event_autosync', event_id=event.id) }}" class="btn btn-sm btn-warning">
-                  Sync all
-                </a>
+                <div class="btn-group">
+                  <a href="{{ url_for('admin.event_autosync', event_id=event.id) }}" class="btn btn-sm btn-warning">
+                    Sync all
+                  </a>
+                  <a href="{{ url_for('api.project_list_event_csv', event_id=event.id) }}" class="btn btn-sm btn-info">
+                    <i class="fa fa-download"></i>&nbsp;CSV
+                  </a>
+                </div>
               {% endif %}</th>
             </tr>
         </thead>

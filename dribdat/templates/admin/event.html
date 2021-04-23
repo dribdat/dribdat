@@ -7,6 +7,8 @@
     <h2>Update event</h2>
     <p>Visit the <a href="{{ url_for('admin.event_projects', event_id=event.id) }}">Project Admin</a> to manage entries from this event.</p>
 
+    <p>Note that times are currently set in <u title="TIME_ZONE environment setting">{{ config.TIME_ZONE }}</u> time.</p>
+
     {{ render_form(url_for('admin.event', event_id=event.id), form) }}
 
     <a href="{{ url_for('admin.event_delete', event_id=event.id) }}" class="btn btn-sm btn-danger"

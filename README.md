@@ -1,16 +1,16 @@
 # Dribdat
 
-[![Travis](https://travis-ci.org/datalets/dribdat.svg?branch=master)](https://travis-ci.org/datalets/dribdat)
-[![Coveralls](https://coveralls.io/repos/github/datalets/dribdat/badge.svg?branch=master)](https://coveralls.io/github/datalets/dribdat?branch=master)
+![Github Actions build](https://github.com/hackathons-ftw/dribdat/workflows/build/badge.svg)
+[![Coveralls](https://coveralls.io/repos/github/hackathons-ftw/dribdat/badge.svg?branch=main)](https://coveralls.io/github/hackathons-ftw/dribdat?branch=main)
 [![Mattermost](https://img.shields.io/badge/Mattermost-chat-blue.svg)](https://team.opendata.ch/signup_user_complete/?id=74yuxwruaby9fpoukx9bmoxday)
 
 ### An open source platform for time-limited team-based data-driven solutions-focused collaboration known as the *Hackathon*.
 
-If you need help or advice in setting up your event, or would like to contribute to the project: please get in touch via [datalets.ch](https://datalets.ch) or [GitHub Issues](https://github.com/hackathons-ftw/dribdat/issues).
+If you need help or advice in setting up your event, or would like to contribute to the project: please get in touch via [GitHub Issues](https://github.com/hackathons-ftw/dribdat/issues) or [e-mail](mailto:dribdat@datalets.ch).
 
 For more background and references, see [USAGE](USAGE.md) and [ABOUT](ABOUT.md). The rest of this document has details for deploying the application.
 
-## Quickstart
+# Quickstart
 
 This project can be deployed to any server capable of serving Python applications, and is set up for fast deployment to the [Heroku](http://heroku.com) cloud:
 
@@ -28,7 +28,7 @@ You can configure your instance with the following **basic environment** variabl
 * `SERVER_URL` - fully qualified domain name where the site is hosted
 * `SERVER_SSL` - redirect all visitors to HTTPS, applying CSP
 * `CSP_DIRECTIVES` - configure content security policy - see [Talisman docs](https://github.com/GoogleCloudPlatform/flask-talisman#content-security-policy)
-* `DATABASE_URL` - if you are using the Postgres add-on, this would be postgres://username:password@... - in Heroku this is set automatically
+* `DATABASE_URL` - connects to PostgreSQL or another database via `postgresql://username:password@...` (in Heroku this is set automatically)
 * `CACHE_TYPE` - speed up the site with built-in, Redis, Memcache - see [Flask-Caching](https://pythonhosted.org/Flask-Caching/)
 
 The following options can be used to toggle **application features**:
@@ -37,9 +37,10 @@ The following options can be used to toggle **application features**:
 * `DRIBDAT_SECRET` - a long scary string for hashing your passwords - in Heroku this is set automatically
 * `DRIBDAT_APIKEY` - for connecting clients to the remote [API](#api)
 * `DRIBDAT_NOT_REGISTER` - set to True to disallow creating accounts on this server
+* `DRIBDAT_SHOW_SUBMITS` - set to False to moderate resource submissions on the site
 * `DRIBDAT_THEME` - can be set to one of the [Bootswatch themes](https://bootswatch.com/)
-* `DRIBDAT_CLOCK` - use 'up' or 'down' to change the position, and 'off' to hide the countdown
-* `DRIBDAT_CERT_PATH` - a URL that prefixes the download link for user certificates, followed by the SSO_ID and `.pdf` extension
+* `DRIBDAT_STYLE` - provide the address to a CSS stylesheet for custom global styles
+* `DRIBDAT_CLOCK` - use 'up' or 'down' to change the position, or 'off' to hide the countdown
 
 Support for **Web analytics** can be configured using one of the following variables:
 
@@ -48,12 +49,12 @@ Support for **Web analytics** can be configured using one of the following varia
 * `ANALYTICS_GOOGLE` (starts with "UA-...")
 * `ANALYTICS_HREF` - an optional link in the footer to a public dashboard for your analytics
 
-OAuth 2.0 support for **Single Sign-On** is currently available using [Flask Dance](https://flask-dance.readthedocs.io/) (see [issue #118](https://github.com/hackathons-ftw/dribdat/issues/118)). To authenticate your users, the following variables should be set:
+OAuth 2.0 support for **Single Sign-On** is currently available using [Flask Dance](https://flask-dance.readthedocs.io/). Register your app with the provider (see SSO tips below), and set the following variables:
 
-* `OAUTH_TYPE` - e.g. 'Slack'
-* `OAUTH_ID` - the Client ID of your app (e.g. from [api.slack.com](https://api.slack.com/apps/))
+* `OAUTH_TYPE` - e.g. 'Slack', 'GitHub', 'Azure'
+* `OAUTH_ID` - the Client ID of your app
 * `OAUTH_SECRET` - the Client Secret of your app
-* `OAUTH_DOMAIN` - (optional) subdomain of your Slack instance
+* `OAUTH_DOMAIN` - (optional) subdomain of your Slack instance, or AD tenant for Azure
 
 For **uploading images** and other files directly within dribdat, you can configure S3 through Amazon and compatible providers:
 
@@ -61,8 +62,9 @@ For **uploading images** and other files directly within dribdat, you can config
 * `S3_SECRET` - the generated secret (long, mixed case)
 * `S3_BUCKET` - the name of your S3 bucket
 * `S3_REGION` - defaults to 'eu-west-1'
-* `S3_FOLDER` - leave blank unless you want to store to a subfolder
-* `S3_HTTPS` - the URL for web access to your bucket's public files
+* `S3_FOLDER` - skip unless you want to store to a subfolder
+* `S3_HTTPS` - URL for web access to your bucket's public files
+* `S3_ENDPOINT` - alternative endpoint for self-hosted Object Storage
 * `MAX_CONTENT_LENGTH` - defaults to 1048576 bytes (1 MB) file size
 
 **Tip**: Use `.flaskenv` or `.env` to store environment variables for local development.
@@ -99,7 +101,7 @@ If you would like to use external clients, like the chatbot, to remote control D
 
 For more details see [api.py](dribdat/public/api.py)
 
-## Developer guide
+# Developer guide
 
 Install Python, Virtualenv and Pip, or [Poetry](https://python-poetry.org/) to start working with the code.
 
@@ -120,6 +122,8 @@ pip install -r requirements/dev.txt
 
 By default in a dev environment, a SQLite database will be created in the root folder (`dev.db`). You can also install and configure your choice of DBMS [supported by SQLAlchemy](http://docs.sqlalchemy.org/en/rel_1_1/dialects/index.html).
 
+In production, the `DATABASE_URL` configures connectivity to an SQLAlchemy-compatible database engine. This requires a `DRIBDAT_ENV=prod` configuration.
+
 Run the following to create your app's database tables and perform the initial migration:
 
 ```
@@ -128,11 +132,7 @@ python manage.py db migrate
 python manage.py db upgrade
 ```
 
-Install frontend resources using [Yarn](https://yarnpkg.com/en/docs/getting-started):
-
-```
-yarn install
-```
+Install a local copy of frontend resources for offline development using [yarn install](https://yarnpkg.com/en/docs/getting-started). These will be used when `FLASK_ENV=dev`, otherwise a CDN will be used in production.
 
 Finally, run this command (or just `debug.sh`) to start the server:
 
@@ -142,24 +142,19 @@ FLASK_DEBUG=1 python manage.py run
 
 You will see a pretty welcome screen at http://127.0.0.1:5000
 
+## Coding tips
+
+This section has some advice for developers and operators.
+
 ### Shell access
 
-To open the interactive shell, run: `python manage.py shell` (or, using the [Heroku toolchain](https://devcenter.heroku.com/categories/command-line), `heroku run python manage.py shell`)
-
-By default, you will have access to the `User` model, as well as Event, Project, Category, Activity. For example, to promote to admin and reset the password of the first user:
-
-```
-u = User.query.first()
-u.is_admin = True
-u.set_password('Ins@nEl*/c0mpl3x')
-u.save()
-```
+To open the interactive shell, run: `python manage.py shell` (or, using the [Heroku toolchain](https://devcenter.heroku.com/categories/command-line), `heroku run python manage.py shell`). By default, you will have access to the `User` model, as well as Event, Project, Category, Activity.
 
 ### Running Tests
 
-To run all tests, run: `python manage.py test`
+To run all tests, whose source is in the **tests** folder, run: `python manage.py test`
 
-## Migrations
+### Migrations
 
 Whenever a database migration needs to be made. Run the following commands:
 
@@ -177,19 +172,48 @@ To apply the migration. Watch out for any errors in the process.
 
 For a full migration command reference, run `python manage.py db --help`.
 
-# Troubleshooting
+## Troubleshooting
 
-A quick guide to a few common errors.
+A quick guide to a few common errors:
 
-## Cannot upgrade database
+### Embedding the front-end
 
-If you get errors like *ERROR [alembic.env] Can't locate revision identified by 'aa969b4f9f51'*, usually the fix is to drop the migration history table (`psql -c "drop table alembic_version"`), and again `db init .. db migrate .. db upgrade`. You can do this in your database client.
+There is an Embed button in the event page and in the admin which provides you with code for an IFRAME that just contains the hexagrid. If you would like to embed the entire application, and find it more intuitive to hide the navigation, add `?clean=1` to the URL. To also hide the top header, use `?minimal=1`.
 
-In the case of Heroku, there's a separate process called **Upgrade** which you can find in your _Resources_ tab. Run it and watch the logs for a minute until it completes, then turn it off again.
+### Navigation is not visible
 
-## Front-end is broken
+Dark Bootswatch themes do not play well with the *navbar-light* component used in our layout (`nav.html`). Override the styles by hand using the `DRIBDAT_CSS_URL` environment variable.
 
-If you are not seeing the icons and other things are not working on the front end, chances are you need to run a build. Just type `yarn` in the home folder, or run the **Build** command in your _Resources_ tab in Heroku.
+### Cannot upgrade database
+
+In local deployment, you will need to upgrade the database using `./manage.py db upgrade`. On Heroku, a deployment process called **Release** runs automatically.
+
+If you get errors like *ERROR [alembic.env] Can't locate revision identified by 'aa969b4f9f51'*, your migration history is out of sync. You can just set `FORCE_MIGRATE` to 1 when you run releases.
+
+See also instructions in the `force-migrate.sh` script.
+
+### Need help setting up SSO
+
+To get client keys, go to the [Slack API](https://api.slack.com/apps/), [Azure portal](https://portal.azure.com/#blade/Microsoft_AAD_RegisteredApps/ApplicationsListBlade), or add the [GitHub App](https://github.com/apps/dribdat) to your account or organization.
+
+Cannot determine SSO callback for app registration? Try `<my server url>/oauth/slack/authorized` (replace `slack` with your OAuth provider).
+
+### Restore admin access
+
+Create a user account if you do not already have one. From the console, run `./manage.py shell` then to promote to admin and/or reset the password of a user called "admin":
+
+```
+u = User.query.filter(User.username=='admin').first()
+u.is_admin = True
+u.set_password('Ins@nEl*/c0mpl3x')
+u.save()
+```
+
+### Test locally using SSL
+
+Some development scenarios and OAuth testing requires SSL. To use this in development with self-signed certificates (you will get a browser warning), start the server with `./manage.py run --cert=adhoc`
+
+You can also try to test SSO providers with `OAUTHLIB_INSECURE_TRANSPORT=true` (do not use in production!)
 
 # Credits
 

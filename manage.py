@@ -30,16 +30,27 @@ def create_app(script_info=None):
     app.cli.add_command('db', MigrateCommand)
     return app
 
-@click.group(cls=FlaskGroup, create_app=create_app)
-def cli():
-    """This is a management script for the wiki application."""
+@click.command()
+def featuretest():
+    """Run feature tests."""
+    import pytest
+    feat_test = os.path.join(TEST_PATH, 'test_features.py')
+    return pytest.main([feat_test, '--disable-warnings'])
 
-@click.command
+@click.command()
 def test():
-    """Run the tests."""
+    """Run all tests."""
     import pytest
     exit_code = pytest.main([TEST_PATH, '--verbose'])
     return exit_code
+
+
+@click.group(cls=FlaskGroup, create_app=create_app)
+def cli():
+    """This is a management script for this application."""
+
+cli.add_command(test)
+cli.add_command(featuretest)
 
 if __name__ == '__main__':
     cli()

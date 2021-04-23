@@ -4,14 +4,18 @@ from flask import (Blueprint, request, render_template, flash, url_for,
                     redirect, session, current_app, jsonify)
 from flask_login import login_required, current_user
 
-from dribdat.user.models import User, Event, Project
-from dribdat.public.forms import *
+from dribdat.user.models import User, Event, Project, Resource
+from dribdat.public.forms import (
+    LoginForm, UserForm,
+    ProjectNew, ProjectForm,
+    ProjectPost, ResourceForm,
+)
 from dribdat.database import db
 from dribdat.extensions import cache
 from dribdat.aggregation import (
     SyncProjectData, GetProjectData,
     ProjectActivity, IsProjectStarred,
-    GetEventUsers
+    GetEventUsers, SuggestionsByProgress,
 )
 from dribdat.user import projectProgressList
 
@@ -54,9 +58,13 @@ def home():
         events = Event.query.filter(Event.id != cur_event.id)
     else:
         events = Event.query
-    events = events.order_by(Event.id.desc()).all()
+    events = events.filter(Event.is_hidden.isnot(True))
+    events = events.order_by(Event.starts_at.desc())
+    today = datetime.utcnow()
+    events_next = events.filter(Event.starts_at > today).all()
+    events_past = events.filter(Event.ends_at < today).all()
     return render_template("public/home.html",
-        events=events, current_event=cur_event)
+        events_next=events_next, events_past=events_past, current_event=cur_event)
 
 @blueprint.route('/user/<username>', methods=['GET'])
 def user(username):
@@ -64,10 +72,14 @@ def user(username):
     if not user.active:
         return "User deactivated. Please contact an event organizer."
     event = current_event()
+    cert_path = user.get_cert_path(event)
     # projects = user.projects
     projects = user.joined_projects()
-    return render_template("public/userprofile.html",
-        current_event=event, event=event, user=user, projects=projects)
+    posts = user.latest_posts()
+    submissions = Resource.query.filter_by(user_id=user.id).order_by(Resource.id.desc()).all()
+    return render_template("public/userprofile.html", active="profile",
+        current_event=event, event=event, user=user, cert_path=cert_path,
+        projects=projects, submissions=submissions, posts=posts)
 
 @blueprint.route("/event/<int:event_id>")
 def event(event_id):
@@ -82,7 +94,7 @@ def event(event_id):
         x['name'].lower()))
     project_count = projects.count()
     return render_template("public/event.html", current_event=event,
-        projects=summaries, project_count=project_count)
+        projects=summaries, project_count=project_count, active="projects")
 
 @blueprint.route("/event/<int:event_id>/participants")
 def event_participants(event_id):
@@ -90,7 +102,23 @@ def event_participants(event_id):
     users = GetEventUsers(event)
     usercount = len(users) if users else 0
     return render_template("public/eventusers.html",
-        current_event=event, participants=users, usercount=usercount)
+        current_event=event, participants=users, usercount=usercount, active="participants")
+
+@blueprint.route("/event/<int:event_id>/resources")
+def event_resources(event_id):
+    event = Event.query.filter_by(id=event_id).first_or_404()
+    steps = []
+    for ix, p in enumerate(projectProgressList(True, False)):
+        steps.append({
+            'index': ix + 1, 'name': p[1],
+            'resources': SuggestionsByProgress(p[0])
+        })
+    steps.append({
+        'name': '/etc', 'index': -1,
+        'resources': SuggestionsByProgress(None)
+    })
+    return render_template("public/resources.html",
+        current_event=event, steps=steps, active="resources")
 
 @blueprint.route('/project/<int:project_id>')
 def project(project_id):
@@ -119,7 +147,8 @@ def project_edit(project_id):
         flash('Project updated.', 'success')
         project_action(project_id, 'update', False)
         return redirect(url_for('public.project', project_id=project.id))
-    return render_template('public/projectedit.html', current_event=event, project=project, form=form)
+    return render_template('public/projectedit.html',
+        current_event=event, project=project, form=form)
 
 @blueprint.route('/project/<int:project_id>/post', methods=['GET', 'POST'])
 @login_required
@@ -132,24 +161,33 @@ def project_post(project_id):
         flash('You do not have access to edit this project.', 'warning')
         return project_action(project_id, None)
     form = ProjectPost(obj=project, next=request.args.get('next'))
+    # Populate progress dialog
     form.progress.choices = projectProgressList(event.has_started or event.has_finished)
+    # Populate resource list
+    resources = Resource.query.filter_by(is_visible=True).order_by(Resource.type_id).all()
+    resource_list = [(0, '')]
+    resource_list.extend([(r.id, r.of_type + ': ' + r.name) for r in resources])
+    form.resource.choices = resource_list
+    # Process form
     if form.validate_on_submit():
         del form.id
+        if form.resource.data == 0:
+            form.resource.data = None
         form.populate_obj(project)
         project.update()
         db.session.add(project)
         db.session.commit()
         cache.clear()
         flash('Thanks for your commit!', 'success')
-        project_action(project_id, 'update', action='post', text=form.note.data)
+        project_action(project_id, 'update', action='post', text=form.note.data, resource=form.resource.data)
         return redirect(url_for('public.project', project_id=project.id))
     return render_template('public/projectpost.html', current_event=event, project=project, form=form)
 
-def project_action(project_id, of_type=None, as_view=True, then_redirect=False, action=None, text=None):
+def project_action(project_id, of_type=None, as_view=True, then_redirect=False, action=None, text=None, resource=None):
     project = Project.query.filter_by(id=project_id).first_or_404()
     event = project.event
     if of_type is not None:
-        ProjectActivity(project, of_type, current_user, action, text)
+        ProjectActivity(project, of_type, current_user, action, text, resource)
     if not as_view:
         return True
     if then_redirect:
@@ -160,8 +198,9 @@ def project_action(project_id, of_type=None, as_view=True, then_redirect=False, 
     project_team = project.team()
     latest_activity = project.latest_activity()
     project_signals = project.all_signals()
+    suggestions = SuggestionsByProgress(project.progress)
     return render_template('public/project.html', current_event=event, project=project,
-        project_starred=starred, project_team=project_team, project_signals=project_signals,
+        project_starred=starred, project_team=project_team, project_signals=project_signals, suggestions=suggestions,
         allow_edit=allow_edit, latest_activity=latest_activity)
 
 @blueprint.route('/project/<int:project_id>/star', methods=['GET', 'POST'])
@@ -208,7 +247,7 @@ def project_new(event_id):
                 return project_autoupdate(project.id)
             else:
                 return redirect(url_for('public.project', project_id=project.id))
-    return render_template('public/projectnew.html', current_event=event, form=form)
+    return render_template('public/projectnew.html', active="projectnew", current_event=event, form=form)
 
 @blueprint.route('/project/<int:project_id>/autoupdate')
 @login_required
@@ -227,3 +266,48 @@ def project_autoupdate(project_id):
     project_action(project.id, 'update', action='sync', text=str(len(project.autotext)) + ' bytes')
     flash("Project data synced from %s" % data['type'], 'success')
     return redirect(url_for('public.project', project_id=project.id))
+
+
+@blueprint.route('/resource/<int:resource_id>', methods=['GET'])
+def resource(resource_id):
+    resource = Resource.query.filter_by(id=resource_id).first_or_404()
+    projects = [ c.project for c in resource.get_comments() ]
+    event = current_event()
+    return render_template('public/resource.html',
+        current_event=event, resource=resource, projects=projects)
+
+@blueprint.route('/resource/post', methods=['GET', 'POST'])
+@login_required
+def resource_post():
+    resource = Resource()
+    event = current_event()
+    form = ResourceForm(obj=resource)
+    if form.validate_on_submit():
+        form.populate_obj(resource)
+        resource.user_id = current_user.id
+        resource.is_visible = current_app.config['DRIBDAT_SHOW_SUBMITS']
+        db.session.add(resource)
+        db.session.commit()
+        flash('Thanks for the tip! Your suggestions are visible in your profile.', 'success')
+        return redirect(url_for('public.resource', resource_id=resource.id))
+    return render_template('public/resourcenew.html',
+                current_event=event, form=form)
+
+@blueprint.route('/resource/<int:resource_id>/edit', methods=['GET', 'POST'])
+@login_required
+def resource_edit(resource_id):
+    resource = Resource.query.filter_by(id=resource_id).first_or_404()
+    event = current_event()
+    allow_edit = not current_user.is_anonymous and current_user == resource.user or current_user.is_admin
+    if not allow_edit:
+        flash('You do not have access to edit this resource.', 'warning')
+        return redirect(url_for('public.home'))
+    form = ResourceForm(obj=resource)
+    if form.validate_on_submit():
+        form.populate_obj(resource)
+        db.session.add(resource)
+        db.session.commit()
+        flash('Changes saved.', 'success')
+        return redirect(url_for('public.resource', resource_id=resource.id))
+    return render_template('public/resourceedit.html',
+                current_event=event, resource=resource, form=form)

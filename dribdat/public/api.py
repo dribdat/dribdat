@@ -7,9 +7,10 @@ from sqlalchemy import or_
 
 from ..extensions import db
 from ..utils import timesince, random_password
+from ..decorators import admin_required
 
 from ..user.models import Event, Project, Category, Activity
-from ..aggregation import GetProjectData
+from ..aggregation import GetProjectData, GetEventUsers
 
 from datetime import datetime
 from flask import Response, stream_with_context
@@ -19,19 +20,6 @@ from os import path
 PY3 = sys.version_info[0] == 3
 
 blueprint = Blueprint('api', __name__, url_prefix='/api')
-
-def get_projects_by_event(event_id):
-    return Project.query.filter_by(event_id=event_id, is_hidden=False)
-
-def get_project_summaries(projects):
-    summaries = expand_project_urls([ p.data for p in projects ])
-    summaries.sort(key=lambda x: x['score'], reverse=True)
-    return summaries
-
-# Collect all projects and challenges for an event
-def project_list(event_id):
-    projects = get_projects_by_event(event_id)
-    return get_project_summaries(projects)
 
 # Generate a CSV file
 def gen_csv(csvdata):
@@ -80,6 +68,19 @@ def info_event_hackathon_json(event_id):
     return jsonify(event.get_schema(request.host_url))
 
 # ------ EVENT PROJECTS ---------
+
+def get_projects_by_event(event_id):
+    return Project.query.filter_by(event_id=event_id, is_hidden=False)
+
+def get_project_summaries(projects):
+    summaries = expand_project_urls([ p.data for p in projects ])
+    summaries.sort(key=lambda x: x['score'], reverse=True)
+    return summaries
+
+# Collect all projects and challenges for an event
+def project_list(event_id):
+    projects = get_projects_by_event(event_id)
+    return get_project_summaries(projects)
 
 # API: Outputs JSON of projects in the current event, along with its info
 @blueprint.route('/event/current/projects.json')
@@ -198,6 +199,19 @@ def project_info_json(project_id):
 
     return jsonify(data)
 
+# ------ USERS ----------
+
+@blueprint.route('/event/<int:event_id>/participants.csv')
+@admin_required
+def event_participants_csv(event_id):
+    event = Event.query.filter_by(id=event_id).first_or_404()
+    userlist = [u.data for u in GetEventUsers(event)]
+    return Response(stream_with_context(gen_csv(userlist)),
+                    mimetype='text/csv',
+                    headers={'Content-Disposition': 'attachment; filename=user_list_%d.csv' % event.id})
+
+
+
 # ------ SEARCH ---------
 
 def expand_project_urls(projects):
@@ -228,7 +242,7 @@ def project_search_json():
 @blueprint.route('/project/push.json', methods=["PUT", "POST"])
 def project_push_json():
     data = request.get_json(force=True)
-    if not 'key' in data or data['key'] != current_app.config['DRIBDAT_APIKEY']:
+    if not 'key' in data or data['key'] != current_app.config['SECRET_API']:
         return jsonify(error='Invalid key')
     project = Project.query.filter_by(hashtag=data['hashtag']).first()
     if not project:
@@ -306,14 +320,25 @@ def project_uploader():
     filename = random_password(24) + '.' + ext
     # with tempfile.TemporaryDirectory() as tmpdir:
         # img.save(path.join(tmpdir, filename))
-    s3_filepath = '/'.join([current_app.config['S3_FOLDER'], filename])
-    print('Uploading to %s' % s3_filepath)
-    s3_obj = boto3.client('s3',
-      aws_access_key_id=current_app.config['S3_KEY'],
-      aws_secret_access_key=current_app.config['S3_SECRET'],
-      config=botocore.client.Config(region_name=current_app.config['S3_REGION']))
-    s3_obj.upload_fileobj(
-        img,
+    if 'S3_FOLDER' in current_app.config:
+        s3_filepath = '/'.join([current_app.config['S3_FOLDER'], filename])
+    else:
+        s3_filepath = filename
+    # print('Uploading to %s' % s3_filepath)
+    if 'S3_ENDPOINT' in current_app.config:
+        s3_obj = boto3.client(service_name='s3',
+            endpoint_url=current_app.config['S3_ENDPOINT'],
+            aws_access_key_id=current_app.config['S3_KEY'],
+            aws_secret_access_key=current_app.config['S3_SECRET'],
+        )
+    else:
+        s3_obj = boto3.client(service_name='s3',
+            region_name=current_app.config['S3_REGION'],
+            aws_access_key_id=current_app.config['S3_KEY'],
+            aws_secret_access_key=current_app.config['S3_SECRET'],
+        )
+    # Commence upload
+    s3_obj.upload_fileobj(img,
         current_app.config['S3_BUCKET'],
         s3_filepath,
         ExtraArgs={ 'ContentType': img.content_type, 'ACL': 'public-read' }

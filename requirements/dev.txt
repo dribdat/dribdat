@@ -22,6 +22,7 @@ py
 pycodestyle
 pydocstyle
 pyflakes
+pyopenssl
 pytest
 snowballstemmer
 testfixtures

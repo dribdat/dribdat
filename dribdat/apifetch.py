@@ -10,7 +10,7 @@ from future.standard_library import install_aliases
 install_aliases()
 from urllib.parse import quote_plus
 from bleach.sanitizer import ALLOWED_TAGS, ALLOWED_ATTRIBUTES
-
+from flask_misaka import markdown
 from base64 import b64decode
 from pyquery import PyQuery as pq
 
@@ -57,7 +57,7 @@ def FetchGithubProject(project_url):
     readme = re.sub(
         r"\!\[(.*)\]\((?!http)",
         # TODO check why we are using \g escape here?
-        "![\g<1>](https://raw.githubusercontent.com/" + json['full_name'] + '/master/',
+        r"![\g<1>](https://raw.githubusercontent.com/" + json['full_name'] + '/master/',
         readme
     )
     return {
@@ -176,6 +176,20 @@ def FetchWebProject(project_url):
         obj['description'] = html_content
         obj['source_url'] = project_url
         obj['image_url'] = "/static/img/document_icon.png"
+
+    # CodiMD / HackMD
+    elif data.text.find('<div id="doc" ')>0:
+        doc = pq(data.text)
+        ptitle = doc("title")
+        if len(ptitle) < 1: return {}
+        content = doc("div#doc").html()
+        if len(content) < 1: return {}
+
+        obj['type'] = 'Markdown'
+        obj['name'] = ptitle.text()
+        obj['description'] = markdown(content)
+        obj['source_url'] = project_url
+        obj['image_url'] = "/static/img/codimd.png"
 
     # DokuWiki
     elif data.text.find('<meta name="generator" content="DokuWiki"/>')>0:
