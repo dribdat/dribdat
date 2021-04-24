@@ -20,6 +20,7 @@ class Config(object):
     # Application options
     DRIBDAT_NOT_REGISTER = os_env.get('DRIBDAT_NOT_REGISTER', False)
     DRIBDAT_SHOW_SUBMITS = os_env.get('DRIBDAT_SHOW_SUBMITS', True)
+    DRIBDAT_SKIP_LOGIN = os_env.get('DRIBDAT_SKIP_LOGIN', False)
 
     # Single sign-on support
     OAUTH_ID = os_env.get('OAUTH_ID', None)
