@@ -20,13 +20,13 @@ class Config(object):
     # Application options
     DRIBDAT_NOT_REGISTER = os_env.get('DRIBDAT_NOT_REGISTER', False)
     DRIBDAT_SHOW_SUBMITS = os_env.get('DRIBDAT_SHOW_SUBMITS', True)
-    OAUTH_SKIP_LOGIN = os_env.get('OAUTH_SKIP_LOGIN', False)
 
     # Single sign-on support
     OAUTH_ID = os_env.get('OAUTH_ID', None)
     OAUTH_TYPE = os_env.get('OAUTH_TYPE', '').lower()
     OAUTH_SECRET = os_env.get('OAUTH_SECRET', None)
     OAUTH_DOMAIN = os_env.get('OAUTH_DOMAIN', None)
+    OAUTH_SKIP_LOGIN = os_env.get('OAUTH_SKIP_LOGIN', False)
 
     # Application settings
     APP_DIR = os.path.abspath(os.path.dirname(__file__))  # This directory
