@@ -55,6 +55,7 @@ OAuth 2.0 support for **Single Sign-On** is currently available using [Flask Dan
 * `OAUTH_ID` - the Client ID of your app
 * `OAUTH_SECRET` - the Client Secret of your app
 * `OAUTH_DOMAIN` - (optional) subdomain of your Slack instance, or AD tenant for Azure
+* `OAUTH_SKIP_LOGIN` - (optional) when enabled, the dribdat login screen is not shown at all
 
 For **uploading images** and other files directly within dribdat, you can configure S3 through Amazon and compatible providers:
 
