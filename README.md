@@ -29,7 +29,7 @@ You can configure your instance with the following **basic environment** variabl
 * `SERVER_SSL` - redirect all visitors to HTTPS, applying CSP
 * `CSP_DIRECTIVES` - configure content security policy - see [Talisman docs](https://github.com/GoogleCloudPlatform/flask-talisman#content-security-policy)
 * `DATABASE_URL` - connects to PostgreSQL or another database via `postgresql://username:password@...` (in Heroku this is set automatically)
-* `CACHE_TYPE` - speed up the site with built-in, Redis, Memcache - see [Flask-Caching](https://pythonhosted.org/Flask-Caching/)
+* `CACHE_TYPE` - speed up the site with Redis or Memcache - see [Flask-Caching](https://flask-caching.readthedocs.io/en/latest/index.html#configuring-flask-caching)
 
 The following options can be used to toggle **application features**:
 
