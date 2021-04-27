@@ -25,6 +25,7 @@ Flask-SQLAlchemy==2.5.1
 flask-talisman==0.7.0
 Flask-WTF==0.14.3
 future==0.18.2
+gevent-websocket==0.10.1
 graphene==2.1.8
 graphql-core==2.3.2
 graphql-relay==2.0.1

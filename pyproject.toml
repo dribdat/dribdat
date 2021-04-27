@@ -44,6 +44,7 @@ pystache = "^0.5.4"
 micawber = "^0.5.1"
 boto3 = "^1.16.13"
 flask-dance = "^3.3.1"
+gevent-websocket = "^0.10.1"
 
 [tool.poetry.dev-dependencies]
 factory-boy = "*"
