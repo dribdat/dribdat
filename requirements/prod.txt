@@ -58,4 +58,5 @@ urlobject==2.4.3
 webassets==2.0
 webencodings==0.5.1
 werkzeug==1.0.1
+whitenoise==5.2.0
 wtforms==2.3.3

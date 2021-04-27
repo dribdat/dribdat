@@ -1285,6 +1285,17 @@ watchdog = ["watchdog"]
 
 [[package]]
 category = "main"
+description = "Radically simplified static file serving for WSGI applications"
+name = "whitenoise"
+optional = false
+python-versions = ">=3.5, <4"
+version = "5.2.0"
+
+[package.extras]
+brotli = ["brotli"]
+
+[[package]]
+category = "main"
 description = "A flexible forms validation and rendering library for Python web development."
 name = "wtforms"
 optional = false
@@ -1344,7 +1355,7 @@ test = ["coverage (>=5.0.3)", "zope.event", "zope.testing"]
 testing = ["coverage (>=5.0.3)", "zope.event", "zope.testing"]
 
 [metadata]
-content-hash = "5a850757820a5f77f8b1156715679b5d1dfaa23738be787ba530b9aa6133d633"
+content-hash = "c365226a4d9a5a3089699d8fa4e503b459f4108e2af165739067f472a5a62b26"
 lock-version = "1.0"
 python-versions = ">=3.6,<4"
 
@@ -2033,6 +2044,10 @@ webtest = [
 werkzeug = [
     {file = "Werkzeug-1.0.1-py2.py3-none-any.whl", hash = "sha256:2de2a5db0baeae7b2d2664949077c2ac63fbd16d98da0ff71837f7d1dea3fd43"},
     {file = "Werkzeug-1.0.1.tar.gz", hash = "sha256:6c80b1e5ad3665290ea39320b91e1be1e0d5f60652b964a3070216de83d2e47c"},
+]
+whitenoise = [
+    {file = "whitenoise-5.2.0-py2.py3-none-any.whl", hash = "sha256:05d00198c777028d72d8b0bbd234db605ef6d60e9410125124002518a48e515d"},
+    {file = "whitenoise-5.2.0.tar.gz", hash = "sha256:05ce0be39ad85740a78750c86a93485c40f08ad8c62a6006de0233765996e5c7"},
 ]
 wtforms = [
     {file = "WTForms-2.3.3-py2.py3-none-any.whl", hash = "sha256:7b504fc724d0d1d4d5d5c114e778ec88c37ea53144683e084215eed5155ada4c"},

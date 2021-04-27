@@ -19,6 +19,7 @@ from flask_misaka import Misaka
 from flask_talisman import Talisman
 from flask_dance.contrib import (slack, azure, github)
 from micawber.providers import bootstrap_basic
+from whitenoise import WhiteNoise
 
 
 def init_app(config_object=ProdConfig):
@@ -32,6 +33,11 @@ def init_app(config_object=ProdConfig):
     # Set up cross-site access to the API
     cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
     app.config['CORS_HEADERS'] = 'Content-Type'
+
+    # Set up optimized static file hosting
+    app.wsgi_app = WhiteNoise(
+        app.wsgi_app, root='dribdat/static/', prefix='static/'
+    )
 
     register_extensions(app)
     register_blueprints(app)
