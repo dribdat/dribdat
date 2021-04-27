@@ -35,9 +35,9 @@ def init_app(config_object=ProdConfig):
     app.config['CORS_HEADERS'] = 'Content-Type'
 
     # Set up optimized static file hosting
-    app.wsgi_app = WhiteNoise(
-        app.wsgi_app, root='dribdat/static/', prefix='static/'
-    )
+    app.wsgi_app = WhiteNoise(app.wsgi_app, prefix='static/')
+    for static in ('css', 'img', 'js', 'public'):
+        app.wsgi_app.add_files('dribdat/static/' + static)
 
     register_extensions(app)
     register_blueprints(app)
