@@ -66,7 +66,7 @@ def make_oembedplus(text, oembed_providers, **params):
             try:
                 response = oembed_providers.request(url, **params)
             except Exception as e:
-                logging.warning("OEmbed provider could not be parsed <%s>" % url)
+                logging.info("OEmbed could not parse: <%s>" % url)
             else:
                 line = full_handler(url, response, **params)
         parsed.append(line)
