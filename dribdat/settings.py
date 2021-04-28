@@ -68,7 +68,7 @@ class ProdConfig(Config):
     ENV = 'prod'
     DEBUG = False
     DEBUG_TB_ENABLED = False  # Disable Debug toolbar
-    PREFERRED_URL_SCHEME = 'https'
+    PREFERRED_URL_SCHEME = 'https' # For generating external URLs
     CACHE_TYPE = os_env.get('CACHE_TYPE', 'simple')
     CACHE_DEFAULT_TIMEOUT = int(os_env.get('CACHE_DEFAULT_TIMEOUT', '300'))
     CACHE_REDIS_URL = os_env.get('CACHE_REDIS_URL', 'simple')

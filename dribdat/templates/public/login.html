@@ -8,15 +8,15 @@
   <h1>Log in</h1>
   <br/>
   {% if oauth_type == 'slack' %}
-    <p><a class="btn signin-slack" href="{{ url_for('slack.login') }}">
+    <p><a class="btn signin-slack" href="{{ url_for('slack.login', _external=True, _scheme='https') }}">
       Sign in with Slack
     </a></p>
   {% elif oauth_type == 'azure' %}
-    <p><a class="btn signin-azure" href="{{ url_for('azure.login') }}">
+    <p><a class="btn signin-azure" href="{{ url_for('azure.login', _external=True, _scheme='https') }}">
       Sign in with Microsoft Teams
     </a></p>
   {% elif oauth_type == 'github' %}
-    <p><a class="btn signin-github" href="{{ url_for('github.login') }}">
+    <p><a class="btn signin-github" href="{{ url_for('github.login', _external=True, _scheme='https') }}">
       Sign in with GitHub
     </a></p>
   {% endif %}
