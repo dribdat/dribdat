@@ -11,6 +11,7 @@ chardet==4.0.0
 Click==7.1.2
 cssmin==0.2.0
 cssselect==1.1.0
+eventlet==0.30.2
 Flask==1.1.2
 Flask-Assets==2.0
 Flask-Bcrypt==0.7.1
@@ -25,7 +26,6 @@ Flask-SQLAlchemy==2.5.1
 flask-talisman==0.7.0
 Flask-WTF==0.14.3
 future==0.18.2
-gevent-websocket==0.10.1
 graphene==2.1.8
 graphql-core==2.3.2
 graphql-relay==2.0.1
