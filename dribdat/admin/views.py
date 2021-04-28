@@ -49,9 +49,28 @@ def index():
 @login_required
 @admin_required
 def users(page=1):
-    users = User.query.order_by(
-        User.username.asc()
-    ).paginate(page, per_page=20)
+    sort_by = request.args.get('sort')
+    if sort_by == 'id':
+        users = User.query.order_by(
+            User.id.asc()
+        )
+    elif sort_by == 'admin':
+        users = User.query.order_by(
+            User.is_admin.desc()
+        )
+    elif sort_by == 'created':
+        users = User.query.order_by(
+            User.created_at.desc()
+        )
+    elif sort_by == 'email':
+        users = User.query.order_by(
+            User.email.asc()
+        )
+    else:
+        users = User.query.order_by(
+            User.username.asc()
+        )
+    users = users.paginate(page, per_page=20)
     return render_template('admin/users.html', data=users, endpoint='admin.users', active='users')
 
 

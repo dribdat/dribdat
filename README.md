@@ -22,14 +22,14 @@ The first user that registers becomes an admin, so don't delay!
 
 ## Configuration
 
-You can configure your instance with the following **basic environment** variables:
+Optimize your dribdat instance with the following environment variables in production. **Tip**: Use `.flaskenv` or `.env` to store environment variables for local development:
 
 * `TIME_ZONE` - set if your event is not in UTC time (e.g. "Europe/Zurich" - see [pytz docs](https://pythonhosted.org/pytz/))
 * `SERVER_URL` - fully qualified domain name where the site is hosted
 * `SERVER_SSL` - redirect all visitors to HTTPS, applying CSP
 * `CSP_DIRECTIVES` - configure content security policy - see [Talisman docs](https://github.com/GoogleCloudPlatform/flask-talisman#content-security-policy)
 * `DATABASE_URL` - connects to PostgreSQL or another database via `postgresql://username:password@...` (in Heroku this is set automatically)
-* `CACHE_TYPE` - speed up the site with built-in, Redis, Memcache - see [Flask-Caching](https://pythonhosted.org/Flask-Caching/)
+* `CACHE_TYPE` - speed up the site with Redis or Memcache - see [Flask-Caching](https://flask-caching.readthedocs.io/en/latest/index.html#configuring-flask-caching)
 
 The following options can be used to toggle **application features**:
 
@@ -49,12 +49,13 @@ Support for **Web analytics** can be configured using one of the following varia
 * `ANALYTICS_GOOGLE` (starts with "UA-...")
 * `ANALYTICS_HREF` - an optional link in the footer to a public dashboard for your analytics
 
-OAuth 2.0 support for **Single Sign-On** is currently available using [Flask Dance](https://flask-dance.readthedocs.io/). Register your app with the provider (see SSO tips below), and set the following variables:
+OAuth 2.0 support for **Single Sign-On** is currently available using [Flask Dance](https://flask-dance.readthedocs.io/), and requires SSL to be enabled (using `SERVER_SSL`=1 in production or `OAUTHLIB_INSECURE_TRANSPORT` in development). Register your app with the provider (see SSO tips below), and set the following variables:
 
 * `OAUTH_TYPE` - e.g. 'Slack', 'GitHub', 'Azure'
 * `OAUTH_ID` - the Client ID of your app
 * `OAUTH_SECRET` - the Client Secret of your app
 * `OAUTH_DOMAIN` - (optional) subdomain of your Slack instance, or AD tenant for Azure
+* `OAUTH_SKIP_LOGIN` - (optional) when enabled, the dribdat login screen is not shown at all
 
 For **uploading images** and other files directly within dribdat, you can configure S3 through Amazon and compatible providers:
 
@@ -66,8 +67,6 @@ For **uploading images** and other files directly within dribdat, you can config
 * `S3_HTTPS` - URL for web access to your bucket's public files
 * `S3_ENDPOINT` - alternative endpoint for self-hosted Object Storage
 * `MAX_CONTENT_LENGTH` - defaults to 1048576 bytes (1 MB) file size
-
-**Tip**: Use `.flaskenv` or `.env` to store environment variables for local development.
 
 ## API
 

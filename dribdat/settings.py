@@ -26,6 +26,7 @@ class Config(object):
     OAUTH_TYPE = os_env.get('OAUTH_TYPE', '').lower()
     OAUTH_SECRET = os_env.get('OAUTH_SECRET', None)
     OAUTH_DOMAIN = os_env.get('OAUTH_DOMAIN', None)
+    OAUTH_SKIP_LOGIN = os_env.get('OAUTH_SKIP_LOGIN', False)
 
     # Application settings
     APP_DIR = os.path.abspath(os.path.dirname(__file__))  # This directory
@@ -67,7 +68,10 @@ class ProdConfig(Config):
     ENV = 'prod'
     DEBUG = False
     DEBUG_TB_ENABLED = False  # Disable Debug toolbar
-    CACHE_TYPE = os_env.get('DRIBDAT_CACHE_TYPE', 'simple')
+    PREFERRED_URL_SCHEME = 'https' # For generating external URLs
+    CACHE_TYPE = os_env.get('CACHE_TYPE', 'simple')
+    CACHE_DEFAULT_TIMEOUT = int(os_env.get('CACHE_DEFAULT_TIMEOUT', '300'))
+    CACHE_REDIS_URL = os_env.get('CACHE_REDIS_URL', 'simple')
     CACHE_MEMCACHED_SERVERS = os_env.get('MEMCACHED_SERVERS', '')
     CACHE_MEMCACHED_USERNAME = os_env.get('MEMCACHED_USERNAME', '')
     CACHE_MEMCACHED_PASSWORD = os_env.get('MEMCACHED_PASSWORD', '')

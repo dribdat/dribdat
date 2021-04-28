@@ -44,6 +44,8 @@ pystache = "^0.5.4"
 micawber = "^0.5.1"
 boto3 = "^1.16.13"
 flask-dance = "^3.3.1"
+whitenoise = "^5.2.0"
+eventlet = "^0.30.2"
 
 [tool.poetry.dev-dependencies]
 factory-boy = "*"
