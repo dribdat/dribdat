@@ -7,5 +7,9 @@ secure_scheme_headers = {
     'X-FORWARDED-SSL': 'on'
 }
 bind = '0.0.0.0:%s' % str(os_env.get('PORT', 5000))
-#worker_class = 'geventwebsocket.gunicorn.workers.GeventWebSocketWorker'
+worker_class = 'geventwebsocket.gunicorn.workers.GeventWebSocketWorker'
 errorlog = '-'
+
+def post_worker_init(worker):
+    import ssl
+    ssl._create_default_https_context = ssl._create_unverified_context
