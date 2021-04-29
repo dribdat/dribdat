@@ -15,6 +15,7 @@ def GetProjectData(url):
 
     elif url.find('//github.com') > 0:
         apiurl = re.sub(r'https?://github\.com/', '', url).strip('/')
+        if apiurl.endswith('.git'): apiurl = apiurl[:-4]
         if apiurl == url: return {}
         return FetchGithubProject(apiurl)
 
