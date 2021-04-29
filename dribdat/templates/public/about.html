@@ -20,13 +20,7 @@
         any other information the organisers have provided. To form a team, you can
         <a href="/register/">login</a> and join or start a project.</p>
     </div>
-    <center>
-      <ul class="search-results"></ul>
-      <form action="/api/project/search.json" id="search">
-        <input name="q" placeholder="Search projects ...">
-        <input type="submit" value="JSON">
-      </form>
-    </center>
+    <hr>
     <div class="row">
       {% include "includes/quickstart.html" %}
     </div><div class="row">
@@ -51,6 +45,12 @@
       <div class="content">
         <h3>More data</h3>
         <p>There is a simple API for accessing data from this site in machine-readable form. See the README for additional details.</p>
+        <p>Search as you type:</p>
+        <ul class="search-results"></ul>
+        <form action="/api/project/search.json" id="search">
+          <input name="q" placeholder="Search projects ...">
+          <input type="submit" value="search.json">
+        </form>
         <p>Basic data on the current frontpage event:</p>
         <ul>
           <li><a href="/hackathon.json">/hackathon.json</a> (JSON <a href="https://schema.org/Hackathon">Schema</a>)</li>

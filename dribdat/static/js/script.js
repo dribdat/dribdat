@@ -169,6 +169,7 @@
   var lastSearch = null;
   $('#search input[name=q]')
     .keyup(delay(function(e) {
+      if (e.keyCode == 13) { e.preventDefault(); return false; }
       var q = $(this).val();
       if (q.length < 4 || q.trim() == lastSearch) return;
       lastSearch = q.trim();
