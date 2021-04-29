@@ -48,7 +48,7 @@
         $indicator.find('i').css('color', 'green');
         $button.removeAttr('disabled').html('Update now');
         if (typeof data.name === 'undefined' || data.name === '') {
-          window.alert('Project data could not be fetched - enter a valid Sync link.');
+          window.alert('Enter a valid link to Sync from a supported site.');
           $('#is_autoupdate').prop('checked', false);
           return;
         }
