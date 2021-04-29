@@ -242,7 +242,8 @@ def project_new(event_id):
             flash('New challenge added.', 'success')
             project_action(project.id, 'create', False)
             cache.clear()
-            project_action(project.id, 'star', False)
+            if event.has_started:
+                project_action(project.id, 'star', False) # Join team
             if len(project.autotext_url)>1:
                 return project_autoupdate(project.id)
             else:
@@ -260,7 +261,7 @@ def project_autoupdate(project_id):
         return project_action(project_id)
     data = GetProjectData(project.autotext_url)
     if not 'name' in data:
-        flash("Could not sync: check the Remote Link.", 'warning')
+        flash("Could not sync: check that the Remote Link contains a README.", 'warning')
         return project_action(project_id)
     SyncProjectData(project, data)
     project_action(project.id, 'update', action='sync', text=str(len(project.autotext)) + ' bytes')
