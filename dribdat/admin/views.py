@@ -155,15 +155,25 @@ def user_reset(user_id):
 @blueprint.route('/user/<int:user_id>/deactivate/')
 @login_required
 @admin_required
-def user_deactivate(user_id):
-    """Deactivate user account."""
+def user_deactivate(user_id, reactivate=False):
+    """Manage activation of user account."""
     user = User.query.filter_by(id=user_id).first_or_404()
-    user.active = False
+    user.active = reactivate
     db.session.add(user)
     db.session.commit()
-    flash('User deactivated.', 'success')
+    if reactivate:
+        flash('User is now active.', 'success')
+    else:
+        flash('User deactivated.', 'warning')
     return users()
 
+
+@blueprint.route('/user/<int:user_id>/reactivate/')
+@login_required
+@admin_required
+def user_reactivate(user_id):
+    """Reactivate user account."""
+    return user_deactivate(user_id, True)
 
 ##############
 ##############

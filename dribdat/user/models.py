@@ -67,6 +67,8 @@ class User(UserMixin, PkModel):
     #: The hashed password
     password = Column(db.String(128), nullable=True)
     created_at = Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)
+
+    # State flags
     active = Column(db.Boolean(), default=False)
     is_admin = Column(db.Boolean(), default=False)
 
@@ -81,7 +83,7 @@ class User(UserMixin, PkModel):
 
     @property
     def is_allowed(self):
-        return self.is_allowed and self.active
+        return self.is_authenticated and self.active
 
     @property
     def data(self):

@@ -70,7 +70,8 @@ def home():
 def user(username):
     user = User.query.filter_by(username=username).first_or_404()
     if not user.active:
-        return "User deactivated. Please contact an event organizer."
+        # return "User deactivated. Please contact an event organizer."
+        flash('This user account is under review. Please contact the organizing team to access all functions of this platform.', 'warning')
     event = current_event()
     cert_path = user.get_cert_path(event)
     # projects = user.projects
@@ -83,6 +84,8 @@ def user(username):
 
 @blueprint.route("/event/<int:event_id>")
 def event(event_id):
+    if not current_user.active:
+        flash('This user account is under review. Please update your profile and contact the organizing team to access all functions of this platform.', 'warning')
     event = Event.query.filter_by(id=event_id).first_or_404()
     projects = Project.query.filter_by(event_id=event_id, is_hidden=False)
     if request.args.get('embed'):
@@ -130,7 +133,7 @@ def project_edit(project_id):
     project = Project.query.filter_by(id=project_id).first_or_404()
     event = project.event
     starred = IsProjectStarred(project, current_user)
-    allow_edit = starred or (not current_user.is_anonymous and current_user.is_admin)
+    allow_edit = starred or (current_user.is_allowed and current_user.is_admin)
     if not allow_edit:
         flash('You do not have access to edit this project.', 'warning')
         return project_action(project_id, None)
@@ -206,6 +209,8 @@ def project_action(project_id, of_type=None, as_view=True, then_redirect=False, 
 @blueprint.route('/project/<int:project_id>/star', methods=['GET', 'POST'])
 @login_required
 def project_star(project_id):
+    if not current_user.is_allowed:
+        return "User not allowed. Please contact event organizers."
     flash('Welcome to the team!', 'success')
     return project_action(project_id, 'star', then_redirect=True)
 
@@ -217,6 +222,8 @@ def project_unstar(project_id):
 
 @blueprint.route('/event/<int:event_id>/project/new', methods=['GET', 'POST'])
 def project_new(event_id):
+    if not current_user.is_allowed:
+        return "User not allowed. Please contact event organizers."
     form = None
     event = Event.query.filter_by(id=event_id).first_or_404()
     if event.lock_starting:
@@ -280,6 +287,8 @@ def resource(resource_id):
 @blueprint.route('/resource/post', methods=['GET', 'POST'])
 @login_required
 def resource_post():
+    if not current_user.is_allowed:
+        return "User not allowed. Please contact event organizers."
     resource = Resource()
     event = current_event()
     form = ResourceForm(obj=resource)
@@ -299,7 +308,7 @@ def resource_post():
 def resource_edit(resource_id):
     resource = Resource.query.filter_by(id=resource_id).first_or_404()
     event = current_event()
-    allow_edit = not current_user.is_anonymous and current_user == resource.user or current_user.is_admin
+    allow_edit = current_user.is_allowed and current_user == resource.user or current_user.is_admin
     if not allow_edit:
         flash('You do not have access to edit this resource.', 'warning')
         return redirect(url_for('public.home'))

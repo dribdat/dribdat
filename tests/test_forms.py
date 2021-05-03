@@ -64,12 +64,14 @@ class TestLoginForm:
         assert 'Invalid password' in form.password.errors
 
 
-    def test_validate_inactive_user(self, user):
+    def test_validate_inactive_user(self, user, testapp):
         """Inactive user."""
         user.active = False
         user.set_password('example')
         user.save()
         # Correct username and password, but user is not activated
         form = LoginForm(username=user.username, password='example')
-        assert form.validate() is False
-        assert 'User not activated' in form.username.errors
+        # Deactivated use can still log in
+        assert form.validate() is True
+        res = testapp.get('/user/%s' % user.username)
+        assert 'under review' in res

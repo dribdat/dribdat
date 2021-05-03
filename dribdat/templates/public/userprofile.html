@@ -7,7 +7,7 @@
 <div class="row">
     <div class="col-lg"></div>
 
-    {% if current_user and current_user.is_allowed and current_user.id == user.id %}
+    {% if current_user and current_user.is_authenticated and current_user.id == user.id %}
     <div class="col-sm btn-group">
         <a href="{{ url_for('auth.user_profile') }}" class="btn btn-secondary">
           <i class="fa fa-child"></i>

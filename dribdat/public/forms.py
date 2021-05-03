@@ -36,9 +36,7 @@ class LoginForm(FlaskForm):
         if not self.user.check_password(self.password.data):
             self.password.errors.append('Invalid password')
             return False
-        if not self.user.active:
-            self.username.errors.append('User not activated')
-            return False
+        # Inactive users are allowed to log in, but not much else.
         return True
 
 class UserForm(FlaskForm):

@@ -25,7 +25,7 @@
         </thead>
         {% for user in data.items %}
         <tr>
-            <td style="{% if not user.active %}text-decoration:line-through; color:red;{% endif %}">
+            <td {% if not user.active %}style="background:yellow" title="Account inactive"{% endif %}>
               <a href="{{ url_for('admin.user', user_id=user.id) }}">
                 {{ user.username }}
               </a>
@@ -42,8 +42,12 @@
                 Reset
               </a>
               {% if user.active %}
-              <a href="{{ url_for('admin.user_deactivate', user_id=user.id) }}" class="btn btn-sm btn-danger" onclick="if(!window.confirm('Deactivate this user?')) return false">
+              <a href="{{ url_for('admin.user_deactivate', user_id=user.id) }}" class="btn btn-sm btn-danger" onclick="if(!window.confirm('Deactivate user {{ user.username }} ?')) return false">
                 Block
+              </a>
+              {% else %}
+              <a href="{{ url_for('admin.user_reactivate', user_id=user.id) }}" class="btn btn-sm btn-success" onclick="if(!window.confirm('Activate user {{ user.username }} ?')) return false">
+                Activate
               </a>
               {% endif %}
             </div></td>

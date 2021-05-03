@@ -26,7 +26,7 @@
         {% if user.active %}
         <a href="{{ url_for('admin.user_deactivate', user_id=user.id) }}" class="btn btn-sm btn-warning">
           Deactivate account
-        </a>
+        </a> <br><small>(* prevents user from making any changes to content except their own profile, which is hidden)</small>
         {% endif %}
     </div>
 </div>
