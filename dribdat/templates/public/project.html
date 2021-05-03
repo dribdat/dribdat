@@ -53,7 +53,7 @@
       <a title="You are a member of the project. Click to leave." class="btn btn-primary" href="{{ url_for('public.project_unstar', project_id=project.id) }}" class="project-star" title="Click to leave the project" onclick="return confirm('Are you sure you wish to leave the team?')">
         <i class="fa fa-star"></i>
       </a>
-    {% elif current_user and current_user.is_authenticated %}
+    {% elif current_user and current_user.is_allowed %}
       <a href="{{ url_for('public.project_star', project_id=project.id) }}" class="btn btn-primary project-star" title="Join project to show your profile below">
        <i class="fa fa-star-o"></i>
        Join
@@ -149,7 +149,7 @@
 {% if not project.is_challenge %}
   <div class="tab-pane fade show active" id="project-md" role="tabpanel" aria-labelledby="project-tab-md">
 
-    {% if current_user and current_user.is_authenticated and not project.webpage_url and not project.longtext %}
+    {% if current_user and current_user.is_allowed and not project.webpage_url and not project.longtext %}
     <div class="alert alert-success" role="alert">
       <a class="close" title="Close" href="#" data-dismiss="alert">&times;</a>
       <!-- Helpful comment for new projects -->

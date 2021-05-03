@@ -222,7 +222,7 @@ def project_new(event_id):
     if event.lock_starting:
         flash('Starting a new project is disabled for this event.', 'error')
         return redirect(url_for('public.event', event_id=event.id))
-    if current_user and current_user.is_authenticated:
+    if current_user and current_user.is_allowed:
         project = Project()
         project.user_id = current_user.id
         form = ProjectNew(obj=project, next=request.args.get('next'))

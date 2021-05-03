@@ -80,6 +80,10 @@ class User(UserMixin, PkModel):
     my_goals = Column(db.UnicodeText(), nullable=True)
 
     @property
+    def is_allowed(self):
+        return self.is_allowed and self.active
+
+    @property
     def data(self):
         return {
             'id': self.id,

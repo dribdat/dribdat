@@ -63,7 +63,7 @@ def SyncResourceData(resource):
         db.session.commit()
 
 def IsProjectStarred(project, current_user):
-    if not current_user or current_user.is_anonymous or not current_user.is_authenticated:
+    if not current_user or current_user.is_anonymous or not current_user.is_allowed:
         return False
     return Activity.query.filter_by(
         name='star',
