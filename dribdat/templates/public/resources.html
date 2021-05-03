@@ -9,7 +9,10 @@
   <div class="container">
 
     <div class="container join-tip"><p>
-      <b>Join</b> a project and click <a href="#" class="btn btn-success disabled btn-sm">Post</a> to progress through the challenge stages:
+      <i class="fa fa-cloud"></i> Tool
+      <i class="fa fa-gear"></i> Code
+      <i class="fa fa-cube"></i> Data
+      <i class="fa fa-leaf"></i> Recommended resources can be found here, sorted by project stage.
     </p></div>
 
     <a name="steps"></a>
@@ -35,6 +38,10 @@
         {% endif %}
       </div>
     {% endfor %}
+
+    <div class="container join-tip"><p>
+      Tip: <b>Join</b> a project and click <a href="#" class="btn btn-success disabled btn-sm">Post</a> to progress through the challenge stages.
+    </p></div>
 
     <center class="mt-5">
       <a class="btn btn-success btn-lg" href="{{ url_for('public.resource_post') }}">Suggest another resource</a>

@@ -864,10 +864,12 @@ pre { color: #333; background: white; }
 .resources-page .step .resource-card {
   background: white;
   margin: 0.5em 0.3em;
+  min-height: 4em;
+  vertical-align: top;
 }
 .resources-page .join-tip {
   opacity: 0.8;
-  margin: 1em;
+  margin: 1em 0;
 }
 .resources-page .resource-list {
   margin: 0; padding: 0;

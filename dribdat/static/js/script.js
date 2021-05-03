@@ -213,10 +213,12 @@
     $navCategories.click().parent().parent().hide();
 
   // Roll up resources on overview page
-  $('.resources-page .step .resource-list').hide().parent()
-    .addClass('active').click(function() {
-      $(this).find('.resource-list').slideDown();
-    });
+  if ($('.resources-page .step .resource-card').length > 16) {
+    $('.resources-page .step .resource-list').hide().parent()
+      .addClass('active').click(function() {
+        $(this).find('.resource-list').slideDown();
+      });
+  }
 
   // Show embed code when button clicked
   $('#embed-link').click(function(e) {
