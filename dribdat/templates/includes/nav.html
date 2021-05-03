@@ -26,17 +26,17 @@
             {% endif %}
           </a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link {% if active == 'resources' %}active{% endif %}" href="{{ url_for('public.event_resources', event_id=event.id) }}">
-            <i class="fa fa-cube"></i>
-            Resources
-          </a>
-        </li>
         {% if event.can_start_project %}
-          <li class="nav-item">
+          <!--<li class="nav-item">
             <a class="nav-link {% if active == 'projectnew' %}active{% endif %}" href="{{ url_for('public.project_new', event_id=event.id) }}">
               <i class="fa fa-rocket"></i>
               Starter
+            </a>
+          </li>-->
+          <li class="nav-item">
+            <a class="nav-link {% if active == 'resources' %}active{% endif %}" href="{{ url_for('public.event_resources', event_id=event.id) }}">
+              <i class="fa fa-cube"></i>
+              Resources
             </a>
           </li>
           <li class="nav-item">
@@ -64,7 +64,7 @@
         {% endfor %}
       {% endif %}
 
-      {% if current_user and current_user.is_allowed %}
+      {% if current_user and current_user.is_authenticated %}
           <li class="nav-item">
             <a class="nav-link{{ ' active' if active == 'profile' }}" href="{{ url_for('public.user', username=current_user.username) }}" title="{{ current_user.username }}">
               <i class="fa fa-key"></i>

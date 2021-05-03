@@ -808,9 +808,12 @@ pre { color: #333; background: white; }
 }
 
 .event-resources {
-  padding: 0 1em;
+  padding: 2rem;
+  margin-bottom: 0px;
   margin-top: 40px;
   text-align: left;
+  background: white;
+  font-size: 125%;
 }
 .event-info {
   margin-top: 40px;
