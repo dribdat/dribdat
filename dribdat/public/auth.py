@@ -82,6 +82,10 @@ def register():
             new_user.is_admin = True
             new_user.save()
             flash("Administrative user created - have fun!", 'success')
+        elif current_app.config['DRIBDAT_USER_APPROVE']:
+            new_user.active = False
+            new_user.save()
+            flash("Thank you for registering. New accounts require approval from the event organizers. Please update your profile and await activation.", 'warning')
         else:
             flash("Thank you for registering. You can now log in and submit projects.", 'success')
         login_user(new_user, remember=True)

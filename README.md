@@ -36,6 +36,7 @@ The following options can be used to toggle **application features**:
 * `DRIBDAT_ENV` - 'dev' to enable debugging, 'prod' to optimise assets etc.
 * `DRIBDAT_SECRET` - a long scary string for hashing your passwords - in Heroku this is set automatically
 * `DRIBDAT_APIKEY` - for connecting clients to the remote [API](#api)
+* `DRIBDAT_USER_APPROVE` - set to True so that any new non-SSO accounts are inactive
 * `DRIBDAT_NOT_REGISTER` - set to True to disallow creating accounts on this server
 * `DRIBDAT_SHOW_SUBMITS` - set to False to moderate resource submissions on the site
 * `DRIBDAT_THEME` - can be set to one of the [Bootswatch themes](https://bootswatch.com/)

@@ -71,7 +71,7 @@ def user(username):
     user = User.query.filter_by(username=username).first_or_404()
     if not user.active:
         # return "User deactivated. Please contact an event organizer."
-        flash('This user account is under review. Please contact the organizing team to access all functions of this platform.', 'warning')
+        flash('This user account is under review. Please contact the organizing team if you have any questions.', 'warning')
     event = current_event()
     cert_path = user.get_cert_path(event)
     # projects = user.projects
@@ -84,7 +84,7 @@ def user(username):
 
 @blueprint.route("/event/<int:event_id>")
 def event(event_id):
-    if not current_user.active:
+    if current_user and not current_user.active:
         flash('This user account is under review. Please update your profile and contact the organizing team to access all functions of this platform.', 'warning')
     event = Event.query.filter_by(id=event_id).first_or_404()
     projects = Project.query.filter_by(event_id=event_id, is_hidden=False)
@@ -223,7 +223,8 @@ def project_unstar(project_id):
 @blueprint.route('/event/<int:event_id>/project/new', methods=['GET', 'POST'])
 def project_new(event_id):
     if not current_user.is_allowed:
-        return "User not allowed. Please contact event organizers."
+        flash("User not activated. Please contact event organizers.", 'warning')
+        return redirect(url_for('public.event', event_id=event_id))
     form = None
     event = Event.query.filter_by(id=event_id).first_or_404()
     if event.lock_starting:
