@@ -296,7 +296,7 @@ def resource_post():
     if form.validate_on_submit():
         form.populate_obj(resource)
         resource.user_id = current_user.id
-        resource.is_visible = current_app.config['DRIBDAT_SHOW_SUBMITS']
+        resource.is_visible = not current_app.config['DRIBDAT_TOOL_APPROVE']
         db.session.add(resource)
         db.session.commit()
         flash('Thanks for the tip! Your suggestions are visible in your profile.', 'success')

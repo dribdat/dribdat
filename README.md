@@ -38,10 +38,10 @@ The following options can be used to toggle **application features**:
 * `DRIBDAT_APIKEY` - for connecting clients to the remote [API](#api)
 * `DRIBDAT_USER_APPROVE` - set to True so that any new non-SSO accounts are inactive
 * `DRIBDAT_NOT_REGISTER` - set to True to disallow creating accounts on this server
-* `DRIBDAT_SHOW_SUBMITS` - set to False to moderate resource submissions on the site
+* `DRIBDAT_TOOL_APPROVE` - set to True for suggested resources to not immediately appear
 * `DRIBDAT_THEME` - can be set to one of the [Bootswatch themes](https://bootswatch.com/)
 * `DRIBDAT_STYLE` - provide the address to a CSS stylesheet for custom global styles
-* `DRIBDAT_CLOCK` - use 'up' or 'down' to change the position, or 'off' to hide the countdown
+* `DRIBDAT_CLOCK` - use 'up' or 'down' to change the position, or 'off' to hide the countdown clock
 
 Support for **Web analytics** can be configured using one of the following variables:
 
