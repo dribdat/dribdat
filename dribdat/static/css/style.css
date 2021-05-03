@@ -162,6 +162,11 @@ nav .navbar-nav .nav-item {
   text-align: center;
   font-weight: bold;
 }
+.home-page h1,
+.home-page .home-nav {
+  display: block;
+  text-align: center;
+}
 .home .an-event .card {
   width: 100%;
 }
@@ -190,11 +195,6 @@ nav .navbar-nav .nav-item {
     left: 50%;
     width: 360px;
     margin-left: -180px;
-  }
-  .home-page h1,
-  .home-page .home-nav {
-    display: block;
-    text-align: center;
   }
 }
 @media (max-width: 400px) {
