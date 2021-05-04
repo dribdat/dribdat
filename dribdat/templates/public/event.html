@@ -83,7 +83,7 @@
 <div class="category-info">
   {% if current_event.has_started and not current_event.has_finished %}
     <div category-id="infobox" class="category-container category-tip">
-      <center><h4><i class="fa fa-arrow-circle-o-up"></i> Explore challenges and join projects</h4></center>
+      <center><h4><i class="fa fa-lightbulb-o"></i> &nbsp;The event has started! Explore challenges and join projects above.</h4></center>
     </div>
   {% endif %}
   {% for category in current_event.categories_for_event() %}

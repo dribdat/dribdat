@@ -9,9 +9,9 @@
 
     {% if current_user and current_user.is_authenticated and current_user.id == user.id %}
     <div class="col-sm btn-group">
-        <a href="{{ url_for('auth.user_profile') }}" class="btn btn-secondary">
+        <a href="{{ url_for('auth.user_profile') }}" class="btn btn-secondary btn-warning">
           <i class="fa fa-child"></i>
-          Edit Profile
+          Edit my profile
         </a>
 
         {% if cert_path %}
@@ -22,9 +22,9 @@
         </a>
         {% endif %}
 
-        <a href="{{ url_for('auth.logout') }}" class="btn btn-secondary">
+        <a href="{{ url_for('auth.logout') }}" class="btn btn-secondary hidden">
           <i class="fa fa-sign-out"></i>
-          Log out
+          Logout
         </a>
     </div>
     {% endif %}
