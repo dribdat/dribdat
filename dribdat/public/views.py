@@ -84,8 +84,6 @@ def user(username):
 
 @blueprint.route("/event/<int:event_id>")
 def event(event_id):
-    if current_user and not isUserActive(current_user):
-        flash('This user account is under review. Please update your profile and contact the organizing team to access all functions of this platform.', 'warning')
     event = Event.query.filter_by(id=event_id).first_or_404()
     projects = Project.query.filter_by(event_id=event_id, is_hidden=False)
     if request.args.get('embed'):

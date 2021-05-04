@@ -3,6 +3,7 @@
 """
 
 from dribdat.user.models import Activity, Resource
+from dribdat.user import isUserActive
 from dribdat.database import db
 from dribdat.apifetch import * # TBR
 
@@ -63,7 +64,7 @@ def SyncResourceData(resource):
         db.session.commit()
 
 def IsProjectStarred(project, current_user):
-    if not current_user or not current_user.active:
+    if not isUserActive(current_user):
         return False
     return Activity.query.filter_by(
         name='star',

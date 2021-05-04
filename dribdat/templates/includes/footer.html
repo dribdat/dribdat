@@ -15,14 +15,5 @@
       <a href="{{ config.ANALYTICS_HREF }}">Analytics</a>
     </li>
     {% endif %}
-
-    {% if current_user %}
-    <li>
-      <a href="{{ url_for('auth.logout') }}">
-        <i class="fa fa-sign-out"></i>
-        Logout
-      </a>
-    </li>
-    {% endif %}
   </ul>
 </footer>

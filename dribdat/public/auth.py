@@ -46,7 +46,10 @@ def login():
     if request.method == 'POST':
         if form.validate_on_submit():
             login_user(form.user, remember=True)
-            flash("You are logged in.", 'success')
+            if not form.user.active:
+                flash('This user account is under review. Please update your profile and contact the organizing team to access all functions of this platform.', 'warning')
+            else:
+                flash("You are logged in! Time to make something awesome ≧◡≦", 'success')
             redirect_url = request.args.get("next") or url_for("public.home")
             return redirect(redirect_url)
         else:
@@ -114,6 +117,8 @@ def forgot():
 @login_required
 def user_profile():
     user = current_user
+    if not user.active:
+        flash('This user account is under review. Please update your profile and contact the organizing team to access all functions of this platform.', 'warning')
     form = UserForm(obj=user, next=request.args.get('next'))
     form.roles.choices = [(r.id, r.name) for r in Role.query.order_by('name')]
 
@@ -179,7 +184,11 @@ def get_or_create_sso_user(sso_id, sso_name, sso_email, sso_webpage=''):
             flash("Welcome! Please complete your user account.", 'info')
             return redirect(url_for("auth.user_profile"))
     login_user(user, remember=True)
-    flash(u'Logged in - welcome!', 'success')
+    if not user.active:
+        flash('This user account is under review. Please update your profile and contact the organizing team to access all functions of this platform.', 'warning')
+    else:
+        flash(u'Logged in! Time to make something awesome ≧◡≦', 'success')
+
     if current_event():
         return redirect(url_for("public.event", event_id=current_event().id))
     else:
