@@ -86,7 +86,7 @@ def getProjectPhase(project):
     if not project.progress in PROJECT_PROGRESS_PHASE: return ""
     return PROJECT_PROGRESS_PHASE[project.progress]
 
-def isUserDeactivated(user):
+def isUserActive(user):
     if not user or not 'active' in user.__dir__():
         return False
-    return not user.active
+    return user.active

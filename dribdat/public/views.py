@@ -17,7 +17,7 @@ from dribdat.aggregation import (
     ProjectActivity, IsProjectStarred,
     GetEventUsers, SuggestionsByProgress,
 )
-from dribdat.user import projectProgressList, isUserDeactivated
+from dribdat.user import projectProgressList, isUserActive
 
 from datetime import datetime
 
@@ -69,7 +69,7 @@ def home():
 @blueprint.route('/user/<username>', methods=['GET'])
 def user(username):
     user = User.query.filter_by(username=username).first_or_404()
-    if isUserDeactivated(user):
+    if not isUserActive(user):
         # return "User deactivated. Please contact an event organizer."
         flash('This user account is under review. Please contact the organizing team if you have any questions.', 'warning')
     event = current_event()
@@ -84,7 +84,7 @@ def user(username):
 
 @blueprint.route("/event/<int:event_id>")
 def event(event_id):
-    if isUserDeactivated(current_user):
+    if current_user and not isUserActive(current_user):
         flash('This user account is under review. Please update your profile and contact the organizing team to access all functions of this platform.', 'warning')
     event = Event.query.filter_by(id=event_id).first_or_404()
     projects = Project.query.filter_by(event_id=event_id, is_hidden=False)
@@ -133,7 +133,7 @@ def project_edit(project_id):
     project = Project.query.filter_by(id=project_id).first_or_404()
     event = project.event
     starred = IsProjectStarred(project, current_user)
-    allow_edit = starred or (current_user.is_allowed and current_user.is_admin)
+    allow_edit = starred or (isUserActive(current_user) and current_user.is_admin)
     if not allow_edit:
         flash('You do not have access to edit this project.', 'warning')
         return project_action(project_id, None)
@@ -209,7 +209,7 @@ def project_action(project_id, of_type=None, as_view=True, then_redirect=False, 
 @blueprint.route('/project/<int:project_id>/star', methods=['GET', 'POST'])
 @login_required
 def project_star(project_id):
-    if not current_user.is_allowed:
+    if not isUserActive(current_user):
         return "User not allowed. Please contact event organizers."
     flash('Welcome to the team!', 'success')
     return project_action(project_id, 'star', then_redirect=True)
@@ -222,7 +222,7 @@ def project_unstar(project_id):
 
 @blueprint.route('/event/<int:event_id>/project/new', methods=['GET', 'POST'])
 def project_new(event_id):
-    if not current_user.is_allowed:
+    if not isUserActive(current_user):
         flash("User not activated. Please contact event organizers.", 'warning')
         return redirect(url_for('public.event', event_id=event_id))
     form = None
@@ -230,7 +230,7 @@ def project_new(event_id):
     if event.lock_starting:
         flash('Starting a new project is disabled for this event.', 'error')
         return redirect(url_for('public.event', event_id=event.id))
-    if current_user and current_user.is_allowed:
+    if isUserActive(current_user):
         project = Project()
         project.user_id = current_user.id
         form = ProjectNew(obj=project, next=request.args.get('next'))
@@ -288,7 +288,7 @@ def resource(resource_id):
 @blueprint.route('/resource/post', methods=['GET', 'POST'])
 @login_required
 def resource_post():
-    if not current_user.is_allowed:
+    if not isUserActive(current_user):
         return "User not allowed. Please contact event organizers."
     resource = Resource()
     event = current_event()
@@ -309,7 +309,7 @@ def resource_post():
 def resource_edit(resource_id):
     resource = Resource.query.filter_by(id=resource_id).first_or_404()
     event = current_event()
-    allow_edit = current_user.is_allowed and current_user == resource.user or current_user.is_admin
+    allow_edit = isUserActive(current_user) and current_user == resource.user or current_user.is_admin
     if not allow_edit:
         flash('You do not have access to edit this resource.', 'warning')
         return redirect(url_for('public.home'))

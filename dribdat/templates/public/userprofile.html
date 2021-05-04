@@ -92,7 +92,7 @@
 </div>
 {% endif %}
 
-{% if not projects and current_user and current_user.is_allowed and current_user.id == user.id %}
+{% if not projects and current_user and current_user.active and current_user.id == user.id %}
     <i>No projects here. Time to <b>Join</b> or <b>Start</b> something awesome!</i>
 {% else %}
     <h5 class="mt-2">Teams</h5>

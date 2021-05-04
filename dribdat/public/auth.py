@@ -151,7 +151,7 @@ def get_or_create_sso_user(sso_id, sso_name, sso_email, sso_webpage=''):
     sso_id = str(sso_id)
     user = User.query.filter_by(sso_id=sso_id).first()
     if not user:
-        if current_user and current_user.is_allowed:
+        if current_user and current_user.active:
             user = current_user
             user.sso_id = sso_id
         else:

@@ -6,5 +6,5 @@ from .constants import (
     USER_ROLE, ADMIN, USER, USER_STATUS, ACTIVE,
     projectProgressList, getProjectPhase,
     resourceTypeList, getResourceType,
-    isUserDeactivated
+    isUserActive
 )
