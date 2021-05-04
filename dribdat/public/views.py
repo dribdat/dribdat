@@ -17,7 +17,7 @@ from dribdat.aggregation import (
     ProjectActivity, IsProjectStarred,
     GetEventUsers, SuggestionsByProgress,
 )
-from dribdat.user import projectProgressList
+from dribdat.user import projectProgressList, isUserDeactivated
 
 from datetime import datetime
 
@@ -69,7 +69,7 @@ def home():
 @blueprint.route('/user/<username>', methods=['GET'])
 def user(username):
     user = User.query.filter_by(username=username).first_or_404()
-    if not user.active:
+    if isUserDeactivated(user):
         # return "User deactivated. Please contact an event organizer."
         flash('This user account is under review. Please contact the organizing team if you have any questions.', 'warning')
     event = current_event()
@@ -84,7 +84,7 @@ def user(username):
 
 @blueprint.route("/event/<int:event_id>")
 def event(event_id):
-    if current_user and not current_user.active:
+    if isUserDeactivated(current_user):
         flash('This user account is under review. Please update your profile and contact the organizing team to access all functions of this platform.', 'warning')
     event = Event.query.filter_by(id=event_id).first_or_404()
     projects = Project.query.filter_by(event_id=event_id, is_hidden=False)
