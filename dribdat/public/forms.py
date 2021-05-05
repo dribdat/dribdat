@@ -46,7 +46,7 @@ class UserForm(FlaskForm):
     webpage_url = URLField(u'Online profile', [length(max=128)],
         description="Link to your website or a social media profile.")
     my_story = TextAreaField(u'My story',
-        description="A brief bio and outline of the competencies you bring into the hackathon. The top portion of your profile.")
+        description="A brief bio and outline of the competencies you bring into the mix. The top portion of your profile.")
     my_goals = TextAreaField(u'My goals',
         description="What brings you here? Share a few words about your interests. This is the bottom portion of your profile.")
     username = StringField(u'Username', [length(max=25), UniqueValidator(User, 'username'), DataRequired()],

@@ -413,12 +413,12 @@ class Project(PkModel):
             signals.append(prev)
         if self.event.has_started or self.event.has_finished:
             signals.append({
-                'title': "Hackathon started",
+                'title': "Event started",
                 'date': self.event.starts_at
             })
         if self.event.has_finished:
             signals.append({
-                'title': "Hackathon finished",
+                'title': "Event finished",
                 'date': self.event.ends_at
             })
         return sorted(signals, key=lambda x: x['date'], reverse=True)

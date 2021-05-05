@@ -1,12 +1,12 @@
 # USAGE
 
-This document explains the basic functions of `} dribdat {`, an open source platform for data-driven team collaboration, such as *Hackathons*. It is a FAQ covering the basic usage of the application. For more background see [ABOUT](ABOUT.md), and for technical details visit the [README](README.md).
+This document explains the basic functions of `} dribdat {`, an open source platform for data-driven team collaboration (such as *[Hackathons](https://hackathon.guide/)*). It is a FAQ covering the basic usage of the application. For more background see [ABOUT](ABOUT.md), and for technical details visit the [README](README.md).
 
 We are also working on a new interactive manual at https://github.com/hackathons-ftw/handbook
 
 ## How does this work?
 
-Dribdat works as a website and project board for running exciting, productive events, and allows organizers and participants to collect their project details in one place, displaying the challenges and projects in Web dashboards, and plugging in community tools such as [Discourse](https://www.discourse.org/), [Slack](http://slack.com), or [Let's Chat](http://sdelements.github.io/lets-chat/) - or using the [remote API](#api) for additional interfaces such as [chatbots](https://github.com/schoolofdata-ch/dridbot) to enhance the hackathon.
+**dribdat** works as a website and project board for running exciting, productive events, and allows organizers and participants to collect their project details in one place, displaying the challenges and projects in Web dashboards, and plugging in community tools such as [Discourse](https://www.discourse.org/), [Slack](http://slack.com), or [Let's Chat](http://sdelements.github.io/lets-chat/) - or using the [remote API](#api) for additional interfaces such as [chatbots](https://github.com/schoolofdata-ch/dridbot) to enhance the hackathon.
 
 ## What does it look like?
 
@@ -16,7 +16,7 @@ As we are really into making the most of those time constraints, the homepage an
 
 ![](dribdat/static/img/screenshot_countdown.png)
 
-Here is how a dribdat-powered event looks like in the heat of the hackathon:
+Here is how a dribdat-powered event looks like in the heat of things:
 
 ![](dribdat/static/img/screenshot_makezurich.jpg)
 
@@ -43,15 +43,13 @@ For more details on entering content, see the [usage steps](#content).
 
 ## Why should we use dribdat?
 
-Hackathons are a playground for creative individuals, and events which focus on sustainable solutions need to encourage good documentation and evaluation. Dribdat is used in hackathon series that involve a diverse user base, in particular those of the Swiss NGO [Opendata.ch](https://opendata.ch/events/) - in fact, the platform was built by this community. This open source platform has developed over time into a unique solution to such needs, and every contribution helps to assure the future development of this project.
-
-And also, as you are such a very cool person, amazing experiences and lasting friendships will emerge from your use of dribdat. Word.
+Creative collaborative events are a playground for creative individuals, and events which focus on sustainable solutions need to encourage good documentation and evaluation. Developed and used for hackathon series, dribdat is designed to involve a diverse user base - in particular those of the Swiss NGO [Opendata.ch](https://opendata.ch/events/). This open source platform built by a community for its own needs has developed over time into a unique solution that is used for a wide variety of events, and every contribution helps to assure the future development of this project.
 
 ## How do I use this effectively?
 
 Once you've signed up for a challenge, found a team and joined a group channel, you will soon start brainstorming daring and innovative solutions. Use dribdat to keep a notebook, post updates about your team's progress, accelerate your collaboration efforts and get ahead of the game to rock your pitch at the end.
 
-Having a readable, regularly updated overview of what your team is working on is your secret weapon in hackathons. Remember to release early, release often, and use the power of evaluation for quick feedback to your experiments. Then rock that stage with your results!
+Having a readable, regularly updated overview of what your team is working on is your secret weapon in collaborative projects. Remember to release early, release often, and use the power of evaluation for quick feedback to your experiments. Then rock that stage with your results!
 
 ## What are the steps for users?
 
@@ -59,7 +57,7 @@ Here we explain the steps that users typically go through in using dribdat. Feel
 
 ### 1. Sign in
 
-Click **Login** at the top of the page and either use the e-mail and password to register and log in, or for hackathons that are connected to Slack, look for a button that looks like this:
+Click **Login** at the top of the page and either use the e-mail and password to register and log in, or for servers that are connected to Slack, look for a button that looks like this:
 
 ![Sign in with Slack button](https://evalhack.org/static/img/btn-sign-in-with-slack.png)
 
@@ -67,13 +65,13 @@ If you have issues logging into the platform, please contact the organizing team
 
 ### 2. Find your team
 
-Every hackathon team should have a public project page on dribdat.
+Every active team should have a public project page on dribdat.
 
-These are sometimes categorized according to the challenge topic they address at the top of the event page, which is a kind of map of the hackathon. The button at the far right (&#9776;) switches to a list mode, which can also help you to find your team if there are a lot of challenges. Here is an example from a recent Dribdat event which uses categories:
+These are sometimes categorized according to the challenge topic they address at the top of the event page, which is a kind of digital map. The button at the far right (&#9776;) switches to a list mode, which can also help you to find your team if there are a lot of challenges. Here is an example from a recent Dribdat event which uses categories:
 
 ![EvalHack screenshot](https://us-east-1.linodeobjects.com/dribdat/uploads/upload_5f353fb2f1a035c8a2a2d84f50121ca1.png)
 
-If your team does not yet have a project, then you may (administrators can disable this) be able to create one with the green **Start project** button (which is called **Announce Challenge** before the hackathon begins) to create a project:
+If your team does not yet have a project, then you may (administrators can disable this) be able to create one with the green **Start project** button (which is called **Announce Challenge** before the event begins) to create a project:
 
 ![](dribdat/static/img/screenshot_start.png)
 
@@ -87,7 +85,7 @@ If you need to make changes or link your name to somewhere on the Internet, clic
 
 ### 3. Post an update
 
-Once you join a project in step (2), buttons appear at the top of the page allowing you to *Post* and *Edit* updates about your hackathon experience.
+Once you join a project in step (2), buttons appear at the top of the page allowing you to *Post* and *Edit* updates about your experience.
 
 ![Editing buttons](https://us-east-1.linodeobjects.com/dribdat/uploads/upload_2445ee313b8f144af17b7490eee29f0e.png)
 
@@ -95,7 +93,7 @@ By clicking the **Post** button, you can give a quick status report of your prog
 
 ![Project log](https://user-images.githubusercontent.com/31819/95675905-db89dd00-0bba-11eb-9e65-24d4213b94ab.png)
 
-Try to use this regularly to keep tabs on how and your team are spending your precious time at the hackathon. It will help you to learn from the experience and think of improvements for next time.
+Try to use this regularly to keep tabs on how and your team are spending your precious time at the event. It will help you to learn from the experience and think of improvements for next time.
 
 ### 4. Share your results
 
@@ -103,7 +101,7 @@ If you need to make other changes to your project, click the **Edit** button. Yo
 
 In the large **Description** field you can post notes on your final results, such as a video or slide presentation, summarizing in free form your solution to the challenge. This can be plain text, in HTML or Markdown. If you need to add an image, use a cloud hosting service like Imgur and paste the link in like this: `![Title of my image](https://link-to-my-image.jpg)`
 
-As noted at the top of this guide: if you are using GitHub, Google Docs, a wiki, etc., to write your documentation, you don't need to copy and paste it into dribdat to submit your project. Use the **Sync** capability to automatically scrape the contents of your README or webpage into the hackathon. Pretty hacky, huh? `;-)`
+As noted at the top of this guide: if you are using GitHub, Google Docs, a wiki, etc., to write your documentation, you don't need to copy and paste it into dribdat. Use the **Sync** capability to automatically scrape the contents of your README or webpage into your project. Pretty hacky, huh? `;-)`
 
 You can also use the **Project link** to embed documentation you are working on elsewhere into a frame on your project page. This could be a demo of your application, or - in the early phases at least - collaboration tools for your team.
 
@@ -115,7 +113,7 @@ Shared text documents, a folder full of sketches, datasets, and any other online
 
 ### 5. Keep a beginner's mind
 
-Have you never participated in a hackathon, are not quite sure what you can contribute, you do not know anyone yet here, or are just stuck? In the header bar you will find a link to the **Community** - most likely a chat channel or forum - where people are posting questions and support issues.
+Have you never participated in an event, where you were not quite sure what you can contribute, you do not know anyone yet here, or are just stuck? In the header bar you will find a link to the **Community** - most likely a chat channel or forum - where people are posting questions and support issues.
 
 In the same vein, adding a **Contact** link to your project which points to your team's chat channel or Issues page helps to connect you to (hopefully very constructive) criticism and encouragement from the audience.
 
@@ -161,6 +159,6 @@ The look and feel of the project view can be customized with CSS, and shows chal
 
 ## I want to use this elsewhere
 
-Please contact the dribdat maintainers through the [homepage](https://dribdat.cc/), where you can find links to get a free copy of the software - or just ask the organising team at a dribdat-powered hackathon for leads. We will be happy to get you any help you need to get started.
+Please contact the dribdat maintainers through the [homepage](https://dribdat.cc/), where you can find links to get a free copy of the software - or just ask the organising team at a dribdat-powered event for leads. We will be happy to get you any help you need to get started.
 
 Happy hacking!

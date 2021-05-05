@@ -6,7 +6,7 @@ For more background and references, see the [User's Guide](USAGE.md) and [README
 
 [![](https://blog.datalets.ch/workshops/2017/dribdat/dribdat.png)](https://github.com/datalets/dribdat/)
 
-`} dribdat {` (originally from "Driven By Data") is an open source tool for data-driven team collaboration, such as Hackathons. It provides an open source website and project board for running events, and integrates popular community platforms and open source code repositories. It is the official platform of [Opendata.ch hackathons](https://hack.opendata.ch) and has been used to host many other events in the Swiss open data and open source community.
+`} dribdat {` (originally from "Driven By Data") is an open source tool for data-driven team collaboration (such as hackathons). It provides an open source website and project board for running events, and integrates popular community platforms and open source code repositories. It is the official platform of [Opendata.ch Hackdays](https://hack.opendata.ch) and has been used to host many other events in the Swiss open data and open source community.
 
 ## Screenshots
 
@@ -24,11 +24,11 @@ Using dribdat's API, it is also possible to create a live dashboard, for example
 
 ## Summary
 
-dribdat is an open source project board designed for splendid collaboration. On dribdat-powered sites we collect and showcase all projects from a hackathon event in one place. Hackathons are more than just a trendy way to get recruited into an IT job: they are an important venue for open collaboration, civic engagement, and technical experimentation in a social setting.
+dribdat is an open source project board designed for splendid collaboration. On dribdat-powered sites we collect and showcase all projects from an event in one place. Designed for use at hackathons, being part of a project team is more than just a trendy way to get recruited into an IT job: they are an important venue for open collaboration, civic engagement, and technical experimentation in a social setting.
 
-The name is an amalgam of "Driven By Data" - with a tip of the hat to [Dribbble](https://dribbble.com/), a famous online community for graphic design which was one of the inspirations at the start of the project. We have organised a lot of hackathons over the years, and started this platform to streamline our own efforts. It is designed with the goal of helping hackathon teams - and their facilitators - sustain efforts over time, streamline information channels, and let everyone focus on driving their ideas forward. 
+The name _dribdat_ is an amalgam of "Driven By Data" - with a tip of the hat to [Dribbble](https://dribbble.com/), a famous online community for graphic design which was one of the inspirations at the start of the project. We have organised a lot of hackathons over the years, and started this platform to streamline our own efforts. It is designed with the goal of helping teams - and their facilitators - sustain efforts over time, streamline information channels, and let everyone focus on driving their ideas forward. 
 
-On the front page you can see the upcoming event, as well as any previous events. A short description is followed by a link to the event home page, as well as a countdown of time remaining until the start or finish (if already started) of the hackathon. The Projects, Challenges and Resources are shown on the event home page. Here you can learn about topics, datasets, schedules, get directions and any other vital information that the organizers of the event have provided. Once the event has started, and you have formed a team, you can login and "Share project". 
+On the front page you can see the upcoming event, as well as any previous events. A short description is followed by a link to the event home page, as well as a countdown of time remaining until the start or finish (if already started) of the event. The Projects, Challenges and Resources are shown on the event home page. Here you can learn about topics, datasets, schedules, get directions and any other vital information that the organizers of the event have provided. Once the event has started, and you have formed a team, you can login and "Share project". 
 
 Once a team has formed around a Challenge, any of the team members can Post an update, and promote it to Project status. At that point you can see a log of the progress the team is making (encourage them to Post regularly to help track activities), and the latest version of their pitch and documentation. As we will discuss in more detail below, this documentation can come from almost any open Internet source and be embedded on the project page.
 
@@ -40,11 +40,11 @@ For more technical guidance, see the [User's Guide](USAGE.md) and installation i
 
 ### History
 
-We have built this project to "scratch our own itch". In it's first two years of service, it has supported dozens of events around Switzerland, and become the official hackathon platform of Opendata.ch and the Open Network Infrastructure Association. We have lots of interesting ideas about how to develop the project further, and need some support and feedback to realize them. 
+We have built this project to "scratch our own itch". In it's first two years of service, it has supported dozens of events around Switzerland, and become the official hackathon platform of [Opendata.ch](https://opendata.ch) - Swiss chapter of Open Knowledge, the [Open Network Infrastructure Association](https://opennetworkinfrastructure.org/), and others. We have interesting ideas about how to develop the project further, and a supportive community giving us the feedback and means to realize them. 
 
 Easiest of all is to sign up for an upcoming [hackathon](http://hack.opendata.ch/), and try dribdat out as a participant. You can also visit the project's home page for instructions on how to quickly deploy it on your own server and set up your own events. 
 
-dribdat is a Web application written using the Flask framework for Python and Bootstrap. It runs on all major operating systems and databases. Looking forward to your contribution!
+dribdat is a responsive Web application written using the Flask framework for Python and Bootstrap. It runs on all major operating systems and databases. Looking forward to your contribution!
 
 ### Links / contacts
 
@@ -54,7 +54,7 @@ dribdat is a Web application written using the Flask framework for Python and B
 
 ## FAQ
 
-The following questions were asked at the [DINAcon](https://dinacon.ch/dinacon-awards/) 2017 nomination submissions.
+The following questions were compiled as part of the projects [DINAcon nomination](https://dinacon.ch/en/dinacon-awards/nominations/), and last updated on May 5, 2021.
 
 _&gt; How mature is the project?_
 
@@ -74,27 +74,27 @@ No
 
 _&gt; How many different contributors did contribute to the project within the last 12 months?_
 
-1
+5
 
 _&gt; How many commits did your project receive within the last 12 months? Projects not having a version control system (e.g. Open Data projects or similar) can also specify changesets or similar._
 
-268
+393
 
-_&gt; Was this project forked (splitted into different communities) in the past or is this project a fork of an other project? Please describe the situation (was it a friendly/unfriendly fork, what was the reason, what is the current state of the projects that are/were involved)._
+_&gt; Was this project forked (split into different communities) in the past or is this project a fork of an other project? Please describe the situation (was it a friendly/unfriendly fork, what was the reason, what is the current state of the projects that are/were involved)._
 
 No
 
 _&gt; If your project is based on a (public) GitLab instance, on Github, on Bitbucket, etc. that offers a metric like "followers" or "likes", what is the metric of your project?_
 
-9 stars, 4 forks
+38 stars, 17 forks
 
 _&gt; Does the community meet in "real life" on a regular base (e.g. yearly, monthly, ...)? How many people do meet at such meetings?_
 
-Yes. We meet at least twice a year at hackathons where we use, and further develop, this platform. I can think of at least 5 people who have directly influenced, and continue to take an interest in, the course of this project.
+Yes. We meet at least twice a year at events where we use, and further develop, this platform. There is a small group of people that has directly influenced, and continues to take an interest in, the course of this project. We have several online locations to share updates (notably on [Mattermost](https://team.opendata.ch/signup_user_complete/?id=74yuxwruaby9fpoukx9bmoxday), Discord and Slack).
 
 _&gt; Do you have other metrics that you would like to share with us, which help us to understand how successful your project is?_
 
-Used at 10+ hackathons. The single largest installation has 150+ users.
+Used at 50+ hackathons. The single largest installation has 750+ users.
 
 _&gt; Does your project have a non-coder community e.g. UX designer, translator, marketing, etc.? What kind of non-coder people are involved in your project?_
 
@@ -102,40 +102,42 @@ Yes. Hackathon participations are not just coders, and non-technical users who w
 
 _&gt; Does your project offer something like "easy hacks" to make it easy to get a foot into the project?_
 
-Yes, there is a getting started page which can also be customized by the hackathon organisers. The process of running hackathons itself, combining our experience in code, is something we have aimed to build into all parts of the tool to make the event format accessible to an even wider public. To run your own instance of dribdat, there is an easy to use "deploy to Heroku" button on the GitHub page.
+Yes, there is a getting started page which can also be customized by the organisers. The process of running creative events like hackathons, combining our experience in code, is something we have aimed to build into all parts of the tool to make the event format accessible to an even wider public. To run your own instance of dribdat, there is an easy to use "deploy to Heroku" button on the GitHub page.
 
 _&gt; Please provide the page where we can find more information about the easy hacks._
 
-For deployment see [https://github.com/datalets/dribdat](https://github.com/datalets/dribdat)
+For deployment see the [README](README.md)
 
-For usage notes, see [https://hack.opendata.ch/about/](https://hack.opendata.ch/about/)
+For usage notes, see [ABOUT](ABOUT.md)
 
-For general guidelines, visit [https://forum.schoolofdata.ch/t/make-the-most-of-hackathon-season/167](https://forum.schoolofdata.ch/t/make-the-most-of-hackathon-season/167)
+For general guidelines, visit [https://forum.opendata.ch/t/make-the-most-of-hackathon-season/167](https://forum.schoolofdata.ch/t/make-the-most-of-hackathon-season/167)
 
 _&gt; Do you have people mentoring new contributors and actively helping them to get on board of the project?_
 
-Oleg and other people at Opendata.ch with experience in using the platform are available via various community channels to new users of dribdat. We regularly mentor new users in getting started. There is also a hosted version of the platform which we can set up to get hackathons going quickly.
+Oleg and other people with experience in using the platform are available via various community channels to new users of dribdat. We regularly mentor new users in getting started. There is also a hosted version of the platform which we can set up to get hackathons going quickly.
 
 _&gt; Does your project undertake specific efforts to make sure, that people regardless of ethnicity, gender, etc. can contribute and participate in the project? Does your project for example have a Code of Conduct or is it in general open and friendly to all human beings? Please explain the current situation._
 
-No. But I think that would be a terrific idea, and have recently discussed this with colleagues. In fact, I think a Code of Conduct should be built into dribdat to help facilitate inclusive events.
+The Hack Code of Conduct, which we have applied to events for the past 3 years, is now in dribdat by default to help facilitate inclusive events.
 
-_&gt; Please describe the business case of your project. _
+_&gt; Please describe the business case of your project._
 
-There are hackathons happening all over the world every weekend. Each of them generates interest, activity, networking and new initiatives. There is still no "market leading" open source hackathon platform board. Several services similar to dribdat, most notably HackDash and Sparkboard, operate in a SaaS model. There is also strong, recurrent interest from companies in using dashboards similar to this one for tracking internal activities above and beyond hackathon-type events. Several business models come to mind leveraging the experience of deploying dribdat. Indeed, the original motivation for the project came out of a hackathon sponsored by Swisscom, a champion of innovation culture.
+There are hackathons happening all over the world every weekend. Countless more collaborative online "hacking" events happen every day in companies, institutions and the civil society. Each of them generates interest, activity, networking and new initiatives. While several hackathon platforms contend to "lead the market", we are one of a handful of open source alternatives, most notably [HackDash](https://github.com/impronunciable/hackdash/) and [Sparkboard](https://github.com/sparkboard/sparkboard) - which operate in a SaaS model.
+
+Please visit our [OpenCollective](https://opencollective.com/dribdat), where we are currently focusing our fundraising and transparent budgeting.
 
 _&gt; How relevant is your project in regard to a commercial use?_
 
-We accept sponsoring and distribute it within the project
+Currently we accept sponsoring and distribute it within the project, but do not charge a licensing fee of any kind. There is a strong, recurrent interest from companies in using dashboards similar to this one for tracking internal activities above and beyond hackathon-type events. Several commercial models come to mind: the original motivation for the project came out of a hackathon sponsored by Swisscom, a company that champions innovation culture. We are inspired us to pursue an organic and grassroots business model that benefits a wide variety of "start-up" initiatives.
 
 _&gt; This project is important to the world because...._
 
-Hackathons are becoming a critical instrument to seeing beyond the veil of pragmatic utility in Information Technologies, and have been embraced by the most disruptive companies and organisations around the world as a vehicle for positive change. By imbuing a software project with the ethics and values of hackathons, we can scale these experiments from our local community to many other corners of the world.
+Hackathons have become a useful instrument to see critically beyond the veil of pragmatic utility in Information Technologies, and have been embraced by the most disruptive companies and organisations around the world as a vehicle for positive change. By imbuing a software project with the ethics and values of hackathons, we can scale these experiments from our local community to many other corners of the world and many domains of creative collaboration.
 
 _&gt; If this project stops its development and ceases to exist, this would be the impact..._
 
-We wouldn't have our own platform to hack the meta-side of hackathons, and that would be a shame. We would probably go back to using wikis and repo organisations, with all the constraints and loss of user friendliness that entails.
+We wouldn't have our own platform to hack the meta-side of hackathons, and that would be a shame. We could go back to using wikis and repo organisations, with all the constraints and loss of user friendliness that entails.
 
 _&gt; Do you have any usage metrics you can provide which show how succesful your project is? (downloads, visits on website, registered users, etc.)_
 
-There are about 200 user accounts and over 250 projects across the different installations known to me.
+In addition to the low thousands of user accounts and hundreds of projects across the different installations (these are visible to administrators in the dashboard), many dribdat instances have "open analytics": scroll down to the bottom of the page (for example, on hack.opendata.ch) and click Analytics.

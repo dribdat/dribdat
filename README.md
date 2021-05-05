@@ -1,14 +1,12 @@
-# Dribdat
+# dribdat
 
 ![Github Actions build](https://github.com/hackathons-ftw/dribdat/workflows/build/badge.svg)
 [![Coveralls](https://coveralls.io/repos/github/hackathons-ftw/dribdat/badge.svg?branch=main)](https://coveralls.io/github/hackathons-ftw/dribdat?branch=main)
 [![Mattermost](https://img.shields.io/badge/Mattermost-chat-blue.svg)](https://team.opendata.ch/signup_user_complete/?id=74yuxwruaby9fpoukx9bmoxday)
 
-### An open source platform for time-limited team-based data-driven solutions-focused collaboration known as the *Hackathon*.
+### A platform for time-limited, team-based, data-driven, open collaboration
 
-If you need help or advice in setting up your event, or would like to contribute to the project: please get in touch via [GitHub Issues](https://github.com/hackathons-ftw/dribdat/issues) or [e-mail](mailto:dribdat@datalets.ch).
-
-For more background and references, see [USAGE](USAGE.md) and [ABOUT](ABOUT.md). The rest of this document has details for deploying the application.
+For background and references, see [User's Guide](USAGE.md) and [Aboue Page](ABOUT.md). If you need help or advice in setting up your event, or would like to contribute to the project: please get in touch via [GitHub Issues](https://github.com/hackathons-ftw/dribdat/issues) or [e-mail](mailto:dribdat@datalets.ch).  The rest of this page has details for deploying the dribdat application.
 
 # Quickstart
 
@@ -221,7 +219,7 @@ See [Contributors](https://github.com/dataletsch/dribdat/graphs/contributors) fo
 
 This project is currently mantained by [@loleg](https://github.com/loleg) and [@gonzalocasas](https://github.com/gonzalocasas).
 
-Special thanks to the [Open Data](https://opendata.ch), [Open Networking](https://opennetworkinfrastructure.org/) and [Open Source](https://dinacon.ch) communities in Switzerland for the many trials and feedbacks. We are also grateful to F. Wieser and M.-C. Gasser at [Swisscom](http://swisscom.com) for conceptual inputs and financial support at an early stage of this project. This code is originally based on Steven Loria's [flask-cookiecutter](https://github.com/sloria/cookiecutter-flask), which we encourage you to use in YOUR next hackathon!
+Special thanks to the [Open Data](https://opendata.ch), [Open Networking](https://opennetworkinfrastructure.org/) and [Open Source](https://dinacon.ch) communities in Switzerland for the many trials and feedbacks. We are also grateful to F. Wieser and M.-C. Gasser at [Swisscom](http://swisscom.com) for conceptual inputs and financial support at an early stage of this project. This code is originally based on Steven Loria's [flask-cookiecutter](https://github.com/sloria/cookiecutter-flask), which we of course encourage you to use in YOUR next project!
 
 Additional and :heart:-felt thanks for testing and feedback to:
 
