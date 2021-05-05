@@ -223,9 +223,9 @@
   // Show embed code when button clicked
   $('#embed-link').click(function(e) {
     e.preventDefault(); e.stopPropagation();
-    var url = $(this).attr('href');
+    var url = $(this).attr('href') + '?embed=1';
     var code = '<iframe src="' + url + '" style="width:100%;height:320px;background:transparent;border:none;overflow:hidden" scrolling="no"></iframe>';
-    window.prompt('Copy and paste this code to embed this event:', code);
+    window.prompt('Share the event link in social media, or copy and paste this HTML code to embed on your site:', code);
   });
 
   // Show project history
