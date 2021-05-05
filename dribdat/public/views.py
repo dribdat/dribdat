@@ -221,7 +221,7 @@ def project_unstar(project_id):
 @blueprint.route('/event/<int:event_id>/project/new', methods=['GET', 'POST'])
 def project_new(event_id):
     if not isUserActive(current_user):
-        flash("User not activated. Please contact event organizers.", 'warning')
+        flash("You are not logged in, or your account needs to be activated.", 'warning')
         return redirect(url_for('public.event', event_id=event_id))
     form = None
     event = Event.query.filter_by(id=event_id).first_or_404()
