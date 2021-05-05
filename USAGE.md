@@ -2,15 +2,21 @@
 
 This document explains the basic functions of `} dribdat {`, an open source platform for data-driven team collaboration (such as *[Hackathons](https://hackathon.guide/)*). It is a FAQ covering the basic usage of the application. For more background see [ABOUT](ABOUT.md), and for technical details visit the [README](README.md).
 
-We are also working on a new interactive manual at https://github.com/hackathons-ftw/handbook
-
-## How does this work?
-
 **dribdat** works as a website and project board for running exciting, productive events, and allows organizers and participants to collect their project details in one place, displaying the challenges and projects in Web dashboards, and plugging in community tools such as [Discourse](https://www.discourse.org/), [Slack](http://slack.com), or [Let's Chat](http://sdelements.github.io/lets-chat/) - or using the [remote API](#api) for additional interfaces such as [chatbots](https://github.com/schoolofdata-ch/dridbot) to enhance the hackathon.
 
-## What does it look like?
+We are also working on a new interactive manual at https://github.com/hackathons-ftw/handbook
 
-Logged-in users can submit challenges, ideas and projects by linking their document or repository, or entering details directly into a form. You can change or customize these [instructions](dribdat/templates/includes/quickstart.html) as you see fit.
+## Quickstart
+
+After you join an event, log in and **Join** a challenge. Or, if it is still possible, start a new challenge or project. You and any of your team members can click the **Join** button at the top of your project page to contribute.
+
+Post your creative **Pitch** using plain text or [Markdown](https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet). Links to videos, documents, a slideshow hosted on [Speaker Deck](https://speakerdeck.com/), and many other [supported sites](https://oembed.com/#section7) will turn into a live preview.
+
+The **Sync** feature allows you to connect a README from your open source repository on [GitHub](https://github.com), [GitLab](https://gitlab.com) or [Bitbucket](https://bitbucket.org) - or an online document at [Etherpad](http://etherpad.org), [Google Docs](http://docs.google.com) (_Publish to Web_), [Instructables](http://instructables.com), [HackMD/CodiMD](https://hackmd.io) and [DokuWiki](http://make.opendata.ch/wiki/project:home). Use the _Sync_ button on your project page for quickly refreshing changes.
+
+By updating your progress using the **Post** button, you can regularly check in your status and any roadblocks.
+
+## What does it actually look like?
 
 As we are really into making the most of those time constraints, the homepage and dashboard feature a big animated countdown clock:
 
@@ -44,6 +50,8 @@ For more details on entering content, see the [usage steps](#content).
 ## Why should we use dribdat?
 
 Creative collaborative events are a playground for creative individuals, and events which focus on sustainable solutions need to encourage good documentation and evaluation. Developed and used for hackathon series, dribdat is designed to involve a diverse user base - in particular those of the Swiss NGO [Opendata.ch](https://opendata.ch/events/). This open source platform built by a community for its own needs has developed over time into a unique solution that is used for a wide variety of events, and every contribution helps to assure the future development of this project.
+
+Logged-in users can submit challenges, ideas and projects by linking their document or repository, or entering details directly into a form. Many customizations to the process and content of the event can be made. You can change or customize the [instructions](dribdat/templates/includes/quickstart.md) for new projects as you see fit in the Event administration.
 
 ## How do I use this effectively?
 
