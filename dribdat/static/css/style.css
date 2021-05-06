@@ -14,6 +14,8 @@ textarea { resize: vertical; }
 
 .hidden { display: none; }
 
+.huge { font-size: 4rem; opacity: 0.6; }
+
 /* Forms */
 form input[type="checkbox"] {
   margin-right: 0.5em;
@@ -328,7 +330,7 @@ nav .navbar-nav .nav-item {
   font-size: 240%;
 }
 .project .hexagontent .progress {
-  margin-top: 6px;
+  margin-top: 1em;
   margin-bottom: 0px;
   height: 3px;
   position: relative;
@@ -336,6 +338,9 @@ nav .navbar-nav .nav-item {
   margin-left: -36px;
   left: 50%;
   opacity: 0.8;
+}
+.project .hexagontent .progress-bar {
+  background-color: #aaa;
 }
 .honeycomb .project { opacity: 0.4; }
 .honeycomb .project.category-highlight { opacity: 1.0; }
@@ -374,6 +379,7 @@ nav .navbar-nav .nav-item {
 }
 .progress-bar {
   background-color: #3399f3;
+  color: #fff;
 }
 .project-info .project-score {
   display: inline-block;
@@ -391,8 +397,17 @@ nav .navbar-nav .nav-item {
   background-size: cover;
   background-position: center;
 }
-.project.hexagon:nth-child(even) { background-color: #f0e0a2; }
-.project.hexagon:nth-child(odd) { background-color: #adddcf; }
+.hexagon .hexaicon {
+  width: 1.5em; height: 1.5em;
+  background-size: cover;
+  position: relative;
+  left: 50%;
+  margin: 0.5em 0 0.5em -0.5em;
+  box-shadow: -2px -2px 1px rgba(0,0,0,0.2);
+  border-radius: 1em;
+}
+.project.hexagon:nth-child(even) { background-color: rgba(240, 240, 210, 0.95); }
+.project.hexagon:nth-child(odd) { background-color: rgba(230, 237, 230, 0.95); }
 
 .project-page .project-name {
   font-weight: bold;
@@ -463,12 +478,6 @@ nav .navbar-nav .nav-item {
   border-radius: 0px;
   clear: both;
 }
-.project-page .project-info a {
-  color: #15a;
-}
-.project-page a.btn { color: white; }
-.project-page a.btn-warning,
-.project-page a.btn-light { color: black; }
 .project-page .project-star i {
   padding-right: 5px;
 }
@@ -822,9 +831,14 @@ pre { color: #333; background: white; }
 .event-info {
   margin-top: 40px;
 }
+.event-participants.jumbotron {
+  padding: 2rem;
+  border: 4px dashed lightgray;
+}
 .event-participants h1 {
-  margin: 2em 0 0;
+  margin: 1em;
   text-align: center;
+  display: none;
 }
 .event-participants .participant-box {
   padding: 2em;
@@ -843,6 +857,10 @@ pre { color: #333; background: white; }
 
 /* resource page */
 
+.resources-page .jumbotron {
+  padding: 2rem;
+  border: 4px dashed lightgray;
+}
 .resources-page .step {
   margin-top: 0.5em;
 }
@@ -862,7 +880,7 @@ pre { color: #333; background: white; }
   position: absolute;
   z-index: 0;
   margin-top: -1rem;
-  color: #bbb;
+  color: burlywood;
   font-weight: bold;
 }
 .resources-page .step .resource-card {
@@ -872,8 +890,8 @@ pre { color: #333; background: white; }
   vertical-align: top;
 }
 .resources-page .join-tip {
-  opacity: 0.8;
-  margin: 1em 0;
+  margin-top: 1em;
+  padding: 0.5em;
 }
 .resources-page .resource-list {
   margin: 0; padding: 0;
