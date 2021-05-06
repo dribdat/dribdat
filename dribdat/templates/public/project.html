@@ -231,10 +231,6 @@
       <div class="timeline-item">
         <div class="timeline-img"></div>
         <div class="timeline-content timeline-card js--fadeInBottom">
-          <div class="date">
-            {{s.date|format_datetime}}
-            {% if s.author %} ~ <b>{{ s.author }}</b>{% endif %}
-          </div>
           {% if s.title %}
           <div class="timeline-img-header">
             <h2>{{s.title}}</h2>
@@ -243,6 +239,12 @@
           {% if s.text %}
             {{s.text|markdown|safe}}
           {% endif %}
+          
+          <div class="date">
+            {{s.date|format_datetime}}
+            {% if s.author %} ~ <b>{{ s.author }}</b>{% endif %}
+          </div>
+
           {% if s.resource and s.resource.is_visible %}
             <a class="resource-card" href="{{ url_for('public.resource', resource_id=s.resource.id) }}">
               <i title="{{s.resource.of_type}}"

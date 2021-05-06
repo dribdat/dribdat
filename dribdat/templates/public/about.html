@@ -19,37 +19,20 @@
         Here we <b>collect and showcase all projects</b> from an event in one place, under open conditions. On the event page you can learn about topics, datasets, and
         any other information the organisers have provided. To form a team, you can
         <a href="/register/">login</a> and join or start a project.</p>
-      <p>Looking for help? <b>Visit the [User Guide](https://github.com/hackathons-ftw/dribdat/blob/main/USAGE.md#usage)</b>, ask your event organiser or fellow participants!</p>
+      <p>Looking for help? <b>Visit the <a href="https://github.com/hackathons-ftw/dribdat/blob/main/USAGE.md#usage" target="_blank">User Guide</a></b>, ask your event organiser or fellow participants!</p>
     </div>
     <hr>
-    <div class="row">
-      <h3>For organisers &#129337;</h3>
-      <p>On the <a href="/">front page</a> you can see the upcoming event, as well as any previous events. A short description is followed
-       by a link to the event home page, as well as a countdown of time remaining until the start or finish (if already started) of the event. All of the content on the site can be edited by the site administrator in the
-        <b>Admin</b> menu linked in the header if you have access: from where you can edit general details under <b>Events</b>,
-        publish <b>Categories</b>, and edit or sync <b>Projects</b> and
-        <b>Challenges</b> (which are either a Category, or just a project in challenge status).</p>
-      <p>If you would like to use this platform for your event,
-        contact the organisers of the events listed here and they
-        should be able to help you - or just fork the open source project
-        and set it up to your liking:</p>
-      <p>
-        <a href="https://github.com/hackathons-ftw/dribdat/blob/main/USAGE.md#usage" class="btn btn-success">User guide</a>
-        <a href="https://github.com/hackathons-ftw/dribdat/issues" class="btn btn-primary">Issues &raquo;</a>
-        <a href="https://github.com/hackathons-ftw/dribdat" class="btn btn-secondary">Source</a>
-      </p>
-    </div>
     <div class="row" class="api">
       <a name="api"></a>
       <div class="content">
         <h3>More data</h3>
         <p>There is a simple API for accessing data from this site in machine-readable form. See the README for additional details.</p>
         <p>Search as you type:</p>
-        <ul class="search-results"></ul>
         <form action="/api/project/search.json" id="search">
           <input name="q" placeholder="Search projects ...">
           <input type="submit" value="search.json">
         </form>
+        <ul class="search-results"></ul>
         <p>Basic data on the current frontpage event:</p>
         <ul>
           <li><a href="/hackathon.json">/hackathon.json</a> (JSON <a href="https://schema.org/Hackathon">Schema</a>)</li>
@@ -66,6 +49,24 @@
           <li><a href="/api/project/posts.json">/api/project/posts.json</a> (JSON)</li>
         </ul>
       </div>
+    </div><!-- /api -->
+    <hr>
+    <div class="row">
+      <h3>Dear organisers</h3>
+      <p>On the <a href="/">front page</a> you can see the upcoming event, as well as any previous events. A short description is followed
+       by a link to the event home page, as well as a countdown of time remaining until the start or finish (if already started) of the event. All of the content on the site can be edited by the site administrator in the
+        <b>Admin</b> menu linked in the header if you have access: from where you can edit general details under <b>Events</b>,
+        publish <b>Categories</b>, and edit or sync <b>Projects</b> and
+        <b>Challenges</b> (which are either a Category, or just a project in challenge status).</p>
+      <p>If you would like to use this platform for your event,
+        contact the organisers of the events listed here and they
+        should be able to help you - or just fork the open source project
+        and set it up to your liking! &#129337;</p>
+      <p>
+        <a href="https://github.com/hackathons-ftw/dribdat/blob/main/USAGE.md#usage" class="btn btn-success">User guide</a>
+        <a href="https://github.com/hackathons-ftw/dribdat/issues" class="btn btn-primary">Issues &raquo;</a>
+        <a href="https://github.com/hackathons-ftw/dribdat" class="btn btn-secondary">Source</a>
+      </p>
     </div>
   </div>
 </div>
