@@ -4,7 +4,7 @@ from flask import (Blueprint, request, render_template, flash, url_for,
                     redirect, session, current_app, jsonify)
 from flask_login import login_required, current_user
 
-from dribdat.user.models import User, Event, Project, Resource
+from dribdat.user.models import User, Event, Project, Resource, Activity
 from dribdat.public.forms import (
     LoginForm, UserForm,
     ProjectNew, ProjectForm,
@@ -120,6 +120,18 @@ def event_resources(event_id):
     })
     return render_template("public/resources.html",
         current_event=event, steps=steps, active="resources")
+
+@blueprint.route("/signals")
+def signals():
+    """ Shows the latest logged posts """
+    page = request.args.get('page') or 1
+    per_page = request.args.get('limit') or 20
+    signals = Activity.query.filter(Activity.action=="post")
+    signals = signals.order_by(Activity.id.desc())
+    signals = signals.paginate(page, per_page=20)
+    return render_template("public/signals.html",
+        endpoint='public.signals', active='signals',
+        current_event=current_event(), data=signals)
 
 @blueprint.route('/project/<int:project_id>')
 def project(project_id):

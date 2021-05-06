@@ -1,0 +1,56 @@
+{% extends "layout.html" %}
+
+{% block page_title %}Signals{% endblock %}
+
+{% block body_class %}signals-page{% endblock %}
+
+{% block content %}
+<h1 class="huge">Posterwall</h1>
+
+<div class="jumbotron">
+  <div class="container">
+
+    <section class="timeline">
+      {% for s in data.items %}
+      <div class="timeline-item">
+        <div class="timeline-img"></div>
+        <div class="timeline-content timeline-card js--fadeInBottom">
+          <a href="{{ url_for('public.project', project_id=s.project.id)}}">
+          <div class="date">
+            {{s.timestamp|format_datetime}}
+            {% if s.user %} ~ <b>{{ s.user.username }}</b>{% endif %}
+          </div>
+            <div class="timeline-img-header">
+              <h2>{{s.project.name}}</h2>
+            </div>
+          </a>
+          {% if s.content %}
+            {{s.content|markdown|safe}}
+          {% endif %}
+          {% if s.resource and s.resource.is_visible %}
+            <a class="resource-card" href="{{ url_for('public.resource', resource_id=s.resource.id) }}">
+              <i title="{{s.resource.of_type}}"
+                 class="fa fa-{{s.resource.icon}}"></i>
+              <b>{{s.resource.name}}</b>
+              <p>{{s.resource.summary}}</p>
+            </a>
+          {% endif %}
+        </div>
+      </div>
+      {% endfor %}
+    </section>
+
+    {% if data.has_next %}
+      <a href="{{ url_for(endpoint, page=data.next_num) }}" class="btn btn-secondary btn-lg">More!</a>
+    {% endif %}
+
+  </div>
+</div>
+
+{% if current_event %}
+<center class="mt-5">
+  <a class="btn btn-dark btn-lg" href="{{ url_for('public.event', event_id=current_event.id) }}">Back to the future</a>
+</center>
+{% endif %}
+
+{% endblock %}

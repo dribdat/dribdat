@@ -863,6 +863,7 @@ pre { color: #333; background: white; }
 
 /* resource page */
 
+.signals-page .jumbotron,
 .resource-page .jumbotron,
 .resources-page .jumbotron {
   padding: 2rem;
