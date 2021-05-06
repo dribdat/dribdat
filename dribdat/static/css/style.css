@@ -138,7 +138,7 @@ ul.help-block {
 @media (max-width: 760px) {
   .section-header .section-header-logo {
     position: relative;
-    margin: 0px;
+    margin: 0px 10px 0 0;
   }
 }
 
@@ -309,9 +309,13 @@ nav .navbar-nav .nav-item {
 .hexagon {
   margin-bottom: 73px;
   border-bottom: 4px solid transparent;
+  transition-property: transform;
+  transition-duration: 1s;
+  transition-delay: 0.3s;
 }
 .hexagon:hover {
   box-shadow: 0px 3px 3px lightblue;
+  transform: scale(1.2);
 }
 .project .hexagontent {
   overflow: hidden;
@@ -399,6 +403,7 @@ nav .navbar-nav .nav-item {
 }
 .hexagon .hexaicon {
   width: 1.5em; height: 1.5em;
+  background-color: white;
   background-size: cover;
   position: relative;
   left: 50%;
@@ -406,8 +411,8 @@ nav .navbar-nav .nav-item {
   box-shadow: -2px -2px 1px rgba(0,0,0,0.2);
   border-radius: 1em;
 }
-.project.hexagon:nth-child(even) { background-color: rgba(240, 240, 210, 0.95); }
-.project.hexagon:nth-child(odd) { background-color: rgba(230, 237, 230, 0.95); }
+.project.hexagon:nth-child(even) { background-color: rgba(230, 200, 160, 0.95); }
+.project.hexagon:nth-child(odd) { background-color: rgba(230, 210, 200, 0.95); }
 
 .project-page .project-name {
   font-weight: bold;
