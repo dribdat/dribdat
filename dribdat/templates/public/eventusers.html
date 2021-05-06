@@ -33,5 +33,12 @@
     <center><b class="usercount">{{ usercount }}</b> contributors to this platform</center>
   {% endif %}
 </div>
+
+{% if current_event %}
+<center class="mt-5">
+    <a class="btn btn-dark btn-lg" href="{{ url_for('public.event', event_id=current_event.id) }}">Back to the future</a>
+</center>
+{% endif %}
+
 {% endcache %}
 {% endblock %}

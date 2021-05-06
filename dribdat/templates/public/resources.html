@@ -48,4 +48,11 @@
 </p><p>
   Tip: <b>Join</b> a project and use the <a href="#" class="btn btn-success disabled btn-sm">Post</a> button to progress through challenge stages.
 </p></div>
+
+{% if current_event %}
+<center class="mt-5">
+    <a class="btn btn-dark btn-lg" href="{{ url_for('public.event', event_id=current_event.id) }}">Back to the future</a>
+</center>
+{% endif %}
+
 {% endblock %}
