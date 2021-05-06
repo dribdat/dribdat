@@ -121,17 +121,17 @@ def event_resources(event_id):
     return render_template("public/resources.html",
         current_event=event, steps=steps, active="resources")
 
-@blueprint.route("/signals")
-def signals():
+@blueprint.route("/dribs")
+def dribs():
     """ Shows the latest logged posts """
     page = request.args.get('page') or 1
     per_page = request.args.get('limit') or 20
-    signals = Activity.query.filter(Activity.action=="post")
-    signals = signals.order_by(Activity.id.desc())
-    signals = signals.paginate(page, per_page=20)
-    return render_template("public/signals.html",
-        endpoint='public.signals', active='signals',
-        current_event=current_event(), data=signals)
+    dribs = Activity.query.filter(Activity.action=="post")
+    dribs = dribs.order_by(Activity.id.desc())
+    dribs = dribs.paginate(page, per_page=20)
+    return render_template("public/dribs.html",
+        endpoint='public.dribs', active='dribs',
+        current_event=current_event(), data=dribs)
 
 @blueprint.route('/project/<int:project_id>')
 def project(project_id):
@@ -210,10 +210,10 @@ def project_action(project_id, of_type=None, as_view=True, then_redirect=False, 
     allow_edit = allow_edit and not event.lock_editing
     project_team = project.team()
     latest_activity = project.latest_activity()
-    project_signals = project.all_signals()
+    project_dribs = project.all_dribs()
     suggestions = SuggestionsByProgress(project.progress)
     return render_template('public/project.html', current_event=event, project=project,
-        project_starred=starred, project_team=project_team, project_signals=project_signals, suggestions=suggestions,
+        project_starred=starred, project_team=project_team, project_dribs=project_dribs, suggestions=suggestions,
         allow_edit=allow_edit, latest_activity=latest_activity)
 
 @blueprint.route('/project/<int:project_id>/star', methods=['GET', 'POST'])

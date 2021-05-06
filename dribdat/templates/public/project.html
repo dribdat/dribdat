@@ -137,7 +137,7 @@
     {% endif %}
     {% if not project.is_challenge %}
     <li class="nav-item">
-      <a class="nav-link" id="signals-tab-md" data-toggle="tab" href="#signals-md" role="tab" aria-controls="signals-md"
+      <a class="nav-link" id="dribs-tab-md" data-toggle="tab" href="#dribs-md" role="tab" aria-controls="dribs-md"
         aria-selected="false">Log</a>
     </li>
     {% endif %}
@@ -224,10 +224,10 @@
 {% if not project.is_challenge %}
   </div>
 {% endif %}
-  <div class="tab-pane fade" id="signals-md" role="tabpanel" aria-labelledby="signals-tab-md">
+  <div class="tab-pane fade" id="dribs-md" role="tabpanel" aria-labelledby="dribs-tab-md">
 
     <section class="timeline">
-      {% for s in project_signals %}
+      {% for s in project_dribs %}
       <div class="timeline-item">
         <div class="timeline-img"></div>
         <div class="timeline-content timeline-card js--fadeInBottom">

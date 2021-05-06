@@ -61,24 +61,25 @@
 
     </div>
 
-    <div class="project-buttons" role="group" aria-label="Resource navigation">
-        {% if resource.source_url %}
-          <a href="{{ resource.source_url }}" class="btn btn-lg" target="_blank" title="Web link"><span>&#x1f310;</span> Get</a>
-        {% endif %}
-    </div>
-
     {% if resource.user_id %}
         <p><i>Recommended by
             <a href="{{ url_for('public.user', username=resource.user.username) }}">
                 {{resource.user.username}}</i></p>
     {% endif %}
 
-    {% if current_user and current_user.active %}
-        {% if resource.user_id == current_user.id or current_user.is_admin %}
-            <a href="{{ url_for('public.resource_edit', resource_id=resource.id) }}" class="btn btn-lg btn-secondary">
-            Edit resource</a>
+    <div class="project-buttons" role="group" aria-label="Resource navigation">
+        {% if resource.source_url %}
+          <a href="{{ resource.source_url }}" class="btn btn-lg" target="_blank" title="Web link">
+              <span>&#x1f310;</span> Get</a>
         {% endif %}
-    {% endif %}
+
+        {% if current_user and current_user.active %}
+        {% if resource.user_id == current_user.id or current_user.is_admin %}
+          <a href="{{ url_for('public.resource_edit', resource_id=resource.id) }}" class="btn btn-lg" title="Edit this resource">
+              <span>&#128221;</span> Edit</a>
+        {% endif %}
+        {% endif %}
+    </div>
 
     {% if current_event %}
     <center class="mt-5">
