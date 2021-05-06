@@ -101,7 +101,7 @@ class ResourceForm(FlaskForm):
     summary = TextAreaField(u'Summary', [length(max=140)], description=u'How is this useful: in 140 characters or less?')
     content = TextAreaField(u'Additional information', description=u'Describe this resource in detail, Markdown and HTML supported')
     progress_tip = SelectField(u'Recommend at', coerce=int, choices=projectProgressList(True, True), description=u'Progress level at which this resource should be suggested to teams')
-    is_visible = BooleanField(u'Show this resource to participants')
+    is_visible = BooleanField(u'Show this resource to participants', description='Enable DRIBDAT_TOOL_APPROVE to moderate all submissions')
     submit = SubmitField(u'Save')
 
 class RoleForm(FlaskForm):

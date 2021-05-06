@@ -13,7 +13,7 @@ from wtforms.fields.html5 import (
 )
 from wtforms.validators import DataRequired, AnyOf, length
 from ..user.validators import UniqueValidator
-from ..user import resourceTypeList
+from ..user import resourceTypeList, projectProgressList
 from dribdat.user.models import User, Project, Resource
 
 class LoginForm(FlaskForm):
@@ -60,39 +60,39 @@ class UserForm(FlaskForm):
 class ProjectNew(FlaskForm):
     id = HiddenField('id')
     name = StringField(u'Title', [length(max=80), UniqueValidator(Project, 'name'), DataRequired()],
-        description=u'A short team name or project title - you may change this later')
+        description=u'A short team name or project title - you may change this later.')
     summary = StringField(u'Summary', [length(max=120)],
-        description="The headline of your project, in up to 120 characters")
-    category_id = SelectField(u'Category', coerce=int, description=u'If your event supports it, select the challenge you plan to address')
+        description="The headline of your project, in up to 120 characters.")
+    category_id = SelectField(u'Category', coerce=int, description=u'If your event supports it, select the challenge you plan to address.')
     contact_url = StringField(u'Contact link', [length(max=255)],
-        description="How to best contact your team")
+        description="How to best contact your team.")
     autotext_url = URLField(u'Sync', [length(max=255)],
-        description="URL to external source of documentation in GitLab, GitHub, Bitbucket, Data Package or Website")
+        description="URL to external source of documentation in GitLab, GitHub, Bitbucket, Data Package or Website.")
     submit = SubmitField(u'Save')
 
 class ProjectForm(FlaskForm):
     id = HiddenField('id')
     # is_autoupdate = BooleanField(u'Sync project data')
     name = StringField(u'Title', [length(max=80), UniqueValidator(Project, 'name'), DataRequired()],
-        description="[Required] a short project name, max 80 characters")
+        description="[Required] a short project name, max 80 characters.")
     summary = StringField(u'Summary', [length(max=120)],
-        description="Max 120 characters")
+        description="Max 120 characters.")
     longtext = TextAreaField(u'Pitch',
         description="To format, use Markdown or HTML. Links on their own line get previews for supported providers.")
     webpage_url = URLField(u'Project link', [length(max=2048)],
-        description="URL to a live demo, presentation, or link to further information")
+        description="URL to a live demo, presentation, or link to further information.")
     is_webembed = BooleanField(u'Embed project link')
     autotext_url = URLField(u'Sync', [length(max=255)],
-        description="URL to external source of documentation in GitLab, GitHub, Bitbucket, Data Package or Web site")
+        description="URL to external source of documentation in GitLab, GitHub, Bitbucket, Data Package or Web site.")
     source_url = URLField(u'Source link', [length(max=255)],
-        description="URL of your repository")
+        description="URL of your repository.")
     contact_url = URLField(u'Contact link', [length(max=255)],
         description="URL of an issues page, forum thread, chat channel, contact form, social media account, etc.")
     # Note: relative links allowed in image_url -> StringField
     image_url = StringField(u'Image link', [length(max=255)],
-        description="URL of an image to display at the top")
+        description="URL of an image to display at the top.")
     logo_color = StringField(u'Custom color', [length(max=7)],
-        description="Background color of your project page")
+        description="Background color of your project page.")
     # logo_icon = StringField(u'<a target="_blank" href="http://fontawesome.io/icons/#search">Custom icon</a>',
     #     [length(max=20)], description="A FontAwesome icon for the project browser.")
     category_id = SelectField(u'Challenge category', coerce=int)
@@ -111,7 +111,12 @@ class ResourceForm(FlaskForm):
     """ For suggesting cool tools """
     name = StringField(u'Name', [length(max=80), DataRequired()])
     type_id = RadioField(u'Type', coerce=int, choices=resourceTypeList())
-    source_url = URLField(u'Link', [length(max=2048)], description=u'URL to download or get more information')
-    summary = StringField(u'Summary', [length(max=140)], description=u'How is this useful: in 140 characters or less?')
-    content = TextAreaField(u'Additional information', description=u'Describe this resource in detail, Markdown and HTML supported')
+    source_url = URLField(u'Link', [length(max=2048)],
+        description=u'URL to download or get more information.')
+    summary = StringField(u'Summary', [length(max=140)],
+        description=u'How is this useful: in 140 characters or less?')
+    content = TextAreaField(u'Additional information',
+        description=u'Describe this resource in detail, Markdown and HTML supported.')
+    progress_tip = SelectField(u'Recommended stage', coerce=int, choices=projectProgressList(True, True),
+        description=u'Project level at which this should be suggested.')
     submit = SubmitField(u'Suggest')

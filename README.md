@@ -172,23 +172,15 @@ For a full migration command reference, run `python manage.py db --help`.
 
 ## Troubleshooting
 
-A quick guide to a few common errors:
+Guidance to common errors:
 
-### Embedding the front-end
+### Add results to my own web page
 
-There is an Embed button in the event page and in the admin which provides you with code for an IFRAME that just contains the hexagrid. If you would like to embed the entire application, and find it more intuitive to hide the navigation, add `?clean=1` to the URL. To also hide the top header, use `?minimal=1`.
+There is an Embed button in the event page and in the admin which provides you with code for an IFRAME that just contains the hexagrid. If you would like to embed the entire application, and find it more intuitive to hide the navigation, add `?clean=1` to the URL. To also hide the top header, use `?minimal=1`. You might also invoke the [dribdat API](#API) to pull data from the platform.
 
 ### Navigation is not visible
 
 Dark Bootswatch themes do not play well with the *navbar-light* component used in our layout (`nav.html`). Override the styles by hand using the `DRIBDAT_CSS_URL` environment variable.
-
-### Cannot upgrade database
-
-In local deployment, you will need to upgrade the database using `./manage.py db upgrade`. On Heroku, a deployment process called **Release** runs automatically.
-
-If you get errors like *ERROR [alembic.env] Can't locate revision identified by 'aa969b4f9f51'*, your migration history is out of sync. You can just set `FORCE_MIGRATE` to 1 when you run releases.
-
-See also instructions in the `force-migrate.sh` script.
 
 ### Need help setting up SSO
 
@@ -206,6 +198,19 @@ u.is_admin = True
 u.set_password('Ins@nEl*/c0mpl3x')
 u.save()
 ```
+
+### Cannot upgrade database
+
+In local deployment, you will need to upgrade the database using `./manage.py db upgrade`. On Heroku, a deployment process called **Release** runs automatically.
+
+If you get errors like *ERROR [alembic.env] Can't locate revision identified by 'aa969b4f9f51'*, your migration history is out of sync. You can set `FORCE_MIGRATE` to 1 when you run releases, however changes to the column sizes and other schema details will not be deployed. Instead, it is better to verify the latest schema specifications in the `migrations` folder, fix anything that is out of sync, and then update the alembic version, e.g.:
+
+```
+alter table projects alter column webpage_url type character varying(2048);
+insert into alembic_version values ('7c3929047190')
+```
+
+See also further instructions in the `force-migrate.sh` script.
 
 ### Test locally using SSL
 
