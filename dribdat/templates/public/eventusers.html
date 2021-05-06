@@ -25,7 +25,7 @@
 
 <div category-id="infobox">
   {% if current_event.has_started and not current_event.has_finished %}
-    <center><h4><i class="fa fa-arrow-circle-o-up"></i> Join a project or challenge to be listed here!</h4>
+    <center><h4><i class="fa fa-lightbulb-o"></i> &nbsp;Join a project or challenge to be listed here!</h4>
     <p>As <b class="usercount">{{ usercount }}</b> have done in
       <a href="{{ url_for('public.event', event_id=current_event.id) }}">
       this event</a> already.</p></center>
