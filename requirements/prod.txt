@@ -11,7 +11,7 @@ chardet==4.0.0
 Click==7.1.2
 cssmin==0.2.0
 cssselect==1.1.0
-eventlet==0.30.3
+eventlet==0.30.2
 Flask==1.1.2
 Flask-Assets==2.0
 Flask-Bcrypt==0.7.1

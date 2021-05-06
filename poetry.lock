@@ -235,7 +235,7 @@ description = "Highly concurrent networking library"
 name = "eventlet"
 optional = false
 python-versions = "*"
-version = "0.30.3"
+version = "0.30.2"
 
 [package.dependencies]
 dnspython = ">=1.15.0,<2.0.0"
@@ -1300,7 +1300,7 @@ docs = ["sphinx", "jaraco.packaging (>=8.2)", "rst.linker (>=1.9)"]
 testing = ["pytest (>=4.6)", "pytest-checkdocs (>=1.2.3)", "pytest-flake8", "pytest-cov", "pytest-enabler", "jaraco.itertools", "func-timeout", "pytest-black (>=0.3.7)", "pytest-mypy"]
 
 [metadata]
-content-hash = "2518215142b6ce6936407f08f8c31fb0af204cd3cec26c3a47d0a069651a4d17"
+content-hash = "05ac2b76cb2526ce73d407f6e5929112c10fc355f4c0a478e66ec45f56bb106d"
 lock-version = "1.0"
 python-versions = ">=3.6,<4"
 
@@ -1435,8 +1435,8 @@ email-validator = [
     {file = "email_validator-1.1.2-py2.py3-none-any.whl", hash = "sha256:094b1d1c60d790649989d38d34f69e1ef07792366277a2cf88684d03495d018f"},
 ]
 eventlet = [
-    {file = "eventlet-0.30.3-py2.py3-none-any.whl", hash = "sha256:c4e2c5452e54a267f5ce56092eeeed3d52d5c9319e545a796ab5ebbb5b2528ef"},
-    {file = "eventlet-0.30.3.tar.gz", hash = "sha256:a802caa725d6eb2d45a763c33f6bb5206e8d0566d5abc03638225379cf32476d"},
+    {file = "eventlet-0.30.2-py2.py3-none-any.whl", hash = "sha256:89cc6dbfef47c4629cefead5fde21c5f2b33464d57f7df5fc5148f8b4de3fbb5"},
+    {file = "eventlet-0.30.2.tar.gz", hash = "sha256:1811b122d9a45eb5bafba092d36911bca825f835cb648a862bbf984030acff9d"},
 ]
 factory-boy = [
     {file = "factory_boy-3.2.0-py2.py3-none-any.whl", hash = "sha256:1d3db4b44b8c8c54cdd8b83ae4bdb9aeb121e464400035f1f03ae0e1eade56a4"},
