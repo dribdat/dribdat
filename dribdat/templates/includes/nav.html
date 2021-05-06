@@ -42,15 +42,7 @@
           <li class="nav-item">
             <a class="nav-link {% if active == 'participants' %}active{% endif %}" href="{{ url_for('public.event_participants', event_id=event.id) }}">
               <i class="fa fa-child"></i>
-              Participants
-            </a>
-          </li>
-        {% endif %}
-        {% if event.community_url %}
-          <li class="nav-item">
-            <a class="nav-link" href="{{ event.community_url }}" target="community">
-              <i class="fa fa-comment"></i>
-              Community
+              Contributors
             </a>
           </li>
         {% endif %}
