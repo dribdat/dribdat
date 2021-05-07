@@ -125,10 +125,10 @@ def event_resources(event_id):
 def dribs():
     """ Shows the latest logged posts """
     page = request.args.get('page') or 1
-    per_page = request.args.get('limit') or 20
+    per_page = request.args.get('limit') or 10
     dribs = Activity.query.filter(Activity.action=="post")
     dribs = dribs.order_by(Activity.id.desc())
-    dribs = dribs.paginate(page, per_page=20)
+    dribs = dribs.paginate(int(page), int(per_page))
     return render_template("public/dribs.html",
         endpoint='public.dribs', active='dribs',
         current_event=current_event(), data=dribs)

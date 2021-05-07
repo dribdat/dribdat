@@ -41,7 +41,9 @@
     </section>
 
     {% if data.has_next %}
-      <a href="{{ url_for(endpoint, page=data.next_num) }}" class="btn btn-secondary btn-lg">More!</a>
+      <a href="{{ url_for(endpoint, page=data.next_num) }}"
+        title="Load another page of dribs" style="width:100%"
+        class="btn btn-primary btn-lg">More!</a>
     {% endif %}
 
   </div>

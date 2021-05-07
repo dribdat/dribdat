@@ -897,10 +897,6 @@ pre { color: #333; background: white; }
   min-height: 4em;
   vertical-align: top;
 }
-.resources-page .join-tip {
-  margin-top: 1em;
-  padding: 0.5em;
-}
 .resources-page .resource-list {
   margin: 0; padding: 0;
   margin-bottom: 1em;
@@ -917,6 +913,22 @@ pre { color: #333; background: white; }
 .resource-page .resource-projects {
   padding-top: 1em;
   border-top: 1px solid #999;
+}
+.resource-page .resource-tip {
+  text-align: center; font-size: 125%;
+}
+.resource-page .resource-tip::before {
+  content: "*"; font-size: 200%;
+  color: goldenrod;
+}
+
+/* tip section used in resources and elsewhere */
+
+.join-tip {
+  margin-top: 1em;
+  padding: 0.5em;
+  font-size: 115%;
+  text-align: center;
 }
 
 /* avatar and profile styles */
