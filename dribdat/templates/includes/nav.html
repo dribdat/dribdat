@@ -8,6 +8,7 @@
     <a class="navbar-brand" href="{{ url_for('public.home') }}">
       <i style="-moz-transform: scale(1, 1); -webkit-transform: scale(1, 1); -o-transform: scale(1, 1); -ms-transform: scale(1, 1); transform: scale(1, 1);" class="fa fa-thumbs-up"></i>
       <i style="-moz-transform: scale(-1, 1); -webkit-transform: scale(-1, 1); -o-transform: scale(-1, 1); -ms-transform: scale(-1, 1); transform: scale(-1, 1);" class="fa fa-thumbs-up"></i>
+      <span>Home</span>
     </a>
   </div>
 
@@ -45,14 +46,15 @@
               Contributors
             </a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link {% if active == 'dribs' %}active{% endif %}" href="{{ url_for('public.dribs') }}">
-              <i class="fa fa-comment"></i>
-              Dribs
-            </a>
-          </li>
         {% endif %}
       {% endif %}
+      
+      <li class="nav-item">
+        <a class="nav-link {% if active == 'dribs' %}active{% endif %}" href="{{ url_for('public.dribs') }}">
+          <i class="fa fa-comment"></i>
+          Updates
+        </a>
+      </li>
 
       {% if tabs %}
         {% for tab, link in tabs %}
