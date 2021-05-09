@@ -259,7 +259,8 @@ nav .navbar-nav .nav-item {
   display: block;
 }
 
-/* Honeycomb customizations */
+/* ---- Hexagonal hawtness ---- */
+
 .event-home .honeycomb {
   /*margin: 30px 0px 100px 0px;
   left: 50%;*/
@@ -282,7 +283,16 @@ nav .navbar-nav .nav-item {
   }
 }
 
-/* ---- Hexagonal hawtness ---- */
+/* Styles for an event in preparation */
+.event-prep {
+}
+/* Styles for an event that has started */
+.event-started {
+}
+/* Styles for an event that has finished */
+.event-finished .hexagontent .progress {
+  display: none;
+}
 
 .hexagon {
   background-size: cover;

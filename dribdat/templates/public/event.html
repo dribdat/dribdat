@@ -12,7 +12,7 @@
   <script type="application/ld+json">{{ current_event.get_schema(request.host_url)|safe }}</script>
 {% endblock %}
 
-{% block body_class %}event-home event-{{ current_event.id }}{% endblock %}
+{% block body_class %}event-home event-{{ current_event.id }} event-{% if current_event.has_finished %}finished{% elif current_event.has_started %}started{% else %}prep{% endif %}{% endblock %}
 
 {% block content %}
 {% cache 300, 'event-%d' % current_event.id %}
