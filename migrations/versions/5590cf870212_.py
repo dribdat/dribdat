@@ -1,8 +1,8 @@
-"""empty message
+"""Initial database
 
-Revision ID: 7c3929047190
-Revises: 
-Create Date: 2021-03-13 13:22:38.768112
+Revision ID: 5590cf870212
+Revises:
+Create Date: 2021-05-09 10:09:22.197520
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '7c3929047190'
+revision = '5590cf870212'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -25,7 +25,7 @@ def upgrade():
     sa.Column('location', sa.String(length=255), nullable=True),
     sa.Column('description', sa.UnicodeText(), nullable=True),
     sa.Column('boilerplate', sa.UnicodeText(), nullable=True),
-    sa.Column('resources', sa.UnicodeText(), nullable=True),
+    sa.Column('instruction', sa.UnicodeText(), nullable=True),
     sa.Column('logo_url', sa.String(length=255), nullable=True),
     sa.Column('custom_css', sa.UnicodeText(), nullable=True),
     sa.Column('webpage_url', sa.String(length=255), nullable=True),
@@ -40,12 +40,14 @@ def upgrade():
     sa.Column('lock_starting', sa.Boolean(), nullable=True),
     sa.Column('lock_resources', sa.Boolean(), nullable=True),
     sa.PrimaryKeyConstraint('id'),
+    sa.UniqueConstraint('name'),
     sa.UniqueConstraint('name')
     )
     op.create_table('roles',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('name', sa.String(length=80), nullable=False),
     sa.PrimaryKeyConstraint('id'),
+    sa.UniqueConstraint('name'),
     sa.UniqueConstraint('name')
     )
     op.create_table('users',
@@ -64,6 +66,8 @@ def upgrade():
     sa.Column('my_goals', sa.UnicodeText(), nullable=True),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('email'),
+    sa.UniqueConstraint('email'),
+    sa.UniqueConstraint('username'),
     sa.UniqueConstraint('username')
     )
     op.create_table('categories',
@@ -89,8 +93,11 @@ def upgrade():
     sa.Column('sync_content', sa.UnicodeText(), nullable=True),
     sa.Column('content', sa.UnicodeText(), nullable=True),
     sa.Column('user_id', sa.Integer(), nullable=True),
+    sa.Column('event_id', sa.Integer(), nullable=True),
+    sa.ForeignKeyConstraint(['event_id'], ['events.id'], ),
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id'),
+    sa.UniqueConstraint('name'),
     sa.UniqueConstraint('name')
     )
     op.create_table('users_roles',
@@ -128,6 +135,7 @@ def upgrade():
     sa.ForeignKeyConstraint(['event_id'], ['events.id'], ),
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id'),
+    sa.UniqueConstraint('name'),
     sa.UniqueConstraint('name')
     )
     op.create_table('activities',

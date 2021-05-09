@@ -103,7 +103,7 @@ class ProjectPost(FlaskForm):
     note = TextAreaField(u'Note', [length(max=140), DataRequired()],
         description=u'What are you working on right now?')
     resource = SelectField(u'Resources', coerce=int,
-        description=u'Are any of these data or tools being used?')
+        description=u'Are any of these being used?')
     progress = SelectField(u'Progress', coerce=int)
     submit = SubmitField(u'Save post')
 

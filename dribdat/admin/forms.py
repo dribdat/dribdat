@@ -42,7 +42,7 @@ class EventForm(FlaskForm):
     hostname = StringField(u'Hosted by', [length(max=80)])
     location = StringField(u'Located at', [length(max=255)])
     description = TextAreaField(u'Description', description=u'Markdown and HTML supported')
-    resources = TextAreaField(u'Information for participants, event page', description=u'Markdown and HTML supported')
+    instruction = TextAreaField(u'Instructions for participants, event page', description=u'Markdown and HTML supported')
     logo_url = URLField(u'Host logo link', [length(max=255)])
     webpage_url = URLField(u'Home page link', [length(max=255)])
     community_url = URLField(u'Community link', [length(max=255)])
@@ -101,6 +101,7 @@ class ResourceForm(FlaskForm):
     summary = TextAreaField(u'Summary', [length(max=140)], description=u'How is this useful: in 140 characters or less?')
     content = TextAreaField(u'Additional information', description=u'Describe this resource in detail, Markdown and HTML supported')
     progress_tip = SelectField(u'Recommend at', coerce=int, choices=projectProgressList(True, True), description=u'Progress level at which this resource should be suggested to teams')
+    event_id = SelectField(u'Specific to an event, or global if blank', coerce=int)
     is_visible = BooleanField(u'Show this resource to participants', description='Enable DRIBDAT_TOOL_APPROVE to moderate all submissions')
     submit = SubmitField(u'Save')
 

@@ -197,7 +197,7 @@ class Event(PkModel):
     location = Column(db.String(255), nullable=True)
     description = Column(db.UnicodeText(), nullable=True)
     boilerplate = Column(db.UnicodeText(), nullable=True)
-    resources = Column(db.UnicodeText(), nullable=True)
+    instruction = Column(db.UnicodeText(), nullable=True)
 
     logo_url = Column(db.String(255), nullable=True)
     custom_css = Column(db.UnicodeText(), nullable=True)
@@ -577,6 +577,7 @@ class Category(PkModel):
             'id': self.id,
             'name': self.name,
             'description': self.description,
+            # 'event_id': self.event_id,
         }
 
     def __init__(self, name=None, **kwargs):
@@ -603,6 +604,10 @@ class Resource(PkModel):
 
     user_id = reference_col('users', nullable=True)
     user = relationship('User', backref='resources')
+
+    # If specific to an event
+    event_id = reference_col('events', nullable=True)
+    event = relationship('Event', backref='categories')
 
     @property
     def of_type(self):
