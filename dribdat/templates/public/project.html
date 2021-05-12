@@ -29,37 +29,41 @@
 {% block content %}
 <div class="btn-group project-edit-buttons" role="group" aria-label="Project tools">
   {% if allow_edit %}
-   <a id="project-post" href="{{ url_for('public.project_post', project_id=project.id) }}" class="btn btn-success">
+   <a id="project-post" href="{{ url_for('public.project_post', project_id=project.id) }}" class="btn btn-lg btn-success">
      <i class="fa fa-signal" aria-hidden="true"></i>
      Post</a>
-   <a href="{{ url_for('public.project_edit', project_id=project.id) }}" class="btn btn-secondary">
+   <a href="{{ url_for('public.project_edit', project_id=project.id) }}" class="btn btn-lg btn-secondary">
      <i class="fa fa-pencil" aria-hidden="true"></i>
      Edit</a>
     {% if project.is_autoupdate %}
-      <a href="{{ url_for('public.project_autoupdate', project_id=project.id) }}" class="btn btn-warning">
+      <a href="{{ url_for('public.project_autoupdate', project_id=project.id) }}" class="btn btn-lg btn-warning">
         <i class="fa fa-refresh" aria-hidden="true"></i>
         Sync</a>
     {% endif %}
   {% endif %}
 
   {% if current_user.is_admin and project.event.lock_editing and project_starred %}
-    <a class="btn btn-secondary" href="{{ url_for('public.project_unstar', project_id=project.id) }}" class="project-star">
+    <a href="{{ url_for('public.project_unstar', project_id=project.id) }}"  class="project-star btn btn-lg btn-secondary">
       <i class="fa fa-star"></i>
     </a>
   {% endif %}
 
   {% if not project.event.lock_editing %}
     {% if project_starred %}<!-- Already starred -->
-      <a title="You are a member of the project. Click to leave." class="btn btn-primary" href="{{ url_for('public.project_unstar', project_id=project.id) }}" class="project-star" title="Click to leave the project" onclick="return confirm('Are you sure you wish to leave the team?')">
+      <a href="{{ url_for('public.project_unstar', project_id=project.id) }}" class="project-star btn btn-lg btn-primary"
+        title="You are a member of the project. Click if you wish to leave."
+        onclick="return confirm('Are you sure you wish to leave the team?')">
         <i class="fa fa-star"></i>
       </a>
-    {% elif current_user and current_user.is_authenticated %}
-      <a href="{{ url_for('public.project_star', project_id=project.id) }}" class="btn btn-primary project-star" title="Join project to show your profile below">
+    {% elif current_user and current_user.active %}
+      <a href="{{ url_for('public.project_star', project_id=project.id) }}" class="btn btn-lg btn-primary project-star"
+        title="Join this project.">
        <i class="fa fa-star-o"></i>
        Join
       </a>
     {% else %}
-      <a href="{{ url_for('auth.login') }}" class="btn btn-primary project-star" title="Login to join this project">
+      <a href="{{ url_for('auth.login') }}" class="btn btn-lg btn-primary project-star" 
+        title="Login to join this project">
        <i class="fa fa-star-o"></i>
        Join
       </a>
@@ -137,7 +141,7 @@
     {% endif %}
     {% if not project.is_challenge %}
     <li class="nav-item">
-      <a class="nav-link" id="signals-tab-md" data-toggle="tab" href="#signals-md" role="tab" aria-controls="signals-md"
+      <a class="nav-link" id="dribs-tab-md" data-toggle="tab" href="#dribs-md" role="tab" aria-controls="dribs-md"
         aria-selected="false">Log</a>
     </li>
     {% endif %}
@@ -149,7 +153,7 @@
 {% if not project.is_challenge %}
   <div class="tab-pane fade show active" id="project-md" role="tabpanel" aria-labelledby="project-tab-md">
 
-    {% if current_user and current_user.is_authenticated and not project.webpage_url and not project.longtext %}
+    {% if current_user and current_user.active and not project.webpage_url and not project.longtext %}
     <div class="alert alert-success" role="alert">
       <a class="close" title="Close" href="#" data-dismiss="alert">&times;</a>
       <!-- Helpful comment for new projects -->
@@ -224,17 +228,13 @@
 {% if not project.is_challenge %}
   </div>
 {% endif %}
-  <div class="tab-pane fade" id="signals-md" role="tabpanel" aria-labelledby="signals-tab-md">
+  <div class="tab-pane fade" id="dribs-md" role="tabpanel" aria-labelledby="dribs-tab-md">
 
     <section class="timeline">
-      {% for s in project_signals %}
+      {% for s in project_dribs %}
       <div class="timeline-item">
         <div class="timeline-img"></div>
         <div class="timeline-content timeline-card js--fadeInBottom">
-          <div class="date">
-            {{s.date|format_datetime}}
-            {% if s.author %} ~ <b>{{ s.author }}</b>{% endif %}
-          </div>
           {% if s.title %}
           <div class="timeline-img-header">
             <h2>{{s.title}}</h2>
@@ -243,6 +243,12 @@
           {% if s.text %}
             {{s.text|markdown|safe}}
           {% endif %}
+
+          <div class="date">
+            {{s.date|format_datetime}}
+            {% if s.author %} ~ <b>{{ s.author }}</b>{% endif %}
+          </div>
+
           {% if s.resource and s.resource.is_visible %}
             <a class="resource-card" href="{{ url_for('public.resource', resource_id=s.resource.id) }}">
               <i title="{{s.resource.of_type}}"
@@ -271,7 +277,7 @@
 
 </div>
 
-  <div class="project-buttons" role="group" aria-label="Hackathon navigation">
+  <div class="project-buttons" role="group" aria-label="Main navigation">
     {% if project.contact_url %}
       <a href="{{ project.contact_url }}" target="_blank" class="btn btn-lg" title="Contact the team"><span>&#x1f44b;</span> Contact</a>
     {% endif %}
@@ -299,4 +305,9 @@
     {{project.event.community_embed|safe}}
   </div>
 </div>
+
+<center class="mt-5">
+  <a class="btn btn-dark btn-lg" href="{{ url_for('public.event', event_id=project.event.id) }}">{{ project.event.name }}</a>
+</center>
+
 {% endblock %}

@@ -46,7 +46,10 @@ def login():
     if request.method == 'POST':
         if form.validate_on_submit():
             login_user(form.user, remember=True)
-            flash("You are logged in.", 'success')
+            if not form.user.active:
+                flash('This user account is under review. Please update your profile and contact the organizing team to access all functions of this platform.', 'warning')
+            else:
+                flash("You are logged in! Time to make something awesome ≧◡≦", 'success')
             redirect_url = request.args.get("next") or url_for("public.home")
             return redirect(redirect_url)
         else:
@@ -82,6 +85,10 @@ def register():
             new_user.is_admin = True
             new_user.save()
             flash("Administrative user created - have fun!", 'success')
+        elif current_app.config['DRIBDAT_USER_APPROVE']:
+            new_user.active = False
+            new_user.save()
+            flash("Thank you for registering. New accounts require approval from the event organizers. Please update your profile and await activation.", 'warning')
         else:
             flash("Thank you for registering. You can now log in and submit projects.", 'success')
         login_user(new_user, remember=True)
@@ -110,6 +117,8 @@ def forgot():
 @login_required
 def user_profile():
     user = current_user
+    if not user.active:
+        flash('This user account is under review. Please update your profile and contact the organizing team to access all functions of this platform.', 'warning')
     form = UserForm(obj=user, next=request.args.get('next'))
     form.roles.choices = [(r.id, r.name) for r in Role.query.order_by('name')]
 
@@ -147,7 +156,7 @@ def get_or_create_sso_user(sso_id, sso_name, sso_email, sso_webpage=''):
     sso_id = str(sso_id)
     user = User.query.filter_by(sso_id=sso_id).first()
     if not user:
-        if current_user and current_user.is_authenticated:
+        if current_user and current_user.active:
             user = current_user
             user.sso_id = sso_id
         else:
@@ -175,7 +184,11 @@ def get_or_create_sso_user(sso_id, sso_name, sso_email, sso_webpage=''):
             flash("Welcome! Please complete your user account.", 'info')
             return redirect(url_for("auth.user_profile"))
     login_user(user, remember=True)
-    flash(u'Logged in - welcome!', 'success')
+    if not user.active:
+        flash('This user account is under review. Please update your profile and contact the organizing team to access all functions of this platform.', 'warning')
+    else:
+        flash(u'Logged in! Time to make something awesome ≧◡≦', 'success')
+
     if current_event():
         return redirect(url_for("public.event", event_id=current_event().id))
     else:

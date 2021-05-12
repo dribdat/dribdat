@@ -48,7 +48,7 @@
         $indicator.find('i').css('color', 'green');
         $button.removeAttr('disabled').html('Update now');
         if (typeof data.name === 'undefined' || data.name === '') {
-          window.alert('Project data could not be fetched - enter a valid Sync link.');
+          window.alert('Enter a valid link to Sync from a supported site.');
           $('#is_autoupdate').prop('checked', false);
           return;
         }
@@ -169,6 +169,7 @@
   var lastSearch = null;
   $('#search input[name=q]')
     .keyup(delay(function(e) {
+      if (e.keyCode == 13) { e.preventDefault(); return false; }
       var q = $(this).val();
       if (q.length < 4 || q.trim() == lastSearch) return;
       lastSearch = q.trim();
@@ -206,23 +207,27 @@
       $('[category-id="' + selected_id + '"]', $infotext).show();
     }
   });
+  // Toggle challenges after the hackathon
+  $('.event-finished .nav-categories #challenges').parent().click();
 
   // Roll up categories if there is only one, and no projects
   if ($navCategories.length === 1)
     $navCategories.click().parent().parent().hide();
 
   // Roll up resources on overview page
-  $('.resources-page .step .resource-list').hide().parent()
-    .addClass('active').click(function() {
-      $(this).find('.resource-list').slideDown();
-    });
+  if ($('.resources-page .step .resource-card').length > 16) {
+    $('.resources-page .step .resource-list').hide().parent()
+      .addClass('active').click(function() {
+        $(this).find('.resource-list').slideDown();
+      });
+  }
 
   // Show embed code when button clicked
   $('#embed-link').click(function(e) {
     e.preventDefault(); e.stopPropagation();
-    var url = $(this).attr('href');
+    var url = $(this).attr('href') + '?embed=1';
     var code = '<iframe src="' + url + '" style="width:100%;height:320px;background:transparent;border:none;overflow:hidden" scrolling="no"></iframe>';
-    window.prompt('Copy and paste this code to embed this event:', code);
+    window.prompt('Share the event link in social media, or copy and paste this HTML code to embed on your site:', code);
   });
 
   // Show project history

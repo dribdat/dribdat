@@ -67,6 +67,8 @@ class User(UserMixin, PkModel):
     #: The hashed password
     password = Column(db.String(128), nullable=True)
     created_at = Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)
+
+    # State flags
     active = Column(db.Boolean(), default=False)
     is_admin = Column(db.Boolean(), default=False)
 
@@ -364,11 +366,11 @@ class Project(PkModel):
         return members
 
     # Query which formats the project's timeline
-    def all_signals(self):
+    def all_dribs(self):
         activities = Activity.query.filter_by(
                         project_id=self.id
                     ).order_by(Activity.timestamp.desc())
-        signals = []
+        dribs = []
         prev = None
         for a in activities:
             title = text = None
@@ -408,18 +410,18 @@ class Project(PkModel):
                 'date': a.timestamp,
                 'resource': a.resource,
             }
-            signals.append(prev)
+            dribs.append(prev)
         if self.event.has_started or self.event.has_finished:
-            signals.append({
-                'title': "Hackathon started",
+            dribs.append({
+                'title': "Event started",
                 'date': self.event.starts_at
             })
         if self.event.has_finished:
-            signals.append({
-                'title': "Hackathon finished",
+            dribs.append({
+                'title': "Event finished",
                 'date': self.event.ends_at
             })
-        return sorted(signals, key=lambda x: x['date'], reverse=True)
+        return sorted(dribs, key=lambda x: x['date'], reverse=True)
 
     # Convenience query for all categories
     def categories_all(self, event=None):
@@ -516,7 +518,7 @@ class Project(PkModel):
             score = self.progress or 0
             cqu = Activity.query.filter_by(project_id=self.id)
             c_s = cqu.count()
-            # Get a point for every (join, update, ..) activity in the project's signals
+            # Get a point for every (join, update, ..) activity in the project's dribs
             score = score + (1 * c_s)
             # Triple the score for every boost (upvote)
             # c_a = cqu.filter_by(name="boost").count()

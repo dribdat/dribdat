@@ -1,14 +1,12 @@
-# Dribdat
+# dribdat
 
 ![Github Actions build](https://github.com/hackathons-ftw/dribdat/workflows/build/badge.svg)
 [![Coveralls](https://coveralls.io/repos/github/hackathons-ftw/dribdat/badge.svg?branch=main)](https://coveralls.io/github/hackathons-ftw/dribdat?branch=main)
 [![Mattermost](https://img.shields.io/badge/Mattermost-chat-blue.svg)](https://team.opendata.ch/signup_user_complete/?id=74yuxwruaby9fpoukx9bmoxday)
 
-### An open source platform for time-limited team-based data-driven solutions-focused collaboration known as the *Hackathon*.
+### A platform for time-limited, team-based, data-driven, open collaboration
 
-If you need help or advice in setting up your event, or would like to contribute to the project: please get in touch via [GitHub Issues](https://github.com/hackathons-ftw/dribdat/issues) or [e-mail](mailto:dribdat@datalets.ch).
-
-For more background and references, see [USAGE](USAGE.md) and [ABOUT](ABOUT.md). The rest of this document has details for deploying the application.
+For background and references, see [User's Guide](USAGE.md) and [Aboue Page](ABOUT.md). If you need help or advice in setting up your event, or would like to contribute to the project: please get in touch via [GitHub Issues](https://github.com/hackathons-ftw/dribdat/issues) or [e-mail](mailto:dribdat@datalets.ch).  The rest of this page has details for deploying the dribdat application.
 
 # Quickstart
 
@@ -36,11 +34,12 @@ The following options can be used to toggle **application features**:
 * `DRIBDAT_ENV` - 'dev' to enable debugging, 'prod' to optimise assets etc.
 * `DRIBDAT_SECRET` - a long scary string for hashing your passwords - in Heroku this is set automatically
 * `DRIBDAT_APIKEY` - for connecting clients to the remote [API](#api)
+* `DRIBDAT_USER_APPROVE` - set to True so that any new non-SSO accounts are inactive
 * `DRIBDAT_NOT_REGISTER` - set to True to disallow creating accounts on this server
-* `DRIBDAT_SHOW_SUBMITS` - set to False to moderate resource submissions on the site
+* `DRIBDAT_TOOL_APPROVE` - set to True for suggested resources to not immediately appear
 * `DRIBDAT_THEME` - can be set to one of the [Bootswatch themes](https://bootswatch.com/)
 * `DRIBDAT_STYLE` - provide the address to a CSS stylesheet for custom global styles
-* `DRIBDAT_CLOCK` - use 'up' or 'down' to change the position, or 'off' to hide the countdown
+* `DRIBDAT_CLOCK` - use 'up' or 'down' to change the position, or 'off' to hide the countdown clock
 
 Support for **Web analytics** can be configured using one of the following variables:
 
@@ -173,23 +172,15 @@ For a full migration command reference, run `python manage.py db --help`.
 
 ## Troubleshooting
 
-A quick guide to a few common errors:
+Guidance to common errors:
 
-### Embedding the front-end
+### Add results to my own web page
 
-There is an Embed button in the event page and in the admin which provides you with code for an IFRAME that just contains the hexagrid. If you would like to embed the entire application, and find it more intuitive to hide the navigation, add `?clean=1` to the URL. To also hide the top header, use `?minimal=1`.
+There is an Embed button in the event page and in the admin which provides you with code for an IFRAME that just contains the hexagrid. If you would like to embed the entire application, and find it more intuitive to hide the navigation, add `?clean=1` to the URL. To also hide the top header, use `?minimal=1`. You might also invoke the [dribdat API](#API) to pull data from the platform.
 
 ### Navigation is not visible
 
 Dark Bootswatch themes do not play well with the *navbar-light* component used in our layout (`nav.html`). Override the styles by hand using the `DRIBDAT_CSS_URL` environment variable.
-
-### Cannot upgrade database
-
-In local deployment, you will need to upgrade the database using `./manage.py db upgrade`. On Heroku, a deployment process called **Release** runs automatically.
-
-If you get errors like *ERROR [alembic.env] Can't locate revision identified by 'aa969b4f9f51'*, your migration history is out of sync. You can just set `FORCE_MIGRATE` to 1 when you run releases.
-
-See also instructions in the `force-migrate.sh` script.
 
 ### Need help setting up SSO
 
@@ -208,6 +199,19 @@ u.set_password('Ins@nEl*/c0mpl3x')
 u.save()
 ```
 
+### Cannot upgrade database
+
+In local deployment, you will need to upgrade the database using `./manage.py db upgrade`. On Heroku, a deployment process called **Release** runs automatically.
+
+If you get errors like *ERROR [alembic.env] Can't locate revision identified by 'aa969b4f9f51'*, your migration history is out of sync. You can set `FORCE_MIGRATE` to 1 when you run releases, however changes to the column sizes and other schema details will not be deployed. Instead, it is better to verify the latest schema specifications in the `migrations` folder, fix anything that is out of sync, and then update the alembic version, e.g.:
+
+```
+alter table projects alter column webpage_url type character varying(2048);
+insert into alembic_version values ('7c3929047190')
+```
+
+See also further instructions in the `force-migrate.sh` script.
+
 ### Test locally using SSL
 
 Some development scenarios and OAuth testing requires SSL. To use this in development with self-signed certificates (you will get a browser warning), start the server with `./manage.py run --cert=adhoc`
@@ -220,7 +224,7 @@ See [Contributors](https://github.com/dataletsch/dribdat/graphs/contributors) fo
 
 This project is currently mantained by [@loleg](https://github.com/loleg) and [@gonzalocasas](https://github.com/gonzalocasas).
 
-Special thanks to the [Open Data](https://opendata.ch), [Open Networking](https://opennetworkinfrastructure.org/) and [Open Source](https://dinacon.ch) communities in Switzerland for the many trials and feedbacks. We are also grateful to F. Wieser and M.-C. Gasser at [Swisscom](http://swisscom.com) for conceptual inputs and financial support at an early stage of this project. This code is originally based on Steven Loria's [flask-cookiecutter](https://github.com/sloria/cookiecutter-flask), which we encourage you to use in YOUR next hackathon!
+Special thanks to the [Open Data](https://opendata.ch), [Open Networking](https://opennetworkinfrastructure.org/) and [Open Source](https://dinacon.ch) communities in Switzerland for the many trials and feedbacks. We are also grateful to F. Wieser and M.-C. Gasser at [Swisscom](http://swisscom.com) for conceptual inputs and financial support at an early stage of this project. This code is originally based on Steven Loria's [flask-cookiecutter](https://github.com/sloria/cookiecutter-flask), which we of course encourage you to use in YOUR next project!
 
 Additional and :heart:-felt thanks for testing and feedback to:
 

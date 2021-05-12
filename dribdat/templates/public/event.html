@@ -12,10 +12,11 @@
   <script type="application/ld+json">{{ current_event.get_schema(request.host_url)|safe }}</script>
 {% endblock %}
 
-{% block body_class %}event-home event-{{ current_event.id }}{% endblock %}
+{% block body_class %}event-home event-{{ current_event.id }} event-{% if current_event.has_finished %}finished{% elif current_event.has_started %}started{% else %}prep{% endif %}{% endblock %}
 
 {% block content %}
 {% cache 300, 'event-%d' % current_event.id %}
+
 <center class="nav-categories">
   <div class="btn-group" data-toggle="buttons" role="group" aria-label="Filter by category">
     {% if projects %}
@@ -40,28 +41,35 @@
       </label>
     {% endfor %}
     {% if projects %}
+      <!-- TODO: Hidden until we have a better list view
       <label class="btn btn-default" title="List view">
         <input type="radio" name="category" id="list" autocomplete="off">
           <i class="fa fa-bars"></i><br>
           <span> </span>
       </label>
+      -->
     {% endif %}
   </div>
 </center>
+
 
 <div class="honeycomb"><!-- Based on Hexagon Tiles by Graham Pyne http://codepen.io/gpyne/pen/iElhp/ -->
   <a name="projects"></a>
   <div class="ibws-fix">
   {% for project in projects %}
     <a href="{{ url_for('public.project', project_id=project.id) }}"
+       title="{{ project.summary }}"
        class="hexagon {{ 'challenge' if project.phase=='Challenge' else 'project' }} category-highlight"
        category-id="{{ project.category_id }}"
-       style="border-bottom-color:{{project.logo_color}}; background-image:url('{{project.image_url}}')">
+       style="border-bottom-color:{{project.logo_color}}">
       <div class="hexagontent{{ ' with-icon' if project.logo_icon }}">
         {% if project.logo_icon %}
           <i class="fa fa-{{project.logo_icon}}"></i><br>
         {% endif %}
         <span>{{ project.name|truncate(32, True, '..') }}</span>
+        {% if project.image_url %}
+          <div class="hexaicon" style="background-image:url('{{project.image_url}}')"></div>
+        {% endif %}
         <div class="progress">
           <div class="progress-bar" role="progressbar" aria-valuenow="{{project.score}}" aria-valuemin="0" aria-valuemax="70" style="width:{{project.score}}%">
           </div>
@@ -75,17 +83,18 @@
   </div>
 </div><!-- /honeycomb -->
 
+
 <div class="category-info">
   {% if current_event.has_started and not current_event.has_finished %}
     <div category-id="infobox" class="category-container category-tip">
-      <center><h4><i class="fa fa-arrow-circle-o-up"></i> Explore challenges and join projects</h4></center>
+      <center><h4><i class="fa fa-lightbulb-o"></i> &nbsp;The event has started! Explore challenges and join projects above.</h4></center>
     </div>
   {% endif %}
   {% for category in current_event.categories_for_event() %}
   <div category-id="{{category.id}}" class="category-container" style="border-top:5px solid {{category.logo_color}}; display:none">
     <h3>{{ category.name }}</h3>
     {{ category.description|markdown }}
-    {% if current_user and current_user.is_authenticated and current_user.is_admin %}
+    {% if current_user and current_user.active and current_user.is_admin %}
       <br><a href="{{ url_for('admin.category', category_id=category.id) }}" class="btn btn-success btn-sm">
         <i class="fa fa-pencil" aria-hidden="true"></i>
         Edit challenge</a>
@@ -107,8 +116,12 @@
     </a>
     {% if current_event.has_started and not current_event.has_finished %}
       <a href="{{ url_for('public.event_resources', event_id=current_event.id) }}" class="btn btn-lg btn-light">
-        <i class="fa fa-cart-plus" aria-hidden="true"></i>
-        <span>Tips and tools</span>
+        <i class="fa fa-cube" aria-hidden="true"></i>
+        <span>Resources</span>
+      </a>
+      <a href="{{ url_for('public.event_participants', event_id=current_event.id) }}" class="btn btn-lg btn-light">
+        <i class="fa fa-user" aria-hidden="true"></i>
+        <span>Participants</span>
       </a>
     {% endif %}
   </div>
@@ -116,14 +129,16 @@
 
 {% if current_event.resources %}
   <a name="resources"></a>
-  <div class="event-resources">
-    {{current_event.resources|markdown}}
+  <div class="jumbotron event-resources">
+    <div class="content">
+      {{current_event.resources|markdown}}
+    </div>
   </div>
 {% endif %}
 
-<a name="info"></a>
 {% if current_event.description or current_event.community_embed %}
 <div class="jumbotron event-info">
+  <a name="info"></a>
   <div class="content">
     {{current_event.description|markdown}}
   </div>
@@ -143,7 +158,7 @@
 
 <center class="event-footer">
 
-  <div role="group" aria-label="Hackathon navigation">
+  <div role="group" aria-label="Event navigation">
     {% if current_event.countdown %}
       <a href="{{ url_for('public.dashboard') }}" class="btn btn-sm btn-default" title="{{ current_event.countdown }}">
         <i class="fa fa-id-card-o" aria-hidden="true"></i>
@@ -152,15 +167,17 @@
     {% if current_event.webpage_url %}
       <a href="{{ current_event.webpage_url }}" class="btn btn-sm btn-default">
         <i class="fa fa-info-circle" aria-hidden="true"></i>
-        Information &raquo;</a>
+        Information</a>
     {% endif %}
-    <a href="{{ url_for('public.event_participants', event_id=current_event.id) }}" class="btn btn-default btn-sm">
-      <i class="fa fa-user" aria-hidden="true"></i>
-      Participants</a>
-    <a href="{{ url_for('public.event', event_id=current_event.id, _external=True) }}?embed=1" class="btn btn-default btn-sm" id="embed-link">
+    {% if current_event.community_url %}
+      <a href="{{ current_event.community_url }}" target="community" class="btn btn-sm btn-default">
+        <i class="fa fa-comment"></i>
+        Community</a>
+    {% endif %}
+    <a href="{{ url_for('public.event', event_id=current_event.id, _external=True) }}" class="btn btn-default btn-sm" id="embed-link">
       <i class="fa fa-external-link" aria-hidden="true"></i>
       Share</a>
-    {% if current_user and current_user.is_authenticated and current_user.is_admin %}
+    {% if current_user and current_user.active and current_user.is_admin %}
       <a href="{{ url_for('admin.event', event_id=current_event.id) }}" class="btn btn-warning btn-sm">
         <i class="fa fa-pencil" aria-hidden="true"></i>
         Settings</a>
@@ -168,7 +185,7 @@
   </div>
 
   {% if current_event and current_event.countdown and not 'off' in config.DRIBDAT_CLOCK %}
-    <a class="container-countdown" href="{{ url_for('public.dashboard') }}" title="{{ current_event.countdown }}">
+    <a class="container-countdown" href="#top" title="{{ current_event.countdown }}">
       <div class="event-countdown" data-start="{{ current_event.countdown }}"></div>
     </a>
   {% endif %}

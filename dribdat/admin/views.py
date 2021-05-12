@@ -13,8 +13,19 @@ from .forms import RoleForm, UserForm, EventForm, ProjectForm, CategoryForm, Res
 from datetime import datetime
 import random, string
 
+from os import path
+# Load event preset content
+EVENT_PRESET = { 'quickstart': '', 'codeofconduct': '' }
+for pr in EVENT_PRESET.keys():
+    fn = path.join(path.join(path.join(path.join(
+        path.dirname(__file__), '..'),
+            'templates'), 'includes'), pr + '.md')
+    with open(fn, mode='r') as file:
+        EVENT_PRESET[pr] = file.read()
+
 
 blueprint = Blueprint('admin', __name__, url_prefix='/admin')
+
 
 
 @blueprint.route('/')
@@ -25,19 +36,19 @@ def index():
     stats = [
         {
             'value': Event.query.count(),
-            'text': 'active events',
+            'text': 'events',
             'height': 6
         },{
             'value': User.query.count(),
-            'text': 'users registered',
+            'text': 'users',
             'height': 7
         },{
             'value': Project.query.filter(Project.progress<0).count(),
-            'text': 'challenges posted',
+            'text': 'challenges',
             'height': 8
         },{
             'value': Project.query.filter(Project.progress>=0).count(),
-            'text': 'projects started',
+            'text': 'projects',
             'height': 9
         },
     ]
@@ -155,15 +166,25 @@ def user_reset(user_id):
 @blueprint.route('/user/<int:user_id>/deactivate/')
 @login_required
 @admin_required
-def user_deactivate(user_id):
-    """Deactivate user account."""
+def user_deactivate(user_id, reactivate=False):
+    """Manage activation of user account."""
     user = User.query.filter_by(id=user_id).first_or_404()
-    user.active = False
+    user.active = reactivate
     db.session.add(user)
     db.session.commit()
-    flash('User deactivated.', 'success')
+    if reactivate:
+        flash('User is now active.', 'success')
+    else:
+        flash('User deactivated.', 'warning')
     return users()
 
+
+@blueprint.route('/user/<int:user_id>/reactivate/')
+@login_required
+@admin_required
+def user_reactivate(user_id):
+    """Reactivate user account."""
+    return user_deactivate(user_id, True)
 
 ##############
 ##############
@@ -223,6 +244,12 @@ def event_new():
         flash('Event added.', 'success')
         cache.clear()
         return redirect(url_for("admin.events"))
+
+    # Load default event content
+    if not form.boilerplate.data:
+        form.boilerplate.data = EVENT_PRESET['quickstart']
+    if not form.community_embed.data:
+        form.community_embed.data = EVENT_PRESET['codeofconduct']
 
     return render_template('admin/eventnew.html', form=form)
 

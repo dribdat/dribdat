@@ -21,7 +21,9 @@
 <div class="jumbotron home-page">
   {% if current_event %}
     {% if current_event.countdown and 'up' in config.DRIBDAT_CLOCK %}
-      <a class="container-countdown" href="{{ url_for('public.dashboard') }}" title="{{ current_event.countdown }}">
+      <a class="container-countdown"
+        href="{{ url_for('public.event', event_id=current_event.id) }}"
+        title="{{ current_event.countdown }}">
         <div class="event-countdown" data-start="{{ current_event.countdown }}"></div>
       </a>
     {% endif %}
@@ -29,7 +31,8 @@
       {{current_event.description|markdown}}
     </div>
     <div class="home-nav">
-      <div class="home-buttons" aria-label="Hackathon navigation">
+      <div class="home-buttons" aria-label="Main navigation">
+        {% if current_event.webpage_url %}
         <a href="{{ current_event.webpage_url }}" class="btn btn-lg btn-primary">
           {% if not current_event.has_finished %}
           <i class="fa fa-ticket" aria-hidden="true"></i>
@@ -38,25 +41,34 @@
           Information
           {% endif %}
           </a>
+        {% endif %}
         <a href="{{ url_for('public.event', event_id=current_event.id) }}" class="btn btn-lg btn-warning"><b>
           <i class="fa fa-bars" aria-hidden="true"></i>
           {% if current_event.has_finished %}
           View the Results
           {% elif current_event.has_started %}
-          Find your Team
+          Explore Challenges
           {% else %}
-          See the Challenges
+          <!-- Event not yet started -->
+          Post Challenge
           {% endif %}
         </b></a>
         {% if current_event.has_started and current_event.can_start_project %}
-          <a href="{{ url_for('public.project_new', event_id=current_event.id) }}" class="btn btn-lg btn-success">
+          <!-- <a href="{{ url_for('public.project_new', event_id=current_event.id) }}" class="btn btn-lg btn-success">
             <i class="fa fa-rocket"></i>
-            Start a Project</a>
+            Start Project</a> -->
+        {% endif %}
+        {% if current_event.community_url %}
+          <a href="{{ current_event.community_url }}" target="community" class="btn btn-lg btn-info">
+            <i class="fa fa-comment"></i>
+            Connect</a>
         {% endif %}
       </div>
     </div>
     {% if current_event.countdown and 'down' in config.DRIBDAT_CLOCK %}
-      <a class="container-countdown" href="{{ url_for('public.dashboard') }}" title="{{ current_event.countdown }}">
+      <a class="container-countdown"
+         href="{{ url_for('public.event', event_id=current_event.id) }}"
+         title="{{ current_event.countdown }}">
         <div class="event-countdown" data-start="{{ current_event.countdown }}"></div>
       </a>
     {% endif %}
@@ -66,10 +78,10 @@
 <div class="body-content">
 
   {% if not current_event and not events_next and not events_past %}
-    <div class="row start-hackathon">
+    <div class="row start-event">
       <div class="col-lg-12 text-center">
         <h3>Looks like you are new to this - welcome!</h3>
-        <a href="/admin/event/new" class="btn btn-success">Start a Hackathon</a>
+        <a href="/admin/event/new" class="btn btn-success">Start an Event</a>
       </div>
     </div>
   {% endif %}
@@ -99,8 +111,10 @@
             </p>
           </div>
           <div class="btn-group an-event-actions" role="group">
-            <a href="{{ event.webpage_url }}" class="btn btn-primary">
-              Infos</a>
+            {% if event.webpage_url %}
+              <a href="{{ event.webpage_url }}" class="btn btn-info">
+                Information</a>
+            {% endif %}
             <a href="{{ url_for('public.event_resources', event_id=event.id) }}" class="btn btn-secondary">
               Resources</a>
             <a href="{{ url_for('public.event', event_id=event.id) }}" class="btn btn-warning">

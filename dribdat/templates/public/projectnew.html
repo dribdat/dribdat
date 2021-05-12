@@ -7,15 +7,13 @@
 
 {% block content %}
   {% if form %}
+    {% if current_event.boilerplate %}
     <div class="jumbotron">
       <div class="container">
-        {% if current_event.boilerplate %}
-          {{current_event.boilerplate|markdown}}
-        {% else %}
-          {% include "includes/quickstart.html" %}
-        {% endif %}
+        {{ current_event.boilerplate|markdown }}
       </div>
     </div>
+    {% endif %}
     <div class="container">
       {{ render_form(url_for('public.project_new', event_id=current_event.id), form) }}
     </div>

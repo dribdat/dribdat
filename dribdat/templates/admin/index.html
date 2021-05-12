@@ -37,6 +37,7 @@
 {% endfor %}
   <div class="chart-activities" style="margin-top:2em">
     <h5>pulse</h5>
+    <a href="#" id="show-activities" class="btn btn-lg btn-primary">Show</a>
     <div id="activities"></div>
   </div>
 </div><!-- /jumbotron -->
@@ -49,37 +50,41 @@
 <script src="https://cdn.jsdelivr.net/npm/vega-lite@4"></script>
 <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
 <script>
-$.getJSON('/api/event/current/activity.json?limit=100', function(data) {
-    if (data.activities.length == 0) return $('.chart-activities').hide();
-    var yourVlSpec = {
-      "width": "600",
-      "$schema": "https://vega.github.io/schema/vega-lite/v2.0.json",
-      "description": "Project activities",
-      "data": {
-        "values": data.activities
-      },
-      "mark": {
-        "type": "line"
-      },
-      "encoding": {
-        "x": {
-          "field": "date",
-          "type": "temporal",
-          "scale": { "rangeStep": null }
+$('#show-activities').click(function(e) {
+    e.preventDefault();
+    $(this).hide();
+    $.getJSON('/api/event/current/activity.json?limit=200', function(data) {
+      if (data.activities.length == 0) return $('.chart-activities').hide();
+      var yourVlSpec = {
+        "width": "600",
+        "$schema": "https://vega.github.io/schema/vega-lite/v2.0.json",
+        "description": "Project activities",
+        "data": {
+          "values": data.activities
         },
-        "y": {
-          "aggregate": "mean",
-          "field": "project_score",
-          "type": "quantitative",
-          "axis": { "title": null, "labels": false }
+        "mark": {
+          "type": "bar"
+        },
+        "encoding": {
+          "x": {
+            "field": "date",
+            "type": "temporal",
+            "scale": { "rangeStep": null }
+          },
+          "y": {
+            "aggregate": "mean",
+            "field": "project_score",
+            "type": "quantitative",
+            "axis": { "title": null, "labels": false }
+          }
+        },
+        "config": {
+          "autosize": { "type": "fit", "contains": "padding" },
+          "axis": { "grid": true, "ticks": false }
         }
-      },
-      "config": {
-        "autosize": { "type": "fit", "contains": "padding" },
-        "axis": { "grid": true, "ticks": false }
       }
-    }
-    vegaEmbed("#activities", yourVlSpec);
+      vegaEmbed("#activities", yourVlSpec);
     });
+});
 </script>
 {% endblock %}

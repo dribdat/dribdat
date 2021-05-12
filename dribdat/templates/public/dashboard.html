@@ -5,6 +5,10 @@
 {% block body_class %}dashboard-page embed-view{% endblock %}
 
 {% block content %}
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/flipclock@0/dist/flipclock.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jquery-resizable-dom@0.35.0/dist/jquery-resizable.min.js"></script>
 
 <!-- Refresh social media wall every ten minutes -->
@@ -36,7 +40,7 @@
       <img id="event-logo" src="{{ current_event.logo_url }}">
 
       <div class="panel-body">
-        <textarea id="announcements" class="editable hidden">Attention! This is a public hackathon service broadcast.</textarea>
+        <textarea id="announcements" class="editable hidden">Attention! This is a public service broadcast.</textarea>
       </div>
 
       {% if current_event.countdown %}

@@ -52,8 +52,9 @@ docs/_build
 
 .webassets-cache
 
-# Virtualenvs
+# Virtualenvs and utility scripts
 env/
+debug.sh
 
 # JavaScript
 node_modules

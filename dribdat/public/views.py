@@ -4,7 +4,7 @@ from flask import (Blueprint, request, render_template, flash, url_for,
                     redirect, session, current_app, jsonify)
 from flask_login import login_required, current_user
 
-from dribdat.user.models import User, Event, Project, Resource
+from dribdat.user.models import User, Event, Project, Resource, Activity
 from dribdat.public.forms import (
     LoginForm, UserForm,
     ProjectNew, ProjectForm,
@@ -17,7 +17,7 @@ from dribdat.aggregation import (
     ProjectActivity, IsProjectStarred,
     GetEventUsers, SuggestionsByProgress,
 )
-from dribdat.user import projectProgressList
+from dribdat.user import projectProgressList, isUserActive
 
 from datetime import datetime
 
@@ -69,8 +69,9 @@ def home():
 @blueprint.route('/user/<username>', methods=['GET'])
 def user(username):
     user = User.query.filter_by(username=username).first_or_404()
-    if not user.active:
-        return "User deactivated. Please contact an event organizer."
+    if not isUserActive(user):
+        # return "User deactivated. Please contact an event organizer."
+        flash('This user account is under review. Please contact the organizing team if you have any questions.', 'warning')
     event = current_event()
     cert_path = user.get_cert_path(event)
     # projects = user.projects
@@ -120,6 +121,18 @@ def event_resources(event_id):
     return render_template("public/resources.html",
         current_event=event, steps=steps, active="resources")
 
+@blueprint.route("/dribs")
+def dribs():
+    """ Shows the latest logged posts """
+    page = request.args.get('page') or 1
+    per_page = request.args.get('limit') or 10
+    dribs = Activity.query.filter(Activity.action=="post")
+    dribs = dribs.order_by(Activity.id.desc())
+    dribs = dribs.paginate(int(page), int(per_page))
+    return render_template("public/dribs.html",
+        endpoint='public.dribs', active='dribs',
+        current_event=current_event(), data=dribs)
+
 @blueprint.route('/project/<int:project_id>')
 def project(project_id):
     return project_action(project_id, None)
@@ -130,7 +143,7 @@ def project_edit(project_id):
     project = Project.query.filter_by(id=project_id).first_or_404()
     event = project.event
     starred = IsProjectStarred(project, current_user)
-    allow_edit = starred or (not current_user.is_anonymous and current_user.is_admin)
+    allow_edit = starred or (isUserActive(current_user) and current_user.is_admin)
     if not allow_edit:
         flash('You do not have access to edit this project.', 'warning')
         return project_action(project_id, None)
@@ -197,15 +210,17 @@ def project_action(project_id, of_type=None, as_view=True, then_redirect=False, 
     allow_edit = allow_edit and not event.lock_editing
     project_team = project.team()
     latest_activity = project.latest_activity()
-    project_signals = project.all_signals()
+    project_dribs = project.all_dribs()
     suggestions = SuggestionsByProgress(project.progress)
     return render_template('public/project.html', current_event=event, project=project,
-        project_starred=starred, project_team=project_team, project_signals=project_signals, suggestions=suggestions,
+        project_starred=starred, project_team=project_team, project_dribs=project_dribs, suggestions=suggestions,
         allow_edit=allow_edit, latest_activity=latest_activity)
 
 @blueprint.route('/project/<int:project_id>/star', methods=['GET', 'POST'])
 @login_required
 def project_star(project_id):
+    if not isUserActive(current_user):
+        return "User not allowed. Please contact event organizers."
     flash('Welcome to the team!', 'success')
     return project_action(project_id, 'star', then_redirect=True)
 
@@ -216,13 +231,17 @@ def project_unstar(project_id):
     return project_action(project_id, 'unstar', then_redirect=True)
 
 @blueprint.route('/event/<int:event_id>/project/new', methods=['GET', 'POST'])
+@login_required
 def project_new(event_id):
+    if not isUserActive(current_user):
+        flash("Your account needs to be activated: please contact an organizer.", 'warning')
+        return redirect(url_for('public.event', event_id=event_id))
     form = None
     event = Event.query.filter_by(id=event_id).first_or_404()
     if event.lock_starting:
         flash('Starting a new project is disabled for this event.', 'error')
         return redirect(url_for('public.event', event_id=event.id))
-    if current_user and current_user.is_authenticated:
+    if isUserActive(current_user):
         project = Project()
         project.user_id = current_user.id
         form = ProjectNew(obj=project, next=request.args.get('next'))
@@ -242,7 +261,8 @@ def project_new(event_id):
             flash('New challenge added.', 'success')
             project_action(project.id, 'create', False)
             cache.clear()
-            project_action(project.id, 'star', False)
+            if event.has_started:
+                project_action(project.id, 'star', False) # Join team
             if len(project.autotext_url)>1:
                 return project_autoupdate(project.id)
             else:
@@ -260,7 +280,7 @@ def project_autoupdate(project_id):
         return project_action(project_id)
     data = GetProjectData(project.autotext_url)
     if not 'name' in data:
-        flash("Could not sync: check the Remote Link.", 'warning')
+        flash("Could not sync: check that the Remote Link contains a README.", 'warning')
         return project_action(project_id)
     SyncProjectData(project, data)
     project_action(project.id, 'update', action='sync', text=str(len(project.autotext)) + ' bytes')
@@ -279,13 +299,15 @@ def resource(resource_id):
 @blueprint.route('/resource/post', methods=['GET', 'POST'])
 @login_required
 def resource_post():
+    if not isUserActive(current_user):
+        return "User not allowed. Please contact event organizers."
     resource = Resource()
     event = current_event()
     form = ResourceForm(obj=resource)
     if form.validate_on_submit():
         form.populate_obj(resource)
         resource.user_id = current_user.id
-        resource.is_visible = current_app.config['DRIBDAT_SHOW_SUBMITS']
+        resource.is_visible = not current_app.config['DRIBDAT_TOOL_APPROVE']
         db.session.add(resource)
         db.session.commit()
         flash('Thanks for the tip! Your suggestions are visible in your profile.', 'success')
@@ -298,7 +320,7 @@ def resource_post():
 def resource_edit(resource_id):
     resource = Resource.query.filter_by(id=resource_id).first_or_404()
     event = current_event()
-    allow_edit = not current_user.is_anonymous and current_user == resource.user or current_user.is_admin
+    allow_edit = isUserActive(current_user) and current_user == resource.user or current_user.is_admin
     if not allow_edit:
         flash('You do not have access to edit this resource.', 'warning')
         return redirect(url_for('public.home'))

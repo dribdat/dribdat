@@ -14,6 +14,8 @@ textarea { resize: vertical; }
 
 .hidden { display: none; }
 
+.huge { font-size: 4rem; opacity: 0.6; }
+
 /* Forms */
 form input[type="checkbox"] {
   margin-right: 0.5em;
@@ -136,19 +138,19 @@ ul.help-block {
 @media (max-width: 760px) {
   .section-header .section-header-logo {
     position: relative;
-    margin: 0px;
+    margin: 0px 10px 0 0;
   }
 }
 
 nav.navbar {
-  margin-bottom: 1em;
+  margin-bottom: 2em;
   box-shadow: 0px 0px 20px rgba(0,0,0,0.5);
   border: 0px;
 }
 nav.navbar .navbar-brand {
-    color: black;
-    background: white;
-    border-radius: 10px;
+  color: black;
+  background: white;
+  border-radius: 10px;
 }
 nav .navbar-nav .fa {
   margin-left:  0.2em;
@@ -157,10 +159,18 @@ nav .navbar-nav .nav-item {
   margin-right: 0.4em;
   padding-right: 0.4em;
 }
+@media (min-width: 992px) {
+  nav.navbar { padding: 0rem 1rem; }
+}
 
 .home-page h2 {
   text-align: center;
   font-weight: bold;
+}
+.home-page h1,
+.home-page .home-nav {
+  display: block;
+  text-align: center;
 }
 .home .an-event .card {
   width: 100%;
@@ -190,11 +200,6 @@ nav .navbar-nav .nav-item {
     left: 50%;
     width: 360px;
     margin-left: -180px;
-  }
-  .home-page h1,
-  .home-page .home-nav {
-    display: block;
-    text-align: center;
   }
 }
 @media (max-width: 400px) {
@@ -254,7 +259,8 @@ nav .navbar-nav .nav-item {
   display: block;
 }
 
-/* Honeycomb customizations */
+/* ---- Hexagonal hawtness ---- */
+
 .event-home .honeycomb {
   /*margin: 30px 0px 100px 0px;
   left: 50%;*/
@@ -275,6 +281,31 @@ nav .navbar-nav .nav-item {
     text-align: center;
     clear: both;
   }
+}
+
+/* Styles for an event in preparation */
+.event-prep {
+}
+/* Styles for an event that has started */
+.event-started {
+}
+/* Styles for an event that has finished */
+.event-finished .hexagontent .progress {
+  display: none;
+}
+
+.hexagon {
+  background-size: cover;
+  background-position: center;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+  transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+  margin-bottom: 73px;
+  border-bottom: 4px solid transparent;
+}
+
+.hexagon:hover {
+  box-shadow: 0 4px 9px rgb(0 0 0 / 5%), 0 9px 15px rgb(0 0 0 / 17%);
+  transform: scale(1.2);
 }
 
 .project-page.phase-Challenge .progress,
@@ -301,18 +332,10 @@ nav .navbar-nav .nav-item {
 .challenge.hexagon:hover {
   box-shadow: none;
 }
-.hexagon {
-  margin-bottom: 73px;
-  border-bottom: 4px solid transparent;
-}
-.hexagon:hover {
-  box-shadow: 0px 3px 3px lightblue;
-}
+
 .project .hexagontent {
   overflow: hidden;
   color: black;
-  font-weight: bold;
-  text-shadow: 1px 1px 0px #fff;
   line-height: 1.5;
 }
 .project .hexagontent.with-icon div {
@@ -325,7 +348,7 @@ nav .navbar-nav .nav-item {
   font-size: 240%;
 }
 .project .hexagontent .progress {
-  margin-top: 6px;
+  margin-top: 1em;
   margin-bottom: 0px;
   height: 3px;
   position: relative;
@@ -333,6 +356,9 @@ nav .navbar-nav .nav-item {
   margin-left: -36px;
   left: 50%;
   opacity: 0.8;
+}
+.project .hexagontent .progress-bar {
+  background-color: #aaa;
 }
 .honeycomb .project { opacity: 0.4; }
 .honeycomb .project.category-highlight { opacity: 1.0; }
@@ -371,6 +397,7 @@ nav .navbar-nav .nav-item {
 }
 .progress-bar {
   background-color: #3399f3;
+  color: #fff;
 }
 .project-info .project-score {
   display: inline-block;
@@ -388,8 +415,18 @@ nav .navbar-nav .nav-item {
   background-size: cover;
   background-position: center;
 }
-.project.hexagon:nth-child(even) { background-color: #f0e0a2; }
-.project.hexagon:nth-child(odd) { background-color: #adddcf; }
+.hexagon .hexaicon {
+  width: 1.5em; height: 1.5em;
+  background-color: white;
+  background-size: cover;
+  position: relative;
+  left: 50%;
+  margin: 0.5em 0 0.5em -0.5em;
+  box-shadow: -2px -2px 1px rgba(0,0,0,0.2);
+  border-radius: 1em;
+}
+.project.hexagon:nth-child(even) { background-color: rgba(230, 200, 160, 0.95); }
+.project.hexagon:nth-child(odd) { background-color: rgba(230, 210, 200, 0.95); }
 
 .project-page .project-name {
   font-weight: bold;
@@ -460,12 +497,6 @@ nav .navbar-nav .nav-item {
   border-radius: 0px;
   clear: both;
 }
-.project-page .project-info a {
-  color: #15a;
-}
-.project-page a.btn { color: white; }
-.project-page a.btn-warning,
-.project-page a.btn-light { color: black; }
 .project-page .project-star i {
   padding-right: 5px;
 }
@@ -806,18 +837,27 @@ pre { color: #333; background: white; }
   margin-top: 15px;
   padding-top: 10px;
 }
+.category-tip { opacity: 0.6; }
 
 .event-resources {
-  padding: 0 1em;
+  padding: 2rem;
+  margin-bottom: 0px;
   margin-top: 40px;
   text-align: left;
+  background: white;
+  font-size: 125%;
 }
 .event-info {
   margin-top: 40px;
 }
+.event-participants.jumbotron {
+  padding: 2rem;
+  border: 4px dashed lightgray;
+}
 .event-participants h1 {
-  margin: 2em 0 0;
+  margin: 1em;
   text-align: center;
+  display: none;
 }
 .event-participants .participant-box {
   padding: 2em;
@@ -836,6 +876,12 @@ pre { color: #333; background: white; }
 
 /* resource page */
 
+.dribs-page .jumbotron,
+.resource-page .jumbotron,
+.resources-page .jumbotron {
+  padding: 2rem;
+  border: 4px dashed lightgray;
+}
 .resources-page .step {
   margin-top: 0.5em;
 }
@@ -855,16 +901,14 @@ pre { color: #333; background: white; }
   position: absolute;
   z-index: 0;
   margin-top: -1rem;
-  color: #bbb;
+  color: burlywood;
   font-weight: bold;
 }
 .resources-page .step .resource-card {
   background: white;
   margin: 0.5em 0.3em;
-}
-.resources-page .join-tip {
-  opacity: 0.8;
-  margin: 1em;
+  min-height: 4em;
+  vertical-align: top;
 }
 .resources-page .resource-list {
   margin: 0; padding: 0;
@@ -875,13 +919,29 @@ pre { color: #333; background: white; }
   padding: 2rem; margin: 0;
   font-size: 125%;
 }
-.resourcepage .resource-summary,
-.resourcepage .resource-content {
+.resource-page .resource-summary,
+.resource-page .resource-content {
   margin: 20pt;
 }
-.resourcepage .resource-projects {
+.resource-page .resource-projects {
   padding-top: 1em;
   border-top: 1px solid #999;
+}
+.resource-page .resource-tip {
+  text-align: center; font-size: 125%;
+}
+.resource-page .resource-tip::before {
+  content: "*"; font-size: 200%;
+  color: goldenrod;
+}
+
+/* tip section used in resources and elsewhere */
+
+.join-tip {
+  margin-top: 1em;
+  padding: 0.5em;
+  font-size: 115%;
+  text-align: center;
 }
 
 /* avatar and profile styles */
@@ -1089,11 +1149,15 @@ Challenges view
 Search engine
 --------------- */
 
+form#search {
+  margin: 1em;
+}
 .search-results {
-  list-style: none; margin: 0px; padding: 0px;
+  /* list-style: none; margin: 0px; padding: 0px; */
+  margin-bottom: 1em;
 }
 .search-results li {
-  margin: 1em; margin-left: 0px;
+  /* margin: 1em; margin-left: 0px; */
 }
 
 /* ------------

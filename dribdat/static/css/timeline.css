@@ -102,8 +102,18 @@
     padding: 0 20px;
     padding-bottom: 16px;
     margin-bottom: 0; }
-  .timeline-card a {
-    margin-left: 20px; }
+
+.timeline-card .resource-card {
+    margin-left: 5%; margin-right: 5%; width: 90%; }
+
+.timeline-item .timeline-card .date {
+    position: relative;
+    margin: 0px;
+    text-align: center;
+    width: 100%;
+    display: block;
+    padding: 0 5px 10px 5px;
+  }
 
 .timeline-item {
   cursor: pointer; }
