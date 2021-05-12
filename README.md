@@ -34,8 +34,8 @@ The following options can be used to toggle **application features**:
 * `DRIBDAT_ENV` - 'dev' to enable debugging, 'prod' to optimise assets etc.
 * `DRIBDAT_SECRET` - a long scary string for hashing your passwords - in Heroku this is set automatically
 * `DRIBDAT_APIKEY` - for connecting clients to the remote [API](#api)
-* `DRIBDAT_USER_APPROVE` - set to True so that any new non-SSO accounts are inactive
-* `DRIBDAT_NOT_REGISTER` - set to True to disallow creating accounts on this server
+* `DRIBDAT_USER_APPROVE` - set to True so that any new non-SSO accounts are inactive until approved by an admin
+* `DRIBDAT_NOT_REGISTER` - set to True to hide the registration, so new users can only join this server via SSO
 * `DRIBDAT_TOOL_APPROVE` - set to True for suggested resources to not immediately appear
 * `DRIBDAT_THEME` - can be set to one of the [Bootswatch themes](https://bootswatch.com/)
 * `DRIBDAT_STYLE` - provide the address to a CSS stylesheet for custom global styles
@@ -48,7 +48,7 @@ Support for **Web analytics** can be configured using one of the following varia
 * `ANALYTICS_GOOGLE` (starts with "UA-...")
 * `ANALYTICS_HREF` - an optional link in the footer to a public dashboard for your analytics
 
-OAuth 2.0 support for **Single Sign-On** is currently available using [Flask Dance](https://flask-dance.readthedocs.io/), and requires SSL to be enabled (using `SERVER_SSL`=1 in production or `OAUTHLIB_INSECURE_TRANSPORT` in development). Register your app with the provider (see SSO tips below), and set the following variables:
+OAuth 2.0 support for **Single Sign-On** (SSO) is currently available using [Flask Dance](https://flask-dance.readthedocs.io/), and requires SSL to be enabled (using `SERVER_SSL`=1 in production or `OAUTHLIB_INSECURE_TRANSPORT` in development). Register your app with the provider (see SSO tips below), and set the following variables:
 
 * `OAUTH_TYPE` - e.g. 'Slack', 'GitHub', 'Azure'
 * `OAUTH_ID` - the Client ID of your app
