@@ -50,8 +50,6 @@ def lint(fix_imports):
 @click.command()
 def clean():
     """Remove *.pyc and *.pyo files recursively starting at current directory.
-
-    Borrowed from Flask-Script, converted to use Click.
     """
     for dirpath, dirnames, filenames in os.walk('.'):
         for filename in filenames:
@@ -69,8 +67,6 @@ def clean():
 @with_appcontext
 def urls(url, order):
     """Display all of the url matching routes for the project.
-
-    Borrowed from Flask-Script, converted to use Click.
     """
     rows = []
     column_length = 0
