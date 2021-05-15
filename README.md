@@ -8,6 +8,8 @@
 
 For background and references, see [User's Guide](USAGE.md) and [Aboue Page](ABOUT.md). If you need help or advice in setting up your event, or would like to contribute to the project: please get in touch via [GitHub Issues](https://github.com/hackathons-ftw/dribdat/issues) or [e-mail](mailto:dribdat@datalets.ch).  The rest of this page has details for deploying the dribdat application.
 
+![](dribdat/static/img/screenshot_makezurich.jpg)
+
 # Quickstart
 
 This project can be deployed to any server capable of serving Python applications, and is set up for fast deployment to the [Heroku](http://heroku.com) cloud:
@@ -118,9 +120,7 @@ Or using plain pip:
 pip install -r requirements/dev.txt
 ```
 
-By default in a dev environment, a SQLite database will be created in the root folder (`dev.db`). You can also install and configure your choice of DBMS [supported by SQLAlchemy](http://docs.sqlalchemy.org/en/rel_1_1/dialects/index.html).
-
-In production, the `DATABASE_URL` configures connectivity to an SQLAlchemy-compatible database engine. This requires a `DRIBDAT_ENV=prod` configuration.
+By default in a dev environment, a SQLite database will be created in the root folder (`dev.db`). You can also install and configure your choice of DBMS [supported by SQLAlchemy](http://docs.sqlalchemy.org/en/rel_1_1/dialects/index.html). In production, the `DATABASE_URL` configures connectivity to an SQLAlchemy-compatible database engine. This requires a `DRIBDAT_ENV=prod` configuration.
 
 Run the following to create your local SQLite database tables and perform the initial migration. Note that we avoid using the production `migrations` folder locally due to [Flask-Migrate#61](https://github.com/miguelgrinberg/Flask-Migrate/issues/61):
 
@@ -139,7 +139,7 @@ Finally, run this command (or just `debug.sh`) to start the server:
 FLASK_DEBUG=1 python manage.py run
 ```
 
-You will see a pretty welcome screen at http://127.0.0.1:5000
+You will see a welcome screen at http://127.0.0.1:5000 - register your first user account, which will have admin access and let you set up events.
 
 ## Coding tips
 
@@ -208,7 +208,7 @@ If you get errors like *ERROR [alembic.env] Can't locate revision identified by 
 
 ```
 alter table projects alter column webpage_url type character varying(2048);
-insert into alembic_version values ('7c3929047190')
+insert into alembic_version values ('75590cf87021')
 ```
 
 See also further instructions in the `force-migrate.sh` script.
