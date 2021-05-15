@@ -247,7 +247,7 @@ description = "Highly concurrent networking library"
 name = "eventlet"
 optional = false
 python-versions = "*"
-version = "0.30.2"
+version = "0.31.0"
 
 [package.dependencies]
 dnspython = ">=1.15.0,<2.0.0"
@@ -442,20 +442,20 @@ category = "main"
 description = "Doing the OAuth dance with style using Flask, requests, and oauthlib"
 name = "flask-dance"
 optional = false
-python-versions = "*"
-version = "3.3.1"
+python-versions = ">=3.6"
+version = "5.0.0"
 
 [package.dependencies]
-Flask = ">=0.7"
+Flask = ">=1.0.4"
+Werkzeug = "<2.1"
 oauthlib = "*"
 requests = ">=2.0"
 requests-oauthlib = ">=1.0.0"
-six = "*"
 urlobject = "*"
 
 [package.extras]
 signals = ["blinker"]
-sqla = ["sqlalchemy", "sqlalchemy-utils"]
+sqla = ["sqlalchemy (>=1.3.11)"]
 
 [[package]]
 category = "dev"
@@ -988,11 +988,11 @@ six = ">=1.5"
 
 [[package]]
 category = "main"
-description = "Add .env support to your django/flask apps in development and deployments"
+description = "Read key-value pairs from a .env file and set them as environment variables"
 name = "python-dotenv"
 optional = false
 python-versions = "*"
-version = "0.13.0"
+version = "0.17.1"
 
 [package.extras]
 cli = ["click (>=5.0)"]
@@ -1315,7 +1315,7 @@ docs = ["sphinx", "jaraco.packaging (>=8.2)", "rst.linker (>=1.9)"]
 testing = ["pytest (>=4.6)", "pytest-checkdocs (>=1.2.3)", "pytest-flake8", "pytest-cov", "pytest-enabler", "jaraco.itertools", "func-timeout", "pytest-black (>=0.3.7)", "pytest-mypy"]
 
 [metadata]
-content-hash = "05ac2b76cb2526ce73d407f6e5929112c10fc355f4c0a478e66ec45f56bb106d"
+content-hash = "e7954a8965934e24c0550966691a7e62c6eaed7383bd396f3df8fe911c7aa66e"
 python-versions = ">=3.6,<4"
 
 [metadata.files]
@@ -1452,8 +1452,8 @@ email-validator = [
     {file = "email_validator-1.1.2-py2.py3-none-any.whl", hash = "sha256:094b1d1c60d790649989d38d34f69e1ef07792366277a2cf88684d03495d018f"},
 ]
 eventlet = [
-    {file = "eventlet-0.30.2-py2.py3-none-any.whl", hash = "sha256:89cc6dbfef47c4629cefead5fde21c5f2b33464d57f7df5fc5148f8b4de3fbb5"},
-    {file = "eventlet-0.30.2.tar.gz", hash = "sha256:1811b122d9a45eb5bafba092d36911bca825f835cb648a862bbf984030acff9d"},
+    {file = "eventlet-0.31.0-py2.py3-none-any.whl", hash = "sha256:27ae41fad9deed9bbf4166f3e3b65acc15d524d42210a518e5877da85a6b8c5d"},
+    {file = "eventlet-0.31.0.tar.gz", hash = "sha256:b36ec2ecc003de87fc87b93197d77fea528aa0f9204a34fdf3b2f8d0f01e017b"},
 ]
 factory-boy = [
     {file = "factory_boy-3.2.0-py2.py3-none-any.whl", hash = "sha256:1d3db4b44b8c8c54cdd8b83ae4bdb9aeb121e464400035f1f03ae0e1eade56a4"},
@@ -1509,9 +1509,9 @@ flask-cors = [
     {file = "Flask_Cors-3.0.10-py2.py3-none-any.whl", hash = "sha256:74efc975af1194fc7891ff5cd85b0f7478be4f7f59fe158102e91abb72bb4438"},
 ]
 flask-dance = [
-    {file = "Flask-Dance-3.3.1.tar.gz", hash = "sha256:6a570e051fe40148698080c65b815704641bf05091fbb9becae549b8d8e1e33b"},
-    {file = "Flask_Dance-3.3.1-py2.7.egg", hash = "sha256:4a0fbfc6c2f9356d8d1dda9c91fa1359d641324e597d8097b7f39a441561f4d6"},
-    {file = "Flask_Dance-3.3.1-py2.py3-none-any.whl", hash = "sha256:cd2955a46cf3b72ff9b0b5a6521df5aed05dd5189eb312a5d27a9e2e4983ce29"},
+    {file = "Flask-Dance-5.0.0.tar.gz", hash = "sha256:4495e5045492dd5bb42d0d26bbef833c861ba28b6d16ebf0bdbb091459dc5e0c"},
+    {file = "Flask_Dance-5.0.0-py2.py3-none-any.whl", hash = "sha256:d3b1d3597512dc0aeae3a0c39c15fe5643fca84b12eef10be6e9894bc13fdef0"},
+    {file = "Flask_Dance-5.0.0-py3.9.egg", hash = "sha256:f0a4a6e9ded71116a91486c333151edf29f5a3946660c6406eb113eafb4207b8"},
 ]
 flask-debugtoolbar = [
     {file = "Flask-DebugToolbar-0.11.0.tar.gz", hash = "sha256:3c4e79d354ede014e6657c545a536d4fb273cc89e3fd6b4835b02e346dd3aab4"},
@@ -1830,8 +1830,8 @@ python-dateutil = [
     {file = "python_dateutil-2.8.1-py2.py3-none-any.whl", hash = "sha256:75bb3f31ea686f1197762692a9ee6a7550b59fc6ca3a1f4b5d7e32fb98e2da2a"},
 ]
 python-dotenv = [
-    {file = "python-dotenv-0.13.0.tar.gz", hash = "sha256:3b9909bc96b0edc6b01586e1eed05e71174ef4e04c71da5786370cebea53ad74"},
-    {file = "python_dotenv-0.13.0-py2.py3-none-any.whl", hash = "sha256:25c0ff1a3e12f4bde8d592cc254ab075cfe734fc5dd989036716fd17ee7e5ec7"},
+    {file = "python-dotenv-0.17.1.tar.gz", hash = "sha256:b1ae5e9643d5ed987fc57cc2583021e38db531946518130777734f9589b3141f"},
+    {file = "python_dotenv-0.17.1-py2.py3-none-any.whl", hash = "sha256:00aa34e92d992e9f8383730816359647f358f4a3be1ba45e5a5cefd27ee91544"},
 ]
 python-editor = [
     {file = "python-editor-1.0.4.tar.gz", hash = "sha256:51fda6bcc5ddbbb7063b2af7509e43bd84bfc32a4ff71349ec7847713882327b"},

@@ -6,7 +6,6 @@ import click
 
 from flask import Flask
 from flask.cli import FlaskGroup
-from flask_migrate import Migrate
 
 from dribdat.app import init_app
 from dribdat.settings import DevConfig, ProdConfig
@@ -29,17 +28,14 @@ def create_app(script_info=None):
     app.shell_context_processor(shell_context)
     return app
 
-app = create_app(os.getenv('FLASK_CONFIG') or 'default')
-migrate = Migrate(app, db)
-
-@app.cli.command()
+@click.command()
 def featuretest():
     """Run feature tests."""
     import pytest
     feat_test = os.path.join(TEST_PATH, 'test_features.py')
     return pytest.main([feat_test, '--disable-warnings'])
 
-@app.cli.command()
+@click.command()
 def test():
     """Run all tests."""
     import pytest
