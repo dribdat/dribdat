@@ -178,7 +178,7 @@ def project_post(project_id):
         return project_action(project_id, None)
     form = ProjectPost(obj=project, next=request.args.get('next'))
     # Populate progress dialog
-    form.progress.choices = projectProgressList(event.has_started or event.has_finished)
+    form.progress.choices = projectProgressList(event.has_started or event.has_finished, False)
     # Populate resource list
     resources = Resource.query.filter_by(is_visible=True).order_by(Resource.type_id).all()
     resource_list = [(0, '')]

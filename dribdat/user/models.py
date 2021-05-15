@@ -607,7 +607,7 @@ class Resource(PkModel):
 
     # If specific to an event
     event_id = reference_col('events', nullable=True)
-    event = relationship('Event', backref='categories')
+    event = relationship('Event', backref='resources')
 
     @property
     def of_type(self):
