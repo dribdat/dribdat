@@ -8,4 +8,5 @@ secure_scheme_headers = {
 }
 bind = '0.0.0.0:%s' % str(os_env.get('PORT', 5000))
 worker_class = 'eventlet'
+workers = os_env.get('WORKERS', 2)
 errorlog = '-'
