@@ -72,8 +72,13 @@ def IsProjectStarred(project, current_user):
         user_id=current_user.id
     ).count() > 0
 
-def SuggestionsByProgress(progress):
-    return Resource.query.filter_by(is_visible=True, progress_tip=progress).order_by(Resource.type_id).all()
+def SuggestionsByProgress(progress, event=None):
+    if event:
+        resources = event.resources_for_event()
+    else:
+        resources = Resource.query
+    resources = resources.filter_by(is_visible=True, progress_tip=progress)
+    return resources.order_by(Resource.type_id).all()
 
 def GetEventUsers(event):
     if not event.projects: return None

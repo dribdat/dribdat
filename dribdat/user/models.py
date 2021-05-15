@@ -292,12 +292,20 @@ class Event(PkModel):
         return format_date_range(self.starts_at, self.ends_at)
 
     # Event categories
-    def categories_for_event(self, event_id=None):
-        if event_id is None: event_id = self.id
+    def categories_for_event(self):
         return Category.query.filter(or_(
             Category.event_id==None,
-            Category.event_id==event_id
+            Category.event_id==-1,
+            Category.event_id==self.id
         )).order_by('name')
+
+    # Event resources
+    def resources_for_event(self):
+        return Resource.query.filter(or_(
+            Resource.event_id==None,
+            Resource.event_id==0,
+            Resource.event_id==self.id
+        ))
 
     # Number of projects
     @property

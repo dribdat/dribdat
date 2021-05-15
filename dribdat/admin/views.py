@@ -173,9 +173,9 @@ def user_deactivate(user_id, reactivate=False):
     db.session.add(user)
     db.session.commit()
     if reactivate:
-        flash('User is now active.', 'success')
+        flash('User %s is now active.' % user.username, 'success')
     else:
-        flash('User deactivated.', 'warning')
+        flash('User %s deactivated.' % user.username, 'warning')
     return users()
 
 
@@ -557,7 +557,7 @@ def role_delete(role_id):
 @admin_required
 def resources(page=1):
     resources = Resource.query.order_by(
-        Resource.type_id.asc()
+        Resource.id.desc()
     ).paginate(page, per_page=10)
     return render_template('admin/resources.html', data=resources, endpoint='admin.resources', active='resources')
 
@@ -569,6 +569,8 @@ def resource(resource_id):
     resource = Resource.query.filter_by(id=resource_id).first_or_404()
     form = ResourceForm(obj=resource, next=request.args.get('next'))
     form.user_id.choices = [(e.id, "%s" % (e.username)) for e in User.query.filter_by(active=True).order_by('username')]
+    form.event_id.choices = [(e.id, e.name) for e in Event.query.order_by(Event.id.desc())]
+    form.event_id.choices.insert(0, (0, ''))
 
     if form.validate_on_submit():
         form.populate_obj(resource)
@@ -588,6 +590,7 @@ def resource_new():
     resource = Resource()
     form = ResourceForm(obj=resource, next=request.args.get('next'))
     form.user_id.choices = [(e.id, "%s" % (e.username)) for e in User.query.filter_by(active=True).order_by('username')]
+    form.event_id.choices = [(e.id, e.name) for e in Event.query.order_by(Event.id.desc())]
 
     if form.validate_on_submit():
         del form.id

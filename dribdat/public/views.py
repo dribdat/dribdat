@@ -77,7 +77,7 @@ def user(username):
     # projects = user.projects
     projects = user.joined_projects()
     posts = user.latest_posts()
-    submissions = Resource.query.filter_by(user_id=user.id).order_by(Resource.id.desc()).all()
+    submissions = Resource.query.filter_by(user_id=user.id).order_by(Resource.name.asc()).all()
     return render_template("public/userprofile.html", active="profile",
         current_event=event, event=event, user=user, cert_path=cert_path,
         projects=projects, submissions=submissions, posts=posts)
@@ -112,11 +112,11 @@ def event_resources(event_id):
     for ix, p in enumerate(projectProgressList(True, False)):
         steps.append({
             'index': ix + 1, 'name': p[1],
-            'resources': SuggestionsByProgress(p[0])
+            'resources': SuggestionsByProgress(p[0], event)
         })
     steps.append({
         'name': '/etc', 'index': -1,
-        'resources': SuggestionsByProgress(None)
+        'resources': SuggestionsByProgress(None, event)
     })
     return render_template("public/resources.html",
         current_event=event, steps=steps, active="resources")
@@ -180,7 +180,7 @@ def project_post(project_id):
     # Populate progress dialog
     form.progress.choices = projectProgressList(event.has_started or event.has_finished, False)
     # Populate resource list
-    resources = Resource.query.filter_by(is_visible=True).order_by(Resource.type_id).all()
+    resources = event.resources_for_event().filter_by(is_visible=True).order_by(Resource.type_id).all()
     resource_list = [(0, '')]
     resource_list.extend([(r.id, r.of_type + ': ' + r.name) for r in resources])
     form.resource.choices = resource_list
@@ -214,7 +214,7 @@ def project_action(project_id, of_type=None, as_view=True, then_redirect=False, 
     project_team = project.team()
     latest_activity = project.latest_activity()
     project_dribs = project.all_dribs()
-    suggestions = SuggestionsByProgress(project.progress)
+    suggestions = SuggestionsByProgress(project.progress, event)
     return render_template('public/project.html', current_event=event, project=project,
         project_starred=starred, project_team=project_team, project_dribs=project_dribs, suggestions=suggestions,
         allow_edit=allow_edit, latest_activity=latest_activity)

@@ -902,14 +902,13 @@ pre { color: #333; background: white; }
 }
 .resources-page .step .resource-card {
   background: white;
-  margin: 0.5em 0.3em;
-  min-height: 4em;
+  margin: 1px -1px;
+  min-height: 7em;
   vertical-align: top;
 }
 .resources-page .resource-list {
   margin: 0; padding: 0;
-  margin-bottom: 1em;
-  margin-left: 2rem;
+  margin-top: 1em;
 }
 .resources-page .event-resources {
   padding: 2rem; margin: 0;
