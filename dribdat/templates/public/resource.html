@@ -69,7 +69,7 @@
 </div>
 
 {% if resource.user_id %}
-    <p class="resource-tip">Recommended by
+    <p class="resource-tip bigger">Recommended by
         <a href="{{ url_for('public.user', username=resource.user.username) }}">
             {{resource.user.username}}</a>
     </p>

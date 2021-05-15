@@ -25,11 +25,6 @@
           <i class="fa fa-trophy"></i><br>
           <span> </span>
       </label>
-      <label class="btn btn-default" title="Projects Only">
-        <input type="radio" name="category" id="challenges" autocomplete="off">
-          <i class="fa fa-cubes"></i><br>
-          <span> </span>
-      </label>
     {% endif %}
     {% for category in current_event.categories_for_event() %}
       <label class="btn btn-default">
@@ -41,6 +36,11 @@
       </label>
     {% endfor %}
     {% if projects %}
+      <label class="btn btn-default" title="Projects Only">
+        <input type="radio" name="category" id="challenges" autocomplete="off">
+          <i class="fa fa-cubes"></i><br>
+          <span> </span>
+      </label>
       <!-- TODO: Hidden until we have a better list view
       <label class="btn btn-default" title="List view">
         <input type="radio" name="category" id="list" autocomplete="off">
@@ -108,20 +108,16 @@
     <a href="{{ url_for('public.project_new', event_id=current_event.id) }}" class="btn btn-lg btn-success">
       {% if current_event.has_started %}
         <i class="fa fa-rocket"></i>
-        <span>Start a project</span>
+        <span>Get started</span>
       {% elif not current_event.has_finished %}
         <i class="fa fa-trophy"></i>
-        <span>Announce challenge</span>
+        <span>Post a challenge</span>
       {% endif %}
     </a>
     {% if current_event.has_started %}
-      <a href="{{ url_for('public.event_resources', event_id=current_event.id) }}" class="btn btn-lg btn-light">
-        <i class="fa fa-cube" aria-hidden="true"></i>
-        <span>Resources</span>
-      </a>
       <a href="{{ url_for('public.event_participants', event_id=current_event.id) }}" class="btn btn-lg btn-light">
         <i class="fa fa-user" aria-hidden="true"></i>
-        <span>Participants</span>
+        <span>See who is who</span>
       </a>
     {% endif %}
   </div>
@@ -133,11 +129,17 @@
     <div class="content">
       {{current_event.instruction|markdown}}
     </div>
+    <div class="btn-resources text-center">
+      <a href="{{ url_for('public.event_resources', event_id=current_event.id) }}" class="btn btn-lg btn-info">
+        <i class="fa fa-cube" aria-hidden="true"></i>
+        <span>Resources</span>
+      </a>
+    </div>
   </div>
 {% endif %}
 
 {% if current_event.description or current_event.community_embed %}
-<div class="jumbotron event-info">
+<div class="event-info">
   <a name="info"></a>
   <div class="content">
     {{current_event.description|markdown}}

@@ -104,7 +104,7 @@ class ProjectPost(FlaskForm):
         description=u'What are you working on right now?')
     progress = SelectField(u'Progress', coerce=int)
     resource = SelectField(u'Resources', coerce=int,
-        description=u'Are any of these being used?')
+        description=u'Are you using one of these?')
     submit = SubmitField(u'Save post')
 
 class ResourceForm(FlaskForm):
