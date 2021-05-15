@@ -63,11 +63,11 @@ class ProjectNew(FlaskForm):
         description=u'A short team name or project title - you may change this later.')
     summary = StringField(u'Summary', [length(max=120)],
         description="The headline of your project, in up to 120 characters.")
-    category_id = SelectField(u'Category', coerce=int, description=u'If your event supports it, select the challenge you plan to address.')
+    category_id = SelectField(u'Category', coerce=int, description=u'Select the challenge you plan to address.')
     contact_url = StringField(u'Contact link', [length(max=255)],
         description="How to best contact your team.")
     autotext_url = URLField(u'Sync', [length(max=255)],
-        description="URL to external source of documentation in GitLab, GitHub, Bitbucket, Data Package or Website.")
+        description="URL to external source of documentation in GitLab, GitHub, Bitbucket, etc.")
     submit = SubmitField(u'Save')
 
 class ProjectForm(FlaskForm):
@@ -83,7 +83,7 @@ class ProjectForm(FlaskForm):
         description="URL to a live demo, presentation, or link to further information.")
     is_webembed = BooleanField(u'Embed project link')
     autotext_url = URLField(u'Sync', [length(max=255)],
-        description="URL to external source of documentation in GitLab, GitHub, Bitbucket, Data Package or Web site.")
+        description="URL to external source of documentation in GitLab, GitHub, Bitbucket, etc.")
     source_url = URLField(u'Source link', [length(max=255)],
         description="URL of your repository.")
     contact_url = URLField(u'Contact link', [length(max=255)],
@@ -102,9 +102,9 @@ class ProjectPost(FlaskForm):
     id = HiddenField('id')
     note = TextAreaField(u'Note', [length(max=140), DataRequired()],
         description=u'What are you working on right now?')
+    progress = SelectField(u'Progress', coerce=int)
     resource = SelectField(u'Resources', coerce=int,
         description=u'Are any of these being used?')
-    progress = SelectField(u'Progress', coerce=int)
     submit = SubmitField(u'Save post')
 
 class ResourceForm(FlaskForm):

@@ -149,7 +149,10 @@ def project_edit(project_id):
         return project_action(project_id, None)
     form = ProjectForm(obj=project, next=request.args.get('next'))
     form.category_id.choices = [(c.id, c.name) for c in project.categories_all()]
-    form.category_id.choices.insert(0, (-1, ''))
+    if len(form.category_id.choices) > 0:
+        form.category_id.choices.insert(0, (-1, ''))
+    else:
+        del form.category_id
     if form.validate_on_submit():
         del form.id
         form.populate_obj(project)
@@ -246,7 +249,10 @@ def project_new(event_id):
         project.user_id = current_user.id
         form = ProjectNew(obj=project, next=request.args.get('next'))
         form.category_id.choices = [(c.id, c.name) for c in project.categories_all(event)]
-        form.category_id.choices.insert(0, (-1, ''))
+        if len(form.category_id.choices) > 0:
+            form.category_id.choices.insert(0, (-1, ''))
+        else:
+            del form.category_id
         if form.validate_on_submit():
             del form.id
             form.populate_obj(project)
