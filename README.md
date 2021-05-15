@@ -122,9 +122,10 @@ By default in a dev environment, a SQLite database will be created in the root f
 
 In production, the `DATABASE_URL` configures connectivity to an SQLAlchemy-compatible database engine. This requires a `DRIBDAT_ENV=prod` configuration.
 
-Run the following to create your app's database tables and perform the initial migration:
+Run the following to create your local SQLite database tables and perform the initial migration. Note that we avoid using the production `migrations` folder locally due to [Flask-Migrate#61](https://github.com/miguelgrinberg/Flask-Migrate/issues/61):
 
 ```
+mv migrations migrations_prod
 python manage.py db init
 python manage.py db migrate
 python manage.py db upgrade
