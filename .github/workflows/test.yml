@@ -49,10 +49,11 @@ jobs:
         run: |
           source $VENV
           coverage run --source=dribdat -m pytest tests/
-          coverage report
-      - name: Coveralls
-        uses: coverallsapp/github-action@master
-        env:
-          COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
+      - name: Generate coverage report
+        run: |
+          source $VENV
+          coverage xml
+      - uses: codecov/codecov-action@v1
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./coverage.xml

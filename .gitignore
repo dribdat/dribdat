@@ -3,6 +3,7 @@ package-lock.json
 yarn.lock
 *.py[cod]
 .flaskenv
+coverage.xml
 
 # C extensions
 *.so
