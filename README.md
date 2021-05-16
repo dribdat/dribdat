@@ -208,7 +208,7 @@ If you get errors like *ERROR [alembic.env] Can't locate revision identified by 
 
 ```
 alter table projects alter column webpage_url type character varying(2048);
-insert into alembic_version values ('75590cf87021')
+insert into alembic_version values ('7c3929047190')
 ```
 
 See also further instructions in the `force-migrate.sh` script.
