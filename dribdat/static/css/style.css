@@ -904,6 +904,7 @@ pre { color: #333; background: white; }
   background: white;
   margin: 1px -1px;
   min-height: 7em;
+  min-width: 16em;
   vertical-align: top;
 }
 .resources-page .resource-list {

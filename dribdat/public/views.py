@@ -109,14 +109,20 @@ def event_participants(event_id):
 def event_resources(event_id):
     event = Event.query.filter_by(id=event_id).first_or_404()
     steps = []
+    allres = SuggestionsByProgress(None, event)
     for ix, p in enumerate(projectProgressList(True, False)):
+        rrr = []
+        for r in allres:
+            if r.progress_tip == p[0]: rrr.append(r)
         steps.append({
-            'index': ix + 1, 'name': p[1],
-            'resources': SuggestionsByProgress(p[0], event)
+            'index': ix + 1, 'name': p[1], 'resources': rrr
         })
+    # show progress-less resources
+    rr0 = []
+    for r in allres:
+        if r.progress_tip < 0: rr0.append(r)
     steps.append({
-        'name': '/etc', 'index': -1,
-        'resources': SuggestionsByProgress(None, event)
+        'name': '/etc', 'index': -1, 'resources': rr0
     })
     return render_template("public/resources.html",
         current_event=event, steps=steps, active="resources")
