@@ -41,3 +41,7 @@ jobs:
       - name: Run tests
         run: |
           poetry run pytest tests
+      - name: Coveralls
+        uses: coverallsapp/github-action@master
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}

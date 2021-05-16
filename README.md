@@ -1,14 +1,16 @@
 # dribdat
 
 ![Github Actions build](https://github.com/hackathons-ftw/dribdat/workflows/build/badge.svg)
-[![Coveralls](https://coveralls.io/repos/github/hackathons-ftw/dribdat/badge.svg?branch=main)](https://coveralls.io/github/hackathons-ftw/dribdat?branch=main)
+[![Coverage Status](https://coveralls.io/repos/github/hackathons-ftw/dribdat/badge.svg?branch=main)](https://coveralls.io/github/hackathons-ftw/dribdat?branch=main)
 [![Mattermost](https://img.shields.io/badge/Mattermost-chat-blue.svg)](https://team.opendata.ch/signup_user_complete/?id=74yuxwruaby9fpoukx9bmoxday)
 
 ### A platform for time-limited, team-based, data-driven, open collaboration
 
-For background and references, see [User's Guide](USAGE.md) and [Aboue Page](ABOUT.md). If you need help or advice in setting up your event, or would like to contribute to the project: please get in touch via [GitHub Issues](https://github.com/hackathons-ftw/dribdat/issues) or [e-mail](mailto:dribdat@datalets.ch).  The rest of this page has details for deploying the dribdat application.
+For background and references, see [User's Guide](USAGE.md) and [About Page](ABOUT.md). If you need help or advice in setting up your event, or would like to contribute to the project: please get in touch via [GitHub Issues](https://github.com/hackathons-ftw/dribdat/issues) or [e-mail](mailto:dribdat@datalets.ch).  The rest of this page has details for deploying the dribdat application.
 
-![](dribdat/static/img/screenshot_makezurich.jpg)
+![](dribdat/static/img/screenshot_sandbox.png)
+
+_Screenshot of a dribdat event page._
 
 # Quickstart
 
@@ -16,13 +18,11 @@ This project can be deployed to any server capable of serving Python application
 
 [![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy)
 
-Add the **nodejs** build pack in the _Settings_ tab of Heroku to get everything working properly.
-
-The first user that registers becomes an admin, so don't delay!
+The first user that registers becomes an admin, so don't delay! If you would like to run dribdat on any other cloud or local machine, follow the [Developer guide](#developer-guide) below. The following section details environment variables you can add to tweak your installation.
 
 ## Configuration
 
-Optimize your dribdat instance with the following environment variables in production. **Tip**: Use `.flaskenv` or `.env` to store environment variables for local development:
+Optimize your dribdat instance with the following environment variables in production:
 
 * `TIME_ZONE` - set if your event is not in UTC time (e.g. "Europe/Zurich" - see [pytz docs](https://pythonhosted.org/pytz/))
 * `SERVER_URL` - fully qualified domain name where the site is hosted
@@ -121,6 +121,8 @@ pip install -r requirements/dev.txt
 ```
 
 By default in a dev environment, a SQLite database will be created in the root folder (`dev.db`). You can also install and configure your choice of DBMS [supported by SQLAlchemy](http://docs.sqlalchemy.org/en/rel_1_1/dialects/index.html). In production, the `DATABASE_URL` configures connectivity to an SQLAlchemy-compatible database engine. This requires a `DRIBDAT_ENV=prod` configuration.
+
+> **Tip**: Use `.flaskenv` or `.env` to store environment variables for local development. See the [Configuration](#configuration) section for more details.
 
 Run the following to create your local SQLite database tables and perform the initial migration. Note that we avoid using the production `migrations` folder locally due to [Flask-Migrate#61](https://github.com/miguelgrinberg/Flask-Migrate/issues/61):
 
