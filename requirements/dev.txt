@@ -2,6 +2,7 @@
 atomicwrites
 attrs
 blinker
+coveralls
 factory-boy
 faker
 flake8-blind-except

@@ -40,7 +40,7 @@ jobs:
           npm install
       - name: Run tests
         run: |
-          poetry run pytest tests
+          poetry run coverage run --source=dribdat -m pytest tests/
       - name: Coveralls
         uses: coverallsapp/github-action@master
         with:
