@@ -591,7 +591,7 @@ def resource_new():
     form = ResourceForm(obj=resource, next=request.args.get('next'))
     form.user_id.choices = [(e.id, "%s" % (e.username)) for e in User.query.filter_by(active=True).order_by('username')]
     form.event_id.choices = [(e.id, e.name) for e in Event.query.order_by(Event.id.desc())]
-    form.event_id.choices.insert(0, (0, ''))
+    form.event_id.choices.insert(0, (None, ''))
 
     if form.validate_on_submit():
         del form.id
