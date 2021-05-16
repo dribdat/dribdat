@@ -26,20 +26,28 @@ jobs:
             python-version: 3.9
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
-        with:
-          node-version: '12'
       - name: Setup Python ${{ matrix.python-version }}
         uses: actions/setup-python@v2
         with:
           python-version: ${{ matrix.python-version }}
-      - name: Install
+      - name: Install Poetry
+        uses: snok/install-poetry@v1.1.4
+        with:
+          virtualenvs-create: true
+          virtualenvs-in-project: true
+      - name: Load cached venv
+        id: cached-pip-wheels
+        uses: actions/cache@v2
+        with:
+          path: ~/.cache
+          key: venv-${{ runner.os }}-${{ hashFiles('**/poetry.lock') }}
+      - name: Install dependencies
+        run: poetry install --no-interaction --no-root
+      - name: Install library
+        run: poetry install --no-interaction
+      - name: Run test suite
         run: |
-          pip install poetry
-          poetry install
-          npm install
-      - name: Run tests
-        run: |
+          source $VENV
           poetry run coverage run --source=dribdat -m pytest tests/
       - name: Coveralls
         uses: coverallsapp/github-action@master
