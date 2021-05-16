@@ -48,8 +48,11 @@ jobs:
       - name: Run test suite
         run: |
           source $VENV
-          poetry run coverage run --source=dribdat -m pytest tests/
+          coverage run --source=dribdat -m pytest tests/
+          coverage report
       - name: Coveralls
         uses: coverallsapp/github-action@master
+        env:
+          COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
