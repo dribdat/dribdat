@@ -163,7 +163,14 @@ The administrative interface shown below allows defining details of the event an
 
 ![](dribdat/static/img/screenshot_admin_projects.png)
 
-The look and feel of the project view can be customized with CSS, and shows challenges and projects, with a rating of how completely they are documented. In the `Events` screen there are links to a *Print* view for a summary of all projects on one page, and the ability to *Embed* results into another website.
+Here you can see challenges and projects, with a rating of how completely they are documented. In the `Events` screen there are links to a *Print* view for a summary of all projects on one page, and the ability to *Embed* results into another website. The look and feel of the projects as well as instructions for teams can be customized per-event.
+
+You can pre-configure **Categories** for your site or a specific event, as well as **Roles** in the `Presets` section of the admin. For example, you could define the following Roles:
+
+- 🖍️ Designer
+- ⚙️ Enabler
+- 💡 Facilitator
+- 🛡️ Organizer
 
 ## I want to use this elsewhere
 
