@@ -61,7 +61,7 @@ class EventForm(FlaskForm):
 class ProjectForm(FlaskForm):
     next = HiddenField()
     id = HiddenField('id')
-    user_id = SelectField(u'Owner (team user)', coerce=int)
+    user_name = StringField(u'Started by')
     event_id = SelectField(u'Event', coerce=int)
     category_id = SelectField(u'Challenge category', coerce=int)
     progress = SelectField(u'Progress', coerce=int, choices=projectProgressList())
@@ -95,7 +95,7 @@ class ResourceForm(FlaskForm):
     next = HiddenField()
     id = HiddenField('id')
     name = StringField(u'Name', [length(max=80), UniqueValidator(Resource, 'name'), DataRequired()])
-    user_id = SelectField(u'Owner', coerce=int)
+    user_name = StringField(u'Shared by')
     type_id = RadioField(u'Type', coerce=int, choices=resourceTypeList())
     source_url = URLField(u'Link', [length(max=2048)], description=u'URL to download or get more information')
     summary = TextAreaField(u'Summary', [length(max=140)], description=u'How is this useful: in 140 characters or less?')
