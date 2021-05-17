@@ -177,8 +177,11 @@ nav .navbar-nav .nav-item {
   margin-bottom: 1em;
 }
 .home .an-event .card-img-top {
-  max-height: 100px;
+  max-height: 10em;
   overflow: hidden;
+}
+.home .an-event .card-img-top img {
+  width: 100%;
 }
 .home .an-event-meta {
   font-size: 90%;

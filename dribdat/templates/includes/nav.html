@@ -40,14 +40,13 @@
               Contributors
             </a>
           </li>
+          <li class="nav-item">
+            <a class="nav-link {% if active == 'dribs' %}active{% endif %}" href="{{ url_for('public.dribs') }}">
+              <i class="fa fa-comment"></i>
+              Updates
+            </a>
+          </li>
         {% endif %}
-
-        <li class="nav-item">
-          <a class="nav-link {% if active == 'dribs' %}active{% endif %}" href="{{ url_for('public.dribs') }}">
-            <i class="fa fa-comment"></i>
-            Updates
-          </a>
-        </li>
       {% endif %}
 
       {% if tabs %}

@@ -3,7 +3,7 @@
 """
 
 from dribdat.user.models import Activity, Resource
-from dribdat.user import isUserActive
+from dribdat.user import isUserActive, projectProgressList
 from dribdat.database import db
 from dribdat.apifetch import * # TBR
 
@@ -73,7 +73,8 @@ def IsProjectStarred(project, current_user):
     ).count() > 0
 
 def SuggestionsByProgress(progress=None, event=None):
-    if event:
+    """ Fetch all resources """
+    if event is not None:
         resources = event.resources_for_event()
     else:
         resources = Resource.query
@@ -81,6 +82,29 @@ def SuggestionsByProgress(progress=None, event=None):
         resources = resources.filter_by(progress_tip=progress)
     resources = resources.filter_by(is_visible=True)
     return resources.order_by(Resource.type_id).all()
+
+def SuggestionsTreeForEvent(event):
+    """ Collect resources by progress """
+    allres = SuggestionsByProgress(None, event)
+    steps = []
+    shown = []
+    for ix, p in enumerate(projectProgressList(True, False)):
+        rrr = []
+        for r in allres:
+            if r.progress_tip and r.progress_tip == p[0]: rrr.append(r)
+        steps.append({
+            'index': ix + 1, 'name': p[1], 'resources': rrr
+        })
+        shown.extend(rrr)
+    # show progress-less resources
+    rr0 = []
+    for r in allres:
+        if not r.progress_tip or not r in shown: rr0.append(r)
+    if len(rr0) > 0:
+        steps.append({
+            'name': '/etc', 'index': -1, 'resources': rr0
+        })
+    return steps
 
 def GetEventUsers(event):
     if not event.projects: return None

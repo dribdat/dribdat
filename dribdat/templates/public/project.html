@@ -62,7 +62,7 @@
        Join
       </a>
     {% else %}
-      <a href="{{ url_for('auth.login') }}" class="btn btn-lg btn-primary project-star" 
+      <a href="{{ url_for('auth.login') }}" class="btn btn-lg btn-primary project-star"
         title="Login to join this project">
        <i class="fa fa-star-o"></i>
        Join
@@ -307,7 +307,9 @@
 </div>
 
 <center class="mt-5">
-  <a class="btn btn-dark btn-lg" href="{{ url_for('public.event', event_id=project.event.id) }}">{{ project.event.name }}</a>
+  <a class="btn btn-dark btn-lg" href="{{ url_for('public.event', event_id=project.event.id) }}">
+    <i class="fa fa-arrow-left" aria-hidden="true"></i>
+    {{ project.event.name }}</a>
 </center>
 
 {% endblock %}
