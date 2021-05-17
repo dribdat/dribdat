@@ -6,7 +6,6 @@ import click
 
 from flask import Flask
 from flask.cli import FlaskGroup
-from flask_migrate import MigrateCommand
 
 from dribdat.app import init_app
 from dribdat.settings import DevConfig, ProdConfig
@@ -27,7 +26,6 @@ def create_app(script_info=None):
     else:
         app = init_app(DevConfig)
     app.shell_context_processor(shell_context)
-    app.cli.add_command('db', MigrateCommand)
     return app
 
 @click.command()
@@ -41,7 +39,8 @@ def featuretest():
 def test():
     """Run all tests."""
     import pytest
-    exit_code = pytest.main([TEST_PATH, '--verbose'])
+    test_opts = [TEST_PATH]
+    exit_code = pytest.main(test_opts)
     return exit_code
 
 

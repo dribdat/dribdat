@@ -1,7 +1,7 @@
-"""empty message
+"""Initial database
 
 Revision ID: 7c3929047190
-Revises: 
+Revises:
 Create Date: 2021-03-13 13:22:38.768112
 
 """

@@ -197,7 +197,7 @@ class Event(PkModel):
     location = Column(db.String(255), nullable=True)
     description = Column(db.UnicodeText(), nullable=True)
     boilerplate = Column(db.UnicodeText(), nullable=True)
-    resources = Column(db.UnicodeText(), nullable=True)
+    instruction = Column(db.UnicodeText(), nullable=True)
 
     logo_url = Column(db.String(255), nullable=True)
     custom_css = Column(db.UnicodeText(), nullable=True)
@@ -292,12 +292,20 @@ class Event(PkModel):
         return format_date_range(self.starts_at, self.ends_at)
 
     # Event categories
-    def categories_for_event(self, event_id=None):
-        if event_id is None: event_id = self.id
+    def categories_for_event(self):
         return Category.query.filter(or_(
             Category.event_id==None,
-            Category.event_id==event_id
+            Category.event_id==-1,
+            Category.event_id==self.id
         )).order_by('name')
+
+    # Event resources
+    def resources_for_event(self):
+        return Resource.query.filter(or_(
+            Resource.event_id==None,
+            Resource.event_id==0,
+            Resource.event_id==self.id
+        ))
 
     # Number of projects
     @property
@@ -577,6 +585,7 @@ class Category(PkModel):
             'id': self.id,
             'name': self.name,
             'description': self.description,
+            # 'event_id': self.event_id,
         }
 
     def __init__(self, name=None, **kwargs):
@@ -603,6 +612,10 @@ class Resource(PkModel):
 
     user_id = reference_col('users', nullable=True)
     user = relationship('User', backref='resources')
+
+    # If specific to an event
+    event_id = reference_col('events', nullable=True)
+    event = relationship('Event', backref='resources')
 
     @property
     def of_type(self):

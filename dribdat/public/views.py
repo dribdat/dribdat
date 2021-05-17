@@ -16,6 +16,7 @@ from dribdat.aggregation import (
     SyncProjectData, GetProjectData,
     ProjectActivity, IsProjectStarred,
     GetEventUsers, SuggestionsByProgress,
+    SuggestionsTreeForEvent,
 )
 from dribdat.user import projectProgressList, isUserActive
 
@@ -77,7 +78,7 @@ def user(username):
     # projects = user.projects
     projects = user.joined_projects()
     posts = user.latest_posts()
-    submissions = Resource.query.filter_by(user_id=user.id).order_by(Resource.id.desc()).all()
+    submissions = Resource.query.filter_by(user_id=user.id).order_by(Resource.name.asc()).all()
     return render_template("public/userprofile.html", active="profile",
         current_event=event, event=event, user=user, cert_path=cert_path,
         projects=projects, submissions=submissions, posts=posts)
@@ -108,16 +109,7 @@ def event_participants(event_id):
 @blueprint.route("/event/<int:event_id>/resources")
 def event_resources(event_id):
     event = Event.query.filter_by(id=event_id).first_or_404()
-    steps = []
-    for ix, p in enumerate(projectProgressList(True, False)):
-        steps.append({
-            'index': ix + 1, 'name': p[1],
-            'resources': SuggestionsByProgress(p[0])
-        })
-    steps.append({
-        'name': '/etc', 'index': -1,
-        'resources': SuggestionsByProgress(None)
-    })
+    steps = SuggestionsTreeForEvent(event)
     return render_template("public/resources.html",
         current_event=event, steps=steps, active="resources")
 
@@ -149,7 +141,10 @@ def project_edit(project_id):
         return project_action(project_id, None)
     form = ProjectForm(obj=project, next=request.args.get('next'))
     form.category_id.choices = [(c.id, c.name) for c in project.categories_all()]
-    form.category_id.choices.insert(0, (-1, ''))
+    if len(form.category_id.choices) > 0:
+        form.category_id.choices.insert(0, (-1, ''))
+    else:
+        del form.category_id
     if form.validate_on_submit():
         del form.id
         form.populate_obj(project)
@@ -175,9 +170,9 @@ def project_post(project_id):
         return project_action(project_id, None)
     form = ProjectPost(obj=project, next=request.args.get('next'))
     # Populate progress dialog
-    form.progress.choices = projectProgressList(event.has_started or event.has_finished)
+    form.progress.choices = projectProgressList(event.has_started or event.has_finished, False)
     # Populate resource list
-    resources = Resource.query.filter_by(is_visible=True).order_by(Resource.type_id).all()
+    resources = event.resources_for_event().filter_by(is_visible=True).order_by(Resource.type_id).all()
     resource_list = [(0, '')]
     resource_list.extend([(r.id, r.of_type + ': ' + r.name) for r in resources])
     form.resource.choices = resource_list
@@ -211,7 +206,7 @@ def project_action(project_id, of_type=None, as_view=True, then_redirect=False, 
     project_team = project.team()
     latest_activity = project.latest_activity()
     project_dribs = project.all_dribs()
-    suggestions = SuggestionsByProgress(project.progress)
+    suggestions = SuggestionsByProgress(project.progress, event)
     return render_template('public/project.html', current_event=event, project=project,
         project_starred=starred, project_team=project_team, project_dribs=project_dribs, suggestions=suggestions,
         allow_edit=allow_edit, latest_activity=latest_activity)
@@ -246,7 +241,10 @@ def project_new(event_id):
         project.user_id = current_user.id
         form = ProjectNew(obj=project, next=request.args.get('next'))
         form.category_id.choices = [(c.id, c.name) for c in project.categories_all(event)]
-        form.category_id.choices.insert(0, (-1, ''))
+        if len(form.category_id.choices) > 0:
+            form.category_id.choices.insert(0, (-1, ''))
+        else:
+            del form.category_id
         if form.validate_on_submit():
             del form.id
             form.populate_obj(project)

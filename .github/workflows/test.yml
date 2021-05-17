@@ -13,31 +13,44 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        name: [ macos, windows, ubuntu ]
+        name: [ macos, ubuntu ]
         include:
           - name: macos
             os: macos-latest
             python-version: 3.7
-          - name: windows
-            os: windows-latest
-            python-version: 3.8
           - name: ubuntu
             os: ubuntu-latest
             python-version: 3.9
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
-        with:
-          node-version: '12'
       - name: Setup Python ${{ matrix.python-version }}
         uses: actions/setup-python@v2
         with:
           python-version: ${{ matrix.python-version }}
-      - name: Install
+      - name: Install Poetry
+        uses: snok/install-poetry@v1.1.4
+        with:
+          virtualenvs-create: true
+          virtualenvs-in-project: true
+      - name: Load cached venv
+        id: cached-pip-wheels
+        uses: actions/cache@v2
+        with:
+          path: ~/.cache
+          key: venv-${{ runner.os }}-${{ hashFiles('**/poetry.lock') }}
+      - name: Install dependencies
+        run: poetry install --no-interaction --no-root
+      - name: Install library
+        run: poetry install --no-interaction
+      - name: Run test suite
         run: |
-          pip install poetry
-          poetry install
-          npm install
-      - name: Run tests
+          source $VENV
+          coverage run --source=dribdat -m pytest tests/
+      - name: Generate coverage report
         run: |
-          poetry run pytest tests
+          source $VENV
+          coverage xml
+      - uses: codecov/codecov-action@v1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./coverage.xml

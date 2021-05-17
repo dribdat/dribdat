@@ -3,7 +3,8 @@
 from flask import flash, current_app
 from datetime import datetime
 from math import floor
-import pytz, re
+from os import path
+import pytz, re, csv
 
 def sanitize_input(text):
     """ Removes unsavoury characters """
@@ -77,3 +78,26 @@ def format_date_range(starts_at, ends_at):
             ends_at.day,
             ends_at.year,
         )
+
+""" Load event preset content """
+def load_event_presets():
+    EVENT_PRESET = { 'quickstart': '', 'codeofconduct': '' }
+    for pr in EVENT_PRESET.keys():
+        fn = path.join(path.join(path.join(
+            path.dirname(__file__),
+                'templates'), 'includes'), pr + '.md')
+        with open(fn, mode='r') as file:
+            EVENT_PRESET[pr] = file.read()
+    return EVENT_PRESET
+
+""" Load structured settings from a CSV file """
+def load_csv_presets(filename, by_col='name'):
+    fn = path.join(path.join(path.join(
+        path.dirname(__file__),
+            'templates'), 'includes'), filename + '.csv')
+    settings_dict = {}
+    with open(fn, mode='r') as file:
+        csvreader = csv.DictReader(file, delimiter=';')
+        for row in csvreader:
+            settings_dict[row[by_col]] = row
+    return settings_dict

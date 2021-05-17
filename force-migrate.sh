@@ -23,14 +23,13 @@ elif [ "$1" = "heroku" ]; then
 
 elif [ "$1" = "local" ]; then
 	echo "Resetting local SQLite DB (dev.db)"
-	rm -rf dev.db migrations
-	python manage.py db init
+	rm -rf dev.db
 	python manage.py db migrate
 	python manage.py db upgrade
 
 else
-	echo "Use this script to refresh the DB schema:"
-	echo "- in production (such as Heroku console), with the psql argument"
-	echo "- use the heroku argument to modify a locally configured remote app"
-	echo "- without arguments, it will ask you if you want to reset your SQLite DB"
+	echo "Use this script with the following arguments to refresh the DB schema:"
+	echo " psql - in production (such as your server ssh console)"
+	echo " heroku - to modify a locally configured remote app"
+	echo " local - wipe and reset your development SQLite file (dev.db)"
 fi

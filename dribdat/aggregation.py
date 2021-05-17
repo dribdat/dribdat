@@ -3,7 +3,7 @@
 """
 
 from dribdat.user.models import Activity, Resource
-from dribdat.user import isUserActive
+from dribdat.user import isUserActive, projectProgressList
 from dribdat.database import db
 from dribdat.apifetch import * # TBR
 
@@ -41,15 +41,15 @@ def SyncProjectData(project, data):
     # Update following fields only if blank
     if 'summary' in data and data['summary']:
         if not project.summary or not project.summary.strip():
-            project.summary = data['summary']
+            project.summary = data['summary'][:120]
     if 'homepage_url' in data and data['homepage_url'] and not project.webpage_url:
-        project.webpage_url = data['homepage_url']
+        project.webpage_url = data['homepage_url'][:2048]
     if 'contact_url' in data and data['contact_url'] and not project.contact_url:
-        project.contact_url = data['contact_url']
+        project.contact_url = data['contact_url'][:255]
     if 'source_url' in data and data['source_url'] and not project.source_url:
-        project.source_url = data['source_url']
+        project.source_url = data['source_url'][:255]
     if 'image_url' in data and data['image_url'] and not project.image_url:
-        project.image_url = data['image_url']
+        project.image_url = data['image_url'][:255]
     project.update()
     db.session.add(project)
     db.session.commit()
@@ -72,8 +72,39 @@ def IsProjectStarred(project, current_user):
         user_id=current_user.id
     ).count() > 0
 
-def SuggestionsByProgress(progress):
-    return Resource.query.filter_by(is_visible=True, progress_tip=progress).order_by(Resource.type_id).all()
+def SuggestionsByProgress(progress=None, event=None):
+    """ Fetch all resources """
+    if event is not None:
+        resources = event.resources_for_event()
+    else:
+        resources = Resource.query
+    if progress is not None:
+        resources = resources.filter_by(progress_tip=progress)
+    resources = resources.filter_by(is_visible=True)
+    return resources.order_by(Resource.type_id).all()
+
+def SuggestionsTreeForEvent(event):
+    """ Collect resources by progress """
+    allres = SuggestionsByProgress(None, event)
+    steps = []
+    shown = []
+    for ix, p in enumerate(projectProgressList(True, False)):
+        rrr = []
+        for r in allres:
+            if r.progress_tip and r.progress_tip == p[0]: rrr.append(r)
+        steps.append({
+            'index': ix + 1, 'name': p[1], 'resources': rrr
+        })
+        shown.extend(rrr)
+    # show progress-less resources
+    rr0 = []
+    for r in allres:
+        if not r.progress_tip or not r in shown: rr0.append(r)
+    if len(rr0) > 0:
+        steps.append({
+            'name': '/etc', 'index': -1, 'resources': rr0
+        })
+    return steps
 
 def GetEventUsers(event):
     if not event.projects: return None

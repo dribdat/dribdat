@@ -2,6 +2,7 @@
 
 {% block content %}
 <div class="container">
+<h2> Admin area </h2>
 <p>
 {% if default_event %}
     Set up
@@ -22,8 +23,6 @@
 </p>
 
 <div class="jumbotron admin-stats" style="background:none; min-width: 600px;">
-  <img src="{{ url_for('static', filename='img/logo7_gray.png') }}" align="left" height="40">
-  <h2>dribdat</h2>
 {% for stat in stats %}
     <div class="card stat" style="height: {{ stat.height }}em">
     {% if stat.img %}
@@ -37,18 +36,26 @@
 {% endfor %}
   <div class="chart-activities" style="margin-top:2em">
     <h5>pulse</h5>
-    <a href="#" id="show-activities" class="btn btn-lg btn-primary">Show</a>
+    <a href="#" id="show-activities" class="btn btn-lg btn-info">Show chart</a>
     <div id="activities"></div>
   </div>
+
+  <center clear="all">
+    <a href="https://dribdat.cc" target="_blank"><img src="{{ url_for('static', filename='img/logo8_rgb.png') }}" height="128" alt="dribdat logo"></a>
+    <br><br>
+    <a href="https://github.com/hackathons-ftw/dribdat/blob/main/USAGE.md#show-me-the-back-end" target="_blank">Documentation</a> |
+    <a href="mailto:dribdat@datalets.ch">Get support</a>
+  </center>
+
 </div><!-- /jumbotron -->
 
 </div>
 {% endblock %}
 
 {% block js %}
-<script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
-<script src="https://cdn.jsdelivr.net/npm/vega-lite@4"></script>
-<script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
+<script src="https://cdn.jsdelivr.net/npm/vega@5/build/vega.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vega-lite@5/build/vega-lite.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vega-embed@6/build/vega-embed.min.js"></script>
 <script>
 $('#show-activities').click(function(e) {
     e.preventDefault();

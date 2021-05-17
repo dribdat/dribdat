@@ -3,7 +3,7 @@
 {% block content %}
 <div class="container">
     <a href="{{ url_for('admin.resource_new') }}" class="btn btn-success btn-lg">Add resource</a>
-    <h2>Resources</h2>
+    <h2>Components</h2>
     <table class='table table-bordered table-hover'>
         <thead>
             <tr>
@@ -15,7 +15,7 @@
         </thead>
         {% for resource in resources or data.items %}
         <tr>
-            <td>
+            <td width="50%">
               <a href="{{ url_for('admin.resource', resource_id=resource.id) }}">
                 {{ resource.name }}
               </a>
@@ -25,6 +25,10 @@
               <i title="{{ resource.created_at }}">
                 {{ resource.since }}
               </i>
+
+              {% if resource.event_id %}
+                @ {{ resource.event.name }}
+              {% endif %}
             </td>
             <td>
               {% if resource.user_id %}

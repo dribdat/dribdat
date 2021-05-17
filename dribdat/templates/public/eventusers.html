@@ -36,7 +36,9 @@
 
 {% if current_event %}
 <center class="mt-5">
-    <a class="btn btn-dark btn-lg" href="{{ url_for('public.event', event_id=current_event.id) }}">Back to the future</a>
+    <a class="btn btn-dark btn-lg" href="{{ url_for('public.event', event_id=current_event.id) }}">
+      <i class="fa fa-arrow-left" aria-hidden="true"></i>
+      Back to the future</a>
 </center>
 {% endif %}
 

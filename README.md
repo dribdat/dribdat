@@ -1,12 +1,16 @@
 # dribdat
 
 ![Github Actions build](https://github.com/hackathons-ftw/dribdat/workflows/build/badge.svg)
-[![Coveralls](https://coveralls.io/repos/github/hackathons-ftw/dribdat/badge.svg?branch=main)](https://coveralls.io/github/hackathons-ftw/dribdat?branch=main)
+[![codecov](https://codecov.io/gh/hackathons-ftw/dribdat/branch/master/graph/badge.svg?token=Ccd1vTxRXg)](https://codecov.io/gh/hackathons-ftw/dribdat)
 [![Mattermost](https://img.shields.io/badge/Mattermost-chat-blue.svg)](https://team.opendata.ch/signup_user_complete/?id=74yuxwruaby9fpoukx9bmoxday)
 
 ### A platform for time-limited, team-based, data-driven, open collaboration
 
-For background and references, see [User's Guide](USAGE.md) and [Aboue Page](ABOUT.md). If you need help or advice in setting up your event, or would like to contribute to the project: please get in touch via [GitHub Issues](https://github.com/hackathons-ftw/dribdat/issues) or [e-mail](mailto:dribdat@datalets.ch).  The rest of this page has details for deploying the dribdat application.
+For background and references, see [User's Guide](USAGE.md) and [About Page](ABOUT.md). If you need help or advice in setting up your event, or would like to contribute to the project: please get in touch via [GitHub Issues](https://github.com/hackathons-ftw/dribdat/issues) or [e-mail](mailto:dribdat@datalets.ch).  The rest of this page has details for deploying the dribdat application.
+
+![](dribdat/static/img/screenshot_sandbox.png)
+
+_Screenshot of a dribdat event page._
 
 # Quickstart
 
@@ -14,13 +18,11 @@ This project can be deployed to any server capable of serving Python application
 
 [![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy)
 
-Add the **nodejs** build pack in the _Settings_ tab of Heroku to get everything working properly.
-
-The first user that registers becomes an admin, so don't delay!
+The first user that registers becomes an admin, so don't delay! If you would like to run dribdat on any other cloud or local machine, follow the [Developer guide](#developer-guide) below. The following section details environment variables you can add to tweak your installation.
 
 ## Configuration
 
-Optimize your dribdat instance with the following environment variables in production. **Tip**: Use `.flaskenv` or `.env` to store environment variables for local development:
+Optimize your dribdat instance with the following environment variables in production:
 
 * `TIME_ZONE` - set if your event is not in UTC time (e.g. "Europe/Zurich" - see [pytz docs](https://pythonhosted.org/pytz/))
 * `SERVER_URL` - fully qualified domain name where the site is hosted
@@ -34,9 +36,9 @@ The following options can be used to toggle **application features**:
 * `DRIBDAT_ENV` - 'dev' to enable debugging, 'prod' to optimise assets etc.
 * `DRIBDAT_SECRET` - a long scary string for hashing your passwords - in Heroku this is set automatically
 * `DRIBDAT_APIKEY` - for connecting clients to the remote [API](#api)
-* `DRIBDAT_USER_APPROVE` - set to True so that any new non-SSO accounts are inactive
-* `DRIBDAT_NOT_REGISTER` - set to True to disallow creating accounts on this server
-* `DRIBDAT_TOOL_APPROVE` - set to True for suggested resources to not immediately appear
+* `DRIBDAT_USER_APPROVE` - set to True so that any new non-SSO accounts are inactive until approved by an admin
+* `DRIBDAT_NOT_REGISTER` - set to True to hide the registration, so new users can only join this server via SSO
+* `DRIBDAT_TOOL_APPROVE` - set to True for suggested components to not immediately appear
 * `DRIBDAT_THEME` - can be set to one of the [Bootswatch themes](https://bootswatch.com/)
 * `DRIBDAT_STYLE` - provide the address to a CSS stylesheet for custom global styles
 * `DRIBDAT_CLOCK` - use 'up' or 'down' to change the position, or 'off' to hide the countdown clock
@@ -48,7 +50,7 @@ Support for **Web analytics** can be configured using one of the following varia
 * `ANALYTICS_GOOGLE` (starts with "UA-...")
 * `ANALYTICS_HREF` - an optional link in the footer to a public dashboard for your analytics
 
-OAuth 2.0 support for **Single Sign-On** is currently available using [Flask Dance](https://flask-dance.readthedocs.io/), and requires SSL to be enabled (using `SERVER_SSL`=1 in production or `OAUTHLIB_INSECURE_TRANSPORT` in development). Register your app with the provider (see SSO tips below), and set the following variables:
+OAuth 2.0 support for **Single Sign-On** (SSO) is currently available using [Flask Dance](https://flask-dance.readthedocs.io/), and requires SSL to be enabled (using `SERVER_SSL`=1 in production or `OAUTHLIB_INSECURE_TRANSPORT` in development). Register your app with the provider (see SSO tips below), and set the following variables:
 
 * `OAUTH_TYPE` - e.g. 'Slack', 'GitHub', 'Azure'
 * `OAUTH_ID` - the Client ID of your app
@@ -66,6 +68,8 @@ For **uploading images** and other files directly within dribdat, you can config
 * `S3_HTTPS` - URL for web access to your bucket's public files
 * `S3_ENDPOINT` - alternative endpoint for self-hosted Object Storage
 * `MAX_CONTENT_LENGTH` - defaults to 1048576 bytes (1 MB) file size
+
+To customize some of the default content, you can edit the template include files, for example the default [quickstart](dribdat/templates/includes/quickstart.md) or [stages](dribdat/templates/includes/stages.csv) - as long as you're not limited by ephemeral storage of your deployment.
 
 ## API
 
@@ -118,13 +122,14 @@ Or using plain pip:
 pip install -r requirements/dev.txt
 ```
 
-By default in a dev environment, a SQLite database will be created in the root folder (`dev.db`). You can also install and configure your choice of DBMS [supported by SQLAlchemy](http://docs.sqlalchemy.org/en/rel_1_1/dialects/index.html).
+By default in a dev environment, a SQLite database will be created in the root folder (`dev.db`). You can also install and configure your choice of DBMS [supported by SQLAlchemy](http://docs.sqlalchemy.org/en/rel_1_1/dialects/index.html). In production, the `DATABASE_URL` configures connectivity to an SQLAlchemy-compatible database engine. This requires a `DRIBDAT_ENV=prod` configuration.
 
-In production, the `DATABASE_URL` configures connectivity to an SQLAlchemy-compatible database engine. This requires a `DRIBDAT_ENV=prod` configuration.
+> **Tip**: Use `.flaskenv` or `.env` to store environment variables for local development. See the [Configuration](#configuration) section for more details.
 
-Run the following to create your app's database tables and perform the initial migration:
+Run the following to create your local SQLite database tables and perform the initial migration. Note that we avoid using the production `migrations` folder locally due to [Flask-Migrate#61](https://github.com/miguelgrinberg/Flask-Migrate/issues/61):
 
 ```
+mv migrations migrations_prod
 python manage.py db init
 python manage.py db migrate
 python manage.py db upgrade
@@ -138,7 +143,7 @@ Finally, run this command (or just `debug.sh`) to start the server:
 FLASK_DEBUG=1 python manage.py run
 ```
 
-You will see a pretty welcome screen at http://127.0.0.1:5000
+You will see a welcome screen at http://127.0.0.1:5000 - register your first user account, which will have admin access and let you set up events.
 
 ## Coding tips
 
@@ -222,7 +227,7 @@ You can also try to test SSO providers with `OAUTHLIB_INSECURE_TRANSPORT=true` (
 
 See [Contributors](https://github.com/dataletsch/dribdat/graphs/contributors) for a list of people who have made changes to the code, and [Forks](https://github.com/dataletsch/dribdat/network/members) to find some other users of this project.
 
-This project is currently mantained by [@loleg](https://github.com/loleg) and [@gonzalocasas](https://github.com/gonzalocasas).
+This project is currently mantained by [@loleg](https://github.com/loleg) and [@gonzalocasas](https://github.com/gonzalocasas). You can find us on Mattermost at the badge at the top of this README.
 
 Special thanks to the [Open Data](https://opendata.ch), [Open Networking](https://opennetworkinfrastructure.org/) and [Open Source](https://dinacon.ch) communities in Switzerland for the many trials and feedbacks. We are also grateful to F. Wieser and M.-C. Gasser at [Swisscom](http://swisscom.com) for conceptual inputs and financial support at an early stage of this project. This code is originally based on Steven Loria's [flask-cookiecutter](https://github.com/sloria/cookiecutter-flask), which we of course encourage you to use in YOUR next project!
 

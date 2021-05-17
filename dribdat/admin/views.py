@@ -3,7 +3,7 @@
 from flask import Blueprint, render_template, redirect, url_for, make_response, request, flash, jsonify
 from flask_login import login_required, current_user
 
-from ..utils import sanitize_input
+from ..utils import sanitize_input, load_event_presets
 from ..extensions import db, cache
 from ..decorators import admin_required
 from ..aggregation import GetProjectData, SyncProjectData
@@ -14,19 +14,11 @@ from datetime import datetime
 import random, string
 
 from os import path
-# Load event preset content
-EVENT_PRESET = { 'quickstart': '', 'codeofconduct': '' }
-for pr in EVENT_PRESET.keys():
-    fn = path.join(path.join(path.join(path.join(
-        path.dirname(__file__), '..'),
-            'templates'), 'includes'), pr + '.md')
-    with open(fn, mode='r') as file:
-        EVENT_PRESET[pr] = file.read()
 
 
 blueprint = Blueprint('admin', __name__, url_prefix='/admin')
 
-
+EVENT_PRESET = load_event_presets()
 
 @blueprint.route('/')
 @login_required
@@ -146,9 +138,21 @@ def user_delete(user_id):
     return users()
 
 
-# Get a reasonably secure password
+""" Get a reasonably secure password """
 def get_random_alphanumeric_string(length=24):
     return ''.join((random.SystemRandom().choice(string.ascii_letters + string.digits) for i in range(length)))
+
+""" Retrieves a user by name """
+def get_user_by_name(username):
+    username = username.strip()
+    print(username)
+    if not username: return None
+    user = User.query.filter_by(username=username).first()
+    if not user:
+        flash('Username %s not found!' % username, 'warning')
+        return None
+    return user
+
 
 @blueprint.route('/user/<int:user_id>/reset/')
 @login_required
@@ -173,9 +177,9 @@ def user_deactivate(user_id, reactivate=False):
     db.session.add(user)
     db.session.commit()
     if reactivate:
-        flash('User is now active.', 'success')
+        flash('User %s is now active.' % user.username, 'success')
     else:
-        flash('User deactivated.', 'warning')
+        flash('User %s deactivated.' % user.username, 'warning')
     return users()
 
 
@@ -250,6 +254,7 @@ def event_new():
         form.boilerplate.data = EVENT_PRESET['quickstart']
     if not form.community_embed.data:
         form.community_embed.data = EVENT_PRESET['codeofconduct']
+    form.is_current.data = True
 
     return render_template('admin/eventnew.html', form=form)
 
@@ -336,7 +341,6 @@ def event_print(event_id):
 def project_view(project_id):
     project = Project.query.filter_by(id=project_id).first_or_404()
     form = ProjectForm(obj=project, next=request.args.get('next'))
-    form.user_id.choices = [(e.id, "%s" % (e.username)) for e in User.query.filter_by(active=True).order_by('username')]
     form.event_id.choices = [(e.id, e.name) for e in Event.query.order_by(Event.id.desc())]
     form.category_id.choices = [(c.id, c.name) for c in project.categories_all()]
     form.category_id.choices.insert(0, (-1, ''))
@@ -345,12 +349,15 @@ def project_view(project_id):
         form.populate_obj(project)
         # Ensure project category remains blank
         if project.category_id == -1: project.category_id = None
+        # Assign owner if selected
+        project.user = get_user_by_name(form.user_name.data)
         project.update()
         db.session.add(project)
         db.session.commit()
         flash('Project updated.', 'success')
         return redirect(url_for("admin.event_projects", event_id=project.event.id))
 
+    if project.user: form.user_name.data = project.user.username
     return render_template('admin/project.html', project=project, form=form)
 
 @blueprint.route('/project/<int:project_id>/toggle', methods=['GET', 'POST'])
@@ -386,19 +393,21 @@ def project_delete(project_id):
 def project_new():
     project = Project()
     form = ProjectForm(obj=project, next=request.args.get('next'))
-    form.user_id.choices = [(e.id, "%s" % (e.username)) for e in User.query.filter_by(active=True).order_by('username')]
     form.event_id.choices = [(e.id, e.name) for e in Event.query.order_by(Event.id.desc())]
     form.category_id.choices = [(c.id, c.name) for c in project.categories_all()]
     form.category_id.choices.insert(0, (-1, ''))
     if form.validate_on_submit():
         del form.id
         form.populate_obj(project)
+        # Assign owner if selected
+        project.user = get_user_by_name(form.user_name.data)
         project.update()
         db.session.add(project)
         db.session.commit()
         cache.clear()
         flash('Project added.', 'success')
         return redirect(url_for("admin.event_projects", event_id=project.event.id))
+    if project.user: form.user_name.data = project.user.username
     return render_template('admin/projectnew.html', form=form)
 
 @blueprint.route('/project/<int:project_id>/autodata')
@@ -557,7 +566,7 @@ def role_delete(role_id):
 @admin_required
 def resources(page=1):
     resources = Resource.query.order_by(
-        Resource.type_id.asc()
+        Resource.id.desc()
     ).paginate(page, per_page=10)
     return render_template('admin/resources.html', data=resources, endpoint='admin.resources', active='resources')
 
@@ -568,10 +577,14 @@ def resources(page=1):
 def resource(resource_id):
     resource = Resource.query.filter_by(id=resource_id).first_or_404()
     form = ResourceForm(obj=resource, next=request.args.get('next'))
-    form.user_id.choices = [(e.id, "%s" % (e.username)) for e in User.query.filter_by(active=True).order_by('username')]
+    form.event_id.choices = [(e.id, e.name) for e in Event.query.order_by(Event.id.desc())]
+    form.event_id.choices.insert(0, (0, ''))
 
     if form.validate_on_submit():
         form.populate_obj(resource)
+        if resource.event_id == 0: resource.event_id = None
+        # Assign owner if selected
+        resource.user = get_user_by_name(form.user_name.data)
         db.session.add(resource)
         db.session.commit()
 
@@ -579,6 +592,7 @@ def resource(resource_id):
         flash('Resource updated.', 'success')
         return resources()
 
+    if resource.user: form.user_name.data = resource.user.username
     return render_template('admin/resource.html', resource=resource, form=form)
 
 @blueprint.route('/resource/new', methods=['GET', 'POST'])
@@ -587,12 +601,17 @@ def resource(resource_id):
 def resource_new():
     resource = Resource()
     form = ResourceForm(obj=resource, next=request.args.get('next'))
-    form.user_id.choices = [(e.id, "%s" % (e.username)) for e in User.query.filter_by(active=True).order_by('username')]
+    form.event_id.choices = [(e.id, e.name) for e in Event.query.order_by(Event.id.desc())]
+    form.event_id.choices.insert(0, (0, ''))
 
     if form.validate_on_submit():
         del form.id
         form.populate_obj(resource)
+        if resource.event_id == 0: resource.event_id = None
         resource.is_visible = True
+        # Assign owner if selected
+        resource.user = get_user_by_name(form.user_name.data)
+
         db.session.add(resource)
         db.session.commit()
 
@@ -600,6 +619,7 @@ def resource_new():
         flash('Resource added.', 'success')
         return resources()
 
+    if resource.user: form.user_name.data = resource.user.username
     return render_template('admin/resourcenew.html', form=form)
 
 
