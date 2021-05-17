@@ -2,12 +2,12 @@
 
 {% extends "layout.html" %}
 
-{% block page_title %}Resource tip{% endblock %}
+{% block page_title %}Share a tip{% endblock %}
 {% block body_class %}projectform{% endblock %}
 
 {% block content %}
 <div class="container">
-    <h2 class="huge">Share resources</h2>
+    <h2 class="huge">Suggest a resource</h2>
     {{ render_form(url_for('public.resource_post'), form) }}
 </div>
 {% endblock %}

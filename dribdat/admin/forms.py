@@ -100,9 +100,9 @@ class ResourceForm(FlaskForm):
     source_url = URLField(u'Link', [length(max=2048)], description=u'URL to download or get more information')
     summary = TextAreaField(u'Summary', [length(max=140)], description=u'How is this useful: in 140 characters or less?')
     content = TextAreaField(u'Additional information', description=u'Describe this resource in detail, Markdown and HTML supported')
-    progress_tip = SelectField(u'Recommend at', coerce=int, choices=projectProgressList(True, True), description=u'Progress level at which this resource should be suggested to teams')
+    progress_tip = SelectField(u'Recommend at', coerce=int, choices=projectProgressList(True, True), description=u'Progress level at which to suggest this to teams')
     event_id = SelectField(u'Specific to an event, or global if blank', coerce=int)
-    is_visible = BooleanField(u'Show this resource to participants')
+    is_visible = BooleanField(u'Approved and visible to participants')
     submit = SubmitField(u'Save')
 
 class RoleForm(FlaskForm):
