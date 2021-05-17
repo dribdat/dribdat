@@ -113,14 +113,14 @@ def event_resources(event_id):
     for ix, p in enumerate(projectProgressList(True, False)):
         rrr = []
         for r in allres:
-            if r.progress_tip == p[0]: rrr.append(r)
+            if r.progress_tip and r.progress_tip == p[0]: rrr.append(r)
         steps.append({
             'index': ix + 1, 'name': p[1], 'resources': rrr
         })
     # show progress-less resources
     rr0 = []
     for r in allres:
-        if r.progress_tip < 0: rr0.append(r)
+        if r.progress_tip and r.progress_tip < 0: rr0.append(r)
     steps.append({
         'name': '/etc', 'index': -1, 'resources': rr0
     })
