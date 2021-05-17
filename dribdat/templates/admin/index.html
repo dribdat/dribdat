@@ -37,7 +37,7 @@
 {% endfor %}
   <div class="chart-activities" style="margin-top:2em">
     <h5>pulse</h5>
-    <a href="#" id="show-activities" class="btn btn-lg btn-primary">Show</a>
+    <a href="#" id="show-activities" class="btn btn-lg btn-default">Show chart</a>
     <div id="activities"></div>
   </div>
 </div><!-- /jumbotron -->
@@ -46,9 +46,9 @@
 {% endblock %}
 
 {% block js %}
-<script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
-<script src="https://cdn.jsdelivr.net/npm/vega-lite@4"></script>
-<script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
+<script src="https://cdn.jsdelivr.net/npm/vega@5/build/vega.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vega-lite@5/build/vega-lite.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vega-embed@6/build/vega-embed.min.js"></script>
 <script>
 $('#show-activities').click(function(e) {
     e.preventDefault();
