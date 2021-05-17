@@ -3,7 +3,7 @@
 from flask import Blueprint, render_template, redirect, url_for, make_response, request, flash, jsonify
 from flask_login import login_required, current_user
 
-from ..utils import sanitize_input
+from ..utils import sanitize_input, load_event_presets
 from ..extensions import db, cache
 from ..decorators import admin_required
 from ..aggregation import GetProjectData, SyncProjectData
@@ -14,19 +14,11 @@ from datetime import datetime
 import random, string
 
 from os import path
-# Load event preset content
-EVENT_PRESET = { 'quickstart': '', 'codeofconduct': '' }
-for pr in EVENT_PRESET.keys():
-    fn = path.join(path.join(path.join(path.join(
-        path.dirname(__file__), '..'),
-            'templates'), 'includes'), pr + '.md')
-    with open(fn, mode='r') as file:
-        EVENT_PRESET[pr] = file.read()
 
 
 blueprint = Blueprint('admin', __name__, url_prefix='/admin')
 
-
+EVENT_PRESET = load_event_presets()
 
 @blueprint.route('/')
 @login_required

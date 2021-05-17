@@ -69,6 +69,8 @@ For **uploading images** and other files directly within dribdat, you can config
 * `S3_ENDPOINT` - alternative endpoint for self-hosted Object Storage
 * `MAX_CONTENT_LENGTH` - defaults to 1048576 bytes (1 MB) file size
 
+To customize some of the default content, you can edit the template include files, for example the default [quickstart](dribdat/templates/includes/quickstart.md) or [stages](dribdat/templates/includes/stages.csv) - as long as you're not limited by ephemeral storage of your deployment.
+
 ## API
 
 There are a number of API calls that admins can use to easily get to the data in Dribdat in CSV or JSON format. These are linked in the About page in a running app. Additionally, the site has a  See GitHub issues for development status.
