@@ -250,6 +250,7 @@ def event_new():
         form.boilerplate.data = EVENT_PRESET['quickstart']
     if not form.community_embed.data:
         form.community_embed.data = EVENT_PRESET['codeofconduct']
+    form.is_current.data = True
 
     return render_template('admin/eventnew.html', form=form)
 

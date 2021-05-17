@@ -41,15 +41,15 @@ def SyncProjectData(project, data):
     # Update following fields only if blank
     if 'summary' in data and data['summary']:
         if not project.summary or not project.summary.strip():
-            project.summary = data['summary']
+            project.summary = data['summary'][:120]
     if 'homepage_url' in data and data['homepage_url'] and not project.webpage_url:
-        project.webpage_url = data['homepage_url']
+        project.webpage_url = data['homepage_url'][:2048]
     if 'contact_url' in data and data['contact_url'] and not project.contact_url:
-        project.contact_url = data['contact_url']
+        project.contact_url = data['contact_url'][:255]
     if 'source_url' in data and data['source_url'] and not project.source_url:
-        project.source_url = data['source_url']
+        project.source_url = data['source_url'][:255]
     if 'image_url' in data and data['image_url'] and not project.image_url:
-        project.image_url = data['image_url']
+        project.image_url = data['image_url'][:255]
     project.update()
     db.session.add(project)
     db.session.commit()
