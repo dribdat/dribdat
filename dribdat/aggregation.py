@@ -160,11 +160,10 @@ def ProjectActivity(project, of_type, current_user, action=None, comments=None, 
 
 def SyncCommitData(project, commits):
     if project.event is None or project.user is None or len(commits)==0: return
-    allcommits = [ a.data for a in Activity.query.filter_by(
+    alldates = [ a.timestamp for a in Activity.query.filter_by(
         name='update', action='commit',
         project_id=project.id
     ).all() ]
-    alldates = [ a['date'] for a in allcommits ]
     username = None
     user = None
     since = project.event.starts_at_tz
@@ -176,11 +175,15 @@ def SyncCommitData(project, commits):
             username = commit['author']
             user = User.query.filter_by(username=username).first()
             if user is None: user = project.user
+        message = commit['message']
+        if 'url' in commit and commit['url'] is not None:
+            if 'github.com' in commit['url']:
+                message += ' ([GitHub](%s))' % commit['url']
         activity = Activity(
             name='update', action='commit',
             project_id=project.id, user_id=user.id,
             timestamp=commit['date'],
-            content=commit['message']
+            content=message
         )
         db.session.add(activity)
     db.session.commit()

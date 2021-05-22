@@ -32,7 +32,7 @@ def FetchGithubCommits(full_name, since=None, until=None):
             author = commit['committer']['name'][:100]
         url = "https://github.com/%s" % full_name
         if 'html_url' in entry:
-            url = entry['url']
+            url = entry['html_url']
         commitlog.append({
             'url': url,
             'date': datestamp,
