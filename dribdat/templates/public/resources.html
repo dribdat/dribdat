@@ -7,7 +7,16 @@
 {% block content %}
 <h1 class="huge">Components</h1>
 
+  <div class="container join-tip" style="text-align:right">
+    <i class="fa fa-cloud"></i> Tool
+    <i class="fa fa-gear"></i> Code
+    <i class="fa fa-cube"></i> Data &amp;
+    <i class="fa fa-leaf"></i> Other suggestions by project stage.
+  </div>
+
 <div class="jumbotron">
+
+
   <div class="container">
 
     <a name="steps"></a>
@@ -42,21 +51,27 @@
   </div>
 </div>
 
-<div class="container join-tip"><p>
-  <i class="fa fa-cloud"></i> Tool
-  <i class="fa fa-gear"></i> Code
-  <i class="fa fa-cube"></i> Data &amp;
-  <i class="fa fa-leaf"></i> Other recommended components can be found here, sorted by stage.
-</p><p class="bigger">
-  <b>Join</b> a project and use the <a href="#" class="btn btn-success disabled btn-sm">Post</a> button to progress through stages.
-</p></div>
-
 {% if current_event %}
-<center class="mt-5">
+
+  {% if current_user and current_user.active and current_event.instruction %}
+    <a name="instruction"></a>
+    <h2>Instructions</h2>
+    <div class="jumbotron event-instruction mt-3">
+      <div class="content">
+        {{current_event.instruction|markdown}}
+      </div>
+    </div>
+  {% endif %}
+
+  <div class="container join-tip bigger">
+    <b>Join</b> a project and use the <a href="#" class="btn btn-success disabled btn-sm">Post</a> button to progress through stages.
+  </div>
+
+  <center class="mt-5">
     <a class="btn btn-dark btn-lg" href="{{ url_for('public.event', event_id=current_event.id) }}">
       <i class="fa fa-arrow-left" aria-hidden="true"></i>
       Back to the future</a>
-</center>
+  </center>
 {% endif %}
 
 {% endblock %}

@@ -42,7 +42,7 @@ class EventForm(FlaskForm):
     hostname = StringField(u'Hosted by', [length(max=80)])
     location = StringField(u'Located at', [length(max=255)])
     description = TextAreaField(u'Description', description=u'Markdown and HTML supported')
-    instruction = TextAreaField(u'Instructions for participants, event page', description=u'Markdown and HTML supported')
+    instruction = TextAreaField(u'Instructions for authenticated participants', description=u'Event and Components page, Markdown and HTML supported')
     logo_url = URLField(u'Host logo link', [length(max=255)])
     webpage_url = URLField(u'Home page link', [length(max=255)])
     community_url = URLField(u'Community link', [length(max=255)])

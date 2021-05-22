@@ -109,7 +109,7 @@
               <span>{{ event.location }}</span>
             </p>
             <p class="an-event-description">
-              {{event.description|markdown}}
+              {{event.description|markdown|striptags|truncate(500)}}
             </p>
           </div>
           <div class="btn-group an-event-actions" role="group">
@@ -153,7 +153,7 @@
               <span>{{ event.location }}</span>
             </p>
             <p class="an-event-description">
-              {{event.description|markdown}}
+              {{event.description|markdown|striptags|truncate(500)}}
             </p>
           </div>
           <div class="btn-group an-event-actions" role="group">

@@ -86,9 +86,11 @@
 
 <div class="category-info">
   {% if current_event.has_started and not current_event.has_finished %}
+    {% if not current_user or not current_user.active %}
     <div category-id="infobox" class="category-container category-tip">
-      <center><h4><i class="fa fa-lightbulb-o"></i> &nbsp;The event has started! Explore challenges and join projects above.</h4></center>
+      <center><h4><i class="fa fa-lightbulb-o"></i> &nbsp;The event has started! Explore the challenges above, then log in to get resources and join projects.</h4></center>
     </div>
+    {% endif %}
   {% endif %}
   {% for category in current_event.categories_for_event() %}
   <div category-id="{{category.id}}" class="category-container" style="border-top:5px solid {{category.logo_color}}; display:none">
@@ -127,7 +129,7 @@
   </div>
 {% endif %}
 
-{% if current_event.instruction %}
+{% if current_user and current_user.active and current_event.instruction %}
   <a name="instruction"></a>
   <div class="jumbotron event-instruction">
     <div class="content">
