@@ -1,5 +1,5 @@
 -i https://pypi.org/simple
-alembic==1.6.0
+alembic==1.6.3
 aniso8601==7.0.0
 bcrypt==3.2.0
 beautifulsoup4==4.9.3
@@ -32,12 +32,12 @@ graphql-relay==2.0.1
 gunicorn==20.1.0
 email_validator==1.1.2
 idna==2.10
-itsdangerous==2.0.0
+itsdangerous==2.0.1
 jinja2==2.11.3
 jsmin==2.2.2
 lxml==4.6.3
 mako==1.1.4
-markupsafe==2.0.0
+markupsafe==2.0.1
 micawber==0.5.3
 promise==2.3
 psycopg2-binary==2.8.6
