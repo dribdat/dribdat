@@ -269,6 +269,14 @@ class Event(PkModel):
         return not self.has_finished and not self.lock_starting
 
     @property
+    def ends_at_tz(self):
+        tz = pytz.timezone(current_app.config['TIME_ZONE'])
+        return tz.localize(self.ends_at)
+    @property
+    def starts_at_tz(self):
+        tz = pytz.timezone(current_app.config['TIME_ZONE'])
+        return tz.localize(self.starts_at)
+    @property
     def countdown(self):
         # Normalizing dates & timezones.
         tz = pytz.timezone(current_app.config['TIME_ZONE'])
@@ -386,6 +394,7 @@ class Project(PkModel):
             if a.action == 'sync':
                 title = "Synchronized"
                 text = "Readme fetched from source"
+                continue
             elif a.action == 'post' and a.content is not None:
                 title = ""
                 text = a.content
@@ -393,6 +402,10 @@ class Project(PkModel):
                 title = "Team forming"
                 text = a.user.username + " has joined!"
                 author = ""
+            elif a.name == 'update' and a.action == 'commit':
+                title = "Code commit"
+                text = a.content
+                author = a.user.username
             elif a.name == 'update':
                 title = ""
                 text = "Worked on documentation"
@@ -674,6 +687,7 @@ class Activity(PkModel):
         name="activity_type"))
     action = Column(db.String(32), nullable=True)
         # 'external',
+        # 'commit',
         # 'boost',
         # 'sync',
         # 'post',

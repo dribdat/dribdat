@@ -942,7 +942,6 @@ pre { color: #333; background: white; }
 /* tip section used in resources and elsewhere */
 
 .join-tip {
-  margin-top: 1em;
   padding: 0.5em;
   font-size: 115%;
   text-align: center;

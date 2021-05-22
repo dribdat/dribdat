@@ -10,6 +10,11 @@
 <div class="jumbotron">
   <div class="container">
 
+    {% if not data.items %}
+      <div class="nothing-here">
+        Log in and write a <b>Post</b> to see your project updates here!
+      </div>
+    {% else %}
     <section class="timeline">
       {% for s in data.items %}
       <div class="timeline-item">
@@ -39,7 +44,8 @@
       </div>
       {% endfor %}
     </section>
-
+    {% endif %}
+    
     {% if data.has_next %}
       <a href="{{ url_for(endpoint, page=data.next_num) }}"
         title="Load another page of dribs" style="width:100%"
