@@ -86,7 +86,7 @@ def SuggestionsByProgress(progress=None, event=None):
     resources = resources.filter_by(is_visible=True)
     return resources.order_by(Resource.type_id).all()
 
-def SuggestionsTreeForEvent(event):
+def SuggestionsTreeForEvent(event=None):
     """ Collect resources by progress """
     allres = SuggestionsByProgress(None, event)
     steps = []
@@ -94,15 +94,16 @@ def SuggestionsTreeForEvent(event):
     for ix, p in enumerate(projectProgressList(True, False)):
         rrr = []
         for r in allres:
-            if r.progress_tip and r.progress_tip == p[0]: rrr.append(r)
+            if r.progress_tip is not None and r.progress_tip == p[0]:
+                rrr.append(r)
+                shown.append(r.id)
         steps.append({
             'index': ix + 1, 'name': p[1], 'resources': rrr
         })
-        shown.extend(rrr)
     # show progress-less resources
     rr0 = []
     for r in allres:
-        if not r.progress_tip or not r in shown: rr0.append(r)
+        if r.progress_tip is None or not r.id in shown: rr0.append(r)
     if len(rr0) > 0:
         steps.append({
             'name': '/etc', 'index': -1, 'resources': rr0

@@ -22,7 +22,8 @@ USER_STATUS = {
 RESOURCE_CODES = {
     'data': 100,
     'code': 200,
-    'tool': 300
+    'tool': 300,
+    'other': 0
 }
 RESOURCE_TYPES = {
     RESOURCE_CODES['data']: "Data",
@@ -37,6 +38,7 @@ RESOURCE_TYPES = {
     # 'tool/kanban': "Project planner",
     # 'tool/sim': "Simulation tool",
     # 'tool/ux': "Wireframing app",
+    RESOURCE_CODES['other']: "Other",
 }
 
 # Project progress stages
@@ -55,6 +57,7 @@ def resourceTypeList():
 
 def getResourceType(resource):
     if resource is None: return ""
+    if resource.type_id is None: return RESOURCE_TYPES[0]
     if not resource.type_id in RESOURCE_TYPES: return ""
     return RESOURCE_TYPES[resource.type_id]
 

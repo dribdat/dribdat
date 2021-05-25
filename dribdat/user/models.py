@@ -614,7 +614,7 @@ class Resource(PkModel):
     name = Column(db.String(80), unique=True, nullable=False)
     type_id = Column(db.Integer(), nullable=True)
     created_at = Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)
-    is_visible = Column(db.Boolean(), default=False)
+    is_visible = Column(db.Boolean(), default=True)
     progress_tip = Column(db.Integer(), nullable=True)
     source_url = Column(db.String(2048), nullable=True)
     download_url = Column(db.String(2048), nullable=True)
