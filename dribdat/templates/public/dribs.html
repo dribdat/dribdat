@@ -20,12 +20,12 @@
       <div class="timeline-item">
         <div class="timeline-img"></div>
         <div class="timeline-content timeline-card js--fadeInBottom">
-          <a href="{{ url_for('public.project', project_id=s.project.id)}}">
-            <div class="timeline-img-header">
+          <div class="timeline-img-header">
+            <a href="{{ url_for('public.project', project_id=s.project.id)}}">
               <h2>{{s.project.name}}</h2>
-            </div>
-          </a>
-          
+            </a>
+          </div>
+
           {% if s.content %}
             <div class="content">
               {{s.content|markdown|safe}}

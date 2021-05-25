@@ -120,6 +120,8 @@
   .timeline-item .timeline-img-header {
     /* background: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, .4)), url('https://picsum.photos/1000/800/?random') center center no-repeat; */
     background-size: cover; }
+  .timeline-item .timeline-img-header a {
+    text-decoration: none; }
 
 .timeline-img-header {
   height: auto;
