@@ -25,13 +25,24 @@
               <h2>{{s.project.name}}</h2>
             </div>
           </a>
+          
           {% if s.content %}
-            {{s.content|markdown|safe}}
+            <div class="content">
+              {{s.content|markdown|safe}}
+            </div>
           {% endif %}
-          <div class="date">
-            {{s.timestamp|format_datetime}}
-            {% if s.user %} ~ <b>{{ s.user.username }}</b>{% endif %}
-          </div>
+
+          {% if s.ref_url %}
+            <a href="{{ s.ref_url }}" target="_blank">
+          {% endif %}
+            <div class="date">
+              {{s.timestamp|format_datetime}}
+              {% if s.user %} ~ <b>{{ s.user.username }}</b>{% endif %}
+            </div>
+          {% if s.ref_url %}
+            </a>
+          {% endif %}
+
           {% if s.resource and s.resource.is_visible %}
             <a class="resource-card" href="{{ url_for('public.resource', resource_id=s.resource.id) }}">
               <i title="{{s.resource.of_type}}"
@@ -45,7 +56,7 @@
       {% endfor %}
     </section>
     {% endif %}
-    
+
     {% if data.has_next %}
       <a href="{{ url_for(endpoint, page=data.next_num) }}"
         title="Load another page of dribs" style="width:100%"

@@ -240,13 +240,22 @@
             <h2>{{s.title}}</h2>
           </div>
           {% endif %}
+
           {% if s.text %}
-            {{s.text|markdown|safe}}
+            <div class="content">
+              {{s.text|markdown|safe}}
+            </div>
           {% endif %}
 
           <div class="date">
-            {{s.date|format_datetime}}
-            {% if s.author %} ~ <b>{{ s.author }}</b>{% endif %}
+          {% if s.ref_url %}
+            <a href="{{ s.ref_url }}" target="_blank">
+          {% endif %}
+              {{s.date|format_datetime}}
+              {% if s.author %} ~ <b>{{ s.author }}</b>{% endif %}
+          {% if s.ref_url %}
+            </a>
+          {% endif %}
           </div>
 
           {% if s.resource and s.resource.is_visible %}

@@ -125,9 +125,9 @@ def ProjectActivity(project, of_type, current_user, action=None, comments=None, 
     activity = Activity(
         name=of_type,
         project_id=project.id,
-        user_id=current_user.id,
         action=action
     )
+    activity.user_id = current_user.id
     score = 1
     if comments is not None and len(comments) > 3:
         activity.content=comments
@@ -161,30 +161,38 @@ def ProjectActivity(project, of_type, current_user, action=None, comments=None, 
 
 def SyncCommitData(project, commits):
     if project.event is None or project.user is None or len(commits)==0: return
-    alldates = [ a.timestamp for a in Activity.query.filter_by(
-        name='update', action='commit',
-        project_id=project.id
-    ).all() ]
+    prevactivities = Activity.query.filter_by(
+            name='update', action='commit', project_id=project.id
+        ).all()
+    prevdates = [ a.timestamp.replace(microsecond=0) for a in prevactivities ]
+    prevlinks = [ a.ref_url for a in prevactivities ]
     username = None
     user = None
     since = project.event.starts_at_tz
     until = project.event.ends_at_tz
     for commit in commits:
-        if commit['date'] in alldates: continue
+        # Check duplicates
+        if 'url' in commit and commit['url'] is not None:
+            if commit['url'] in prevlinks: continue
+        if commit['date'].replace(microsecond=0) in prevdates: continue
         if commit['date'] < since or commit['date'] > until: continue
+        # Get message and author
+        message = commit['message']
         if username != commit['author']:
             username = commit['author']
             user = User.query.filter_by(username=username).first()
-            if user is None: user = project.user
-        message = commit['message']
-        if 'url' in commit and commit['url'] is not None:
-            if 'github.com' in commit['url']:
-                message += ' ([GitHub](%s))' % commit['url']
+            if user is None:
+                message += ' (@%s)' % username or "git"
+        # Create object
         activity = Activity(
             name='update', action='commit',
-            project_id=project.id, user_id=user.id,
+            project_id=project.id,
             timestamp=commit['date'],
             content=message
         )
-        db.session.add(activity)
+        if 'url' in commit and commit['url'] is not None:
+            activity.ref_url = commit['url']
+        if user is not None:
+            activity.user_id = user.id
+        activity.save()
     db.session.commit()

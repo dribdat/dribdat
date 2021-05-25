@@ -115,8 +115,8 @@
     padding: 0 5px 10px 5px;
   }
 
-.timeline-item {
-  cursor: pointer; }
+/* .timeline-item {
+  cursor: pointer; } */
   .timeline-item .timeline-img-header {
     /* background: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, .4)), url('https://picsum.photos/1000/800/?random') center center no-repeat; */
     background-size: cover; }

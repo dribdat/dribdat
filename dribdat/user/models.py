@@ -389,8 +389,10 @@ class Project(PkModel):
         dribs = []
         prev = None
         for a in activities:
-            title = text = None
-            author = a.user.username
+            author = title = text = None
+            if a.user:
+                author = a.user.username
+                if not a.user.active: continue
             if a.action == 'sync':
                 title = "Synchronized"
                 text = "Readme fetched from source"
@@ -405,7 +407,7 @@ class Project(PkModel):
             elif a.name == 'update' and a.action == 'commit':
                 title = "Code commit"
                 text = a.content
-                author = a.user.username
+                author = None #a.user.username
             elif a.name == 'update':
                 title = ""
                 text = "Worked on documentation"
@@ -415,8 +417,6 @@ class Project(PkModel):
                 author = ""
             else:
                 continue
-            # Check if user is still active
-            if not a.user.active: continue
             # Check if last signal very similar
             if prev is not None:
                 if (
@@ -430,6 +430,7 @@ class Project(PkModel):
                 'author': author,
                 'date': a.timestamp,
                 'resource': a.resource,
+                'ref_url': a.ref_url,
             }
             dribs.append(prev)
         if self.event.has_started or self.event.has_finished:
@@ -694,17 +695,18 @@ class Activity(PkModel):
         # ...
     timestamp = Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)
     content = Column(db.UnicodeText, nullable=True)
+    ref_url = Column(db.String(2048), nullable=True)
 
-    user_id = reference_col('users', nullable=False)
+    user_id = reference_col('users', nullable=True)
     user = relationship('User', backref='activities')
-
-    project_id = reference_col('projects', nullable=False)
-    project = relationship('Project', backref='activities')
-    project_progress = Column(db.Integer, nullable=True)
-    project_score = Column(db.Integer, nullable=True)
 
     resource_id = reference_col('resources', nullable=True)
     resource = relationship('Resource', backref='activities')
+
+    project_id = reference_col('projects', nullable=True)
+    project = relationship('Project', backref='activities')
+    project_progress = Column(db.Integer, nullable=True)
+    project_score = Column(db.Integer, nullable=True)
 
     @property
     def data(self):
@@ -715,6 +717,7 @@ class Activity(PkModel):
             'timesince': timesince(self.timestamp),
             'date': self.timestamp,
             'content': self.content or '',
+            'ref_url': self.ref_url or '',
             'user_name': self.user.username,
             'user_id': self.user.id,
             'project_id': self.project.id,
@@ -725,11 +728,10 @@ class Activity(PkModel):
             'resource_type': getResourceType(self.resource),
         }
 
-    def __init__(self, name, user_id, project_id, **kwargs):
+    def __init__(self, name, project_id, **kwargs):
         if name:
             db.Model.__init__(
                 self, name=name,
-                user_id=user_id,
                 project_id=project_id,
                 **kwargs
             )
