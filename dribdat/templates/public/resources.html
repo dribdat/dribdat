@@ -7,15 +7,7 @@
 {% block content %}
 <h1 class="huge">Resources</h1>
 
-  <div class="container join-tip" style="text-align:right">
-    <i class="fa fa-cloud"></i> Tool
-    <i class="fa fa-gear"></i> Code
-    <i class="fa fa-cube"></i> Data &amp;
-    <i class="fa fa-leaf"></i> Other suggestions by project stage.
-  </div>
-
 <div class="jumbotron">
-
 
   <div class="container">
 
@@ -45,7 +37,18 @@
       </div>
     {% endfor %}
 
-    <center class="mt-5">
+    <div class="join-tip bigger mt-4">
+      <i class="fa fa-cloud"></i> Tool
+      <i class="fa fa-gear"></i> Code
+      <i class="fa fa-cube"></i> Data &amp;
+      <i class="fa fa-leaf"></i> Other tips by project stage.
+    </div>
+
+    <div class="join-tip">
+      <b>&#128161; Join</b> a project and use the <b>Post</b> button to progress through stages.
+    </div>
+
+    <center class="mt-3">
       <a class="btn btn-success btn-lg" href="{{ url_for('public.resource_post') }}">Suggest another resource</a>
     </center>
   </div>
@@ -62,10 +65,6 @@
       </div>
     </div>
   {% endif %}
-
-  <div class="container join-tip bigger">
-    <b>Join</b> a project and use the <a href="#" class="btn btn-success disabled btn-sm">Post</a> button to progress through stages.
-  </div>
 
   <center class="mt-5">
     <a class="btn btn-dark btn-lg" href="{{ url_for('public.event', event_id=current_event.id) }}">
