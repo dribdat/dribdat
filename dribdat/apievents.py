@@ -26,7 +26,7 @@ def FetchGithubCommits(full_name, since=None, until=None):
         if not 'commit' in entry: continue
         commit = entry['commit']
         datestamp = parser.parse(commit['committer']['date'])
-        if 'author' in entry and 'login' in entry['author']:
+        if 'author' in entry and entry['author'] is not None and 'login' in entry['author']:
             author = entry['author']['login']
         else:
             author = commit['committer']['name'][:100]

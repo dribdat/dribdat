@@ -1,5 +1,5 @@
 -i https://pypi.org/simple
-alembic==1.6.3
+alembic>=1.6,<2
 aniso8601==7.0.0
 bcrypt==3.2.0
 beautifulsoup4==4.9.3
@@ -24,7 +24,7 @@ Flask-Migrate==3.0.0
 Flask-Misaka==1.0.0
 Flask-SQLAlchemy==2.5.1
 flask-talisman==0.7.0
-Flask-WTF==0.14.3
+Flask-WTF==0.15.1
 future==0.18.2
 graphene==2.1.8
 graphql-core==2.3.2
