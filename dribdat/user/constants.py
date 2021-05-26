@@ -70,8 +70,10 @@ def projectProgressList(All=True, WithEmpty=True):
     return sorted(pl, key=lambda x: x[0])
 
 def getProjectPhase(project):
-    if project is None or project.progress is None: return ""
-    if not project.progress in PROJECT_PROGRESS_PHASE: return ""
+    if project is None or project.progress is None:
+        return ""
+    if not project.progress in PROJECT_PROGRESS_PHASE:
+        return PROJECT_PROGRESS_PHASE[PR_CHALLENGE]
     return PROJECT_PROGRESS_PHASE[project.progress]
 
 def isUserActive(user):
