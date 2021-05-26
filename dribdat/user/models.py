@@ -28,6 +28,7 @@ from dribdat.utils import (
 )
 from dribdat.onebox import format_webembed
 from dribdat.user import getProjectPhase, getResourceType
+from dribdat.user.constants import PR_CHALLENGE
 
 from sqlalchemy import Table, or_
 
@@ -458,7 +459,7 @@ class Project(PkModel):
     @property
     def is_challenge(self):
         if self.progress is None: return False
-        return self.progress < 0
+        return self.progress <= PR_CHALLENGE
 
     @property
     def webembed(self):
@@ -650,9 +651,12 @@ class Resource(PkModel):
             return 'leaf'
 
     def get_comments(self, max=5):
-        return Activity.query.filter_by(resource_id=self.id).order_by(Activity.id.desc()).limit(max)
+        return Activity.query.filter_by(resource_id=self.id)\
+            .distinct(Activity.resource_id).group_by(Activity.resource_id)\
+            .order_by(Activity.id.desc()).limit(max)
     def count_mentions(self):
-        return Activity.query.filter_by(resource_id=self.id).group_by(Activity.id).count()
+        return Activity.query.filter_by(resource_id=self.id)\
+            .group_by(Activity.id).count()
 
     def sync(self):
         """ Synchronize supported resources """

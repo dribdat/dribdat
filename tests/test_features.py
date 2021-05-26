@@ -43,17 +43,19 @@ class TestProgressTree:
         rC.save()
         rD = Resource(name="Code D", type_id=200, progress_tip=10)
         rD.save()
+        rE = Resource(name="Code E", type_id=200, progress_tip=5)
+        rE.save()
         rN = Resource(name="Code N", type_id=100, is_visible=False)
         rN.save()
 
         allres = SuggestionsByProgress()
-        assert len(allres) == 4
+        assert len(allres) == 5 # one is hidden
         assert allres[-1] == rB
 
         rTree = SuggestionsTreeForEvent()
         assert rTree[-1]['index'] == -1 # etc
         assert len(rTree) == 7 + 1 # defaults plus etc
-        assert rTree[0]['resources'] == [] # idea or challenge
-        assert rTree[1]['resources'] == [rB]
-        assert rTree[2]['resources'] == [rC, rD]
+        assert rTree[0]['resources'] == [rB] # idea or challenge
+        assert rTree[1]['resources'] == [rE] # team has formed
+        assert rTree[2]['resources'] == [rC, rD] # researching
         assert rTree[-1]['resources'] == [rA]

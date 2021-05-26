@@ -43,7 +43,7 @@ RESOURCE_TYPES = {
 
 # Project progress stages
 project_stages = load_csv_presets('stages', 'name')
-PR_CHALLENGE = project_stages['CHALLENGE']['id']
+PR_CHALLENGE = int(project_stages['CHALLENGE']['id'])
 PROJECT_PROGRESS = {}
 PROJECT_PROGRESS_PHASE = {}
 for ps in project_stages:
