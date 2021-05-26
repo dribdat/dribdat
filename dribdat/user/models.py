@@ -652,8 +652,7 @@ class Resource(PkModel):
 
     def get_comments(self, max=5):
         return Activity.query.filter_by(resource_id=self.id)\
-            .group_by(Activity.resource_id)\
-            .order_by(Activity.id.desc()).limit(max)
+            .group_by(Activity.resource_id).limit(max)
     def count_mentions(self):
         return Activity.query.filter_by(resource_id=self.id)\
             .group_by(Activity.id).count()
