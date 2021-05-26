@@ -208,7 +208,7 @@
     }
   });
   // Toggle challenges after the hackathon
-  $('.event-finished .nav-categories #challenges').parent().click();
+  // $('.event-finished .nav-categories #challenges').parent().click();
 
   // Roll up categories if there is only one, and no projects
   if ($navCategories.length === 1)
