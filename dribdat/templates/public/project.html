@@ -113,7 +113,7 @@
   {% if not project.is_challenge and project_starred and suggestions %}
     <div class="alert alert-info resource-list col-12">
       <a class="close" title="Close" href="#" data-dismiss="alert">&times;</a>
-        <p>For this stage of your project, we suggest:</p>
+        <p>Suggestions for this stage of your project:</p>
     {% for resource in suggestions %}
         {% if resource.is_visible %}
         <a class="col-5 resource-card" href="{{ url_for('public.resource', resource_id=resource.id) }}">
@@ -240,13 +240,22 @@
             <h2>{{s.title}}</h2>
           </div>
           {% endif %}
+
           {% if s.text %}
-            {{s.text|markdown|safe}}
+            <div class="content">
+              {{s.text|markdown|safe}}
+            </div>
           {% endif %}
 
           <div class="date">
-            {{s.date|format_datetime}}
-            {% if s.author %} ~ <b>{{ s.author }}</b>{% endif %}
+          {% if s.ref_url %}
+            <a href="{{ s.ref_url }}" target="_blank">
+          {% endif %}
+              {{s.date|format_datetime}}
+              {% if s.author %} ~ <b>{{ s.author }}</b>{% endif %}
+          {% if s.ref_url %}
+            </a>
+          {% endif %}
           </div>
 
           {% if s.resource and s.resource.is_visible %}

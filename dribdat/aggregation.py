@@ -2,7 +2,7 @@
 """Utilities for aggregating data
 """
 
-from dribdat.user.models import Activity, Resource
+from dribdat.user.models import Activity, Resource, User
 from dribdat.user import isUserActive, projectProgressList
 from dribdat.database import db
 from dribdat.apifetch import * # TBR
@@ -53,6 +53,9 @@ def SyncProjectData(project, data):
     project.update()
     db.session.add(project)
     db.session.commit()
+    # Additional logs, if available
+    if 'commits' in data:
+        SyncCommitData(project, data['commits'])
 
 def SyncResourceData(resource):
     url = resource.source_url
@@ -83,7 +86,7 @@ def SuggestionsByProgress(progress=None, event=None):
     resources = resources.filter_by(is_visible=True)
     return resources.order_by(Resource.type_id).all()
 
-def SuggestionsTreeForEvent(event):
+def SuggestionsTreeForEvent(event=None):
     """ Collect resources by progress """
     allres = SuggestionsByProgress(None, event)
     steps = []
@@ -91,15 +94,16 @@ def SuggestionsTreeForEvent(event):
     for ix, p in enumerate(projectProgressList(True, False)):
         rrr = []
         for r in allres:
-            if r.progress_tip and r.progress_tip == p[0]: rrr.append(r)
+            if r.progress_tip is not None and r.progress_tip == p[0]:
+                rrr.append(r)
+                shown.append(r.id)
         steps.append({
             'index': ix + 1, 'name': p[1], 'resources': rrr
         })
-        shown.extend(rrr)
     # show progress-less resources
     rr0 = []
     for r in allres:
-        if not r.progress_tip or not r in shown: rr0.append(r)
+        if r.progress_tip is None or not r.id in shown: rr0.append(r)
     if len(rr0) > 0:
         steps.append({
             'name': '/etc', 'index': -1, 'resources': rr0
@@ -121,9 +125,9 @@ def ProjectActivity(project, of_type, current_user, action=None, comments=None, 
     activity = Activity(
         name=of_type,
         project_id=project.id,
-        user_id=current_user.id,
         action=action
     )
+    activity.user_id = current_user.id
     score = 1
     if comments is not None and len(comments) > 3:
         activity.content=comments
@@ -152,4 +156,43 @@ def ProjectActivity(project, of_type, current_user, action=None, comments=None, 
     activity.project_score = project.score
     project.save()
     db.session.add(activity)
+    db.session.commit()
+
+
+def SyncCommitData(project, commits):
+    if project.event is None or project.user is None or len(commits)==0: return
+    prevactivities = Activity.query.filter_by(
+            name='update', action='commit', project_id=project.id
+        ).all()
+    prevdates = [ a.timestamp.replace(microsecond=0) for a in prevactivities ]
+    prevlinks = [ a.ref_url for a in prevactivities ]
+    username = None
+    user = None
+    since = project.event.starts_at_tz
+    until = project.event.ends_at_tz
+    for commit in commits:
+        # Check duplicates
+        if 'url' in commit and commit['url'] is not None:
+            if commit['url'] in prevlinks: continue
+        if commit['date'].replace(microsecond=0) in prevdates: continue
+        if commit['date'] < since or commit['date'] > until: continue
+        # Get message and author
+        message = commit['message']
+        if username != commit['author']:
+            username = commit['author']
+            user = User.query.filter_by(username=username).first()
+            if user is None:
+                message += ' (@%s)' % username or "git"
+        # Create object
+        activity = Activity(
+            name='update', action='commit',
+            project_id=project.id,
+            timestamp=commit['date'],
+            content=message
+        )
+        if 'url' in commit and commit['url'] is not None:
+            activity.ref_url = commit['url']
+        if user is not None:
+            activity.user_id = user.id
+        activity.save()
     db.session.commit()

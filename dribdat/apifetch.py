@@ -14,6 +14,8 @@ from flask_misaka import markdown
 from base64 import b64decode
 from pyquery import PyQuery as pq
 
+from .apievents import FetchGithubCommits
+
 def FetchGitlabProject(project_url):
     WEB_BASE = "https://gitlab.com/%s"
     API_BASE = "https://gitlab.com/api/v4/projects/%s"
@@ -41,25 +43,30 @@ def FetchGithubProject(project_url):
     data = requests.get(API_BASE % project_url)
     if data.text.find('{') < 0: return {}
     json = data.json()
-    if not 'name' in json: return {}
+    if not 'name' in json or not 'full_name' in json: return {}
+    repo_full_name = json['full_name']
+    default_branch = json['default_branch'] or 'main'
     readmeurl = "%s/readme" % (API_BASE % project_url)
     readmedata = requests.get(readmeurl)
     if readmedata.text.find('{') < 0: return {}
     readme = readmedata.json()
-    if not 'content' in readme: return {}
-    readme = b64decode(readme['content']).decode('utf-8')
-    # Fix relative links in text
-    readme = re.sub(
-        r"<img src=\"(?!http)",
-        "<img src=\"https://raw.githubusercontent.com/" + json['full_name'] + '/master/',
-        readme
-    )
-    readme = re.sub(
-        r"\!\[(.*)\]\((?!http)",
-        # TODO check why we are using \g escape here?
-        r"![\g<1>](https://raw.githubusercontent.com/" + json['full_name'] + '/master/',
-        readme
-    )
+    if not 'content' in readme:
+        readme = ''
+    else:
+        readme = b64decode(readme['content']).decode('utf-8')
+        # Fix relative links in text
+        imgroot = "https://raw.githubusercontent.com"
+        readme = re.sub(
+            r"<img src=\"(?!http)",
+            "<img src=\"%s/%s/%s/" % (imgroot, repo_full_name, default_branch),
+            readme
+        )
+        readme = re.sub(
+            r"\!\[(.*)\]\((?!http)",
+            # TODO check why we are using \g escape here?
+            r"![\g<1>](%s/%s/%s/" % (imgroot, repo_full_name, default_branch),
+            readme
+        )
     return {
         'type': 'GitHub',
         'name': json['name'],
@@ -69,6 +76,7 @@ def FetchGithubProject(project_url):
         'source_url': json['html_url'],
         'image_url': json['owner']['avatar_url'],
         'contact_url': json['html_url'] + '/issues',
+        'commits': FetchGithubCommits(repo_full_name)
     }
 
 def FetchBitbucketProject(project_url):

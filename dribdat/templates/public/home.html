@@ -47,10 +47,10 @@
           {% if current_event.has_finished %}
           View the Results
           {% elif current_event.has_started %}
-          Explore Challenges
+          Get started!
           {% else %}
           <!-- Event not yet started -->
-          Post Challenge
+          Challenges
           {% endif %}
         </b></a>
         {% if current_event.has_started and current_event.can_start_project %}
@@ -109,7 +109,7 @@
               <span>{{ event.location }}</span>
             </p>
             <p class="an-event-description">
-              {{event.description|markdown}}
+              {{event.description|markdown|striptags|truncate(500)}}
             </p>
           </div>
           <div class="btn-group an-event-actions" role="group">
@@ -118,7 +118,7 @@
                 Information</a>
             {% endif %}
             <a href="{{ url_for('public.event_resources', event_id=event.id) }}" class="btn btn-secondary">
-              Components</a>
+              Resources</a>
             <a href="{{ url_for('public.event', event_id=event.id) }}" class="btn btn-warning">
               Challenges
             </a>
@@ -153,7 +153,7 @@
               <span>{{ event.location }}</span>
             </p>
             <p class="an-event-description">
-              {{event.description|markdown}}
+              {{event.description|markdown|striptags|truncate(500)}}
             </p>
           </div>
           <div class="btn-group an-event-actions" role="group">

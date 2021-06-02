@@ -535,7 +535,7 @@ nav .navbar-nav .nav-item {
   display: inline-block;
   text-align: center;
   font-size: 140%;
-  width: 5em;
+  width: 6em;
   background: rgba(255, 255, 255, 0.5);
 }
 .project-buttons .btn:hover {
@@ -637,7 +637,7 @@ nav .navbar-nav .nav-item {
   background: url(https://raw.githubusercontent.com/RickStrahl/jquery-resizable/master/assets/wingrip.png) no-repeat;
  }
 
-/* Components */
+/* Resources */
 .resource-card {
   display: inline-block;
   background: rgba(0,0,0,0.06);
@@ -942,9 +942,7 @@ pre { color: #333; background: white; }
 /* tip section used in resources and elsewhere */
 
 .join-tip {
-  margin-top: 1em;
   padding: 0.5em;
-  font-size: 115%;
   text-align: center;
 }
 

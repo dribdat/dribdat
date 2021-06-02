@@ -10,23 +10,39 @@
 <div class="jumbotron">
   <div class="container">
 
+    {% if not data.items %}
+      <div class="nothing-here">
+        Log in and write a <b>Post</b> to see your project updates here!
+      </div>
+    {% else %}
     <section class="timeline">
       {% for s in data.items %}
       <div class="timeline-item">
         <div class="timeline-img"></div>
         <div class="timeline-content timeline-card js--fadeInBottom">
-          <a href="{{ url_for('public.project', project_id=s.project.id)}}">
-            <div class="timeline-img-header">
+          <div class="timeline-img-header">
+            <a href="{{ url_for('public.project', project_id=s.project.id)}}">
               <h2>{{s.project.name}}</h2>
-            </div>
-          </a>
-          {% if s.content %}
-            {{s.content|markdown|safe}}
-          {% endif %}
-          <div class="date">
-            {{s.timestamp|format_datetime}}
-            {% if s.user %} ~ <b>{{ s.user.username }}</b>{% endif %}
+            </a>
           </div>
+
+          {% if s.content %}
+            <div class="content">
+              {{s.content|markdown|safe}}
+            </div>
+          {% endif %}
+
+          {% if s.ref_url %}
+            <a href="{{ s.ref_url }}" target="_blank">
+          {% endif %}
+            <div class="date">
+              {{s.timestamp|format_datetime}}
+              {% if s.user %} ~ <b>{{ s.user.username }}</b>{% endif %}
+            </div>
+          {% if s.ref_url %}
+            </a>
+          {% endif %}
+
           {% if s.resource and s.resource.is_visible %}
             <a class="resource-card" href="{{ url_for('public.resource', resource_id=s.resource.id) }}">
               <i title="{{s.resource.of_type}}"
@@ -39,6 +55,7 @@
       </div>
       {% endfor %}
     </section>
+    {% endif %}
 
     {% if data.has_next %}
       <a href="{{ url_for(endpoint, page=data.next_num) }}"

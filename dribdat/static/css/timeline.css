@@ -30,10 +30,10 @@
 	} */ }
   .timeline::before {
     content: '';
-    background: #888;
+    background: #baa;
     top: 0;
-    width: 5px;
-    height: 95%;
+    width: 6px;
+    height: 100%;
     position: absolute;
     left: 50%;
     transform: translateX(-50%); }
@@ -89,6 +89,7 @@
   width: 30px;
   height: 30px;
   background: #888;
+  opacity: 0.6;
   border-radius: 50%;
   position: absolute;
   left: 50%;
@@ -115,11 +116,13 @@
     padding: 0 5px 10px 5px;
   }
 
-.timeline-item {
-  cursor: pointer; }
+/* .timeline-item {
+  cursor: pointer; } */
   .timeline-item .timeline-img-header {
     /* background: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, .4)), url('https://picsum.photos/1000/800/?random') center center no-repeat; */
     background-size: cover; }
+  .timeline-item .timeline-img-header a {
+    text-decoration: none; }
 
 .timeline-img-header {
   height: auto;

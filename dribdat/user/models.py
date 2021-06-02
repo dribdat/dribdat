@@ -28,6 +28,7 @@ from dribdat.utils import (
 )
 from dribdat.onebox import format_webembed
 from dribdat.user import getProjectPhase, getResourceType
+from dribdat.user.constants import PR_CHALLENGE
 
 from sqlalchemy import Table, or_
 
@@ -269,6 +270,14 @@ class Event(PkModel):
         return not self.has_finished and not self.lock_starting
 
     @property
+    def ends_at_tz(self):
+        tz = pytz.timezone(current_app.config['TIME_ZONE'])
+        return tz.localize(self.ends_at)
+    @property
+    def starts_at_tz(self):
+        tz = pytz.timezone(current_app.config['TIME_ZONE'])
+        return tz.localize(self.starts_at)
+    @property
     def countdown(self):
         # Normalizing dates & timezones.
         tz = pytz.timezone(current_app.config['TIME_ZONE'])
@@ -381,11 +390,14 @@ class Project(PkModel):
         dribs = []
         prev = None
         for a in activities:
-            title = text = None
-            author = a.user.username
+            author = title = text = None
+            if a.user:
+                author = a.user.username
+                if not a.user.active: continue
             if a.action == 'sync':
                 title = "Synchronized"
                 text = "Readme fetched from source"
+                continue
             elif a.action == 'post' and a.content is not None:
                 title = ""
                 text = a.content
@@ -393,6 +405,10 @@ class Project(PkModel):
                 title = "Team forming"
                 text = a.user.username + " has joined!"
                 author = ""
+            elif a.name == 'update' and a.action == 'commit':
+                title = "Code commit"
+                text = a.content
+                author = None #a.user.username
             elif a.name == 'update':
                 title = ""
                 text = "Worked on documentation"
@@ -402,8 +418,6 @@ class Project(PkModel):
                 author = ""
             else:
                 continue
-            # Check if user is still active
-            if not a.user.active: continue
             # Check if last signal very similar
             if prev is not None:
                 if (
@@ -417,6 +431,7 @@ class Project(PkModel):
                 'author': author,
                 'date': a.timestamp,
                 'resource': a.resource,
+                'ref_url': a.ref_url,
             }
             dribs.append(prev)
         if self.event.has_started or self.event.has_finished:
@@ -444,7 +459,7 @@ class Project(PkModel):
     @property
     def is_challenge(self):
         if self.progress is None: return False
-        return self.progress < 0
+        return self.progress <= PR_CHALLENGE
 
     @property
     def webembed(self):
@@ -601,7 +616,7 @@ class Resource(PkModel):
     name = Column(db.String(80), unique=True, nullable=False)
     type_id = Column(db.Integer(), nullable=True)
     created_at = Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)
-    is_visible = Column(db.Boolean(), default=False)
+    is_visible = Column(db.Boolean(), default=True)
     progress_tip = Column(db.Integer(), nullable=True)
     source_url = Column(db.String(2048), nullable=True)
     download_url = Column(db.String(2048), nullable=True)
@@ -636,9 +651,11 @@ class Resource(PkModel):
             return 'leaf'
 
     def get_comments(self, max=5):
-        return Activity.query.filter_by(resource_id=self.id).order_by(Activity.id.desc()).limit(max)
+        return Activity.query.filter_by(resource_id=self.id)\
+            .distinct(Activity.resource_id).limit(max)
     def count_mentions(self):
-        return Activity.query.filter_by(resource_id=self.id).group_by(Activity.id).count()
+        return Activity.query.filter_by(resource_id=self.id)\
+            .group_by(Activity.id).count()
 
     def sync(self):
         """ Synchronize supported resources """
@@ -674,48 +691,54 @@ class Activity(PkModel):
         name="activity_type"))
     action = Column(db.String(32), nullable=True)
         # 'external',
+        # 'commit',
         # 'boost',
         # 'sync',
         # 'post',
         # ...
     timestamp = Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)
     content = Column(db.UnicodeText, nullable=True)
+    ref_url = Column(db.String(2048), nullable=True)
 
-    user_id = reference_col('users', nullable=False)
+    user_id = reference_col('users', nullable=True)
     user = relationship('User', backref='activities')
-
-    project_id = reference_col('projects', nullable=False)
-    project = relationship('Project', backref='activities')
-    project_progress = Column(db.Integer, nullable=True)
-    project_score = Column(db.Integer, nullable=True)
 
     resource_id = reference_col('resources', nullable=True)
     resource = relationship('Resource', backref='activities')
 
+    project_id = reference_col('projects', nullable=True)
+    project = relationship('Project', backref='activities')
+    project_progress = Column(db.Integer, nullable=True)
+    project_score = Column(db.Integer, nullable=True)
+
     @property
     def data(self):
-        return {
+        a = {
             'id': self.id,
             'name': self.name,
             'time': int(mktime(self.timestamp.timetuple())),
             'timesince': timesince(self.timestamp),
             'date': self.timestamp,
             'content': self.content or '',
-            'user_name': self.user.username,
-            'user_id': self.user.id,
-            'project_id': self.project.id,
-            'project_name': self.project.name,
-            'project_score': self.project_score or 0,
-            'project_phase': getProjectPhase(self.project),
-            'resource_id': self.resource_id,
-            'resource_type': getResourceType(self.resource),
+            'ref_url': self.ref_url or '',
         }
+        if self.user:
+            a['user_id'] = self.user.id
+            a['user_name'] = self.user.username
+        if self.project:
+            a['project_id'] = self.project.id
+            a['project_name'] = self.project.name
+            a['project_score'] = self.project_score or 0
+            a['project_phase'] = getProjectPhase(self.project)
+        if self.resource:
+            a['resource_id'] = self.resource_id
+            a['resource_type'] = getResourceType(self.resource)
+        return a
 
-    def __init__(self, name, user_id, project_id, **kwargs):
+    def __init__(self, name, project_id, **kwargs):
         if name:
             db.Model.__init__(
                 self, name=name,
-                user_id=user_id,
                 project_id=project_id,
                 **kwargs
             )

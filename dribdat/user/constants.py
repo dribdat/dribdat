@@ -22,7 +22,8 @@ USER_STATUS = {
 RESOURCE_CODES = {
     'data': 100,
     'code': 200,
-    'tool': 300
+    'tool': 300,
+    'other': 0
 }
 RESOURCE_TYPES = {
     RESOURCE_CODES['data']: "Data",
@@ -37,11 +38,12 @@ RESOURCE_TYPES = {
     # 'tool/kanban': "Project planner",
     # 'tool/sim': "Simulation tool",
     # 'tool/ux': "Wireframing app",
+    RESOURCE_CODES['other']: "Other",
 }
 
 # Project progress stages
 project_stages = load_csv_presets('stages', 'name')
-PR_CHALLENGE = project_stages['CHALLENGE']['id']
+PR_CHALLENGE = int(project_stages['CHALLENGE']['id'])
 PROJECT_PROGRESS = {}
 PROJECT_PROGRESS_PHASE = {}
 for ps in project_stages:
@@ -55,6 +57,7 @@ def resourceTypeList():
 
 def getResourceType(resource):
     if resource is None: return ""
+    if resource.type_id is None: return RESOURCE_TYPES[0]
     if not resource.type_id in RESOURCE_TYPES: return ""
     return RESOURCE_TYPES[resource.type_id]
 
@@ -67,8 +70,10 @@ def projectProgressList(All=True, WithEmpty=True):
     return sorted(pl, key=lambda x: x[0])
 
 def getProjectPhase(project):
-    if project is None or project.progress is None: return ""
-    if not project.progress in PROJECT_PROGRESS_PHASE: return ""
+    if project is None or project.progress is None:
+        return ""
+    if not project.progress in PROJECT_PROGRESS_PHASE:
+        return PROJECT_PROGRESS_PHASE[PR_CHALLENGE]
     return PROJECT_PROGRESS_PHASE[project.progress]
 
 def isUserActive(user):
