@@ -3,6 +3,7 @@
 ![Github Actions build](https://github.com/hackathons-ftw/dribdat/workflows/build/badge.svg)
 [![codecov](https://codecov.io/gh/hackathons-ftw/dribdat/branch/master/graph/badge.svg?token=Ccd1vTxRXg)](https://codecov.io/gh/hackathons-ftw/dribdat)
 [![Mattermost](https://img.shields.io/badge/Mattermost-chat-blue.svg)](https://team.opendata.ch/signup_user_complete/?id=74yuxwruaby9fpoukx9bmoxday)
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Floleg%2Fdribdat.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Floleg%2Fdribdat?ref=badge_shield)
 
 ### A platform for time-limited, team-based, data-driven, open collaboration
 
@@ -242,3 +243,7 @@ Additional and :heart:-felt thanks for testing and feedback to:
 - [@khashashin](https://github.com/khashashin)
 - [@philshem](https://github.com/philshem)
 - [Thomas Amberg](https://github.com/tamberg)
+
+
+## License
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Floleg%2Fdribdat.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Floleg%2Fdribdat?ref=badge_large)
