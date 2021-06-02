@@ -56,7 +56,7 @@
 
 {% if current_event %}
 
-  {% if current_user and current_user.active and current_event.instruction %}
+  {% if current_event.instruction %}
     <a name="instruction"></a>
     <h2>Instructions</h2>
     <div class="jumbotron event-instruction mt-3">
