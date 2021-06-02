@@ -713,7 +713,7 @@ class Activity(PkModel):
 
     @property
     def data(self):
-        return {
+        a = {
             'id': self.id,
             'name': self.name,
             'time': int(mktime(self.timestamp.timetuple())),
@@ -721,15 +721,19 @@ class Activity(PkModel):
             'date': self.timestamp,
             'content': self.content or '',
             'ref_url': self.ref_url or '',
-            'user_name': self.user.username,
-            'user_id': self.user.id,
-            'project_id': self.project.id,
-            'project_name': self.project.name,
-            'project_score': self.project_score or 0,
-            'project_phase': getProjectPhase(self.project),
-            'resource_id': self.resource_id,
-            'resource_type': getResourceType(self.resource),
         }
+        if self.user:
+            a['user_id'] = self.user.id
+            a['user_name'] = self.user.username
+        if self.project:
+            a['project_id'] = self.project.id
+            a['project_name'] = self.project.name
+            a['project_score'] = self.project_score or 0
+            a['project_phase'] = getProjectPhase(self.project)
+        if self.resource:
+            a['resource_id'] = self.resource_id
+            a['resource_type'] = getResourceType(self.resource)
+        return a
 
     def __init__(self, name, project_id, **kwargs):
         if name:
