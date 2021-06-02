@@ -7,8 +7,8 @@ from ..utils import sanitize_input, load_event_presets
 from ..extensions import db, cache
 from ..decorators import admin_required
 from ..aggregation import GetProjectData, SyncProjectData
-from ..user.models import Role, User, Event, Project, Category, Resource
-from .forms import RoleForm, UserForm, EventForm, ProjectForm, CategoryForm, ResourceForm
+from ..user.models import Role, User, Event, Project, Category
+from .forms import RoleForm, UserForm, EventForm, ProjectForm, CategoryForm
 
 from datetime import datetime
 import random, string
@@ -554,84 +554,3 @@ def role_delete(role_id):
         role.delete()
         flash('Role deleted.', 'success')
     return redirect(url_for("admin.presets"))
-
-
-##############
-##############
-##############
-
-@blueprint.route('/resources')
-@blueprint.route('/resources/pp/<int:page>')
-@login_required
-@admin_required
-def resources(page=1):
-    resources = Resource.query.order_by(
-        Resource.id.desc()
-    ).paginate(page, per_page=10)
-    return render_template('admin/resources.html', data=resources, endpoint='admin.resources', active='resources')
-
-
-@blueprint.route('/resource/<int:resource_id>', methods=['GET', 'POST'])
-@login_required
-@admin_required
-def resource(resource_id):
-    resource = Resource.query.filter_by(id=resource_id).first_or_404()
-    form = ResourceForm(obj=resource, next=request.args.get('next'))
-    form.event_id.choices = [(e.id, e.name) for e in Event.query.order_by(Event.id.desc())]
-    form.event_id.choices.insert(0, (0, ''))
-
-    if form.validate_on_submit():
-        form.populate_obj(resource)
-        if resource.event_id == 0: resource.event_id = None
-        # Assign owner if selected
-        resource.user = get_user_by_name(form.user_name.data)
-        db.session.add(resource)
-        db.session.commit()
-
-        cache.clear()
-        flash('Resource updated.', 'success')
-        return resources()
-
-    if resource.user: form.user_name.data = resource.user.username
-    return render_template('admin/resource.html', resource=resource, form=form)
-
-@blueprint.route('/resource/new', methods=['GET', 'POST'])
-@login_required
-@admin_required
-def resource_new():
-    resource = Resource()
-    form = ResourceForm(obj=resource, next=request.args.get('next'))
-    form.event_id.choices = [(e.id, e.name) for e in Event.query.order_by(Event.id.desc())]
-    form.event_id.choices.insert(0, (0, ''))
-
-    if form.validate_on_submit():
-        del form.id
-        form.populate_obj(resource)
-        if resource.event_id == 0: resource.event_id = None
-        resource.is_visible = True
-        # Assign owner if selected
-        resource.user = get_user_by_name(form.user_name.data)
-
-        db.session.add(resource)
-        db.session.commit()
-
-        cache.clear()
-        flash('Resource added.', 'success')
-        return resources()
-
-    if resource.user: form.user_name.data = resource.user.username
-    return render_template('admin/resourcenew.html', form=form)
-
-
-@blueprint.route('/resource/<int:resource_id>/delete', methods=['GET', 'POST'])
-@login_required
-@admin_required
-def resource_delete(resource_id):
-    resource = Resource.query.filter_by(id=resource_id).first_or_404()
-    if resource.count_mentions() > 0:
-        flash('No project activities may reference a resource in order to delete.', 'warning')
-    else:
-        cache.clear()
-        resource.delete()
-        flash('Resource deleted.', 'success')
-    return redirect(url_for("admin.resources"))

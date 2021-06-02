@@ -13,12 +13,11 @@ from wtforms.validators import AnyOf, DataRequired, length
 
 from datetime import time, datetime
 
-from dribdat.user.models import User, Project, Event, Resource, Role
+from dribdat.user.models import User, Project, Event, Role
 from ..user.validators import UniqueValidator
 from ..user import (
     USER_ROLE, USER_STATUS,
     projectProgressList,
-    resourceTypeList,
 )
 
 class UserForm(FlaskForm):
@@ -91,20 +90,6 @@ class CategoryForm(FlaskForm):
     logo_color = StringField(u'Custom color', [length(max=7)])
     logo_icon = StringField(u'Custom icon (fontawesome.io/icons)', [length(max=20)])
     event_id = SelectField(u'Specific to an event, or global if blank', coerce=int)
-    submit = SubmitField(u'Save')
-
-class ResourceForm(FlaskForm):
-    next = HiddenField()
-    id = HiddenField('id')
-    name = StringField(u'Name', [length(max=80), UniqueValidator(Resource, 'name'), DataRequired()])
-    user_name = StringField(u'Shared by')
-    type_id = RadioField(u'Type', coerce=int, choices=resourceTypeList())
-    source_url = URLField(u'Link', [length(max=2048)], description=u'URL to download or get more information')
-    summary = TextAreaField(u'Summary', [length(max=140)], description=u'How is this useful: in 140 characters or less?')
-    content = TextAreaField(u'Additional information', description=u'Describe this resource in detail, Markdown and HTML supported')
-    progress_tip = SelectField(u'Recommend at', coerce=int, choices=projectProgressList(True, True), description=u'Progress level at which to suggest this to teams')
-    event_id = SelectField(u'Specific to an event, or global if blank', coerce=int)
-    is_visible = BooleanField(u'Approved and visible to participants')
     submit = SubmitField(u'Save')
 
 class RoleForm(FlaskForm):

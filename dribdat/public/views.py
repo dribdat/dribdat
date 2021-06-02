@@ -4,11 +4,11 @@ from flask import (Blueprint, request, render_template, flash, url_for,
                     redirect, session, current_app, jsonify)
 from flask_login import login_required, current_user
 
-from dribdat.user.models import User, Event, Project, Resource, Activity
+from dribdat.user.models import User, Event, Project, Activity
 from dribdat.public.forms import (
     LoginForm, UserForm,
     ProjectNew, ProjectForm,
-    ProjectPost, ResourceForm,
+    ProjectPost,
 )
 from dribdat.database import db
 from dribdat.extensions import cache
@@ -78,7 +78,7 @@ def user(username):
     # projects = user.projects
     projects = user.joined_projects()
     posts = user.latest_posts()
-    submissions = Resource.query.filter_by(user_id=user.id).order_by(Resource.name.asc()).all()
+    submissions = user.posted_challenges()
     return render_template("public/userprofile.html", active="profile",
         current_event=event, event=event, user=user, cert_path=cert_path,
         projects=projects, submissions=submissions, posts=posts)

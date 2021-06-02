@@ -13,8 +13,8 @@ from wtforms.fields.html5 import (
 )
 from wtforms.validators import DataRequired, AnyOf, length
 from ..user.validators import UniqueValidator
-from ..user import resourceTypeList, projectProgressList
-from dribdat.user.models import User, Project, Resource
+from ..user import projectProgressList
+from dribdat.user.models import User, Project
 
 class LoginForm(FlaskForm):
     """Login form."""
@@ -105,20 +105,7 @@ class ProjectPost(FlaskForm):
     note = TextAreaField(u'Note', [length(max=140), DataRequired()],
         description=u'What are you working on right now?')
     progress = SelectField(u'Progress', coerce=int)
-    resource = SelectField(u'Resources', coerce=int,
-        description=u'Are you using one of these?')
+    # TODO: project selection dialog
+    # resource = SelectField(u'Resources', coerce=int,
+    #     description=u'Are you using one of these?')
     submit = SubmitField(u'Save post')
-
-class ResourceForm(FlaskForm):
-    """ For suggesting cool tools """
-    name = StringField(u'Name', [length(max=80), DataRequired()])
-    type_id = RadioField(u'Type', coerce=int, choices=resourceTypeList())
-    source_url = URLField(u'Link', [length(max=2048)],
-        description=u'URL to download or get more information.')
-    summary = StringField(u'Summary', [length(max=140)],
-        description=u'How is this useful: in 140 characters or less?')
-    content = TextAreaField(u'Additional information',
-        description=u'Describe this resource in detail, Markdown and HTML supported.')
-    progress_tip = SelectField(u'Recommended stage', coerce=int, choices=projectProgressList(True, True),
-        description=u'Project level at which this should be suggested.')
-    submit = SubmitField(u'Suggest')

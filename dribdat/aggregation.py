@@ -2,7 +2,7 @@
 """Utilities for aggregating data
 """
 
-from dribdat.user.models import Activity, Resource, User
+from dribdat.user.models import Activity, User
 from dribdat.user import isUserActive, projectProgressList
 from dribdat.database import db
 from dribdat.apifetch import * # TBR
@@ -59,15 +59,6 @@ def SyncProjectData(project, data):
     if 'commits' in data:
         SyncCommitData(project, data['commits'])
 
-def SyncResourceData(resource):
-    url = resource.source_url
-    if url.find('/datapackage.json') > 0:
-        dpdata = FetchDataProject(url)
-        resource.sync_content = dpdata.description
-        resource.download_url = dpdata.homepage_url
-        db.session.add(resource)
-        db.session.commit()
-
 def IsProjectStarred(project, current_user):
     if not isUserActive(current_user):
         return False
@@ -77,38 +68,38 @@ def IsProjectStarred(project, current_user):
         user_id=current_user.id
     ).count() > 0
 
-def SuggestionsByProgress(progress=None, event=None):
-    """ Fetch all resources """
+def ProjectsByProgress(progress=None, event=None):
+    """ Fetch all projects by progress level """
     if event is not None:
-        resources = event.resources_for_event()
+        projects = event.projects_for_event()
     else:
-        resources = Resource.query
+        return None
     if progress is not None:
-        resources = resources.filter_by(progress_tip=progress)
-    resources = resources.filter_by(is_visible=True)
-    return resources.order_by(Resource.type_id).all()
+        projects = projects.filter_by(progress=progress)
+    projects = projects.filter_by(is_hidden=False)
+    return projects.order_by(Project.category_id).all()
 
 def SuggestionsTreeForEvent(event=None):
-    """ Collect resources by progress """
+    """ Collect projects by progress """
     allres = SuggestionsByProgress(None, event)
     steps = []
     shown = []
     for ix, p in enumerate(projectProgressList(True, False)):
         rrr = []
         for r in allres:
-            if r.progress_tip is not None and r.progress_tip == p[0]:
+            if r.progress is not None and r.progress == p[0]:
                 rrr.append(r)
                 shown.append(r.id)
         steps.append({
-            'index': ix + 1, 'name': p[1], 'resources': rrr
+            'index': ix + 1, 'name': p[1], 'projects': rrr
         })
-    # show progress-less resources
+    # show progress-less projects
     rr0 = []
     for r in allres:
-        if r.progress_tip is None or not r.id in shown: rr0.append(r)
+        if r.progress is None or not r.id in shown: rr0.append(r)
     if len(rr0) > 0:
         steps.append({
-            'name': '/etc', 'index': -1, 'resources': rr0
+            'name': '/etc', 'index': -1, 'projects': rr0
         })
     return steps
 
@@ -123,7 +114,7 @@ def GetEventUsers(event):
                 users.append(u)
     return sorted(users, key=lambda x: x.username)
 
-def ProjectActivity(project, of_type, current_user, action=None, comments=None, resource=None):
+def ProjectActivity(project, of_type, current_user, action=None, comments=None):
     activity = Activity(
         name=of_type,
         project_id=project.id,
@@ -133,9 +124,6 @@ def ProjectActivity(project, of_type, current_user, action=None, comments=None, 
     score = 1
     if comments is not None and len(comments) > 3:
         activity.content=comments
-    if resource is not None:
-        score = 2 # Double score for adding resources
-        activity.resource_id=resource
     if project.score is None: project.score = 0
     allstars = Activity.query.filter_by(
         name='star',
