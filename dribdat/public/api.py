@@ -72,15 +72,25 @@ def info_event_hackathon_json(event_id):
 def get_projects_by_event(event_id):
     return Project.query.filter_by(event_id=event_id, is_hidden=False)
 
-def get_project_summaries(projects):
-    summaries = expand_project_urls([ p.data for p in projects ])
+def get_project_summaries(projects, is_moar=False):
+    if is_moar:
+        summaries = []
+        for project in projects:
+            p = project.data
+            p['autotext'] = project.autotext # Markdown
+            p['longtext'] = project.longtext # Markdown - see longhtml()
+            summaries.append(p)
+    else:
+        summaries = [ p.data for p in projects ]
+    summaries = expand_project_urls(summaries)
     summaries.sort(key=lambda x: x['score'], reverse=True)
     return summaries
 
 # Collect all projects and challenges for an event
 def project_list(event_id):
+    is_moar = bool(request.args.get('moar', type=bool)) or False
     projects = get_projects_by_event(event_id)
-    return get_project_summaries(projects)
+    return get_project_summaries(projects, is_moar)
 
 # API: Outputs JSON of projects in the current event, along with its info
 @blueprint.route('/event/current/projects.json')
