@@ -29,12 +29,6 @@
         </li>
         {% if event.can_start_project %}
           <li class="nav-item">
-            <a class="nav-link {% if active == 'resources' %}active{% endif %}" href="{{ url_for('public.event_resources', event_id=event.id) }}">
-              <i class="fa fa-cube"></i>
-              Resources
-            </a>
-          </li>
-          <li class="nav-item">
             <a class="nav-link {% if active == 'participants' %}active{% endif %}" href="{{ url_for('public.event_participants', event_id=event.id) }}">
               <i class="fa fa-child"></i>
               Contributors

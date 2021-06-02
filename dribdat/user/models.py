@@ -27,7 +27,7 @@ from dribdat.utils import (
     format_date_range, format_date, timesince
 )
 from dribdat.onebox import format_webembed
-from dribdat.user import getProjectPhase, getResourceType
+from dribdat.user import getProjectPhase
 from dribdat.user.constants import PR_CHALLENGE
 
 from sqlalchemy import Table, or_
@@ -308,14 +308,6 @@ class Event(PkModel):
             Category.event_id==-1,
             Category.event_id==self.id
         )).order_by('name')
-
-    # Event resources
-    def resources_for_event(self):
-        return Resource.query.filter(or_(
-            Resource.event_id==None,
-            Resource.event_id==0,
-            Resource.event_id==self.id
-        ))
 
     # Number of projects
     @property
@@ -616,77 +608,6 @@ class Category(PkModel):
 
     def __repr__(self):
         return '<Category({name})>'.format(name=self.name)
-
-class Resource(PkModel):
-    """ The kitchen larder """
-    __tablename__ = 'resources'
-    name = Column(db.String(80), unique=True, nullable=False)
-    type_id = Column(db.Integer(), nullable=True)
-    created_at = Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)
-    is_visible = Column(db.Boolean(), default=True)
-    progress_tip = Column(db.Integer(), nullable=True)
-    source_url = Column(db.String(2048), nullable=True)
-    download_url = Column(db.String(2048), nullable=True)
-    summary = Column(db.String(140), nullable=True)
-
-    sync_content = Column(db.UnicodeText(), nullable=True)
-    content = Column(db.UnicodeText(), nullable=True)
-
-    user_id = reference_col('users', nullable=True)
-    user = relationship('User', backref='resources')
-
-    # If specific to an event
-    event_id = reference_col('events', nullable=True)
-    event = relationship('Event', backref='resources')
-
-    @property
-    def of_type(self):
-        return getResourceType(self)
-    @property
-    def since(self):
-        return timesince(self.created_at)
-
-    @property
-    def icon(self):
-        if self.type_id >= 300: # tool
-            return 'cloud'
-        elif self.type_id >= 200: # code
-            return 'gear'
-        elif self.type_id >= 100: # data
-            return 'cube'
-        else:
-            return 'leaf'
-
-    def get_comments(self, max=5):
-        return Activity.query.filter_by(resource_id=self.id)\
-            .distinct(Activity.resource_id).limit(max)
-    def count_mentions(self):
-        return Activity.query.filter_by(resource_id=self.id)\
-            .group_by(Activity.id).count()
-
-    def sync(self):
-        """ Synchronize supported resources """
-        SyncResourceData(self)
-
-    @property
-    def data(self):
-        return {
-            'id': self.id,
-            'name': self.name,
-            'since': self.since,
-            'type': self.of_type,
-            'url': self.source_url,
-            # 'content': self.content,
-            'summary': self.summary,
-            'count': self.count_mentions()
-        }
-
-    def __init__(self, name=None, **kwargs):
-        if name:
-            db.Model.__init__(self, name=name, **kwargs)
-
-    def __repr__(self):
-        return '<Resource({name})>'.format(name=self.name)
 
 class Activity(PkModel):
     """ Public, real time, conversational """

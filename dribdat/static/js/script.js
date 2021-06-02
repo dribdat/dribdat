@@ -216,14 +216,6 @@
   if ($navCategories.length === 1)
     $navCategories.click().parent().parent().hide();
 
-  // Roll up resources on overview page
-  if ($('.resources-page .step .resource-card').length > 16) {
-    $('.resources-page .step .resource-list').hide().parent()
-      .addClass('active').click(function() {
-        $(this).find('.resource-list').slideDown();
-      });
-  }
-
   // Show embed code when button clicked
   $('#embed-link').click(function(e) {
     e.preventDefault(); e.stopPropagation();

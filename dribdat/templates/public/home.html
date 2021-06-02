@@ -117,8 +117,6 @@
               <a href="{{ event.webpage_url }}" class="btn btn-info">
                 Information</a>
             {% endif %}
-            <a href="{{ url_for('public.event_resources', event_id=event.id) }}" class="btn btn-secondary">
-              Resources</a>
             <a href="{{ url_for('public.event', event_id=event.id) }}" class="btn btn-warning">
               Challenges
             </a>

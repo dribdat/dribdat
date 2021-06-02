@@ -846,14 +846,6 @@ pre { color: #333; background: white; }
 }
 .category-tip { opacity: 0.6; }
 
-.event-resources {
-  padding: 2rem;
-  margin-bottom: 0px;
-  margin-top: 40px;
-  text-align: left;
-  background: white;
-  font-size: 125%;
-}
 .event-participants.jumbotron {
   padding: 2rem;
   border: 4px dashed lightgray;
@@ -878,68 +870,14 @@ pre { color: #333; background: white; }
   }
 }
 
-/* resource page */
+/* dribs page */
 
-.dribs-page .jumbotron,
-.resource-page .jumbotron,
-.resources-page .jumbotron {
+.dribs-page .jumbotron {
   padding: 2rem;
   border: 4px dashed lightgray;
 }
-.resources-page .step {
-  margin-top: 0.5em;
-}
-.resources-page .step .title {
-  padding: 3px;
-  margin-left: 2rem;
-  display: block;
-  opacity: 0.7;
-  width: 100%;
-  z-index: 1;
-  cursor: pointer;
-}
-.resources-page .step:hover .title { opacity: 1.0; }
-.resources-page .step.active .title { color: blue; }
-.resources-page .step .number {
-  font-size: 3rem;
-  position: absolute;
-  z-index: 0;
-  margin-top: -1rem;
-  color: burlywood;
-  font-weight: bold;
-}
-.resources-page .step .resource-card {
-  background: white;
-  margin: 1px -1px;
-  min-height: 7em;
-  min-width: 16em;
-  vertical-align: top;
-}
-.resources-page .resource-list {
-  margin: 0; padding: 0;
-  margin-top: 1em;
-}
-.resources-page .event-resources {
-  padding: 2rem; margin: 0;
-  font-size: 125%;
-}
-.resource-page .resource-summary,
-.resource-page .resource-content {
-  margin: 20pt;
-}
-.resource-page .resource-projects {
-  padding-top: 1em;
-  border-top: 1px solid #999;
-}
-.resource-page .resource-tip {
-  text-align: center;
-}
-.resource-page .resource-tip::before {
-  content: "*"; font-size: 200%;
-  color: goldenrod;
-}
 
-/* tip section used in resources and elsewhere */
+/* tip section */
 
 .join-tip {
   padding: 0.5em;
