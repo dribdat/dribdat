@@ -17,6 +17,9 @@
         {% if project.source_url %}
         <li>Source: <a href="{{ project.source_url }}">{{ project.source_url }}</a></li>
         {% endif %}
+        {% if project.download_url %}
+        <li>Download: <a href="{{ project.download_url }}">{{ project.download_url }}</a></li>
+        {% endif %}
         {% if project.contact_url %}
         <li>Contact: <a href="{{ project.contact_url }}">{{ project.contact_url }}</a></li>
         {% endif %}

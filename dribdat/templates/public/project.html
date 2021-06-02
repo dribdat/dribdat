@@ -293,6 +293,9 @@
     {% if project.webpage_url %}
       <a href="{{ project.webpage_url }}" class="btn btn-lg" target="_blank" title="Project web link"><span>&#x1f310;</span> Explore</a>
     {% endif %}
+    {% if project.download_url %}
+      <a href="{{ project.download_url }}" target="_blank" class="btn btn-lg" title="Download link"><span>&#x1f4c2;</span> Download</a>
+    {% endif %}
     {% if project.source_url %}
       <a href="{{ project.source_url }}" class="btn btn-lg" target="_blank" title="Source code"><span>&#x1f4bb;</span> Source</a>
     {% endif %}

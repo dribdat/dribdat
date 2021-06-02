@@ -76,6 +76,7 @@ def FetchGithubProject(project_url):
         'source_url': json['html_url'],
         'image_url': json['owner']['avatar_url'],
         'contact_url': json['html_url'] + '/issues',
+        'download_url': json['html_url'] + '/releases',
         'commits': FetchGithubCommits(repo_full_name)
     }
 

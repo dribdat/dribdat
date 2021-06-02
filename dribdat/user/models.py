@@ -196,6 +196,7 @@ class Event(PkModel):
     name = Column(db.String(80), unique=True, nullable=False)
     hostname = Column(db.String(80), nullable=True)
     location = Column(db.String(255), nullable=True)
+    summary = Column(db.String(140), nullable=True)
     description = Column(db.UnicodeText(), nullable=True)
     boilerplate = Column(db.UnicodeText(), nullable=True)
     instruction = Column(db.UnicodeText(), nullable=True)
@@ -333,23 +334,29 @@ class Project(PkModel):
     """ You know, for kids! """
     __tablename__ = 'projects'
     name = Column(db.String(80), unique=True, nullable=False)
-    summary = Column(db.String(120), nullable=True)
-    image_url = Column(db.String(255), nullable=True)
-    source_url = Column(db.String(255), nullable=True)
+    summary = Column(db.String(140), nullable=True)
+
+    image_url = Column(db.String(2048), nullable=True)
+    source_url = Column(db.String(2048), nullable=True)
     webpage_url = Column(db.String(2048), nullable=True)
+    contact_url = Column(db.String(2048), nullable=True)
+    autotext_url = Column(db.String(2048), nullable=True)
+    download_url = Column(db.String(2048), nullable=True)
+
+    is_hidden = Column(db.Boolean(), default=False)
     is_webembed = Column(db.Boolean(), default=False)
-    contact_url = Column(db.String(255), nullable=True)
-    autotext_url = Column(db.String(255), nullable=True)
     is_autoupdate = Column(db.Boolean(), default=True)
+
     autotext = Column(db.UnicodeText(), nullable=True, default=u"")
     longtext = Column(db.UnicodeText(), nullable=False, default=u"")
+
     hashtag = Column(db.String(40), nullable=True)
+
     logo_color = Column(db.String(7), nullable=True)
     logo_icon = Column(db.String(40), nullable=True)
 
     created_at = Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)
     updated_at = Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)
-    is_hidden = Column(db.Boolean(), default=False)
 
     # User who created the project
     user_id = reference_col('users', nullable=True)

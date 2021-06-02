@@ -63,6 +63,8 @@
           $('input#source_url').val(data.source_url);
         if (!$('input#contact_url').val())
           $('input#contact_url').val(data.contact_url);
+        if (!$('input#download_url').val())
+          $('input#download_url').val(data.download_url);
         if (!$('input#image_url').val())
           $('input#image_url').val(data.image_url);
       });

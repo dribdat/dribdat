@@ -288,7 +288,7 @@ def project_push_json():
             if len(data['name']) > 0:
                 project.name = data['name'][0:80]
             if 'summary' in data and len(data['summary']) > 0:
-                project.summary = data['summary'][0:120]
+                project.summary = data['summary'][0:140]
             if 'description' in data and len(data['description']) > 0:
                 project.longtext = data['description']
             if 'homepage_url' in data and len(data['homepage_url']) > 0:
