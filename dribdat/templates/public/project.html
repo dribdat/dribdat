@@ -28,10 +28,12 @@
 
 {% block content %}
 <div class="btn-group project-edit-buttons" role="group" aria-label="Project tools">
-  {% if allow_edit %}
+  {% if allow_post %}
    <a id="project-post" href="{{ url_for('public.project_post', project_id=project.id) }}" class="btn btn-lg btn-success">
      <i class="fa fa-signal" aria-hidden="true"></i>
      Post</a>
+  {% endif %}
+  {% if allow_edit %}
    <a href="{{ url_for('public.project_edit', project_id=project.id) }}" class="btn btn-lg btn-secondary">
      <i class="fa fa-pencil" aria-hidden="true"></i>
      Edit</a>

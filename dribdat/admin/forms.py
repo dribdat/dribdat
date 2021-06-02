@@ -56,7 +56,7 @@ class EventForm(FlaskForm):
     # copy_template = BooleanField(u'Copy template pitch into new projects', default=False)
     lock_editing = BooleanField(u'Block editing projects (Freeze)', default=False)
     lock_starting = BooleanField(u'Block starting new projects (Lock)', default=False)
-    lock_resources = BooleanField(u'Block suggesting resources (Stun)', default=False)
+    lock_resources = BooleanField(u'Block posting project updates (Stun)', default=False)
     submit = SubmitField(u'Save')
 
 class ProjectForm(FlaskForm):

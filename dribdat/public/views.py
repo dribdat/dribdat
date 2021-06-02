@@ -164,9 +164,10 @@ def project_post(project_id):
     project = Project.query.filter_by(id=project_id).first_or_404()
     event = project.event
     starred = IsProjectStarred(project, current_user)
-    allow_edit = starred or (not current_user.is_anonymous and current_user.is_admin)
-    if not allow_edit:
-        flash('You do not have access to edit this project.', 'warning')
+    allow_post = starred or (not current_user.is_anonymous and current_user.is_admin)
+    allow_post = allow_post and not event.lock_resources
+    if not allow_post:
+        flash('You do not have access to post to this project.', 'warning')
         return project_action(project_id, None)
     form = ProjectPost(obj=project, next=request.args.get('next'))
     # Populate progress dialog
@@ -202,6 +203,7 @@ def project_action(project_id, of_type=None, as_view=True, then_redirect=False, 
         return redirect(url_for('public.project', project_id=project.id))
     starred = IsProjectStarred(project, current_user)
     allow_edit = starred or (not current_user.is_anonymous and current_user.is_admin)
+    allow_post = allow_edit and not event.lock_resources
     allow_edit = allow_edit and not event.lock_editing
     project_team = project.team()
     latest_activity = project.latest_activity()
@@ -209,7 +211,8 @@ def project_action(project_id, of_type=None, as_view=True, then_redirect=False, 
     suggestions = SuggestionsByProgress(project.progress, event)
     return render_template('public/project.html', current_event=event, project=project,
         project_starred=starred, project_team=project_team, project_dribs=project_dribs, suggestions=suggestions,
-        allow_edit=allow_edit, latest_activity=latest_activity)
+        allow_edit=allow_edit, allow_post=allow_post,
+        latest_activity=latest_activity)
 
 @blueprint.route('/project/<int:project_id>/star', methods=['GET', 'POST'])
 @login_required
