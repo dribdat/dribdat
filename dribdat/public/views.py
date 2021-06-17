@@ -15,8 +15,7 @@ from dribdat.extensions import cache
 from dribdat.aggregation import (
     SyncProjectData, GetProjectData,
     ProjectActivity, IsProjectStarred,
-    GetEventUsers, SuggestionsByProgress,
-    SuggestionsTreeForEvent,
+    GetEventUsers,
 )
 from dribdat.user import projectProgressList, isUserActive
 
@@ -106,6 +105,23 @@ def event_participants(event_id):
     return render_template("public/eventusers.html",
         current_event=event, participants=users, usercount=usercount, active="participants")
 
+@blueprint.route("/event/<int:event_id>/instructions")
+def event_instructions(event_id):
+    event = Event.query.filter_by(id=event_id).first_or_404()
+    steps = []
+    shown = []
+    for ix, p in enumerate(projectProgressList(True, False)):
+        # rrr = []
+        # for r in allres:
+        #     if r.progress_tip is not None and r.progress_tip == p[0]:
+        #         rrr.append(r)
+        #         shown.append(r.id)
+        steps.append({
+            'index': ix + 1, 'name': p[1], #'projects': rrr
+        })
+    return render_template("public/instructions.html",
+        current_event=event, steps=steps, active="participants")
+
 @blueprint.route("/dribs")
 def dribs():
     """ Shows the latest logged posts """
@@ -194,10 +210,10 @@ def project_action(project_id, of_type=None, as_view=True, then_redirect=False, 
     project_team = project.team()
     latest_activity = project.latest_activity()
     project_dribs = project.all_dribs()
-    suggestions = SuggestionsByProgress(project.progress, event)
     return render_template('public/project.html', current_event=event, project=project,
-        project_starred=starred, project_team=project_team, project_dribs=project_dribs, suggestions=suggestions,
+        project_starred=starred, project_team=project_team, project_dribs=project_dribs,
         allow_edit=allow_edit, allow_post=allow_post,
+        # suggestions=suggestions, # TODO recommend similar projects
         latest_activity=latest_activity)
 
 @blueprint.route('/project/<int:project_id>/star', methods=['GET', 'POST'])

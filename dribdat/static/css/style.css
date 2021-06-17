@@ -435,6 +435,8 @@ nav .navbar-nav .nav-item {
 .project.hexagon:nth-child(even) { background-color: rgba(230, 200, 160, 0.95); }
 .project.hexagon:nth-child(odd) { background-color: rgba(230, 210, 200, 0.95); }
 
+/* --- Project page --- */
+
 .project-page .project-name {
   font-weight: bold;
   margin-top: 0.5em;
@@ -838,7 +840,7 @@ pre { color: #333; background: white; }
   text-align: left;
 }
 .category-info img {
-  width: 100%;
+  max-width: 100%;
 }
 .category-container {
   margin-top: 15px;
@@ -1083,6 +1085,68 @@ Challenges view
 }
 .list-data a.list-group-item:nth-child(1) {
     border-top: 1px solid #333;
+}
+
+/* -------------
+Instruction page
+---------------- */
+/* resource page */
+
+.instructions-page .jumbotron {
+  padding: 2rem;
+  border: 4px dashed lightgray;
+}
+.instructions-page .step {
+  margin-top: 0.5em;
+}
+.instructions-page .step .title {
+  padding: 3px;
+  margin-left: 2rem;
+  display: block;
+  opacity: 0.7;
+  width: 100%;
+  z-index: 1;
+  cursor: pointer;
+}
+.instructions-page .step:hover .title { opacity: 1.0; }
+.instructions-page .step.active .title { color: blue; }
+.instructions-page .step .number {
+  font-size: 3rem;
+  position: absolute;
+  z-index: 0;
+  margin-top: -1rem;
+  color: burlywood;
+  font-weight: bold;
+}
+.instructions-page .step .resource-card {
+  background: white;
+  margin: 1px -1px;
+  min-height: 7em;
+  min-width: 16em;
+  vertical-align: top;
+}
+.instructions-page .resource-list {
+  margin: 0; padding: 0;
+  margin-top: 1em;
+}
+.instructions-page .event-resources {
+  padding: 2rem; margin: 0;
+  font-size: 125%;
+}
+.resource-page .resource-summary,
+.resource-page .resource-content {
+  margin: 20pt;
+}
+.resource-page .resource-projects {
+  padding-top: 1em;
+  border-top: 1px solid #999;
+}
+.resource-page .resource-tip {
+  text-align: center;
+}
+.resource-page .resource-tip::before {
+  content: "*"; font-size: 200%;
+  color: goldenrod;
 }
 
 /* ------------

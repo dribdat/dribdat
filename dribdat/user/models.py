@@ -429,7 +429,7 @@ class Project(PkModel):
                 'text': text,
                 'author': author,
                 'date': a.timestamp,
-                'resource': a.resource,
+                # 'resource': a.resource,
                 'ref_url': a.ref_url,
             }
             dribs.append(prev)
@@ -631,8 +631,8 @@ class Activity(PkModel):
     user_id = reference_col('users', nullable=True)
     user = relationship('User', backref='activities')
 
-    resource_id = reference_col('resources', nullable=True)
-    resource = relationship('Resource', backref='activities')
+    # resource_id = reference_col('resources', nullable=True)
+    # resource = relationship('Resource', backref='activities')
 
     project_id = reference_col('projects', nullable=True)
     project = relationship('Project', backref='activities')
@@ -658,9 +658,9 @@ class Activity(PkModel):
             a['project_name'] = self.project.name
             a['project_score'] = self.project_score or 0
             a['project_phase'] = getProjectPhase(self.project)
-        if self.resource:
-            a['resource_id'] = self.resource_id
-            a['resource_type'] = getResourceType(self.resource)
+        # if self.resource:
+        #     a['resource_id'] = self.resource_id
+        #     a['resource_type'] = getResourceType(self.resource)
         return a
 
     def __init__(self, name, project_id, **kwargs):

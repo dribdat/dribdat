@@ -95,7 +95,7 @@
   {% for category in current_event.categories_for_event() %}
   <div category-id="{{category.id}}" class="category-container" style="border-top:5px solid {{category.logo_color}}; display:none">
     <h3>{{ category.name }}</h3>
-    {{ category.description|markdown }}
+    {{ category.description|onebox|markdown|safe }}
     {% if current_user and current_user.active and current_user.is_admin %}
       <br><a href="{{ url_for('admin.category', category_id=category.id) }}" class="btn btn-success btn-sm">
         <i class="fa fa-pencil" aria-hidden="true"></i>
