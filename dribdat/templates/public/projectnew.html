@@ -15,7 +15,7 @@
     </div>
     {% endif %}
     <div class="container">
-      {{ render_form(url_for('public.project_new', event_id=current_event.id), form) }}
+      {{ render_form(url_for('project.project_new', event_id=current_event.id), form) }}
     </div>
   {% else %}
     <div class="alert alert-info">

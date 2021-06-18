@@ -252,7 +252,7 @@ class Event(PkModel):
             "workPerformed":[ p.get_schema(host_url) for p in self.projects ]
         }
 
-    # TODO: allow this to be configured
+    # TODO: allow this to be configured, add to schema above, show in footer
     @property
     def license(self):
         return "http://creativecommons.org/licenses/by/4.0/"
@@ -280,7 +280,7 @@ class Event(PkModel):
         return tz.localize(self.starts_at)
     @property
     def countdown(self):
-        # Normalizing dates & timezones.
+        """ Normalized countdown timer """
         tz = pytz.timezone(current_app.config['TIME_ZONE'])
         starts_at = tz.localize(self.starts_at)
         ends_at = tz.localize(self.ends_at)
@@ -299,21 +299,27 @@ class Event(PkModel):
 
     @property
     def date(self):
+        """ Formatted date range """
         return format_date_range(self.starts_at, self.ends_at)
 
-    # Event categories
+    @property
+    def project_count(self):
+        """ Number of projects """
+        if not self.projects: return 0
+        return len(self.projects)
+
     def categories_for_event(self):
+        """ Event categories """
         return Category.query.filter(or_(
             Category.event_id==None,
             Category.event_id==-1,
             Category.event_id==self.id
         )).order_by('name')
 
-    # Number of projects
-    @property
-    def project_count(self):
-        if not self.projects: return 0
-        return len(self.projects)
+    def current():
+        """ Returns currently featured event """
+        # TODO: allow multiple featurettes?
+        return Event.query.filter_by(is_current=True).first()
 
     def __init__(self, name=None, **kwargs):
         if name:
@@ -366,12 +372,12 @@ class Project(PkModel):
     progress = Column(db.Integer(), nullable=True, default=-1)
     score = Column(db.Integer(), nullable=True, default=0)
 
-    # Convenience query for latest activity
     def latest_activity(self, max=5):
+        """ Convenience query for latest activity """
         return Activity.query.filter_by(project_id=self.id).order_by(Activity.timestamp.desc()).limit(max)
 
-    # Return all starring users (A team)
     def team(self):
+        """ Return all starring users (A team) """
         activities = Activity.query.filter_by(
             name='star', project_id=self.id
         ).all()
@@ -381,8 +387,8 @@ class Project(PkModel):
                 members.append(a.user)
         return members
 
-    # Query which formats the project's timeline
     def all_dribs(self):
+        """ Query which formats the project's timeline """
         activities = Activity.query.filter_by(
                         project_id=self.id
                     ).order_by(Activity.timestamp.desc())
@@ -445,18 +451,19 @@ class Project(PkModel):
             })
         return sorted(dribs, key=lambda x: x['date'], reverse=True)
 
-    # Convenience query for all categories
     def categories_all(self, event=None):
+        """ Convenience query for all categories """
         if self.event: return self.event.categories_for_event()
         if event is not None: return event.categories_for_event()
         return Category.query.order_by('name')
 
-    # Self-assessment (progress)
     @property
     def phase(self):
+        """ Self-assessment (progress) """
         return getProjectPhase(self)
     @property
     def is_challenge(self):
+        """ True if this project is in challenge phase """
         if self.progress is None: return False
         return self.progress <= PR_CHALLENGE
 

@@ -72,6 +72,7 @@ def init_talisman(app):
 def register_blueprints(app):
     """Register Flask blueprints."""
     app.register_blueprint(public.views.blueprint)
+    app.register_blueprint(public.project.blueprint)
     app.register_blueprint(public.auth.blueprint)
     app.register_blueprint(public.api.blueprint)
     app.register_blueprint(user.views.blueprint)
@@ -79,6 +80,8 @@ def register_blueprints(app):
     return None
 
 def register_oauthhandlers(app):
+    """ Set up OAuth handlers based on configuration """
+    # TODO: move to auth class
     blueprint = None
     if not app.config["OAUTH_TYPE"]: return
     if app.config["OAUTH_TYPE"] == 'slack':

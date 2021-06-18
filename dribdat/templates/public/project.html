@@ -5,7 +5,7 @@
 
 {% block page_meta %}
   <meta property="og:type" content="website">
-  <meta property="og:url" content="{{ url_for('public.project', project_id=project.id, _external=True) }}">
+  <meta property="og:url" content="{{ url_for('project.project', project_id=project.id, _external=True) }}">
   <meta property="og:title" content="{{project.name}}">
   <meta property="og:image" content="{% if project.image_url %}{{project.image_url}}{% else %}{{ url_for('static', filename='img/badge-black.png', _external=True) }}{% endif %}">
   <meta property="og:description" content="{% if project.summary %}{{project.summary}}{% else %}{{ project.longtext|striptags|truncate(120) }}{% endif %}">
@@ -29,37 +29,37 @@
 {% block content %}
 <div class="btn-group project-edit-buttons" role="group" aria-label="Project tools">
   {% if allow_post %}
-   <a id="project-post" href="{{ url_for('public.project_post', project_id=project.id) }}" class="btn btn-lg btn-success">
-     <i class="fa fa-signal" aria-hidden="true"></i>
+   <a id="project-post" href="{{ url_for('project.project_post', project_id=project.id) }}" title="Post an update to this project" class="btn btn-lg btn-success">
+     <i class="fa fa-clipboard" aria-hidden="true"></i>
      Post</a>
   {% endif %}
   {% if allow_edit %}
-   <a href="{{ url_for('public.project_edit', project_id=project.id) }}" class="btn btn-lg btn-secondary">
-     <i class="fa fa-pencil" aria-hidden="true"></i>
-     Edit</a>
     {% if project.is_autoupdate %}
-      <a href="{{ url_for('public.project_autoupdate', project_id=project.id) }}" class="btn btn-lg btn-warning">
+      <a href="{{ url_for('project.project_autoupdate', project_id=project.id) }}" title="Sync external data" class="btn btn-lg btn-warning">
         <i class="fa fa-refresh" aria-hidden="true"></i>
         Sync</a>
     {% endif %}
+    <a href="{{ url_for('project.project_edit', project_id=project.id) }}" title="Edit project details" class="btn btn-lg btn-secondary">
+      <i class="fa fa-pencil" aria-hidden="true"></i>
+      Edit</a>
   {% endif %}
 
   {% if current_user.is_admin and project.event.lock_editing and project_starred %}
-    <a href="{{ url_for('public.project_unstar', project_id=project.id) }}"  class="project-star btn btn-lg btn-secondary">
+    <a href="{{ url_for('project.project_unstar', project_id=project.id) }}"  class="project-star btn btn-lg btn-secondary">
       <i class="fa fa-star"></i>
     </a>
   {% endif %}
 
   {% if not project.event.lock_editing %}
     {% if project_starred %}<!-- Already starred -->
-      <a href="{{ url_for('public.project_unstar', project_id=project.id) }}" class="project-star btn btn-lg btn-primary"
-        title="You are a member of the project. Click if you wish to leave."
-        onclick="return confirm('Are you sure you wish to leave the team?')">
+      <a href="{{ url_for('project.project_unstar', project_id=project.id) }}" class="project-star btn btn-lg btn-secondary"
+        title="Click to stop being a member of the project"
+        onclick="return confirm('Are you sure you wish to leave this team?')">
         <i class="fa fa-star"></i>
       </a>
     {% elif current_user and current_user.active %}
-      <a href="{{ url_for('public.project_star', project_id=project.id) }}" class="btn btn-lg btn-primary project-star"
-        title="Join this project.">
+      <a href="{{ url_for('project.project_star', project_id=project.id) }}" class="btn btn-lg btn-primary project-star"
+        title="Join this project">
        <i class="fa fa-star-o"></i>
        Join
       </a>
