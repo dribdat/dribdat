@@ -1,0 +1,46 @@
+stages:
+  -
+    score: 0
+    phase: CHALLENGE
+    name: Challenge
+    description: 🚧 This is an idea or challenge description
+    conditions:
+      -
+        minchars:
+          summary: 10
+          longtext: 500
+          contact_url: 3
+  -
+    score: 5
+    phase: NEW
+    name: Researching
+    description: 👪 A team has formed and started a project
+    conditions:
+      -
+        mincount:
+          user: 2
+  -
+    score: 10
+    phase: RESEARCHED
+    name: Sketching
+    description: ⚗️ Research has been done to define the scope
+  -
+    score: 20
+    phase: SKETCHED
+    name: Prototyping
+    description: 🎨 Initial designs have been sketched and shared
+  -
+    score: 30
+    phase: PROTOTYPED
+    name: Launching
+    description: 🐣 A prototype of the idea has been developed
+  -
+    score: 40
+    phase: LAUNCHED
+    name: Promoting
+    description: 🎈 The prototype has been deployed and presented
+  -
+    score: 50
+    phase: LIVE
+    name: Supporting
+    description: 🚀 This project is live and available to the public
