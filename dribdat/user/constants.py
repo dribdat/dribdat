@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from ..utils import load_csv_presets
+from ..utils import load_yaml_presets
 
 # User role
 USER = 0
@@ -19,7 +19,7 @@ USER_STATUS = {
 }
 
 # Project progress stages
-project_stages = load_csv_presets('stages', 'name')
+project_stages = load_yaml_presets('stages', 'name')
 PR_CHALLENGE = int(project_stages['CHALLENGE']['id'])
 PROJECT_PROGRESS = {}
 PROJECT_PROGRESS_PHASE = {}
