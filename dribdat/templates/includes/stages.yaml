@@ -1,3 +1,7 @@
+---
+# definition of rulesets for advancing through the
+# stages of a hackathon projects
+
 stages:
   -
     score: 0
@@ -9,7 +13,9 @@ stages:
         minchars:
           summary: 10
           longtext: 500
-          contact_url: 3
+        agree:
+          - The challenge is well documented, including links to data sources or contacts.
+          - This challenge can be reasonably tackled within the time limits of the event.
   -
     score: 5
     phase: NEW
@@ -19,28 +25,70 @@ stages:
       -
         mincount:
           user: 2
+        maxcount:
+          user: 8
+        validurl:
+          - contact_url
+        agree:
+          - We have a shared channel or working area for our team to speak and collaborate.
+          - The team members are committed to working together for the duration of the event.
   -
     score: 10
     phase: RESEARCHED
     name: Sketching
-    description: ⚗️ Research has been done to define the scope
+    description: ⚗️ Scoping research has been done and documented
+    conditions:
+      -
+        validurl:
+          - source_url
+        agree:
+          - A source code repository or shared folder has been set up and shared with the team.
+          - We have better defined the achievable scope of the project, and have documented our basic intent.
   -
     score: 20
     phase: SKETCHED
     name: Prototyping
     description: 🎨 Initial designs have been sketched and shared
+    conditions:
+      -
+        validurl:
+          - image_url
+        agree:
+          - We have used a wireframing tool or just pen and paper to sketch and share a vision for the project.
+          - Everyone on the team was able to contribute to the design and attach their ideas or questions.
   -
     score: 30
     phase: PROTOTYPED
     name: Launching
     description: 🐣 A prototype of the idea has been developed
+    conditions:
+      -
+        validurl:
+          - webpage_url
+        agree:
+          - This prototype was significantly created by members of our team. Contributions from others does not include major functionality, and is less than 20% of the codebase.
+          - We own the rights, use open licenses, or received written permission from the owner for all assets and software demonstrated in our prototype.
   -
     score: 40
     phase: LAUNCHED
     name: Promoting
     description: 🎈 The prototype has been deployed and presented
+    conditions:
+      -
+        validurl:
+          - autotext_url
+        agree:
+          - A demo or presentation has been made accessible, and shared here along with the sources.
+          - We have made sure that every team member is thanked, and any third-party assets or software attributed in the documentation.
   -
     score: 50
     phase: LIVE
     name: Supporting
     description: 🚀 This project is live and available to the public
+    conditions:
+      -
+        validurl:
+          - download_url
+        agree:
+          - A copy of the results of our project can be downloaded and further distributed.
+          - It is possible to contact the team with questions and feedback.
