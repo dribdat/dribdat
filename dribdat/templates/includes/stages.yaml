@@ -9,86 +9,79 @@ stages:
     phase: Challenge
     description: 🚧 This is an idea or challenge description
     conditions:
-      -
-        minchars:
-          summary: 10
-          longtext: 500
-        agree:
-          - The challenge is well documented, including links to data sources or contacts.
-          - This challenge can be reasonably tackled within the time limits of the event.
+      minchars:
+        summary: 10
+        longtext: 500
+      agree:
+        - The challenge is well documented, including links to data sources or contacts.
+        - This challenge can be reasonably tackled within the time limits of the event.
   -
     id: 5
     name: NEW
     phase: Researching
     description: 👪 A team has formed and started a project
     conditions:
-      -
-        mincount:
-          user: 2
-        maxcount:
-          user: 8
-        validurl:
-          - contact_url
-        agree:
-          - We have a shared channel or working area for our team to speak and collaborate.
-          - The team members are committed to working together for the duration of the event.
+      mincount:
+        user: 2
+      maxcount:
+        user: 8
+      validurl:
+        - contact_url
+      agree:
+        - We have a shared channel or working area for our team to speak and collaborate.
+        - The team members are committed to working together for the duration of the event.
   -
     id: 10
     name: RESEARCHED
     phase: Sketching
     description: ⚗️ Scoping research has been done and documented
     conditions:
-      -
-        validurl:
-          - source_url
-        agree:
-          - A source code repository or shared folder has been set up and shared with the team.
-          - We have better defined the achievable scope of the project, and have documented our basic intent.
+      validurl:
+        - source_url
+      agree:
+        - A source code repository or shared folder has been set up and shared with the team.
+        - We have better defined the achievable scope of the project, and have documented our basic intent.
   -
     id: 20
     name: SKETCHED
     phase: Prototyping
     description: 🎨 Initial designs have been sketched and shared
     conditions:
-      -
-        validurl:
-          - image_url
-        agree:
-          - We have used a wireframing tool or just pen and paper to sketch and share a vision for the project.
-          - Everyone on the team was able to contribute to the design and attach their ideas or questions.
+      validurl:
+        - image_url
+      agree:
+        - We have used a wireframing tool or just pen and paper to sketch and share a vision for the project.
+        - Everyone on the team was able to contribute to the design and attach their ideas or questions.
   -
     id: 30
     name: PROTOTYPED
     phase: Launching
     description: 🐣 A prototype of the idea has been developed
     conditions:
-      -
-        validurl:
-          - webpage_url
-        agree:
-          - This prototype was significantly created by members of our team. Contributions from others does not include major functionality, and is less than 20% of the codebase.
-          - We own the rights, use open licenses, or received written permission from the owner for all assets and software demonstrated in our prototype.
+      validurl:
+        - webpage_url
+      agree:
+        - This prototype was significantly created by members of our team. Contributions from others does not include major functionality, and is less than 20% of the codebase.
+        - We own the rights, use open licenses, or received written permission from the owner for all assets and software demonstrated in our prototype.
   -
     id: 40
     name: LAUNCHED
     phase: Promoting
     description: 🎈 The prototype has been deployed and presented
     conditions:
-      -
-        validurl:
-          - autotext_url
-        agree:
-          - A demo or presentation has been made accessible, and shared here along with the sources.
-          - We have made sure that every team member is thanked, and any third-party assets or software attributed in the documentation.
+      validurl:
+        - autotext_url
+      agree:
+        - A demo or presentation has been made accessible, and shared here along with the sources.
+        - We have made sure that every team member is thanked, and any third-party assets or software attributed in the documentation.
   -
     id: 50
     name: LIVE
     phase: Supporting
     description: 🚀 This project is live and available to the public
     conditions:
-      -
-        validurl:
-          - download_url
-        agree:
-          - A copy of the results of our project can be downloaded and further distributed.
-          - It is possible to contact the team with questions and feedback.
+      validurl:
+        - download_url
+      agree:
+        - A copy of the results of our project can be downloaded and further distributed.
+        - It is possible to contact the team with questions and feedback.

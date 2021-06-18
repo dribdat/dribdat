@@ -82,7 +82,12 @@ def project_post(project_id):
         flash('Thanks for your commit!', 'success')
         project_action(project_id, 'update', action='post', text=form.note.data)
         return redirect(url_for('project.project', project_id=project.id))
-    return render_template('public/projectpost.html', current_event=event, project=project, form=form)
+    print(project.stage)
+    return render_template(
+        'public/projectpost.html',
+        current_event=event, project=project, form=form,
+        stage=project.stage
+    )
 
 def project_action(project_id, of_type=None, as_view=True, then_redirect=False, action=None, text=None):
     project = Project.query.filter_by(id=project_id).first_or_404()

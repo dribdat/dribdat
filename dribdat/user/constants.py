@@ -22,11 +22,11 @@ USER_STATUS = {
 project_stages = load_yaml_presets('stages', 'name')
 PR_CHALLENGE = int(project_stages['CHALLENGE']['id'])
 PROJECT_PROGRESS = {}
-PROJECT_PROGRESS_PHASE = {}
+PROJECT_PROGRESS_STAGE = {}
 for ps in project_stages:
     pid = int(project_stages[ps]['id'])
     PROJECT_PROGRESS[pid] = project_stages[ps]['description']
-    PROJECT_PROGRESS_PHASE[pid] = project_stages[ps]['phase']
+    PROJECT_PROGRESS_STAGE[pid] = project_stages[ps]
 
 def projectProgressList(All=True, WithEmpty=True):
     if not All:
@@ -39,9 +39,15 @@ def projectProgressList(All=True, WithEmpty=True):
 def getProjectPhase(project):
     if project is None or project.progress is None:
         return ""
-    if not project.progress in PROJECT_PROGRESS_PHASE:
-        return PROJECT_PROGRESS_PHASE[PR_CHALLENGE]
-    return PROJECT_PROGRESS_PHASE[project.progress]
+    if not project.progress in PROJECT_PROGRESS_STAGE:
+        return PROJECT_PROGRESS_STAGE[PR_CHALLENGE]['phase']
+    return PROJECT_PROGRESS_STAGE[project.progress]['phase']
+
+def getStageByProgress(progress):
+    if progress is None: return None
+    if not progress in PROJECT_PROGRESS_STAGE:
+        return PROJECT_PROGRESS_STAGE[PR_CHALLENGE]
+    return PROJECT_PROGRESS_STAGE[progress]
 
 def isUserActive(user):
     if not user or not 'active' in user.__dir__():

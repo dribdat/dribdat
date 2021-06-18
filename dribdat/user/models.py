@@ -27,8 +27,9 @@ from dribdat.utils import (
     format_date_range, format_date, timesince
 )
 from dribdat.onebox import format_webembed
-from dribdat.user import getProjectPhase
-from dribdat.user.constants import PR_CHALLENGE
+from dribdat.user.constants import (
+    PR_CHALLENGE, getProjectPhase, getStageByProgress
+)
 
 from sqlalchemy import Table, or_
 
@@ -458,8 +459,12 @@ class Project(PkModel):
         return Category.query.order_by('name')
 
     @property
+    def stage(self):
+        """ Assessment of progress stage with full data """
+        return getStageByProgress(self.progress)
+    @property
     def phase(self):
-        """ Self-assessment (progress) """
+        """ Assessment of progress as phase name """
         return getProjectPhase(self)
     @property
     def is_challenge(self):

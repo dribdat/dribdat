@@ -9,6 +9,20 @@
   <h2>Drib about
     <a class="project-link" href="{{ url_for('project.project', project_id=project.id) }}">{{project.name}}</a>
   </h2>
+
+  {% if stage %}
+  <div class="form-project-stage" style="font-size: 125%; border: 3px dashed orange; padding: 1em">
+    <h4 style="text-align: center">Self assessment</h4>
+    {% for item in stage.conditions.agree %}
+      <label style="clear:both;margin-top:0.5em"><input type="checkbox">&nbsp;{{ item }}</label>
+    {% endfor %}
+    {% for item in stage.conditions.validurl %}
+      <label style="clear:both;margin-top:0.5em">Fill in a <input type="input" placeholder="{{ item }}">
+      </label> to advance to the next stage.
+    {% endfor %}
+  </div>
+  {% endif %}
+
   <div class="form-project-post">
 
     {{ render_form(url_for('project.project_post', project_id=project.id), form) }}
