@@ -57,7 +57,7 @@
   <a name="projects"></a>
   <div class="ibws-fix">
   {% for project in projects %}
-    <a href="{{ url_for('project.project', project_id=project.id) }}"
+    <a href="{{ url_for('project.project_view', project_id=project.id) }}"
        title="{{ project.summary }}"
        class="hexagon {{ 'challenge' if project.phase=='Challenge' else 'project' }} category-highlight"
        category-id="{{ project.category_id }}"

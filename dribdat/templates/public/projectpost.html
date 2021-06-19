@@ -7,25 +7,45 @@
 
 {% block content %}
   <h2>Drib about
-    <a class="project-link" href="{{ url_for('project.project', project_id=project.id) }}">{{project.name}}</a>
+    <a class="project-link" href="{{ url_for('project.project_view', project_id=project.id) }}">{{project.name}}</a>
   </h2>
-
-  {% if stage %}
-  <div class="form-project-stage" style="font-size: 125%; border: 3px dashed orange; padding: 1em">
-    <h4 style="text-align: center">Self assessment</h4>
-    {% for item in stage.conditions.agree %}
-      <label style="clear:both;margin-top:0.5em"><input type="checkbox">&nbsp;{{ item }}</label>
-    {% endfor %}
-    {% for item in stage.conditions.validurl %}
-      <label style="clear:both;margin-top:0.5em">Fill in a <input type="input" placeholder="{{ item }}">
-      </label> to advance to the next stage.
-    {% endfor %}
-  </div>
-  {% endif %}
 
   <div class="form-project-post">
 
     {{ render_form(url_for('project.project_post', project_id=project.id), form) }}
 
   </div>
+
+  {% if stage %}
+  {% if all_valid and stage['name'] == 'LIVE' %}
+    <div style="margin-top:1em" class="alert alert-success" role="alert">
+      <i class="fa fa-thumbs-up"></i>
+      Your project is ready for action!
+    </div>
+  {% else %}
+  <div class="form-project-stage" style="margin-top:1em; font-size: 125%; border: 3px dashed orange; padding: 1em">
+    <h4 style="text-align: center">
+      Ready for the next stage?
+    </h4>
+    {% if all_valid %}
+      {% for item in stage.conditions.agree %}
+        <label style="clear:both;margin-top:0.5em"><input type="checkbox">&nbsp;{{ item }}</label>
+      {% endfor %}
+    {% endif %}
+    {% for item in stage.conditions.validate %}
+      {% if item.valid %}
+        <div style="margin-top:0.5em" class="alert alert-success" role="alert">
+          <i class="fa fa-thumbs-up"></i>
+          {{ item.help }}
+        </div>
+      {% else %}
+        <div style="margin-top:0.5em" class="alert alert-warning" role="alert">
+          <i class="fa fa-paw"></i>
+          {{ item.help }}
+        </div>
+      {% endif %}
+    {% endfor %}
+  </div>
+  {% endif %}
+  {% endif %}
 {% endblock %}

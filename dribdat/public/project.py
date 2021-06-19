@@ -25,7 +25,7 @@ def current_event(): return Event.current()
 
 
 @blueprint.route('/<int:project_id>')
-def project(project_id):
+def project_view(project_id):
     return project_action(project_id, None)
 
 @blueprint.route('/<int:project_id>/edit', methods=['GET', 'POST'])
@@ -53,7 +53,7 @@ def project_edit(project_id):
         cache.clear()
         flash('Project updated.', 'success')
         project_action(project_id, 'update', False)
-        return redirect(url_for('project.project', project_id=project.id))
+        return redirect(url_for('project.project_view', project_id=project.id))
     return render_template('public/projectedit.html',
         current_event=event, project=project, form=form)
 
@@ -70,23 +70,55 @@ def project_post(project_id):
         return project_action(project_id, None)
     form = ProjectPost(obj=project, next=request.args.get('next'))
     # Populate progress dialog
-    form.progress.choices = projectProgressList(event.has_started or event.has_finished, False)
+    # form.progress.choices = projectProgressList(event.has_started or event.has_finished, False)
+    # Evaluate project progress
+    stage = project.stage
+    all_valid = True
+    project_data = project.data
+    for v in stage['conditions']['validate']:
+        v['valid'] = False
+        vf = v['field']
+        if vf in project_data:
+            if ('min' in v and len(project_data[vf]) >= v['min']) or \
+                ('max' in v and len(project_data[vf]) <= v['max']) or \
+                ('test' in v and v['test'] == 'validurl' and project_data[vf].startswith('http')):
+                v['valid'] = True
+        if not v['valid']:
+            all_valid = False
+
     # Process form
     if form.validate_on_submit():
+
+        # Check and update progress
+        all_stages = projectProgressList(event.has_started or event.has_finished, False)
+        if form.has_progress:
+            if all_valid:
+                found_next = False
+                for a in all_stages:
+                    if found_next:
+                        project.progress = a[0]
+                        flash('Your project has been promoted!', 'info')
+                        break
+                    if a[0] == project.progress:
+                        found_next = True
+            else:
+                flash('Your project did not yet meet all stage requirements.', 'danger')
+        # Update project data
         del form.id
+        del form.has_progress
         form.populate_obj(project)
         project.update()
         db.session.add(project)
         db.session.commit()
         cache.clear()
-        flash('Thanks for your commit!', 'success')
+        flash('Thanks for your commit', 'success')
         project_action(project_id, 'update', action='post', text=form.note.data)
-        return redirect(url_for('project.project', project_id=project.id))
-    print(project.stage)
+        # return redirect(url_for('project.project_view', project_id=project.id))
+        return project_view(project.id)
+
     return render_template(
         'public/projectpost.html',
-        current_event=event, project=project, form=form,
-        stage=project.stage
+        current_event=event, project=project, form=form, stage=stage, all_valid=all_valid,
     )
 
 def project_action(project_id, of_type=None, as_view=True, then_redirect=False, action=None, text=None):
@@ -97,7 +129,7 @@ def project_action(project_id, of_type=None, as_view=True, then_redirect=False, 
     if not as_view:
         return True
     if then_redirect:
-        return redirect(url_for('project.project', project_id=project.id))
+        return redirect(url_for('project.project_view', project_id=project.id))
     starred = IsProjectStarred(project, current_user)
     allow_edit = starred or (not current_user.is_anonymous and current_user.is_admin)
     allow_post = allow_edit and not event.lock_resources
@@ -164,7 +196,7 @@ def project_new(event_id):
             if len(project.autotext_url)>1:
                 return project_autoupdate(project.id)
             else:
-                return redirect(url_for('project.project', project_id=project.id))
+                return redirect(url_for('project.project_view', project_id=project.id))
     return render_template('public/projectnew.html', active="projectnew", current_event=event, form=form)
 
 @blueprint.route('/<int:project_id>/autoupdate')
@@ -183,4 +215,4 @@ def project_autoupdate(project_id):
     SyncProjectData(project, data)
     project_action(project.id, 'update', action='sync', text=str(len(project.autotext)) + ' bytes')
     flash("Project data synced from %s" % data['type'], 'success')
-    return redirect(url_for('project.project', project_id=project.id))
+    return redirect(url_for('project.project_view', project_id=project.id))

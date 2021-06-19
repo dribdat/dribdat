@@ -508,6 +508,7 @@ class Project(PkModel):
             'contact_url': self.contact_url or '',
             'logo_color': self.logo_color or '',
         }
+        d['team'] = [ u.username for u in self.team() ]
         if self.user is not None:
             d['maintainer'] = self.user.username
         if self.event is not None:

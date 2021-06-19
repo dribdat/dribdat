@@ -27,7 +27,7 @@
   <div class="honeycomb">
     <div class="ibws-fix">
     {% for project in projects %}
-      <a href="{{ url_for('project.project', project_id=project.id) }}" target="_blank"
+      <a href="{{ url_for('project.project_view', project_id=project.id) }}" target="_blank"
         class="hexagon project" category-id="{{project.category_id}}"
         style="background-color:{{project.logo_color}}; background-image:url('{{project.image_url}}')">
         <div class="hexagontent">

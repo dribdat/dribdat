@@ -42,7 +42,7 @@
               <small><br>{{ project.user.username }}</small></td>
             <td>{{ project.updated_at|since_date }}</td>
             <td><div class="btn-group">
-              <a href="{{ url_for('project.project', project_id=project.id) }}" class="btn btn-sm btn-primary">
+              <a href="{{ url_for('project.project_view', project_id=project.id) }}" class="btn btn-sm btn-primary">
                 View
               </a>
               {% if project.is_hidden %}
