@@ -15,9 +15,16 @@
   </div>
   {% endif %}
 
-  <h2 style="margin-top:2em">Project phases:</h2>
+  <!-- <h2>Project phases:</h2> -->
 
   <a name="steps"></a>
+  <p style="mt-2">
+    See also: <a href="{{ url_for('public.event_stages', event_id=current_event.id) }}">
+      <i class="fa fa-arrow-right" aria-hidden="true"></i>
+      Projects by stage</a>
+  </p>
+
+  <div class="list-stages">
   {% for step in steps %}
     <div class="row step">
       {% if step.index > 0 %}
@@ -46,6 +53,7 @@
       {% endif %}
     </div>
   {% endfor %}
+  </div>
 
   <center class="mt-5">
     <a class="btn btn-dark btn-lg" href="{{ url_for('public.event', event_id=current_event.id) }}">

@@ -1090,51 +1090,10 @@ Challenges view
 /* -------------
 Instruction page
 ---------------- */
-/* resource page */
 
 .instructions-page .jumbotron {
   padding: 2rem;
   border: 4px dashed lightgray;
-}
-.instructions-page .step {
-  margin-top: 3em;
-}
-.instructions-page .step .title {
-  padding: 3px;
-  margin-left: 2rem;
-  display: block;
-  opacity: 0.7;
-  width: 100%;
-  z-index: 1;
-  cursor: pointer;
-  font-size: 200%;
-}
-.instructions-page .step:hover .title { opacity: 1.0; }
-.instructions-page .step.active .title { color: blue; }
-.instructions-page .step .number {
-  font-size: 3rem;
-  position: absolute;
-  z-index: 0;
-  margin-top: -1rem;
-  color: burlywood;
-  font-weight: bold;
-}
-.instructions-page .step .agree-list,
-.instructions-page .step .subtitle {
-  margin: 0em 3em;
-  font-size: 125%;
-}
-.instructions-page .step .agree-list li {
-  clear: both;
-  list-style: square;
-  margin-left: -1em;
-}
-.instructions-page .step .resource-card {
-  background: white;
-  margin: 1px -1px;
-  min-height: 7em;
-  min-width: 16em;
-  vertical-align: top;
 }
 .instructions-page .resource-list {
   margin: 0; padding: 0;
@@ -1144,20 +1103,46 @@ Instruction page
   padding: 2rem; margin: 0;
   font-size: 125%;
 }
-.resource-page .resource-summary,
-.resource-page .resource-content {
-  margin: 20pt;
+
+.list-stages .step {
+  margin-top: 3em;
 }
-.resource-page .resource-projects {
-  padding-top: 1em;
-  border-top: 1px solid #999;
+.list-stages .step .title {
+  padding: 3px;
+  margin-left: 2rem;
+  display: block;
+  opacity: 0.7;
+  width: 100%;
+  z-index: 1;
+  cursor: pointer;
+  font-size: 200%;
 }
-.resource-page .resource-tip {
-  text-align: center;
+.list-stages .step:hover .title { opacity: 1.0; }
+.list-stages .step.active .title { color: blue; }
+.list-stages .step .number {
+  font-size: 3rem;
+  position: absolute;
+  z-index: 0;
+  margin-top: -1rem;
+  color: burlywood;
+  font-weight: bold;
 }
-.resource-page .resource-tip::before {
-  content: "*"; font-size: 200%;
-  color: goldenrod;
+.list-stages .step .agree-list,
+.list-stages .step .subtitle {
+  margin: 0em 3em;
+  font-size: 125%;
+}
+.list-stages .step .agree-list li {
+  clear: both;
+  list-style: square;
+  margin-left: -1em;
+}
+.list-stages .step .card {
+  background: white;
+  margin: 1px -1px;
+  min-height: 7em;
+  min-width: 16em;
+  vertical-align: top;
 }
 
 /* ------------
