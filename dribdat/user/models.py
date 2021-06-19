@@ -118,7 +118,7 @@ class User(UserMixin, PkModel):
         self.carddata = gravatar_url
         self.save()
 
-    def joined_projects(self):
+    def joined_projects(self, with_challenges=True):
         """ Retrieve all projects user has joined """
         activities = Activity.query.filter_by(
                 user_id=self.id, name='star'
@@ -126,7 +126,15 @@ class User(UserMixin, PkModel):
         projects = []
         for a in activities:
             if not a.project in projects and not a.project.is_hidden:
-                projects.append(a.project)
+                if with_challenges or a.project.progress != 0:
+                    projects.append(a.project)
+        return projects
+
+    def posted_challenges(self):
+        """ Retrieve all challenges user has posted """
+        projects = Project.query.filter_by(
+                user_id=self.id, progress=0, is_hidden=False
+            ).order_by(Project.id.desc()).all()
         return projects
 
     def latest_posts(self, max=None):

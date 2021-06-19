@@ -36,6 +36,14 @@ def projectProgressList(All=True, WithEmpty=True):
         pl.append((-100, ''))
     return sorted(pl, key=lambda x: x[0])
 
+def getProjectStages():
+    pl = []
+    for ix, g in enumerate(sorted(PROJECT_PROGRESS)):
+        stage = PROJECT_PROGRESS_STAGE[g]
+        stage['index'] = ix + 1
+        pl.append(stage)
+    return pl
+
 def getProjectPhase(project):
     if project is None or project.progress is None:
         return ""

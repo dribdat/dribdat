@@ -18,7 +18,6 @@ class Config(object):
     DRIBDAT_THEME = os_env.get('DRIBDAT_THEME', 'simplex')
 
     # Application options
-    DRIBDAT_TOOL_APPROVE = os_env.get('DRIBDAT_TOOL_APPROVE', False)
     DRIBDAT_USER_APPROVE = os_env.get('DRIBDAT_USER_APPROVE', False)
     DRIBDAT_NOT_REGISTER = os_env.get('DRIBDAT_NOT_REGISTER', False)
 

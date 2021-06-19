@@ -129,11 +129,11 @@
 {% endif %}
 
 {% if submissions %}
-<div class="container">
+    <a name="challenges"></a>
     <h5 class="mt-5 text-center">Challenges</h5>
     <div class="profile-projects container-fluid">
         <div class="row flex-row flex-nowrap">
-        {% for project in challenges %}
+        {% for project in submissions %}
             <a class="col-5 card project"
                href="{{ url_for('project.project_view', project_id=project.id) }}">
 
@@ -146,7 +146,6 @@
         {% endfor %}
         </div>
     </div><!-- /profile-challenges -->
-</div>
 {% endif %}
 
 {% if user.my_goals %}
