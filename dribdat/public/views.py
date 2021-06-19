@@ -9,7 +9,7 @@ from dribdat.public.forms import LoginForm, UserForm
 from dribdat.database import db
 from dribdat.extensions import cache
 from dribdat.aggregation import GetEventUsers
-from dribdat.user import projectProgressList, isUserActive
+from dribdat.user import getProjectStages, isUserActive
 
 from datetime import datetime
 
@@ -66,10 +66,9 @@ def user(username):
         flash('This user account is under review. Please contact the organizing team if you have any questions.', 'warning')
     event = current_event()
     cert_path = user.get_cert_path(event)
-    # projects = user.projects
-    projects = user.joined_projects()
-    posts = user.latest_posts()
     submissions = user.posted_challenges()
+    projects = user.joined_projects(False)
+    posts = user.latest_posts()
     return render_template("public/userprofile.html", active="profile",
         current_event=event, event=event, user=user, cert_path=cert_path,
         projects=projects, submissions=submissions, posts=posts)
@@ -100,17 +99,7 @@ def event_participants(event_id):
 @blueprint.route("/event/<int:event_id>/instructions")
 def event_instructions(event_id):
     event = Event.query.filter_by(id=event_id).first_or_404()
-    steps = []
-    shown = []
-    for ix, p in enumerate(projectProgressList(True, False)):
-        # rrr = []
-        # for r in allres:
-        #     if r.progress_tip is not None and r.progress_tip == p[0]:
-        #         rrr.append(r)
-        #         shown.append(r.id)
-        steps.append({
-            'index': ix + 1, 'name': p[1], #'projects': rrr
-        })
+    steps = getProjectStages()
     return render_template("public/instructions.html",
         current_event=event, steps=steps, active="participants")
 

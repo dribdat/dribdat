@@ -79,30 +79,6 @@ def ProjectsByProgress(progress=None, event=None):
     projects = projects.filter_by(is_hidden=False)
     return projects.order_by(Project.category_id).all()
 
-def SuggestionsTreeForEvent(event=None):
-    """ Collect projects by progress """
-    allres = SuggestionsByProgress(None, event)
-    steps = []
-    shown = []
-    for ix, p in enumerate(projectProgressList(True, False)):
-        rrr = []
-        for r in allres:
-            if r.progress is not None and r.progress == p[0]:
-                rrr.append(r)
-                shown.append(r.id)
-        steps.append({
-            'index': ix + 1, 'name': p[1], 'projects': rrr
-        })
-    # show progress-less projects
-    rr0 = []
-    for r in allres:
-        if r.progress is None or not r.id in shown: rr0.append(r)
-    if len(rr0) > 0:
-        steps.append({
-            'name': '/etc', 'index': -1, 'projects': rr0
-        })
-    return steps
-
 def GetEventUsers(event):
     if not event.projects: return None
     users = []

@@ -1097,7 +1097,7 @@ Instruction page
   border: 4px dashed lightgray;
 }
 .instructions-page .step {
-  margin-top: 0.5em;
+  margin-top: 3em;
 }
 .instructions-page .step .title {
   padding: 3px;
@@ -1107,6 +1107,7 @@ Instruction page
   width: 100%;
   z-index: 1;
   cursor: pointer;
+  font-size: 200%;
 }
 .instructions-page .step:hover .title { opacity: 1.0; }
 .instructions-page .step.active .title { color: blue; }
@@ -1117,6 +1118,16 @@ Instruction page
   margin-top: -1rem;
   color: burlywood;
   font-weight: bold;
+}
+.instructions-page .step .agree-list,
+.instructions-page .step .subtitle {
+  margin: 0em 3em;
+  font-size: 125%;
+}
+.instructions-page .step .agree-list li {
+  clear: both;
+  list-style: square;
+  margin-left: -1em;
 }
 .instructions-page .step .resource-card {
   background: white;

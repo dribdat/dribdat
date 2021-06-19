@@ -15,6 +15,8 @@
   </div>
   {% endif %}
 
+  <h2 style="margin-top:2em">Project phases:</h2>
+
   <a name="steps"></a>
   {% for step in steps %}
     <div class="row step">
@@ -23,9 +25,20 @@
       {% else %}
         <div class="number">*</div>
       {% endif %}
-      {% if step.index > 0 or step.resources %}
-        <h4 class="title">{{ step.name }}</h4>
+
+      {% if step.index > 0 %}
+        <h3 class="title">{{ step.phase }}</h3>
+        <p class="subtitle"><b>{{ step.description }}</b></p>
       {% endif %}
+
+      {% if step.conditions %}
+      <ul class="agree-list row">
+        {% for what in step.conditions.agree %}
+          <li>{{ what }}</li>
+        {% endfor %}
+      </ul>
+      {% endif %}
+
       {% if step.projects %}
       <div class="project-list row">
 
