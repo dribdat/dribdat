@@ -515,8 +515,14 @@ class Project(PkModel):
             'webpage_url': self.webpage_url or '',
             'contact_url': self.contact_url or '',
             'logo_color': self.logo_color or '',
+            'readme': '',
+            'excerpt': '',
         }
         d['team'] = [ u.username for u in self.team() ]
+        if self.is_autoupdate:
+            d['readme'] = self.autotext[:300] + '...'
+        if len(self.longtext) > 10:
+            d['excerpt'] = self.longtext[:300] + '...'
         if self.user is not None:
             d['maintainer'] = self.user.username
         if self.event is not None:

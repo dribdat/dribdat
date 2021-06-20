@@ -238,7 +238,7 @@
 
   // Horizontal desktop dragging of project pages
   $('.profile-projects').each(function() {
-    ele = $(this)[0];
+    const ele = $(this)[0];
     // thanks to Nguyen Huu Phuoc
     ele.style.cursor = 'grab';
     let pos = { top: 0, left: 0, x: 0, y: 0 };

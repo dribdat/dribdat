@@ -15,9 +15,9 @@ stages:
           min: 10
           help: Your challenge must have a short summary.
         -
-          field: description
-          min: 500
-          help: At least 500 characters of description are needed.
+          field: excerpt
+          min: 144
+          help: At least 144 characters of pitch description are needed.
       agree:
         - The challenge is well documented, including links to data sources or contacts.
         - This challenge can be reasonably tackled within the time limits of the event.
@@ -30,9 +30,9 @@ stages:
       validate:
         -
           field: team
-          min: 2
-          max: 8
-          help: Your team needs to have between 2 and 8 members.
+          min: 1
+          max: 5
+          help: Between 1 and 5 members need to join your project.
         -
           field: contact_url
           test: validurl

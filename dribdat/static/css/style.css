@@ -44,6 +44,25 @@ form input[type="checkbox"] {
 .form-project-post textarea {
   height: 4em;
 }
+.form-project-post .checkbox input {
+  opacity: 1;
+}
+.form-project-post .checkbox input:checked {
+  opacity: 0;
+}
+.form-project-post .checkbox:before {
+  font-family: "FontAwesome";
+  font-weight: bold;
+  color: orange;
+  height: 1em;
+  content: '\f005';
+  margin-left: -.2em;
+  position: absolute;
+  font-size: 2em;
+  margin-top: -.36em;
+  z-index: -1;
+}
+
 .upload-note {
   font-size: 90%;
   margin: 1em 0;

@@ -80,7 +80,7 @@ def project_post(project_id):
         vf = v['field']
         if vf in project_data:
             if ('min' in v and len(project_data[vf]) >= v['min']) or \
-                ('max' in v and len(project_data[vf]) <= v['max']) or \
+                ('max' in v and v['min'] <= len(project_data[vf]) <= v['max']) or \
                 ('test' in v and v['test'] == 'validurl' and project_data[vf].startswith('http')):
                 v['valid'] = True
         if not v['valid']:
@@ -102,7 +102,7 @@ def project_post(project_id):
                     if a[0] == project.progress:
                         found_next = True
             else:
-                flash('Your project did not yet meet all stage requirements.', 'danger')
+                flash('Your project did not yet meet all stage requirements.', 'info')
         # Update project data
         del form.id
         del form.has_progress

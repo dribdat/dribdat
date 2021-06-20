@@ -44,6 +44,7 @@ def repl_onebox(mat=None, li=[]):
             project = Project.query.filter_by(id=project_id).first()
             if not project: return mat.group()
             pd = project.data
+            # project.url returns a relative path?
             pd['link'] = project_link
             return pystache.render(TEMPLATE_PROJECT, pd)
     return mat.group()
