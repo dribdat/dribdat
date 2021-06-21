@@ -5,13 +5,19 @@
 {% block body_class %}stages-page{% endblock %}
 
 {% block content %}
-<h1 class="huge">Projects by stage</h1>
+
+{% if current_event.lock_resources %}
+  <h1 class="huge">Resources</h1>
+
+{% else %}
+  <h1 class="huge">Projects by stage</h1>
 
   <p style="mt-2">
     See also: <a href="{{ url_for('public.event_instructions', event_id=current_event.id) }}#steps">
       <i class="fa fa-arrow-right" aria-hidden="true"></i>
       Details about stages</a>
   </p>
+{% endif %}
 
   <div class="list-stages">
   <a name="steps"></a>
@@ -62,10 +68,18 @@
   {% endfor %}
   </div>
 
+{% if current_event.lock_resources %}
+  <center class="mt-5">
+    <a class="btn btn-dark btn-lg" href="{{ url_for('public.home') }}">
+      <i class="fa fa-arrow-left" aria-hidden="true"></i>
+      Back to the future</a>
+  </center>
+{% else %}
   <center class="mt-5">
     <a class="btn btn-dark btn-lg" href="{{ url_for('public.event', event_id=current_event.id) }}">
       <i class="fa fa-arrow-left" aria-hidden="true"></i>
       Back to the future</a>
   </center>
+{% endif %}
 
 {% endblock %}

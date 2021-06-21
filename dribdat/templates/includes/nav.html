@@ -14,7 +14,7 @@
   <!-- Collect the nav links, forms, and other content for toggling -->
   <div class="collapse navbar-collapse" id="navbar-main-collapse">
     <ul class="navbar-nav navbar-left mr-auto nav-fill">
-      {% if event %}
+      {% if event and not event.lock_resources %}
         <li class="nav-item">
           <a class="nav-link {% if active == 'projects' %}active{% endif %}" href="{{ url_for('public.event', event_id=event.id) }}#top">
             <i class="fa fa-star"></i>

@@ -218,8 +218,8 @@ class Event(PkModel):
     community_embed = Column(db.UnicodeText(), nullable=True)
     certificate_path = Column(db.String(1024), nullable=True)
 
-    starts_at = Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)
-    ends_at = Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)
+    starts_at = Column(db.DateTime, nullable=True)
+    ends_at = Column(db.DateTime, nullable=True)
 
     is_hidden = Column(db.Boolean(), default=False)
     is_current = Column(db.Boolean(), default=False)

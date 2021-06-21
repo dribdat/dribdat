@@ -8,7 +8,9 @@
       {% endif %}
       <div class="section-header-content">
         <h3 class="event-name">{{ event.name }}</h3>
-        <div class="event-date">{{ event.date }}</div>
+        {% if not event.lock_resources %}
+          <div class="event-date">{{ event.date }}</div>
+        {% endif %}
         {% if event.location %}
           <div class="event-location">{{ event.location }}</div>
         {% endif %}

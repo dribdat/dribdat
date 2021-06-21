@@ -51,12 +51,15 @@ def home():
     else:
         events = Event.query
     events = events.filter(Event.is_hidden.isnot(True))
-    events = events.order_by(Event.starts_at.desc())
+    timed_events = events.filter(Event.lock_resources.isnot(True)).order_by(Event.starts_at.desc())
     today = datetime.utcnow()
-    events_next = events.filter(Event.starts_at > today).all()
-    events_past = events.filter(Event.ends_at < today).all()
+    events_next = timed_events.filter(Event.starts_at > today).all()
+    events_past = timed_events.filter(Event.ends_at < today).all()
+    resource_events = events.filter(Event.lock_resources).order_by(Event.name.asc()).all()
     return render_template("public/home.html",
-        events_next=events_next, events_past=events_past, current_event=cur_event)
+        events_next=events_next, events_past=events_past,
+        events_tips=resource_events,
+        current_event=cur_event)
 
 @blueprint.route('/user/<username>', methods=['GET'])
 def user(username):

@@ -1,4 +1,5 @@
 {% extends "layout.html" %}
+{% import "macros/_misc.html" as misc %}
 
 {% block page_title %}{{current_event.name}}{% endblock %}
 
@@ -77,7 +78,7 @@
 
 <div class="body-content">
 
-  {% if not current_event and not events_next and not events_past %}
+  {% if not current_event and not events_next and not events_past and not events_tips %}
     <div class="row start-event">
       <div class="col-lg-12 text-center">
         <h3>Looks like you are new to this - welcome!</h3>
@@ -90,40 +91,16 @@
   <h2 class="mt-4">Upcoming</h2>
   <div class="row events-next">
     {% for event in events_next %}
-    <div class="col-lg-4 an-event">
-      <div class="card">
-        {% if event.logo_url %}
-        <div class="card-img-top">
-          <img src="{{ event.logo_url }}" title="{{ event.hostname }}">
-        </div>
-        {% endif %}
-        <div class="card-body">
-          <i class="fa fa-code" style="float:right"></i>
-          <h3 class="card-title">
-            <a href="{{ url_for('public.event', event_id=event.id) }}">
-              {{event.name}}</a>
-          </h3>
-          <div class="card-text">
-            <p class="an-event-meta">
-              <b>{{ event.date }}</b>
-              <span>{{ event.location }}</span>
-            </p>
-            <p class="an-event-description">
-              {{event.summary or event.description|markdown|striptags|truncate(500)}}
-            </p>
-          </div>
-          <div class="btn-group an-event-actions" role="group">
-            {% if event.webpage_url %}
-              <a href="{{ event.webpage_url }}" class="btn btn-info">
-                Information</a>
-            {% endif %}
-            <a href="{{ url_for('public.event', event_id=event.id) }}" class="btn btn-warning">
-              Challenges
-            </a>
-          </div>
-        </div><!-- /.card-body -->
-      </div>
-    </div>
+      {{ misc.render_home_event(event) }}
+    {% endfor %}
+  </div><!-- /.row events-next -->
+  {% endif %}
+
+  {% if events_tips %}
+  <h2 class="mt-4">Resources</h2>
+  <div class="row events-tips">
+    {% for event in events_tips %}
+      {{ misc.render_home_event(event) }}
     {% endfor %}
   </div><!-- /.row events-next -->
   {% endif %}
@@ -132,36 +109,7 @@
   <h2 class="mt-4">Past events</h2>
   <div class="row events-past">
     {% for event in events_past %}
-    <div class="col-lg-4 an-event">
-      <div class="card">
-        {% if event.logo_url %}
-        <div class="card-img-top">
-          <img src="{{ event.logo_url }}" title="{{ event.hostname }}">
-        </div>
-        {% endif %}
-        <div class="card-body">
-          <i class="fa fa-code" style="float:right"></i>
-          <h3 class="card-title">
-            <a href="{{ url_for('public.event', event_id=event.id) }}">
-              {{event.name}}</a>
-          </h3>
-          <div class="card-text">
-            <p class="an-event-meta">
-              <b>{{ event.date }}</b>
-              <span>{{ event.location }}</span>
-            </p>
-            <p class="an-event-description">
-              {{event.summary or event.description|markdown|striptags|truncate(500)}}
-            </p>
-          </div>
-          <div class="btn-group an-event-actions" role="group">
-            <a href="{{ url_for('public.event', event_id=event.id) }}" class="btn btn-warning">
-              Results
-            </a>
-          </div>
-        </div><!-- /.card-body -->
-      </div>
-    </div>
+      {{ misc.render_home_event(event) }}
     {% endfor %}
   </div><!-- /.row events-past -->
   {% endif %}
