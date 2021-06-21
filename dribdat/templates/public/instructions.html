@@ -5,9 +5,11 @@
 {% block body_class %}instructions-page{% endblock %}
 
 {% block content %}
-<h1 class="huge">Instructions</h1>
+
 
   {% if current_event and current_event.instruction %}
+  <h1 class="huge">Instructions</h1>
+
   <div class="jumbotron event-instruction mt-3">
     <div class="content">
       {{current_event.instruction|markdown}}
@@ -15,17 +17,12 @@
   </div>
   {% endif %}
 
-  <!-- <h2>Project phases:</h2> -->
-
-  <a name="steps"></a>
-  <p style="mt-2">
-    See also: <a href="{{ url_for('public.event_stages', event_id=current_event.id) }}">
-      <i class="fa fa-arrow-right" aria-hidden="true"></i>
-      Projects by stage</a>
-  </p>
+  <h1>Stages</h1>
 
   <div class="list-stages">
+  <a name="steps"></a>
   {% for step in steps %}
+    {% if step.projects %}
     <div class="row step">
       {% if step.index > 0 %}
         <div class="number">{{ step.index }}</div>
@@ -35,30 +32,60 @@
 
       {% if step.index > 0 %}
         <h3 class="title">{{ step.phase }}</h3>
-        <p class="subtitle"><b>{{ step.description }}</b></p>
       {% endif %}
 
-      {% if step.conditions %}
-      <ul class="agree-list row">
-        {% for what in step.conditions.agree %}
-          <li>{{ what }}</li>
+      <div class="profile-projects container-fluid">
+        <div class="row flex-row flex-nowrap">
+        {% for project in step.projects %}
+            <a class="col-5 card project"
+               href="{{ url_for('project.project_view', project_id=project.id) }}">
+
+              {% if project.image_url %}
+                <img class="project-image" src="{{project.image_url}}">
+              {% endif %}
+
+              {% if project.score and not project.is_challenge %}
+              <div class="project-score">
+                <div class="progress" title="A score based on profile completeness and voting results">
+                  <div class="progress-bar" role="progressbar" aria-valuenow="{{project.score}}" aria-valuemin="0" aria-valuemax="70" style="width:{{project.score}}%">
+                    {{project.score}}
+                  </div>
+                </div>
+              </div>
+              {% endif %}
+
+              <div class="card-body">
+                <h5 class="card-title">{{ project.name }}</h5>
+                <p class="card-text">{{ project.summary }}</p>
+              </div>
+
+            </a>
         {% endfor %}
-      </ul>
-      {% endif %}
-
-      {% if step.projects %}
-      <div class="project-list row">
-
-      </div>
-      {% endif %}
+        </div>
+      </div><!-- /profile-projects -->
     </div>
+    {% endif %}
   {% endfor %}
   </div>
 
+  <p class="mt-5">
+    See also: <a href="{{ url_for('public.event_stages', event_id=current_event.id) }}">
+      <i class="fa fa-arrow-right" aria-hidden="true"></i>
+      About project stages</a>
+  </p>
+
+{% if current_event.lock_resources %}
+  <center class="mt-5">
+    <a class="btn btn-dark btn-lg" href="{{ url_for('public.home') }}">
+      <i class="fa fa-arrow-left" aria-hidden="true"></i>
+      Back to the future</a>
+  </center>
+{% else %}
   <center class="mt-5">
     <a class="btn btn-dark btn-lg" href="{{ url_for('public.event', event_id=current_event.id) }}">
       <i class="fa fa-arrow-left" aria-hidden="true"></i>
       Back to the future</a>
   </center>
+{% endif %}
 
 {% endblock %}
