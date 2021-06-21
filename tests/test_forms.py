@@ -15,7 +15,7 @@ class TestRegisterForm:
                             password='example', confirm='example')
 
         assert form.validate() is False
-        assert 'Username already registered' in form.username.errors
+        assert 'A user with this name already exists' in form.username.errors
 
 
     def test_validate_email_already_registered(self, user):

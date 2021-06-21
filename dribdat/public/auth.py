@@ -70,14 +70,8 @@ def register():
         form.email.data = request.args.get('email')
     if request.args.get('web') and not form.webpage_url.data:
         form.webpage_url.data = request.args.get('web')
-    user1 = User.query.filter_by(email=form.email.data).first()
-    if user1:
-        flash("A user account with this email already exists", 'warning')
-    sane_username = sanitize_input(form.username.data)
-    user1 = User.query.filter_by(username=sane_username).first()
-    if user1:
-        flash("A user account with this name already exists", 'warning')
-    elif form.validate_on_submit():
+    if form.validate_on_submit():
+        sane_username = sanitize_input(form.username.data)
         new_user = User.create(
                         username=sane_username,
                         email=form.email.data,
