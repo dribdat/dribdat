@@ -73,9 +73,13 @@ def register():
     user1 = User.query.filter_by(email=form.email.data).first()
     if user1:
         flash("A user account with this email already exists", 'warning')
+    sane_username = sanitize_input(form.username.data)
+    user1 = User.query.filter_by(username=sane_username).first()
+    if user1:
+        flash("A user account with this name already exists", 'warning')
     elif form.validate_on_submit():
         new_user = User.create(
-                        username=sanitize_input(form.username.data),
+                        username=sane_username,
                         email=form.email.data,
                         webpage_url=form.webpage_url.data,
                         password=form.password.data,
