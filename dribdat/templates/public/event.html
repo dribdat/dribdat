@@ -88,7 +88,7 @@
   {% if current_event.has_started and not current_event.has_finished %}
     {% if not current_user or not current_user.active %}
     <div category-id="infobox" class="category-container category-tip">
-      <center><h4><i class="fa fa-lightbulb-o"></i> &nbsp;The event has started! Explore the challenges above, then log in to get instructions and join projects.</h4></center>
+      <center><h4><i class="fa fa-lightbulb-o"></i> &nbsp;The event has started! Explore the challenges above, then log in to get instructed and join projects.</h4></center>
     </div>
     {% endif %}
   {% endif %}
@@ -120,17 +120,13 @@
       {% endif %}
     </a>
     {% if current_event.lock_resources %}
-      <a href="{{ url_for('public.event_instructions', event_id=current_event.id) }}" class="btn btn-lg btn-info">
+      <a href="{{ url_for('public.event_instruction', event_id=current_event.id) }}" class="btn btn-lg btn-info">
         <span>Resources by stage</span>
       </a>
     {% elif current_event.has_started %}
       <a href="{{ url_for('public.event_participants', event_id=current_event.id) }}" class="btn btn-lg btn-light">
         <i class="fa fa-user" aria-hidden="true"></i>
         <span>See who is who</span>
-      </a>
-      <a href="{{ url_for('public.event_instructions', event_id=current_event.id) }}" class="btn btn-lg btn-info">
-        <i class="fa fa-bell" aria-hidden="true"></i>
-        <span>Get resources</span>
       </a>
     {% endif %}
   </div>
@@ -142,16 +138,29 @@
   <div class="content">
     {{current_event.description|markdown}}
   </div>
+</div><!-- /.event-info -->
+{% endif %}
 
-  {% if current_event.community_embed %}
-  <div class="panel panel-default community-embed">
-    <a name="community"></a>
-    <div class="panel-body"><i class="fa fa-comment"></i>
-      {{current_event.community_embed|safe}}
-    </div>
+{% if current_event.instruction %}
+<div class="jumbotron event-instruction mt-2 mb-2">
+  <div class="content">
+    {{current_event.instruction|markdown}}
   </div>
-  {% endif %}
-</div><!-- /.jumbotron -->
+  <center class="mt-5 mb-0">
+    <a href="{{ url_for('public.event_instruction', event_id=current_event.id) }}#resources" class="btn btn-lg btn-info">
+      <i class="fa fa-cube" aria-hidden="true"></i>
+      Resources</a>
+  </center>
+</div>
+{% endif %}
+
+{% if current_event.community_embed %}
+<div class="panel panel-default community-embed">
+  <a name="community"></a>
+  <div class="panel-body"><i class="fa fa-comment"></i>
+    {{current_event.community_embed|safe}}
+  </div>
+</div>
 {% endif %}
 
 {% endcache %}
@@ -174,13 +183,17 @@
         <i class="fa fa-comment"></i>
         Community</a>
     {% endif %}
-    <a href="{{ url_for('public.event_instructions', event_id=current_event.id) }}" class="btn btn-default btn-sm">
+    <a href="{{ url_for('public.event_instruction', event_id=current_event.id) }}" class="btn btn-default btn-sm">
       <i class="fa fa-cube" aria-hidden="true"></i>
       <span>Resources</span>
     </a>
     <a href="{{ url_for('public.event_participants', event_id=current_event.id) }}" class="btn btn-default btn-sm">
-      <i class="fa fa-user" aria-hidden="true"></i>
-      <span>Participants</span>
+      <i class="fa fa-child" aria-hidden="true"></i>
+      <span>Contributors</span>
+    </a>
+    <a href="{{ url_for('public.dribs') }}" class="btn btn-default btn-sm">
+      <i class="fa fa-comment"></i>
+      Updates
     </a>
     {% if current_user and current_user.active and current_user.is_admin %}
       <a href="{{ url_for('admin.event', event_id=current_event.id) }}" class="btn btn-warning btn-sm">

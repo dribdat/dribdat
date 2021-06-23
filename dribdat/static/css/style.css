@@ -1110,15 +1110,16 @@ Challenges view
 Instruction page
 ---------------- */
 
-.instructions-page .jumbotron {
+.event-instruction,
+.instruction-page .jumbotron {
   padding: 2rem;
   border: 4px dashed lightgray;
 }
-.instructions-page .resource-list {
+.instruction-page .resource-list {
   margin: 0; padding: 0;
   margin-top: 1em;
 }
-.instructions-page .event-resources {
+.instruction-page .event-resources {
   padding: 2rem; margin: 0;
   font-size: 125%;
 }

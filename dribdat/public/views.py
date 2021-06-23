@@ -106,15 +106,19 @@ def event_stages(event_id):
     return render_template("public/stages.html",
         current_event=event, steps=steps, active="stages")
 
-@blueprint.route("/event/<int:event_id>/instructions")
-def event_instructions(event_id):
+@blueprint.route("/event/<int:event_id>/instruction")
+def event_instruction(event_id):
     event = Event.query.filter_by(id=event_id).first_or_404()
     steps = getProjectStages()
-    projects = Project.query.filter_by(event_id=event_id, is_hidden=False)
-    for s in steps:
-        s['projects'] = [ p.data for p in projects.filter_by(progress=s['id']).all() ]
-    return render_template("public/instructions.html",
-        current_event=event, steps=steps, active="instructions")
+    resource_events = Event.query.filter_by(lock_resources=True).all()
+    for e in resource_events:
+        projects = Project.query.filter_by(event_id=e.id, is_hidden=False)
+        for s in steps:
+            if not 'projects' in s: s['projects'] = []
+            project_list = [ p.data for p in projects.filter_by(progress=s['id']).all() ]
+            s['projects'].extend(project_list)
+    return render_template("public/instruction.html",
+        current_event=event, steps=steps, active="instruction")
 
 @blueprint.route("/dribs")
 def dribs():
