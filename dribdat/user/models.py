@@ -261,11 +261,6 @@ class Event(PkModel):
             "workPerformed":[ p.get_schema(host_url) for p in self.projects ]
         }
 
-    # TODO: allow this to be configured, add to schema above, show in footer
-    @property
-    def license(self):
-        return "http://creativecommons.org/licenses/by/4.0/"
-
     @property
     def url(self):
         return "event/%d" % (self.id)
@@ -357,10 +352,11 @@ class Project(PkModel):
     autotext = Column(db.UnicodeText(), nullable=True, default=u"")
     longtext = Column(db.UnicodeText(), nullable=False, default=u"")
 
-    hashtag = Column(db.String(40), nullable=True)
-
     logo_color = Column(db.String(7), nullable=True)
     logo_icon = Column(db.String(40), nullable=True)
+
+    license_name = Column(db.String(40), nullable=True)
+    license_url = Column(db.String(2048), nullable=True)
 
     created_at = Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)
     updated_at = Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)
@@ -700,3 +696,49 @@ class Activity(PkModel):
 
     def __repr__(self):
         return '<Activity({name})>'.format(name=self.name)
+
+
+class Component(PkModel):
+    """ Somewhat graph-like in principle """
+    __tablename__ = 'components'
+    rel = Column(db.Enum(
+        'forks',
+        'includes',
+        'uses_data',
+        'inspired_by',
+        name="of_type"))
+
+    timestamp = Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)
+    comment = Column(db.UnicodeText, nullable=True)
+    url = Column(db.String(2048), nullable=True)
+
+    source_project_id = reference_col('projects', nullable=False)
+    source_project = relationship('Project', backref='components')
+
+    target_project_id = reference_col('projects', nullable=True)
+    target_project = relationship('Project', backref='component_of')
+
+    @property
+    def data(self):
+        a = {
+            'id': self.id,
+            'date': self.timestamp,
+            'rel': self.rel,
+            'url': self.ref_url or '',
+            'comment': self.comment or '',
+            'source_id': self.source_project.id,
+            'source_name': self.source_project.name
+        }
+        if self.target_project:
+            a['target_id'] = self.target_project.id
+            a['target_name'] = self.target_project.name
+        return a
+
+    def __init__(self, project_id, **kwargs):
+        db.Model.__init__(
+            self, source_project_id=project_id,
+            **kwargs
+        )
+
+    def __repr__(self):
+        return '<Component({name})>'.format(name=self.source_project.name)

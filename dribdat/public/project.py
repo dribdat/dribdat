@@ -57,6 +57,30 @@ def project_edit(project_id):
     return render_template('public/projectedit.html',
         current_event=event, project=project, form=form)
 
+@blueprint.route('/<int:project_id>/link', methods=['GET', 'POST'])
+@login_required
+def components_add(project_id):
+    project = Project.query.filter_by(id=project_id).first_or_404()
+    event = project.event
+    starred = IsProjectStarred(project, current_user)
+    allow_edit = starred or (isUserActive(current_user) and current_user.is_admin)
+    if not allow_edit:
+        flash('You do not have access to edit this project.', 'warning')
+        return project_action(project_id, None)
+    component = Component()
+    form = NewComponentForm(obj=component, next=request.args.get('next'))
+    if form.validate_on_submit():
+        del form.id
+        form.populate_obj(component)
+        db.session.add(component)
+        db.session.commit()
+        cache.clear()
+        flash('Component added.', 'success')
+        # project_action(project_id, 'component', False)
+        return redirect(url_for('project.project_view', project_id=project.id))
+    return render_template('public/componentnew.html',
+        current_event=event, project=project, component=component, form=form)
+
 @blueprint.route('/<int:project_id>/post', methods=['GET', 'POST'])
 @login_required
 def project_post(project_id):
