@@ -28,7 +28,10 @@ from dribdat.utils import (
 )
 from dribdat.onebox import format_webembed
 from dribdat.user.constants import (
-    PR_CHALLENGE, getProjectPhase, getStageByProgress
+    PR_CHALLENGE,
+    getProjectPhase,
+    getResourceType,
+    getStageByProgress,
 )
 
 from sqlalchemy import Table, or_
@@ -681,9 +684,6 @@ class Activity(PkModel):
             a['project_name'] = self.project.name
             a['project_score'] = self.project_score or 0
             a['project_phase'] = getProjectPhase(self.project)
-        # if self.resource:
-        #     a['resource_id'] = self.resource_id
-        #     a['resource_type'] = getResourceType(self.resource)
         return a
 
     def __init__(self, name, project_id, **kwargs):
@@ -703,15 +703,9 @@ class Resource(PkModel):
     __tablename__ = 'resources'
     name = Column(db.String(80), nullable=False)
     type_id = Column(db.Integer(), nullable=True, default=0)
-        # 'forks', # source code forks
-        # 'proves', # demos or examples of
-        # 'permits', # licenses and terms
-        # 'includes', # libraries and resources
-        # 'uses_data', # databases and other sources
-        # 'built_with', # hardware components and modules
-        # 'inspired_by', # inspiration pure and simple
 
     created_at = Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)
+    # At which progress level did it become relevant
     progress_tip = Column(db.Integer(), nullable=True)
     # order = Column(db.Integer, nullable=True)
     source_url = Column(db.String(2048), nullable=True)
@@ -727,6 +721,10 @@ class Resource(PkModel):
     project = relationship('Project', backref='components')
 
     @property
+    def of_type(self):
+        return getResourceType(self)
+
+    @property
     def data(self):
         return {
             'id': self.id,
@@ -739,9 +737,9 @@ class Resource(PkModel):
             # 'project_name': self.project.name
         }
 
-    def __init__(self, project_id, **kwargs):
+    def __init__(self, name, project_id, **kwargs):
         db.Model.__init__(
-            self, source_project_id=project_id,
+            self, name=name, project_id=project_id,
             **kwargs
         )
 

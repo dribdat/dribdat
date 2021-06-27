@@ -113,3 +113,17 @@ class TestEvent:
         assert event.countdown is not None
         assert event.countdown == tz_event
         assert timesince(event.countdown, until=True) == "%d hours to go" % timediff_hours
+
+
+# @pytest.mark.usefixtures('db')
+# class TestResource:
+#     """Resource (Component) tests."""
+#
+#     def test_resource_collection(self, db):
+#         resourceA = Resource(name="Test A")
+#         resourceA.save()
+#
+#         assert resourceA.name == "Test A"
+#         assert getResourceType(resourceB) == 'Code'
+#         assert getResourceType(resourceC) == 'Other'
+#         assert getResourceType(resourceN) == 'Other'

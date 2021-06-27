@@ -3,7 +3,7 @@ from flask_wtf import FlaskForm
 from wtforms import (
     HiddenField, SubmitField, BooleanField,
     StringField, PasswordField, SelectField,
-    TextAreaField, RadioField,
+    TextAreaField, RadioField, IntegerField,
 )
 from wtforms.fields.html5 import (
     DateField, TimeField,
@@ -13,11 +13,11 @@ from wtforms.validators import AnyOf, DataRequired, length
 
 from datetime import time, datetime
 
-from dribdat.user.models import User, Project, Event, Role
+from dribdat.user.models import User, Project, Event, Role, Resource
 from ..user.validators import UniqueValidator
 from ..user import (
     USER_ROLE, USER_STATUS,
-    projectProgressList,
+    projectProgressList, resourceTypeList,
 )
 
 class UserForm(FlaskForm):
@@ -97,4 +97,16 @@ class RoleForm(FlaskForm):
     next = HiddenField()
     id = HiddenField('id')
     name = StringField(u'Name', [length(max=80), UniqueValidator(Role, 'name'), DataRequired()])
+    submit = SubmitField(u'Save')
+
+class ResourceForm(FlaskForm):
+    next = HiddenField()
+    id = HiddenField('id')
+    name = StringField(u'Name', [length(max=80), UniqueValidator(Resource, 'name'), DataRequired()])
+    project_id = IntegerField(u'Project id')
+    type_id = RadioField(u'Type', coerce=int, choices=resourceTypeList())
+    source_url = URLField(u'Link', [length(max=2048)], description=u'URL to download or get more information')
+    content = TextAreaField(u'Comment', description=u'Describe this resource in more detail, Markdown and HTML supported')
+    progress_tip = SelectField(u'Recommended at', coerce=int, choices=projectProgressList(True, True), description=u'Progress level at which to suggest this to teams')
+    is_visible = BooleanField(u'Approved and visible to participants')
     submit = SubmitField(u'Save')

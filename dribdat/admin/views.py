@@ -7,8 +7,12 @@ from ..utils import sanitize_input, load_event_presets
 from ..extensions import db, cache
 from ..decorators import admin_required
 from ..aggregation import GetProjectData, SyncProjectData
-from ..user.models import Role, User, Event, Project, Category
-from .forms import RoleForm, UserForm, EventForm, ProjectForm, CategoryForm
+from ..user.models import Role, User, Event, Project, Category, Resource
+from .forms import (
+    RoleForm, UserForm,
+    EventForm, ProjectForm,
+    CategoryForm, ResourceForm,
+)
 
 from datetime import datetime
 import random, string
@@ -554,3 +558,73 @@ def role_delete(role_id):
         role.delete()
         flash('Role deleted.', 'success')
     return redirect(url_for("admin.presets"))
+
+
+
+##############
+##############
+##############
+
+@blueprint.route('/resources')
+@blueprint.route('/resources/pp/<int:page>')
+@login_required
+@admin_required
+def resources(page=1):
+    resources = Resource.query.order_by(
+        Resource.id.desc()
+    ).paginate(page, per_page=10)
+    return render_template('admin/resources.html', data=resources, endpoint='admin.resources', active='resources')
+
+
+@blueprint.route('/resource/<int:resource_id>', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def resource(resource_id):
+    resource = Resource.query.filter_by(id=resource_id).first_or_404()
+    form = ResourceForm(obj=resource, next=request.args.get('next'))
+
+    if form.validate_on_submit():
+        form.populate_obj(resource)
+        db.session.add(resource)
+        db.session.commit()
+
+        cache.clear()
+        flash('Resource updated.', 'success')
+        return resources()
+
+    return render_template('admin/resource.html', resource=resource, form=form)
+
+@blueprint.route('/resource/new', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def resource_new():
+    resource = Resource()
+    form = ResourceForm(obj=resource, next=request.args.get('next'))
+
+    if form.validate_on_submit():
+        del form.id
+        form.populate_obj(resource)
+        resource.is_visible = True
+
+        db.session.add(resource)
+        db.session.commit()
+
+        cache.clear()
+        flash('Resource added.', 'success')
+        return resources()
+
+    return render_template('admin/resourcenew.html', form=form)
+
+
+@blueprint.route('/resource/<int:resource_id>/delete', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def resource_delete(resource_id):
+    resource = Resource.query.filter_by(id=resource_id).first_or_404()
+    # if resource.count_mentions() > 0:
+    #     flash('No projects may reference a resource in order to delete.', 'warning')
+    # else:
+    cache.clear()
+    resource.delete()
+    flash('Resource deleted.', 'success')
+    return redirect(url_for("admin.resources"))

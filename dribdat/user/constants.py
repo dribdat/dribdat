@@ -18,6 +18,29 @@ USER_STATUS = {
     ACTIVE: 'active',
 }
 
+# Resource types
+RESOURCE_TYPES = {
+    0: ('forks', "Forks the source of"),
+    1: ('proves', "Demo or example of"),
+    2: ('permits', "License or terms applied"),
+    3: ('includes', "Includes this library or resource"),
+    4: ('uses data', "Uses this data source"),
+    5: ('built with', "Uses this hardware component"),
+    6: ('inspired by', "Is inspired by this"),
+}
+
+def resourceTypeList(verbose=False):
+    vb = 1 if verbose else 0
+    pl = [(g, RESOURCE_TYPES[g][vb]) for g in RESOURCE_TYPES]
+    return sorted(pl, key=lambda x: x[0])
+
+def getResourceType(resource, verbose=False):
+    vb = 1 if verbose else 0
+    if resource is None: return ""
+    if resource.type_id is None: return RESOURCE_TYPES[0][vb]
+    if not resource.type_id in RESOURCE_TYPES: return ""
+    return RESOURCE_TYPES[resource.type_id][vb]
+
 # Project progress stages
 project_stages = load_yaml_presets('stages', 'name')
 PR_CHALLENGE = int(project_stages['CHALLENGE']['id'])

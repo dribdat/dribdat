@@ -7,6 +7,8 @@ from dribdat.user import isUserActive, projectProgressList
 from dribdat.database import db
 from dribdat.apifetch import * # TBR
 
+import json
+
 def GetProjectData(url):
     data = None
     if url.find('//gitlab.com') > 0:
@@ -58,6 +60,14 @@ def SyncProjectData(project, data):
     # Additional logs, if available
     if 'commits' in data:
         SyncCommitData(project, data['commits'])
+
+# The above, in one step
+def SyncResourceData(resource):
+    url = resource.source_url
+    dpdata = GetProjectData(url)
+    resource.sync_content = json.dumps(dpdata)
+    db.session.add(resource)
+    db.session.commit()
 
 def IsProjectStarred(project, current_user):
     if not isUserActive(current_user):

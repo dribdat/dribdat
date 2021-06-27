@@ -13,8 +13,8 @@ from wtforms.fields.html5 import (
 )
 from wtforms.validators import DataRequired, AnyOf, length
 from ..user.validators import UniqueValidator
-from ..user import projectProgressList
-from dribdat.user.models import User, Project
+from ..user import projectProgressList, resourceTypeList
+from dribdat.user.models import User, Project, Resource
 
 class LoginForm(FlaskForm):
     """Login form."""
@@ -110,3 +110,13 @@ class ProjectPost(FlaskForm):
     # resource = SelectField(u'Resources', coerce=int,
     #     description=u'Are you using one of these?')
     submit = SubmitField(u'Save post')
+
+class ResourceForm(FlaskForm):
+    """ For suggesting cool tools """
+    name = StringField(u'Name', [length(max=80), DataRequired()])
+    type_id = RadioField(u'Type', coerce=int, choices=resourceTypeList())
+    source_url = URLField(u'Link', [length(max=2048)],
+        description=u'URL to download or get more information.')
+    content = TextAreaField(u'Comment',
+        description=u'Describe how you use this resource in more detail, Markdown and HTML supported.')
+    submit = SubmitField(u'Suggest')
