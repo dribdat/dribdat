@@ -32,7 +32,6 @@ def project_view(project_id):
 @login_required
 def project_edit(project_id):
     project = Project.query.filter_by(id=project_id).first_or_404()
-    event = project.event
     starred = IsProjectStarred(project, current_user)
     allow_edit = starred or (isUserActive(current_user) and current_user.is_admin)
     if not allow_edit:
@@ -55,31 +54,70 @@ def project_edit(project_id):
         project_action(project_id, 'update', False)
         return redirect(url_for('project.project_view', project_id=project.id))
     return render_template('public/projectedit.html',
-        current_event=event, project=project, form=form)
+        current_event=project.event, project=project, form=form)
 
-@blueprint.route('/<int:project_id>/link', methods=['GET', 'POST'])
+@blueprint.route('/<int:project_id>/resource/add', methods=['GET', 'POST'])
 @login_required
-def components_add(project_id):
+def resource_add(project_id):
     project = Project.query.filter_by(id=project_id).first_or_404()
-    event = project.event
     starred = IsProjectStarred(project, current_user)
     allow_edit = starred or (isUserActive(current_user) and current_user.is_admin)
     if not allow_edit:
-        flash('You do not have access to edit this project.', 'warning')
+        flash('You do not have access to add a resource.', 'warning')
         return project_action(project_id, None)
-    component = Component()
-    form = NewComponentForm(obj=component, next=request.args.get('next'))
+    resource = Resource()
+    form = ResourceForm(obj=resource, next=request.args.get('next'))
     if form.validate_on_submit():
         del form.id
-        form.populate_obj(component)
-        db.session.add(component)
+        form.populate_obj(resource)
+        db.session.add(resource)
         db.session.commit()
         cache.clear()
-        flash('Component added.', 'success')
-        # project_action(project_id, 'component', False)
+        flash('Resource added.', 'success')
+        # project_action(project_id, 'resource', False)
         return redirect(url_for('project.project_view', project_id=project.id))
-    return render_template('public/componentnew.html',
-        current_event=event, project=project, component=component, form=form)
+    return render_template('public/resourcenew.html',
+        current_event=project.event, project=project, resource=resource, form=form)
+
+@blueprint.route('/<int:project_id>/resource/<int:resource_id>/edit', methods=['GET', 'POST'])
+@login_required
+def resource_edit(project_id, resource_id):
+    project = Project.query.filter_by(id=project_id).first_or_404()
+    resource = Resource.query.filter_by(id=resource_id).first_or_404()
+    starred = IsProjectStarred(project, current_user)
+    allow_edit = starred or (isUserActive(current_user) and current_user.is_admin)
+    if not allow_edit:
+        flash('You do not have access to edit this resource.', 'warning')
+        return project_action(project_id, None)
+    form = ResourceForm(obj=resource, next=request.args.get('next'))
+    if form.validate_on_submit():
+        del form.id
+        form.populate_obj(resource)
+        db.session.add(resource)
+        db.session.commit()
+        cache.clear()
+        flash('Resource updated.', 'success')
+        # project_action(project_id, 'resource', False)
+        return redirect(url_for('project.project_view', project_id=project.id))
+    return render_template('public/resourceedit.html',
+        current_event=project.event, project=project, resource=resource, form=form)
+
+@blueprint.route('/<int:project_id>/resource/<int:resource_id>/del', methods=['GET', 'POST'])
+@login_required
+def resource_delete(project_id, resource_id):
+    project = Project.query.filter_by(id=project_id).first_or_404()
+    resource = Resource.query.filter_by(id=resource_id).first_or_404()
+    starred = IsProjectStarred(project, current_user)
+    allow_edit = starred or (isUserActive(current_user) and current_user.is_admin)
+    if not allow_edit:
+        flash('You do not have access to edit this resource.', 'warning')
+        return project_action(project_id, None)
+    resource.is_hidden = True
+    db.session.add(resource)
+    db.session.commit()
+    flash('Resource removed.', 'success')
+    # project_action(project_id, 'resource-removed', False)
+    return redirect(url_for('project.project_view', project_id=project.id))
 
 @blueprint.route('/<int:project_id>/post', methods=['GET', 'POST'])
 @login_required

@@ -1,0 +1,21 @@
+{% from "macros/_form.html" import render_form %}
+
+{% extends "layout.html" %}
+
+{% block page_title %}Resource editor{% endblock %}
+{% block body_class %}resourceform{% endblock %}
+
+{% block content %}
+  <div>Edit a resource or component of
+    <h2>
+      <a class="project-link" href="{{ url_for('project.project_view', project_id=project.id) }}">{{project.name}}</a>
+    </h2>
+  </div>
+
+  <div class="form-resource">
+
+    {{ render_form(url_for('project.resource_edit', project_id=project.id), form) }}
+
+  </div>
+
+{% endblock %}

@@ -1,0 +1,21 @@
+{% from "macros/_form.html" import render_form %}
+
+{% extends "layout.html" %}
+
+{% block page_title %}Add resource{% endblock %}
+{% block body_class %}resourceform{% endblock %}
+
+{% block content %}
+  <div>Add a resource or component to
+    <h2>
+      <a class="project-link" href="{{ url_for('project.project_view', project_id=project.id) }}">{{project.name}}</a>
+    </h2>
+  </div>
+
+  <div class="form-resource">
+
+    {{ render_form(url_for('project.resource_add', project_id=project.id), form) }}
+
+  </div>
+
+{% endblock %}

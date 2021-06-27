@@ -218,8 +218,8 @@ class Event(PkModel):
     community_embed = Column(db.UnicodeText(), nullable=True)
     certificate_path = Column(db.String(1024), nullable=True)
 
-    starts_at = Column(db.DateTime, nullable=True, default=dt.datetime.utcnow)
-    ends_at = Column(db.DateTime, nullable=True, default=dt.datetime.utcnow)
+    starts_at = Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)
+    ends_at = Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)
 
     is_hidden = Column(db.Boolean(), default=False)
     is_current = Column(db.Boolean(), default=False)
@@ -337,6 +337,7 @@ class Project(PkModel):
     __tablename__ = 'projects'
     name = Column(db.String(80), unique=True, nullable=False)
     summary = Column(db.String(140), nullable=True)
+    hashtag = Column(db.String(40), nullable=True)
 
     image_url = Column(db.String(2048), nullable=True)
     source_url = Column(db.String(2048), nullable=True)
@@ -354,9 +355,6 @@ class Project(PkModel):
 
     logo_color = Column(db.String(7), nullable=True)
     logo_icon = Column(db.String(40), nullable=True)
-
-    license_name = Column(db.String(40), nullable=True)
-    license_url = Column(db.String(2048), nullable=True)
 
     created_at = Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)
     updated_at = Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)
@@ -531,6 +529,8 @@ class Project(PkModel):
 
     def get_schema(self, host_url=''):
         """ Schema.org compatible metadata """
+        # TODO: accurately detect project license based on component etc.
+        content_license = "https://creativecommons.org/licenses/by/4.0/" if "creativecommons" in self.event.community_embed else ''
         return {
             "@type": "CreativeWork",
             "name": self.name,
@@ -539,7 +539,7 @@ class Project(PkModel):
             "dateUpdated": format_date(self.updated_at, '%Y-%m-%dT%H:%M'),
             "discussionUrl": self.contact_url,
             "image": self.image_url,
-            "license": self.event.license,
+            "license": content_license,
             "url": host_url + self.url
         }
 
@@ -698,41 +698,46 @@ class Activity(PkModel):
         return '<Activity({name})>'.format(name=self.name)
 
 
-class Component(PkModel):
+class Resource(PkModel):
     """ Somewhat graph-like in principle """
-    __tablename__ = 'components'
-    rel = Column(db.Enum(
-        'forks',
-        'includes',
-        'uses_data',
-        'inspired_by',
-        name="of_type"))
+    __tablename__ = 'resources'
+    name = Column(db.String(80), nullable=False)
+    type_id = Column(db.Integer(), nullable=True, default=0)
+        # 'forks', # source code forks
+        # 'proves', # demos or examples of
+        # 'permits', # licenses and terms
+        # 'includes', # libraries and resources
+        # 'uses_data', # databases and other sources
+        # 'built_with', # hardware components and modules
+        # 'inspired_by', # inspiration pure and simple
 
-    timestamp = Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)
-    comment = Column(db.UnicodeText, nullable=True)
-    url = Column(db.String(2048), nullable=True)
+    created_at = Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)
+    progress_tip = Column(db.Integer(), nullable=True)
+    # order = Column(db.Integer, nullable=True)
+    source_url = Column(db.String(2048), nullable=True)
+    is_visible = Column(db.Boolean(), default=True)
 
-    source_project_id = reference_col('projects', nullable=False)
-    source_project = relationship('Project', backref='components')
+    # This is the text content of a comment or description
+    content = Column(db.UnicodeText, nullable=True)
+    # JSON blob of externally fetched structured content
+    sync_content = Column(db.UnicodeText, nullable=True)
 
-    target_project_id = reference_col('projects', nullable=True)
-    target_project = relationship('Project', backref='component_of')
+    # The project this is referenced in
+    project_id = reference_col('projects', nullable=True)
+    project = relationship('Project', backref='components')
 
     @property
     def data(self):
-        a = {
+        return {
             'id': self.id,
-            'date': self.timestamp,
-            'rel': self.rel,
-            'url': self.ref_url or '',
-            'comment': self.comment or '',
-            'source_id': self.source_project.id,
-            'source_name': self.source_project.name
+            'date': self.created_at,
+            'name': self.name,
+            'of_type': self.type_id,
+            'url': self.source_url or '',
+            'content': self.content or '',
+            'project_id': self.project_id,
+            # 'project_name': self.project.name
         }
-        if self.target_project:
-            a['target_id'] = self.target_project.id
-            a['target_name'] = self.target_project.name
-        return a
 
     def __init__(self, project_id, **kwargs):
         db.Model.__init__(
@@ -741,4 +746,4 @@ class Component(PkModel):
         )
 
     def __repr__(self):
-        return '<Component({name})>'.format(name=self.source_project.name)
+        return '<Resource({name})>'.format(name=self.name)

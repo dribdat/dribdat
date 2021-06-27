@@ -29,6 +29,6 @@ def upgrade():
 
 def downgrade():
     with op.batch_alter_table('events') as batch_op:
-        batch_op.drop_column('download_url')
-    with op.batch_alter_table('projects') as batch_op:
         batch_op.drop_column('summary')
+    with op.batch_alter_table('projects') as batch_op:
+        batch_op.drop_column('download_url')

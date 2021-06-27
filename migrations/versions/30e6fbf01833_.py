@@ -1,4 +1,4 @@
-"""empty message
+"""Activity users and project nullable
 
 Revision ID: 30e6fbf01833
 Revises: 1ba5ea3134a7
