@@ -1,0 +1,56 @@
+{% extends "layout.html" %}
+
+{% block page_title %}Project stages{% endblock %}
+
+{% block body_class %}stages-page{% endblock %}
+
+{% block content %}
+<h1 class="huge">Stages</h1>
+
+  <p class="mt-3">
+    This page details the requirements of projects as they progress through stages of development.
+    Use the <b>Post</b> button when your project is ready to advance to the next level! See also:
+    <a href="{{ url_for('public.event_instruction', event_id=current_event.id) }}">
+      <i class="fa fa-arrow-right" aria-hidden="true"></i>
+      Resources</a>
+  </p>
+
+  <a name="steps"></a>
+  <div class="list-stages">
+  {% for step in steps %}
+    <div class="row step">
+      {% if step.index > 0 %}
+        <div class="number">{{ step.index }}</div>
+      {% else %}
+        <div class="number">*</div>
+      {% endif %}
+
+      {% if step.index > 0 %}
+        <h3 class="title">{{ step.phase }}</h3>
+        <p class="subtitle"><b>{{ step.description }}</b></p>
+      {% endif %}
+
+      {% if step.conditions %}
+      <ul class="agree-list row">
+        {% for what in step.conditions.agree %}
+          <li>{{ what }}</li>
+        {% endfor %}
+      </ul>
+      {% endif %}
+
+      {% if step.projects %}
+      <div class="project-list row">
+
+      </div>
+      {% endif %}
+    </div>
+  {% endfor %}
+  </div>
+
+  <center class="mt-5">
+    <a class="btn btn-light btn-lg" href="{{ url_for('public.event', event_id=current_event.id) }}">
+      <i class="fa fa-arrow-left" aria-hidden="true"></i>
+      Back to the future</a>
+  </center>
+
+{% endblock %}

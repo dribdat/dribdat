@@ -5,8 +5,7 @@ import datetime as dt
 import pytest
 import pytz
 
-from dribdat.user.models import Role, User, Event, Resource
-from dribdat.user.constants import getResourceType
+from dribdat.user.models import Role, User, Event
 from dribdat.utils import timesince
 from dribdat.settings import Config
 
@@ -116,21 +115,15 @@ class TestEvent:
         assert timesince(event.countdown, until=True) == "%d hours to go" % timediff_hours
 
 
-@pytest.mark.usefixtures('db')
-class TestResource:
-    """Resource ('Component') tests."""
-
-    def test_resource_collection(self, db):
-        resourceA = Resource(name="Test A", type_id=100)
-        resourceA.save()
-        resourceB = Resource(name="Test B", type_id=200)
-        resourceB.save()
-        resourceC = Resource(name="Test C", type_id=0)
-        resourceC.save()
-        resourceN = Resource(name="Test N", type_id=None)
-        resourceN.save()
-
-        assert resourceA.name == "Test A"
-        assert getResourceType(resourceB) == 'Code'
-        assert getResourceType(resourceC) == 'Other'
-        assert getResourceType(resourceN) == 'Other'
+# @pytest.mark.usefixtures('db')
+# class TestResource:
+#     """Resource (Component) tests."""
+#
+#     def test_resource_collection(self, db):
+#         resourceA = Resource(name="Test A")
+#         resourceA.save()
+#
+#         assert resourceA.name == "Test A"
+#         assert getResourceType(resourceB) == 'Code'
+#         assert getResourceType(resourceC) == 'Other'
+#         assert getResourceType(resourceN) == 'Other'

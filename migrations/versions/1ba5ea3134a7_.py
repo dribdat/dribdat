@@ -29,7 +29,7 @@ def upgrade():
 def downgrade():
     with op.batch_alter_table('resources') as batch_op:
         batch_op.drop_column('event_id')
-        batch_op.drop_constraint('resources', type_='foreignkey')
+        # batch_op.drop_constraint('events', type_='foreignkey')
     with op.batch_alter_table('events') as batch_op:
         batch_op.alter_column(
             'instruction', new_column_name='resources'

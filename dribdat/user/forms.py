@@ -4,6 +4,8 @@ from wtforms import PasswordField, StringField
 from wtforms.validators import DataRequired, Email, EqualTo, Length
 from wtforms.fields.html5 import URLField, EmailField
 
+from dribdat.utils import sanitize_input
+
 from .models import User
 
 
@@ -29,9 +31,10 @@ class RegisterForm(FlaskForm):
         initial_validation = super(RegisterForm, self).validate()
         if not initial_validation:
             return False
-        user = User.query.filter_by(username=self.username.data).first()
+        sane_username = sanitize_input(self.username.data)
+        user = User.query.filter_by(username=sane_username).first()
         if user:
-            self.username.errors.append('Username already registered')
+            self.username.errors.append('A user with this name already exists')
             return False
         user = User.query.filter_by(email=self.email.data).first()
         if user:

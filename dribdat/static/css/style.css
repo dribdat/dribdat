@@ -44,6 +44,25 @@ form input[type="checkbox"] {
 .form-project-post textarea {
   height: 4em;
 }
+.form-project-post .checkbox input {
+  opacity: 1;
+}
+.form-project-post .checkbox input:checked {
+  opacity: 0;
+}
+.form-project-post .checkbox:before {
+  font-family: "FontAwesome";
+  font-weight: bold;
+  color: orange;
+  height: 1em;
+  content: '\f005';
+  margin-left: -.2em;
+  position: absolute;
+  font-size: 2em;
+  margin-top: -.36em;
+  z-index: -1;
+}
+
 .upload-note {
   font-size: 90%;
   margin: 1em 0;
@@ -55,11 +74,14 @@ form input[type="checkbox"] {
 .form-group .radio-inline {
   margin-right: 1em;
 }
+.admin .form-group .checkbox .help-inline {
+  display: block;
+}
 .admin .form-group .checkbox label {
   font-weight: bold;
 }
 .admin .form-group .checkbox label:hover {
-  background: highlight;
+  background: #ff3;
 }
 
 /* pagination */
@@ -435,6 +457,8 @@ nav .navbar-nav .nav-item {
 .project.hexagon:nth-child(even) { background-color: rgba(230, 200, 160, 0.95); }
 .project.hexagon:nth-child(odd) { background-color: rgba(230, 210, 200, 0.95); }
 
+/* --- Project page --- */
+
 .project-page .project-name {
   font-weight: bold;
   margin-top: 0.5em;
@@ -451,7 +475,7 @@ nav .navbar-nav .nav-item {
   font-weight: normal;
   color: #999;
 }
-.project-home .project-image {
+.project-home .project-image-container {
   margin-top: 10px;
   margin-bottom: -15px;
   height: 200px;
@@ -469,10 +493,10 @@ nav .navbar-nav .nav-item {
   border: 5px solid #ccc;
   margin-top: 1em;
 }
-.project-home .project-image.underlay {
+.project-home .project-image-container.underlay {
   filter: blur(2px);
 }
-.project-home .project-image.overlay {
+.project-home .project-image-container.overlay {
   opacity: 1.0;
 }
 .project-home #overlayImage {
@@ -529,6 +553,19 @@ nav .navbar-nav .nav-item {
 
 .project-page .project-longtext { margin: 1em 0em; font-size: 125%; }
 .project-page .project-autotext { margin: 0em; }
+
+.project-page .latest-drib { padding: 1em; }
+
+/* Hides the triangle pointers in the timeline */
+.project-page .timeline-card::after { display: none; }
+.project-page .timeline-img {
+  width: 30px; height: 2px;
+  background: #baa;
+  opacity: 1;
+  border-radius: 0;
+  margin-top: 25px;
+  margin-left: -15px;
+}
 
 .project-buttons { display: block; text-align: center; }
 .project-buttons .btn {
@@ -838,7 +875,7 @@ pre { color: #333; background: white; }
   text-align: left;
 }
 .category-info img {
-  width: 100%;
+  max-width: 100%;
 }
 .category-container {
   margin-top: 15px;
@@ -846,14 +883,6 @@ pre { color: #333; background: white; }
 }
 .category-tip { opacity: 0.6; }
 
-.event-resources {
-  padding: 2rem;
-  margin-bottom: 0px;
-  margin-top: 40px;
-  text-align: left;
-  background: white;
-  font-size: 125%;
-}
 .event-participants.jumbotron {
   padding: 2rem;
   border: 4px dashed lightgray;
@@ -878,68 +907,14 @@ pre { color: #333; background: white; }
   }
 }
 
-/* resource page */
+/* dribs page */
 
-.dribs-page .jumbotron,
-.resource-page .jumbotron,
-.resources-page .jumbotron {
+.dribs-page .jumbotron {
   padding: 2rem;
   border: 4px dashed lightgray;
 }
-.resources-page .step {
-  margin-top: 0.5em;
-}
-.resources-page .step .title {
-  padding: 3px;
-  margin-left: 2rem;
-  display: block;
-  opacity: 0.7;
-  width: 100%;
-  z-index: 1;
-  cursor: pointer;
-}
-.resources-page .step:hover .title { opacity: 1.0; }
-.resources-page .step.active .title { color: blue; }
-.resources-page .step .number {
-  font-size: 3rem;
-  position: absolute;
-  z-index: 0;
-  margin-top: -1rem;
-  color: burlywood;
-  font-weight: bold;
-}
-.resources-page .step .resource-card {
-  background: white;
-  margin: 1px -1px;
-  min-height: 7em;
-  min-width: 16em;
-  vertical-align: top;
-}
-.resources-page .resource-list {
-  margin: 0; padding: 0;
-  margin-top: 1em;
-}
-.resources-page .event-resources {
-  padding: 2rem; margin: 0;
-  font-size: 125%;
-}
-.resource-page .resource-summary,
-.resource-page .resource-content {
-  margin: 20pt;
-}
-.resource-page .resource-projects {
-  padding-top: 1em;
-  border-top: 1px solid #999;
-}
-.resource-page .resource-tip {
-  text-align: center;
-}
-.resource-page .resource-tip::before {
-  content: "*"; font-size: 200%;
-  color: goldenrod;
-}
 
-/* tip section used in resources and elsewhere */
+/* tip section */
 
 .join-tip {
   padding: 0.5em;
@@ -1145,6 +1120,71 @@ Challenges view
 }
 .list-data a.list-group-item:nth-child(1) {
     border-top: 1px solid #333;
+}
+
+/* -------------
+Instruction page
+---------------- */
+
+.event-instruction,
+.instruction-page .jumbotron {
+  padding: 2rem;
+  border: 4px dashed lightgray;
+}
+.instruction-page .resource-list {
+  margin: 0; padding: 0;
+  margin-top: 1em;
+}
+.instruction-page .event-resources {
+  padding: 2rem; margin: 0;
+  font-size: 125%;
+}
+
+.list-stages .step {
+  margin-top: 3em;
+}
+.list-stages .step .title {
+  padding: 3px;
+  margin-left: 2rem;
+  display: block;
+  opacity: 0.7;
+  width: 100%;
+  z-index: 1;
+  cursor: pointer;
+  font-size: 200%;
+}
+.list-stages .step:hover .title { opacity: 1.0; }
+.list-stages .step.active .title { color: blue; }
+.list-stages .step .number {
+  font-size: 3rem;
+  position: absolute;
+  z-index: 0;
+  margin-top: -1rem;
+  color: burlywood;
+  font-weight: bold;
+}
+.list-stages .step .agree-list,
+.list-stages .step .subtitle {
+  margin: 0em 3em;
+  font-size: 125%;
+}
+.list-stages .step .agree-list li {
+  clear: both;
+  list-style: square;
+  margin-left: -1em;
+}
+.list-stages .step .card {
+  background: white;
+  margin: 1px -1px;
+  min-height: 7em;
+  min-width: 16em;
+  vertical-align: top;
+}
+.form-project-stage {
+  margin-top: 1em;
+  font-size: 125%;
+  border: 3px dashed lightgray;
+  padding: 1em;
 }
 
 /* ------------

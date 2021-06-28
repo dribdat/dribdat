@@ -39,7 +39,6 @@ The following options can be used to toggle **application features**:
 * `DRIBDAT_APIKEY` - for connecting clients to the remote [API](#api)
 * `DRIBDAT_USER_APPROVE` - set to True so that any new non-SSO accounts are inactive until approved by an admin
 * `DRIBDAT_NOT_REGISTER` - set to True to hide the registration, so new users can only join this server via SSO
-* `DRIBDAT_TOOL_APPROVE` - set to True for suggested Resources to not immediately appear
 * `DRIBDAT_THEME` - can be set to one of the [Bootswatch themes](https://bootswatch.com/)
 * `DRIBDAT_STYLE` - provide the address to a CSS stylesheet for custom global styles
 * `DRIBDAT_CLOCK` - use 'up' or 'down' to change the position, or 'off' to hide the countdown clock
@@ -70,7 +69,7 @@ For **uploading images** and other files directly within dribdat, you can config
 * `S3_ENDPOINT` - alternative endpoint for self-hosted Object Storage
 * `MAX_CONTENT_LENGTH` - defaults to 1048576 bytes (1 MB) file size
 
-To customize some of the default content, you can edit the template include files, for example the default [quickstart](dribdat/templates/includes/quickstart.md) or [stages](dribdat/templates/includes/stages.csv) - as long as you're not limited by ephemeral storage of your deployment.
+To customize some of the default content, you can edit the template include files, for example the default [quickstart](dribdat/templates/includes/quickstart.md) or [stages](dribdat/templates/includes/stages.yaml) - as long as you're not limited by ephemeral storage of your deployment.
 
 ## API
 

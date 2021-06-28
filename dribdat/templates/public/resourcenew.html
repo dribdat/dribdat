@@ -2,12 +2,20 @@
 
 {% extends "layout.html" %}
 
-{% block page_title %}Share a tip{% endblock %}
-{% block body_class %}projectform{% endblock %}
+{% block page_title %}Add resource{% endblock %}
+{% block body_class %}resourceform{% endblock %}
 
 {% block content %}
-<div class="container">
-    <h2 class="huge">Suggest a resource</h2>
-    {{ render_form(url_for('public.resource_post'), form) }}
-</div>
+  <div>Add a resource or component to
+    <h2>
+      <a class="project-link" href="{{ url_for('project.project_view', project_id=project.id) }}">{{project.name}}</a>
+    </h2>
+  </div>
+
+  <div class="form-resource">
+
+    {{ render_form(url_for('project.resource_add', project_id=project.id), form) }}
+
+  </div>
+
 {% endblock %}

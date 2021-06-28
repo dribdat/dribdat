@@ -41,6 +41,7 @@ tests/.cache
 .project
 .pydevproject
 /*.db
+.idea/
 
 # Complexity
 output/*.html

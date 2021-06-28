@@ -44,19 +44,20 @@ def repl_onebox(mat=None, li=[]):
             project = Project.query.filter_by(id=project_id).first()
             if not project: return mat.group()
             pd = project.data
+            # project.url returns a relative path?
             pd['link'] = project_link
             return pystache.render(TEMPLATE_PROJECT, pd)
     return mat.group()
 
 def make_onebox(raw_html):
-    url = re.escape(url_for('.home', _external=True))
+    url = re.escape(url_for('public.home', _external=True))
     regexp = re.compile('<a href="(%s.+?)">(%s.+?)</a>' % (url, url))
     return re.sub(regexp, repl_onebox, raw_html)
 
 def make_oembedplus(text, oembed_providers, **params):
     lines = text.splitlines()
     parsed = []
-    home_url = re.escape(url_for('.home', _external=True))
+    home_url = re.escape(url_for('public.home', _external=True))
     home_url_re = re.compile('(%s.+)' % home_url)
     for line in lines:
         if home_url_re.match(line):

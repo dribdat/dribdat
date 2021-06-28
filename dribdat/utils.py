@@ -4,7 +4,8 @@ from flask import flash, current_app
 from datetime import datetime
 from math import floor
 from os import path
-import pytz, re, csv
+
+import pytz, re, csv, yaml
 
 def sanitize_input(text):
     """ Removes unsavoury characters """
@@ -93,11 +94,23 @@ def load_event_presets():
 """ Load structured settings from a CSV file """
 def load_csv_presets(filename, by_col='name'):
     fn = path.join(path.join(path.join(
-        path.dirname(__file__),
-            'templates'), 'includes'), filename + '.csv')
+        path.dirname(__file__), 'templates'), 'includes'), filename + '.csv')
     settings_dict = {}
     with open(fn, mode='r') as file:
         csvreader = csv.DictReader(file, delimiter=';')
         for row in csvreader:
+            settings_dict[row[by_col]] = row
+    return settings_dict
+
+""" Load structured settings from a YAML file """
+def load_yaml_presets(filename, by_col='name'):
+    # Expects filename to not have an extension
+    # and be equivalent to the top level element
+    fn = path.join(path.join(path.join(
+        path.dirname(__file__), 'templates'), 'includes'), filename + '.yaml')
+    settings_dict = {}
+    with open(fn, mode='r') as file:
+        stages = yaml.safe_load(file)
+        for row in stages[filename]:
             settings_dict[row[by_col]] = row
     return settings_dict

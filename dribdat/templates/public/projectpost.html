@@ -6,14 +6,61 @@
 {% block body_class %}projectform{% endblock %}
 
 {% block content %}
-  <h2>Drib on
-    <a class="project-link" href="{{ url_for('public.project', project_id=project.id) }}">{{project.name}}</a>
+  <h2>Drib about
+    <a class="project-link" href="{{ url_for('project.project_view', project_id=project.id) }}" target="_blank">{{project.name}}</a>
   </h2>
+
   <div class="form-project-post">
 
-    {{ render_form(url_for('public.project_post', project_id=project.id), form) }}
+    {{ render_form(url_for('project.project_post', project_id=project.id), form) }}
 
-    <p class="text-center mt-3 bigger"><b>&#128161;</b> You can suggest
-      <a href="{{ url_for('public.resource_post') }}" target="_blank">more resources</a> here.</p>
   </div>
+
+  {% if stage %}
+  {% if all_valid and stage['name'] == 'LIVE' %}
+    <div style="margin-top:1em" class="alert alert-success" role="alert">
+      <i class="fa fa-thumbs-up"></i>
+      Your project is ready for action!
+    </div>
+  {% else %}
+  <div class="form-project-stage" style="{% if all_valid %}border-color:lightgreen{% endif %}">
+    {% if all_valid %}
+      <h4 class="text-center mb-3">
+        &#128640; Ready for the next level?
+      </h4>
+      {% for item in stage.conditions.agree %}
+        <label style="clear:both;margin-top:0.5em"><input type="checkbox">&nbsp;{{ item }}</label>
+      {% endfor %}
+    {% endif %}
+    {% for item in stage.conditions.validate %}
+      {% if item.valid %}
+        <div style="margin-top:0.5em" class="alert alert-success" role="alert">
+          <i class="fa fa-thumbs-up"></i>
+          {{ item.help }}
+        </div>
+      {% else %}
+        <div style="margin-top:0.5em" class="alert alert-warning" role="alert">
+          <i class="fa fa-paw"></i>
+          {{ item.help }}
+        </div>
+      {% endif %}
+    {% endfor %}
+
+    <p class="text-center mt-3 mb-0"><small>
+      For more information, see
+      <a href="{{ url_for('public.event_stages', event_id=current_event.id) }}" target="_blank">
+        <i class="fa fa-arrow-right" aria-hidden="true"></i>
+        Stages</a>
+    </small></p>
+  </div>
+  {% endif %}
+  {% endif %}
+
+  <center class="mt-3">
+  <a href="{{ url_for('project.project_view', project_id=project.id) }}"
+     title="Cancel" class="btn btn-light"
+     onclick="if(!window.confirm('Your edits will not be saved - continue?')) return false">
+    <i class="fa fa-arrow-left" aria-hidden="true"></i> Cancel &amp; return to project
+  </a>
+  </center>
 {% endblock %}

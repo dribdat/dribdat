@@ -42,7 +42,7 @@ For more user-facing guidance, see the [User's Guide](USAGE.md) and installation
 
 ### Schema
 
-One starts an **Event**, to which Challenges (= Ideas) are added. These can take the form of **Projects** (at progress level 0), or **Categories**. A team is made of up of any number of **Users** who have certain organizer-defined **Roles** and have joined a **Project**. **Resources** can be added to a Project by attaching one to a **Post**.
+One starts an **Event**, to which Challenges (= Ideas) are added. These can take the form of **Projects** (at progress level 0), or **Categories**. A team is made of up of any number of **Users** who have certain organizer-defined **Roles** and have joined a **Project**.
 
 The main models are represented here:
 

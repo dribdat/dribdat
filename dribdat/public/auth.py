@@ -70,12 +70,10 @@ def register():
         form.email.data = request.args.get('email')
     if request.args.get('web') and not form.webpage_url.data:
         form.webpage_url.data = request.args.get('web')
-    user1 = User.query.filter_by(email=form.email.data).first()
-    if user1:
-        flash("A user account with this email already exists", 'warning')
-    elif form.validate_on_submit():
+    if form.validate_on_submit():
+        sane_username = sanitize_input(form.username.data)
         new_user = User.create(
-                        username=sanitize_input(form.username.data),
+                        username=sane_username,
                         email=form.email.data,
                         webpage_url=form.webpage_url.data,
                         password=form.password.data,
@@ -156,7 +154,7 @@ def get_or_create_sso_user(sso_id, sso_name, sso_email, sso_webpage=''):
     sso_id = str(sso_id)
     user = User.query.filter_by(sso_id=sso_id).first()
     if not user:
-        if current_user and current_user.active:
+        if isinstance(current_user, User) and current_user.active:
             user = current_user
             user.sso_id = sso_id
         else:

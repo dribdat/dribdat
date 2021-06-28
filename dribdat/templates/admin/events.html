@@ -22,20 +22,23 @@
                   Action ...
                 </button>
                 <div class="dropdown-menu" aria-labelledby="evMenu{{ event.id }}">
-                  <a href="{{ url_for('admin.event_projects', event_id=event.id) }}" class="dropdown-item">
-                    Projects
-                  </a>
                   <a href="{{ url_for('admin.event_print', event_id=event.id) }}" class="dropdown-item">
                     Print
                   </a>
                   <a href="{{ url_for('public.event', event_id=event.id) }}" class="dropdown-item">
-                    Public view
+                    Projects
+                  </a>
+                  <a href="{{ url_for('public.event_instruction', event_id=event.id) }}" class="dropdown-item">
+                    Resources
                   </a>
                   <a href="{{ url_for('public.dashboard', event_id=event.id) }}" class="dropdown-item">
                     Dashboard
                   </a>
                   <a href="{{ url_for('public.event', event_id=event.id, _external=True) }}?embed=1" class="dropdown-item" id="embed-link">
                     Embed view
+                  </a>
+                  <a href="{{ url_for('admin.event_projects', event_id=event.id) }}" class="dropdown-item">
+                    Project admin
                   </a>
                   <a href="{{ url_for('api.info_event_hackathon_json', event_id=event.id) }}" class="dropdown-item">
                     Projects (JSON)
@@ -50,7 +53,7 @@
               </div>
             </td>
             <td>
-              <a href="{{ url_for('admin.event', event_id=event.id) }}#EOF" style="float:right">
+              <a href="{{ url_for('admin.event', event_id=event.id) }}" style="float:right">
               {% if event.is_current %}
                 <span class="btn btn-warning btn-sm">Current</span>
               {% endif %}
@@ -61,21 +64,24 @@
                 <span title="Creating locked" class="btn btn-dark btn-sm">Lock</span>
               {% endif %}
               {% if event.lock_resources %}
-                <span title="Suggesting locked" class="btn btn-dark btn-sm">Stun</span>
+                <span title="Projects are considered global resources" class="btn btn-dark btn-sm">Resource</span>
               {% endif %}
               {% if event.is_hidden %}
                 <span class="btn btn-dark btn-sm">Hidden</span>
               {% endif %}
               </a>
 
-              <a href="{{ url_for('admin.event', event_id=event.id) }}">
+              <a href="{{ url_for('public.event', event_id=event.id) }}">
                 {{ event.name }}
               </a>
             </td>
             <td>{{ event.starts_at|format_date }}</td>
             <td>{{ event.ends_at|format_date }}</td>
-            <td>
-              <a href="{{ url_for('admin.event_projects', event_id=event.id) }}" class="btn btn-primary">
+            <td class="btn-group">
+              <a href="{{ url_for('admin.event', event_id=event.id) }}" class="btn btn-primary">
+                Edit
+              </a>
+              <a href="{{ url_for('admin.event_projects', event_id=event.id) }}" class="btn btn-info">
                 {{ event.project_count }}&nbsp;projects
               </a>
             </td>

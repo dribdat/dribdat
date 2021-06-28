@@ -100,7 +100,7 @@
         <div class="row flex-row flex-nowrap">
         {% for project in projects %}
             <a class="col-5 card project"
-               href="{{ url_for('public.project', project_id=project.id) }}">
+               href="{{ url_for('project.project_view', project_id=project.id) }}">
 
               {% if project.image_url %}
                 <img class="project-image" src="{{project.image_url}}">
@@ -129,21 +129,23 @@
 {% endif %}
 
 {% if submissions %}
-<div class="container">
-    <h5 class="mt-5 text-center">Resources</h5>
-    <div class="resource-list row">
-    {% for resource in submissions %}
-        {% if resource.is_visible %}
-        <a class="col resource-card" href="{{ url_for('public.resource', resource_id=resource.id) }}">
-            <i title="{{resource.of_type}}"
-            class="fa fa-{{resource.icon}}"></i>
-            <b>{{resource.name}}</b>
-            <p>{{resource.summary}}</p>
-        </a>
-        {% endif %}
-    {% endfor %}
-    </div>
-</div>
+    <a name="challenges"></a>
+    <h5 class="mt-5 text-center">Challenges</h5>
+    <div class="profile-projects container-fluid">
+        <div class="row flex-row flex-nowrap">
+        {% for project in submissions %}
+            <a class="col-5 card project"
+               href="{{ url_for('project.project_view', project_id=project.id) }}">
+
+              <div class="card-body">
+                <h5 class="card-title">{{ project.name }}</h5>
+                <p class="card-text">{{ project.summary }}</p>
+              </div>
+
+            </a>
+        {% endfor %}
+        </div>
+    </div><!-- /profile-challenges -->
 {% endif %}
 
 {% if user.my_goals %}
@@ -165,7 +167,7 @@
     <div class="timeline-img"></div>
     <div class="timeline-content timeline-card js--fadeInBottom">
       <div class="timeline-img-header">
-        <a href="{{ url_for('public.project', project_id=s.project_id) }}">
+        <a href="{{ url_for('project.project_view', project_id=s.project_id) }}">
           <h2>{{s.project_name}}</h2>
         </a>
       </div>

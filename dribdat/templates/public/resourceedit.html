@@ -2,12 +2,20 @@
 
 {% extends "layout.html" %}
 
-{% block page_title %}Resources edit{% endblock %}
-{% block body_class %}projectform{% endblock %}
+{% block page_title %}Resource editor{% endblock %}
+{% block body_class %}resourceform{% endblock %}
 
 {% block content %}
-<div class="container">
-    <h2>Edit component</h2>
-    {{ render_form(url_for('public.resource_edit', resource_id=resource.id), form) }}
-</div>
+  <div>Edit a resource or component of
+    <h2>
+      <a class="project-link" href="{{ url_for('project.project_view', project_id=project.id) }}">{{project.name}}</a>
+    </h2>
+  </div>
+
+  <div class="form-resource">
+
+    {{ render_form(url_for('project.resource_edit', project_id=project.id), form) }}
+
+  </div>
+
 {% endblock %}

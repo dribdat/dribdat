@@ -63,10 +63,24 @@
           $('input#source_url').val(data.source_url);
         if (!$('input#contact_url').val())
           $('input#contact_url').val(data.contact_url);
+        if (!$('input#download_url').val())
+          $('input#download_url').val(data.download_url);
         if (!$('input#image_url').val())
           $('input#image_url').val(data.image_url);
       });
       return true;
+    });
+  });
+
+  // Allow project progress on acknowledge
+  $('.form-project-post label[for="has_progress"]').each(function() {
+    var vparent = $(this).parent().parent().hide();
+    var vinput = $(this).parent().find('input')[0];
+    vinput.checked = false;
+    $('.form-project-stage input[type="checkbox"]').click(function() {
+      vparent.show();
+      all_checked = $('.form-project-stage input[type="checkbox"]:not(:checked)').length === 0;
+      vinput.checked = all_checked;
     });
   });
 
@@ -79,7 +93,7 @@
   });
 
   // Check image size on render
-  $('.project-home .project-image').each(function() {
+  $('.project-home .project-image-container').each(function() {
     var $self = $(this);
     var url = $self.data('href');
     if (url.length<6) return;
@@ -214,20 +228,46 @@
   if ($navCategories.length === 1)
     $navCategories.click().parent().parent().hide();
 
-  // Roll up resources on overview page
-  if ($('.resources-page .step .resource-card').length > 16) {
-    $('.resources-page .step .resource-list').hide().parent()
-      .addClass('active').click(function() {
-        $(this).find('.resource-list').slideDown();
-      });
-  }
-
   // Show embed code when button clicked
   $('#embed-link').click(function(e) {
     e.preventDefault(); e.stopPropagation();
     var url = $(this).attr('href') + '?embed=1';
     var code = '<iframe src="' + url + '" style="width:100%;height:320px;background:transparent;border:none;overflow:hidden" scrolling="no"></iframe>';
-    window.prompt('Share the event link in social media, or copy and paste this HTML code to embed on your site:', code);
+    window.prompt('Share the event link in social media, or copy and paste this HTML code to embed on your site. For even better embedding, visit github.com/dribdat/backboard', code);
+  });
+
+  // Horizontal desktop dragging of project pages
+  $('.profile-projects').each(function() {
+    const ele = $(this)[0];
+    // thanks to Nguyen Huu Phuoc
+    ele.style.cursor = 'grab';
+    let pos = { top: 0, left: 0, x: 0, y: 0 };
+    const mouseDownHandler = function(e) {
+        ele.style.cursor = 'grabbing';
+        ele.style.userSelect = 'none';
+        pos = {
+            left: ele.scrollLeft,
+            top: ele.scrollTop,
+            // Get the current mouse position
+            x: e.clientX,
+            y: e.clientY,
+        };
+        document.addEventListener('mousemove', mouseMoveHandler);
+        document.addEventListener('mouseup', mouseUpHandler);
+    };
+    const mouseMoveHandler = function(e) {
+        const dx = e.clientX - pos.x;
+        const dy = e.clientY - pos.y;
+        ele.scrollTop = pos.top - dy;
+        ele.scrollLeft = pos.left - dx;
+    };
+    const mouseUpHandler = function() {
+        ele.style.cursor = 'grab';
+        ele.style.removeProperty('user-select');
+        document.removeEventListener('mousemove', mouseMoveHandler);
+        document.removeEventListener('mouseup', mouseUpHandler);
+    };
+    ele.addEventListener('mousedown', mouseDownHandler);
   });
 
   // Show project history

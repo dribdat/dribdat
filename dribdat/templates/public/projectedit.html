@@ -14,7 +14,7 @@
   </button>
   {% endif %}
 
-  {{ render_form(url_for('public.project_edit', project_id=project.id), form) }}
+  {{ render_form(url_for('project.project_edit', project_id=project.id), form) }}
 
   <!-- Upload dialog -->
   <div class="modal fade uploader" id="uploadImage" tabindex="-1" role="dialog" aria-labelledby="uploadLabel" aria-hidden="true">

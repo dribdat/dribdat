@@ -13,7 +13,7 @@ from wtforms.fields.html5 import (
 )
 from wtforms.validators import DataRequired, AnyOf, length
 from ..user.validators import UniqueValidator
-from ..user import resourceTypeList, projectProgressList
+from ..user import projectProgressList, resourceTypeList
 from dribdat.user.models import User, Project, Resource
 
 class LoginForm(FlaskForm):
@@ -61,12 +61,12 @@ class ProjectNew(FlaskForm):
     id = HiddenField('id')
     name = StringField(u'Title', [length(max=80), UniqueValidator(Project, 'name'), DataRequired()],
         description=u'A short team name or project title - you may change this later.')
-    summary = StringField(u'Summary', [length(max=120)],
-        description="The headline of your project, in up to 120 characters.")
+    summary = StringField(u'Summary', [length(max=140)],
+        description="The headline of your project, in up to 140 characters.")
     category_id = SelectField(u'Category', coerce=int, description=u'Select the challenge you plan to address.')
-    contact_url = StringField(u'Contact link', [length(max=255)],
+    contact_url = StringField(u'Contact link', [length(max=2048)],
         description="How to best contact your team.")
-    autotext_url = URLField(u'Sync', [length(max=255)],
+    autotext_url = URLField(u'Sync', [length(max=2048)],
         description="URL to external source of documentation in GitLab, GitHub, Bitbucket, etc.")
     submit = SubmitField(u'Save')
 
@@ -75,8 +75,8 @@ class ProjectForm(FlaskForm):
     # is_autoupdate = BooleanField(u'Sync project data')
     name = StringField(u'Title', [length(max=80), UniqueValidator(Project, 'name'), DataRequired()],
         description="[Required] a short project name, max 80 characters.")
-    summary = StringField(u'Summary', [length(max=120)],
-        description="Max 120 characters.")
+    summary = StringField(u'Summary', [length(max=140)],
+        description="Max 140 characters.")
     longtext = TextAreaField(u'Pitch',
         description="To format, use Markdown or HTML. Links on their own line get previews for supported providers.")
     webpage_url = URLField(u'Project link', [length(max=2048)],
@@ -86,6 +86,8 @@ class ProjectForm(FlaskForm):
         description="URL to external source of documentation in GitLab, GitHub, Bitbucket, etc.")
     source_url = URLField(u'Source link', [length(max=255)],
         description="URL of your repository.")
+    download_url = URLField(u'Download link', [length(max=255)],
+        description="URL to a release page, website, app store,.. from where your project should be installed.")
     contact_url = URLField(u'Contact link', [length(max=255)],
         description="URL of an issues page, forum thread, chat channel, contact form, social media account, etc.")
     # Note: relative links allowed in image_url -> StringField
@@ -100,11 +102,9 @@ class ProjectForm(FlaskForm):
 
 class ProjectPost(FlaskForm):
     id = HiddenField('id')
-    note = TextAreaField(u'Note', [length(max=140), DataRequired()],
-        description=u'What are you working on right now?')
-    progress = SelectField(u'Progress', coerce=int)
-    resource = SelectField(u'Resources', coerce=int,
-        description=u'Are you using one of these?')
+    note = TextAreaField(u'What are you working on right now?', [length(max=140), DataRequired()],
+        description=u'A short note for your project log.')
+    has_progress = BooleanField(u'Promote our project to the next stage')
     submit = SubmitField(u'Save post')
 
 class ResourceForm(FlaskForm):
@@ -113,10 +113,6 @@ class ResourceForm(FlaskForm):
     type_id = RadioField(u'Type', coerce=int, choices=resourceTypeList())
     source_url = URLField(u'Link', [length(max=2048)],
         description=u'URL to download or get more information.')
-    summary = StringField(u'Summary', [length(max=140)],
-        description=u'How is this useful: in 140 characters or less?')
-    content = TextAreaField(u'Additional information',
-        description=u'Describe this resource in detail, Markdown and HTML supported.')
-    progress_tip = SelectField(u'Recommended stage', coerce=int, choices=projectProgressList(True, True),
-        description=u'Project level at which this should be suggested.')
+    content = TextAreaField(u'Comment',
+        description=u'Describe how you use this resource in more detail, Markdown and HTML supported.')
     submit = SubmitField(u'Suggest')

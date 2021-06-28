@@ -1,4 +1,5 @@
 {% extends "layout.html" %}
+{% import "macros/_misc.html" as misc %}
 
 {% block page_title %}{{current_event.name}}{% endblock %}
 
@@ -8,8 +9,8 @@
   <meta property="og:url" content="{{ url_for('public.event', event_id=current_event.id, _external=True) }}">
   <meta property="og:title" content="{{current_event.name}}">
   <meta property="og:image" content="{{current_event.logo_url}}">
-  <meta property="og:description" content="{{current_event.description|truncate(140)}}">
-  <meta name="description" content="{{current_event.description|truncate(140)}}">
+  <meta property="og:description" content="{{current_event.summary or current_event.description|truncate(140)}}">
+  <meta name="description" content="{{current_event.summary or current_event.description|truncate(140)}}">
   <script type="application/ld+json">{{ current_event.get_schema(request.host_url)|safe }}</script>
 {% endif %}
 {% endblock %}
@@ -28,7 +29,7 @@
       </a>
     {% endif %}
     <div class="home-description">
-      {{current_event.description|markdown}}
+      {{current_event.summary or current_event.description|markdown}}
     </div>
     <div class="home-nav">
       <div class="home-buttons" aria-label="Main navigation">
@@ -54,7 +55,7 @@
           {% endif %}
         </b></a>
         {% if current_event.has_started and current_event.can_start_project %}
-          <!-- <a href="{{ url_for('public.project_new', event_id=current_event.id) }}" class="btn btn-lg btn-success">
+          <!-- <a href="{{ url_for('project.project_new', event_id=current_event.id) }}" class="btn btn-lg btn-success">
             <i class="fa fa-rocket"></i>
             Start Project</a> -->
         {% endif %}
@@ -77,7 +78,7 @@
 
 <div class="body-content">
 
-  {% if not current_event and not events_next and not events_past %}
+  {% if not current_event and not events_next and not events_past and not events_tips %}
     <div class="row start-event">
       <div class="col-lg-12 text-center">
         <h3>Looks like you are new to this - welcome!</h3>
@@ -90,42 +91,16 @@
   <h2 class="mt-4">Upcoming</h2>
   <div class="row events-next">
     {% for event in events_next %}
-    <div class="col-lg-4 an-event">
-      <div class="card">
-        {% if event.logo_url %}
-        <div class="card-img-top">
-          <img src="{{ event.logo_url }}" title="{{ event.hostname }}">
-        </div>
-        {% endif %}
-        <div class="card-body">
-          <i class="fa fa-code" style="float:right"></i>
-          <h3 class="card-title">
-            <a href="{{ url_for('public.event', event_id=event.id) }}">
-              {{event.name}}</a>
-          </h3>
-          <div class="card-text">
-            <p class="an-event-meta">
-              <b>{{ event.date }}</b>
-              <span>{{ event.location }}</span>
-            </p>
-            <p class="an-event-description">
-              {{event.description|markdown|striptags|truncate(500)}}
-            </p>
-          </div>
-          <div class="btn-group an-event-actions" role="group">
-            {% if event.webpage_url %}
-              <a href="{{ event.webpage_url }}" class="btn btn-info">
-                Information</a>
-            {% endif %}
-            <a href="{{ url_for('public.event_resources', event_id=event.id) }}" class="btn btn-secondary">
-              Resources</a>
-            <a href="{{ url_for('public.event', event_id=event.id) }}" class="btn btn-warning">
-              Challenges
-            </a>
-          </div>
-        </div><!-- /.card-body -->
-      </div>
-    </div>
+      {{ misc.render_home_event(event) }}
+    {% endfor %}
+  </div><!-- /.row events-next -->
+  {% endif %}
+
+  {% if events_tips %}
+  <h2 class="mt-4">Resources</h2>
+  <div class="row events-tips">
+    {% for event in events_tips %}
+      {{ misc.render_home_event(event) }}
     {% endfor %}
   </div><!-- /.row events-next -->
   {% endif %}
@@ -134,36 +109,7 @@
   <h2 class="mt-4">Past events</h2>
   <div class="row events-past">
     {% for event in events_past %}
-    <div class="col-lg-4 an-event">
-      <div class="card">
-        {% if event.logo_url %}
-        <div class="card-img-top">
-          <img src="{{ event.logo_url }}" title="{{ event.hostname }}">
-        </div>
-        {% endif %}
-        <div class="card-body">
-          <i class="fa fa-code" style="float:right"></i>
-          <h3 class="card-title">
-            <a href="{{ url_for('public.event', event_id=event.id) }}">
-              {{event.name}}</a>
-          </h3>
-          <div class="card-text">
-            <p class="an-event-meta">
-              <b>{{ event.date }}</b>
-              <span>{{ event.location }}</span>
-            </p>
-            <p class="an-event-description">
-              {{event.description|markdown|striptags|truncate(500)}}
-            </p>
-          </div>
-          <div class="btn-group an-event-actions" role="group">
-            <a href="{{ url_for('public.event', event_id=event.id) }}" class="btn btn-warning">
-              Results
-            </a>
-          </div>
-        </div><!-- /.card-body -->
-      </div>
-    </div>
+      {{ misc.render_home_event(event) }}
     {% endfor %}
   </div><!-- /.row events-past -->
   {% endif %}

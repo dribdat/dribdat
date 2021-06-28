@@ -1,0 +1,112 @@
+---
+# definition of rulesets for advancing through the
+# stages of a hackathon projects
+
+stages:
+  -
+    id: 0
+    name: CHALLENGE
+    phase: Challenge
+    description: 🚧 This is an idea or challenge description
+    conditions:
+      validate:
+        -
+          field: summary
+          min: 10
+          help: Your challenge must have a short summary.
+        -
+          field: excerpt
+          min: 144
+          help: At least 144 characters in the challenge pitch.
+      agree:
+        - The challenge is well documented, including links to data sources or contacts.
+        - We accept this challenge, deemed realistic within the time limits of the event.
+  -
+    id: 5
+    name: NEW
+    phase: Researching
+    description: 👪 A team has formed and started a project
+    conditions:
+      validate:
+        -
+          field: team
+          min: 1
+          max: 5
+          help: Between 1 and 5 members need to join your project.
+        -
+          field: contact_url
+          test: validurl
+          help: Provide a contact link on your project page.
+      agree:
+        - We have a shared channel or working area for our team to speak and collaborate.
+        - The team members are committed to working together for the duration of the event.
+  -
+    id: 10
+    name: RESEARCHED
+    phase: Sketching
+    description: ⚗️ Scoping research has been done and documented
+    conditions:
+      validate:
+        -
+          field: source_url
+          test: validurl
+          help: Provide a source link on your project page.
+      agree:
+        - A source code repository or shared folder has been set up and shared with the team.
+        - We have better defined the achievable scope of the project, and have documented our basic intent.
+  -
+    id: 20
+    name: SKETCHED
+    phase: Prototyping
+    description: 🎨 Initial designs have been sketched and shared
+    conditions:
+      validate:
+        -
+          field: image_url
+          test: validurl
+          help: Provide an image link on your project page.
+      agree:
+        - We have used a wireframing tool or just pen and paper to sketch and share a vision for the project.
+        - Everyone on the team was able to contribute to the design and attach their ideas or questions.
+  -
+    id: 30
+    name: PROTOTYPED
+    phase: Launching
+    description: 🐣 A prototype of the idea has been developed
+    conditions:
+      validate:
+        -
+          field: webpage_url
+          test: validurl
+          help: Provide a project link to an online demo, embedded if possible.
+      agree:
+        - This prototype was created by the members of our team. Contributions from others does not include major functionality, and is less than 20% of the codebase.
+        - We own the rights, use open licenses, or received written permission from the owner for all assets and software demonstrated in our prototype.
+  -
+    id: 40
+    name: LAUNCHED
+    phase: Promoting
+    description: 🎈 The prototype has been deployed and presented
+    conditions:
+      validate:
+        -
+          field: autotext_url
+          test: validurl
+          help: Link and sync a remote repository link to your project.
+      agree:
+        - A demo or presentation has been made accessible, and shared here along with the sources.
+        - We have made sure that every team member is thanked, and any third-party assets or software attributed in the documentation.
+  -
+    id: 50
+    name: LIVE
+    phase: Supporting
+    description: 🚀 This project is live and available to the public
+    conditions:
+      validate:
+        -
+          field: download_url
+          test: validurl
+          help: Provide a working download link on your project page.
+      agree:
+        - A copy of the results of our project can be downloaded and further distributed.
+        - It is possible to contact the team with questions and feedback.

@@ -117,4 +117,4 @@ class TestRegistering:
         # Submits
         res = form.submit()
         # sees error
-        assert 'Username already registered' in res
+        assert 'A user with this name already exists' in res
