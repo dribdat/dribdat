@@ -308,7 +308,13 @@ class Event(PkModel):
     def date(self):
         """ Formatted date range """
         return format_date_range(self.starts_at, self.ends_at)
-
+    @property
+    def oneliner(self):
+        """ A short online description """
+        ol = self.summary or self.description
+        ol = re.sub(r"\s+", " ", ol)
+        if len(ol)>140: ol = ol[:140] + '...'
+        return ol
     @property
     def project_count(self):
         """ Number of projects """

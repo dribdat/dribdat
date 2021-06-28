@@ -7,8 +7,8 @@
   <meta property="og:url" content="{{ url_for('public.event', event_id=current_event.id, _external=True) }}">
   <meta property="og:title" content="{{current_event.name}}">
   <meta property="og:image" content="{{current_event.logo_url}}">
-  <meta property="og:description" content="{{current_event.summary or current_event.description|truncate(140)}}">
-  <meta name="description" content="{{current_event.summary or current_event.description|truncate(140)}}">
+  <meta property="og:description" content="{{current_event.oneliner}}">
+  <meta name="description" content="{{current_event.oneliner}}">
   <script type="application/ld+json">{{ current_event.get_schema(request.host_url)|safe }}</script>
 {% endblock %}
 
