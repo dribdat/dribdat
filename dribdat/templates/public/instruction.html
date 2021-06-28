@@ -53,7 +53,7 @@
                 <img class="project-image" src="{{project.image_url}}">
               {% endif %}
 
-              {% if project.score and not project.is_challenge %}
+              {% if False and project.score and not project.is_challenge %}
               <div class="project-score">
                 <div class="progress" title="A score based on profile completeness and voting results">
                   <div class="progress-bar" role="progressbar" aria-valuenow="{{project.score}}" aria-valuemin="0" aria-valuemax="70" style="width:{{project.score}}%">

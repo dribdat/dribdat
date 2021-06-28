@@ -6,6 +6,7 @@
 {% block content %}
 {% cache 300, 'eventusers-%d' % current_event.id %}
 <h1 class="huge">Contributors</h1>
+<p>All users who have joined a challenge</p>
 
 <div class="event-participants jumbotron">
 {% if participants %}
