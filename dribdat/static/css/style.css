@@ -475,7 +475,7 @@ nav .navbar-nav .nav-item {
   font-weight: normal;
   color: #999;
 }
-.project-home .project-image {
+.project-home .project-image-container {
   margin-top: 10px;
   margin-bottom: -15px;
   height: 200px;
@@ -493,10 +493,10 @@ nav .navbar-nav .nav-item {
   border: 5px solid #ccc;
   margin-top: 1em;
 }
-.project-home .project-image.underlay {
+.project-home .project-image-container.underlay {
   filter: blur(2px);
 }
-.project-home .project-image.overlay {
+.project-home .project-image-container.overlay {
   opacity: 1.0;
 }
 .project-home #overlayImage {

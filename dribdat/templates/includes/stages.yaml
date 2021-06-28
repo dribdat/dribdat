@@ -20,7 +20,7 @@ stages:
           help: At least 144 characters in the challenge pitch.
       agree:
         - The challenge is well documented, including links to data sources or contacts.
-        - This challenge can be reasonably tackled within the time limits of the event.
+        - We accept this challenge, deemed realistic within the time limits of the event.
   -
     id: 5
     name: NEW

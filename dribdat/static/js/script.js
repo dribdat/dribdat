@@ -93,7 +93,7 @@
   });
 
   // Check image size on render
-  $('.project-home .project-image').each(function() {
+  $('.project-home .project-image-container').each(function() {
     var $self = $(this);
     var url = $self.data('href');
     if (url.length<6) return;

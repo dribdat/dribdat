@@ -74,7 +74,7 @@
 </div><br clear="all">
 
 {% if project.image_url %}
-  <div class="project-image"
+  <div class="project-image-container"
     style="background-image:url('{{project.image_url}}'); {% if project.logo_color %}background-color:{{project.logo_color}}; opacity:1.0{% endif %}"
     data-href="{{project.image_url}}"></div>
 {% endif %}
@@ -145,21 +145,28 @@
   </div>
   {% endif %}
 
-  {% if False and not project.is_challenge and project_starred and suggestions %}
-    # TODO: recommended projects
+  {% if not project.is_challenge and project_starred and suggestions %}
     <div class="alert alert-info resource-list col-12">
       <a class="close" title="Close" href="#" data-dismiss="alert">&times;</a>
-        <p>Suggestions for this stage of your project:</p>
-    {% for resource in suggestions %}
-        {% if resource.is_visible %}
-        <a class="col-5 resource-card" href="{{ url_for('public.resource', resource_id=resource.id) }}">
-            <i title="{{resource.of_type}}"
-            class="fa fa-{{resource.icon}}"></i>
-            <b>{{resource.name}}</b>
-            <p>{{resource.summary}}</p>
-        </a>
-        {% endif %}
-    {% endfor %}
+      <p>Suggestions for this stage of your project:</p>
+      <div class="profile-projects container-fluid">
+        <div class="row flex-row flex-nowrap">
+        {% for project in suggestions %}
+          <a class="col-5 card project"
+             href="{{ url_for('project.project_view', project_id=project.id) }}">
+
+            {% if project.image_url %}
+              <img class="project-image" src="{{project.image_url}}">
+            {% endif %}
+
+            <div class="card-body">
+              <h5 class="card-title">{{ project.name }}</h5>
+              <p class="card-text">{{ project.summary }}</p>
+            </div>
+          </a>
+        {% endfor %}
+        </div>
+      </div><!-- /profile-projects -->
     </div>
   {% endif %}
 

@@ -172,6 +172,15 @@ def project_post(project_id):
         current_event=event, project=project, form=form, stage=stage, all_valid=all_valid,
     )
 
+def getSuggestionsForStage(progress):
+    """ Get all projects which are published in a resource-type event """
+    project_list = []
+    resource_events = [ e.id for e in Event.query.filter_by(lock_resources=True).all() ]
+    for eid in resource_events:
+        projects = Project.query.filter_by(event_id=eid, is_hidden=False, progress=progress)
+        project_list.extend([ p.data for p in projects.all() ])
+    return project_list
+
 def project_action(project_id, of_type=None, as_view=True, then_redirect=False, action=None, text=None):
     project = Project.query.filter_by(id=project_id).first_or_404()
     event = project.event
@@ -188,11 +197,11 @@ def project_action(project_id, of_type=None, as_view=True, then_redirect=False, 
     project_team = project.team()
     latest_activity = project.latest_activity()
     project_dribs = project.all_dribs()
+    suggestions = getSuggestionsForStage(project.progress)
     return render_template('public/project.html', current_event=event, project=project,
         project_starred=starred, project_team=project_team, project_dribs=project_dribs,
         allow_edit=allow_edit, allow_post=allow_post,
-        # suggestions=suggestions, # TODO recommend similar projects
-        latest_activity=latest_activity)
+        suggestions=suggestions, latest_activity=latest_activity)
 
 @blueprint.route('/<int:project_id>/star', methods=['GET', 'POST'])
 @login_required
