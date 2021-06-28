@@ -24,9 +24,17 @@
     </div>
   {% else %}
   <div class="form-project-stage" style="margin-top:1em; font-size: 125%; border: 3px dashed orange; padding: 1em">
-    <h4 style="text-align: center">
-      Ready for the next stage?
-    </h4>
+    <center>
+      <h4>
+        Ready for the next stage?
+      </h4>
+      <p><small>
+        For more information, see
+        <a href="{{ url_for('public.event_stages', event_id=current_event.id) }}" target="_blank">
+          <i class="fa fa-arrow-right" aria-hidden="true"></i>
+          Stages</a>
+      </small></p>
+    </center>
     {% if all_valid %}
       {% for item in stage.conditions.agree %}
         <label style="clear:both;margin-top:0.5em"><input type="checkbox">&nbsp;{{ item }}</label>

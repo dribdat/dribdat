@@ -7,17 +7,15 @@
 {% block content %}
 <h1 class="huge">Stages</h1>
 
-  <p>
+  <p class="mt-3">
     This page details the requirements of projects as they progress through stages of development.
-    Use the <b>Post</b> button when your project is ready to advance to the next level!</p>
-
-  <a name="steps"></a>
-  <p style="mt-2">
+    Use the <b>Post</b> button when your project is ready to advance to the next level! See also:
     <a href="{{ url_for('public.event_instruction', event_id=current_event.id) }}#resources">
       <i class="fa fa-arrow-right" aria-hidden="true"></i>
       Resources</a>
   </p>
 
+  <a name="steps"></a>
   <div class="list-stages">
   {% for step in steps %}
     <div class="row step">
