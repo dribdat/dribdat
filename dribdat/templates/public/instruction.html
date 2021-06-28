@@ -6,27 +6,15 @@
 
 {% block content %}
 
-
-  {% if current_event and current_event.instruction %}
-  <h1 class="huge">Instructions</h1>
-
-  <div class="jumbotron event-instruction mt-3">
-    <div class="content">
-      {{current_event.instruction|markdown}}
-    </div>
-  </div>
-  {% endif %}
-
   <a name="resources"></a>
-  <h1>Resources</h1>
+  <h1 class="huge">Resources</h1>
 
   <p class="mt-3">
-    This page lists the typical stages of a project.
-    Event organizers may add tools and components which may be useful to your project here.
-    To read more about this process, see
+    This page lists the typical stages of a project, as well as any tools or instructions.
+    For more details on the process, see
     <a href="{{ url_for('public.event_stages', event_id=current_event.id) }}">
       <i class="fa fa-arrow-right" aria-hidden="true"></i>
-      Stages</a>
+      Stages</a>.
   </p>
 
   <div class="list-stages">
@@ -76,6 +64,17 @@
     </div>
   {% endfor %}
   </div>
+
+  {% if current_event and current_event.instruction %}
+  <a name="instructions"></a>
+  <h1 class="mt-5">Instructions</h1>
+
+  <div class="jumbotron event-instruction mt-3">
+    <div class="content">
+      {{current_event.instruction|markdown}}
+    </div>
+  </div>
+  {% endif %}
 
 {% if current_event.lock_resources %}
   <center class="mt-5">

@@ -19,10 +19,10 @@
               <th>Updated</th>
               <th>{% if event %}
                 <div class="btn-group">
-                  <a href="{{ url_for('admin.event_autosync', event_id=event.id) }}" class="btn btn-sm btn-warning">
+                  <a href="{{ url_for('admin.event_autosync', event_id=event.id) }}" class="btn btn-warning">
                     Sync all
                   </a>
-                  <a href="{{ url_for('api.project_list_event_csv', event_id=event.id) }}" class="btn btn-sm btn-info">
+                  <a href="{{ url_for('api.project_list_event_csv', event_id=event.id) }}" class="btn btn-info">
                     <i class="fa fa-download"></i>&nbsp;CSV
                   </a>
                 </div>
@@ -32,7 +32,7 @@
         {% for project in projects or data.items %}
         <tr>
             <td width="50%">
-              <a href="{{ url_for('admin.project_view', project_id=project.id) }}">
+              <a href="{{ url_for('project.project_view', project_id=project.id) }}">
                 {{ project.name }}
               </a>
               <small><br>{{ project.phase }}</small>
@@ -42,20 +42,20 @@
               <small><br>{{ project.user.username }}</small></td>
             <td>{{ project.updated_at|since_date }}</td>
             <td><div class="btn-group">
-              <a href="{{ url_for('project.project_view', project_id=project.id) }}" class="btn btn-sm btn-primary">
-                View
+              <a href="{{ url_for('admin.project_view', project_id=project.id) }}" class="btn btn-primary">
+                Edit
               </a>
               {% if project.is_hidden %}
-                <a href="{{ url_for('admin.project_toggle', project_id=project.id) }}" class="btn btn-sm btn-success">
+                <a href="{{ url_for('admin.project_toggle', project_id=project.id) }}" class="btn btn-success">
                   Enable
                 </a>
               {% else %}
                 {% if project.is_autoupdate %}
-                <a href="{{ url_for('project.project_autoupdate', project_id=project.id) }}" class="btn btn-sm btn-warning">
+                <a href="{{ url_for('project.project_autoupdate', project_id=project.id) }}" class="btn btn-warning">
                   Sync
                 </a>
                 {% endif %}
-                <a href="{{ url_for('admin.project_toggle', project_id=project.id) }}" title="Hide" class="btn btn-sm btn-danger"
+                <a href="{{ url_for('admin.project_toggle', project_id=project.id) }}" title="Hide" class="btn btn-danger"
                    onclick="if(!window.confirm('Are you sure you wish to hide this project?')) return false">
                   <i class="fa fa-eye"></i>
                 </a>

@@ -84,3 +84,23 @@ def isUserActive(user):
     if not user or not 'active' in user.__dir__():
         return False
     return user.active
+
+def validateProjectData(project):
+    stage = project.stage
+    all_valid = True
+    # Collect project data
+    project_data = project.data
+    if len(project_data['readme']) > len(project_data['excerpt']):
+        project_data['excerpt'] = project_data['readme']
+    # Iterate through the stage conditions
+    for v in stage['conditions']['validate']:
+        v['valid'] = False
+        vf = v['field']
+        if vf in project_data:
+            if ('min' in v and len(project_data[vf]) >= v['min']) or \
+                ('max' in v and v['min'] <= len(project_data[vf]) <= v['max']) or \
+                ('test' in v and v['test'] == 'validurl' and project_data[vf].startswith('http')):
+                v['valid'] = True
+        if not v['valid']:
+            all_valid = False
+    return stage, all_valid

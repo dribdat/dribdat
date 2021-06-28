@@ -6,8 +6,8 @@
       <span class="navbar-toggler-icon"></span>
     </button>
     <a class="navbar-brand" href="{{ url_for('public.home') }}" title="Home page">
-      <i style="-moz-transform: scale(1, 1); -webkit-transform: scale(1, 1); -o-transform: scale(1, 1); -ms-transform: scale(1, 1); transform: scale(1, 1);" class="fa fa-thumbs-up"></i>
-      <i style="-moz-transform: scale(-1, 1); -webkit-transform: scale(-1, 1); -o-transform: scale(-1, 1); -ms-transform: scale(-1, 1); transform: scale(-1, 1);" class="fa fa-thumbs-up"></i>
+      <i style="-moz-transform: scale(1, 1); -webkit-transform: scale(1, 1); -o-transform: scale(1, 1); -ms-transform: scale(1, 1); transform: scale(1, 1);" class="fa fa-thumbs-up" aria-hidden="true"></i>
+      <i style="-moz-transform: scale(-1, 1); -webkit-transform: scale(-1, 1); -o-transform: scale(-1, 1); -ms-transform: scale(-1, 1); transform: scale(-1, 1);" class="fa fa-thumbs-up" aria-hidden="true"></i>
     </a>
   </div>
 
@@ -17,7 +17,7 @@
       {% if event and not event.lock_resources %}
         <li class="nav-item">
           <a class="nav-link {% if active == 'projects' %}active{% endif %}" href="{{ url_for('public.event', event_id=event.id) }}#top">
-            <i class="fa fa-star"></i>
+            <i class="fa fa-star" aria-hidden="true"></i>
             {% if event.has_finished %}
               Results
             {% elif event.has_started %}
@@ -30,15 +30,21 @@
         {% if event.can_start_project %}
           <li class="nav-item">
             <a class="nav-link {% if active == 'participants' %}active{% endif %}" href="{{ url_for('public.event_participants', event_id=event.id) }}">
-              <i class="fa fa-child"></i>
+              <i class="fa fa-child" aria-hidden="true"></i>
               Contributors
             </a>
           </li>
         {% endif %}
         <li class="nav-item">
           <a class="nav-link {% if active == 'dribs' %}active{% endif %}" href="{{ url_for('public.dribs') }}">
-            <i class="fa fa-comment"></i>
+            <i class="fa fa-comment" aria-hidden="true"></i>
             Updates
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="{{ url_for('public.event_stages', event_id=current_event.id) }}" class="nav-link {% if active == 'stages' %}active{% endif %}">
+            <i class="fa fa-signal" aria-hidden="true"></i>
+            <span>Stages</span>
           </a>
         </li>
       {% endif %}
@@ -54,32 +60,35 @@
       {% if current_user and current_user.is_authenticated %}
           <li class="nav-item">
             <a class="nav-link{{ ' active' if active == 'profile' }}" href="{{ url_for('public.user', username=current_user.username) }}" title="{{ current_user.username }}">
-              <i class="fa fa-key"></i>
+              <i class="fa fa-key" aria-hidden="true"></i>
               My Profile
             </a>
           </li>
           {% if current_user.is_admin %}
             <li class="nav-item">
               <a class="nav-link" href="{{ url_for('admin.index') }}">
-                <i class="fa fa-gear"></i>
+                <i class="fa fa-gear" aria-hidden="true"></i>
                 Admin
               </a>
             </li>
           {% endif %}
           <li class="nav-item nav-logout">
             <a class="nav-link" href="{{ url_for('auth.logout') }}">
-              <i class="fa fa-sign-out"></i>
+              <i class="fa fa-sign-out" aria-hidden="true"></i>
               Logout
             </a>
           </li>
       {% else %}
         <li class="nav-item">
-          <a class="nav-link" href="{{ url_for('auth.login') }}">Log in<i class="fa fa-sign-in"></i></a>
+          <a class="nav-link" href="{{ url_for('auth.login') }}">
+            <i class="fa fa-sign-in" aria-hidden="true"></i>
+            Log in
+          </a>
         </li>
         {% if not config.DRIBDAT_NOT_REGISTER %}
           <li class="nav-item">
             <a class="nav-link" href="{{ url_for('auth.register') }}">
-              <i class="fa fa-child"></i>
+              <i class="fa fa-child" aria-hidden="true"></i>
               Create account
             </a></li>
         {% endif %}

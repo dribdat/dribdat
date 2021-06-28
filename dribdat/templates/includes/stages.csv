@@ -1,8 +1,0 @@
-id;name;phase;description
-0;CHALLENGE;Challenge;🚧 This is an idea or challenge description
-5;NEW;Researching;👪 A team has formed and started a project
-10;RESEARCHED;Sketching;⚗️ Research has been done to define the scope
-20;SKETCHED;Prototyping;🎨 Initial designs have been sketched and shared
-30;PROTOTYPED;Launching;🐣 A prototype of the idea has been developed
-40;LAUNCHED;Promoting;🎈 The prototype has been deployed and presented
-50;LIVE;Supporting;🚀 This project is live and available to the public

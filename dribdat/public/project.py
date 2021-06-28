@@ -15,7 +15,7 @@ from dribdat.aggregation import (
     ProjectActivity, IsProjectStarred,
 )
 from dribdat.user import (
-    projectProgressList, isUserActive,
+    validateProjectData, projectProgressList, isUserActive,
 )
 
 blueprint = Blueprint('project', __name__, static_folder="../static", url_prefix='/project')
@@ -133,19 +133,7 @@ def project_post(project_id):
     form = ProjectPost(obj=project, next=request.args.get('next'))
 
     # Evaluate project progress
-    stage = project.stage
-    all_valid = True
-    project_data = project.data
-    for v in stage['conditions']['validate']:
-        v['valid'] = False
-        vf = v['field']
-        if vf in project_data:
-            if ('min' in v and len(project_data[vf]) >= v['min']) or \
-                ('max' in v and v['min'] <= len(project_data[vf]) <= v['max']) or \
-                ('test' in v and v['test'] == 'validurl' and project_data[vf].startswith('http')):
-                v['valid'] = True
-        if not v['valid']:
-            all_valid = False
+    stage, all_valid = validateProjectData(project)
 
     # Process form
     if form.validate_on_submit():

@@ -555,7 +555,17 @@ nav .navbar-nav .nav-item {
 .project-page .project-autotext { margin: 0em; }
 
 .project-page .latest-drib { padding: 1em; }
-.project-page .timeline-card::after { border: none; }
+
+/* Hides the triangle pointers in the timeline */
+.project-page .timeline-card::after { display: none; }
+.project-page .timeline-img {
+  width: 30px; height: 2px;
+  background: #baa;
+  opacity: 1;
+  border-radius: 0;
+  margin-top: 25px;
+  margin-left: -15px;
+}
 
 .project-buttons { display: block; text-align: center; }
 .project-buttons .btn {
@@ -1169,6 +1179,12 @@ Instruction page
   min-height: 7em;
   min-width: 16em;
   vertical-align: top;
+}
+.form-project-stage {
+  margin-top: 1em;
+  font-size: 125%;
+  border: 3px dashed lightgray;
+  padding: 1em;
 }
 
 /* ------------
