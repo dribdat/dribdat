@@ -110,6 +110,7 @@ def event_stages(event_id):
 def event_instruction(event_id):
     event = Event.query.filter_by(id=event_id).first_or_404()
     steps = getProjectStages()
+    for s in steps: s['projects'] = [] # Reset the index
     resource_events = Event.query.filter_by(lock_resources=True).all()
     for e in resource_events:
         projects = Project.query.filter_by(event_id=e.id, is_hidden=False)

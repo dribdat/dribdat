@@ -321,10 +321,18 @@
   </div>
 </div>
 
+{% if not project.event.lock_resources %}
 <center class="mt-5">
   <a class="btn btn-light btn-lg" href="{{ url_for('public.event', event_id=project.event.id) }}">
     <i class="fa fa-arrow-left" aria-hidden="true"></i>
     {{ project.event.name }}</a>
 </center>
+{% else %}
+<center class="mt-5">
+  <a class="btn btn-light btn-lg" href="javascript:history.back()">
+    <i class="fa fa-arrow-left" aria-hidden="true"></i>
+    Go back</a>
+</center>
+{% endif %}
 
 {% endblock %}
