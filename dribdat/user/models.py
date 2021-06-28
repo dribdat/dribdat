@@ -573,27 +573,29 @@ class Project(PkModel):
             # score = score + (2 * c_a)
             # Add to the score for every complete documentation field
             if self.summary is None: self.summary = ''
-            if len(self.summary) > 3: score = score + 3
+            if len(self.summary) > 3: score = score + 1
             if self.image_url is None: self.image_url = ''
-            if len(self.image_url) > 3: score = score + 3
+            if len(self.image_url) > 3: score = score + 1
             if self.source_url is None: self.source_url = ''
-            if len(self.source_url) > 3: score = score + 3
+            if len(self.source_url) > 3: score = score + 1
             if self.webpage_url is None: self.webpage_url = ''
-            if len(self.webpage_url) > 3: score = score + 3
+            if len(self.webpage_url) > 3: score = score + 1
             if self.logo_color is None: self.logo_color = ''
-            if len(self.logo_color) > 3: score = score + 3
+            if len(self.logo_color) > 3: score = score + 1
             if self.logo_icon is None: self.logo_icon = ''
-            if len(self.logo_icon) > 3: score = score + 3
+            if len(self.logo_icon) > 3: score = score + 1
             if self.longtext is None: self.longtext = ''
             # Get more points based on how much content you share
             if len(self.longtext) > 3: score = score + 1
-            if len(self.longtext) > 100: score = score + 4
-            if len(self.longtext) > 500: score = score + 10
+            if len(self.longtext) > 100: score = score + 3
+            if len(self.longtext) > 500: score = score + 5
             # Points for external (Readme) content
             if self.autotext is not None:
                 if len(self.autotext) > 3: score = score + 1
-                if len(self.autotext) > 100: score = score + 4
-                if len(self.autotext) > 500: score = score + 10
+                if len(self.autotext) > 100: score = score + 3
+                if len(self.autotext) > 500: score = score + 5
+            # Cap at 100%
+            if score > 100: score = 100
             self.score = score
 
     def __init__(self, name=None, **kwargs):

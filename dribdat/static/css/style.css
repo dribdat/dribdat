@@ -74,11 +74,14 @@ form input[type="checkbox"] {
 .form-group .radio-inline {
   margin-right: 1em;
 }
+.admin .form-group .checkbox .help-inline {
+  display: block;
+}
 .admin .form-group .checkbox label {
   font-weight: bold;
 }
 .admin .form-group .checkbox label:hover {
-  background: highlight;
+  background: #ff3;
 }
 
 /* pagination */

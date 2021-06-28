@@ -131,8 +131,7 @@ def project_post(project_id):
         flash('You do not have access to post to this project.', 'warning')
         return project_action(project_id, None)
     form = ProjectPost(obj=project, next=request.args.get('next'))
-    # Populate progress dialog
-    # form.progress.choices = projectProgressList(event.has_started or event.has_finished, False)
+
     # Evaluate project progress
     stage = project.stage
     all_valid = True
@@ -152,19 +151,21 @@ def project_post(project_id):
     if form.validate_on_submit():
 
         # Check and update progress
-        all_stages = projectProgressList(event.has_started or event.has_finished, False)
-        if form.has_progress:
+        if form.has_progress.data:
+            found_next = False
             if all_valid:
-                found_next = False
-                for a in all_stages:
+                for a in projectProgressList(True, False):
+                    print(a[0])
                     if found_next:
                         project.progress = a[0]
                         flash('Your project has been promoted!', 'info')
                         break
-                    if a[0] == project.progress:
+                    if a[0] == project.progress or not project.progress or project.progress < 0:
                         found_next = True
-            else:
-                flash('Your project did not yet meet all stage requirements.', 'info')
+                        print("Founddd")
+            if not all_valid or not found_next:
+                flash('Your project did not yet meet stage requirements.', 'info')
+
         # Update project data
         del form.id
         del form.has_progress

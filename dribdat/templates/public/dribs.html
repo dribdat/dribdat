@@ -67,16 +67,16 @@
   </div>
 </div>
 
-<div class="container join-tip">
-<p>
-  <b>dribs</b> <i>n. pl.:</i> in small amounts, a few at a time (<a href="https://dictionary.cambridge.org/dictionary/english/dribs" target="_blank">Cambridge English Dictionary</a>)
-</p><p class="bigger">
+<div class="container join-tip"><p class="bigger">
   <b>Join</b> a project and use the <a href="#" class="btn btn-success disabled btn-sm">Post</a> button to share your dribs!
+</p>
+<p>
+  <b>dribs</b> <i>n. pl.: in small amounts, a few at a time</i> (<a href="https://dictionary.cambridge.org/dictionary/english/dribs" target="_blank">Cambridge English</a>)
 </p></div>
 
 {% if current_event %}
 <center class="mt-5">
-  <a class="btn btn-dark btn-lg" href="{{ url_for('public.event', event_id=current_event.id) }}">
+  <a class="btn btn-light btn-lg" href="{{ url_for('public.event', event_id=current_event.id) }}">
     <i class="fa fa-arrow-left" aria-hidden="true"></i>
     Back to the future</a>
 </center>
