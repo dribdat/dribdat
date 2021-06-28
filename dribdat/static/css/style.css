@@ -554,6 +554,9 @@ nav .navbar-nav .nav-item {
 .project-page .project-longtext { margin: 1em 0em; font-size: 125%; }
 .project-page .project-autotext { margin: 0em; }
 
+.project-page .latest-drib { padding: 1em; }
+.project-page .timeline-card::after { border: none; }
+
 .project-buttons { display: block; text-align: center; }
 .project-buttons .btn {
   display: inline-block;

@@ -112,6 +112,38 @@
   {% endif %}
   </div>
 
+  {% if False and not project.is_challenge %}
+  <div class="latest-drib">
+    {% for s in project_dribs[:1] %}
+    <small>Top of the Log</small>
+    <div class="timeline-content timeline-card js--fadeInBottom">
+      {% if s.title %}
+      <div class="timeline-img-header">
+        <h2>{{s.title}}</h2>
+      </div>
+      {% endif %}
+
+      {% if s.text %}
+        <div class="content">
+          {{s.text|markdown|safe}}
+        </div>
+      {% endif %}
+
+      <div class="date">
+      {% if s.ref_url %}
+        <a href="{{ s.ref_url }}" target="_blank">
+      {% endif %}
+          {{s.date|format_datetime}}
+          {% if s.author %} ~ <b>{{ s.author }}</b>{% endif %}
+      {% if s.ref_url %}
+        </a>
+      {% endif %}
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
   {% if False and not project.is_challenge and project_starred and suggestions %}
     # TODO: recommended projects
     <div class="alert alert-info resource-list col-12">
@@ -195,17 +227,10 @@
   {% if project_team %}
     <a name="team"></a>
     <div class="widget widget-team">
+      <h5>Team</h5>
       {% for user in project_team %}
         {{ misc.render_user_profile(user) }}
       {% endfor %}
-      <p class="started-at">
-        <small>
-          Launched this at
-          <a href="{{ url_for('public.event', event_id=project.event.id) }}">
-            <b>{{ project.event.name }}</b>
-          </a>
-        </small>
-      </p>
     </div>
   {% endif %}
 
@@ -260,15 +285,6 @@
             </a>
           {% endif %}
           </div>
-
-          {% if s.resource and s.resource.is_visible %}
-            <a class="resource-card" href="{{ url_for('public.resource', resource_id=s.resource.id) }}">
-              <i title="{{s.resource.of_type}}"
-                 class="fa fa-{{s.resource.icon}}"></i>
-              <b>{{s.resource.name}}</b>
-              <p>{{s.resource.summary}}</p>
-            </a>
-          {% endif %}
         </div>
       </div>
       {% endfor %}
@@ -288,6 +304,21 @@
   </div>
 
 </div>
+
+{% if project.is_challenge and project.user %}
+  <a name="owner"></a>
+  <div class="widget widget-team">
+    {{ misc.render_user_profile(project.user) }}
+    <p class="started-at">
+      <small>
+        Launched this at
+        <a href="{{ url_for('public.event', event_id=project.event.id) }}">
+          <b>{{ project.event.name }}</b>
+        </a>
+      </small>
+    </p>
+  </div>
+{% endif %}
 
   <div class="project-buttons" role="group" aria-label="Main navigation">
     {% if project.contact_url %}
