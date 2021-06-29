@@ -995,10 +995,10 @@ pre { color: #333; background: white; }
   padding: 0px;
 }
 .profile-projects .card .project-image {
-  width: 5em;
-  float: left;
-  padding: 6px 10px;
-  margin-bottom: 5em;
+  height: 100%;
+  max-width: 40%;
+  padding: 0px;
+  margin-right: 1em;
 }
 .profile-projects .card-body {
   padding: 10px;
@@ -1045,7 +1045,7 @@ pre { color: #333; background: white; }
     border-radius: 4px;
     margin-bottom: 1px;
 }
-@media (max-width: 1000px) {
+@media (max-width: 760px) {
   .profile-projects .project-score,
   .profile-projects .card .project-image
   { display: none; }
