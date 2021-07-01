@@ -89,7 +89,7 @@ class ProjectForm(FlaskForm):
         description="URL of your repository.")
     download_url = URLField(u'Download link', [length(max=255)],
         description="URL to a release page, website, app store,.. from where your project should be installed.")
-    contact_url = URLField(u'Contact link', [length(max=255)],
+    contact_url = StringField(u'Contact link', [length(max=255)],
         description="URL of an issues page, contact form, chat channel, forum thread, social media account,..")
     # Note: relative links allowed in image_url -> StringField
     image_url = StringField(u'Image link', [length(max=255)],
