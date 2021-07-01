@@ -318,7 +318,11 @@
 
   <div class="project-buttons" role="group" aria-label="Main navigation">
     {% if project.contact_url %}
-      <a href="{{ project.contact_url }}" target="_blank" class="btn btn-lg" title="Contact the team"><span>&#x1f44b;</span> Contact</a>
+      {% if project.contact_url.startswith('http') %}
+        <a href="{{ project.contact_url }}" target="_blank" class="btn btn-lg" title="Contact the team"><span>&#x1f44b;</span> Contact</a>
+      {% else %}
+        <div class="btn btn-lg" title="Contact the team"><span>&#x1f44b;</span> {{ project.contact_url }}</div>
+      {% endif %}
     {% endif %}
     {% if project.webpage_url %}
       <a href="{{ project.webpage_url }}" class="btn btn-lg" target="_blank" title="Project web link"><span>&#x1f310;</span> Explore</a>

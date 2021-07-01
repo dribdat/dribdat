@@ -59,15 +59,16 @@ class UserForm(FlaskForm):
 
 class ProjectNew(FlaskForm):
     id = HiddenField('id')
+    autotext_url = URLField(u'Sync', [length(max=2048)],
+        description="URL to online challenge or project documentation (Git, Doc,..) based on which to fill the rest of this form.")
     name = StringField(u'Title', [length(max=80), UniqueValidator(Project, 'name'), DataRequired()],
-        description=u'A short team name or project title - you may change this later.')
+        description=u'A short project title or team name - you may change this later.')
     summary = StringField(u'Summary', [length(max=140)],
         description="The headline of your project, in up to 140 characters.")
-    category_id = SelectField(u'Category', coerce=int, description=u'Select the challenge you plan to address.')
-    contact_url = StringField(u'Contact link', [length(max=2048)],
-        description="How to best contact your team.")
-    autotext_url = URLField(u'Sync', [length(max=2048)],
-        description="URL to external source of documentation in GitLab, GitHub, Bitbucket, etc.")
+    category_id = SelectField(u'Category', coerce=int, description=u'Select the category that your challenge addresses.')
+    contact_url = StringField(u'Contact', [length(max=2048)],
+        description="On which channel, or in which room, to find you.")
+    longtext = TextAreaField(u'Describe your idea')
     submit = SubmitField(u'Save')
 
 class ProjectForm(FlaskForm):
@@ -83,13 +84,13 @@ class ProjectForm(FlaskForm):
         description="URL to a live demo, presentation, or link to further information.")
     is_webembed = BooleanField(u'Embed project link')
     autotext_url = URLField(u'Sync', [length(max=255)],
-        description="URL to external source of documentation in GitLab, GitHub, Bitbucket, etc.")
+        description="URL to external source of documentation in GitLab, GitHub, Bitbucket,..")
     source_url = URLField(u'Source link', [length(max=255)],
         description="URL of your repository.")
     download_url = URLField(u'Download link', [length(max=255)],
         description="URL to a release page, website, app store,.. from where your project should be installed.")
     contact_url = URLField(u'Contact link', [length(max=255)],
-        description="URL of an issues page, forum thread, chat channel, contact form, social media account, etc.")
+        description="URL of an issues page, contact form, chat channel, forum thread, social media account,..")
     # Note: relative links allowed in image_url -> StringField
     image_url = StringField(u'Image link', [length(max=255)],
         description="URL of an image to display at the top.")
