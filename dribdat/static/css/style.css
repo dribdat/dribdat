@@ -494,7 +494,7 @@ nav .navbar-nav .nav-item {
   border-top-left-radius: 20px;
   border-top-right-radius: 20px;
   border: 5px solid #ccc;
-  margin-top: 1em;
+  margin-top: 0em; /* to overlap slightly with image */
 }
 .project-home .project-image-container.underlay {
   filter: blur(2px);
