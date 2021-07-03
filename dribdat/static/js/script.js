@@ -205,15 +205,17 @@
     $('.honeycomb').removeClass('hide-challenges');
 
     if (selected_id === '' || selected_id === 'list' || selected_id === 'challenges') {
+      // Visibility option selected
       $projects.addClass('category-highlight');
       $('.category-container', $infotext).hide();
       $projects
         .removeClass('hexagon hexalist')
         .addClass(selected_id === 'list' ? 'hexalist' : 'hexagon');
-      if (selected_id === 'challenges')
+      if (selected_id !== '')
         $('.honeycomb').addClass('hide-challenges');
 
     } else {
+      // A category is selected
       var $selected = $('[category-id="' + selected_id + '"]', $projects.parent());
       $projects.removeClass('category-highlight');
       $selected.addClass('category-highlight');

@@ -384,7 +384,8 @@ nav .navbar-nav .nav-item {
   width: 72px;
   margin-left: -36px;
   left: 50%;
-  opacity: 0.8;
+  opacity: 1;
+  border: 1px solid white;
 }
 .project .hexagontent .progress-bar {
   background-color: #aaa;
@@ -978,10 +979,11 @@ pre { color: #333; background: white; }
   font-weight: bold;
 }
 .profile-projects {
-  padding: 1em 2em;
+  padding: 1em 3em;
   overflow-x: auto;
-  background: #eee;
   width: 100%;
+  border-top: 2px solid #ddd;
+  border-bottom: 2px solid #ddd;
 }
 .profile-projects::-webkit-scrollbar {
   display: none;
