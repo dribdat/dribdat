@@ -84,8 +84,8 @@
     <i>No projects here. Time to <b>Join</b> or <b>Start</b> something awesome!</i>
 {% else %}
     <a name="teams"></a>
-    <div class="profile-projects container-fluid honeycomb">
-        <div class="row flex-row flex-nowrap ibws-fix">
+    <div class="profile-projects honeycomb">
+        <div class="row ibws-fix">
         {% for project in projects %}
             {{ misc.render_project_hexagon(project) }}
         {% endfor %}
