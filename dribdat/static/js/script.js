@@ -292,20 +292,29 @@
     });
   });
 
-  // Enable dark mode
+
+  function setDarkMode(toggle) {
+    dm = Boolean(window.darkmode);
+    if (toggle) dm = !dm;
+    if (dm) {
+      $('html').css('-webkit-filter','invert(100%)')
+               .css('-moz-filter','invert(100%)')
+               .css('-o-filter','invert(100%)')
+               .css('-ms-filter','invert(100%)')
+               .css('background', 'black')
+               .css('height', '100%');
+    } else {
+      $('html').attr('style','');
+    }
+    localStorage.setItem('darkmode', dm ? '1' : '0');
+    window.darkmode = dm;
+  }
+  window.darkmode = localStorage.getItem('darkmode') == '1';
+  setDarkMode(false);
+  // Enable dark mode on click
   $('.darkmode').click(function(e) {
     e.preventDefault(); e.stopPropagation();
-    if (window.darkmode) {
-      $('html').attr('style','');
-      return window.darkmode = false;
-    }
-    window.darkmode = true;
-    $('html').css('-webkit-filter','invert(100%)')
-             .css('-moz-filter','invert(100%)')
-             .css('-o-filter','invert(100%)')
-             .css('-ms-filter','invert(100%)')
-             .css('background', 'black')
-             .css('height', '100%');
+    setDarkMode(true);
   });
 
 }).call(this, jQuery, window);
