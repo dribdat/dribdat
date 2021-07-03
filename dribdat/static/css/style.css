@@ -142,6 +142,7 @@ ul.help-block {
 }
 .section-header .section-header-logo img {
   height: 6em;
+  margin-bottom: 2em;
 }
 .section-header .event-hostname,
 .section-header .event-location {
@@ -276,6 +277,7 @@ nav .navbar-nav .nav-item {
 
 .jumbotron.home-page {
   background: none;
+  padding: 1rem;
 }
 .jumbotron.event-page {
   margin-top: 40px;
