@@ -84,6 +84,14 @@ form input[type="checkbox"] {
   background: #ff3;
 }
 
+.scroll-after-500 {
+  overflow-y: auto;
+  max-height: 500px;
+}
+.alert .close {
+  font-size: 2rem;
+}
+
 /* pagination */
 
 .pagination { margin-bottom: 1em; }

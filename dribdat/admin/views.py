@@ -260,7 +260,9 @@ def event_new():
         form.community_embed.data = EVENT_PRESET['codeofconduct']
     form.is_current.data = True
 
-    return render_template('admin/eventnew.html', form=form)
+    tips = EVENT_PRESET['eventstart']
+
+    return render_template('admin/eventnew.html', form=form, tips=tips)
 
 @blueprint.route('/event/<int:event_id>/delete', methods=['GET', 'POST'])
 @login_required

@@ -19,8 +19,8 @@
 
 {% block content %}
 {% cache 300, 'home-page' %}
-<div class="jumbotron home-page">
-  {% if current_event %}
+{% if current_event %}
+  <div class="jumbotron home-page">
     {% if current_event.countdown and 'up' in config.DRIBDAT_CLOCK %}
       <a class="container-countdown"
         href="{{ url_for('public.event', event_id=current_event.id) }}"
@@ -73,8 +73,8 @@
         <div class="event-countdown" data-start="{{ current_event.countdown }}"></div>
       </a>
     {% endif %}
-  {% endif %}
-</div><!-- /.jumbotron -->
+  </div><!-- /.jumbotron -->
+{% endif %}
 
 <div class="body-content">
 
