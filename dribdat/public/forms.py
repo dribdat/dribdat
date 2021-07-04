@@ -73,7 +73,6 @@ class ProjectNew(FlaskForm):
 
 class ProjectForm(FlaskForm):
     id = HiddenField('id')
-    # is_autoupdate = BooleanField(u'Sync project data')
     name = StringField(u'Title', [length(max=80), UniqueValidator(Project, 'name'), DataRequired()],
         description="[Required] A short project name, max 80 characters.")
     summary = StringField(u'Summary', [length(max=140)],
@@ -83,6 +82,11 @@ class ProjectForm(FlaskForm):
     webpage_url = URLField(u'Project link', [length(max=2048)],
         description="URL to a live demo, presentation, or a link to get more information.")
     is_webembed = BooleanField(u'Embed this link directly on project page')
+    category_id = SelectField(u'Challenge category', coerce=int)
+    submit = SubmitField(u'Save changes')
+
+class ProjectDetailForm(FlaskForm):
+    id = HiddenField('id')
     autotext_url = URLField(u'Sync', [length(max=255)],
         description="URL to external source of documentation (code repository, online doc,..)")
     source_url = URLField(u'Source link', [length(max=255)],
@@ -98,7 +102,6 @@ class ProjectForm(FlaskForm):
         description="Customize the color of your project page.")
     # logo_icon = StringField(u'<a target="_blank" href="http://fontawesome.io/icons/#search">Custom icon</a>',
     #     [length(max=20)], description="A FontAwesome icon for the project browser.")
-    category_id = SelectField(u'Challenge category', coerce=int)
     submit = SubmitField(u'Save changes')
 
 class ProjectPost(FlaskForm):

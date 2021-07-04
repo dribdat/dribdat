@@ -6,7 +6,7 @@ from flask_login import login_required, current_user
 
 from dribdat.user.models import Event, Project
 from dribdat.public.forms import (
-    ProjectNew, ProjectForm, ProjectPost,
+    ProjectNew, ProjectForm, ProjectDetailForm, ProjectPost,
 )
 from dribdat.database import db
 from dribdat.extensions import cache
@@ -31,18 +31,30 @@ def project_view(project_id):
 @blueprint.route('/<int:project_id>/edit', methods=['GET', 'POST'])
 @login_required
 def project_edit(project_id):
+    return project_edit_action(project_id)
+
+@blueprint.route('/<int:project_id>/details', methods=['GET', 'POST'])
+@login_required
+def project_details(project_id):
+    return project_edit_action(project_id, True)
+
+def project_edit_action(project_id, detail_view=False):
+    """ Project editing handler """
     project = Project.query.filter_by(id=project_id).first_or_404()
     starred = IsProjectStarred(project, current_user)
     allow_edit = starred or (isUserActive(current_user) and current_user.is_admin)
     if not allow_edit:
         flash('You do not have access to edit this project.', 'warning')
         return project_action(project_id, None)
-    form = ProjectForm(obj=project, next=request.args.get('next'))
-    form.category_id.choices = [(c.id, c.name) for c in project.categories_all()]
-    if len(form.category_id.choices) > 0:
-        form.category_id.choices.insert(0, (-1, ''))
+    if not detail_view:
+        form = ProjectForm(obj=project, next=request.args.get('next'))
+        form.category_id.choices = [(c.id, c.name) for c in project.categories_all()]
+        if len(form.category_id.choices) > 0:
+            form.category_id.choices.insert(0, (-1, ''))
+        else:
+            del form.category_id
     else:
-        del form.category_id
+        form = ProjectDetailForm(obj=project, next=request.args.get('next'))
     if form.validate_on_submit():
         del form.id
         form.populate_obj(project)
@@ -53,7 +65,7 @@ def project_edit(project_id):
         flash('Project updated.', 'success')
         project_action(project_id, 'update', False)
         return redirect(url_for('project.project_view', project_id=project.id))
-    return render_template('public/projectedit.html',
+    return render_template('public/projectedit.html', detail_view=detail_view,
         current_event=project.event, project=project, form=form)
 
 @blueprint.route('/<int:project_id>/resource/add', methods=['GET', 'POST'])

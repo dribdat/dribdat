@@ -39,7 +39,7 @@
         <i class="fa fa-refresh" aria-hidden="true"></i>
         Sync</a>
     {% endif %}
-    <a href="{{ url_for('project.project_edit', project_id=project.id) }}" title="Edit project details" class="btn btn-lg btn-secondary">
+    <a href="{{ url_for('project.project_edit', project_id=project.id) }}" title="Edit project" class="btn btn-lg btn-secondary">
       <i class="fa fa-pencil" aria-hidden="true"></i>
       Edit</a>
   {% endif %}
@@ -334,6 +334,14 @@
       <a href="{{ project.source_url }}" class="btn btn-lg" target="_blank" title="Source code"><span>&#x1f4bb;</span> Source</a>
     {% endif %}
   </div>
+
+  {% if allow_edit %}
+  <center>
+    <a href="{{ url_for('project.project_details', project_id=project.id) }}" title="Edit project details" class="btn btn-lg btn-secondary">
+      <i class="fa fa-pencil" aria-hidden="true"></i>
+      Edit details</a>
+  </center>
+  {% endif %}
 
   {% if project.category %}
   <div class="panel panel-default category-details">

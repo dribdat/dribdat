@@ -503,9 +503,11 @@ nav .navbar-nav .nav-item {
   border-top-right-radius: 20px;
   border: 5px solid #ccc;
   margin-top: 0em; /* to overlap slightly with image */
+  position: relative;
 }
 .project-home .project-image-container.underlay {
   filter: blur(2px);
+  z-index: -1;
 }
 .project-home .project-image-container.overlay {
   opacity: 1.0;

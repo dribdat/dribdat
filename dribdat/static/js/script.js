@@ -112,7 +112,6 @@
     var $togglebtn = $('button[data-target="#uploadImage"]');
     $('.fld-longtext').append($togglebtn);
     $('.fld-image_url').append($togglebtn.clone());
-    $('.fld-autotext_url').parent().prepend($('input#submit').parent().clone());
     var $dialog = $(this);
     var $inputfd = $dialog.find('input[type="file"]');
     $inputfd.change(function() {
