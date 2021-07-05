@@ -79,11 +79,14 @@
 </div>
 {% endif %}
 
-<a name="projects"><h1>Projects</h1></a>
-{% if not projects and current_user and current_user.id == user.id %}
-    <i>No projects here. Time to <b>Join</b> or <b>Start</b> something awesome!</i>
+{% if not projects %}
+    {% if current_user and current_user.id == user.id %}
+      <div class="alert alert-warning">
+        No projects here yet. Time to <b>Join</b> or <b>Start</b> something awesome!
+      </div>
+    {% endif %}
 {% else %}
-    <a name="teams"></a>
+    <a name="projects"><h1>Projects</h1></a>
     <div class="profile-projects honeycomb">
         <div class="row ibws-fix">
         {% for project in projects %}
@@ -124,6 +127,13 @@
 </div>
 {% endif %}
 
+{% if not posts %}
+    {% if current_user and current_user.id == user.id %}
+      <div class="alert alert-info">
+        Once you join a project, write some <b>Posts</b> to show a log of your work.
+      </div>
+    {% endif %}
+{% else %}
 <a name="timeline"><h1>Log</h1></a>
 <div class="jumbotron">
 
@@ -150,5 +160,6 @@
     {% endfor %}
     </section>
 </div>
+{% endif %}
 
 {% endblock %}

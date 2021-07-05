@@ -991,12 +991,16 @@ pre { color: #333; background: white; }
   font-size: 140%;
   font-weight: bold;
 }
+.userprofile h1 {
+  text-align: center;
+  margin-top: 1em;
+}
 .profile-projects {
-  padding: 1em 3em;
+  padding: 1.5em 4em;
   overflow-x: auto;
   width: 100%;
-  border-top: 2px solid #ddd;
-  border-bottom: 2px solid #ddd;
+  background: #f0f0f0;
+  border-radius: 20px;
 }
 .profile-projects::-webkit-scrollbar {
   display: none;
@@ -1008,6 +1012,9 @@ pre { color: #333; background: white; }
   overflow: hidden;
   display: inline-block;
   padding: 0px;
+}
+.profile-projects .card:hover {
+  box-shadow: 3px 3px 3px lightblue;
 }
 .profile-projects .card .project-image {
   height: 100%;
