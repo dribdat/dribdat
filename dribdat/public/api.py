@@ -312,7 +312,7 @@ def project_autofill():
     data = GetProjectData(url)
     return jsonify(data)
 
-
+# TODO: move to separate upload.py ?
 import boto3, botocore
 from botocore.exceptions import ClientError
 from botocore.client import Config
@@ -354,3 +354,29 @@ def project_uploader():
         ExtraArgs={ 'ContentType': img.content_type, 'ACL': 'public-read' }
       )
     return '/'.join([current_app.config['S3_HTTPS'], s3_filepath])
+
+
+# TODO: move to packager.py ?
+
+from frictionless import Resource, Package
+
+@blueprint.route('/package/event/current', methods=["GET"])
+def package_event():
+    event = Event.query.filter_by(is_current=True).first() or \
+            Event.query.order_by(Event.id.desc()).first_or_404()
+    package = Package(
+        name='dribdat-package',
+        title='dribdat Data Package',
+        description='All the good things',
+        # it's possible to provide all the official properties like homepage, version, etc
+    )
+    resource = Resource(
+        name='event',
+        title=event.name,
+        description=event.summary or event.description,
+        path='data/hackathon.json',
+        # it's possible to provide all the official properties like mediatype, etc
+    )
+    package.add_resource(resource)
+    # package.to_json('datapackage.json') # Save as JSON
+    return jsonify(package)

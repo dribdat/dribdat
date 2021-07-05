@@ -46,6 +46,7 @@ werkzeug = ">=0.12"
 whitenoise = "^5"
 wtforms = ">=2.1"
 pyyaml = "^5.4.1"
+frictionless = "^4.12.4"
 
 [tool.poetry.dev-dependencies]
 factory-boy = "*"
