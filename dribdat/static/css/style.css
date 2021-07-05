@@ -203,6 +203,13 @@ nav .navbar-nav .nav-item {
   display: block;
   text-align: center;
 }
+.home-page .home-description {
+  margin: 1em;
+  font-size: 125%;
+}
+.home .start-event {
+  margin: 1em;
+}
 .home .an-event .card {
   width: 100%;
   margin-bottom: 1em;
@@ -296,6 +303,10 @@ nav .navbar-nav .nav-item {
   margin: 2em 0px;
   text-align: center;
   display: block;
+}
+
+.event-home .event-info {
+  font-size: 125%;
 }
 
 /* ---- Hexagonal hawtness ---- */
@@ -996,16 +1007,19 @@ pre { color: #333; background: white; }
   margin-top: 1em;
 }
 .profile-projects {
-  padding: 1.5em 4em;
+  padding: 1em 2em;
   overflow-x: auto;
   width: 100%;
   background: #f0f0f0;
   border-radius: 20px;
 }
+.profile-projects.honeycomb {
+  padding: 1.5em 4em;
+}
 .profile-projects::-webkit-scrollbar {
   display: none;
 }
-.profile-projects .card {
+.profile-projects .row .card.project {
   height: 8em;
   width: 20em;
   margin-right: 5px;
