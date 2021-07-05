@@ -13,7 +13,7 @@ from ..user.models import Event, Project, Category, Activity
 from ..aggregation import GetProjectData, GetEventUsers
 
 from datetime import datetime
-from flask import Response, stream_with_context
+from flask import Response, stream_with_context, send_file
 
 import io, csv, json, sys, tempfile
 from os import path
@@ -228,6 +228,7 @@ def expand_project_urls(projects):
     for p in projects:
         p['event_url'] = request.host_url + p['event_url']
         p['url'] = request.host_url + p['url']
+        p['team'] = ', '.join(p['team'])
     return projects
 
 # API: Full text search projects
@@ -358,25 +359,31 @@ def project_uploader():
 
 # TODO: move to packager.py ?
 
-from frictionless import Resource, Package
+from frictionless import Package, Resource
 
 @blueprint.route('/package/event/current', methods=["GET"])
 def package_event():
     event = Event.query.filter_by(is_current=True).first() or \
             Event.query.order_by(Event.id.desc()).first_or_404()
     package = Package(
-        name='dribdat-package',
-        title='dribdat Data Package',
-        description='All the good things',
-        # it's possible to provide all the official properties like homepage, version, etc
-    )
-    resource = Resource(
-        name='event',
+        name='event-%d' % event.id,
         title=event.name,
         description=event.summary or event.description,
-        path='data/hackathon.json',
-        # it's possible to provide all the official properties like mediatype, etc
+        # it's possible to provide all the official properties like homepage, version, etc
+    )
+    fp_projects = tempfile.NamedTemporaryFile(mode='w+t', prefix='projects-', suffix='.csv')
+    print("Writing temp file", fp_projects.name)
+    fp_projects.write(gen_csv(project_list(event.id)))
+    resource = Resource(
+        name='projects',
+        path=fp_projects.name,
     )
     package.add_resource(resource)
-    # package.to_json('datapackage.json') # Save as JSON
+    fp_package = tempfile.NamedTemporaryFile(prefix='datapackage-', suffix='.zip')
+    print("Saving at", fp_package.name)
+    # package.zip(fp_package.name)
     return jsonify(package)
+    # package.to_json('datapackage.json') # Save as JSON
+    fp_projects.close()
+    fp_package.close()
+    return send_file(fp_package.name, as_attachment=True)
