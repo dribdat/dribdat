@@ -16,8 +16,8 @@ stages:
           help: Your challenge must have a short summary.
         -
           field: excerpt
-          min: 144
-          help: At least 144 characters in the challenge pitch.
+          min: 123
+          help: At least 123 characters in the challenge pitch.
       agree:
         - The challenge is well documented, including links to data sources or contacts.
         - We accept this challenge, deemed realistic within the time limits of the event.
@@ -66,8 +66,8 @@ stages:
           test: validurl
           help: Provide an image link on your project page.
       agree:
-        - We have used a wireframing tool or just pen and paper to sketch and share a vision for the project.
         - Everyone on the team was able to contribute to the design and attach their ideas or questions.
+        - We have used a wireframing tool, or just pen and paper, to sketch and share a vision for the project.
   -
     id: 30
     name: PROTOTYPED
@@ -80,8 +80,8 @@ stages:
           test: validurl
           help: Provide a project link to an online demo, embedded if possible.
       agree:
-        - This prototype was created by the members of our team. Contributions from others does not include major functionality, and is less than 20% of the codebase.
-        - We own the rights, use open licenses, or received written permission from the owner for all assets and software demonstrated in our prototype.
+        - This prototype was created by our team. Contributions from others do not include major functionality, and is less than 20% of the codebase.
+        - We own the rights, use open licenses, or received written permission for all data, assets and software demonstrated in our prototype.
   -
     id: 40
     name: LAUNCHED
@@ -92,10 +92,10 @@ stages:
         -
           field: autotext_url
           test: validurl
-          help: Link and sync a remote repository link to your project.
+          help: Link and sync a remote repository to your project.
       agree:
         - A demo or presentation has been made accessible, and shared here along with the sources.
-        - We have made sure that every team member is thanked, and any third-party assets or software attributed in the documentation.
+        - Every team member is thanked, and any third-party assets or software are attributed.
   -
     id: 50
     name: LIVE
@@ -108,5 +108,5 @@ stages:
           test: validurl
           help: Provide a working download link on your project page.
       agree:
-        - A copy of the results of our project can be downloaded and further distributed.
-        - It is possible to contact the team with questions and feedback.
+        - The results of our project can be obtained under an open license.
+        - It is possible to contact the maintainers with questions and feedback.
