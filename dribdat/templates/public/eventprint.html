@@ -2,16 +2,17 @@
 {% import "macros/_misc.html" as misc %}
 
 {% block page_title %}{{current_event.name}} / Print{% endblock %}
+{% block body_class %}print-page{% endblock %}
 
 {% block content %}
 <div class="container">
-    <p>List of all projects and challenges as of <b>{{ curdate }}</b></p>
+    <p>All projects and challenges as of <b>{{ curdate }}</b></p>
 
     {% for project in projects %}
     <hr>
     <div class="project-info">
 
-      <ul style="float:right; min-width:50%; list-style-type:none; border-left:1px solid #999; padding-left:15px">
+      <ul class="project-meta">
         <li>Permalink: <a href="{{ url_for('project.project_view', project_id=project.id) }}">{{ url_for('project.project_view', project_id=project.id, _external=True) }}</a></li>
         {% if project.webpage_url %}
         <li>Homepage: <a href="{{ project.webpage_url }}">{{ project.webpage_url }}</a></li>
