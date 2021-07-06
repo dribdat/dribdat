@@ -1123,6 +1123,15 @@ pre { color: #333; background: white; }
 .embed-view .section-header { display: none; }
 
 
+/* Print view of projects */
+.print-page .project-meta {
+  float: right;
+  width: 50%;
+  list-style-type: none;
+  border-left: 1px solid #999;
+  padding-left: 15px;
+}
+
 /* ------------
 Code of Conduct
 --------------- */
