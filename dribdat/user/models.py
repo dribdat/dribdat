@@ -206,24 +206,24 @@ class Event(PkModel):
     """ Tell me what's a-happening """
     __tablename__ = 'events'
     name = Column(db.String(80), unique=True, nullable=False)
+    summary = Column(db.String(140), nullable=True)
     hostname = Column(db.String(80), nullable=True)
     location = Column(db.String(255), nullable=True)
-    summary = Column(db.String(140), nullable=True)
+
     description = Column(db.UnicodeText(), nullable=True)
     boilerplate = Column(db.UnicodeText(), nullable=True)
     instruction = Column(db.UnicodeText(), nullable=True)
 
     logo_url = Column(db.String(255), nullable=True)
-    custom_css = Column(db.UnicodeText(), nullable=True)
-
     webpage_url = Column(db.String(255), nullable=True)
     community_url = Column(db.String(255), nullable=True)
-    community_embed = Column(db.UnicodeText(), nullable=True)
-    certificate_path = Column(db.String(1024), nullable=True)
 
     starts_at = Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)
     ends_at = Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)
 
+    custom_css = Column(db.UnicodeText(), nullable=True)
+    community_embed = Column(db.UnicodeText(), nullable=True)
+    certificate_path = Column(db.String(1024), nullable=True)
     is_hidden = Column(db.Boolean(), default=False)
     is_current = Column(db.Boolean(), default=False)
     lock_editing = Column(db.Boolean(), default=False)
@@ -235,17 +235,30 @@ class Event(PkModel):
         return {
             'id': self.id,
             'name': self.name,
-            'hostname': self.hostname,
-            'location': self.location,
+            'summary': self.summary or '',
+            'hostname': self.hostname or '',
+            'location': self.location or '',
             'starts_at': self.starts_at,
             'has_started': self.has_started,
             'ends_at': self.ends_at,
             'has_finished': self.has_finished,
-            'community_url': self.community_url,
-            'webpage_url': self.webpage_url,
+            'community_url': self.community_url or '',
+            'webpage_url': self.webpage_url or '',
+            'logo_url': self.logo_url or '',
         }
 
+    def get_full_data(self):
+        """ Returns full JSON event content """
+        d = self.data
+        d['starts_at'] = format_date(self.starts_at, '%Y-%m-%dT%H:%M')
+        d['ends_at'] = format_date(self.ends_at, '%Y-%m-%dT%H:%M')
+        d['description'] = self.description or ''
+        d['boilerplate'] = self.boilerplate or ''
+        d['instruction'] = self.instruction or ''
+        return d
+
     def get_schema(self, host_url=''):
+        """ Returns hackathon.json formatted metadata """
         return {
             "@context": "http://schema.org",
             "@type":"Event",
@@ -516,10 +529,13 @@ class Project(PkModel):
             'image_url': self.image_url or '',
             'source_url': self.source_url or '',
             'webpage_url': self.webpage_url or '',
+            'autotext_url': self.autotext_url or '',
             'contact_url': self.contact_url or '',
             'logo_color': self.logo_color or '',
             'excerpt': '',
         }
+        d['created_at'] = format_date(self.created_at, '%Y-%m-%dT%H:%M')
+        d['updated_at'] = format_date(self.updated_at, '%Y-%m-%dT%H:%M')
         d['team'] = [ u.username for u in self.team() ]
         if len(self.longtext) > 10:
             d['excerpt'] = self.longtext[:300] + '...'

@@ -33,10 +33,12 @@
           <input type="submit" value="search.json">
         </form>
         <ul class="search-results"></ul>
-        <p>Basic data on the current frontpage event:</p>
+        <p>Download data on the current (frontpage) or past events:</p>
         <ul>
           <li><a href="/hackathon.json">/hackathon.json</a> (JSON <a href="https://schema.org/Hackathon">Schema</a>)</li>
-          <li><a href="/api/event/current/info.json">/api/event/current/info</a> (JSON)</li>
+          <li><a href="/api/event/current/info.json">/api/event/current/info.json</a> (JSON basic info)</li>
+          <li><a href="/api/event/current/datapackage.json">/api/event/current/datapackage.json</a> (full Data Package)</li>
+          <li><a href="/api/event/current/datapackage.zip">/api/event/current/datapackage.zip</a> (Data Package as ZIP)</li>
         </ul>
         <p>Retrieve all project data from the current (or specific, by id) event:</p>
         <ul>
