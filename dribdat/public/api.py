@@ -21,17 +21,11 @@ PY3 = sys.version_info[0] == 3
 
 blueprint = Blueprint('api', __name__, url_prefix='/api')
 
-# Generate a CSV file
-def gen_csv(csvdata):
-    if len(csvdata) < 1: return ""
-    headerline = csvdata[0].keys()
-    if PY3:
-        output = io.StringIO()
-    else:
-        output = io.BytesIO()
-        headerline = [l.encode('utf-8') for l in headerline]
-    writer = csv.writer(output, quoting=csv.QUOTE_NONNUMERIC)
-    writer.writerow(headerline)
+# Generate rows from data
+def gen_rows(csvdata):
+    rkrows = []
+    headerline = list(csvdata[0].keys())
+    rkrows.append(headerline)
     for rk in csvdata:
         rkline = []
         for l in rk.values():
@@ -43,7 +37,23 @@ def gen_csv(csvdata):
                 rkline.append(json.dumps(l))
             else:
                 rkline.append(l.encode('utf-8'))
-        writer.writerow(rkline)
+        rkrows.append(rkline)
+    return rkrows
+
+# Generate a CSV file
+def gen_csv(csvdata):
+    if len(csvdata) < 1: return ""
+    rowdata = gen_rows(csvdata)
+    headerline = rowdata[0]
+    if PY3:
+        output = io.StringIO()
+    else:
+        output = io.BytesIO()
+        headerline = [l.encode('utf-8') for l in headerline]
+    writer = csv.writer(output, quoting=csv.QUOTE_NONNUMERIC)
+    writer.writerow(headerline)
+    for rk in rowdata[1:]:
+        writer.writerow(rk)
     return output.getvalue()
 
 # ------ EVENT INFORMATION ---------
@@ -371,19 +381,22 @@ def package_event():
         description=event.summary or event.description,
         # it's possible to provide all the official properties like homepage, version, etc
     )
-    fp_projects = tempfile.NamedTemporaryFile(mode='w+t', prefix='projects-', suffix='.csv')
-    print("Writing temp file", fp_projects.name)
-    fp_projects.write(gen_csv(project_list(event.id)))
+    # fp_projects = tempfile.NamedTemporaryFile(mode='w+t', prefix='projects-', suffix='.csv')
+    # print("Writing temp file", fp_projects.name)
+    # fp_projects.write(gen_csv(project_list(event.id)))
+    project_rows = gen_rows(project_list(event.id))
+    print(project_rows)
     resource = Resource(
         name='projects',
-        path=fp_projects.name,
+        data=project_rows,
     )
+    print(resource.read_rows())
     package.add_resource(resource)
     fp_package = tempfile.NamedTemporaryFile(prefix='datapackage-', suffix='.zip')
     print("Saving at", fp_package.name)
-    # package.zip(fp_package.name)
-    return jsonify(package)
+    package.to_zip(fp_package.name)
+    # return jsonify(package)
     # package.to_json('datapackage.json') # Save as JSON
-    fp_projects.close()
-    fp_package.close()
+    # fp_projects.close()
+    # fp_package.close()
     return send_file(fp_package.name, as_attachment=True)
