@@ -8,7 +8,7 @@ boto3>=1.17,<2
 certifi>=2021.5.30
 cffi>=1.14.5
 chardet>=4.0.0
-Click>=8.0.0,<9
+Click==7.1.2
 cssmin>=0.2.0
 cssselect>=1.1.0
 eventlet>=0.30.2
