@@ -84,15 +84,20 @@ def FetchBitbucketProject(project_url):
     WEB_BASE = "https://bitbucket.org/%s"
     API_BASE = "https://api.bitbucket.org/2.0/repositories/%s"
     data = requests.get(API_BASE % project_url)
-    if data.text.find('{') < 0: return {}
+    if data.text.find('{') < 0:
+        print('No data at', project_url)
+        return {}
     json = data.json()
-    if not 'name' in json: return {}
+    if not 'name' in json:
+        print('Invalid format at', project_url)
+        return {}
+    readme = ''
+    for docext in ['.md', '.rst', '.txt', '']:
+        readmedata = requests.get(API_BASE % project_url + '/src/HEAD/README.md')
+        if readmedata.text.find('{"type":"error"') != 0:
+            readme = readmedata.text
+            break
     web_url = WEB_BASE % project_url
-    readmedata = requests.get(web_url)
-    if readmedata.text.find('class="readme') < 0: return {}
-    doc = pq(readmedata.text)
-    content = doc("div.readme")
-    if len(content) < 1: return {}
     contact_url = json['website'] or web_url
     if json['has_issues']: contact_url = "%s/issues" % web_url
     image_url = ''
@@ -100,12 +105,11 @@ def FetchBitbucketProject(project_url):
         image_url = json['project']['links']['avatar']['href']
     elif 'links' in json and 'avatar' in json['links']:
         image_url = json['links']['avatar']['href']
-    html_content = bleach.clean(content.html().strip())
     return {
         'type': 'Bitbucket',
         'name': json['name'],
         'summary': json['description'],
-        'description': html_content,
+        'description': readme,
         'homepage_url': json['website'],
         'source_url': web_url,
         'image_url': image_url,
