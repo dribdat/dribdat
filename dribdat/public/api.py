@@ -331,7 +331,7 @@ def package_event(event, format):
     package = Package(
         name='event-%d' % event.id,
         title=event.name,
-        description=event.summary + "\n\n*This is a Data Package containing event and project details.*",
+        description="This is a Data Package containing event and project details",
         keywords=["dribdat", "hackathon", "co-creation"],
         sources=[{
             "title": "dribdat", "path": "https://dribdat.cc"
