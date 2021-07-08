@@ -4,6 +4,14 @@
 
 {% block content %}
 <div class="container">
+    {% if tips %}
+    <div class="jumbotron alert alert-info">
+      <a class="close" title="Close" href="#" data-dismiss="alert">&times;</a>
+      <div class="container scroll-after-500">
+        {{ tips|markdown }}
+      </div>
+    </div>
+    {% endif %}
     <h2>New Event</h2>
     {{ render_form(url_for('admin.event_new'), form) }}
 </div>

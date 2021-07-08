@@ -1,15 +1,18 @@
-{% extends "admin/layout.html" %}
+{% extends "layout.html" %}
+{% import "macros/_misc.html" as misc %}
+
+{% block page_title %}{{current_event.name}} / Print{% endblock %}
+{% block body_class %}print-page{% endblock %}
 
 {% block content %}
 <div class="container">
-    <h2>{{ event.name }}</h2>
-    <p>List of all projects which have advanced beyond idea/challenge phase as of <b>{{ curdate }}</b></p>
+    <p>All projects and challenges as of <b>{{ curdate }}</b></p>
 
     {% for project in projects %}
     <hr>
     <div class="project-info">
 
-      <ul style="float:right; min-width:50%; list-style-type:none; border-left:1px solid #999; padding-left:15px">
+      <ul class="project-meta">
         <li>Permalink: <a href="{{ url_for('project.project_view', project_id=project.id) }}">{{ url_for('project.project_view', project_id=project.id, _external=True) }}</a></li>
         {% if project.webpage_url %}
         <li>Homepage: <a href="{{ project.webpage_url }}">{{ project.webpage_url }}</a></li>
@@ -28,6 +31,13 @@
         {% if project.category_id %}
         <li>Category: <b>{{ project.category.name }}</b></li>
         {% endif %}
+        <li>Team:
+          <ul class="project-team" title="team">
+          {% for user in project.team() %}
+            <li><a href="{{user.webpage_url}}" target="_blank">{{ user.username }}</a></li>
+          {% endfor %}
+          </ul>
+        </li>
       </ul>
 
       {% if project.image_url %}
@@ -51,12 +61,6 @@
         {{project.longtext|truncate(250)|markdown}}
       </div>
       {% endif %}
-
-      <ul class="project-team">
-      {% for user in project.team() %}
-        <li><a href="{{user.webpage_url}}" target="_blank">{{ user.username }}</a></li>
-      {% endfor %}
-      </ul>
     </div>
 
     <br clear="all">

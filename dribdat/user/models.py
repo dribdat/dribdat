@@ -255,7 +255,7 @@ class Event(PkModel):
             },
             "name": self.name,
             "url": host_url + self.url,
-            "description": re.sub('<[^>]*>', '', self.description),
+            "description": self.summary or re.sub('<[^>]*>', '', self.description),
             "startDate": format_date(self.starts_at, '%Y-%m-%dT%H:%M'),
             "endDate": format_date(self.ends_at, '%Y-%m-%dT%H:%M'),
             "logo": self.logo_url,

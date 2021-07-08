@@ -1,4 +1,5 @@
 {% extends "layout.html" %}
+{% import "macros/_event.html" as misc %}
 
 {% block page_title %}{{current_event.name}} / {% if current_event.has_finished %} Results {% elif current_event.has_started %} Project Board {% else %} Challenges {% endif %}{% endblock %}
 
@@ -20,7 +21,7 @@
 <center class="nav-categories">
   <div class="btn-group" data-toggle="buttons" role="group" aria-label="Filter by category">
     {% if projects %}
-      <label class="btn btn-default active" title="Projects + Challenges">
+      <label class="btn btn-default active" title="All projects">
         <input type="radio" name="category" id="" autocomplete="off" checked>
           <i class="fa fa-trophy"></i><br>
           <span> </span>
@@ -35,47 +36,27 @@
           <span>{{ category.name }}</span>
       </label>
     {% endfor %}
-    {% if projects %}
-      <label class="btn btn-default" title="Projects Only">
+    {% if projects and current_event.has_finished %}
+      <label class="btn btn-default" title="Hide challenges">
         <input type="radio" name="category" id="challenges" autocomplete="off">
           <i class="fa fa-cubes"></i><br>
           <span> </span>
       </label>
-      <!-- TODO: Hidden until we have a better list view
-      <label class="btn btn-default" title="List view">
+      <!-- <label class="btn btn-default" title="List view">
         <input type="radio" name="category" id="list" autocomplete="off">
           <i class="fa fa-bars"></i><br>
           <span> </span>
-      </label>
-      -->
+      </label> -->
     {% endif %}
   </div>
 </center>
 
 
-<div class="honeycomb"><!-- Based on Hexagon Tiles by Graham Pyne http://codepen.io/gpyne/pen/iElhp/ -->
+<div class="honeycomb">
   <a name="projects"></a>
   <div class="ibws-fix">
   {% for project in projects %}
-    <a href="{{ url_for('project.project_view', project_id=project.id) }}"
-       title="{{ project.summary }}"
-       class="hexagon {{ 'challenge' if project.phase=='Challenge' else 'project' }} category-highlight"
-       category-id="{{ project.category_id }}"
-       style="border-bottom-color:{{project.logo_color}}">
-      <div class="hexagontent{{ ' with-icon' if project.logo_icon }}">
-        {% if project.logo_icon %}
-          <i class="fa fa-{{project.logo_icon}}"></i><br>
-        {% endif %}
-        <span>{{ project.name|truncate(32, True, '..') }}</span>
-        {% if project.image_url %}
-          <div class="hexaicon" style="background-image:url('{{project.image_url}}')"></div>
-        {% endif %}
-        <div class="progress">
-          <div class="progress-bar" role="progressbar" aria-valuenow="{{project.score}}" aria-valuemin="0" aria-valuemax="70" style="width:{{project.score}}%">
-          </div>
-        </div>
-      </div>
-    </a>
+    {{ misc.render_project_hexagon(project) }}
   {% endfor %}
   {% if project_count % 6 != 0 %}
     <a class="hexagon" style="visibility:hidden"></a>
@@ -132,11 +113,11 @@
   </div>
 {% endif %}
 
-{% if current_event.description or current_event.community_embed %}
+{% if current_event.description or current_event.summary %}
 <div class="event-info">
   <a name="info"></a>
   <div class="content">
-    {{current_event.description|markdown}}
+    {{current_event.description or current_event.summary|markdown}}
   </div>
 </div><!-- /.event-info -->
 {% endif %}
@@ -195,14 +176,17 @@
       <i class="fa fa-signal" aria-hidden="true"></i>
       <span>Stages</span>
     </a>
+    <a href="{{ url_for('public.event_print', event_id=current_event.id) }}" class="btn btn-default">
+      <i class="fa fa-clipboard" aria-hidden="true"></i>
+      List</a>
     {% if current_user and current_user.active and current_user.is_admin %}
-      <a href="{{ url_for('admin.event', event_id=current_event.id) }}" class="btn btn-default">
-        <i class="fa fa-pencil" aria-hidden="true"></i>
-        Event settings</a>
       <!-- admin only until we have proper social sharing -->
       <a href="{{ url_for('public.event', event_id=current_event.id, _external=True) }}" class="btn btn-default" id="embed-link">
         <i class="fa fa-external-link" aria-hidden="true"></i>
-        Share code</a>
+        Share</a>
+      <a href="{{ url_for('admin.event', event_id=current_event.id) }}" class="btn btn-warning">
+        <i class="fa fa-pencil" aria-hidden="true"></i>
+        Event</a>
     {% endif %}
   </div>
 

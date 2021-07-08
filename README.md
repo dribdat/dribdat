@@ -31,17 +31,17 @@ Optimize your dribdat instance with the following environment variables in produ
 * `CSP_DIRECTIVES` - configure content security policy - see [Talisman docs](https://github.com/GoogleCloudPlatform/flask-talisman#content-security-policy)
 * `DATABASE_URL` - connects to PostgreSQL or another database via `postgresql://username:password@...` (in Heroku this is set automatically)
 * `CACHE_TYPE` - speed up the site with Redis or Memcache - see [Flask-Caching](https://flask-caching.readthedocs.io/en/latest/index.html#configuring-flask-caching)
+* `DRIBDAT_ENV` - 'dev' to enable debugging, 'prod' to optimise assets for production
 
 The following options can be used to toggle **application features**:
 
-* `DRIBDAT_ENV` - 'dev' to enable debugging, 'prod' to optimise assets etc.
+* `DRIBDAT_THEME` - can be set to one of the [Bootswatch themes](https://bootswatch.com/)
+* `DRIBDAT_STYLE` - provide the address to a CSS stylesheet for custom global styles
+* `DRIBDAT_CLOCK` - use 'up' or 'down' to change the position, or 'off' to hide the countdown clock
 * `DRIBDAT_SECRET` - a long scary string for hashing your passwords - in Heroku this is set automatically
 * `DRIBDAT_APIKEY` - for connecting clients to the remote [API](#api)
 * `DRIBDAT_USER_APPROVE` - set to True so that any new non-SSO accounts are inactive until approved by an admin
 * `DRIBDAT_NOT_REGISTER` - set to True to hide the registration, so new users can only join this server via SSO
-* `DRIBDAT_THEME` - can be set to one of the [Bootswatch themes](https://bootswatch.com/)
-* `DRIBDAT_STYLE` - provide the address to a CSS stylesheet for custom global styles
-* `DRIBDAT_CLOCK` - use 'up' or 'down' to change the position, or 'off' to hide the countdown clock
 
 Support for **Web analytics** can be configured using one of the following variables:
 

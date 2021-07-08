@@ -22,32 +22,32 @@
                   Action ...
                 </button>
                 <div class="dropdown-menu" aria-labelledby="evMenu{{ event.id }}">
-                  <a href="{{ url_for('admin.event_print', event_id=event.id) }}" class="dropdown-item">
-                    Print
+                  <a href="{{ url_for('admin.event', event_id=event.id) }}" class="dropdown-item">
+                    &#9734; Edit this event
                   </a>
-                  <a href="{{ url_for('public.event', event_id=event.id) }}" class="dropdown-item">
-                    Projects
+                  <a href="{{ url_for('admin.event_projects', event_id=event.id) }}" class="dropdown-item">
+                    &#9734; Project admin
+                  </a>
+                  <a href="{{ url_for('admin.event_print', event_id=event.id) }}" class="dropdown-item">
+                    Print view
                   </a>
                   <a href="{{ url_for('public.event_instruction', event_id=event.id) }}" class="dropdown-item">
-                    Resources
+                    Instruction view
                   </a>
                   <a href="{{ url_for('public.dashboard', event_id=event.id) }}" class="dropdown-item">
-                    Dashboard
+                    Dashboard view
                   </a>
                   <a href="{{ url_for('public.event', event_id=event.id, _external=True) }}?embed=1" class="dropdown-item" id="embed-link">
                     Embed view
                   </a>
-                  <a href="{{ url_for('admin.event_projects', event_id=event.id) }}" class="dropdown-item">
-                    Project admin
-                  </a>
                   <a href="{{ url_for('api.info_event_hackathon_json', event_id=event.id) }}" class="dropdown-item">
-                    Projects (JSON)
+                    &#9660; hackathon.json
                   </a>
                   <a href="{{ url_for('api.project_list_event_csv', event_id=event.id) }}" class="dropdown-item">
-                    Projects (CSV)
+                    &#9660; Projects (CSV)
                   </a>
                   <a href="{{ url_for('api.event_participants_csv', event_id=event.id) }}" class="dropdown-item">
-                    Participants (CSV)
+                    &#9660; Participants (CSV)
                   </a>
                 </div>
               </div>

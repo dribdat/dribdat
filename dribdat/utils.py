@@ -82,7 +82,11 @@ def format_date_range(starts_at, ends_at):
 
 """ Load event preset content """
 def load_event_presets():
-    EVENT_PRESET = { 'quickstart': '', 'codeofconduct': '' }
+    EVENT_PRESET = {
+        'eventstart': '',
+        'quickstart': '',
+        'codeofconduct': '',
+    }
     for pr in EVENT_PRESET.keys():
         fn = path.join(path.join(path.join(
             path.dirname(__file__),

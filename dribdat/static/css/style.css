@@ -84,6 +84,14 @@ form input[type="checkbox"] {
   background: #ff3;
 }
 
+.scroll-after-500 {
+  overflow-y: auto;
+  max-height: 500px;
+}
+.alert .close {
+  font-size: 2rem;
+}
+
 /* pagination */
 
 .pagination { margin-bottom: 1em; }
@@ -142,6 +150,7 @@ ul.help-block {
 }
 .section-header .section-header-logo img {
   height: 6em;
+  margin-bottom: 2em;
 }
 .section-header .event-hostname,
 .section-header .event-location {
@@ -193,6 +202,13 @@ nav .navbar-nav .nav-item {
 .home-page .home-nav {
   display: block;
   text-align: center;
+}
+.home-page .home-description {
+  margin: 1em;
+  font-size: 125%;
+}
+.home .start-event {
+  margin: 1em;
 }
 .home .an-event .card {
   width: 100%;
@@ -276,6 +292,7 @@ nav .navbar-nav .nav-item {
 
 .jumbotron.home-page {
   background: none;
+  padding: 1rem;
 }
 .jumbotron.event-page {
   margin-top: 40px;
@@ -286,6 +303,10 @@ nav .navbar-nav .nav-item {
   margin: 2em 0px;
   text-align: center;
   display: block;
+}
+
+.event-home .event-info {
+  font-size: 125%;
 }
 
 /* ---- Hexagonal hawtness ---- */
@@ -384,7 +405,8 @@ nav .navbar-nav .nav-item {
   width: 72px;
   margin-left: -36px;
   left: 50%;
-  opacity: 0.8;
+  opacity: 1;
+  border: 1px solid white;
 }
 .project .hexagontent .progress-bar {
   background-color: #aaa;
@@ -491,10 +513,12 @@ nav .navbar-nav .nav-item {
   border-top-left-radius: 20px;
   border-top-right-radius: 20px;
   border: 5px solid #ccc;
-  margin-top: 1em;
+  margin-top: 0em; /* to overlap slightly with image */
+  position: relative;
 }
 .project-home .project-image-container.underlay {
   filter: blur(2px);
+  z-index: -1;
 }
 .project-home .project-image-container.overlay {
   opacity: 1.0;
@@ -907,9 +931,9 @@ pre { color: #333; background: white; }
   }
 }
 
-/* dribs page */
+/* big stylish jumbotrons! */
 
-.dribs-page .jumbotron {
+.jumbotron {
   padding: 2rem;
   border: 4px dashed lightgray;
 }
@@ -936,8 +960,9 @@ pre { color: #333; background: white; }
   width: 200px;
   height: 60px;
   display: inline-block;
-  background: rgba(0,0,0,0.1);
-  border: 2px solid #fff;
+  background: rgba(255,255,255,0.5);
+  border: 2px solid #eee;
+  border-radius: 10px;
   padding: 2px; margin-right: 5px;
   overflow: hidden;
   text-align: left;
@@ -977,16 +1002,24 @@ pre { color: #333; background: white; }
   font-size: 140%;
   font-weight: bold;
 }
+.userprofile h1 {
+  text-align: center;
+  margin-top: 1em;
+}
 .profile-projects {
   padding: 1em 2em;
   overflow-x: auto;
-  background: #eee;
   width: 100%;
+  background: #f0f0f0;
+  border-radius: 20px;
+}
+.profile-projects.honeycomb {
+  padding: 1.5em 4em;
 }
 .profile-projects::-webkit-scrollbar {
   display: none;
 }
-.profile-projects .card {
+.profile-projects .row .card.project {
   height: 8em;
   width: 20em;
   margin-right: 5px;
@@ -994,11 +1027,14 @@ pre { color: #333; background: white; }
   display: inline-block;
   padding: 0px;
 }
+.profile-projects .card:hover {
+  box-shadow: 3px 3px 3px lightblue;
+}
 .profile-projects .card .project-image {
-  width: 5em;
-  float: left;
-  padding: 6px 10px;
-  margin-bottom: 5em;
+  height: 100%;
+  max-width: 40%;
+  padding: 0px;
+  margin-right: 1em;
 }
 .profile-projects .card-body {
   padding: 10px;
@@ -1030,6 +1066,9 @@ pre { color: #333; background: white; }
   font-size: 120%;
   margin-top: 1em;
 }
+.profile-text {
+  background: white;
+}
 .team-roles {
   display: inline-block;
   float: right;
@@ -1045,7 +1084,7 @@ pre { color: #333; background: white; }
     border-radius: 4px;
     margin-bottom: 1px;
 }
-@media (max-width: 1000px) {
+@media (max-width: 760px) {
   .profile-projects .project-score,
   .profile-projects .card .project-image
   { display: none; }
@@ -1083,6 +1122,15 @@ pre { color: #333; background: white; }
 }
 .embed-view .section-header { display: none; }
 
+
+/* Print view of projects */
+.print-page .project-meta {
+  float: right;
+  width: 50%;
+  list-style-type: none;
+  border-left: 1px solid #999;
+  padding-left: 15px;
+}
 
 /* ------------
 Code of Conduct
@@ -1126,11 +1174,6 @@ Challenges view
 Instruction page
 ---------------- */
 
-.event-instruction,
-.instruction-page .jumbotron {
-  padding: 2rem;
-  border: 4px dashed lightgray;
-}
 .instruction-page .resource-list {
   margin: 0; padding: 0;
   margin-top: 1em;

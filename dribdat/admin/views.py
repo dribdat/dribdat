@@ -260,7 +260,9 @@ def event_new():
         form.community_embed.data = EVENT_PRESET['codeofconduct']
     form.is_current.data = True
 
-    return render_template('admin/eventnew.html', form=form)
+    tips = EVENT_PRESET['eventstart']
+
+    return render_template('admin/eventnew.html', form=form, tips=tips)
 
 @blueprint.route('/event/<int:event_id>/delete', methods=['GET', 'POST'])
 @login_required
@@ -333,11 +335,7 @@ def event_projects(event_id):
 @login_required
 @admin_required
 def event_print(event_id):
-    now = datetime.utcnow().strftime("%d.%m.%Y %H:%M")
-    event = Event.query.filter_by(id=event_id).first_or_404()
-    projects = Project.query.filter_by(event_id=event_id, is_hidden=False)
-    projects = projects.filter(Project.progress>=0).order_by(Project.name)
-    return render_template('admin/eventprint.html', event=event, projects=projects, curdate=now, active='projects')
+    return redirect(url_for("public.event_print", event_id=event_id))
 
 @blueprint.route('/project/<int:project_id>', methods=['GET', 'POST'])
 @login_required

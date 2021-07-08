@@ -1,22 +1,22 @@
 {% macro render_user_table(users, class='') %}
-<table class='{{ class }}'>
-    <thead>
-        <tr>
-            <td>#</td>
-            <td>Username</td>
-            <td>Email</td>
-        </tr>
-    </thead>
-    <tbody>
-        {% for user in users %}
-        <tr>
-            <td>{{ loop.index }}</td>
-            <td><a href="{{ url_for('user.profile', name=user.name) }}">{{ user.name }}</a></td>
-            <td>{{ user.email }}</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+    <table class='{{ class }}'>
+        <thead>
+            <tr>
+                <td>#</td>
+                <td>Username</td>
+                <td>Email</td>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+            <tr>
+                <td>{{ loop.index }}</td>
+                <td><a href="{{ url_for('user.profile', name=user.name) }}">{{ user.name }}</a></td>
+                <td>{{ user.email }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 {% endmacro %}
 
 {% macro render_user_profile(user) %}
@@ -33,57 +33,6 @@
         {% endfor %}
         </div>
     </a>
-{% endmacro %}
-
-{% macro render_home_event(event) %}
-<div class="col-lg-4 an-event"><div class="card">
-    {% if event.logo_url %}
-    <div class="card-img-top">
-      <img src="{{ event.logo_url }}" title="{{ event.hostname }}">
-    </div>
-    {% endif %}
-    <div class="card-body">
-      {% if event.lock_resources %}
-        <i class="fa fa-cube" style="float:right"></i>
-      {% else %}
-        <i class="fa fa-code" style="float:right"></i>
-      {% endif %}
-      <h3 class="card-title">
-        <a href="{{ url_for('public.event', event_id=event.id) }}">
-          {{event.name}}</a>
-      </h3>
-      <div class="card-text">
-        {% if not event.lock_resources %}
-            <p class="an-event-meta">
-              <b>{{ event.date }}</b>
-              <span>{{ event.location }}</span>
-            </p>
-        {% endif %}
-        <p class="an-event-description">
-          {{event.summary or event.description|markdown|striptags|truncate(500)}}
-        </p>
-      </div>
-      <div class="btn-group an-event-actions" role="group">
-        {% if event.webpage_url %}
-          <a href="{{ event.webpage_url }}" class="btn btn-info">
-            Information</a>
-        {% endif %}
-        {% if event.lock_resources %}
-            <a href="{{ url_for('public.event_instruction', event_id=event.id) }}" class="btn btn-info">
-                Resources
-            </a>
-        {% elif event.has_finished %}
-            <a href="{{ url_for('public.event', event_id=event.id) }}" class="btn btn-warning">
-                Results
-            </a>
-        {% else %}
-            <a href="{{ url_for('public.event', event_id=event.id) }}" class="btn btn-success">
-                Challenges
-            </a>
-        {% endif %}
-      </div>
-    </div><!-- /.card-body -->
-</div></div>
 {% endmacro %}
 
 {% macro render_pagination(pagination, endpoint) %}

@@ -1,6 +1,6 @@
 ---
 # definition of rulesets for advancing through the
-# stages of a hackathon projects
+# stages of a dribdat project
 
 stages:
   -
@@ -12,7 +12,7 @@ stages:
       validate:
         -
           field: summary
-          min: 10
+          min: 5
           help: Your challenge must have a short summary.
         -
           field: excerpt

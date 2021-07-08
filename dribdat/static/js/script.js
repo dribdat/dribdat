@@ -112,7 +112,6 @@
     var $togglebtn = $('button[data-target="#uploadImage"]');
     $('.fld-longtext').append($togglebtn);
     $('.fld-image_url').append($togglebtn.clone());
-    $('.fld-autotext_url').parent().prepend($('input#submit').parent().clone());
     var $dialog = $(this);
     var $inputfd = $dialog.find('input[type="file"]');
     $inputfd.change(function() {
@@ -205,15 +204,17 @@
     $('.honeycomb').removeClass('hide-challenges');
 
     if (selected_id === '' || selected_id === 'list' || selected_id === 'challenges') {
+      // Visibility option selected
       $projects.addClass('category-highlight');
       $('.category-container', $infotext).hide();
       $projects
         .removeClass('hexagon hexalist')
         .addClass(selected_id === 'list' ? 'hexalist' : 'hexagon');
-      if (selected_id === 'challenges')
+      if (selected_id !== '')
         $('.honeycomb').addClass('hide-challenges');
 
     } else {
+      // A category is selected
       var $selected = $('[category-id="' + selected_id + '"]', $projects.parent());
       $projects.removeClass('category-highlight');
       $selected.addClass('category-highlight');
@@ -290,20 +291,29 @@
     });
   });
 
-  // Enable dark mode
+
+  function setDarkMode(toggle) {
+    dm = Boolean(window.darkmode);
+    if (toggle) dm = !dm;
+    if (dm) {
+      $('html').css('-webkit-filter','invert(100%)')
+               .css('-moz-filter','invert(100%)')
+               .css('-o-filter','invert(100%)')
+               .css('-ms-filter','invert(100%)')
+               .css('background', 'black')
+               .css('height', '100%');
+    } else {
+      $('html').attr('style','');
+    }
+    localStorage.setItem('darkmode', dm ? '1' : '0');
+    window.darkmode = dm;
+  }
+  window.darkmode = localStorage.getItem('darkmode') == '1';
+  setDarkMode(false);
+  // Enable dark mode on click
   $('.darkmode').click(function(e) {
     e.preventDefault(); e.stopPropagation();
-    if (window.darkmode) {
-      $('html').attr('style','');
-      return window.darkmode = false;
-    }
-    window.darkmode = true;
-    $('html').css('-webkit-filter','invert(100%)')
-             .css('-moz-filter','invert(100%)')
-             .css('-o-filter','invert(100%)')
-             .css('-ms-filter','invert(100%)')
-             .css('background', 'black')
-             .css('height', '100%');
+    setDarkMode(true);
   });
 
 }).call(this, jQuery, window);

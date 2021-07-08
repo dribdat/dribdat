@@ -1,4 +1,5 @@
 {% extends "layout.html" %}
+{% import "macros/_event.html" as misc %}
 
 {% block page_title %}{{ user.username }}{% endblock %}
 {% block body_class %}userprofile{% endblock %}
@@ -32,7 +33,7 @@
 </div>
 <div class="row">
 
-    <h1 class="profile-header">
+    <h1 class="profile-header huge">
         <img src="https://www.gravatar.com/avatar/{{user.carddata}}"/>
         <span>
             {{ user.username }}
@@ -68,61 +69,28 @@
 
 </div>
 
-<ul class="nav nav-pills nav-fill md-tabs" id="userTabs" role="tablist">
-    <li class="nav-item">
-        <a class="nav-link active" id="projects-tab-md" data-toggle="tab" href="#projects-md" role="tab" aria-controls="projects-md"
-        aria-selected="true">Projects</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" id="posts-tab-md" data-toggle="tab" href="#posts-md" role="tab" aria-controls="posts-md"
-        aria-selected="false">Log</a>
-    </li>
-</ul>
-
-<div class="user-info tab-content">
-    <div class="tab-pane fade show active" id="projects-md" role="tabpanel" aria-labelledby="projects-tab-md">
-
 {% if user.my_story %}
 <div class="row">
     <div class="profile-story col-12">
-        <div class="profile-text">
+        <blockquote class="profile-text">
             {{ user.my_story|markdown }}
-        </div>
+        </blockquote>
     </div>
 </div>
 {% endif %}
 
-{% if not projects and current_user and current_user.id == user.id %}
-    <i>No projects here. Time to <b>Join</b> or <b>Start</b> something awesome!</i>
+{% if not projects %}
+    {% if current_user and current_user.id == user.id %}
+      <div class="alert alert-warning">
+        No projects here yet. Time to <b>Join</b> or <b>Start</b> something awesome!
+      </div>
+    {% endif %}
 {% else %}
-    <a name="teams"></a>
-    <div class="profile-projects container-fluid">
-        <div class="row flex-row flex-nowrap">
+    <a name="projects"><h1>Projects</h1></a>
+    <div class="profile-projects honeycomb">
+        <div class="row ibws-fix">
         {% for project in projects %}
-            <a class="col-5 card project"
-               href="{{ url_for('project.project_view', project_id=project.id) }}">
-
-              {% if project.image_url %}
-                <img class="project-image" src="{{project.image_url}}">
-              {% endif %}
-
-              {% if project.score and not project.is_challenge %}
-              <div class="project-score">
-                <div class="progress" title="A score based on profile completeness and voting results">
-                  <div class="progress-bar" role="progressbar" aria-valuenow="{{project.score}}" aria-valuemin="0" aria-valuemax="70" style="width:{{project.score}}%">
-                    {{project.score}}
-                  </div>
-                </div>
-                <center>{{ project.event.name }}</center>
-              </div>
-              {% endif %}
-
-              <div class="card-body">
-                <h5 class="card-title">{{ project.name }}</h5>
-                <p class="card-text">{{ project.summary }}</p>
-              </div>
-
-            </a>
+            {{ misc.render_project_hexagon(project) }}
         {% endfor %}
         </div>
     </div><!-- /profile-projects -->
@@ -151,40 +119,47 @@
 {% if user.my_goals %}
 <div class="row">
     <div class="profile-goals col-12">
-        <div class="profile-text">
+        <a name="goals"><h1>Goals</h1></a>
+        <blockquote class="profile-text jumbotron">
             {{ user.my_goals|markdown }}
-        </div>
+        </blockquote>
     </div>
 </div>
 {% endif %}
 
-</div>
-<div class="tab-pane fade" id="posts-md" role="tabpanel" aria-labelledby="posts-tab-md">
-
-<section class="timeline">
-{% for s in posts %}
-<div class="timeline-item">
-    <div class="timeline-img"></div>
-    <div class="timeline-content timeline-card js--fadeInBottom">
-      <div class="timeline-img-header">
-        <a href="{{ url_for('project.project_view', project_id=s.project_id) }}">
-          <h2>{{s.project_name}}</h2>
-        </a>
+{% if not posts %}
+    {% if current_user and current_user.id == user.id %}
+      <div class="alert alert-info">
+        Once you join a project, write some <b>Posts</b> to show a log of your work.
       </div>
+    {% endif %}
+{% else %}
+<a name="timeline"><h1>Log</h1></a>
+<div class="jumbotron">
 
-      {% if s.content %}
-        <div class="content">
-          {{s.content|markdown|safe}}
+    <section class="timeline">
+    {% for s in posts %}
+    <div class="timeline-item">
+        <div class="timeline-img"></div>
+        <div class="timeline-content timeline-card js--fadeInBottom">
+          <div class="timeline-img-header">
+            <a href="{{ url_for('project.project_view', project_id=s.project_id) }}">
+              <h2>{{s.project_name}}</h2>
+            </a>
+          </div>
+
+          {% if s.content %}
+            <div class="content">
+              {{s.content|markdown|safe}}
+            </div>
+          {% endif %}
+
+          <div class="date">{{s.date|format_datetime}}</div>
         </div>
-      {% endif %}
-
-      <div class="date">{{s.date|format_datetime}}</div>
     </div>
+    {% endfor %}
+    </section>
 </div>
-{% endfor %}
-</section>
-
-</div><!-- /tab-pane -->
-</div>
+{% endif %}
 
 {% endblock %}

@@ -121,6 +121,15 @@ def event_instruction(event_id):
     return render_template("public/instruction.html",
         current_event=event, steps=steps, active="instruction")
 
+@blueprint.route('/event/<int:event_id>/print')
+def event_print(event_id):
+    now = datetime.utcnow().strftime("%d.%m.%Y %H:%M")
+    event = Event.query.filter_by(id=event_id).first_or_404()
+    projects = Project.query.filter_by(event_id=event_id, is_hidden=False)
+    projects = projects.filter(Project.progress>=0).order_by(Project.name)
+    return render_template('public/eventprint.html',
+        current_event=event, projects=projects, curdate=now, active='print')
+
 @blueprint.route("/dribs")
 def dribs():
     """ Shows the latest logged posts """
