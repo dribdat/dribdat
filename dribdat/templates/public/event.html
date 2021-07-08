@@ -117,7 +117,7 @@
 <div class="event-info">
   <a name="info"></a>
   <div class="content">
-    {{current_event.description or current_event.summary|markdown}}
+    {{current_event.description|markdown or current_event.summary}}
   </div>
 </div><!-- /.event-info -->
 {% endif %}
