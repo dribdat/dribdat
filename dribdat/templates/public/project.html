@@ -37,7 +37,7 @@
     {% if project.is_autoupdate %}
       <a href="{{ url_for('project.project_autoupdate', project_id=project.id) }}" title="Sync external data" class="btn btn-lg btn-warning">
         <i class="fa fa-refresh" aria-hidden="true"></i>
-        Sync</a>
+        Refresh</a>
     {% endif %}
     <a href="{{ url_for('project.project_edit', project_id=project.id) }}" title="Edit project" class="btn btn-lg btn-secondary">
       <i class="fa fa-pencil" aria-hidden="true"></i>

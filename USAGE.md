@@ -12,7 +12,7 @@ After you join an event, log in and **Join** a challenge. Or, if it is still pos
 
 Post your creative **Pitch** using plain text or [Markdown](https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet). Links to videos, documents, a slideshow hosted on [Speaker Deck](https://speakerdeck.com/), and many other [supported sites](https://oembed.com/#section7) will turn into a live preview.
 
-The **Sync** feature allows you to connect a README from your open source repository on [GitHub](https://github.com), [GitLab](https://gitlab.com) or [Bitbucket](https://bitbucket.org) - or an online document at [Etherpad](http://etherpad.org), [Google Docs](http://docs.google.com) (_Publish to Web_), [Instructables](http://instructables.com), [HackMD/CodiMD](https://hackmd.io) and [DokuWiki](http://make.opendata.ch/wiki/project:home). Use the _Sync_ button on your project page for quickly refreshing changes.
+The **Refresh** feature allows you to connect a README from your open source repository on [GitHub](https://github.com), [GitLab](https://gitlab.com) or [Bitbucket](https://bitbucket.org) - or an online document at [Etherpad](http://etherpad.org), [Google Docs](http://docs.google.com) (_Publish to Web_), [Instructables](http://instructables.com), [HackMD/CodiMD](https://hackmd.io) and [DokuWiki](http://make.opendata.ch/wiki/project:home). Use the button on your project page for quickly refreshing changes.
 
 By updating your progress using the **Post** button, you can regularly check in your status and any roadblocks.
 

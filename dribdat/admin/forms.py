@@ -68,7 +68,7 @@ class ProjectForm(FlaskForm):
     category_id = SelectField(u'Challenge category', coerce=int)
     progress = SelectField(u'Progress', coerce=int, choices=projectProgressList())
     hashtag = StringField(u'Hashtag', [length(max=255)], description="Uniquely identifies the team channel")
-    autotext_url = URLField(u'Sync', [length(max=2048)])
+    autotext_url = URLField(u'Readme', [length(max=2048)])
     # is_autoupdate = BooleanField(u'Autoupdate project data')
     name = StringField(u'Title', [length(max=80), UniqueValidator(Project, 'name'), DataRequired()])
     summary = StringField(u'Short summary', [length(max=140)])
