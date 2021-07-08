@@ -50,7 +50,7 @@
   <center class="mt-5">
     <a class="btn btn-light btn-lg" href="{{ url_for('public.event', event_id=current_event.id) }}">
       <i class="fa fa-arrow-left" aria-hidden="true"></i>
-      Back to the future</a>
+      {{ current_event.name }}</a>
   </center>
 
 {% endblock %}
