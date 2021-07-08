@@ -148,7 +148,7 @@
   {% endif %}
 
   {% if not project.is_challenge and project_starred and suggestions %}
-    <div class="alert alert-info resource-list col-12">
+    <div class="alert resource-list col-12">
       <a class="close" title="Close" href="#" data-dismiss="alert">&times;</a>
       <p>Suggestions for this stage of your project:</p>
       <div class="profile-projects container-fluid">
@@ -339,7 +339,7 @@
   <center>
     <a href="{{ url_for('project.project_details', project_id=project.id) }}" title="Edit project details" class="btn btn-lg btn-secondary">
       <i class="fa fa-pencil" aria-hidden="true"></i>
-      Edit details</a>
+      Details</a>
   </center>
   {% endif %}
 

@@ -6,7 +6,23 @@
 {% block body_class %}projectform{% endblock %}
 
 {% block content %}
-  <h2 class="huge">Edit project</h2>
+  <h2 class="huge">
+    Edit
+      <a href="{{ url_for('project.project_view', project_id=project.id) }}" title="Back to project">
+      project</a>
+  </h2>
+
+  <div class="text-right">
+  {% if detail_view %}
+    <a href="{{ url_for('project.project_edit', project_id=project.id) }}" title="Edit project" class="btn btn-lg btn-secondary">
+      <i class="fa fa-pencil" aria-hidden="true"></i>
+      Basics</a>
+  {% else %}
+    <a href="{{ url_for('project.project_details', project_id=project.id) }}" title="Edit project details" class="btn btn-lg btn-secondary">
+      <i class="fa fa-pencil" aria-hidden="true"></i>
+      Details</a>
+  {% endif %}
+  </div>
 
   {% if config.S3_KEY %}
   <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#uploadImage">

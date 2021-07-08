@@ -209,7 +209,9 @@ def project_action(project_id, of_type=None, as_view=True, then_redirect=False, 
     project_team = project.team()
     latest_activity = project.latest_activity()
     project_dribs = project.all_dribs()
-    suggestions = getSuggestionsForStage(project.progress)
+    suggestions = None
+    if not event.lock_resources:
+        suggestions = getSuggestionsForStage(project.progress)
     return render_template('public/project.html', current_event=event, project=project,
         project_starred=starred, project_team=project_team, project_dribs=project_dribs,
         allow_edit=allow_edit, allow_post=allow_post,
