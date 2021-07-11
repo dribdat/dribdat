@@ -40,14 +40,20 @@
                   <a href="{{ url_for('public.event', event_id=event.id, _external=True) }}?embed=1" class="dropdown-item" id="embed-link">
                     Embed view
                   </a>
-                  <a href="{{ url_for('api.info_event_hackathon_json', event_id=event.id) }}" class="dropdown-item">
-                    &#9660; hackathon.json
+                  <a href="{{ url_for('api.package_specific_event', event_id=event.id, format='json') }}" class="dropdown-item">
+                    &#9660; Data Package (JSON)
+                  </a>
+                  <a href="{{ url_for('api.package_specific_event', event_id=event.id, format='zip') }}" class="dropdown-item">
+                    &#9660; Data Package (ZIP)
                   </a>
                   <a href="{{ url_for('api.project_list_event_csv', event_id=event.id) }}" class="dropdown-item">
                     &#9660; Projects (CSV)
                   </a>
                   <a href="{{ url_for('api.event_participants_csv', event_id=event.id) }}" class="dropdown-item">
                     &#9660; Participants (CSV)
+                  </a>
+                  <a href="{{ url_for('api.info_event_hackathon_json', event_id=event.id) }}" class="dropdown-item">
+                    &#9660; hackathon.json
                   </a>
                 </div>
               </div>
