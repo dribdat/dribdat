@@ -14,11 +14,20 @@ from .aggregation import GetEventUsers
 def get_projects_by_event(event_id):
     return Project.query.filter_by(event_id=event_id, is_hidden=False)
 
-def get_event_activities(event_id, limit=50):
-    event = Event.query.filter_by(id=event_id).first_or_404()
-    return [a.data for a in Activity.query
-              .filter(Activity.timestamp>=event.starts_at)
-              .order_by(Activity.id.desc()).limit(limit).all()]
+def get_event_activities(event_id=None, limit=50, q=None, action=None):
+    if event_id is not None:
+        event = Event.query.filter_by(id=event_id).first_or_404()
+        query = Activity.query \
+            .filter(Activity.timestamp>=event.starts_at) \
+            .filter(Activity.timestamp<=event.finishes_at)
+    else:
+        query = Activity.query
+    if q is not None:
+        q = "%%%s%%" % q
+        query = query.filter(Activity.content.like(q))
+    if action is not None:
+        query = query.filter(Activity.action==action)
+    return [a.data for a in query.order_by(Activity.id.desc()).limit(limit).all()]
 
 def get_event_users(event):
     """ Returns plain user objects without personal data """

@@ -94,7 +94,9 @@ def categories_list_current_json():
 @blueprint.route('/event/<int:event_id>/activity.json')
 def event_activity_json(event_id):
     limit = request.args.get('limit') or 50
-    return jsonify(activities=get_event_activities(event_id, limit))
+    q = request.args.get('q') or None
+    if q and len(q) < 3: q = None
+    return jsonify(activities=get_event_activities(event_id, limit, q))
 
 # API: Outputs JSON of categories in the current event
 @blueprint.route('/event/current/activity.json')
@@ -107,7 +109,9 @@ def event_activity_current_json():
 @blueprint.route('/event/<int:event_id>/activity.csv')
 def event_activity_csv(event_id):
     limit = request.args.get('limit') or 50
-    return Response(stream_with_context(gen_csv(get_event_activities(event_id, limit))),
+    q = request.args.get('q') or None
+    if q and len(q) < 3: q = None
+    return Response(stream_with_context(gen_csv(get_event_activities(event_id, limit, q))),
                     mimetype='text/csv',
                     headers={'Content-Disposition': 'attachment; filename=activity_list.csv'})
 
@@ -115,17 +119,17 @@ def event_activity_csv(event_id):
 @blueprint.route('/project/activity.json')
 def projects_activity_json():
     limit = request.args.get('limit') or 10
-    recent = Activity.query.order_by(Activity.id.desc()).limit(limit).all()
-    return jsonify(activities=[a.data for a in recent])
+    q = request.args.get('q') or None
+    if q and len(q) < 3: q = None
+    return jsonify(activities=get_event_activities(None, limit, q))
 
 # API: Outputs JSON of recent posts (a type of activity) across projects
 @blueprint.route('/project/posts.json')
 def projects_posts_json():
     limit = request.args.get('limit') or 10
-    recent = Activity.query.filter(Activity.action=="post")
-    recent = recent.order_by(Activity.id.desc())
-    recent = recent.limit(limit).all()
-    return jsonify(activities=[a.data for a in recent])
+    q = request.args.get('q') or None
+    if q and len(q) < 3: q = None
+    return jsonify(activities=get_event_activities(None, limit, q, "post"))
 
 # API: Outputs JSON of recent activity of a project
 @blueprint.route('/project/<int:project_id>/activity.json')
