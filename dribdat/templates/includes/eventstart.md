@@ -35,3 +35,4 @@ In the interest of creating a safe and inclusive environment, we strongly encour
 <label><input type="checkbox"> Make sure your teams make the data they use, or check that the data are freely and legally available. </label><br>
 
 _Need more help?_ Contact the developers at [dribdat.cc](https://dribdat.cc/#contact), or raise [an issue](https://github.com/hackathons-ftw/dribdat/issues).
+_Disagree with something?_ [Edit this page](https://github.com/hackathons-ftw/dribdat/blob/main/dribdat/templates/includes/eventstart.md).

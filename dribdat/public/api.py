@@ -374,6 +374,16 @@ def package_event(event, format):
             name='projects',
             data=project_list(event.id, True),
         ))
+    print("Generating in-memory JSON of participants")
+    package.add_resource(Resource(
+            name='participants',
+            data=get_event_users(event),
+        ))
+    print("Generating in-memory JSON of activities")
+    package.add_resource(Resource(
+            name='activities',
+            data=get_event_activities(event.id, 500),
+        ))
 
     # Generate data package
     fp_package = tempfile.NamedTemporaryFile(prefix='datapackage-', suffix='.zip')

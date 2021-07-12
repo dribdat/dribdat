@@ -9,7 +9,7 @@ from sys import version_info
 PY3 = version_info[0] == 3
 
 from dribdat.user.models import Event, Project, Category, Activity
-
+from .aggregation import GetEventUsers
 
 def get_projects_by_event(event_id):
     return Project.query.filter_by(event_id=event_id, is_hidden=False)
@@ -20,6 +20,18 @@ def get_event_activities(event_id, limit=50):
               .filter(Activity.timestamp>=event.starts_at)
               .order_by(Activity.id.desc()).limit(limit).all()]
 
+def get_event_users(event):
+    """ Returns plain user objects without personal data """
+    userdata = []
+    for u in GetEventUsers(event):
+        ud = u.data
+        userdata.append({
+            'id': ud['id'],
+            'name': ud['username'],
+            'roles': ud['roles'],
+            'url': ud['url'],
+        })
+    return userdata
 
 def get_project_summaries(projects, host_url, is_moar=False):
     if is_moar:

@@ -695,7 +695,7 @@ class Activity(PkModel):
             'name': self.name,
             'time': int(mktime(self.timestamp.timetuple())),
             'timesince': timesince(self.timestamp),
-            'date': self.timestamp,
+            'date': format_date(self.timestamp, '%Y-%m-%dT%H:%M'),
             'content': self.content or '',
             'ref_url': self.ref_url or '',
         }
