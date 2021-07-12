@@ -54,7 +54,7 @@ def login():
             return redirect(redirect_url)
         else:
             flash_errors(form)
-    return render_template("public/login.html", current_event=current_event(), form=form, oauth_type=oauth_type())
+    return render_template("public/login.html", form=form, oauth_type=oauth_type())
 
 
 @blueprint.route("/register/", methods=['GET', 'POST'])
@@ -93,7 +93,7 @@ def register():
         return redirect(url_for('public.home'))
     else:
         flash_errors(form)
-    return render_template('public/register.html', current_event=current_event(), form=form, oauth_type=oauth_type())
+    return render_template('public/register.html', form=form, oauth_type=oauth_type())
 
 
 @blueprint.route('/logout/')
@@ -108,7 +108,7 @@ def logout():
 @blueprint.route('/forgot/')
 def forgot():
     """Forgot password."""
-    return render_template('public/forgot.html', current_event=current_event(), oauth_type=oauth_type())
+    return render_template('public/forgot.html', oauth_type=oauth_type())
 
 
 @blueprint.route('/user/profile', methods=['GET', 'POST'])

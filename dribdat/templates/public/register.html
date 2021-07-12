@@ -20,17 +20,20 @@
         {{ form.hidden_tag() }}
         <div class="form-group">
             {{form.username.label}}
-            {{form.username(placeholder="Username", class_="form-control")}}
+            {{form.username(placeholder="Name", class_="form-control")}}
         </div>
         <div class="form-group">
             {{form.email.label}}
-            <p><i>For a profile image, link to <br>this address at
-                <a href="https://gravatar.com" target="_blank">Gravatar.com</a>
+            <p><i>For a profile image, create a
+                <a href="https://gravatar.com" target="_blank">Gravatar</a>
+                with this address.
             </i></p>
             {{form.email(placeholder="Email", class_="form-control")}}
         </div>
         <div class="form-group">
             {{form.webpage_url.label}}
+            <p><i>URL to your homepage or GitHub, Twitter, ... account.
+            </i></p>
             {{form.webpage_url(placeholder="https://", class_="form-control")}}
         </div>
         <div class="form-group">
