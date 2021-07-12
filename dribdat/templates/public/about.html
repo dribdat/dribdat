@@ -5,6 +5,25 @@
 {% block body_class %}about-dribdat{% endblock %}
 
 {% block content %}
+
+<div class="container" style="margin-bottom:1em">
+  <div class="row" id="api-search">
+    <form action="/api/project/search.json" id="search">
+      <div class="content input-group mb-3">
+        <div class="input-group-prepend">
+          <span class="input-group-text">Quicksearch</span>
+        </div>
+        <input type="text" class="form-control" name="q" aria-label="Search term" placeholder="Start typing ...">
+      </div>
+    </form>
+  </div>
+  <div class="row">
+    <div class="profile-projects container-fluid">
+      <div class="row flex-row flex-nowrap" id="search-results"></div>
+    </div>
+  </div>
+</div>
+
 <div class="jumbotron">
   <div class="container">
     <div class="row"><center style="width:100%">
@@ -20,17 +39,6 @@
         Visit our <b><a href="https://dribdat.cc" target="_blank">web page</a></b>,
         read the <b><a href="https://github.com/dribdat/dribdat/blob/main/USAGE.md#usage" target="_blank">User Guide</a></b>,
         ask your event organiser, or talk to fellow participants!</p>
-    </div>
-    <hr>
-    <div class="row" id="api-search">
-      <div class="content">
-        <h3>Search</h3>
-        <form action="/api/project/search.json" id="search">
-          <input name="q" placeholder="Search projects ...">
-        </form>
-
-        <ul class="search-results"></ul>
-      </div>
     </div>
     <hr>
     <div class="row" id="api">
