@@ -19,7 +19,7 @@ def get_event_activities(event_id=None, limit=50, q=None, action=None):
         event = Event.query.filter_by(id=event_id).first_or_404()
         query = Activity.query \
             .filter(Activity.timestamp>=event.starts_at) \
-            .filter(Activity.timestamp<=event.finishes_at)
+            .filter(Activity.timestamp<=event.ends_at)
     else:
         query = Activity.query
     if q is not None:
