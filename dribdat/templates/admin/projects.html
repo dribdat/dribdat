@@ -1,32 +1,32 @@
 {% extends "admin/layout.html" %}
 
 {% block content %}
-<div class="container">
+<div class="container admin-projects">
     <a href="{{ url_for('admin.project_new') }}" class="btn btn-success btn-lg">Add project</a>
     <h2>Projects</h2>
     {% if category_name %}<h4>Category: <b>{{ category_name }}</b></h4>{% endif %}
     {% if event %}
+      <div class="btn-group projects-extra">
+        <a href="{{ url_for('admin.event_autosync', event_id=event.id) }}" class="btn btn-warning">
+          <i class="fa fa-recycle" aria-hidden="true"></i>&nbsp;Sync all
+        </a>
+        <a href="{{ url_for('api.project_list_event_csv', event_id=event.id) }}" class="btn btn-info">
+          <i class="fa fa-download"></i>&nbsp;CSV
+        </a>
+      </div>
       <h4><b>{{ event.name }}</b></h4>
-    {% else %}
-      <span>Manage projects for a specific event for more options.</span>
+      <a href="{{ url_for('admin.event', event_id=event.id) }}" class="btn btn-warning">
+        <i class="fa fa-pencil" aria-hidden="true"></i>
+        Event</a>
     {% endif %}
-    <table class='table table-bordered table-hover'>
+    <table class='table table-hover'>
         <thead>
             <tr>
-              <th>Name (Phase)</th>
+              <th>Name <small> _ Phase</small></th>
               <th>Category</th>
               <th>Created</th>
               <th>Updated</th>
-              <th>{% if event %}
-                <div class="btn-group">
-                  <a href="{{ url_for('admin.event_autosync', event_id=event.id) }}" class="btn btn-warning">
-                    Sync all
-                  </a>
-                  <a href="{{ url_for('api.project_list_event_csv', event_id=event.id) }}" class="btn btn-info">
-                    <i class="fa fa-download"></i>&nbsp;CSV
-                  </a>
-                </div>
-              {% endif %}</th>
+              <th></th>
             </tr>
         </thead>
         {% for project in projects or data.items %}
@@ -66,6 +66,9 @@
     </table>
   {% if data %}
     {% include "includes/pagination.html" %}
+  {% endif %}
+  {% if not event %}
+    <span><b>Tip</b>: Manage the projects of a specific event for more options.</span>
   {% endif %}
 </div>
 {% endblock %}

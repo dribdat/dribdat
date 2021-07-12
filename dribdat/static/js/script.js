@@ -291,7 +291,12 @@
     });
   });
 
+  // Admin button tips
+  $('.admin-defaults button').click(function() {
+    $('input#name').val($(this).text());
+  });
 
+  // Ye olde darke moude
   function setDarkMode(toggle) {
     dm = Boolean(window.darkmode);
     if (toggle) dm = !dm;

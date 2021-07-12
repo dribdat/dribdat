@@ -1,3 +1,4 @@
+{% if data.pages > 1 %}
 <div class="nav-pagination">
 	<div class="pagination">
 	{%- for page in data.iter_pages() %}
@@ -21,3 +22,4 @@
 		{% endif %}
 	</div>
 </div>
+{% endif %}

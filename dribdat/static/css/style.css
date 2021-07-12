@@ -75,13 +75,20 @@ form input[type="checkbox"] {
   margin-right: 1em;
 }
 .admin .form-group .checkbox .help-inline {
-  display: block;
+  float: right;
+  /* display: block; */
 }
 .admin .form-group .checkbox label {
   font-weight: bold;
 }
 .admin .form-group .checkbox label:hover {
   background: #ff3;
+}
+.admin-events .event-name {
+  font-size: 125%;
+}
+.admin-projects .projects-extra {
+  float:right; clear:both; margin-bottom:1em;
 }
 
 .scroll-after-500 {
