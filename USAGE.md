@@ -4,7 +4,7 @@ This document explains the basic functions of `} dribdat {`, an open source plat
 
 **dribdat** works as a website and project board for running exciting, productive events, and allows organizers and participants to collect their project details in one place, displaying the challenges and projects in Web dashboards, and plugging in community tools such as [Discourse](https://www.discourse.org/), [Slack](http://slack.com), or [Let's Chat](http://sdelements.github.io/lets-chat/) - or using the [remote API](#api) for additional interfaces such as [chatbots](https://github.com/schoolofdata-ch/dridbot) to enhance the hackathon.
 
-We are also working on a new interactive manual at https://github.com/hackathons-ftw/handbook
+We are also working on a new interactive manual at https://github.com/dribdat/handbook
 
 ## Quickstart
 
@@ -133,7 +133,7 @@ Remember: _there is no such thing as a stupid question._
 
 Dribdat helps us to keep things fun and unpredictable at our events. We love hacking on the platform itself, and would love to hear your feedback.
 
-Here we cover some ways of extending dribdat's functions with additional tools. If you have any other questions or suggestions, please leave them in our [Issues](https://github.com/hackathons-ftw/dribdat/issues).
+Here we cover some ways of extending dribdat's functions with additional tools. If you have any other questions or suggestions, please leave them in our [Issues](https://github.com/dribdat/dribdat/issues).
 
 ## How is the work evaluated?
 

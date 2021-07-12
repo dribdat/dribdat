@@ -1,13 +1,13 @@
 # dribdat
 
-![Github Actions build](https://github.com/hackathons-ftw/dribdat/workflows/build/badge.svg)
+![Github Actions build](https://github.com/dribdat/dribdat/workflows/build/badge.svg)
 [![codecov](https://codecov.io/gh/hackathons-ftw/dribdat/branch/master/graph/badge.svg?token=Ccd1vTxRXg)](https://codecov.io/gh/hackathons-ftw/dribdat)
 [![Mattermost](https://img.shields.io/badge/Mattermost-chat-blue.svg)](https://team.opendata.ch/signup_user_complete/?id=74yuxwruaby9fpoukx9bmoxday)
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Floleg%2Fdribdat.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Floleg%2Fdribdat?ref=badge_shield)
 
 ### A platform for time-limited, team-based, data-driven, open collaboration
 
-For background and references, see [User's Guide](USAGE.md) and [About Page](ABOUT.md). If you need help or advice in setting up your event, or would like to contribute to the project: please get in touch via [GitHub Issues](https://github.com/hackathons-ftw/dribdat/issues) or [e-mail](mailto:dribdat@datalets.ch).  The rest of this page has details for deploying the dribdat application.
+For background and references, see [User's Guide](USAGE.md) and [About Page](ABOUT.md). If you need help or advice in setting up your event, or would like to contribute to the project: please get in touch via [GitHub Issues](https://github.com/dribdat/dribdat/issues) or [e-mail](mailto:dribdat@datalets.ch).  The rest of this page has details for deploying the dribdat application.
 
 ![](dribdat/static/img/screenshot_sandbox.png)
 
