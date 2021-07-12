@@ -187,6 +187,9 @@
       <a href="{{ url_for('admin.event', event_id=current_event.id) }}" class="btn btn-warning">
         <i class="fa fa-pencil" aria-hidden="true"></i>
         Event</a>
+      <a href="{{ url_for('admin.project_new', event_id=current_event.id) }}" class="btn btn-success">
+        <i class="fa fa-cube"></i>
+        Add project</a>
     {% endif %}
   </div>
 

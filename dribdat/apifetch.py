@@ -14,6 +14,8 @@ from flask_misaka import markdown
 from base64 import b64decode
 from pyquery import PyQuery as pq
 
+from flask import url_for
+
 from .apievents import FetchGithubCommits
 
 def FetchGitlabProject(project_url):
@@ -126,7 +128,7 @@ def FetchDataProject(project_url):
     readme_url = project_url.replace('datapackage.json', 'README.md')
     if readme_url == project_url: return {}
     text_content = requests.get(readme_url).text
-    contact_url = 'http://frictionlessdata.io/'
+    contact_url = ''
     if 'maintainers' in json and len(json['maintainers'])>0 and 'web' in json['maintainers'][0]:
         contact_url = json['maintainers'][0]['web']
     return {
@@ -134,9 +136,9 @@ def FetchDataProject(project_url):
         'name': json['name'],
         'summary': json['title'],
         'description': text_content,
-        'homepage_url': DP_VIEWER_URL % project_url,
+        # 'homepage_url': DP_VIEWER_URL % project_url,
         'source_url': project_url,
-        'image_url': '/static/img/datapackage_icon.png',
+        'image_url': url_for('static', filename='img/datapackage_icon.png', _external=True),
         'contact_url': contact_url,
     }
 
@@ -188,7 +190,7 @@ def FetchWebProject(project_url):
         obj['name'] = ptitle.text()
         obj['description'] = html_content
         obj['source_url'] = project_url
-        obj['image_url'] = "/static/img/document_icon.png"
+        obj['image_url'] = url_for('static', filename='img/document_icon.png', _external=True)
 
     # CodiMD / HackMD
     elif data.text.find('<div id="doc" ')>0:
@@ -202,12 +204,12 @@ def FetchWebProject(project_url):
         obj['name'] = ptitle.text()
         obj['description'] = markdown(content)
         obj['source_url'] = project_url
-        obj['image_url'] = "/static/img/codimd.png"
+        obj['image_url'] = url_for('static', filename='img/codimd.png', _external=True)
 
     # DokuWiki
     elif data.text.find('<meta name="generator" content="DokuWiki"/>')>0:
         doc = pq(data.text)
-        ptitle = doc("p.pageId span")
+        ptitle = doc("span.pageId")
         if len(ptitle) < 1: return {}
         content = doc("div.dw-content")
         if len(content) < 1: return {}
@@ -218,7 +220,7 @@ def FetchWebProject(project_url):
         obj['name'] = ptitle.text().replace('project:', '')
         obj['description'] = html_content
         obj['source_url'] = project_url
-        obj['image_url'] = "/static/img/dokuwiki_icon.png"
+        obj['image_url'] = url_for('static', filename='img/dokuwiki_icon.png', _external=True)
 
     # Etherpad
     elif data.text.find('pad.importExport.exportetherpad')>0:
@@ -230,7 +232,7 @@ def FetchWebProject(project_url):
         obj['name'] = ptitle.replace('_', ' ')
         obj['description'] = text_content
         obj['source_url'] = project_url
-        obj['image_url'] = "/static/img/document_white.png"
+        obj['image_url'] = url_for('static', filename='img/document_white.png', _external=True)
 
     # Instructables
     elif project_url.startswith('https://www.instructables.com/'):
