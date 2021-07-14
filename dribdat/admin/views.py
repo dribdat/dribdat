@@ -260,9 +260,7 @@ def event_new():
         form.community_embed.data = EVENT_PRESET['codeofconduct']
     form.is_current.data = True
 
-    tips = EVENT_PRESET['eventstart']
-
-    return render_template('admin/eventnew.html', form=form, tips=tips)
+    return render_template('admin/eventnew.html', form=form)
 
 @blueprint.route('/event/<int:event_id>/delete', methods=['GET', 'POST'])
 @login_required
@@ -298,6 +296,13 @@ def event_autosync(event_id):
     flash("%d projects synced." % count, 'success')
     return event_projects(event.id)
 
+
+@blueprint.route('/event/start', methods=['GET'])
+@login_required
+@admin_required
+def event_start():
+    tips = EVENT_PRESET['eventstart']
+    return render_template('admin/start.html', tips=tips)
 
 ##############
 ##############
