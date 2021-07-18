@@ -50,11 +50,18 @@ def home():
         events = Event.query.filter(Event.id != cur_event.id)
     else:
         events = Event.query
+    # Skip any hidden events
     events = events.filter(Event.is_hidden.isnot(True))
-    timed_events = events.filter(Event.lock_resources.isnot(True)).order_by(Event.starts_at.desc())
+    # Query upcoming and past events which are not resource-typed
     today = datetime.utcnow()
+    timed_events = events.filter(Event.lock_resources.isnot(True)).order_by(Event.starts_at.desc())
     events_next = timed_events.filter(Event.starts_at > today).all()
     events_past = timed_events.filter(Event.ends_at < today).all()
+    if cur_event is None:
+        # Select a featured event if none is selected
+        events_now = timed_events.filter(Event.starts_at <= today).filter(Event.ends_at >= today)
+        cur_event = events_now.first()
+    # Select resource events separately
     resource_events = events.filter(Event.lock_resources).order_by(Event.name.asc()).all()
     return render_template("public/home.html",
         events_next=events_next, events_past=events_past,
