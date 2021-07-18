@@ -420,7 +420,7 @@ class Project(PkModel):
         dribs = []
         prev = None
         for a in activities:
-            author = title = text = None
+            author = title = text = icon = None
             if a.user:
                 author = a.user.username
                 if not a.user.active: continue
@@ -431,21 +431,31 @@ class Project(PkModel):
             elif a.action == 'post' and a.content is not None:
                 title = ""
                 text = a.content
+                icon = 'pencil'
             elif a.name == 'star':
                 title = "Team forming"
                 text = a.user.username + " has joined!"
                 author = ""
+                icon = 'high-five'
             elif a.name == 'update' and a.action == 'commit':
                 title = "Code commit"
                 text = a.content
                 author = None #a.user.username
+                icon = 'zap'
             elif a.name == 'update':
                 title = ""
                 text = "Worked on documentation"
+                icon = 'clipboard'
             elif a.name == 'create':
                 title = "Project started"
                 text = "Initialized by %s &#x1F389;" % a.user.username
                 author = ""
+                icon = 'rocket'
+            elif a.name == 'boost':
+                title = a.action
+                text = a.content
+                author = a.user.username
+                icon = 'trophy'
             else:
                 continue
             # Check if last signal very similar
@@ -456,6 +466,7 @@ class Project(PkModel):
                 ):
                     continue
             prev = {
+                'icon': icon,
                 'title': title,
                 'text': text,
                 'author': author,
@@ -664,12 +675,12 @@ class Activity(PkModel):
     name = Column(db.Enum(
         'create',
         'update',
+        'boost',
         'star',
         name="activity_type"))
     action = Column(db.String(32), nullable=True)
         # 'external',
         # 'commit',
-        # 'boost',
         # 'sync',
         # 'post',
         # ...

@@ -6,7 +6,7 @@ from flask_login import login_required, current_user
 
 from dribdat.user.models import Event, Project
 from dribdat.public.forms import (
-    ProjectNew, ProjectForm, ProjectDetailForm, ProjectPost,
+    ProjectNew, ProjectForm, ProjectDetailForm, ProjectPost, ProjectBoost,
 )
 from dribdat.database import db
 from dribdat.extensions import cache
@@ -131,6 +131,35 @@ def resource_delete(project_id, resource_id):
     # project_action(project_id, 'resource-removed', False)
     return redirect(url_for('project.project_view', project_id=project.id))
 
+@blueprint.route('/<int:project_id>/boost', methods=['GET', 'POST'])
+@login_required
+def project_boost(project_id):
+    project = Project.query.filter_by(id=project_id).first_or_404()
+    event = project.event
+
+    allow_post = not current_user.is_anonymous and current_user.is_admin
+    if not allow_post:
+        flash('You do not have access to boost this project.', 'warning')
+        return project_action(project_id, None)
+
+    form = ProjectBoost(obj=project, next=request.args.get('next'))
+    form.boost_type.choices = [
+        '---', 'awesome sauce', 'top committer', 'data wizards', 'top tutor',
+    ]
+
+    # Process form
+    if form.validate_on_submit():
+        # Update project data
+        cache.clear()
+        project_action(project_id, 'boost', action=form.boost_type.data, text=form.note.data)
+        flash('Thanks for your boost!', 'success')
+        return project_view(project.id)
+
+    return render_template(
+        'public/projectboost.html',
+        current_event=event, project=project, form=form,
+    )
+
 @blueprint.route('/<int:project_id>/post', methods=['GET', 'POST'])
 @login_required
 def project_post(project_id):
@@ -143,15 +172,12 @@ def project_post(project_id):
         flash('You do not have access to post to this project.', 'warning')
         return project_action(project_id, None)
     form = ProjectPost(obj=project, next=request.args.get('next'))
-
     # Evaluate project progress
     stage, all_valid = validateProjectData(project)
-
     # Process form
     if form.validate_on_submit():
-
-        # Check and update progress
         if form.has_progress.data:
+            # Check and update progress
             found_next = False
             if all_valid:
                 for a in projectProgressList(True, False):

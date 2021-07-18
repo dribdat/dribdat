@@ -28,6 +28,7 @@
 
 {% block content %}
 <div class="btn-group project-edit-buttons" role="group" aria-label="Project tools">
+
   {% if allow_post %}
    <a id="project-post" href="{{ url_for('project.project_post', project_id=project.id) }}" title="Post an update to this project" class="btn btn-lg btn-success">
      <i class="fa fa-clipboard" aria-hidden="true"></i>
@@ -44,14 +45,8 @@
       Edit</a>
   {% endif %}
 
-  {% if current_user.is_admin and project.event.lock_editing and project_starred %}
-    <a href="{{ url_for('project.project_unstar', project_id=project.id) }}"  class="project-star btn btn-lg btn-secondary">
-      <i class="fa fa-star"></i>
-    </a>
-  {% endif %}
-
   {% if not project.event.lock_editing %}
-    {% if project_starred %}<!-- Already starred -->
+    {% if project_starred %}
       <a href="{{ url_for('project.project_unstar', project_id=project.id) }}" class="project-star btn btn-lg btn-secondary"
         title="Click to stop being a member of the project"
         onclick="return confirm('Are you sure you wish to leave this team?')">
@@ -71,6 +66,24 @@
       </a>
     {% endif %}
   {% endif %}
+
+  {% if current_user.is_admin %}
+
+    {% if project.event.lock_editing and project_starred %}
+    <!-- Always allow admins to un-star -->
+    <a href="{{ url_for('project.project_unstar', project_id=project.id) }}"  class="project-star btn btn-lg btn-secondary">
+      <i class="fa fa-star"></i>
+    </a>
+    {% endif %}
+
+    <a href="{{ url_for('project.project_boost', project_id=project.id) }}" class="btn btn-lg btn-info project-boost"
+      title="Boost this project">
+     <i class="fa fa-rocket"></i>
+     Boost
+    </a>
+
+  {% endif %}
+
 </div><br clear="all">
 
 {% if project.image_url %}

@@ -111,6 +111,12 @@ class ProjectPost(FlaskForm):
     has_progress = BooleanField(u'Promote us to the next stage')
     submit = SubmitField(u'Save post')
 
+class ProjectBoost(FlaskForm):
+    id = HiddenField('id')
+    note = TextAreaField(u'Short praise and comments', [length(max=140), DataRequired()])
+    boost_type = SelectField(u'Select booster', [DataRequired()])
+    submit = SubmitField(u'Energize!')
+
 class ResourceForm(FlaskForm):
     """ For suggesting cool tools """
     name = StringField(u'Name', [length(max=80), DataRequired()])

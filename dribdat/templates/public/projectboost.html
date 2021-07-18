@@ -1,0 +1,24 @@
+{% from "macros/_form.html" import render_form %}
+
+{% extends "layout.html" %}
+
+{% block page_title %}Boost: {{project.name}}{% endblock %}
+{% block body_class %}projectboost{% endblock %}
+
+{% block content %}
+  <h2>Boost
+    <a class="project-link" href="{{ url_for('project.project_view', project_id=project.id) }}" target="_blank">{{project.name}}</a>
+  </h2>
+
+  <div class="form-project-post">
+    {{ render_form(url_for('project.project_boost', project_id=project.id), form) }}
+  </div>
+
+  <center class="mt-3">
+  <a href="{{ url_for('project.project_view', project_id=project.id) }}"
+     title="Cancel" class="btn btn-light"
+     onclick="if(!window.confirm('Your edits will not be saved - continue?')) return false">
+    <i class="fa fa-arrow-left" aria-hidden="true"></i> Cancel &amp; return to project
+  </a>
+  </center>
+{% endblock %}
