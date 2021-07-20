@@ -36,8 +36,8 @@
           {% if s.ref_url %}
             <a href="{{ s.ref_url }}" target="_blank">
           {% endif %}
-            <div class="date">
-              {{s.timestamp|format_datetime}}
+            <div class="date" title="{{ s.data.date }}">
+              {{s.data.timesince}}
               {% if s.user %} ~ <b>{{ s.user.username }}</b>{% endif %}
             </div>
           {% if s.ref_url %}
