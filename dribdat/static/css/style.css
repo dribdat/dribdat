@@ -1042,17 +1042,14 @@ pre { color: #333; background: white; }
   max-width: 40%;
   padding: 0px;
   margin-right: 1em;
+  float: left;
 }
 .profile-projects .card-body {
   padding: 10px;
 }
 .profile-projects .card-text {
-  font-size: 80%; color: #999;
-  height: 3em; overflow: hidden;
-}
-.profile-projects .card-body * {
-  color: #333;
-  margin: 0px;
+  font-size: 90%;
+  color: #555;
 }
 .profile-projects a:hover {
   text-decoration: none;
