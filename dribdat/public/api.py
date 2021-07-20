@@ -1,6 +1,12 @@
  # -*- coding: utf-8 -*-
 
-from flask import Blueprint, render_template, redirect, url_for, make_response, request, flash, jsonify, current_app
+from flask import (
+    Blueprint, current_app,
+    render_template, redirect, url_for,
+    Response, make_response, request,
+    stream_with_context, send_file,
+    flash, jsonify,
+)
 from flask_login import login_required, current_user
 
 from sqlalchemy import or_
@@ -15,8 +21,7 @@ from ..aggregation import GetProjectData, GetEventUsers
 from ..apiutils import *
 
 from datetime import datetime
-from flask import Response, stream_with_context, send_file
-
+from os import path
 import json, tempfile
 
 blueprint = Blueprint('api', __name__, url_prefix='/api')
@@ -351,16 +356,16 @@ def package_event(event, format):
         }],
         homepage=request.host_url,
         created=format_date(datetime.now(), '%Y-%m-%dT%H:%M'),
-        version="0.1.0"
+        version="0.1.0",
     )
 
     if False: # as CSV
         fp_projects = tempfile.NamedTemporaryFile(mode='w+t', prefix='projects-', suffix='.csv')
-        print("Writing to temp CSV file", fp_projects.name)
+        # print("Writing to temp CSV file", fp_projects.name)
         fp_projects.write(gen_csv(project_list(event.id)))
         resource = Resource(fp_projects.name)
     if False:
-        print("Generating in-memory rowset")
+        # print("Generating in-memory rowset")
         project_rows = gen_rows(project_list(event.id))
         resource = Resource(
             name='projects',
@@ -368,26 +373,32 @@ def package_event(event, format):
         )
 
     # Generate resources
-    print("Generating in-memory JSON of event")
+    # print("Generating in-memory JSON of event")
     package.add_resource(Resource(
             name='event',
             data=[event.get_full_data()],
         ))
-    print("Generating in-memory JSON of projects")
+    # print("Generating in-memory JSON of projects")
     package.add_resource(Resource(
             name='projects',
             data=project_list(event.id, True),
         ))
-    print("Generating in-memory JSON of participants")
-    package.add_resource(Resource(
-            name='participants',
-            data=get_event_users(event),
-        ))
-    print("Generating in-memory JSON of activities")
-    package.add_resource(Resource(
-            name='activities',
-            data=get_event_activities(event.id, 500),
-        ))
+    if format == 'zip':
+        # print("Generating in-memory JSON of participants")
+        package.add_resource(Resource(
+                name='participants',
+                data=get_event_users(event),
+            ))
+        # print("Generating in-memory JSON of activities")
+        package.add_resource(Resource(
+                name='activities',
+                data=get_event_activities(event.id, 500),
+            ))
+        # print("Adding supplementary README")
+        package.add_resource(Resource(
+                name='readme',
+                path='PACKAGE.txt',
+            ))
 
     # Generate data package
     fp_package = tempfile.NamedTemporaryFile(prefix='datapackage-', suffix='.zip')
