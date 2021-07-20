@@ -1,0 +1,14 @@
+dribdat Data Package
+====================
+
+This is an export of data about events, projects, participants and activities
+generated with the dribdat application for hackathons and other collaborative,
+time-bounded events.
+
+You can use this file to generate a static site using the backboard tool,
+available at: https://github.com/dribdat/backboard#usage
+
+For more information and support, please visit https://dribdat.cc
+
+This package is licensed under the Open Data Commons Public Domain Dedication
+and License v1.0 http://opendatacommons.org/licenses/pddl/
