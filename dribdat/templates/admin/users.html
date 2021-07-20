@@ -1,10 +1,11 @@
 {% extends "admin/layout.html" %}
 
 {% block content %}
-<div class="container">
+<div class="container admin-users">
     <a href="{{ url_for('admin.user_new') }}" class="btn btn-success btn-lg">Add user</a>
     <h2>Users</h2>
-    <table class='table table-bordered table-hover'>
+    {% include "includes/pagination.html" %}
+    <table class='table table-hover'>
         <thead>
             <tr>
               <th width="100%">

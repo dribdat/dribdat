@@ -48,7 +48,7 @@
         $indicator.find('i').css('color', 'green');
         $button.removeAttr('disabled').html('Update now');
         if (typeof data.name === 'undefined' || data.name === '') {
-          window.alert('Enter a valid link to Sync from a supported site.');
+          window.alert('Enter a valid link to sync from a supported site.');
           $('#is_autoupdate').prop('checked', false);
           return;
         }
@@ -180,16 +180,25 @@
 
   // About page simple stupid search
   var lastSearch = null;
-  $('#search input[name=q]')
+  var searchForm = $('form#search');
+  searchForm.find('input[name="q"]')
     .keyup(delay(function(e) {
       if (e.keyCode == 13) { e.preventDefault(); return false; }
       var q = $(this).val();
       if (q.length < 4 || q.trim() == lastSearch) return;
       lastSearch = q.trim();
-      $ul = $('.search-results').empty();
-      $.get($(this).parent().attr('action') + '?q=' + q, function(d) {
+      $ul = $('#search-results').empty();
+      $.get(searchForm.attr('action') + '?q=' + q, function(d) {
         d.projects.forEach(function(p) {
-          $ul.append('<li><a href="' + p.url + '">' + p.name + '</a></li>');
+          $ul.append(
+            '<a class="col-5 card project"' +
+               'href="' + p.url + '">' +
+              '<div class="card-body">' +
+                '<h5 class="card-title">' + p.name + '</h5>' +
+                '<p class="card-text">' + p.summary + '</p>' +
+              '</div>' +
+            '</a>'
+          );
         });
       });
     }, 500));
@@ -291,7 +300,12 @@
     });
   });
 
+  // Admin button tips
+  $('.admin-defaults button').click(function() {
+    $('input#name').val($(this).text());
+  });
 
+  // Ye olde darke moude
   function setDarkMode(toggle) {
     dm = Boolean(window.darkmode);
     if (toggle) dm = !dm;

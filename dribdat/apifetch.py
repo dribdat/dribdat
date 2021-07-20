@@ -14,6 +14,8 @@ from flask_misaka import markdown
 from base64 import b64decode
 from pyquery import PyQuery as pq
 
+from flask import url_for
+
 from .apievents import FetchGithubCommits
 
 def FetchGitlabProject(project_url):
@@ -84,15 +86,20 @@ def FetchBitbucketProject(project_url):
     WEB_BASE = "https://bitbucket.org/%s"
     API_BASE = "https://api.bitbucket.org/2.0/repositories/%s"
     data = requests.get(API_BASE % project_url)
-    if data.text.find('{') < 0: return {}
+    if data.text.find('{') < 0:
+        print('No data at', project_url)
+        return {}
     json = data.json()
-    if not 'name' in json: return {}
+    if not 'name' in json:
+        print('Invalid format at', project_url)
+        return {}
+    readme = ''
+    for docext in ['.md', '.rst', '.txt', '']:
+        readmedata = requests.get(API_BASE % project_url + '/src/HEAD/README.md')
+        if readmedata.text.find('{"type":"error"') != 0:
+            readme = readmedata.text
+            break
     web_url = WEB_BASE % project_url
-    readmedata = requests.get(web_url)
-    if readmedata.text.find('class="readme') < 0: return {}
-    doc = pq(readmedata.text)
-    content = doc("div.readme")
-    if len(content) < 1: return {}
     contact_url = json['website'] or web_url
     if json['has_issues']: contact_url = "%s/issues" % web_url
     image_url = ''
@@ -100,12 +107,11 @@ def FetchBitbucketProject(project_url):
         image_url = json['project']['links']['avatar']['href']
     elif 'links' in json and 'avatar' in json['links']:
         image_url = json['links']['avatar']['href']
-    html_content = bleach.clean(content.html().strip())
     return {
         'type': 'Bitbucket',
         'name': json['name'],
         'summary': json['description'],
-        'description': html_content,
+        'description': readme,
         'homepage_url': json['website'],
         'source_url': web_url,
         'image_url': image_url,
@@ -122,7 +128,7 @@ def FetchDataProject(project_url):
     readme_url = project_url.replace('datapackage.json', 'README.md')
     if readme_url == project_url: return {}
     text_content = requests.get(readme_url).text
-    contact_url = 'http://frictionlessdata.io/'
+    contact_url = ''
     if 'maintainers' in json and len(json['maintainers'])>0 and 'web' in json['maintainers'][0]:
         contact_url = json['maintainers'][0]['web']
     return {
@@ -130,9 +136,9 @@ def FetchDataProject(project_url):
         'name': json['name'],
         'summary': json['title'],
         'description': text_content,
-        'homepage_url': DP_VIEWER_URL % project_url,
+        # 'homepage_url': DP_VIEWER_URL % project_url,
         'source_url': project_url,
-        'image_url': '/static/img/datapackage_icon.png',
+        'image_url': url_for('static', filename='img/datapackage_icon.png', _external=True),
         'contact_url': contact_url,
     }
 
@@ -184,7 +190,7 @@ def FetchWebProject(project_url):
         obj['name'] = ptitle.text()
         obj['description'] = html_content
         obj['source_url'] = project_url
-        obj['image_url'] = "/static/img/document_icon.png"
+        obj['image_url'] = url_for('static', filename='img/document_icon.png', _external=True)
 
     # CodiMD / HackMD
     elif data.text.find('<div id="doc" ')>0:
@@ -198,12 +204,12 @@ def FetchWebProject(project_url):
         obj['name'] = ptitle.text()
         obj['description'] = markdown(content)
         obj['source_url'] = project_url
-        obj['image_url'] = "/static/img/codimd.png"
+        obj['image_url'] = url_for('static', filename='img/codimd.png', _external=True)
 
     # DokuWiki
     elif data.text.find('<meta name="generator" content="DokuWiki"/>')>0:
         doc = pq(data.text)
-        ptitle = doc("p.pageId span")
+        ptitle = doc("span.pageId")
         if len(ptitle) < 1: return {}
         content = doc("div.dw-content")
         if len(content) < 1: return {}
@@ -214,7 +220,7 @@ def FetchWebProject(project_url):
         obj['name'] = ptitle.text().replace('project:', '')
         obj['description'] = html_content
         obj['source_url'] = project_url
-        obj['image_url'] = "/static/img/dokuwiki_icon.png"
+        obj['image_url'] = url_for('static', filename='img/dokuwiki_icon.png', _external=True)
 
     # Etherpad
     elif data.text.find('pad.importExport.exportetherpad')>0:
@@ -226,7 +232,7 @@ def FetchWebProject(project_url):
         obj['name'] = ptitle.replace('_', ' ')
         obj['description'] = text_content
         obj['source_url'] = project_url
-        obj['image_url'] = "/static/img/document_white.png"
+        obj['image_url'] = url_for('static', filename='img/document_white.png', _external=True)
 
     # Instructables
     elif project_url.startswith('https://www.instructables.com/'):

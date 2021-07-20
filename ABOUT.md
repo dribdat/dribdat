@@ -63,7 +63,7 @@ dribdat is a responsive Web application written using the Flask framework for P
 
 ### Links / contacts
 
-- Source: [github.com/hackathons-ftw/dribdat](https://github.com/hackathons-ftw/dribdat)
+- Source: [github.com/dribdat/dribdat](https://github.com/dribdat/dribdat)
 - Website: [dribdat.cc](https://dribdat.cc)
 - Discuss: [forum.opendata.ch](https://forum.schoolofdata.ch/search?q=dribdat)
 

@@ -107,12 +107,12 @@
 
   {% if current_user and current_user.is_admin %}
     <div class="row start-event">
-      <div class="col-lg-12 text-center">
+      <div class="col-lg-12">
         {% if not current_event and not events_next and not events_past and not events_tips %}
           <h3>Looks like you are new to this - welcome!</h3>
-          <p>Click this button to get help setting up your first events:</p>
+          <p>Click to get started with your first event:</p>
         {% endif %}
-        <a href="/admin/event/new" class="btn btn-success">Start an Event</a>
+        <a href="{{ url_for('admin.event_start') }}" class="btn btn-success">Start an Event</a>
       </div>
     </div>
   {% endif %}

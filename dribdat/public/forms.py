@@ -59,8 +59,8 @@ class UserForm(FlaskForm):
 
 class ProjectNew(FlaskForm):
     id = HiddenField('id')
-    autotext_url = URLField(u'Sync', [length(max=2048)],
-        description="[Optional] URL to online documentation (Git, Doc,..) based on which to fill the rest of this form.")
+    autotext_url = URLField(u'Readme', [length(max=2048)],
+        description="[Optional] URL to a repository or online documentation of your project.")
     name = StringField(u'Title', [length(max=80), UniqueValidator(Project, 'name'), DataRequired()],
         description=u'A short project title or team name - you may change this later.')
     summary = StringField(u'Summary', [length(max=140)],
@@ -87,16 +87,16 @@ class ProjectForm(FlaskForm):
 
 class ProjectDetailForm(FlaskForm):
     id = HiddenField('id')
-    autotext_url = URLField(u'Sync', [length(max=255)],
-        description="URL to external source of documentation (code repository, online doc,..)")
-    source_url = URLField(u'Source link', [length(max=255)],
-        description="URL of your repository.")
-    download_url = URLField(u'Download link', [length(max=255)],
+    autotext_url = URLField(u'Readme', [length(max=255)],
+        description="URL to external documentation (code repository, online doc,..)")
+    source_url = URLField(u'Sources', [length(max=255)],
+        description="URL of your source code repository or project data.")
+    download_url = URLField(u'Download', [length(max=255)],
         description="URL to a release page, website, app store,.. from where your project should be installed.")
-    contact_url = StringField(u'Contact link', [length(max=255)],
+    contact_url = StringField(u'Contact us', [length(max=255)],
         description="URL of an issues page, contact form, chat channel, forum thread, social media account,..")
     # Note: relative links allowed in image_url -> StringField
-    image_url = StringField(u'Image link', [length(max=255)],
+    image_url = StringField(u'Cover image', [length(max=255)],
         description="URL of an image to display at the top of the page.")
     logo_color = StringField(u'Color scheme', [length(max=7)],
         description="Customize the color of your project page.")

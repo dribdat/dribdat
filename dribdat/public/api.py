@@ -1,50 +1,31 @@
  # -*- coding: utf-8 -*-
 
-from flask import Blueprint, render_template, redirect, url_for, make_response, request, flash, jsonify, current_app
+from flask import (
+    Blueprint, current_app,
+    render_template, redirect, url_for,
+    Response, make_response, request,
+    stream_with_context, send_file,
+    flash, jsonify,
+)
 from flask_login import login_required, current_user
 
 from sqlalchemy import or_
 
 from ..extensions import db
-from ..utils import timesince, random_password
+from ..utils import timesince, random_password, format_date
 from ..decorators import admin_required
 
 from ..user.models import Event, Project, Category, Activity
 from ..aggregation import GetProjectData, GetEventUsers
 
-from datetime import datetime
-from flask import Response, stream_with_context
+from ..apiutils import *
 
-import io, csv, json, sys, tempfile
+from datetime import datetime
 from os import path
-PY3 = sys.version_info[0] == 3
+import json, tempfile
 
 blueprint = Blueprint('api', __name__, url_prefix='/api')
 
-# Generate a CSV file
-def gen_csv(csvdata):
-    if len(csvdata) < 1: return ""
-    headerline = csvdata[0].keys()
-    if PY3:
-        output = io.StringIO()
-    else:
-        output = io.BytesIO()
-        headerline = [l.encode('utf-8') for l in headerline]
-    writer = csv.writer(output, quoting=csv.QUOTE_NONNUMERIC)
-    writer.writerow(headerline)
-    for rk in csvdata:
-        rkline = []
-        for l in rk.values():
-            if l is None:
-                rkline.append("")
-            elif isinstance(l, (int, float, datetime, str)):
-                rkline.append(str(l))
-            elif isinstance(l, (dict)):
-                rkline.append(json.dumps(l))
-            else:
-                rkline.append(l.encode('utf-8'))
-        writer.writerow(rkline)
-    return output.getvalue()
 
 # ------ EVENT INFORMATION ---------
 
@@ -69,39 +50,23 @@ def info_event_hackathon_json(event_id):
 
 # ------ EVENT PROJECTS ---------
 
-def get_projects_by_event(event_id):
-    return Project.query.filter_by(event_id=event_id, is_hidden=False)
-
-def get_project_summaries(projects, is_moar=False):
-    if is_moar:
-        summaries = []
-        for project in projects:
-            p = project.data
-            p['autotext'] = project.autotext # Markdown
-            p['longtext'] = project.longtext # Markdown - see longhtml()
-            summaries.append(p)
-    else:
-        summaries = [ p.data for p in projects ]
-    summaries = expand_project_urls(summaries)
-    summaries.sort(key=lambda x: x['score'], reverse=True)
-    return summaries
-
-# Collect all projects and challenges for an event
-def project_list(event_id):
-    is_moar = bool(request.args.get('moar', type=bool)) or False
+def project_list(event_id, full_data=False):
+    """ Collect all projects and challenges for an event """
+    is_moar = bool(request.args.get('moar', type=bool)) or full_data
     projects = get_projects_by_event(event_id)
-    return get_project_summaries(projects, is_moar)
+    host_url = request.host_url
+    return get_project_summaries(projects, host_url, is_moar)
 
-# API: Outputs JSON of projects in the current event, along with its info
 @blueprint.route('/event/current/projects.json')
 def project_list_current_json():
+    """ API: Outputs JSON of projects in the current event, along with its info """
     event = Event.query.filter_by(is_current=True).first() or \
             Event.query.order_by(Event.id.desc()).first_or_404()
     return jsonify(projects=project_list(event.id), event=event.data)
 
-# API: Outputs JSON of all projects at a specific event
 @blueprint.route('/event/<int:event_id>/projects.json')
 def project_list_json(event_id):
+    """ API: Outputs JSON of all projects at a specific event """
     return jsonify(projects=project_list(event_id))
 
 def project_list_csv(event_id, event_name):
@@ -130,17 +95,13 @@ def categories_list_current_json():
 
 # ------ ACTIVITY FEEDS ---------
 
-def get_event_activities(event_id, limit=50):
-    event = Event.query.filter_by(id=event_id).first_or_404()
-    return [a.data for a in Activity.query
-              .filter(Activity.timestamp>=event.starts_at)
-              .order_by(Activity.id.desc()).limit(limit).all()]
-
 # API: Outputs JSON of recent activity in an event
 @blueprint.route('/event/<int:event_id>/activity.json')
 def event_activity_json(event_id):
     limit = request.args.get('limit') or 50
-    return jsonify(activities=get_event_activities(event_id, limit))
+    q = request.args.get('q') or None
+    if q and len(q) < 3: q = None
+    return jsonify(activities=get_event_activities(event_id, limit, q))
 
 # API: Outputs JSON of categories in the current event
 @blueprint.route('/event/current/activity.json')
@@ -153,7 +114,9 @@ def event_activity_current_json():
 @blueprint.route('/event/<int:event_id>/activity.csv')
 def event_activity_csv(event_id):
     limit = request.args.get('limit') or 50
-    return Response(stream_with_context(gen_csv(get_event_activities(event_id, limit))),
+    q = request.args.get('q') or None
+    if q and len(q) < 3: q = None
+    return Response(stream_with_context(gen_csv(get_event_activities(event_id, limit, q))),
                     mimetype='text/csv',
                     headers={'Content-Disposition': 'attachment; filename=activity_list.csv'})
 
@@ -161,17 +124,17 @@ def event_activity_csv(event_id):
 @blueprint.route('/project/activity.json')
 def projects_activity_json():
     limit = request.args.get('limit') or 10
-    recent = Activity.query.order_by(Activity.id.desc()).limit(limit).all()
-    return jsonify(activities=[a.data for a in recent])
+    q = request.args.get('q') or None
+    if q and len(q) < 3: q = None
+    return jsonify(activities=get_event_activities(None, limit, q))
 
 # API: Outputs JSON of recent posts (a type of activity) across projects
 @blueprint.route('/project/posts.json')
 def projects_posts_json():
     limit = request.args.get('limit') or 10
-    recent = Activity.query.filter(Activity.action=="post")
-    recent = recent.order_by(Activity.id.desc())
-    recent = recent.limit(limit).all()
-    return jsonify(activities=[a.data for a in recent])
+    q = request.args.get('q') or None
+    if q and len(q) < 3: q = None
+    return jsonify(activities=get_event_activities(None, limit, q, "post"))
 
 # API: Outputs JSON of recent activity of a project
 @blueprint.route('/project/<int:project_id>/activity.json')
@@ -224,12 +187,6 @@ def event_participants_csv(event_id):
 
 # ------ SEARCH ---------
 
-def expand_project_urls(projects):
-    for p in projects:
-        p['event_url'] = request.host_url + p['event_url']
-        p['url'] = request.host_url + p['url']
-    return projects
-
 # API: Full text search projects
 @blueprint.route('/project/search.json')
 def project_search_json():
@@ -243,7 +200,10 @@ def project_search_json():
         Project.longtext.like(q),
         Project.autotext.like(q),
     )).limit(limit).all()
-    projects = expand_project_urls([p.data for p in projects])
+    projects = expand_project_urls(
+        [p.data for p in projects],
+        request.host_url
+    )
     return jsonify(projects=projects)
 
 # ------ UPDATE ---------
@@ -312,7 +272,7 @@ def project_autofill():
     data = GetProjectData(url)
     return jsonify(data)
 
-
+# TODO: move to separate upload.py ?
 import boto3, botocore
 from botocore.exceptions import ClientError
 from botocore.client import Config
@@ -354,3 +314,97 @@ def project_uploader():
         ExtraArgs={ 'ContentType': img.content_type, 'ACL': 'public-read' }
       )
     return '/'.join([current_app.config['S3_HTTPS'], s3_filepath])
+
+
+# TODO: move to packager.py ?
+
+from frictionless import Package, Resource
+
+@blueprint.route('/event/current/datapackage.<format>', methods=["GET"])
+@login_required
+def package_current_event(format):
+    event = Event.query.filter_by(is_current=True).first() or \
+            Event.query.order_by(Event.id.desc()).first_or_404()
+    return package_event(event, format)
+
+@blueprint.route('/event/<int:event_id>/datapackage.<format>', methods=["GET"])
+@login_required
+def package_specific_event(event_id, format):
+    event = Event.query.filter_by(id=event_id).first_or_404()
+    return package_event(event, format)
+
+def package_event(event, format):
+    if format not in ['zip', 'json']:
+        return "Format not supported"
+    # Set up a data package
+    package = Package(
+        name='event-%d' % event.id,
+        title=event.name,
+        description="This is a Data Package containing event and project details",
+        keywords=["dribdat", "hackathon", "co-creation"],
+        sources=[{
+            "title": "dribdat", "path": "https://dribdat.cc"
+        }],
+        licenses=[{
+            "name": "ODC-PDDL-1.0", "path": "http://opendatacommons.org/licenses/pddl/",
+            "title": "Open Data Commons Public Domain Dedication and License v1.0"
+        }],
+        contributors=[{
+            "title": current_user.username,
+            "path": current_user.webpage_url or '',
+            "role": "author"
+        }],
+        homepage=request.host_url,
+        created=format_date(datetime.now(), '%Y-%m-%dT%H:%M'),
+        version="0.1.0",
+    )
+
+    if False: # as CSV
+        fp_projects = tempfile.NamedTemporaryFile(mode='w+t', prefix='projects-', suffix='.csv')
+        # print("Writing to temp CSV file", fp_projects.name)
+        fp_projects.write(gen_csv(project_list(event.id)))
+        resource = Resource(fp_projects.name)
+    if False:
+        # print("Generating in-memory rowset")
+        project_rows = gen_rows(project_list(event.id))
+        resource = Resource(
+            name='projects',
+            data=project_rows,
+        )
+
+    # Generate resources
+    # print("Generating in-memory JSON of event")
+    package.add_resource(Resource(
+            name='event',
+            data=[event.get_full_data()],
+        ))
+    # print("Generating in-memory JSON of projects")
+    package.add_resource(Resource(
+            name='projects',
+            data=project_list(event.id, True),
+        ))
+    if format == 'zip':
+        # print("Generating in-memory JSON of participants")
+        package.add_resource(Resource(
+                name='participants',
+                data=get_event_users(event),
+            ))
+        # print("Generating in-memory JSON of activities")
+        package.add_resource(Resource(
+                name='activities',
+                data=get_event_activities(event.id, 500),
+            ))
+        # print("Adding supplementary README")
+        package.add_resource(Resource(
+                name='readme',
+                path='PACKAGE.txt',
+            ))
+
+    # Generate data package
+    fp_package = tempfile.NamedTemporaryFile(prefix='datapackage-', suffix='.zip')
+    print("Saving at", fp_package.name)
+    if format == 'json':
+        return jsonify(package)
+    elif format == 'zip':
+        package.to_zip(fp_package.name)
+        return send_file(fp_package.name, as_attachment=True)

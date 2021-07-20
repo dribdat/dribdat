@@ -4,7 +4,7 @@ This document explains the basic functions of `} dribdat {`, an open source plat
 
 **dribdat** works as a website and project board for running exciting, productive events, and allows organizers and participants to collect their project details in one place, displaying the challenges and projects in Web dashboards, and plugging in community tools such as [Discourse](https://www.discourse.org/), [Slack](http://slack.com), or [Let's Chat](http://sdelements.github.io/lets-chat/) - or using the [remote API](#api) for additional interfaces such as [chatbots](https://github.com/schoolofdata-ch/dridbot) to enhance the hackathon.
 
-We are also working on a new interactive manual at https://github.com/hackathons-ftw/handbook
+We are also working on a new interactive manual at https://github.com/dribdat/handbook
 
 ## Quickstart
 
@@ -12,7 +12,7 @@ After you join an event, log in and **Join** a challenge. Or, if it is still pos
 
 Post your creative **Pitch** using plain text or [Markdown](https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet). Links to videos, documents, a slideshow hosted on [Speaker Deck](https://speakerdeck.com/), and many other [supported sites](https://oembed.com/#section7) will turn into a live preview.
 
-The **Sync** feature allows you to connect a README from your open source repository on [GitHub](https://github.com), [GitLab](https://gitlab.com) or [Bitbucket](https://bitbucket.org) - or an online document at [Etherpad](http://etherpad.org), [Google Docs](http://docs.google.com) (_Publish to Web_), [Instructables](http://instructables.com), [HackMD/CodiMD](https://hackmd.io) and [DokuWiki](http://make.opendata.ch/wiki/project:home). Use the _Sync_ button on your project page for quickly refreshing changes.
+The **Refresh** feature allows you to connect a README from your open source repository on [GitHub](https://github.com), [GitLab](https://gitlab.com) or [Bitbucket](https://bitbucket.org) - or an online document at [Etherpad](http://etherpad.org), [Google Docs](http://docs.google.com) (_Publish to Web_), [Instructables](http://instructables.com), [HackMD/CodiMD](https://hackmd.io) and [DokuWiki](http://make.opendata.ch/wiki/project:home). Use the button on your project page for quickly refreshing changes.
 
 By updating your progress using the **Post** button, you can regularly check in your status and any roadblocks.
 
@@ -133,7 +133,7 @@ Remember: _there is no such thing as a stupid question._
 
 Dribdat helps us to keep things fun and unpredictable at our events. We love hacking on the platform itself, and would love to hear your feedback.
 
-Here we cover some ways of extending dribdat's functions with additional tools. If you have any other questions or suggestions, please leave them in our [Issues](https://github.com/hackathons-ftw/dribdat/issues).
+Here we cover some ways of extending dribdat's functions with additional tools. If you have any other questions or suggestions, please leave them in our [Issues](https://github.com/dribdat/dribdat/issues).
 
 ## How is the work evaluated?
 

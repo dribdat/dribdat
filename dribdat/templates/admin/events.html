@@ -1,10 +1,10 @@
 {% extends "admin/layout.html" %}
 
 {% block content %}
-<div class="container">
+<div class="container admin-events">
     <a href="{{ url_for('admin.event_new') }}" class="btn btn-success btn-lg">Start an event</a>
     <h2>Events</h2>
-    <table class='table table-bordered table-hover'>
+    <table class='table table-hover'>
         <thead>
             <tr>
               <th></th>
@@ -22,32 +22,38 @@
                   Action ...
                 </button>
                 <div class="dropdown-menu" aria-labelledby="evMenu{{ event.id }}">
-                  <a href="{{ url_for('admin.event', event_id=event.id) }}" class="dropdown-item">
+                  <!-- <a href="{{ url_for('admin.event', event_id=event.id) }}" class="dropdown-item">
                     &#9734; Edit this event
                   </a>
                   <a href="{{ url_for('admin.event_projects', event_id=event.id) }}" class="dropdown-item">
                     &#9734; Project admin
-                  </a>
+                  </a> -->
                   <a href="{{ url_for('admin.event_print', event_id=event.id) }}" class="dropdown-item">
-                    Print view
+                    Print preview
                   </a>
                   <a href="{{ url_for('public.event_instruction', event_id=event.id) }}" class="dropdown-item">
-                    Instruction view
+                    Instructions
                   </a>
                   <a href="{{ url_for('public.dashboard', event_id=event.id) }}" class="dropdown-item">
-                    Dashboard view
+                    &#9734; Dashboard
                   </a>
                   <a href="{{ url_for('public.event', event_id=event.id, _external=True) }}?embed=1" class="dropdown-item" id="embed-link">
-                    Embed view
+                    &#9734; Embed link
                   </a>
                   <a href="{{ url_for('api.info_event_hackathon_json', event_id=event.id) }}" class="dropdown-item">
-                    &#9660; hackathon.json
+                    &#9734; hackathon<b>.json</b>
                   </a>
                   <a href="{{ url_for('api.project_list_event_csv', event_id=event.id) }}" class="dropdown-item">
-                    &#9660; Projects (CSV)
+                    &#9660; projects<b>.csv</b>
                   </a>
                   <a href="{{ url_for('api.event_participants_csv', event_id=event.id) }}" class="dropdown-item">
-                    &#9660; Participants (CSV)
+                    &#9660; participants<b>.csv</b>
+                  </a>
+                  <a href="{{ url_for('api.package_specific_event', event_id=event.id, format='json') }}" class="dropdown-item">
+                    &#9660; datapackage<b>.json</b>
+                  </a>
+                  <a href="{{ url_for('api.package_specific_event', event_id=event.id, format='zip') }}" class="dropdown-item">
+                    &#9660; datapackage<b>.zip</b>
                   </a>
                 </div>
               </div>
@@ -71,7 +77,7 @@
               {% endif %}
               </a>
 
-              <a href="{{ url_for('public.event', event_id=event.id) }}">
+              <a class="event-name" href="{{ url_for('public.event', event_id=event.id) }}">
                 {{ event.name }}
               </a>
             </td>

@@ -34,13 +34,17 @@ class EventForm(FlaskForm):
     next = HiddenField()
     id = HiddenField('id')
     name = StringField(u'Title', [length(max=80), UniqueValidator(Event, 'name'), DataRequired()])
-    is_current = BooleanField(u'Featured event shown on homepage', default=False)
-    is_hidden = BooleanField(u'Hide this event from the homepage', default=False)
+    is_current = BooleanField(u'Featured', default=False, \
+        description=u'📣 Pin this event to the top of the homepage.')
+    is_hidden = BooleanField(u'Hidden', default=False, \
+        description=u'🚧 This event is not shown on the homepage.')
     # copy_template = BooleanField(u'Copy template pitch into new projects', default=False)
-    lock_editing = BooleanField(u'Block editing projects (Freeze)', default=False)
-    lock_starting = BooleanField(u'Block starting new projects (Lock)', default=False)
-    lock_resources = BooleanField(u'Use projects as global toolbox (Resources)', default=False, \
-        description=u'☝️ When enabled, the start and finish dates are hidden.')
+    lock_editing = BooleanField(u'Freeze projects', default=False, \
+        description=u'🔒 Prevent users editing any projects.')
+    lock_starting = BooleanField(u'Lock projects', default=False, \
+        description=u'🔒 Block starting new projects here.')
+    lock_resources = BooleanField(u'Resource area', default=False, \
+        description=u'💡 Used as toolbox, ignoring start and finish.')
     starts_date = DateField(u'Starts date', default=datetime.now())
     starts_time = TimeField(u'Starts time', default=time(9,0,0))
     ends_date = DateField(u'Finish date', default=datetime.now())
@@ -68,7 +72,7 @@ class ProjectForm(FlaskForm):
     category_id = SelectField(u'Challenge category', coerce=int)
     progress = SelectField(u'Progress', coerce=int, choices=projectProgressList())
     hashtag = StringField(u'Hashtag', [length(max=255)], description="Uniquely identifies the team channel")
-    autotext_url = URLField(u'Sync', [length(max=2048)])
+    autotext_url = URLField(u'Readme', [length(max=2048)], description="Location from which to Sync content")
     # is_autoupdate = BooleanField(u'Autoupdate project data')
     name = StringField(u'Title', [length(max=80), UniqueValidator(Project, 'name'), DataRequired()])
     summary = StringField(u'Short summary', [length(max=140)])

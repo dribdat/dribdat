@@ -3,8 +3,15 @@
 {% extends "admin/layout.html" %}
 
 {% block content %}
-<div class="container">
+<div class="container admin-rolenew">
     <h2>New role</h2>
     {{ render_form(url_for('admin.role_new'), form) }}
+</div>
+<div class="container admin-defaults">
+  <p>Suggestions:</p>
+  <button class="btn btn-secondary">🖍️ Designer</button>
+  <button class="btn btn-secondary">⚙️ Developer</button>
+  <button class="btn btn-secondary">💡 Ideator</button>
+  <button class="btn btn-secondary">🛡️ Organizer</button>
 </div>
 {% endblock %}

@@ -90,8 +90,6 @@ def validateProjectData(project):
     all_valid = True
     # Collect project data
     project_data = project.data
-    if len(project_data['readme']) > len(project_data['excerpt']):
-        project_data['excerpt'] = project_data['readme']
     # Iterate through the stage conditions
     for v in stage['conditions']['validate']:
         v['valid'] = False

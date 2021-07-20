@@ -1,0 +1,17 @@
+{% from "macros/_form.html" import render_form %}
+
+{% extends "admin/layout.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="jumbotron alert alert-info">
+      <!-- <a class="close" title="Close" href="#" data-dismiss="alert">&times;</a> -->
+      <div class="container scroll-after-500">
+        {{ tips|markdown }}
+      </div>
+    </div>
+    <center class="mt-2">
+      <a href="{{ url_for('admin.event_new') }}" class="btn btn-lg btn-success">Continue &#9654;</a>
+    </center>
+</div>
+{% endblock %}

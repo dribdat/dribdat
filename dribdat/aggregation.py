@@ -12,18 +12,24 @@ import json
 def GetProjectData(url):
     data = None
     if url.find('//gitlab.com') > 0:
-        apiurl = re.sub(r'https?://gitlab\.com/', '', url).strip('/')
+        apiurl = url
+        apiurl = re.sub(r'(?i)-?/blob/[a-z]+/README.*', '', apiurl)
+        apiurl = re.sub(r'https?://gitlab\.com/', '', apiurl).strip('/')
         if apiurl == url: return {}
         return FetchGitlabProject(apiurl)
 
     elif url.find('//github.com') > 0:
-        apiurl = re.sub(r'https?://github\.com/', '', url).strip('/')
+        apiurl = url
+        apiurl = re.sub(r'(?i)/blob/[a-z]+/README.*', '', apiurl)
+        apiurl = re.sub(r'https?://github\.com/', '', apiurl).strip('/')
         if apiurl.endswith('.git'): apiurl = apiurl[:-4]
         if apiurl == url: return {}
         return FetchGithubProject(apiurl)
 
     elif url.find('//bitbucket.org') > 0:
-        apiurl = re.sub(r'https?://bitbucket\.org', '', url).strip('/')
+        apiurl = url
+        apiurl = re.sub(r'(?i)/src/[a-z]+/(README)?\.?[a-z]*', '', apiurl)
+        apiurl = re.sub(r'https?://bitbucket\.org', '', apiurl).strip('/')
         if apiurl == url: return {}
         return FetchBitbucketProject(apiurl)
 

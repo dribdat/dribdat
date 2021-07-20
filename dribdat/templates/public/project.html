@@ -21,7 +21,6 @@
 {% endblock %}
 {% block js %}
 <script type="text/javascript" src="{{ url_for('static', filename='css/rainbow/rainbow-custom.min.js') }}"></script>
-<script type="text/javascript" src="{{ url_for('static', filename='libs/jquery-resizable/jquery-resizable.min.js') }}"></script>
 {% endblock %}
 
 {% block body_class %}project-home{% endblock %}
@@ -37,7 +36,7 @@
     {% if project.is_autoupdate %}
       <a href="{{ url_for('project.project_autoupdate', project_id=project.id) }}" title="Sync external data" class="btn btn-lg btn-warning">
         <i class="fa fa-refresh" aria-hidden="true"></i>
-        Sync</a>
+        Refresh</a>
     {% endif %}
     <a href="{{ url_for('project.project_edit', project_id=project.id) }}" title="Edit project" class="btn btn-lg btn-secondary">
       <i class="fa fa-pencil" aria-hidden="true"></i>
@@ -148,7 +147,7 @@
   {% endif %}
 
   {% if not project.is_challenge and project_starred and suggestions %}
-    <div class="alert alert-info resource-list col-12">
+    <div class="alert resource-list col-12">
       <a class="close" title="Close" href="#" data-dismiss="alert">&times;</a>
       <p>Suggestions for this stage of your project:</p>
       <div class="profile-projects container-fluid">
@@ -234,10 +233,9 @@
     {% if project.autotext %}
       {% if not project.is_challenge %}
       <div class="alert alert-secondary text-center">
-        These contents were scraped from an external site.
-        Visit the
-        <a href="{{ project.autotext_url }}" target="_blank" title="Source link">original location</a>
-        to see all the formatting.
+        This content is a preview, from an
+        <a href="{{ project.autotext_url }}" target="_blank" title="Source link">
+          external site</a>.
       </div>
       {% endif %}
 
@@ -339,7 +337,7 @@
   <center>
     <a href="{{ url_for('project.project_details', project_id=project.id) }}" title="Edit project details" class="btn btn-lg btn-secondary">
       <i class="fa fa-pencil" aria-hidden="true"></i>
-      Edit details</a>
+      Details</a>
   </center>
   {% endif %}
 

@@ -8,7 +8,7 @@
     "collaboration"
   ],
   "website": "https://dribdat.cc",
-  "repository": "https://github.com/hackathons-ftw/dribdat",
+  "repository": "https://github.com/dribdat/dribdat",
   "success_url": "/admin",
   "scripts": {
   },
