@@ -143,8 +143,14 @@ def project_boost(project_id):
         return project_action(project_id, None)
 
     form = ProjectBoost(obj=project, next=request.args.get('next'))
+    # TODO: load from a YAML file or from the Presets config
     form.boost_type.choices = [
-        '---', 'awesome sauce', 'top committer', 'data wizards', 'top tutor',
+        '---',
+        'Awesome sauce',
+        'Data wizards',
+        'Glorious purpose',
+        'Top tutorial',
+        'Super committers',
     ]
 
     # Process form
