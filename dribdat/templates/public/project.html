@@ -246,7 +246,7 @@
     {% if project.autotext %}
       {% if not project.is_challenge %}
       <div class="alert alert-secondary text-center">
-        This content is a preview, from an
+        This content is a preview from an
         <a href="{{ project.autotext_url }}" target="_blank" title="Source link">
           external site</a>.
       </div>
@@ -264,7 +264,11 @@
     <section class="timeline">
       {% for s in project_dribs %}
       <div class="timeline-item">
-        <div class="timeline-img"></div>
+        <div class="timeline-img">
+          {% if s.icon %}
+            <i class="fa fa-{{ s.icon }}" aria-hidden="true"></i>
+          {% endif %}
+        </div>
         <div class="timeline-content timeline-card js--fadeInBottom">
           {% if s.title %}
           <div class="timeline-img-header">

@@ -2,7 +2,7 @@
   "name": "dribdat",
   "version": "0.5",
   "description": "Open source hackathon platform",
-  "repository": "git@github.com:hackathons-ftw/dribdat.git",
+  "repository": "git@github.com:dribdat/dribdat.git",
   "author": "Oleg Lavrovsky <oleg@datalets.ch>",
   "license": "MIT",
   "private": false,

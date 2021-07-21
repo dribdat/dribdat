@@ -1,9 +1,10 @@
 # dribdat
 
 ![Github Actions build](https://github.com/dribdat/dribdat/workflows/build/badge.svg)
-[![codecov](https://codecov.io/gh/hackathons-ftw/dribdat/branch/master/graph/badge.svg?token=Ccd1vTxRXg)](https://codecov.io/gh/hackathons-ftw/dribdat)
-[![Mattermost](https://img.shields.io/badge/Mattermost-chat-blue.svg)](https://team.opendata.ch/signup_user_complete/?id=74yuxwruaby9fpoukx9bmoxday)
+[![codecov](https://codecov.io/gh/dribdat/dribdat/branch/main/graph/badge.svg?token=Ccd1vTxRXg)](https://codecov.io/gh/dribdat/dribdat)
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Floleg%2Fdribdat.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Floleg%2Fdribdat?ref=badge_shield)
+[![Mattermost](https://img.shields.io/badge/Mattermost-chat-blue.svg)](https://team.opendata.ch/signup_user_complete/?id=74yuxwruaby9fpoukx9bmoxday)
+<object type="image/svg+xml" data="https://opencollective.com/dribdat/tiers/backer.svg?avatarHeight=36&width=600"></object>
 
 ### A platform for time-limited, team-based, data-driven, open collaboration
 
@@ -225,7 +226,7 @@ You can also try to test SSO providers with `OAUTHLIB_INSECURE_TRANSPORT=true` (
 
 # Credits
 
-See [Contributors](https://github.com/dataletsch/dribdat/graphs/contributors) for a list of people who have made changes to the code, and [Forks](https://github.com/dataletsch/dribdat/network/members) to find some other users of this project.
+See [Contributors](https://github.com/dataletsch/dribdat/graphs/contributors) for a list of people who have made changes to the code, and [Forks](https://github.com/dataletsch/dribdat/network/members) to find other users of this project.
 
 This project is currently mantained by [@loleg](https://github.com/loleg) and [@gonzalocasas](https://github.com/gonzalocasas). You can find us on Mattermost at the badge at the top of this README.
 
@@ -238,11 +239,12 @@ Additional and :heart:-felt thanks for testing and feedback to:
 - [Chris Mutel](https://github.com/cmutel)
 - [Fabien Schwob](https://github.com/jibaku)
 - [Jonathan Sobel](https://github.com/JonathanSOBEL)
+- [Thomas Amberg](https://github.com/tamberg)
 - [@jonhesso](https://github.com/jonHESSO)
 - [@khashashin](https://github.com/khashashin)
 - [@philshem](https://github.com/philshem)
-- [Thomas Amberg](https://github.com/tamberg)
 
 
 ## License
-[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Floleg%2Fdribdat.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Floleg%2Fdribdat?ref=badge_large)
+
+This project is open source under the [MIT License](LICENSE)
