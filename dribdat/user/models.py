@@ -427,6 +427,7 @@ class Project(PkModel):
             if a.action == 'sync':
                 title = "Synchronized"
                 text = "Readme fetched from source"
+                icon = 'taxi'
                 continue
             elif a.action == 'post' and a.content is not None:
                 title = ""
@@ -436,16 +437,16 @@ class Project(PkModel):
                 title = "Team forming"
                 text = a.user.username + " has joined!"
                 author = ""
-                icon = 'high-five'
+                icon = 'thumbs-up'
             elif a.name == 'update' and a.action == 'commit':
                 title = "Code commit"
                 text = a.content
                 author = None #a.user.username
-                icon = 'zap'
+                icon = 'random'
             elif a.name == 'update':
                 title = ""
                 text = "Worked on documentation"
-                icon = 'clipboard'
+                icon = 'paperclip'
             elif a.name == 'create':
                 title = "Project started"
                 text = "Initialized by %s &#x1F389;" % a.user.username
@@ -470,6 +471,7 @@ class Project(PkModel):
                 'title': title,
                 'text': text,
                 'author': author,
+                'name': a.name,
                 'date': a.timestamp,
                 # 'resource': a.resource,
                 'ref_url': a.ref_url,
@@ -478,12 +480,16 @@ class Project(PkModel):
         if self.event.has_started or self.event.has_finished:
             dribs.append({
                 'title': "Event started",
-                'date': self.event.starts_at
+                'date': self.event.starts_at,
+                'icon': 'calendar',
+                'name': 'start',
             })
         if self.event.has_finished:
             dribs.append({
                 'title': "Event finished",
-                'date': self.event.ends_at
+                'date': self.event.ends_at,
+                'icon': 'bullhorn',
+                'name': 'finish',
             })
         return sorted(dribs, key=lambda x: x['date'], reverse=True)
 

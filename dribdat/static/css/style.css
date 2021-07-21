@@ -590,12 +590,21 @@ nav .navbar-nav .nav-item {
 /* Hides the triangle pointers in the timeline */
 .project-page .timeline-card::after { display: none; }
 .project-page .timeline-img {
-  width: 30px; height: 2px;
+  width: 2em;
+  height: 2em;
   background: #baa;
+  color: white;
   opacity: 1;
-  border-radius: 0;
-  margin-top: 25px;
-  margin-left: -15px;
+  border-radius: 1em;
+  margin-top: 0.5em;
+  margin-left: -1em;
+  text-align: center;
+  line-height: 1.8em;
+  font-size: 150%;
+}
+
+.timeline-boost .timeline-img-header {
+  background: teal;
 }
 
 .project-buttons { display: block; text-align: center; }
