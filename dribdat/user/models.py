@@ -430,21 +430,19 @@ class Project(PkModel):
                 icon = 'taxi'
                 continue
             elif a.action == 'post' and a.content is not None:
-                title = ""
                 text = a.content
                 icon = 'pencil'
             elif a.name == 'star':
-                title = "Team forming"
+                # title = "Team forming"
                 text = a.user.username + " has joined!"
-                author = ""
+                author = None
                 icon = 'thumbs-up'
             elif a.name == 'update' and a.action == 'commit':
-                title = "Code commit"
+                # title = "Code commit"
                 text = a.content
                 author = None #a.user.username
                 icon = 'random'
             elif a.name == 'update':
-                title = ""
                 text = "Worked on documentation"
                 icon = 'paperclip'
             elif a.name == 'create':

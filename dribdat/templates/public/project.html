@@ -264,7 +264,7 @@
     <section class="timeline">
       {% for s in project_dribs %}
       <div class="timeline-item timeline-{{ s.name }}">
-        <div class="timeline-img">
+        <div class="timeline-img" title="{{ s.name }}">
           {% if s.icon %}
             <i class="fa fa-{{ s.icon }}" aria-hidden="true"></i>
           {% endif %}
