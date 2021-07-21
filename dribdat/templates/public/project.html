@@ -276,6 +276,11 @@
           </div>
           {% endif %}
 
+          {% if s.id and current_user.is_admin %}
+            <a class="close" title="Delete post" href="{{ url_for('project.post_delete', project_id=project.id, activity_id=s.id) }}"
+              onclick="if(!window.confirm('Delete this post?')) return false">&times;</a>
+          {% endif %}
+
           {% if s.text %}
             <div class="content">
               {{s.text|markdown|safe}}

@@ -602,6 +602,7 @@ nav .navbar-nav .nav-item {
   line-height: 1.8em;
   font-size: 150%;
 }
+.project-page .timeline-card .close { margin: 0.4em; }
 
 .timeline-boost .timeline-img-header {
   background: teal;

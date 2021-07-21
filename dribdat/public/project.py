@@ -4,7 +4,7 @@ from flask import (Blueprint, request, render_template, flash, url_for,
                     redirect, session, current_app, jsonify)
 from flask_login import login_required, current_user
 
-from dribdat.user.models import Event, Project
+from dribdat.user.models import Event, Project, Activity
 from dribdat.public.forms import (
     ProjectNew, ProjectForm, ProjectDetailForm, ProjectPost, ProjectBoost,
 )
@@ -209,6 +209,16 @@ def project_post(project_id):
         'public/projectpost.html',
         current_event=event, project=project, form=form, stage=stage, all_valid=all_valid,
     )
+
+
+@blueprint.route('/<int:project_id>/unpost/<int:activity_id>', methods=['GET', 'POST'])
+@login_required
+def post_delete(project_id, activity_id):
+    project = Project.query.filter_by(id=project_id).first_or_404()
+    activity = Activity.query.filter_by(id=activity_id).first_or_404()
+    activity.delete()
+    flash('The post has been deleted.', 'success')
+    return project_view(project.id)
 
 def getSuggestionsForStage(progress):
     """ Get all projects which are published in a resource-type event """

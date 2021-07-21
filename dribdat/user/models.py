@@ -473,6 +473,7 @@ class Project(PkModel):
                 'date': a.timestamp,
                 # 'resource': a.resource,
                 'ref_url': a.ref_url,
+                'id': a.id,
             }
             dribs.append(prev)
         if self.event.has_started or self.event.has_finished:
