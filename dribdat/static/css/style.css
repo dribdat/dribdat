@@ -167,8 +167,11 @@ ul.help-block {
 .section-header .event-hostname::before {
   content: ' - ';
 }
-.section-header .event-date {
-  font-size: 120%; color: #000;
+.section-header .section-header-content div {
+  color: initial;
+}
+.section-header .section-header-content .event-date {
+  font-size: 120%;
 }
 .section-header a:hover {
   text-decoration: none;
@@ -312,8 +315,15 @@ nav .navbar-nav .nav-item {
   display: block;
 }
 
-.event-home .event-info {
+.event-home .event-info .event-summary {
+  text-align: center;
+  margin-bottom: 1em;
   font-size: 125%;
+}
+.event-home .event-info .event-description {
+  font-size: 110%;
+  padding: 1em;
+  background: white;
 }
 
 /* ---- Hexagonal hawtness ---- */
@@ -606,6 +616,18 @@ nav .navbar-nav .nav-item {
 
 .timeline-boost .timeline-img-header {
   background: teal;
+}
+.project-page .badges .boost {
+  display: inline-block;
+  width: 2em;
+  height: 2em;
+  background: teal;
+  color: white;
+  opacity: 1;
+  border-radius: 1em;
+  text-align: center;
+  line-height: 1.8em;
+  font-size: 150%;
 }
 
 .project-buttons { display: block; text-align: center; }
@@ -909,6 +931,8 @@ pre { color: #333; background: white; }
 @media only screen and (max-width:460px){
   .section-header-content { display: none; }
   .project-edit-buttons { margin: 1em; }
+  .container .jumbotron { padding: 0.3em; border: none; }
+  .jumbotron section { overflow: hidden; }
 }
 .category-info {
   padding: 0 1em;

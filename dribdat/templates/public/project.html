@@ -124,6 +124,16 @@
       {{project.summary}}
     </p>
   {% endif %}
+  </div><!-- /.project-name -->
+
+  <div class="badges">
+    {% for s in project_dribs %}
+      {% if s.icon and s.name == 'boost' %}
+      <a class="boost" href="#" onclick="$('#dribs-tab-md').click(); return false" title="{{ s.title }}">
+        <i class="fa fa-{{ s.icon }}" aria-hidden="true"></i>
+      </a>
+      {% endif %}
+    {% endfor %}
   </div>
 
   {% if False and not project.is_challenge %}
