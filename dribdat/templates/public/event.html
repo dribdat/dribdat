@@ -113,14 +113,21 @@
   </div>
 {% endif %}
 
-{% if current_event.description or current_event.summary %}
 <div class="event-info">
-  <a name="info"></a>
   <div class="content">
-    {{current_event.description|markdown or current_event.summary}}
+    <a name="info"></a>
+    {% if current_event.summary %}
+      <div class="event-summary">
+        {{current_event.summary}}
+      </div>
+    {% endif %}
+    {% if current_event.description %}
+      <div class="event-description">
+        {{current_event.description|markdown}}
+      </div>
+    {% endif %}
   </div>
 </div><!-- /.event-info -->
-{% endif %}
 
 {% if current_event.instruction %}
 <div class="jumbotron event-instruction mt-2 mb-2">
@@ -189,7 +196,7 @@
         Event</a>
       <a href="{{ url_for('admin.project_new', event_id=current_event.id) }}" class="btn btn-success">
         <i class="fa fa-cube"></i>
-        Add project</a>
+        Add</a>
     {% endif %}
   </div>
 
