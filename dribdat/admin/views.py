@@ -298,12 +298,6 @@ def event_projects(event_id):
     projects = Project.query.filter_by(event_id=event_id).order_by(Project.id.desc())
     return render_template('admin/projects.html', projects=projects, event=event, active='projects')
 
-@blueprint.route('/event/<int:event_id>/print')
-@login_required
-@admin_required
-def event_print(event_id):
-    return redirect(url_for("public.event_print", event_id=event_id))
-
 @blueprint.route('/project/<int:project_id>', methods=['GET', 'POST'])
 @login_required
 @admin_required
