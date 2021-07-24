@@ -310,14 +310,14 @@
     dm = Boolean(window.darkmode);
     if (toggle) dm = !dm;
     if (dm) {
-      $('html').css('-webkit-filter','invert(100%)')
+      $('body').css('-webkit-filter','invert(100%)')
                .css('-moz-filter','invert(100%)')
                .css('-o-filter','invert(100%)')
                .css('-ms-filter','invert(100%)')
                .css('background', 'black')
                .css('height', '100%');
     } else {
-      $('html').attr('style','');
+      $('body').attr('style','');
     }
     localStorage.setItem('darkmode', dm ? '1' : '0');
     window.darkmode = dm;
