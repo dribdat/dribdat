@@ -5,7 +5,7 @@ from flask import (Blueprint, request, render_template, flash, url_for,
 from flask_login import login_required, current_user
 
 from dribdat.user.models import User, Event, Project, Activity
-from dribdat.public.forms import LoginForm, UserForm
+from dribdat.public.forms import LoginForm, UserForm, NewEventForm
 from dribdat.database import db
 from dribdat.extensions import cache
 from dribdat.aggregation import GetEventUsers
@@ -14,6 +14,10 @@ from dribdat.user import getProjectStages, isUserActive
 from datetime import datetime
 
 blueprint = Blueprint('public', __name__, static_folder="../static")
+
+from dribdat.utils import load_event_presets
+
+EVENT_PRESET = load_event_presets()
 
 def current_event(): return Event.current()
 
@@ -136,6 +140,42 @@ def event_print(event_id):
     projects = projects.filter(Project.progress>=0).order_by(Project.name)
     return render_template('public/eventprint.html',
         current_event=event, projects=projects, curdate=now, active='print')
+
+
+@blueprint.route('/event/start', methods=['GET'])
+@login_required
+def event_start():
+    if not current_app.config['DRIBDAT_ALLOW_EVENTS'] and not current_user.is_admin:
+        flash('Only administrators can start events on this server.', 'danger')
+    tips = EVENT_PRESET['eventstart']
+    return render_template('public/eventstart.html', tips=tips)
+
+@blueprint.route('/event/new', methods=['GET', 'POST'])
+@login_required
+def event_new():
+    if not current_app.config['DRIBDAT_ALLOW_EVENTS'] and not current_user.is_admin:
+        return redirect(url_for("public.event_start"))
+    event = Event()
+    form = NewEventForm(obj=event, next=request.args.get('next'))
+    if form.validate_on_submit():
+        del form.id
+        form.populate_obj(event)
+        event.starts_at = datetime.combine(form.starts_date.data, form.starts_time.data)
+        event.ends_at = datetime.combine(form.ends_date.data, form.ends_time.data)
+        # Load default event content
+        event.boilerplate = EVENT_PRESET['quickstart']
+        event.community_embed = EVENT_PRESET['codeofconduct']
+        event.is_hidden = True
+        db.session.add(event)
+        db.session.commit()
+        flash('A new event has been planned!', 'success')
+        if not current_user.is_admin:
+            flash('Please contact an administrator to make changes and promote this event.', 'warning')
+        cache.clear()
+        return redirect(url_for("public.event", event_id=event.id))
+    return render_template('public/eventnew.html', form=form)
+
+#####
 
 @blueprint.route("/dribs")
 def dribs():

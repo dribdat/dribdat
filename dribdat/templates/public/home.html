@@ -105,14 +105,16 @@
   </div><!-- /.row events-past -->
   {% endif %}
 
-  {% if current_user and current_user.is_admin %}
+  {% if current_user %}
     <div class="row start-event">
       <div class="col-lg-12">
         {% if not current_event and not events_next and not events_past and not events_tips %}
           <h3>Looks like you are new to this - welcome!</h3>
           <p>Click to get started with your first event:</p>
         {% endif %}
-        <a href="{{ url_for('admin.event_start') }}" class="btn btn-success">Start an Event</a>
+        <div class="text-center">
+          <a href="{{ url_for('public.event_start') }}" class="btn btn-light">Start another Event</a>
+        </div>
       </div>
     </div>
   {% endif %}

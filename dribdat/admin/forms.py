@@ -53,15 +53,14 @@ class EventForm(FlaskForm):
     hostname = StringField(u'Hosted by', [length(max=80)], description=u'Organization responsible for the event')
     location = StringField(u'Located at', [length(max=255)], description=u'The event locale or virtual space')
     description = TextAreaField(u'Description', description=u'Markdown and HTML supported')
-    instruction = TextAreaField(u'Instructions', description=u'Shown to participants on the Resources page, Markdown and HTML supported')
     logo_url = URLField(u'Host logo link', [length(max=255)], description=u'Link to a logo file, ideally square and max 512x512 resolution')
     webpage_url = URLField(u'Home page link', [length(max=255)], description=u'Link to register or get more information about the event')
     community_url = URLField(u'Community link', [length(max=255)], description=u'Link to connect to a community forum or hashtag')
-    certificate_path = URLField(u'Participant certificate link', [length(max=1024)], description='Include {username}, {email} or {sso} identifier in your certificate generator')
+    certificate_path = URLField(u'Certificate link', [length(max=1024)], description='Include {username}, {email} or {sso} identifier in your participant certificate generator')
+    instruction = TextAreaField(u'Instructions', description=u'Shown to participants on the Resources page, Markdown and HTML supported')
     boilerplate = TextAreaField(u'Getting started guide', description=u'Top of new project page, markdown and HTML supported')
     community_embed = TextAreaField(u'Code of conduct and community links', description=u'Bottom of event and project page, markdown, HTML and embedded scripts supported')
     custom_css = TextAreaField(u'Custom stylesheet', description=u'External CSS support: @import url(https://...);')
-
     submit = SubmitField(u'Save')
 
 class ProjectForm(FlaskForm):

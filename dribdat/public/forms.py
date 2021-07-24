@@ -6,15 +6,18 @@ from wtforms import (
     TextAreaField,
     SelectMultipleField,
     SelectField, HiddenField,
-    RadioField
+    RadioField,
+    TimeField, DateField,
 )
 from wtforms.fields.html5 import (
     URLField, EmailField,
 )
 from wtforms.validators import DataRequired, AnyOf, length
 from ..user.validators import UniqueValidator
-from ..user import projectProgressList, resourceTypeList
-from dribdat.user.models import User, Project, Resource
+from ..user import projectProgressList
+from dribdat.user.models import User, Project, Event
+
+from datetime import time, datetime
 
 class LoginForm(FlaskForm):
     """Login form."""
@@ -117,12 +120,19 @@ class ProjectBoost(FlaskForm):
     boost_type = SelectField(u'Select booster', [DataRequired()])
     submit = SubmitField(u'Energize!')
 
-class ResourceForm(FlaskForm):
-    """ For suggesting cool tools """
-    name = StringField(u'Name', [length(max=80), DataRequired()])
-    type_id = RadioField(u'Type', coerce=int, choices=resourceTypeList())
-    source_url = URLField(u'Link', [length(max=2048)],
-        description=u'URL to download or get more information.')
-    content = TextAreaField(u'Comment',
-        description=u'Describe how you use this resource in more detail, Markdown and HTML supported.')
-    submit = SubmitField(u'Suggest')
+class NewEventForm(FlaskForm):
+    next = HiddenField()
+    id = HiddenField('id')
+    name = StringField(u'Title', [length(max=80), UniqueValidator(Event, 'name'), DataRequired()])
+    starts_date = DateField(u'Starts date', default=datetime.now())
+    starts_time = TimeField(u'Starts time', default=time(9,0,0))
+    ends_date = DateField(u'Finish date', default=datetime.now())
+    ends_time = TimeField(u'Finish time', default=time(16,0,0))
+    summary = StringField(u'Summary', [length(max=140)], description=u'A short overview (140 chars) of the upcoming event')
+    hostname = StringField(u'Hosted by', [length(max=80)], description=u'Organization responsible for the event')
+    location = StringField(u'Located at', [length(max=255)], description=u'The event locale or virtual space')
+    description = TextAreaField(u'Description', description=u'Markdown and HTML supported')
+    logo_url = URLField(u'Host logo link', [length(max=255)], description=u'Link to a logo file, ideally square and max 512x512 resolution')
+    webpage_url = URLField(u'Home page link', [length(max=255)], description=u'Link to register or get more information about the event')
+    community_url = URLField(u'Community link', [length(max=255)], description=u'Link to connect to a community forum or hashtag')
+    submit = SubmitField(u'Save')

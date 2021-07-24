@@ -3,7 +3,7 @@
 from flask import Blueprint, render_template, redirect, url_for, make_response, request, flash, jsonify
 from flask_login import login_required, current_user
 
-from ..utils import sanitize_input, load_event_presets
+from ..utils import sanitize_input
 from ..extensions import db, cache
 from ..decorators import admin_required
 from ..aggregation import GetProjectData, SyncProjectData
@@ -21,8 +21,6 @@ from os import path
 
 
 blueprint = Blueprint('admin', __name__, url_prefix='/admin')
-
-EVENT_PRESET = load_event_presets()
 
 @blueprint.route('/')
 @login_required
@@ -233,35 +231,6 @@ def event(event_id):
     form.ends_time.data = event.ends_at
     return render_template('admin/event.html', event=event, form=form)
 
-@blueprint.route('/event/new', methods=['GET', 'POST'])
-@login_required
-@admin_required
-def event_new():
-    event = Event()
-    form = EventForm(obj=event, next=request.args.get('next'))
-
-    if form.validate_on_submit():
-        del form.id
-        form.populate_obj(event)
-        event.starts_at = datetime.combine(form.starts_date.data, form.starts_time.data)
-        event.ends_at = datetime.combine(form.ends_date.data, form.ends_time.data)
-
-        db.session.add(event)
-        db.session.commit()
-
-        flash('Event added.', 'success')
-        cache.clear()
-        return redirect(url_for("admin.events"))
-
-    # Load default event content
-    if not form.boilerplate.data:
-        form.boilerplate.data = EVENT_PRESET['quickstart']
-    if not form.community_embed.data:
-        form.community_embed.data = EVENT_PRESET['codeofconduct']
-    form.is_current.data = True
-
-    return render_template('admin/eventnew.html', form=form)
-
 @blueprint.route('/event/<int:event_id>/delete', methods=['GET', 'POST'])
 @login_required
 @admin_required
@@ -296,13 +265,6 @@ def event_autosync(event_id):
     flash("%d projects synced." % count, 'success')
     return event_projects(event.id)
 
-
-@blueprint.route('/event/start', methods=['GET'])
-@login_required
-@admin_required
-def event_start():
-    tips = EVENT_PRESET['eventstart']
-    return render_template('admin/start.html', tips=tips)
 
 ##############
 ##############

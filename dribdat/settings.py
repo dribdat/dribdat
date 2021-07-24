@@ -20,6 +20,7 @@ class Config(object):
     # Application options
     DRIBDAT_USER_APPROVE = os_env.get('DRIBDAT_USER_APPROVE', False)
     DRIBDAT_NOT_REGISTER = os_env.get('DRIBDAT_NOT_REGISTER', False)
+    DRIBDAT_ALLOW_EVENTS = os_env.get('DRIBDAT_ALLOW_EVENTS', False)
 
     # Single sign-on support
     OAUTH_ID = os_env.get('OAUTH_ID', None)
