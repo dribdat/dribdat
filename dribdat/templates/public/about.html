@@ -47,14 +47,14 @@
         <p>
           There is a simple open API for accessing data from this site in machine-readable form over the Web.
         </p>
-        <p>Download data on the current (frontpage) or past events</p>
+        <p>Download data on the featured or past (replace <tt>current</tt> by <tt>id</tt>) events</p>
         <ul>
           <li><a href="/hackathon.json">/hackathon.json</a> (JSON <a href="https://schema.org/Hackathon">Schema</a>)</li>
           <li><a href="/api/event/current/info.json">/api/event/current/info.json</a> (JSON basic info)</li>
           <li><a href="/api/event/current/datapackage.json">/api/event/current/datapackage.json</a> (full Data Package)</li>
           <li><a href="/api/event/current/datapackage.zip">/api/event/current/datapackage.zip</a> (Data Package as ZIP)</li>
         </ul>
-        <p>Retrieve project data from the <tt>current</tt> (or any by <tt>id</tt>) event</p>
+        <p>Retrieve project data from the <tt>current</tt> (or <tt>id</tt>) event</p>
         <ul>
           <li><a href="/api/event/current/projects.json">/api/event/current/projects</a> (JSON)</li>
           <li><a href="/api/event/current/projects.csv">/api/event/current/projects</a> (CSV)</li>
@@ -70,20 +70,23 @@
     </div><!-- /api -->
     <hr>
     <div class="row">
-      <h3>Dear organisers</h3>
+      <h3>Dear organiser</h3>
       <p>On the <a href="/">front page</a> you can see the upcoming event, as well as any previous events. A short description is followed
        by a link to the event home page, as well as a countdown of time remaining until the start or finish (if already started) of the event. All of the content on the site can be edited by the site administrator in the
         <b>Admin</b> menu linked in the header if you have access: from where you can edit general details under <b>Events</b>,
-        publish <b>Categories</b>, and edit or sync <b>Projects</b> and
-        <b>Challenges</b> (which are either a Category, or just a project in challenge status).</p>
+        configure <b>Presets</b>, and edit or sync <b>Projects</b> and
+        Challenges - which are either a Category, or just a project in challenge status.</p>
+      <div class="text-center mt-2 mb-4">
+        <a href="{{ url_for('public.event_start') }}" class="btn btn-light"> &#129337; Start another Event</a>
+      </div>
       <p>If you would like to use this platform for your event,
         see the <a href="https://github.com/dribdat/dribdat/blob/main/USAGE.md#show-me-the-back-end" target="_blank">installation guide</a>,
         contact the organisers of the events listed here - or just fork the open source project
-        and set it up to your liking! &#129337;</p>
+        and set it up to your liking!</p>
       <p>
         <a href="https://github.com/dribdat/dribdat/blob/main/USAGE.md#usage" class="btn btn-success">User guide</a>
         <a href="https://github.com/dribdat/dribdat/issues" class="btn btn-primary">Issues &raquo;</a>
-        <a href="https://dribdat.cc" class="btn btn-secondary">Homepage</a>
+        <a href="https://dribdat.cc" class="btn btn-info">Homepage</a>
       </p>
     </div>
   </div>
