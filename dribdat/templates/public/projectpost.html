@@ -31,6 +31,10 @@
       {% for item in stage.conditions.agree %}
         <label style="clear:both;margin-top:0.5em"><input type="checkbox">&nbsp;{{ item }}</label>
       {% endfor %}
+    {% else %}
+      <p class="text-center mb-3"><small>
+        To reach the next level:
+      </small></p>
     {% endif %}
     {% for item in stage.conditions.validate %}
       {% if item.valid %}

@@ -823,6 +823,7 @@ nav .navbar-nav .nav-item {
 /* General form styles */
 .userform form label,
 .userform form .control-label,
+.projectpost form .control-label,
 .projectform form .control-label {
   font-weight: 400; font-size: 140%;
   display: block;
@@ -833,18 +834,21 @@ nav .navbar-nav .nav-item {
   margin-top: 1rem;
 }
 .userform form > .form-group,
+.projectpost form > .form-group,
 .projectform form > .form-group {
   margin-top: 1rem;
   margin-bottom: 0px;
   text-align: center;
 }
 .userform form .help-inline,
+.projectpost form .help-inline,
 .projectform form .help-inline {
   color: #555;
   display: block;
   margin-top: 1em;
 }
 .userform form .form-control,
+.projectpost form .form-control,
 .projectform form .form-control {
   font-size: 125%;
   box-shadow: 5px 5px 5px #ccc;
@@ -861,6 +865,7 @@ nav .navbar-nav .nav-item {
 .userform .btn-submit {
   min-width: 7em;
 }
+.projectpost .form-actions input,
 .projectform .form-actions input {
   margin-top: 1em;
   font-size: 150%;
