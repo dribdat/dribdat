@@ -712,10 +712,11 @@ class Activity(PkModel):
     """ Public, real time, conversational """
     __tablename__ = 'activities'
     name = Column(db.Enum(
-        'create',
-        'update',
-        'star',
-        name="activity_type"))
+                          'boost',
+                          'create',
+                          'update',
+                          'star',
+                          name="activity_type"))
     action = Column(db.String(32), nullable=True)
     # 'external',
     # 'commit',
