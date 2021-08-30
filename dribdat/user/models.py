@@ -408,7 +408,7 @@ class Project(PkModel):
         ).all()
         members = []
         for a in activities:
-            if not a.user in members and a.user.active:
+            if a.user and a.user not in members and a.user.active:
                 members.append(a.user)
         return members
 
