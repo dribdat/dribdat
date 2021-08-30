@@ -537,9 +537,9 @@ class Project(PkModel):
         d['created_at'] = format_date(self.created_at, '%Y-%m-%dT%H:%M')
         d['updated_at'] = format_date(self.updated_at, '%Y-%m-%dT%H:%M')
         d['team'] = [ u.username for u in self.team() ]
-        if len(self.longtext) > 10:
+        if self.longtext and len(self.longtext) > 10:
             d['excerpt'] = self.longtext[:300] + '...'
-        elif self.is_autoupdate:
+        elif self.is_autoupdate and self.autotext:
             d['excerpt'] = self.autotext[:300] + '...'
         if self.user is not None:
             d['maintainer'] = self.user.username
