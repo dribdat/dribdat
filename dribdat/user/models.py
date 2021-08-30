@@ -1,45 +1,50 @@
 # -*- coding: utf-8 -*-
 """User models."""
 
-from future.standard_library import install_aliases
-install_aliases()
-from urllib.parse import urlencode
+from sqlalchemy import Table, or_
 
-import re
-import hashlib
-import datetime as dt
-from time import mktime
-import pytz
-
-from flask_login import UserMixin
-from flask import current_app
-
-from dribdat.extensions import hashing
-from dribdat.database import (
-    db,
-    Model,
-    Column,
-    PkModel,
-    relationship,
-    reference_col,
-)
-from dribdat.utils import (
-    format_date_range, format_date, timesince
-)
-from dribdat.onebox import format_webembed
 from dribdat.user.constants import (
     PR_CHALLENGE,
     getProjectPhase,
     getResourceType,
     getStageByProgress,
 )
-
-from sqlalchemy import Table, or_
-
-users_roles = Table('users_roles', db.metadata,
-    Column('user_id', db.Integer, db.ForeignKey('users.id'), primary_key=True),
-    Column('role_id', db.Integer, db.ForeignKey('roles.id'), primary_key=True)
+from dribdat.onebox import format_webembed
+from dribdat.utils import (
+    format_date_range, format_date, timesince
 )
+from dribdat.database import (
+    db,
+    Column,
+    PkModel,
+    relationship,
+    reference_col,
+)
+from dribdat.extensions import hashing
+
+from flask import current_app
+from flask_login import UserMixin
+
+import pytz
+from time import mktime
+
+import datetime as dt
+import hashlib
+import re
+
+from urllib.parse import urlencode
+from future.standard_library import install_aliases
+install_aliases()
+
+
+users_roles = Table(
+    'users_roles', db.metadata,
+    Column('user_id', db.Integer, db.ForeignKey(
+        'users.id'), primary_key=True),
+    Column('role_id', db.Integer, db.ForeignKey(
+        'roles.id'), primary_key=True)
+)
+
 
 class Role(PkModel):
     """ Loud and proud """
@@ -60,6 +65,7 @@ class Role(PkModel):
         users = User.query.filter(User.roles.contains(self))
         return users.count()
 
+
 class User(UserMixin, PkModel):
     """ Just a regular Joe """
 
@@ -71,7 +77,8 @@ class User(UserMixin, PkModel):
     sso_id = Column(db.String(128), nullable=True)
     #: The hashed password
     password = Column(db.String(128), nullable=True)
-    created_at = Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)
+    created_at = Column(db.DateTime, nullable=False,
+                        default=dt.datetime.utcnow)
 
     # State flags
     active = Column(db.Boolean(), default=False)
@@ -117,7 +124,7 @@ class User(UserMixin, PkModel):
         gr_size = 80
         email = self.email.lower().encode('utf-8')
         gravatar_url = hashlib.md5(email).hexdigest() + "?"
-        gravatar_url += urlencode({'s':str(gr_size)})
+        gravatar_url += urlencode({'s': str(gr_size)})
         self.carddata = gravatar_url
         self.save()
 
@@ -128,7 +135,7 @@ class User(UserMixin, PkModel):
             ).order_by(Activity.timestamp.desc()).all()
         projects = []
         for a in activities:
-            if not a.project in projects and not a.project.is_hidden:
+            if a.project not in projects and not a.project.is_hidden:
                 if with_challenges or a.project.progress != 0:
                     projects.append(a.project)
         return projects
@@ -159,7 +166,8 @@ class User(UserMixin, PkModel):
         act = Activity.query.filter_by(
                 user_id=self.id
             ).order_by(Activity.timestamp.desc()).first()
-        if not act: return 'Never'
+        if not act:
+            return 'Never'
         return act.timestamp
 
     @property
@@ -171,8 +179,10 @@ class User(UserMixin, PkModel):
 
     def get_cert_path(self, event):
         """ Generate URL to participation certificate """
-        if not event: return None
-        if not event.certificate_path: return None
+        if not event:
+            return None
+        if not event.certificate_path:
+            return None
         path = event.certificate_path
         userdata = self.data
         for m in ['sso', 'username', 'email']:
@@ -259,33 +269,37 @@ class Event(PkModel):
 
     def get_schema(self, host_url=''):
         """ Returns hackathon.json formatted metadata """
+        desc = self.summary or re.sub('<[^>]*>', '', self.description)
         return {
             "@context": "http://schema.org",
-            "@type":"Event",
-            "location":{ "@type":"Place",
-                "name": self.hostname,
-                "address": self.location
-            },
+            "@type": "Event",
+            "location": {"@type": "Place",
+                         "name": self.hostname,
+                         "address": self.location
+                         },
             "name": self.name,
             "url": host_url + self.url,
-            "description": self.summary or re.sub('<[^>]*>', '', self.description),
+            "description": desc,
             "startDate": format_date(self.starts_at, '%Y-%m-%dT%H:%M'),
             "endDate": format_date(self.ends_at, '%Y-%m-%dT%H:%M'),
             "logo": self.logo_url,
             "mainEntityOfPage": self.webpage_url,
-            "offers":{ "@type":"Offer", "url": self.webpage_url },
-            "workPerformed":[ p.get_schema(host_url) for p in self.projects ]
+            "offers": {"@type": "Offer", "url": self.webpage_url},
+            "workPerformed": [p.get_schema(host_url) for p in self.projects]
         }
 
     @property
     def url(self):
         return "event/%d" % (self.id)
+
     @property
     def has_started(self):
         return self.starts_at <= dt.datetime.utcnow() <= self.ends_at
+
     @property
     def has_finished(self):
         return dt.datetime.utcnow() > self.ends_at
+
     @property
     def can_start_project(self):
         return not self.has_finished and not self.lock_starting
@@ -294,10 +308,12 @@ class Event(PkModel):
     def ends_at_tz(self):
         tz = pytz.timezone(current_app.config['TIME_ZONE'])
         return tz.localize(self.ends_at)
+
     @property
     def starts_at_tz(self):
         tz = pytz.timezone(current_app.config['TIME_ZONE'])
         return tz.localize(self.starts_at)
+
     @property
     def countdown(self):
         """ Normalized countdown timer """
@@ -309,10 +325,12 @@ class Event(PkModel):
         TIME_LIMIT = tz_now + dt.timedelta(days=30)
         # Show countdown within limits
         if starts_at > tz_now:
-            if starts_at > TIME_LIMIT: return None
+            if starts_at > TIME_LIMIT:
+                return None
             return starts_at
         elif ends_at > tz_now:
-            if ends_at > TIME_LIMIT: return None
+            if ends_at > TIME_LIMIT:
+                return None
             return ends_at
         else:
             return None
@@ -321,25 +339,29 @@ class Event(PkModel):
     def date(self):
         """ Formatted date range """
         return format_date_range(self.starts_at, self.ends_at)
+
     @property
     def oneliner(self):
         """ A short online description """
         ol = self.summary or self.description
         ol = re.sub(r"\s+", " ", ol)
-        if len(ol)>140: ol = ol[:140] + '...'
+        if len(ol) > 140:
+            ol = ol[:140] + '...'
         return ol
+
     @property
     def project_count(self):
         """ Number of projects """
-        if not self.projects: return 0
+        if not self.projects:
+            return 0
         return len(self.projects)
 
     def categories_for_event(self):
         """ Event categories """
         return Category.query.filter(or_(
-            Category.event_id==None,
-            Category.event_id==-1,
-            Category.event_id==self.id
+            Category.event_id is None,
+            Category.event_id == -1,
+            Category.event_id == self.id
         )).order_by('name')
 
     def current():
@@ -353,6 +375,7 @@ class Event(PkModel):
 
     def __repr__(self):
         return '<Event({name})>'.format(name=self.name)
+
 
 class Project(PkModel):
     """ You know, for kids! """
@@ -378,8 +401,10 @@ class Project(PkModel):
     logo_color = Column(db.String(7), nullable=True)
     logo_icon = Column(db.String(40), nullable=True)
 
-    created_at = Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)
-    updated_at = Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)
+    created_at = Column(db.DateTime, nullable=False,
+                        default=dt.datetime.utcnow)
+    updated_at = Column(db.DateTime, nullable=False,
+                        default=dt.datetime.utcnow)
 
     # User who created the project
     user_id = reference_col('users', nullable=True)
@@ -399,7 +424,9 @@ class Project(PkModel):
 
     def latest_activity(self, max=5):
         """ Convenience query for latest activity """
-        return Activity.query.filter_by(project_id=self.id).order_by(Activity.timestamp.desc()).limit(max)
+        q = Activity.query.filter_by(project_id=self.id)
+        q = q.order_by(Activity.timestamp.desc())
+        return q.limit(max)
 
     def team(self):
         """ Return all starring users (A team) """
@@ -408,7 +435,7 @@ class Project(PkModel):
         ).all()
         members = []
         for a in activities:
-            if not a.user in members and a.user.active:
+            if a.user not in members and a.user.active:
                 members.append(a.user)
         return members
 
@@ -420,41 +447,33 @@ class Project(PkModel):
         dribs = []
         prev = None
         for a in activities:
-            author = title = text = icon = None
+            author = title = text = None
             if a.user:
                 author = a.user.username
-                if not a.user.active: continue
+                if not a.user.active:
+                    continue
             if a.action == 'sync':
                 title = "Synchronized"
                 text = "Readme fetched from source"
-                icon = 'taxi'
                 continue
             elif a.action == 'post' and a.content is not None:
+                title = ""
                 text = a.content
-                icon = 'pencil'
             elif a.name == 'star':
-                # title = "Team forming"
+                title = "Team forming"
                 text = a.user.username + " has joined!"
-                author = None
-                icon = 'thumbs-up'
+                author = ""
             elif a.name == 'update' and a.action == 'commit':
-                # title = "Code commit"
+                title = "Code commit"
                 text = a.content
-                author = None #a.user.username
-                icon = 'random'
+                author = None  # a.user.username
             elif a.name == 'update':
+                title = ""
                 text = "Worked on documentation"
-                icon = 'paperclip'
             elif a.name == 'create':
                 title = "Project started"
                 text = "Initialized by %s &#x1F389;" % a.user.username
                 author = ""
-                icon = 'rocket'
-            elif a.name == 'boost':
-                title = a.action
-                text = a.content
-                author = a.user.username
-                icon = 'trophy'
             else:
                 continue
             # Check if last signal very similar
@@ -465,51 +484,49 @@ class Project(PkModel):
                 ):
                     continue
             prev = {
-                'icon': icon,
                 'title': title,
                 'text': text,
                 'author': author,
-                'name': a.name,
                 'date': a.timestamp,
                 # 'resource': a.resource,
                 'ref_url': a.ref_url,
-                'id': a.id,
             }
             dribs.append(prev)
         if self.event.has_started or self.event.has_finished:
             dribs.append({
                 'title': "Event started",
-                'date': self.event.starts_at,
-                'icon': 'calendar',
-                'name': 'start',
+                'date': self.event.starts_at
             })
         if self.event.has_finished:
             dribs.append({
                 'title': "Event finished",
-                'date': self.event.ends_at,
-                'icon': 'bullhorn',
-                'name': 'finish',
+                'date': self.event.ends_at
             })
         return sorted(dribs, key=lambda x: x['date'], reverse=True)
 
     def categories_all(self, event=None):
         """ Convenience query for all categories """
-        if self.event: return self.event.categories_for_event()
-        if event is not None: return event.categories_for_event()
+        if self.event:
+            return self.event.categories_for_event()
+        if event is not None:
+            return event.categories_for_event()
         return Category.query.order_by('name')
 
     @property
     def stage(self):
         """ Assessment of progress stage with full data """
         return getStageByProgress(self.progress)
+
     @property
     def phase(self):
         """ Assessment of progress as phase name """
         return getProjectPhase(self)
+
     @property
     def is_challenge(self):
         """ True if this project is in challenge phase """
-        if self.progress is None: return False
+        if self.progress is None:
+            return False
         return self.progress <= PR_CHALLENGE
 
     @property
@@ -552,10 +569,10 @@ class Project(PkModel):
         }
         d['created_at'] = format_date(self.created_at, '%Y-%m-%dT%H:%M')
         d['updated_at'] = format_date(self.updated_at, '%Y-%m-%dT%H:%M')
-        d['team'] = [ u.username for u in self.team() ]
-        if len(self.longtext) > 10:
+        d['team'] = [u.username for u in self.team()]
+        if self.longtext and len(self.longtext) > 10:
             d['excerpt'] = self.longtext[:300] + '...'
-        elif self.is_autoupdate:
+        elif self.is_autoupdate and self.autotext:
             d['excerpt'] = self.autotext[:300] + '...'
         if self.user is not None:
             d['maintainer'] = self.user.username
@@ -570,7 +587,10 @@ class Project(PkModel):
     def get_schema(self, host_url=''):
         """ Schema.org compatible metadata """
         # TODO: accurately detect project license based on component etc.
-        content_license = "https://creativecommons.org/licenses/by/4.0/" if "creativecommons" in self.event.community_embed else ''
+        if "creativecommons" in self.event.community_embed:
+            content_license = "https://creativecommons.org/licenses/by/4.0/"
+        else:
+            content_license = ''
         return {
             "@type": "CreativeWork",
             "name": self.name,
@@ -586,14 +606,17 @@ class Project(PkModel):
     def update(self):
         """ Process data submission """
         # Correct fields
-        if self.category_id == -1: self.category_id = None
+        if self.category_id == -1:
+            self.category_id = None
         if self.logo_icon and self.logo_icon.startswith('fa-'):
             self.logo_icon = self.logo_icon.replace('fa-', '')
         if self.logo_color == '#000000':
             self.logo_color = ''
         # Check update status
-        self.is_autoupdate = bool(self.autotext_url and self.autotext_url.strip())
-        if not self.is_autoupdate: self.autotext = ''
+        self.is_autoupdate = bool(
+            self.autotext_url and self.autotext_url.strip())
+        if not self.is_autoupdate:
+            self.autotext = ''
         # Set the timestamp
         self.updated_at = dt.datetime.utcnow()
         if self.is_challenge:
@@ -603,36 +626,56 @@ class Project(PkModel):
             score = self.progress or 0
             cqu = Activity.query.filter_by(project_id=self.id)
             c_s = cqu.count()
-            # Get a point for every (join, update, ..) activity in the project's dribs
+            # Get a point for every (join, update, ..) activity in dribs
             score = score + (1 * c_s)
             # Triple the score for every boost (upvote)
             # c_a = cqu.filter_by(name="boost").count()
             # score = score + (2 * c_a)
             # Add to the score for every complete documentation field
-            if self.summary is None: self.summary = ''
-            if len(self.summary) > 3: score = score + 1
-            if self.image_url is None: self.image_url = ''
-            if len(self.image_url) > 3: score = score + 1
-            if self.source_url is None: self.source_url = ''
-            if len(self.source_url) > 3: score = score + 1
-            if self.webpage_url is None: self.webpage_url = ''
-            if len(self.webpage_url) > 3: score = score + 1
-            if self.logo_color is None: self.logo_color = ''
-            if len(self.logo_color) > 3: score = score + 1
-            if self.logo_icon is None: self.logo_icon = ''
-            if len(self.logo_icon) > 3: score = score + 1
-            if self.longtext is None: self.longtext = ''
+            if self.summary is None:
+                self.summary = ''
+            if len(self.summary) > 3:
+                score = score + 1
+            if self.image_url is None:
+                self.image_url = ''
+            if len(self.image_url) > 3:
+                score = score + 1
+            if self.source_url is None:
+                self.source_url = ''
+            if len(self.source_url) > 3:
+                score = score + 1
+            if self.webpage_url is None:
+                self.webpage_url = ''
+            if len(self.webpage_url) > 3:
+                score = score + 1
+            if self.logo_color is None:
+                self.logo_color = ''
+            if len(self.logo_color) > 3:
+                score = score + 1
+            if self.logo_icon is None:
+                self.logo_icon = ''
+            if len(self.logo_icon) > 3:
+                score = score + 1
+            if self.longtext is None:
+                self.longtext = ''
             # Get more points based on how much content you share
-            if len(self.longtext) > 3: score = score + 1
-            if len(self.longtext) > 100: score = score + 3
-            if len(self.longtext) > 500: score = score + 5
+            if len(self.longtext) > 3:
+                score = score + 1
+            if len(self.longtext) > 100:
+                score = score + 3
+            if len(self.longtext) > 500:
+                score = score + 5
             # Points for external (Readme) content
             if self.autotext is not None:
-                if len(self.autotext) > 3: score = score + 1
-                if len(self.autotext) > 100: score = score + 3
-                if len(self.autotext) > 500: score = score + 5
+                if len(self.autotext) > 3:
+                    score = score + 1
+                if len(self.autotext) > 100:
+                    score = score + 3
+                if len(self.autotext) > 500:
+                    score = score + 5
             # Cap at 100%
-            if score > 100: score = 100
+            if score > 100:
+                score = 100
             self.score = score
 
     def __init__(self, name=None, **kwargs):
@@ -641,6 +684,7 @@ class Project(PkModel):
 
     def __repr__(self):
         return '<Project({name})>'.format(name=self.name)
+
 
 class Category(PkModel):
     """ Is it a bird? Is it a plane? """
@@ -655,7 +699,8 @@ class Category(PkModel):
     event = relationship('Event', backref='categories')
 
     def project_count(self):
-        if not self.projects: return 0
+        if not self.projects:
+            return 0
         return len(self.projects)
 
     @property
@@ -674,21 +719,22 @@ class Category(PkModel):
     def __repr__(self):
         return '<Category({name})>'.format(name=self.name)
 
+
 class Activity(PkModel):
     """ Public, real time, conversational """
     __tablename__ = 'activities'
     name = Column(db.Enum(
         'create',
         'update',
-        'boost',
         'star',
         name="activity_type"))
     action = Column(db.String(32), nullable=True)
-        # 'external',
-        # 'commit',
-        # 'sync',
-        # 'post',
-        # ...
+    # 'external',
+    # 'commit',
+    # 'boost',
+    # 'sync',
+    # 'post',
+    # ...
     timestamp = Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)
     content = Column(db.UnicodeText, nullable=True)
     ref_url = Column(db.String(2048), nullable=True)
@@ -743,7 +789,8 @@ class Resource(PkModel):
     name = Column(db.String(80), nullable=False)
     type_id = Column(db.Integer(), nullable=True, default=0)
 
-    created_at = Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)
+    created_at = Column(db.DateTime, nullable=False,
+                        default=dt.datetime.utcnow)
     # At which progress level did it become relevant
     progress_tip = Column(db.Integer(), nullable=True)
     # order = Column(db.Integer, nullable=True)
