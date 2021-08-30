@@ -8,6 +8,7 @@ from dribdat.user.constants import (
     getProjectPhase,
     getResourceType,
     getStageByProgress,
+    getActivityByType,
 )
 from dribdat.onebox import format_webembed
 from dribdat.utils import (
@@ -447,35 +448,10 @@ class Project(PkModel):
         dribs = []
         prev = None
         for a in activities:
-            author = title = text = None
-            if a.user:
-                author = a.user.username
-                if not a.user.active:
-                    continue
-            if a.action == 'sync':
-                title = "Synchronized"
-                text = "Readme fetched from source"
+            a_parsed = getActivityByType(a)
+            if a_parsed is None:
                 continue
-            elif a.action == 'post' and a.content is not None:
-                title = ""
-                text = a.content
-            elif a.name == 'star':
-                title = "Team forming"
-                text = a.user.username + " has joined!"
-                author = ""
-            elif a.name == 'update' and a.action == 'commit':
-                title = "Code commit"
-                text = a.content
-                author = None  # a.user.username
-            elif a.name == 'update':
-                title = ""
-                text = "Worked on documentation"
-            elif a.name == 'create':
-                title = "Project started"
-                text = "Initialized by %s &#x1F389;" % a.user.username
-                author = ""
-            else:
-                continue
+            (author, title, text, icon) = a_parsed
             # Check if last signal very similar
             if prev is not None:
                 if (
@@ -484,23 +460,30 @@ class Project(PkModel):
                 ):
                     continue
             prev = {
+                'icon': icon,
                 'title': title,
                 'text': text,
                 'author': author,
+                'name': a.name,
                 'date': a.timestamp,
                 # 'resource': a.resource,
                 'ref_url': a.ref_url,
+                'id': a.id,
             }
             dribs.append(prev)
         if self.event.has_started or self.event.has_finished:
             dribs.append({
                 'title': "Event started",
-                'date': self.event.starts_at
+                'date': self.event.starts_at,
+                'icon': 'calendar',
+                'name': 'start',
             })
         if self.event.has_finished:
             dribs.append({
                 'title': "Event finished",
-                'date': self.event.ends_at
+                'date': self.event.ends_at,
+                'icon': 'bullhorn',
+                'name': 'finish',
             })
         return sorted(dribs, key=lambda x: x['date'], reverse=True)
 

@@ -29,17 +29,23 @@ RESOURCE_TYPES = {
     6: ('inspired by', "Is inspired by this"),
 }
 
+
 def resourceTypeList(verbose=False):
     vb = 1 if verbose else 0
     pl = [(g, RESOURCE_TYPES[g][vb]) for g in RESOURCE_TYPES]
     return sorted(pl, key=lambda x: x[0])
 
+
 def getResourceType(resource, verbose=False):
     vb = 1 if verbose else 0
-    if resource is None: return ""
-    if resource.type_id is None: return RESOURCE_TYPES[0][vb]
-    if not resource.type_id in RESOURCE_TYPES: return ""
+    if resource is None:
+        return ""
+    if resource.type_id is None:
+        return RESOURCE_TYPES[0][vb]
+    if resource.type_id not in RESOURCE_TYPES:
+        return ""
     return RESOURCE_TYPES[resource.type_id][vb]
+
 
 # Project progress stages
 project_stages = load_yaml_presets('stages', 'name')
@@ -51,6 +57,7 @@ for ps in project_stages:
     PROJECT_PROGRESS[pid] = project_stages[ps]['description']
     PROJECT_PROGRESS_STAGE[pid] = project_stages[ps]
 
+
 def projectProgressList(All=True, WithEmpty=True):
     if not All:
         return [(PR_CHALLENGE, PROJECT_PROGRESS[PR_CHALLENGE])]
@@ -58,6 +65,7 @@ def projectProgressList(All=True, WithEmpty=True):
     if WithEmpty:
         pl.append((-100, ''))
     return sorted(pl, key=lambda x: x[0])
+
 
 def getProjectStages():
     pl = []
@@ -67,23 +75,28 @@ def getProjectStages():
         pl.append(stage)
     return pl
 
+
 def getProjectPhase(project):
     if project is None or project.progress is None:
         return ""
-    if not project.progress in PROJECT_PROGRESS_STAGE:
+    if project.progress not in PROJECT_PROGRESS_STAGE:
         return PROJECT_PROGRESS_STAGE[PR_CHALLENGE]['phase']
     return PROJECT_PROGRESS_STAGE[project.progress]['phase']
 
+
 def getStageByProgress(progress):
-    if progress is None: return None
-    if not progress in PROJECT_PROGRESS_STAGE:
+    if progress is None:
+        return None
+    if progress not in PROJECT_PROGRESS_STAGE:
         return PROJECT_PROGRESS_STAGE[PR_CHALLENGE]
     return PROJECT_PROGRESS_STAGE[progress]
 
+
 def isUserActive(user):
-    if not user or not 'active' in user.__dir__():
+    if not user or 'active' not in user.__dir__():
         return False
     return user.active
+
 
 def validateProjectData(project):
     stage = project.stage
@@ -95,10 +108,59 @@ def validateProjectData(project):
         v['valid'] = False
         vf = v['field']
         if vf in project_data:
-            if ('min' in v and len(project_data[vf]) >= v['min']) or \
-                ('max' in v and v['min'] <= len(project_data[vf]) <= v['max']) or \
-                ('test' in v and v['test'] == 'validurl' and project_data[vf].startswith('http')):
+            pdvf = project_data[vf]
+            if (
+                ('min' in v and len(pdvf) >= v['min'])
+                or ('max' in v and v['min'] <= len(pdvf) <= v['max'])
+                or (
+                    'test' in v and v['test'] == 'validurl'
+                    and pdvf.startswith('http')
+                )
+            ):
                 v['valid'] = True
         if not v['valid']:
             all_valid = False
     return stage, all_valid
+
+
+def getActivityByType(a):
+    """ Returns Activity item representated as a tuple """
+    author = title = text = icon = None
+    if a.user:
+        author = a.user.username
+        if not a.user.active:
+            return None
+    if a.action == 'sync':
+        title = "Synchronized"
+        text = "Data fetched from source"
+        icon = 'taxi'
+        return None  # SKIPPED FOR NOW!
+    elif a.action == 'post' and a.content is not None:
+        text = a.content
+        icon = 'pencil'
+    elif a.name == 'star':
+        # title = "Team forming"
+        text = a.user.username + " has joined!"
+        author = None
+        icon = 'thumbs-up'
+    elif a.name == 'update' and a.action == 'commit':
+        # title = "Code commit"
+        text = a.content
+        author = None  # a.user.username
+        icon = 'random'
+    elif a.name == 'update':
+        text = "Worked on documentation"
+        icon = 'paperclip'
+    elif a.name == 'create':
+        title = "Project started"
+        text = "Initialized by %s &#x1F389;" % a.user.username
+        author = ""
+        icon = 'rocket'
+    elif a.name == 'boost':
+        title = a.action
+        text = a.content
+        author = a.user.username
+        icon = 'trophy'
+    else:
+        return None
+    return (author, title, text, icon)
