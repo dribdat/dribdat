@@ -619,64 +619,69 @@ class Project(PkModel):
             self.autotext = ''
         # Set the timestamp
         self.updated_at = dt.datetime.utcnow()
+        self.update_null_fields()
+        self.score = self.calculate_score()
+
+    def update_null_fields(self):
+        if self.summary is None:
+            self.summary = ''
+        if self.image_url is None:
+            self.image_url = ''
+        if self.source_url is None:
+            self.source_url = ''
+        if self.webpage_url is None:
+            self.webpage_url = ''
+        if self.logo_color is None:
+            self.logo_color = ''
+        if self.logo_icon is None:
+            self.logo_icon = ''
+        if self.longtext is None:
+            self.longtext = ''
+        if self.autotext is None:
+            self.autotext = ''
+
+    def calculate_score(self):
+        """ Calculate score of a project based on base progress """
         if self.is_challenge:
-            self.score = 0
-        else:
-            # Calculate score based on base progress
-            score = self.progress or 0
-            cqu = Activity.query.filter_by(project_id=self.id)
-            c_s = cqu.count()
-            # Get a point for every (join, update, ..) activity in dribs
-            score = score + (1 * c_s)
-            # Triple the score for every boost (upvote)
-            # c_a = cqu.filter_by(name="boost").count()
-            # score = score + (2 * c_a)
-            # Add to the score for every complete documentation field
-            if self.summary is None:
-                self.summary = ''
-            if len(self.summary) > 3:
-                score = score + 1
-            if self.image_url is None:
-                self.image_url = ''
-            if len(self.image_url) > 3:
-                score = score + 1
-            if self.source_url is None:
-                self.source_url = ''
-            if len(self.source_url) > 3:
-                score = score + 1
-            if self.webpage_url is None:
-                self.webpage_url = ''
-            if len(self.webpage_url) > 3:
-                score = score + 1
-            if self.logo_color is None:
-                self.logo_color = ''
-            if len(self.logo_color) > 3:
-                score = score + 1
-            if self.logo_icon is None:
-                self.logo_icon = ''
-            if len(self.logo_icon) > 3:
-                score = score + 1
-            if self.longtext is None:
-                self.longtext = ''
-            # Get more points based on how much content you share
-            if len(self.longtext) > 3:
-                score = score + 1
-            if len(self.longtext) > 100:
-                score = score + 3
-            if len(self.longtext) > 500:
-                score = score + 5
-            # Points for external (Readme) content
-            if self.autotext is not None:
-                if len(self.autotext) > 3:
-                    score = score + 1
-                if len(self.autotext) > 100:
-                    score = score + 3
-                if len(self.autotext) > 500:
-                    score = score + 5
-            # Cap at 100%
-            if score > 100:
-                score = 100
-            self.score = score
+            return 0
+        score = self.progress or 0
+        cqu = Activity.query.filter_by(project_id=self.id)
+        c_s = cqu.count()
+        # Get a point for every (join, update, ..) activity in dribs
+        score = score + (1 * c_s)
+        # Triple the score for every boost (upvote)
+        # c_a = cqu.filter_by(name="boost").count()
+        # score = score + (2 * c_a)
+        # Add to the score for every complete documentation field
+        if len(self.summary) > 3:
+            score = score + 1
+        if len(self.image_url) > 3:
+            score = score + 1
+        if len(self.source_url) > 3:
+            score = score + 1
+        if len(self.webpage_url) > 3:
+            score = score + 1
+        if len(self.logo_color) > 3:
+            score = score + 1
+        if len(self.logo_icon) > 3:
+            score = score + 1
+        # Get more points based on how much content you share
+        if len(self.longtext) > 3:
+            score = score + 1
+        if len(self.longtext) > 100:
+            score = score + 3
+        if len(self.longtext) > 500:
+            score = score + 5
+        # Points for external (Readme) content
+        if len(self.autotext) > 3:
+            score = score + 1
+        if len(self.autotext) > 100:
+            score = score + 3
+        if len(self.autotext) > 500:
+            score = score + 5
+        # Cap at 100%
+        score = min(score, 100)
+        return score
 
     def __init__(self, name=None, **kwargs):
         if name:
