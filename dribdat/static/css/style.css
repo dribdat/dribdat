@@ -996,7 +996,7 @@ pre { color: #333; background: white; }
 .team-gravatar img {
   margin: 5px;
   vertical-align: top;
-  width: 2.7em;
+  width: 3.3em;
 }
 .team-gravatar span {
   width: 48%;
@@ -1186,10 +1186,10 @@ Code of Conduct
 /* ------------
 Challenges view
 --------------- */
-#ideas-list .list-group-item { border: none !important; }
 .list-data .list-group-item {
     border-left: none; border-right: none; border-top: none;
-    border-bottom: 1px solid #333; border-radius: 0px;
+    border-bottom: 1px solid #aaa;
+    border-radius: 0px;
     margin-right: 1em;
 }
 .list-data .list-group-item img {
@@ -1197,20 +1197,19 @@ Challenges view
     padding-right: 0.5em;
 }
 @media (min-width: 1000px) {
-.list-data .list-group-item {
-    width: 48%;
-    display: inline-block;
-    overflow: hidden;
-    height: 3em;
-    line-height: 2em;
-    padding-top: 0.4em;
-}
-.list-data a.list-group-item:nth-child(2) {
-    border-top: 1px solid #333;
-}
+  .list-data .list-group-item {
+      display: inline-block;
+      overflow: hidden;
+      height: 3em;
+      line-height: 2em;
+      padding-top: 0.4em;
+  }
 }
 .list-data a.list-group-item:nth-child(1) {
-    border-top: 1px solid #333;
+    border-top: 1px solid #aaa;
+}
+.widget-github {
+  text-align: center;
 }
 
 /* -------------

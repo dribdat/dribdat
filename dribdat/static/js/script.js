@@ -287,6 +287,31 @@
   });
   $('.details .history').hide();
 
+  // Show GitHub issues
+  $('#issues-list').each(function() {
+    var per_page = 10;
+    var $self = $(this);
+    var userAndRepo = $self.data('github');
+    var url_api = 'https://api.github.com/repos/' + userAndRepo + '/issues';
+    var url_www = 'https://github.com/' + userAndRepo + '/issues';
+    $.getJSON(url_api + '?per_page=' + (per_page + 1), function(data) {
+      $self.empty();
+      $.each(data, function(index) {
+        if (index == per_page) {
+          return $self.append(
+            '<a href="' + url_www +
+            '" class="list-group-item" target="_blank">More issues ...</a>'
+          );
+        }
+        $self.append(
+          '<a href="' + this.html_url +
+          '" class="list-group-item" target="_blank">' +
+          '<img src="' + this.user.avatar_url + '">&nbsp;' + this.title + '</a>'
+        );
+      });
+    });
+  });
+
   // Make embedded iframes resizable
   $('.resizable').each(function() {
     var $self = $(this);
