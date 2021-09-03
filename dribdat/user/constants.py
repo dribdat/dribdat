@@ -126,40 +126,42 @@ def validateProjectData(project):
 def getActivityByType(a):
     """ Returns Activity item representated as a tuple """
     author = title = text = icon = None
+    # Obtain author if available
     if a.user:
         author = a.user.username
         if not a.user.active:
             return None
+    else:
+        author = "?"
+    # Based on action, populate activity fields
     if a.action == 'sync':
-        title = "Synchronized"
-        text = "Data fetched from source"
+        # title = "Synchronized"
+        text = "Readme updated"
         icon = 'taxi'
-        return None  # SKIPPED FOR NOW!
     elif a.action == 'post' and a.content is not None:
         text = a.content
         icon = 'pencil'
     elif a.name == 'star':
         # title = "Team forming"
-        text = a.user.username + " has joined!"
+        text = "%s has joined!" % author
         author = None
         icon = 'thumbs-up'
     elif a.name == 'update' and a.action == 'commit':
         # title = "Code commit"
         text = a.content
-        author = None  # a.user.username
+        author = None
         icon = 'random'
     elif a.name == 'update':
-        text = "Worked on documentation"
+        text = "Worked on the pitch"
         icon = 'paperclip'
     elif a.name == 'create':
         title = "Project started"
-        text = "Initialized by %s &#x1F389;" % a.user.username
-        author = ""
+        text = "Initialized by %s &#x1F389;" % author
+        author = None
         icon = 'rocket'
     elif a.name == 'boost':
         title = a.action
         text = a.content
-        author = a.user.username
         icon = 'trophy'
     else:
         return None
