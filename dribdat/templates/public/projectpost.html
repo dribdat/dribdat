@@ -6,9 +6,6 @@
 {% block body_class %}projectpost{% endblock %}
 
 {% block content %}
-  <h2>Drib about
-    <a class="project-link" href="{{ url_for('project.project_view', project_id=project.id) }}" target="_blank">{{project.name}}</a>
-  </h2>
 
   {% if all_valid %}
     <h4 class="text-center mb-3">
@@ -21,6 +18,11 @@
       {% endfor %}
       </label>
     </div>
+  {% else %}
+    <h2>
+      <i class="fa fa-clipboard" aria-hidden="true"></i>
+      <a class="project-link" href="{{ url_for('project.project_view', project_id=project.id) }}" target="_blank">{{project.name}}</a>
+    </h2>
   {% endif %}
 
   <div class="form-project-post">
