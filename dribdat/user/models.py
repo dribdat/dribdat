@@ -431,7 +431,7 @@ class Project(PkModel):
             elif a.action == 'post' and a.content is not None:
                 title = ""
                 text = a.content
-            elif a.name == 'star':
+            elif a.name == 'star' and a.user:
                 title = "Team forming"
                 text = a.user.username + " has joined!"
                 author = ""
@@ -442,7 +442,7 @@ class Project(PkModel):
             elif a.name == 'update':
                 title = ""
                 text = "Worked on documentation"
-            elif a.name == 'create':
+            elif a.name == 'create' and a.user:
                 title = "Project started"
                 text = "Initialized by %s &#x1F389;" % a.user.username
                 author = ""
