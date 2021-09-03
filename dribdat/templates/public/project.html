@@ -31,7 +31,7 @@
   {% if allow_post and project.is_challenge %}
    <a id="project-post" href="{{ url_for('project.project_post', project_id=project.id) }}" title="Post an update to this project" class="btn btn-lg btn-success">
      <i class="fa fa-rocket" aria-hidden="true"></i>
-     Start Project</a>
+     Post to Project</a>
   {% elif allow_post %}
    <a id="project-post" href="{{ url_for('project.project_post', project_id=project.id) }}" title="Post an update to this project" class="btn btn-lg btn-success">
      <i class="fa fa-clipboard" aria-hidden="true"></i>
