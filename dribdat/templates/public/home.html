@@ -112,9 +112,11 @@
           <h3>Looks like you are new to this - welcome!</h3>
           <p>Click to get started with your first event:</p>
         {% endif %}
-        <div class="text-center">
-          <a href="{{ url_for('public.event_start') }}" class="btn btn-light">Start another Event</a>
-        </div>
+        {% if config.DRIBDAT_ALLOW_EVENTS %}
+          <div class="text-center">
+            <a href="{{ url_for('public.event_start') }}" class="btn btn-light">Start another Event</a>
+          </div>
+        {% endif %}
       </div>
     </div>
   {% endif %}

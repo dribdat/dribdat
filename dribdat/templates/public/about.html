@@ -76,9 +76,11 @@
         <b>Admin</b> menu linked in the header if you have access: from where you can edit general details under <b>Events</b>,
         configure <b>Presets</b>, and edit or sync <b>Projects</b> and
         Challenges - which are either a Category, or just a project in challenge status.</p>
+      {% if config.DRIBDAT_ALLOW_EVENTS %}
       <div class="text-center mt-2 mb-4">
         <a href="{{ url_for('public.event_start') }}" class="btn btn-light"> &#129337; Start another Event</a>
       </div>
+      {% endif %}
       <p>If you would like to use this platform for your event,
         see the <a href="https://github.com/dribdat/dribdat/blob/main/USAGE.md#show-me-the-back-end" target="_blank">installation guide</a>,
         contact the organisers of the events listed here - or just fork the open source project
