@@ -77,9 +77,9 @@
     var vparent = $(this).parent().parent().hide();
     var vinput = $(this).parent().find('input')[0];
     vinput.checked = false;
-    $('.form-project-stage input[type="checkbox"]').click(function() {
+    $('.form-project-confirm input[type="checkbox"]').click(function() {
       vparent.show();
-      all_checked = $('.form-project-stage input[type="checkbox"]:not(:checked)').length === 0;
+      all_checked = $('.form-project-confirm input[type="checkbox"]:not(:checked)').length === 0;
       vinput.checked = all_checked;
     });
   });
