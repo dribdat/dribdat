@@ -18,6 +18,7 @@ from dribdat.aggregation import (
 from dribdat.user import (
     validateProjectData, projectProgressList, isUserActive,
 )
+from ..decorators import admin_required
 
 blueprint = Blueprint('project', __name__,
                       static_folder="../static", url_prefix='/project')
@@ -197,16 +198,17 @@ def getSuggestionsForStage(progress):
     return project_list
 
 
-def project_action(project_id, of_type=None, as_view=True, then_redirect=False, action=None, text=None):
+def project_action(project_id, of_type=None, as_view=True, then_redirect=False,
+                   action=None, text=None, for_user=current_user):
     project = Project.query.filter_by(id=project_id).first_or_404()
     event = project.event
     if of_type is not None:
-        ProjectActivity(project, of_type, current_user, action, text)
+        ProjectActivity(project, of_type, for_user, action, text)
     if not as_view:
         return True
     if then_redirect:
         return redirect(url_for('project.project_view', project_id=project.id))
-    starred = IsProjectStarred(project, current_user)
+    starred = IsProjectStarred(project, for_user)
     allow_edit = starred or (
         not current_user.is_anonymous and current_user.is_admin)
     allow_post = allow_edit  # and not event.lock_resources
@@ -223,13 +225,26 @@ def project_action(project_id, of_type=None, as_view=True, then_redirect=False, 
                            suggestions=suggestions, latest_activity=latest_activity)
 
 
-@blueprint.route('/<int:project_id>/star', methods=['GET', 'POST'])
+@blueprint.route('/<int:project_id>/star/me', methods=['GET', 'POST'])
 @login_required
 def project_star(project_id):
     if not isUserActive(current_user):
         return "User not allowed. Please contact event organizers."
     flash('Welcome to the team!', 'success')
     return project_action(project_id, 'star', then_redirect=True)
+
+
+@blueprint.route('/<int:project_id>/star', methods=['POST'])
+@login_required
+@admin_required
+def project_star_user(project_id):
+    username = request.form['username']
+    user = User.query.filter_by(username=username).first()
+    if user is None:
+        flash("User [%s] not found. Please try again." % username, 'warning')
+        return redirect(url_for('project.project_view', project_id=project_id))
+    flash('Added %s to the team!' % username, 'success')
+    return project_action(project_id, 'star', then_redirect=True, for_user=user)
 
 
 @blueprint.route('/<int:project_id>/unstar/me', methods=['GET', 'POST'])
@@ -241,13 +256,14 @@ def project_unstar_me(project_id):
 
 @blueprint.route('/<int:project_id>/unstar/<int:user_id>', methods=['GET', 'POST'])
 @login_required
+@admin_required
 def project_unstar(project_id, user_id):
     user = User.query.filter_by(id=user_id).first_or_404()
     project = Project.query.filter_by(id=project_id).first_or_404()
-    ProjectActivity(project, 'unstar', user)
-
     flash('User %s has left the project' % user.username, 'success')
-    return project_view(project_id)
+    return project_action(
+        project.id, 'unstar', then_redirect=True, for_user=user
+    )
 
 
 @blueprint.route('/event/<int:event_id>/project/new', methods=['GET', 'POST'])

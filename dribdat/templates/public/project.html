@@ -366,6 +366,16 @@
     </div>
   {% endif %}
 
+  {% if current_user.is_admin %}
+  <!-- Add arbitrary user to the team -->
+  <center class="mb-3">
+    <form action="{{ url_for('project.project_star_user', project_id=project.id)}}" method="post">
+      <input type="text" name="username" placeholder="Add user to project ..." />
+      <input type="submit" value="OK" />
+    </form>
+  </center>
+  {% endif %}
+
   <div class="project-buttons" role="group" aria-label="Main navigation">
     {% if project.contact_url %}
       {% if project.contact_url.startswith('http') %}

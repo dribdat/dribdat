@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
 
-from flask import Blueprint, render_template, redirect, url_for, make_response, request, flash, jsonify
-from flask_login import login_required, current_user
+from flask import (
+    Blueprint, render_template, redirect, url_for,
+    request, flash, jsonify
+)
+from flask_login import login_required
 
 from ..utils import sanitize_input
 from ..extensions import db, cache
@@ -15,12 +18,14 @@ from .forms import (
 )
 
 from datetime import datetime
-import random, string
+import random
+import string
 
 from os import path
 
 
 blueprint = Blueprint('admin', __name__, url_prefix='/admin')
+
 
 @blueprint.route('/')
 @login_required
@@ -32,16 +37,16 @@ def index():
             'value': Event.query.count(),
             'text': 'events',
             'height': 6
-        },{
+        }, {
             'value': User.query.count(),
             'text': 'users',
             'height': 7
-        },{
-            'value': Project.query.filter(Project.progress<0).count(),
+        }, {
+            'value': Project.query.filter(Project.progress < 0).count(),
             'text': 'challenges',
             'height': 8
-        },{
-            'value': Project.query.filter(Project.progress>=0).count(),
+        }, {
+            'value': Project.query.filter(Project.progress >= 0).count(),
             'text': 'projects',
             'height': 9
         },
@@ -103,6 +108,7 @@ def user(user_id):
 
     return render_template('admin/useredit.html', user=user, form=form)
 
+
 @blueprint.route('/user/new', methods=['GET', 'POST'])
 @login_required
 @admin_required
@@ -124,6 +130,7 @@ def user_new():
 
     return render_template('admin/usernew.html', form=form)
 
+
 @blueprint.route('/user/<int:user_id>/delete', methods=['GET', 'POST'])
 @login_required
 @admin_required
@@ -141,14 +148,20 @@ def user_delete(user_id):
 
 
 """ Get a reasonably secure password """
+
+
 def get_random_alphanumeric_string(length=24):
     return ''.join((random.SystemRandom().choice(string.ascii_letters + string.digits) for i in range(length)))
 
+
 """ Retrieves a user by name """
+
+
 def get_user_by_name(username):
     username = username.strip()
     print(username)
-    if not username: return None
+    if not username:
+        return None
     user = User.query.filter_by(username=username).first()
     if not user:
         flash('Username %s not found!' % username, 'warning')
@@ -196,6 +209,7 @@ def user_reactivate(user_id):
 ##############
 ##############
 
+
 @blueprint.route('/events')
 @login_required
 @admin_required
@@ -213,8 +227,10 @@ def event(event_id):
 
     if form.validate_on_submit():
         form.populate_obj(event)
-        event.starts_at = datetime.combine(form.starts_date.data, form.starts_time.data)
-        event.ends_at = datetime.combine(form.ends_date.data, form.ends_time.data)
+        event.starts_at = datetime.combine(
+            form.starts_date.data, form.starts_time.data)
+        event.ends_at = datetime.combine(
+            form.ends_date.data, form.ends_time.data)
 
         db.session.add(event)
         db.session.commit()
@@ -230,6 +246,7 @@ def event(event_id):
     form.ends_date.data = event.ends_at
     form.ends_time.data = event.ends_at
     return render_template('admin/event.html', event=event, form=form)
+
 
 @blueprint.route('/event/<int:event_id>/delete', methods=['GET', 'POST'])
 @login_required
@@ -248,6 +265,7 @@ def event_delete(event_id):
         flash('Event deleted.', 'success')
     return events()
 
+
 @blueprint.route('/event/<int:event_id>/autosync', methods=['GET', 'POST'])
 @login_required
 @admin_required
@@ -255,7 +273,8 @@ def event_autosync(event_id):
     event = Event.query.filter_by(id=event_id).first_or_404()
     count = 0
     for project in event.projects:
-        if not project.is_autoupdate: continue
+        if not project.is_autoupdate:
+            continue
         data = GetProjectData(project.autotext_url)
         if not 'name' in data:
             flash("Could not sync: %s" % project.name, 'warning')
@@ -287,16 +306,20 @@ def projects(page=1):
 @admin_required
 def category_projects(category_id):
     category = Category.query.filter_by(id=category_id).first_or_404()
-    projects = Project.query.filter_by(category_id=category_id).order_by(Project.id.desc())
+    projects = Project.query.filter_by(
+        category_id=category_id).order_by(Project.id.desc())
     return render_template('admin/projects.html', projects=projects, category_name=category.name, active='projects')
+
 
 @blueprint.route('/event/<int:event_id>/projects')
 @login_required
 @admin_required
 def event_projects(event_id):
     event = Event.query.filter_by(id=event_id).first_or_404()
-    projects = Project.query.filter_by(event_id=event_id).order_by(Project.id.desc())
+    projects = Project.query.filter_by(
+        event_id=event_id).order_by(Project.id.desc())
     return render_template('admin/projects.html', projects=projects, event=event, active='projects')
+
 
 @blueprint.route('/project/<int:project_id>', methods=['GET', 'POST'])
 @login_required
@@ -304,14 +327,17 @@ def event_projects(event_id):
 def project_view(project_id):
     project = Project.query.filter_by(id=project_id).first_or_404()
     form = ProjectForm(obj=project, next=request.args.get('next'))
-    form.event_id.choices = [(e.id, e.name) for e in Event.query.order_by(Event.id.desc())]
-    form.category_id.choices = [(c.id, c.name) for c in project.categories_all()]
+    form.event_id.choices = [(e.id, e.name)
+                             for e in Event.query.order_by(Event.id.desc())]
+    form.category_id.choices = [(c.id, c.name)
+                                for c in project.categories_all()]
     form.category_id.choices.insert(0, (-1, ''))
     if form.validate_on_submit():
         del form.id
         form.populate_obj(project)
         # Ensure project category remains blank
-        if project.category_id == -1: project.category_id = None
+        if project.category_id == -1:
+            project.category_id = None
         # Assign owner if selected
         project.user = get_user_by_name(form.user_name.data)
         project.update()
@@ -320,8 +346,10 @@ def project_view(project_id):
         flash('Project updated.', 'success')
         return redirect(url_for("admin.event_projects", event_id=project.event.id))
 
-    if project.user: form.user_name.data = project.user.username
+    if project.user:
+        form.user_name.data = project.user.username
     return render_template('admin/project.html', project=project, form=form)
+
 
 @blueprint.route('/project/<int:project_id>/toggle', methods=['GET', 'POST'])
 @login_required
@@ -337,6 +365,7 @@ def project_toggle(project_id):
         flash('Project "%s" is now visible.' % project.name, 'success')
     return redirect(url_for("admin.event_projects", event_id=project.event.id))
 
+
 @blueprint.route('/project/<int:project_id>/delete', methods=['GET', 'POST'])
 @login_required
 @admin_required
@@ -345,10 +374,12 @@ def project_delete(project_id):
     if not project.is_hidden:
         flash('Project must be disabled.', 'warning')
     else:
-        for a in project.activities: a.delete()
+        for a in project.activities:
+            a.delete()
         project.delete()
         flash('Project deleted.', 'success')
     return redirect(url_for("admin.projects"))
+
 
 @blueprint.route('/project/new', methods=['GET', 'POST'])
 @login_required
@@ -356,8 +387,10 @@ def project_delete(project_id):
 def project_new():
     project = Project()
     form = ProjectForm(obj=project, next=request.args.get('next'))
-    form.event_id.choices = [(e.id, e.name) for e in Event.query.order_by(Event.id.desc())]
-    form.category_id.choices = [(c.id, c.name) for c in project.categories_all()]
+    form.event_id.choices = [(e.id, e.name)
+                             for e in Event.query.order_by(Event.id.desc())]
+    form.category_id.choices = [(c.id, c.name)
+                                for c in project.categories_all()]
     form.category_id.choices.insert(0, (-1, ''))
     if form.validate_on_submit():
         del form.id
@@ -370,8 +403,10 @@ def project_new():
         cache.clear()
         flash('Project added.', 'success')
         return redirect(url_for("admin.event_projects", event_id=project.event.id))
-    if project.user: form.user_name.data = project.user.username
+    if project.user:
+        form.user_name.data = project.user.username
     return render_template('admin/projectnew.html', form=form)
+
 
 @blueprint.route('/project/<int:project_id>/autodata')
 @login_required
@@ -399,13 +434,16 @@ def categories():
 def category(category_id):
     category = Category.query.filter_by(id=category_id).first_or_404()
     form = CategoryForm(obj=category, next=request.args.get('next'))
-    form.event_id.choices = [(e.id, e.name) for e in Event.query.order_by('name')]
+    form.event_id.choices = [(e.id, e.name)
+                             for e in Event.query.order_by('name')]
     form.event_id.choices.insert(0, (-1, ''))
 
     if form.validate_on_submit():
         form.populate_obj(category)
-        if category.event_id == -1: category.event_id = None
-        if category.logo_color == '#000000': category.logo_color = ''
+        if category.event_id == -1:
+            category.event_id = None
+        if category.logo_color == '#000000':
+            category.logo_color = ''
 
         db.session.add(category)
         db.session.commit()
@@ -416,18 +454,21 @@ def category(category_id):
 
     return render_template('admin/category.html', category=category, form=form)
 
+
 @blueprint.route('/category/new', methods=['GET', 'POST'])
 @login_required
 @admin_required
 def category_new():
     category = Category()
     form = CategoryForm(obj=category, next=request.args.get('next'))
-    form.event_id.choices = [(e.id, e.name) for e in Event.query.order_by('name')]
+    form.event_id.choices = [(e.id, e.name)
+                             for e in Event.query.order_by('name')]
     form.event_id.choices.insert(0, (-1, ''))
 
     if form.validate_on_submit():
         form.populate_obj(category)
-        if category.event_id == -1: category.event_id = None
+        if category.event_id == -1:
+            category.event_id = None
 
         db.session.add(category)
         db.session.commit()
@@ -465,6 +506,7 @@ def presets():
     categories = Category.query.order_by(Category.event_id.desc()).all()
     return render_template('admin/presets.html', categories=categories, roles=roles, active='roles')
 
+
 @blueprint.route('/role/<int:role_id>', methods=['GET', 'POST'])
 @login_required
 @admin_required
@@ -483,6 +525,7 @@ def role(role_id):
         return redirect(url_for("admin.presets"))
 
     return render_template('admin/role.html', role=role, form=form)
+
 
 @blueprint.route('/role/new', methods=['GET', 'POST'])
 @login_required
@@ -519,7 +562,6 @@ def role_delete(role_id):
     return redirect(url_for("admin.presets"))
 
 
-
 ##############
 ##############
 ##############
@@ -552,6 +594,7 @@ def resource(resource_id):
         return resources()
 
     return render_template('admin/resource.html', resource=resource, form=form)
+
 
 @blueprint.route('/resource/new', methods=['GET', 'POST'])
 @login_required
