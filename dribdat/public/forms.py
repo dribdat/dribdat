@@ -117,7 +117,7 @@ class ProjectPost(FlaskForm):
 class ProjectBoost(FlaskForm):
     id = HiddenField('id')
     note = TextAreaField(u'Short praise and comments', [length(max=140), DataRequired()])
-    boost_type = SelectField(u'Select booster', [DataRequired()])
+    boost_type = SelectField(u'Select booster pack', [DataRequired()])
     submit = SubmitField(u'Energize!')
 
 class NewEventForm(FlaskForm):

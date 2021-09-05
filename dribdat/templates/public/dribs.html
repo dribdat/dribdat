@@ -10,6 +10,16 @@
 <div class="jumbotron">
   <div class="container">
 
+    {% if current_user and current_user.is_authenticated %}
+    <center style="position:relative">
+      <a id="project-post"
+         href="{{ url_for('public.user_post', username=current_user.username) }}"
+         title="Post an update to your current project" class="btn btn-lg btn-success">
+        <i class="fa fa-clipboard" aria-hidden="true"></i>
+        Post</a>
+    </center>
+    {% endif %}
+
     {% if not data.items %}
       <div class="nothing-here">
         Log in and write a <b>Post</b> to see your project updates here!
@@ -69,13 +79,15 @@
 
 <div class="container join-tip">
   <p class="bigger">
-    Latest project log updates across all events.
-    <b>Join</b> a project and use the <a href="#" class="btn btn-success disabled btn-sm">Post</a> button to share yours!
+    <b>Join</b> a project to share your progress!
   </p>
 </div>
 
 <center class="mt-2">
-  * <b>dribs</b> <i>n. pl.: in small amounts, a few at a time</i> (<a href="https://dictionary.cambridge.org/dictionary/english/dribs" target="_blank">Cambridge English</a>)
+  <p>
+    * <b>dribs</b> <i>n. pl.: in small amounts, a few at a time</i>
+    <br><small><a href="https://dictionary.cambridge.org/dictionary/english/dribs" target="_blank">Cambridge English</a></small>
+  </p>
 </center>
 
 {% if current_event %}

@@ -1264,7 +1264,6 @@ Instruction page
 .list-stages .step .agree-list li {
   clear: both;
   list-style: square;
-  margin-left: -1em;
 }
 .list-stages .step .card {
   background: white;
@@ -1289,6 +1288,13 @@ Instruction page
 }
 .projectpost alert {
   margin-top: 0.5em;
+}
+.projectpost .honeycomb {
+  position: absolute;
+  opacity: 0.6;
+  z-index: -9;
+  margin-top: -2em;
+  margin-left: 2em;
 }
 
 /* ------------

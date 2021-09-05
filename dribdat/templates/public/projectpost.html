@@ -1,4 +1,5 @@
 {% from "macros/_form.html" import render_form %}
+{% import "macros/_event.html" as misc %}
 
 {% extends "layout.html" %}
 
@@ -6,6 +7,12 @@
 {% block body_class %}projectpost{% endblock %}
 
 {% block content %}
+
+  <div class="mt-5">&nbsp;</div>
+
+  <div class="honeycomb d-none d-md-block">
+      {{ misc.render_project_hexagon(project) }}
+  </div>
 
   {% if all_valid %}
     <h4 class="text-center mb-3">
@@ -18,11 +25,6 @@
       {% endfor %}
       </label>
     </div>
-  {% else %}
-    <h2>
-      <i class="fa fa-clipboard" aria-hidden="true"></i>
-      <a class="project-link" href="{{ url_for('project.project_view', project_id=project.id) }}" target="_blank">{{project.name}}</a>
-    </h2>
   {% endif %}
 
   <div class="form-project-post">
@@ -59,7 +61,7 @@
     {% endfor %}
 
     <p class="text-center mt-3 mb-0"><small>
-      For more information, see
+      For more info see
       <a href="{{ url_for('public.event_stages', event_id=current_event.id) }}" target="_blank">
         <i class="fa fa-arrow-right" aria-hidden="true"></i>
         Stages</a>
@@ -70,10 +72,18 @@
   {% endif %}
 
   <center class="mt-3">
-  <a href="{{ url_for('project.project_view', project_id=project.id) }}"
-     title="Cancel" class="btn btn-light"
-     onclick="if(!window.confirm('Your edits will not be saved - continue?')) return false">
-    <i class="fa fa-arrow-left" aria-hidden="true"></i> Cancel &amp; return to project
-  </a>
+
+    <p class="category-tip">
+      To Post on another project, <b>Join</b> it or visit
+      <a href="{{ url_for('public.user', username=current_user.username) }}">your profile</a>
+      to switch.
+    </p>
+
+    <a href="{{ url_for('project.project_view', project_id=project.id) }}"
+       title="Cancel" class="btn btn-light"
+       onclick="if(!window.confirm('Your edits will not be saved - continue?')) return false">
+      <i class="fa fa-arrow-left" aria-hidden="true"></i> Cancel &amp; return to project
+    </a>
+
   </center>
 {% endblock %}

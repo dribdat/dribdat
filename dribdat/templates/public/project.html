@@ -79,12 +79,6 @@
     </a>
     {% endif %}
 
-    <a href="{{ url_for('project.project_boost', project_id=project.id) }}" class="btn btn-lg btn-info project-boost"
-      title="Boost this project">
-     <i class="fa fa-rocket"></i>
-     Boost
-    </a>
-
   {% endif %}
 
 </div><br clear="all">
@@ -275,6 +269,14 @@
   </div>
   <div class="tab-pane fade" id="dribs-md" role="tabpanel" aria-labelledby="dribs-tab-md">
 
+    {% if current_user and current_user.is_authenticated %}
+    <center style="position:relative" class="mt-3">
+      <a id="project-post" href="{{ url_for('project.project_post', project_id=project.id) }}" title="Post an update to this project" class="btn btn-lg btn-success">
+        <i class="fa fa-clipboard" aria-hidden="true"></i>
+        Post an update</a>
+    </center>
+    {% endif %}
+
     <section class="timeline">
       {% for s in project_dribs %}
       <div class="timeline-item timeline-{{ s.name }}">
@@ -314,12 +316,6 @@
         </div>
       </div>
       {% endfor %}
-
-      <center style="position:relative">
-        <a id="project-post" href="{{ url_for('project.project_post', project_id=project.id) }}" title="Post an update to this project" class="btn btn-lg btn-success">
-          <i class="fa fa-clipboard" aria-hidden="true"></i>
-          Post an update</a>
-      </center>
 
     </section>
 
@@ -379,11 +375,21 @@
   </div>
 
   {% if allow_edit %}
-  <center>
+  <center><div class="btn-group">
     <a href="{{ url_for('project.project_details', project_id=project.id) }}" title="Edit project details" class="btn btn-lg btn-secondary">
       <i class="fa fa-pencil" aria-hidden="true"></i>
       Edit Project</a>
-  </center>
+    {% if current_user.is_admin %}
+    <a href="{{ url_for('admin.project_view', project_id=project.id) }}" title="Edit project details" class="btn btn-lg btn-secondary">
+      <i class="fa fa-rocket" aria-hidden="true"></i>
+      Admin Edit</a>
+    {% endif %}
+    <a href="{{ url_for('project.project_boost', project_id=project.id) }}" class="btn btn-lg btn-info project-boost"
+      title="Boost this project">
+     <i class="fa fa-rocket"></i>
+     Boost
+    </a>
+  </div></center>
   {% endif %}
 
   {% if project.category %}

@@ -112,6 +112,16 @@ def user(username):
                            submissions=submissions, posts=posts)
 
 
+@blueprint.route('/user/<username>/post', methods=['GET'])
+def user_post(username):
+    user = User.query.filter_by(username=username).first_or_404()
+    projects = user.joined_projects(False)
+    if not len(projects) > 0:
+        flash('Please Join a project to be able to Post an update.', 'warning')
+        return user(username)
+    return redirect(url_for("project.project_post", project_id=projects[0].id))
+
+
 @blueprint.route("/event/<int:event_id>")
 def event(event_id):
     event = Event.query.filter_by(id=event_id).first_or_404()
@@ -144,6 +154,15 @@ def event_participants(event_id):
 def event_stages(event_id):
     event = Event.query.filter_by(id=event_id).first_or_404()
     steps = getProjectStages()
+    for s in steps:
+        s['projects'] = []  # Reset the index
+    projects = Project.query.filter_by(event_id=event.id, is_hidden=False)
+    for s in steps:
+        if 'projects' not in s:
+            s['projects'] = []
+        project_list = [p.data for p in projects.filter_by(
+            progress=s['id']).all()]
+        s['projects'].extend(project_list)
     return render_template("public/stages.html",
                            current_event=event, steps=steps, active="stages")
 
