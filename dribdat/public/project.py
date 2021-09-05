@@ -5,7 +5,7 @@ from flask import (
 )
 from flask_login import login_required, current_user
 
-from dribdat.user.models import Event, Project, Activity
+from dribdat.user.models import Event, Project, Activity, User
 from dribdat.public.forms import (
     ProjectNew, ProjectForm, ProjectDetailForm, ProjectPost, ProjectBoost,
 )
@@ -232,11 +232,22 @@ def project_star(project_id):
     return project_action(project_id, 'star', then_redirect=True)
 
 
-@blueprint.route('/<int:project_id>/unstar', methods=['GET', 'POST'])
+@blueprint.route('/<int:project_id>/unstar/me', methods=['GET', 'POST'])
 @login_required
-def project_unstar(project_id):
+def project_unstar_me(project_id):
     flash('You have left the project', 'success')
     return project_action(project_id, 'unstar', then_redirect=True)
+
+
+@blueprint.route('/<int:project_id>/unstar/<int:user_id>', methods=['GET', 'POST'])
+@login_required
+def project_unstar(project_id, user_id):
+    user = User.query.filter_by(id=user_id).first_or_404()
+    project = Project.query.filter_by(id=project_id).first_or_404()
+    ProjectActivity(project, 'unstar', user)
+
+    flash('User %s has left the project' % user.username, 'success')
+    return project_view(project_id)
 
 
 @blueprint.route('/event/<int:event_id>/project/new', methods=['GET', 'POST'])
