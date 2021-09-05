@@ -938,6 +938,8 @@ pre { color: #333; background: white; }
   .project-edit-buttons { margin: 1em; }
   .container .jumbotron { padding: 0.3em; border: none; }
   .jumbotron section { overflow: hidden; }
+  .project-home .jumbotron.project-page { border-width: 1px; }
+  .timeline .timeline-item .timeline-img { margin-left: 0em; margin-top: -1em; }
 }
 .category-info {
   padding: 0 1em;
@@ -1054,6 +1056,7 @@ pre { color: #333; background: white; }
 }
 .user-score {
   min-width: 2.5em;
+  text-align: center;
   display: inline-block;
   background: #007bff;
   color: #fff;
