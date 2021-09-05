@@ -99,10 +99,13 @@ def user(username):
     cert_path = user.get_cert_path(event)
     submissions = user.posted_challenges()
     projects = user.joined_projects(False)
+    score = sum([ p.score for p in projects ])
     posts = user.latest_posts()
     return render_template("public/userprofile.html", active="profile",
-                           current_event=event, event=event, user=user, cert_path=cert_path,
-                           projects=projects, submissions=submissions, posts=posts)
+                           current_event=event, event=event, user=user,
+                           cert_path=cert_path,
+                           projects=projects, score=score,
+                           submissions=submissions, posts=posts)
 
 
 @blueprint.route("/event/<int:event_id>")

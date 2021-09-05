@@ -1052,6 +1052,14 @@ pre { color: #333; background: white; }
   text-align: center;
   margin-top: 1em;
 }
+.user-score {
+  min-width: 2.5em;
+  display: inline-block;
+  background: #007bff;
+  color: #fff;
+  border-radius: 2em;
+  padding: 0.5em;
+}
 .profile-projects {
   padding: 1em 2em;
   overflow-x: auto;

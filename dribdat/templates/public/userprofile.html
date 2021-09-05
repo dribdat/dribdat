@@ -94,11 +94,12 @@
         {% endfor %}
         </div>
     </div><!-- /profile-projects -->
+    <h5 class="mt-1 text-center"><span class="user-score">{{ score }}</span> dribs</h5>
 {% endif %}
 
 {% if submissions %}
     <a name="challenges"></a>
-    <h5 class="mt-5 text-center">Challenges</h5>
+    <h2 class="mt-5 text-center">Challenges</h2>
     <div class="profile-projects container-fluid">
         <div class="row flex-row flex-nowrap">
         {% for project in submissions %}
@@ -134,7 +135,7 @@
       </div>
     {% endif %}
 {% else %}
-<a name="timeline"><h1>Log</h1></a>
+<a name="timeline"><h1>Personal log</h1></a>
 <div class="jumbotron">
 
     <section class="timeline">

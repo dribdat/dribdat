@@ -5,8 +5,7 @@
 {% block body_class %}dribs-page{% endblock %}
 
 {% block content %}
-<h1 class="huge">Top dribs</h1>
-<p>Latest project log updates across all events</p>
+<h1 class="huge">Top dribs*</h1>
 
 <div class="jumbotron">
   <div class="container">
@@ -68,12 +67,16 @@
   </div>
 </div>
 
-<div class="container join-tip"><p class="bigger">
-  <b>Join</b> a project and use the <a href="#" class="btn btn-success disabled btn-sm">Post</a> button to share your dribs!
-</p>
-<p>
-  <b>dribs</b> <i>n. pl.: in small amounts, a few at a time</i> (<a href="https://dictionary.cambridge.org/dictionary/english/dribs" target="_blank">Cambridge English</a>)
-</p></div>
+<div class="container join-tip">
+  <p class="bigger">
+    Latest project log updates across all events.
+    <b>Join</b> a project and use the <a href="#" class="btn btn-success disabled btn-sm">Post</a> button to share yours!
+  </p>
+</div>
+
+<center class="mt-2">
+  * <b>dribs</b> <i>n. pl.: in small amounts, a few at a time</i> (<a href="https://dictionary.cambridge.org/dictionary/english/dribs" target="_blank">Cambridge English</a>)
+</center>
 
 {% if current_event %}
 <center class="mt-5">
@@ -82,5 +85,6 @@
     {{ current_event.name }}</a>
 </center>
 {% endif %}
+
 
 {% endblock %}
