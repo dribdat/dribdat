@@ -926,7 +926,7 @@ pre { color: #333; background: white; }
   text-align: right;
 }
 .project-edit-buttons {
-  /* margin: -2em 0 0 0; */
+  left: -1.5em;
   float: right;
 }
 .project-edit-buttons * {

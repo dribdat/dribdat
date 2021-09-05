@@ -170,7 +170,6 @@
   {% if not project.is_challenge and project_starred and suggestions %}
     <div class="alert resource-list col-12">
       <a class="close" title="Close" href="#" data-dismiss="alert">&times;</a>
-      <p>Suggestions for this stage of your project:</p>
       <div class="profile-projects container-fluid">
         <div class="row flex-row flex-nowrap">
         {% for project in suggestions %}
@@ -188,6 +187,9 @@
           </a>
         {% endfor %}
         </div>
+        <p class="category-tip mt-3 mb-0" style="margin-left:-1em">
+          &#x1F4A1; Suggestions for this stage of your project
+        - visible only to you and your team members.</p>
       </div><!-- /profile-projects -->
     </div>
   {% endif %}
@@ -271,7 +273,7 @@
 
     {% if current_user and current_user.is_authenticated %}
     <center style="position:relative" class="mt-3">
-      <a id="project-post" href="{{ url_for('project.project_post', project_id=project.id) }}" title="Post an update to this project" class="btn btn-lg btn-success">
+      <a id="project-post" href="{{ url_for('project.project_post', project_id=project.id) }}" title="Post an update to this project" class="btn btn-success">
         <i class="fa fa-clipboard" aria-hidden="true"></i>
         Post an update</a>
     </center>
