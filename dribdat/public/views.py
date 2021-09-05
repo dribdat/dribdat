@@ -94,12 +94,16 @@ def user(username):
     user = User.query.filter_by(username=username).first_or_404()
     if not isUserActive(user):
         # return "User deactivated. Please contact an event organizer."
-        flash('This user account is under review. Please contact the organizing team if you have any questions.', 'warning')
+        flash(
+            'This user account is under review. Please contact the '
+            + 'organizing team if you have any questions.',
+            'warning'
+        )
     event = current_event()
     cert_path = user.get_cert_path(event)
     submissions = user.posted_challenges()
     projects = user.joined_projects(False)
-    score = sum([ p.score for p in projects ])
+    score = sum([p.score for p in projects])
     posts = user.latest_posts()
     return render_template("public/userprofile.html", active="profile",
                            current_event=event, event=event, user=user,
@@ -113,7 +117,8 @@ def event(event_id):
     event = Event.query.filter_by(id=event_id).first_or_404()
     projects = Project.query.filter_by(event_id=event_id, is_hidden=False)
     if request.args.get('embed'):
-        return render_template("public/embed.html", current_event=event, projects=projects)
+        return render_template("public/embed.html",
+                               current_event=event, projects=projects)
     summaries = [p.data for p in projects]
     # Sort projects by reverse score, then name
     summaries.sort(key=lambda x: (
@@ -121,7 +126,8 @@ def event(event_id):
         x['name'].lower()))
     project_count = projects.count()
     return render_template("public/event.html", current_event=event,
-                           projects=summaries, project_count=project_count, active="projects")
+                           projects=summaries, project_count=project_count,
+                           active="projects")
 
 
 @blueprint.route("/event/<int:event_id>/participants")
@@ -130,7 +136,8 @@ def event_participants(event_id):
     users = GetEventUsers(event)
     usercount = len(users) if users else 0
     return render_template("public/eventusers.html",
-                           current_event=event, participants=users, usercount=usercount, active="participants")
+                           current_event=event, participants=users,
+                           usercount=usercount, active="participants")
 
 
 @blueprint.route("/event/<int:event_id>/stages")
@@ -151,13 +158,14 @@ def event_instruction(event_id):
     for e in resource_events:
         projects = Project.query.filter_by(event_id=e.id, is_hidden=False)
         for s in steps:
-            if not 'projects' in s:
+            if 'projects' not in s:
                 s['projects'] = []
             project_list = [p.data for p in projects.filter_by(
                 progress=s['id']).all()]
             s['projects'].extend(project_list)
     return render_template("public/instruction.html",
-                           current_event=event, steps=steps, active="instruction")
+                           current_event=event, steps=steps,
+                           active="instruction")
 
 
 @blueprint.route('/event/<int:event_id>/print')
@@ -167,14 +175,16 @@ def event_print(event_id):
     projects = Project.query.filter_by(event_id=event_id, is_hidden=False)
     projects = projects.filter(Project.progress >= 0).order_by(Project.name)
     return render_template('public/eventprint.html',
-                           current_event=event, projects=projects, curdate=now, active='print')
+                           current_event=event, projects=projects, curdate=now,
+                           active='print')
 
 
 @blueprint.route('/event/start', methods=['GET'])
 @login_required
 def event_start():
-    if not current_app.config['DRIBDAT_ALLOW_EVENTS'] and not current_user.is_admin:
-        flash('Only administrators can start events on this server.', 'danger')
+    if not current_app.config['DRIBDAT_ALLOW_EVENTS']:
+        if not current_user.is_admin:
+            flash('Only administrators may start events here.', 'danger')
     tips = EVENT_PRESET['eventstart']
     return render_template('public/eventstart.html', tips=tips)
 
@@ -182,8 +192,9 @@ def event_start():
 @blueprint.route('/event/new', methods=['GET', 'POST'])
 @login_required
 def event_new():
-    if not current_app.config['DRIBDAT_ALLOW_EVENTS'] and not current_user.is_admin:
-        return redirect(url_for("public.event_start"))
+    if not current_app.config['DRIBDAT_ALLOW_EVENTS']:
+        if not current_user.is_admin:
+            return redirect(url_for("public.event_start"))
     event = Event()
     form = NewEventForm(obj=event, next=request.args.get('next'))
     if form.validate_on_submit():
@@ -202,7 +213,9 @@ def event_new():
         flash('A new event has been planned!', 'success')
         if not current_user.is_admin:
             flash(
-                'Please contact an administrator to make changes and promote this event.', 'warning')
+                'Please contact an administrator to make changes or '
+                + 'to promote this event on the home page.',
+                'warning')
         cache.clear()
         return redirect(url_for("public.event", event_id=event.id))
     return render_template('public/eventnew.html', form=form)
