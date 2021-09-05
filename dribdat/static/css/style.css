@@ -1279,6 +1279,17 @@ Instruction page
   border: 3px dashed lightgray;
   padding: 1em;
 }
+.form-project-confirm label {
+  clear: both;
+  margin-top: 0.5em;
+  cursor: pointer;
+}
+.form-project-confirm:hover {
+  background-color: lightyellow;
+}
+.projectpost alert {
+  margin-top: 0.5em;
+}
 
 /* ------------
 Search engine

@@ -28,7 +28,11 @@
 {% block content %}
 <div class="btn-group project-edit-buttons" role="group" aria-label="Project tools">
 
-  {% if allow_post %}
+  {% if allow_post and project.is_challenge %}
+   <a id="project-post" href="{{ url_for('project.project_post', project_id=project.id) }}" title="Post an update to this project" class="btn btn-lg btn-success">
+     <i class="fa fa-rocket" aria-hidden="true"></i>
+     Post to Project</a>
+  {% elif allow_post %}
    <a id="project-post" href="{{ url_for('project.project_post', project_id=project.id) }}" title="Post an update to this project" class="btn btn-lg btn-success">
      <i class="fa fa-clipboard" aria-hidden="true"></i>
      Post</a>
@@ -310,6 +314,13 @@
         </div>
       </div>
       {% endfor %}
+
+      <center style="position:relative">
+        <a id="project-post" href="{{ url_for('project.project_post', project_id=project.id) }}" title="Post an update to this project" class="btn btn-lg btn-success">
+          <i class="fa fa-clipboard" aria-hidden="true"></i>
+          Post an update</a>
+      </center>
+
     </section>
 
   </div><!-- /tab-pane -->

@@ -109,9 +109,9 @@ class ProjectDetailForm(FlaskForm):
 
 class ProjectPost(FlaskForm):
     id = HiddenField('id')
-    note = TextAreaField(u'What are you working on right now?', [length(max=140), DataRequired()],
-        description=u'Write a short note for your project log.')
     has_progress = BooleanField(u'Promote us to the next stage')
+    note = TextAreaField(u'What are you working on right now?', [length(max=140), DataRequired()],
+        description=u'A short note for your project log.')
     submit = SubmitField(u'Save post')
 
 class ProjectBoost(FlaskForm):
