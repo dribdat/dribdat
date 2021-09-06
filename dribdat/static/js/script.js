@@ -190,10 +190,13 @@
       $ul = $('#search-results').empty();
       $.get(searchForm.attr('action') + '?q=' + q, function(d) {
         d.projects.forEach(function(p) {
+          var card_image = p.image_url ?
+            '<div class="card-image" style="background-image:url(' + p.image_url + ')"></div>' : '';
           $ul.append(
             '<a class="col-5 card project"' +
                'href="' + p.url + '">' +
               '<div class="card-body">' +
+                card_image +
                 '<h5 class="card-title">' + p.name + '</h5>' +
                 '<p class="card-text">' + p.summary + '</p>' +
               '</div>' +

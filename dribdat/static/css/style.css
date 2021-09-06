@@ -1304,7 +1304,15 @@ Instruction page
 Search engine
 --------------- */
 
-/* There is none ... */
+#search-results .card-image {
+  width: 48px;
+  height: 7em;
+  background-repeat: no-repeat;
+  display: inline-block;
+  float: left;
+  background-size: contain;
+  margin-right: 8px;
+}
 
 /* ------------
 Data Packages view
