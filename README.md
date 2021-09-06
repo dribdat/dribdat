@@ -16,11 +16,30 @@ _Screenshot of a dribdat event page._
 
 # Quickstart
 
-This project can be deployed to any server capable of serving Python applications, and is set up for fast deployment to the [Heroku](http://heroku.com) cloud:
+This project can be deployed to any server capable of serving Python applications, and is set up for fast deployment using Docker or to the [Heroku](http://heroku.com) cloud:
 
 [![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy)
 
 The first user that registers becomes an admin, so don't delay! If you would like to run dribdat on any other cloud or local machine, follow the [Developer guide](#developer-guide) below. The following section details environment variables you can add to tweak your installation.
+
+## Docker
+
+To deploy dribdat using Docker, use the included [docker-compose.yml file](docker-compose.yml) as a starting point and launch `docker-compose up -d`. By default, it persists the database files on the local filesystem, outside the container.
+
+For a first-time setup, perform the initial migrations from an interactive bash session inside a container:
+
+```
+docker-compose run --rm dribdat /bin/bash
+```
+
+And once in bash:
+
+```
+mv migrations migrations_prod
+python manage.py db init
+python manage.py db migrate
+python manage.py db upgrade
+```
 
 ## Configuration
 
@@ -153,7 +172,9 @@ This section has some advice for developers and operators.
 
 ### Shell access
 
-To open the interactive shell, run: `python manage.py shell` (or, using the [Heroku toolchain](https://devcenter.heroku.com/categories/command-line), `heroku run python manage.py shell`). By default, you will have access to the `User` model, as well as Event, Project, Category, Activity.
+To open the interactive shell, run: `python manage.py shell`. By default, you will have access to the `User` model, as well as Event, Project, Category, Activity.
+
+Using the [Heroku toolchain](https://devcenter.heroku.com/categories/command-line), `heroku run python manage.py shell`, or using [Docker](https://www.docker.com/), `docker-compose run --rm dribdat python manage.py shell`.
 
 ### Running Tests
 
