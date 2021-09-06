@@ -24,22 +24,15 @@ The first user that registers becomes an admin, so don't delay! If you would lik
 
 ## Docker
 
-To deploy dribdat using Docker, use the included [docker-compose.yml file](docker-compose.yml) as a starting point and launch `docker-compose up -d`. By default, it persists the database files on the local filesystem, outside the container.
+To deploy dribdat using [Docker](https://www.docker.com/) or [Podman](https://docs.podman.io/en/latest/index.html), use the included [docker-compose.yml file](docker-compose.yml) as a starting point. This, by default, persists the PostgreSQL database outside the container, on the local filesystem in the `.db` folder.
 
-For a first-time setup, perform the initial migrations from an interactive bash session inside a container:
+For a first-time setup, perform the initial migrations as follows:
 
-```
-docker-compose run --rm dribdat /bin/bash
-```
+`docker-compose run --rm dribdat ./release.sh`
 
-And once in bash:
+At this point you should be ready to start with Docker Compose:
 
-```
-mv migrations migrations_prod
-python manage.py db init
-python manage.py db migrate
-python manage.py db upgrade
-```
+`docker-compose up -d`
 
 ## Configuration
 
