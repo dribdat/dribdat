@@ -57,6 +57,7 @@ docs/_build
 # Virtualenvs and utility scripts
 env/
 debug.sh
+.db/
 
 # JavaScript
 node_modules
