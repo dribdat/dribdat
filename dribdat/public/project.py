@@ -128,8 +128,8 @@ def project_post(project_id):
     project = Project.query.filter_by(id=project_id).first_or_404()
     event = project.event
     starred = IsProjectStarred(project, current_user)
-    allow_post = starred or (
-        not current_user.is_anonymous and current_user.is_admin)
+    allow_post = starred
+    #or (not current_user.is_anonymous and current_user.is_admin)
     # allow_post = allow_post and not event.lock_resources
     if not allow_post:
         flash('You do not have access to post to this project.', 'warning')
@@ -211,7 +211,7 @@ def project_action(project_id, of_type=None, as_view=True, then_redirect=False,
     starred = IsProjectStarred(project, for_user)
     allow_edit = starred or (
         not current_user.is_anonymous and current_user.is_admin)
-    allow_post = allow_edit  # and not event.lock_resources
+    allow_post = starred  # and not event.lock_resources
     allow_edit = allow_edit and not event.lock_editing
     project_team = project.team()
     latest_activity = project.latest_activity()

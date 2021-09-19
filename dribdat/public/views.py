@@ -117,8 +117,8 @@ def user_post(username):
     user = User.query.filter_by(username=username).first_or_404()
     projects = user.joined_projects(False)
     if not len(projects) > 0:
-        flash('Please Join a project to be able to Post an update.', 'warning')
-        return user(username)
+        flash('Please Join a project to be able to Post an update.', 'info')
+        return redirect(url_for("public.home"))
     return redirect(url_for("project.project_post", project_id=projects[0].id))
 
 
