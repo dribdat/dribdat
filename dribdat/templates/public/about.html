@@ -6,10 +6,27 @@
 
 {% block content %}
 
+<div class="container home-search mb-3">
+  <div class="row" id="api-search">
+    <div class="profile-projects container-fluid">
+      <form action="/api/project/search.json" target="_blank" id="search">
+        <div class="content input-group">
+          <div class="input-group-prepend">
+            <span class="input-group-text">Search</span>
+          </div>
+          <input type="text" class="form-control" name="q" aria-label="Search term" placeholder="Start typing ..."  style="width:20em">
+        </div>
+      </form>
+      <div class="row flex-row flex-nowrap ml-0 mt-1" id="search-results"></div>
+    </div>
+  </div>
+</div>
+
 <div class="jumbotron">
+
   <div class="container">
     <div class="row"><center style="width:100%">
-      <h1 style="font-weight:bold; font-family:monospace">? help dribdat
+      <h1 style="font-weight:bold; font-family:monospace">? dribdat_
       </h1>
     </center></div>
     <div class="row">
@@ -22,7 +39,7 @@
         read the <b><a href="https://github.com/dribdat/dribdat/blob/main/USAGE.md#usage" target="_blank">User Guide</a></b>,
         ask your event organiser, or talk to fellow participants!</p>
     </div>
-    <hr>
+
     <div class="row" id="api">
       <div class="content">
         <h3>Get the data</h3>

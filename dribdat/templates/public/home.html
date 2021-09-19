@@ -96,22 +96,6 @@
   </div><!-- /.row events-next -->
   {% endif %}
 
-  <div class="container home-search mt-3 mb-3">
-    <div class="row" id="api-search">
-      <div class="profile-projects container-fluid">
-        <form action="/api/project/search.json" target="_blank" id="search">
-          <div class="content input-group">
-            <div class="input-group-prepend">
-              <span class="input-group-text">Search</span>
-            </div>
-            <input type="text" class="form-control" name="q" aria-label="Search term" placeholder="Start typing ..."  style="width:20em">
-          </div>
-        </form>
-        <div class="row flex-row flex-nowrap ml-0 mt-1" id="search-results"></div>
-      </div>
-    </div>
-  </div>
-
   {% if events_past %}
   <h2 class="mt-4">Past events</h2>
   <div class="row events-past">
