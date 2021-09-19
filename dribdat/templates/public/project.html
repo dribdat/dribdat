@@ -41,9 +41,9 @@
     {% if project.is_autoupdate %}
       <a href="{{ url_for('project.project_autoupdate', project_id=project.id) }}" title="Sync external data" class="btn btn-lg btn-warning">
         <i class="fa fa-refresh" aria-hidden="true"></i>
-        Refresh</a>
+        Sync</a>
     {% endif %}
-    <a href="{{ url_for('project.project_edit', project_id=project.id) }}" title="Edit project" class="btn btn-lg btn-secondary">
+    <a href="{{ url_for('project.project_edit', project_id=project.id) }}" title="Edit project" class="btn btn-lg btn-warning">
       <i class="fa fa-pencil" aria-hidden="true"></i>
       Edit</a>
   {% endif %}
@@ -198,7 +198,7 @@
     </div>
   {% endif %}
 
-  {% if not project.is_challenge %}
+  {% if not project.is_challenge and not project.event.lock_resources %}
   <ul class="nav nav-pills nav-fill md-tabs" id="projectTabs" role="tablist">
     <li class="nav-item">
       <a class="nav-link active" id="project-tab-md" data-toggle="tab" href="#project-md" role="tab" aria-controls="project-md"
@@ -210,7 +210,7 @@
         aria-selected="false">Readme</a>
     </li>
     {% endif %}
-    {% if not project.is_challenge %}
+    {% if not project.is_challenge and not project.event.lock_resources %}
     <li class="nav-item">
       <a class="nav-link" id="dribs-tab-md" data-toggle="tab" href="#dribs-md" role="tab" aria-controls="dribs-md"
         aria-selected="false">Log</a>
@@ -271,7 +271,7 @@
     </div>
     {% endif %}
 
-{% if not project.is_challenge %}
+{% if not project.is_challenge and not project.event.lock_resources %}
   </div>
   <div class="tab-pane fade" id="dribs-md" role="tabpanel" aria-labelledby="dribs-tab-md">
 
@@ -352,7 +352,7 @@
         {% endif %}
       {% endfor %}
     </div>
-  {% elif project.user %}
+  {% elif project.user and not project.event.lock_resources %}
     <div class="widget widget-team">
       {{ misc.render_user_profile(project.user) }}
       <p class="started-at">
@@ -364,16 +364,6 @@
         </small>
       </p>
     </div>
-  {% endif %}
-
-  {% if current_user.is_admin %}
-  <!-- Add arbitrary user to the team -->
-  <center class="mb-3">
-    <form action="{{ url_for('project.project_star_user', project_id=project.id)}}" method="post">
-      <input type="text" name="username" placeholder="Add user to project ..." />
-      <input type="submit" value="OK" />
-    </form>
-  </center>
   {% endif %}
 
   <div class="project-buttons" role="group" aria-label="Main navigation">
@@ -397,13 +387,13 @@
 
   {% if allow_edit %}
   <center><div class="btn-group">
-    <a href="{{ url_for('project.project_details', project_id=project.id) }}" title="Edit project details" class="btn btn-lg btn-secondary">
+    <a href="{{ url_for('project.project_details', project_id=project.id) }}" title="Edit project details" class="btn btn-lg btn-warning">
       <i class="fa fa-pencil" aria-hidden="true"></i>
-      Edit Details</a>
+      Details</a>
     {% if current_user.is_admin %}
-    <a href="{{ url_for('admin.project_view', project_id=project.id) }}" title="Edit project details" class="btn btn-lg btn-warning">
+    <a href="{{ url_for('admin.project_view', project_id=project.id) }}" title="Edit full details" class="btn btn-lg btn-secondary">
       <i class="fa fa-pencil" aria-hidden="true"></i>
-      Admin Edit</a>
+      Admin</a>
     {% endif %}
     <a href="{{ url_for('project.project_boost', project_id=project.id) }}" class="btn btn-lg btn-info project-boost"
       title="Boost this project">
@@ -411,6 +401,17 @@
      Boost
     </a>
   </div></center>
+  {% endif %}
+
+  {% if current_user.is_admin %}
+  <!-- Add arbitrary user to the team -->
+  <center class="mb-3 mt-3">
+    <form action="{{ url_for('project.project_star_user', project_id=project.id)}}" method="post">
+      <i class="fa fa-child" aria-hidden="true"></i>
+      <input type="text" name="username" placeholder="Enter username ..." />
+      <input type="submit" value="+ Add" />
+    </form>
+  </center>
   {% endif %}
 
   {% if project.category %}
