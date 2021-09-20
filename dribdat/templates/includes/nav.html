@@ -74,16 +74,9 @@
         <li class="nav-item">
           <a class="nav-link" href="{{ url_for('auth.login') }}">
             <i class="fa fa-sign-in" aria-hidden="true"></i>
-            Log in
+            Login
           </a>
         </li>
-        {% if not config.DRIBDAT_NOT_REGISTER %}
-          <li class="nav-item">
-            <a class="nav-link" href="{{ url_for('auth.register') }}">
-              <i class="fa fa-child" aria-hidden="true"></i>
-              Create account
-            </a></li>
-        {% endif %}
       {% endif %}
 
       <li class="nav-item">
