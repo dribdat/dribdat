@@ -14,6 +14,11 @@
           <i class="fa fa-child"></i>
           Edit my profile
         </a>
+        <a id="project-post"
+           href="{{ url_for('public.user_post', username=current_user.username) }}"
+           title="Post an update to your current project" class="btn btn-success">
+          <i class="fa fa-clipboard" aria-hidden="true"></i>
+          Write a Post</a>
 
         {% if cert_path %}
         <a href="{{ cert_path }}"
@@ -94,15 +99,16 @@
         {% endfor %}
         </div>
     </div><!-- /profile-projects -->
+    <h5 class="mt-1 text-center"><span class="user-score">{{ score }}</span> dribs</h5>
 {% endif %}
 
 {% if submissions %}
     <a name="challenges"></a>
-    <h5 class="mt-5 text-center">Challenges</h5>
+    <h2 class="mt-5 text-center">Challenges</h2>
     <div class="profile-projects container-fluid">
         <div class="row flex-row flex-nowrap">
         {% for project in submissions %}
-            <a class="col-5 card project"
+            <a class="col-md-5 ms-auto card project"
                href="{{ url_for('project.project_view', project_id=project.id) }}">
 
               <div class="card-body">
@@ -134,7 +140,7 @@
       </div>
     {% endif %}
 {% else %}
-<a name="timeline"><h1>Log</h1></a>
+<a name="timeline"><h1>Personal log</h1></a>
 <div class="jumbotron">
 
     <section class="timeline">

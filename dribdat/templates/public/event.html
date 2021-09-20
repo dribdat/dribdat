@@ -94,7 +94,7 @@
         <span>Share a resource</span>
       {% elif current_event.has_started %}
         <i class="fa fa-rocket"></i>
-        <span>Get started</span>
+        <span>Start</span>
       {% elif not current_event.has_finished %}
         <i class="fa fa-trophy"></i>
         <span>Post a challenge</span>
@@ -102,25 +102,32 @@
     </a>
     {% if current_event.lock_resources %}
       <a href="{{ url_for('public.event_instruction', event_id=current_event.id) }}" class="btn btn-lg btn-info">
-        <span>Resources by stage</span>
+        <span>Resources</span>
       </a>
     {% elif current_event.has_started %}
       <a href="{{ url_for('public.event_participants', event_id=current_event.id) }}" class="btn btn-lg btn-light">
         <i class="fa fa-user" aria-hidden="true"></i>
-        <span>See who is who</span>
+        <span>Who is who</span>
       </a>
     {% endif %}
   </div>
 {% endif %}
 
-{% if current_event.description or current_event.summary %}
 <div class="event-info">
-  <a name="info"></a>
   <div class="content">
-    {{current_event.description|markdown or current_event.summary}}
+    <a name="info"></a>
+    {% if current_event.summary %}
+      <div class="event-summary">
+        {{current_event.summary}}
+      </div>
+    {% endif %}
+    {% if current_event.description %}
+      <div class="event-description">
+        {{current_event.description|markdown}}
+      </div>
+    {% endif %}
   </div>
 </div><!-- /.event-info -->
-{% endif %}
 
 {% if current_event.instruction %}
 <div class="jumbotron event-instruction mt-2 mb-2">
@@ -157,28 +164,24 @@
     {% if current_event.webpage_url %}
       <a href="{{ current_event.webpage_url }}" class="btn btn-default">
         <i class="fa fa-info-circle" aria-hidden="true"></i>
-        <span>Information</span></a>
+        <span>Info</span></a>
     {% endif %}
     {% if current_event.community_url %}
       <a href="{{ current_event.community_url }}" target="community" class="btn btn-default">
         <i class="fa fa-comment"></i>
         <span>Community</span></a>
     {% endif %}
-    <a href="{{ url_for('public.event_participants', event_id=current_event.id) }}" class="btn btn-default">
-      <i class="fa fa-child" aria-hidden="true"></i>
-      <span>Contributors</span>
-    </a>
-    <a href="{{ url_for('public.dribs') }}" class="btn btn-default">
-      <i class="fa fa-comment"></i>
-      <span>Updates</span>
-    </a>
     <a href="{{ url_for('public.event_stages', event_id=current_event.id) }}" class="btn btn-default">
       <i class="fa fa-signal" aria-hidden="true"></i>
-      <span>Stages</span>
+      <span>By Stage</span>
     </a>
     <a href="{{ url_for('public.event_print', event_id=current_event.id) }}" class="btn btn-default">
-      <i class="fa fa-clipboard" aria-hidden="true"></i>
-      List</a>
+      <i class="fa fa-signal" aria-hidden="true"></i>
+      As List</a>
+    <a href="{{ url_for('public.event_participants', event_id=current_event.id) }}" class="btn btn-default">
+      <i class="fa fa-child" aria-hidden="true"></i>
+      <span>People</span>
+    </a>
     {% if current_user and current_user.active and current_user.is_admin %}
       <!-- admin only until we have proper social sharing -->
       <a href="{{ url_for('public.event', event_id=current_event.id, _external=True) }}" class="btn btn-default" id="embed-link">
@@ -187,7 +190,7 @@
       <a href="{{ url_for('admin.event', event_id=current_event.id) }}" class="btn btn-warning">
         <i class="fa fa-pencil" aria-hidden="true"></i>
         Event</a>
-      <a href="{{ url_for('admin.project_new', event_id=current_event.id) }}" class="btn btn-success">
+      <a href="{{ url_for('admin.project_new', event_id=current_event.id) }}" class="btn btn-info">
         <i class="fa fa-cube"></i>
         Add project</a>
     {% endif %}

@@ -1,13 +1,39 @@
 <footer>
   <ul class="footer-nav">
+    {% if current_user and current_user.is_authenticated %}
+      <li>
+        <a href="{{ url_for('public.user', username=current_user.username) }}" title="{{ current_user.username }}">
+          <i class="fa fa-key" aria-hidden="true"></i>
+          My Profile
+        </a>
+      </li>
+      {% if current_user.is_admin %}
+        <li>
+          <a href="{{ url_for('admin.index') }}">
+            <i class="fa fa-gear" aria-hidden="true"></i>
+            Admin
+          </a>
+        </li>
+      {% endif %}
+      <li>
+        <a href="{{ url_for('auth.logout') }}">
+          <i class="fa fa-sign-out" aria-hidden="true"></i>
+          Logout
+        </a>
+      </li>
+    {% else %}
+      <li>
+        <a href="{{ url_for('auth.login') }}">
+          <i class="fa fa-sign-in" aria-hidden="true"></i>
+          Login
+        </a>
+      </li>
+    {% endif %}
+
     <li>
-      <a href="{{ url_for('public.about') }}">
-      <small>powered by D R I
-      <i class="fa fa-thumbs-up"></i>
-      <i style="-moz-transform: scale(-1, 1); -webkit-transform: scale(-1, 1); -o-transform: scale(-1, 1); -ms-transform: scale(-1, 1); transform: scale(-1, 1);" class="fa fa-thumbs-up"></i>
-      A T</small>
-      </a>
-      <a class="darkmode" href="#">☽<small>&nbsp;darkmode</small></a>
+      <a href="{{ url_for('public.about') }}">&#128214;&nbsp;About</a> &nbsp;
+      <!-- <a href="https://github.com/dribdat" target="_blank"><img src="{{ url_for('static', filename='img/logo11.png') }}" style="height:2em; margin-top:-.1em">&nbsp;Source</a> &nbsp; -->
+      <a class="darkmode" href="#">&#127763;&nbsp;Darkmode</a>
     </li>
 
     {% if config.ANALYTICS_HREF %}

@@ -113,10 +113,15 @@ def ProjectActivity(project, of_type, current_user, action=None, comments=None):
         action=action
     )
     activity.user_id = current_user.id
+    # Regular posts are 1 star
     score = 1
+    # Booster stars to give projects special awards
+    if of_type == 'boost': score = 10
+    # Post comments are activity contents
     if comments is not None and len(comments) > 3:
         activity.content=comments
     if project.score is None: project.score = 0
+    # Check for existing stars
     allstars = Activity.query.filter_by(
         name='star',
         project_id=project.id,
@@ -131,9 +136,7 @@ def ProjectActivity(project, of_type, current_user, action=None, comments=None):
         project.score = project.score - score
         project.save()
         return
-    # Booster stars to give projects special awards
-    #if of_type == 'star' and current_user.is_admin:
-    #    score = 10
+    # Save current project score
     project.score = project.score + score
     activity.project_score = project.score
     project.save()

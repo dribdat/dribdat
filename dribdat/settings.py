@@ -20,6 +20,7 @@ class Config(object):
     # Application options
     DRIBDAT_USER_APPROVE = os_env.get('DRIBDAT_USER_APPROVE', False)
     DRIBDAT_NOT_REGISTER = os_env.get('DRIBDAT_NOT_REGISTER', False)
+    DRIBDAT_ALLOW_EVENTS = os_env.get('DRIBDAT_ALLOW_EVENTS', False)
 
     # Single sign-on support
     OAUTH_ID = os_env.get('OAUTH_ID', None)
@@ -43,7 +44,7 @@ class Config(object):
     SERVER_SSL = os_env.get('SERVER_SSL', None)
     CSP_DIRECTIVES = os_env.get('CSP_DIRECTIVES', "default-src * 'unsafe-inline' 'unsafe-eval' data:")
     TIME_ZONE = os_env.get('TIME_ZONE', 'UTC')
-    MAX_CONTENT_LENGTH = os_env.get('MAX_CONTENT_LENGTH', 1 * 1024 * 1024)
+    MAX_CONTENT_LENGTH = int(os_env.get('MAX_CONTENT_LENGTH', 1 * 1024 * 1024))
 
     # Configure web analytics providers
     ANALYTICS_HREF = os_env.get('ANALYTICS_HREF', None)

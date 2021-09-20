@@ -14,11 +14,11 @@
 
   <div class="text-right">
   {% if detail_view %}
-    <a href="{{ url_for('project.project_edit', project_id=project.id) }}" title="Edit project" class="btn btn-lg btn-secondary">
+    <a href="{{ url_for('project.project_edit', project_id=project.id) }}" title="Edit project" class="btn btn-lg btn-warning">
       <i class="fa fa-pencil" aria-hidden="true"></i>
       Basics</a>
   {% else %}
-    <a href="{{ url_for('project.project_details', project_id=project.id) }}" title="Edit project details" class="btn btn-lg btn-secondary">
+    <a href="{{ url_for('project.project_details', project_id=project.id) }}" title="Edit project details" class="btn btn-lg btn-warning">
       <i class="fa fa-pencil" aria-hidden="true"></i>
       Details</a>
   {% endif %}
@@ -48,7 +48,8 @@
         </div>
         <div class="modal-body">
           <p class="upload-note">
-            PNG and JPEG formats are accepted.
+            PNG, GIF and JPEG formats are accepted.
+            Max {{ (config.MAX_CONTENT_LENGTH/(1024*1024))|round(1) }} MB.
             To embed a slide presentation, use
             <a href="https://hackmd.io/s/how-to-create-slide-deck" target="_blank">HackMD</a>,
             <a href="https://slides.com" target="_blank">Slides.com</a>, or

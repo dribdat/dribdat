@@ -36,7 +36,7 @@ stages:
         -
           field: contact_url
           test: validurl
-          help: Provide a contact link on your project page.
+          help: Provide a contact link in the Details of your project page.
       agree:
         - We have a shared channel or working area for our team to speak and collaborate.
         - The team members are committed to working together for the duration of the event.

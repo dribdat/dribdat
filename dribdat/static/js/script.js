@@ -77,9 +77,9 @@
     var vparent = $(this).parent().parent().hide();
     var vinput = $(this).parent().find('input')[0];
     vinput.checked = false;
-    $('.form-project-stage input[type="checkbox"]').click(function() {
+    $('.form-project-confirm input[type="checkbox"]').click(function() {
       vparent.show();
-      all_checked = $('.form-project-stage input[type="checkbox"]:not(:checked)').length === 0;
+      all_checked = $('.form-project-confirm input[type="checkbox"]:not(:checked)').length === 0;
       vinput.checked = all_checked;
     });
   });
@@ -190,10 +190,13 @@
       $ul = $('#search-results').empty();
       $.get(searchForm.attr('action') + '?q=' + q, function(d) {
         d.projects.forEach(function(p) {
+          var card_image = p.image_url ?
+            '<div class="card-image" style="background-image:url(' + p.image_url + ')"></div>' : '';
           $ul.append(
-            '<a class="col-5 card project"' +
+            '<a class="col-md-5 ms-auto card project"' +
                'href="' + p.url + '">' +
               '<div class="card-body">' +
+                card_image +
                 '<h5 class="card-title">' + p.name + '</h5>' +
                 '<p class="card-text">' + p.summary + '</p>' +
               '</div>' +
@@ -287,6 +290,31 @@
   });
   $('.details .history').hide();
 
+  // Show GitHub issues
+  $('#issues-list').each(function() {
+    var per_page = 10;
+    var $self = $(this);
+    var userAndRepo = $self.data('github');
+    var url_api = 'https://api.github.com/repos/' + userAndRepo + '/issues';
+    var url_www = 'https://github.com/' + userAndRepo + '/issues';
+    $.getJSON(url_api + '?per_page=' + (per_page + 1), function(data) {
+      $self.empty();
+      $.each(data, function(index) {
+        if (index == per_page) {
+          return $self.append(
+            '<a href="' + url_www +
+            '" class="list-group-item" target="_blank">More issues ...</a>'
+          );
+        }
+        $self.append(
+          '<a href="' + this.html_url +
+          '" class="list-group-item" target="_blank">' +
+          '<img src="' + this.user.avatar_url + '">&nbsp;' + this.title + '</a>'
+        );
+      });
+    });
+  });
+
   // Make embedded iframes resizable
   $('.resizable').each(function() {
     var $self = $(this);
@@ -310,14 +338,14 @@
     dm = Boolean(window.darkmode);
     if (toggle) dm = !dm;
     if (dm) {
-      $('html').css('-webkit-filter','invert(100%)')
+      $('body').css('-webkit-filter','invert(100%)')
                .css('-moz-filter','invert(100%)')
                .css('-o-filter','invert(100%)')
                .css('-ms-filter','invert(100%)')
                .css('background', 'black')
                .css('height', '100%');
     } else {
-      $('html').attr('style','');
+      $('body').attr('style','');
     }
     localStorage.setItem('darkmode', dm ? '1' : '0');
     window.darkmode = dm;
