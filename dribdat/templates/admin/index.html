@@ -12,7 +12,7 @@
     <a href="{{ url_for('admin.event_projects', event_id=default_event.id) }}">
         the projects</a>,
 {% else %}
-    <a href="{{ url_for('admin.event_start') }}">
+    <a href="{{ url_for('public.event_start') }}">
       Start an event</a>, then
 {% endif %}
  create
@@ -29,7 +29,7 @@
 
   <div class="chart-activities">
     <div class="btn-group mb-2 text-center">
-      <a href="{{ url_for('admin.event_start') }}" class="btn btn-lg btn-success">Start an Event</a>
+      <a href="{{ url_for('public.event_start') }}" class="btn btn-lg btn-success">Start an Event</a>
       <!-- <a href="#" id="show-activities" class="btn btn-lg btn-info">Pulse check</a> -->
     </div>
     <div id="activities"></div>

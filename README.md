@@ -1,9 +1,10 @@
 # dribdat
 
 ![Github Actions build](https://github.com/dribdat/dribdat/workflows/build/badge.svg)
-[![codecov](https://codecov.io/gh/hackathons-ftw/dribdat/branch/master/graph/badge.svg?token=Ccd1vTxRXg)](https://codecov.io/gh/hackathons-ftw/dribdat)
-[![Mattermost](https://img.shields.io/badge/Mattermost-chat-blue.svg)](https://team.opendata.ch/signup_user_complete/?id=74yuxwruaby9fpoukx9bmoxday)
+[![codecov](https://codecov.io/gh/dribdat/dribdat/branch/main/graph/badge.svg?token=Ccd1vTxRXg)](https://codecov.io/gh/dribdat/dribdat)
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Floleg%2Fdribdat.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Floleg%2Fdribdat?ref=badge_shield)
+[![Mattermost](https://img.shields.io/badge/Mattermost-chat-blue.svg)](https://team.opendata.ch/signup_user_complete/?id=74yuxwruaby9fpoukx9bmoxday)
+<object type="image/svg+xml" data="https://opencollective.com/dribdat/tiers/backer.svg?avatarHeight=36&width=600"></object>
 
 ### A platform for time-limited, team-based, data-driven, open collaboration
 
@@ -23,22 +24,15 @@ The first user that registers becomes an admin, so don't delay! If you would lik
 
 ## Docker
 
-To deploy dribdat using Docker, use the included [docker-compose.yml file](docker-compose.yml) as a starting point and launch `docker-compose up -d`. By default, it persists the database files on the local filesystem, outside the container.
+To deploy dribdat using [Docker](https://www.docker.com/) or [Podman](https://docs.podman.io/en/latest/index.html), use the included [docker-compose.yml file](docker-compose.yml) as a starting point. This, by default, persists the PostgreSQL database outside the container, on the local filesystem in the `.db` folder.
 
-For a first-time setup, perform the initial migrations from an interactive bash session inside a container:
+For a first-time setup, perform the initial migrations as follows:
 
-```
-docker-compose run --rm dribdat /bin/bash
-```
+`docker-compose run --rm dribdat ./release.sh`
 
-And once in bash:
+At this point you should be ready to start with Docker Compose:
 
-```
-mv migrations migrations_prod
-python manage.py db init
-python manage.py db migrate
-python manage.py db upgrade
-```
+`docker-compose up -d`
 
 ## Configuration
 
@@ -61,6 +55,7 @@ The following options can be used to toggle **application features**:
 * `DRIBDAT_APIKEY` - for connecting clients to the remote [API](#api)
 * `DRIBDAT_USER_APPROVE` - set to True so that any new non-SSO accounts are inactive until approved by an admin
 * `DRIBDAT_NOT_REGISTER` - set to True to hide the registration, so new users can only join this server via SSO
+* `DRIBDAT_ALLOW_EVENTS` - set to True to allow regular users to suggest new events on this site (which only admins can then edit and promote)
 
 Support for **Web analytics** can be configured using one of the following variables:
 
@@ -246,7 +241,7 @@ You can also try to test SSO providers with `OAUTHLIB_INSECURE_TRANSPORT=true` (
 
 # Credits
 
-See [Contributors](https://github.com/dataletsch/dribdat/graphs/contributors) for a list of people who have made changes to the code, and [Forks](https://github.com/dataletsch/dribdat/network/members) to find some other users of this project.
+See [Contributors](https://github.com/dataletsch/dribdat/graphs/contributors) for a list of people who have made changes to the code, and [Forks](https://github.com/dataletsch/dribdat/network/members) to find other users of this project.
 
 This project is currently mantained by [@loleg](https://github.com/loleg) and [@gonzalocasas](https://github.com/gonzalocasas). You can find us on Mattermost at the badge at the top of this README.
 
@@ -259,11 +254,12 @@ Additional and :heart:-felt thanks for testing and feedback to:
 - [Chris Mutel](https://github.com/cmutel)
 - [Fabien Schwob](https://github.com/jibaku)
 - [Jonathan Sobel](https://github.com/JonathanSOBEL)
+- [Thomas Amberg](https://github.com/tamberg)
 - [@jonhesso](https://github.com/jonHESSO)
 - [@khashashin](https://github.com/khashashin)
 - [@philshem](https://github.com/philshem)
-- [Thomas Amberg](https://github.com/tamberg)
 
 
 ## License
-[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Floleg%2Fdribdat.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Floleg%2Fdribdat?ref=badge_large)
+
+This project is open source under the [MIT License](LICENSE)

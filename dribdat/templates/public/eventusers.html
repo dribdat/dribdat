@@ -6,7 +6,6 @@
 {% block content %}
 {% cache 300, 'eventusers-%d' % current_event.id %}
 <h1 class="huge">Contributors</h1>
-<p>All users who have joined a challenge</p>
 
 <div class="event-participants jumbotron">
 {% if participants %}
@@ -20,18 +19,22 @@
 {% else %}
 <h4>This event does not yet have any projects or challenges with a team.
   <!-- Or perhaps nobody has joined any that exist. -->
-  Now is a good time to start some, and encourage your participants to Join.</h4>
+  Now is a good time to start some, and encourage your participants to Join one.</h4>
 {% endif %}
 </div><!-- /event-participants -->
 
 <div category-id="infobox">
   {% if current_event.has_started and not current_event.has_finished %}
-    <center><h4><i class="fa fa-lightbulb-o"></i> &nbsp;Join a project or challenge to be listed here!</h4>
-    <p>As <b class="usercount">{{ usercount }}</b> have done in
+    <center><h4><i class="fa fa-lightbulb-o"></i> &nbsp;Join a project or
+      challenge to be listed here!</h4>
+    <p>As
+      <span class="user-score">{{ usercount }}</span> have done in
       <a href="{{ url_for('public.event', event_id=current_event.id) }}">
       this event</a> already.</p></center>
   {% else %}
-    <center><b class="usercount">{{ usercount }}</b> contributors to this platform</center>
+    <center>
+      <span class="user-score">{{ usercount }}</span>
+      users who have joined a challenge on this platform.</center>
   {% endif %}
 </div>
 

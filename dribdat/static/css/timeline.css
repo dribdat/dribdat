@@ -135,12 +135,13 @@
 
 @media screen and (max-width: 768px) {
   .timeline::before {
-    left: 50px; }
+    left: 0px; }
   .timeline .timeline-img {
-    left: 50px; }
+    left: 0px; }
   .timeline .timeline-content {
     width: 100%;
-    margin-left: 70px; }
+    margin-top: 10px;
+    margin-left: 3px; }
   .timeline .timeline-item:nth-child(odd) .timeline-content {
     float: left; }
   .timeline .timeline-item:nth-child(even) .timeline-content::after {
