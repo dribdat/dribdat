@@ -193,7 +193,7 @@
           var card_image = p.image_url ?
             '<div class="card-image" style="background-image:url(' + p.image_url + ')"></div>' : '';
           $ul.append(
-            '<a class="col-5 card project"' +
+            '<a class="col-md-5 ms-auto card project"' +
                'href="' + p.url + '">' +
               '<div class="card-body">' +
                 card_image +

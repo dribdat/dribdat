@@ -173,7 +173,7 @@
       <div class="profile-projects container-fluid">
         <div class="row flex-row flex-nowrap">
         {% for project in suggestions %}
-          <a class="col-5 card project"
+          <a class="col-md-5 ms-auto card project"
              href="{{ url_for('project.project_view', project_id=project.id) }}">
 
             {% if project.image_url %}
