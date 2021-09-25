@@ -572,6 +572,12 @@ nav .navbar-nav .nav-item {
 .project-page .project-star i {
   padding-right: 5px;
 }
+.project-edit-cover {
+  z-index: 99;
+  position: absolute;
+  margin-top: -2em;
+  margin-left: 1em;
+}
 .project-page img {
   max-width: 100%;
 }
