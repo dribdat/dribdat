@@ -154,7 +154,7 @@ class ProjectPost(FlaskForm):
     has_progress = BooleanField(u'Promote us to the next stage')
     note = TextAreaField(
         u'What are you working on right now?',
-        [length(max=140), DataRequired()],
+        [length(max=280), DataRequired()],
         description=u'A short note for your project log.')
     submit = SubmitField(u'Save post')
 
