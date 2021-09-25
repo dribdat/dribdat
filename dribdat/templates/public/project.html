@@ -45,7 +45,7 @@
     {% endif %}
     <a href="{{ url_for('project.project_edit', project_id=project.id) }}" title="Edit project" class="btn btn-lg btn-warning">
       <i class="fa fa-pencil" aria-hidden="true"></i>
-      Edit</a>
+    </a>
   {% endif %}
 
   {% if not project.event.lock_editing %}
@@ -88,10 +88,11 @@
     style="background-image:url('{{project.image_url}}'); {% if project.logo_color %}background-color:{{project.logo_color}}; opacity:1.0{% endif %}"
     data-href="{{project.image_url}}">
   </div>
-
-  <a class="project-edit-cover" href="{{ url_for('project.project_details', project_id=project.id) }}#image_url" title="Edit cover image">
-    <i class="fa fa-pencil"></i>
-  </a>
+  {% if allow_edit %}
+    <a class="project-edit-cover" href="{{ url_for('project.project_details', project_id=project.id) }}#image_url" title="Edit cover image">
+      <i class="fa fa-pencil"></i>
+    </a>
+  {% endif %}
 {% endif %}
 
 <div class="jumbotron project-page phase-{{ project.phase }}" {% if project.logo_color %} style="border-color:{{project.logo_color}}"{% endif %}>
@@ -392,7 +393,10 @@
 
   {% if allow_edit %}
   <center><div class="btn-group">
-    <a href="{{ url_for('project.project_details', project_id=project.id) }}" title="Edit project details" class="btn btn-lg btn-warning">
+    <a href="{{ url_for('project.project_edit', project_id=project.id) }}" title="Edit project" class="btn btn-lg btn-warning">
+      <i class="fa fa-pencil" aria-hidden="true"></i>
+      Edit</a>
+    <a href="{{ url_for('project.project_details', project_id=project.id) }}" title="Edit project details" class="btn btn-lg btn-secondary">
       <i class="fa fa-pencil" aria-hidden="true"></i>
       Details</a>
     {% if current_user.is_admin %}
