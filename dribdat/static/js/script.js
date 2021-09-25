@@ -109,10 +109,14 @@
 
   // Upload images
   $('#uploadImage').each(function() {
-    var $togglebtn = $('button[data-target="#uploadImage"]');
-    $('.fld-longtext').append($togglebtn);
-    $('.fld-image_url').append($togglebtn.clone());
     var $dialog = $(this);
+    var $togglebtn = $('button[data-target="#uploadImage"]');
+    // Enable the available fields
+    var $longtext = $('.fld-longtext').append($togglebtn);
+    var $imageurl = $('.fld-image_url').append($togglebtn.clone());
+    if (!$longtext.length) $dialog.find("[data-target='pitch']").hide();
+    if (!$imageurl.length) $dialog.find("[data-target='cover']").hide();
+    // Set up the file dialog
     var $inputfd = $dialog.find('input[type="file"]');
     $inputfd.change(function() {
       var imgfile = $inputfd[0].files[0];

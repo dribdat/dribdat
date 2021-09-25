@@ -55,6 +55,7 @@ docs/_build
 .webassets-cache
 
 # Virtualenvs and utility scripts
+.env
 env/
 debug.sh
 .db/
