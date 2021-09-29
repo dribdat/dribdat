@@ -112,10 +112,18 @@
     var $dialog = $(this);
     var $togglebtn = $('button[data-target="#uploadImage"]');
     // Enable the available fields
-    var $longtext = $('.fld-longtext').append($togglebtn);
-    var $imageurl = $('.fld-image_url').append($togglebtn.clone());
-    if (!$longtext.length) $dialog.find("[data-target='pitch']").hide();
-    if (!$imageurl.length) $dialog.find("[data-target='cover']").hide();
+    var $longtext = $('.fld-longtext');
+    var $imageurl = $('.fld-image_url');
+    if ($longtext.length > 0) {
+      $longtext.append($togglebtn.clone().show());
+    } else {
+      $dialog.find("[data-target='pitch']").hide();
+    }
+    if ($imageurl.length > 0) {
+      $imageurl.append($togglebtn.clone().show());
+    } else {
+      $dialog.find("[data-target='cover']").hide();
+    }
     // Set up the file dialog
     var $inputfd = $dialog.find('input[type="file"]');
     $inputfd.change(function() {

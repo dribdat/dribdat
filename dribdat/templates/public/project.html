@@ -391,37 +391,6 @@
     {% endif %}
   </div>
 
-  {% if allow_edit %}
-  <center><div class="btn-group">
-    <a href="{{ url_for('project.project_edit', project_id=project.id) }}" title="Edit project" class="btn btn-lg btn-warning">
-      <i class="fa fa-pencil" aria-hidden="true"></i>
-      Edit</a>
-    <a href="{{ url_for('project.project_details', project_id=project.id) }}" title="Edit project details" class="btn btn-lg btn-secondary">
-      <i class="fa fa-pencil" aria-hidden="true"></i>
-      Details</a>
-    {% if current_user.is_admin %}
-      <a href="{{ url_for('admin.project_view', project_id=project.id) }}" title="Edit full details" class="btn btn-lg btn-secondary">
-        <i class="fa fa-pencil" aria-hidden="true"></i>
-        Admin</a>
-
-      <a href="{{ url_for('project.project_boost', project_id=project.id) }}" class="btn btn-lg btn-info project-boost" title="Boost this project">
-         <i class="fa fa-rocket" aria-hidden="true"></i>
-         Boost</a>
-    {% endif %}
-  </div></center>
-  {% endif %}
-
-  {% if current_user.is_admin %}
-  <!-- Add arbitrary user to the team -->
-  <center class="mb-3 mt-3">
-    <form action="{{ url_for('project.project_star_user', project_id=project.id)}}" method="post">
-      <i class="fa fa-child" aria-hidden="true"></i>
-      <input type="text" name="username" placeholder="Enter username ..." />
-      <input type="submit" value="+ Add" />
-    </form>
-  </center>
-  {% endif %}
-
   {% if project.category %}
   <div class="panel panel-default category-details">
     <a name="category"></a>
@@ -433,6 +402,39 @@
   {% endif %}
 
 </div><!-- /.jumbotron .project-page -->
+
+
+
+{% if allow_edit %}
+<center><div class="btn-group">
+  <a href="{{ url_for('project.project_edit', project_id=project.id) }}" title="Edit project" class="btn btn-lg btn-warning">
+    <i class="fa fa-pencil" aria-hidden="true"></i>
+    Edit</a>
+  <a href="{{ url_for('project.project_details', project_id=project.id) }}" title="Edit project details" class="btn btn-lg btn-secondary">
+    <i class="fa fa-pencil" aria-hidden="true"></i>
+    Details</a>
+  {% if current_user.is_admin %}
+    <a href="{{ url_for('admin.project_view', project_id=project.id) }}" title="Edit full details" class="btn btn-lg btn-secondary">
+      <i class="fa fa-pencil" aria-hidden="true"></i>
+      Admin</a>
+
+    <a href="{{ url_for('project.project_boost', project_id=project.id) }}" class="btn btn-lg btn-info project-boost" title="Boost this project">
+       <i class="fa fa-rocket" aria-hidden="true"></i>
+       Boost</a>
+  {% endif %}
+</div></center>
+{% endif %}
+
+{% if current_user.is_admin %}
+<!-- Add arbitrary user to the team -->
+<center class="mb-3 mt-3">
+  <form action="{{ url_for('project.project_star_user', project_id=project.id)}}" method="post">
+    <i class="fa fa-child" aria-hidden="true"></i>
+    <input type="text" name="username" placeholder="Enter username ..." />
+    <input type="submit" value="+ Add" />
+  </form>
+</center>
+{% endif %}
 
 <div class="panel panel-default community-embed">
   <div class="panel-body"><i class="fa fa-comment"></i>
