@@ -151,7 +151,7 @@ class ProjectDetailForm(FlaskForm):
 
 class ProjectPost(FlaskForm):
     id = HiddenField('id')
-    has_progress = BooleanField(u'Promote us to the next stage')
+    has_progress = BooleanField(u"Let's go")
     note = TextAreaField(
         u'What are you working on right now?',
         [length(max=280), DataRequired()],

@@ -15,22 +15,20 @@
   </div>
 
   {% if all_valid %}
-    <h4 class="text-center mb-3">
+    <h4 class="text-center mt-5 mb-3">
       &#128640; Ready for the next level?
     </h4>
-    <div class="form-project-confirm alert alert-warning mb-3" role="alert">
+    <div class="form-project-confirm alert alert-success mb-3" role="alert">
       <label><input type="checkbox">&nbsp;
       {% for item in stage.conditions.agree %}
-        <span>{{ item }}</span>
+        <span>{{ item }}</span><br>
       {% endfor %}
       </label>
     </div>
   {% endif %}
 
   <div class="form-project-post">
-
     {{ render_form(url_for('project.project_post', project_id=project.id), form) }}
-
   </div>
 
   {% if stage %}
@@ -43,8 +41,10 @@
   {% if not all_valid %}
   <div class="form-project-stage" style="{% if all_valid %}border-color:lightgreen{% endif %}">
     <h5 class="text-center mb-3">
-      Next level goals
-      &#x1F3AF;
+      To reach the
+      <a href="{{ url_for('public.event_stages', event_id=current_event.id) }}" target="_blank">
+        next stage</a>
+      &#128161;
     </h5>
     {% for item in stage.conditions.validate %}
       {% if item.valid %}
@@ -60,7 +60,11 @@
       {% endif %}
     {% endfor %}
 
-    <p class="text-center mt-3 mb-0"><small>
+    <p class="text-center mt-3 mb-0 hidden"><small>
+      &#x1F3AF;
+      To Post on another project, <b>Join</b> it or visit
+      <a href="{{ url_for('public.user', username=current_user.username) }}">your profile</a>
+      to switch.
       For more info see
       <a href="{{ url_for('public.event_stages', event_id=current_event.id) }}" target="_blank">
         <i class="fa fa-arrow-right" aria-hidden="true"></i>
@@ -72,18 +76,11 @@
   {% endif %}
 
   <center class="mt-3">
-
-    <p class="category-tip">
-      To Post on another project, <b>Join</b> it or visit
-      <a href="{{ url_for('public.user', username=current_user.username) }}">your profile</a>
-      to switch.
-    </p>
-
     <a href="{{ url_for('project.project_view', project_id=project.id) }}"
        title="Cancel" class="btn btn-light"
-       onclick="if(!window.confirm('Your edits will not be saved - continue?')) return false">
-      <i class="fa fa-arrow-left" aria-hidden="true"></i> Cancel &amp; return to project
+       onclick="if(!window.confirm('Your post will not be saved - continue?')) return false">
+      <i class="fa fa-arrow-left" aria-hidden="true"></i> Cancel and return to project
     </a>
-
   </center>
+
 {% endblock %}

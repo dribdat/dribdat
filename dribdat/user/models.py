@@ -26,7 +26,6 @@ from dribdat.extensions import hashing
 from flask import current_app
 from flask_login import UserMixin
 
-import pytz
 from time import mktime
 
 import datetime as dt
@@ -305,22 +304,19 @@ class Event(PkModel):
 
     @property
     def ends_at_tz(self):
-        tz = pytz.timezone(current_app.config['TIME_ZONE'])
-        return tz.localize(self.ends_at)
+        return current_app.tz.localize(self.ends_at)
 
     @property
     def starts_at_tz(self):
-        tz = pytz.timezone(current_app.config['TIME_ZONE'])
-        return tz.localize(self.starts_at)
+        return current_app.tz.localize(self.starts_at)
 
     @property
     def countdown(self):
         """ Normalized countdown timer """
-        tz = pytz.timezone(current_app.config['TIME_ZONE'])
-        starts_at = tz.localize(self.starts_at)
-        ends_at = tz.localize(self.ends_at)
+        starts_at = current_app.tz.localize(self.starts_at)
+        ends_at = current_app.tz.localize(self.ends_at)
         # Check event time limit (hard coded to 30 days)
-        tz_now = tz.localize(dt.datetime.utcnow())
+        tz_now = current_app.tz.localize(dt.datetime.utcnow())
         TIME_LIMIT = tz_now + dt.timedelta(days=30)
         # Show countdown within limits
         if starts_at > tz_now:
@@ -739,12 +735,13 @@ class Activity(PkModel):
 
     @property
     def data(self):
+        localtime = current_app.tz.localize(self.timestamp)
         a = {
             'id': self.id,
             'name': self.name,
             'time': int(mktime(self.timestamp.timetuple())),
-            'timesince': timesince(self.timestamp),
-            'date': format_date(self.timestamp, '%Y-%m-%dT%H:%M'),
+            'date': format_date(localtime, '%Y-%m-%dT%H:%M'),
+            'timesince': timesince(localtime),
             'content': self.content or '',
             'ref_url': self.ref_url or '',
         }

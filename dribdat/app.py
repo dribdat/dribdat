@@ -22,6 +22,7 @@ from flask_talisman import Talisman
 from flask_dance.contrib import (slack, azure, github)
 from micawber.providers import bootstrap_basic
 from whitenoise import WhiteNoise
+from pytz import timezone
 
 
 def init_app(config_object=ProdConfig):
@@ -172,7 +173,10 @@ def register_filters(app):
             value, app.oembed_providers, maxwidth=600, maxheight=400
         )
 
-    # Custom filterss
+    # Timezone helper
+    app.tz = timezone(app.config['TIME_ZONE'])
+
+    # Custom filters
     @app.template_filter()
     def since_date(value):
         return timesince(value)
