@@ -14,19 +14,12 @@
           <i class="fa fa-child"></i>
           Edit my profile
         </a>
+
         <a id="project-post"
            href="{{ url_for('public.user_post', username=current_user.username) }}"
            title="Post an update to your current project" class="btn btn-success">
           <i class="fa fa-clipboard" aria-hidden="true"></i>
           Write a Post</a>
-
-        {% if cert_path %}
-        <a href="{{ cert_path }}"
-            download class="btn btn-success">
-          <i class="fa fa-download"></i>
-          Certificate
-        </a>
-        {% endif %}
 
         <a href="{{ url_for('auth.logout') }}" class="btn btn-secondary hidden">
           <i class="fa fa-sign-out"></i>
@@ -71,12 +64,21 @@
         {% endfor %}
         </ul>
     </div>
-
 </div>
+
+{% if score %}
+  <div class="row">
+      <h5 class="ml-4 mt-1" title="Total score across all projects">
+        <span class="user-score">{{ score }}</span>
+      </h5>
+  </div>
+{% endif %}
 
 {% if user.my_story %}
 <div class="row">
-    <div class="profile-story col-12">
+  <div class="profile-story col-12">
+    <a name="story"></a>
+    <h2 class="mt-5 text-center">My Story</h2>
         <blockquote class="profile-text">
             {{ user.my_story|markdown }}
         </blockquote>
@@ -99,7 +101,6 @@
         {% endfor %}
         </div>
     </div><!-- /profile-projects -->
-    <h5 class="mt-1 text-center"><span class="user-score">{{ score }}</span> dribs</h5>
 {% endif %}
 
 {% if submissions %}
@@ -125,8 +126,8 @@
 {% if user.my_goals %}
 <div class="row">
     <div class="profile-goals col-12">
-        <a name="goals"><h1>Goals</h1></a>
-        <blockquote class="profile-text jumbotron">
+        <a name="goals"><h1>&#127919; Goals</h1></a>
+        <blockquote class="profile-text">
             {{ user.my_goals|markdown }}
         </blockquote>
     </div>

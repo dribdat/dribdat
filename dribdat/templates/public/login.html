@@ -26,15 +26,16 @@
       {{ form.username(placeholder="Username", class_="form-control") }}
       {{ form.password(placeholder="Password", class_="form-control") }}
       <button type="submit" class="btn btn-default btn-primary btn-submit">Enter</button>
+      {% if not config.DRIBDAT_NOT_REGISTER %}
+        &nbsp; or &nbsp;
+        <a class="btn btn-warning btn-submit" href="{{ url_for('auth.register') }}">Create an account</a>
+      {% endif %}
     </div>
   </form>
   {% if not config.DRIBDAT_NOT_REGISTER %}
     <br>
-    <p>Not yet registered?
-      <a href="{{ url_for('auth.register') }}">Create an account</a>.
-    </p>
     <p>Forgot your password?
-      <a href="{{ url_for('auth.forgot') }}">Help me log back in</a>.
+      <a href="{{ url_for('auth.forgot') }}">Help me to get back in</a>.
     </p>
   {% endif %}
 </div>

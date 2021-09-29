@@ -1119,15 +1119,11 @@ pre { color: #333; background: white; }
 .profile-projects center {
   margin-top: 5px;
 }
-.profile-story {
-  margin-top: 2em;
-}
-.profile-goals {
-  font-size: 120%;
-  margin-top: 1em;
-}
-.profile-text {
+.userprofile .profile-text {
+  font-size: 125%;
+  padding: 1em 1em 0.1em;
   background: white;
+  box-shadow: 5px 5px 5px rgba(0,0,0,0.2);
 }
 .team-roles {
   display: inline-block;

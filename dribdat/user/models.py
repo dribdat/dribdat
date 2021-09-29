@@ -189,8 +189,6 @@ class User(UserMixin, PkModel):
         for m in ['sso', 'username', 'email']:
             if m in userdata and userdata[m]:
                 path = path.replace('{%s}' % m, userdata[m])
-            else:
-                return None
         return path
 
     def __init__(self, username=None, email=None, password=None, **kwargs):
