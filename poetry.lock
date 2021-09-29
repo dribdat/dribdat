@@ -99,14 +99,14 @@ python-versions = "*"
 
 [[package]]
 name = "boto3"
-version = "1.18.48"
+version = "1.18.50"
 description = "The AWS SDK for Python"
 category = "main"
 optional = false
 python-versions = ">= 3.6"
 
 [package.dependencies]
-botocore = ">=1.21.48,<1.22.0"
+botocore = ">=1.21.50,<1.22.0"
 jmespath = ">=0.7.1,<1.0.0"
 s3transfer = ">=0.5.0,<0.6.0"
 
@@ -115,7 +115,7 @@ crt = ["botocore[crt] (>=1.21.0,<2.0a0)"]
 
 [[package]]
 name = "botocore"
-version = "1.21.48"
+version = "1.21.50"
 description = "Low-level, data-driven core of boto 3."
 category = "main"
 optional = false
@@ -585,7 +585,7 @@ email = ["email-validator"]
 
 [[package]]
 name = "frictionless"
-version = "4.17.1"
+version = "4.18.1"
 description = "Frictionless is a framework to describe, extract, validate, and transform tabular data"
 category = "main"
 optional = false
@@ -595,6 +595,7 @@ python-versions = "*"
 chardet = ">=3.0"
 isodate = ">=0.6"
 jsonschema = ">=2.5"
+marko = ">=1.0"
 petl = ">=1.6"
 python-dateutil = ">=2.8"
 python-slugify = ">=1.2"
@@ -861,6 +862,19 @@ babel = ["babel"]
 lingua = ["lingua"]
 
 [[package]]
+name = "marko"
+version = "1.1.0"
+description = "A markdown parser with high extensibility."
+category = "main"
+optional = false
+python-versions = ">=3.6"
+
+[package.extras]
+benchmark = ["commonmark (>=0.9,<1.0)", "markdown (>=3.3,<4.0)", "markdown-it-py (>=0.6,<1.0)", "mistune (>=0.8,<1.0)", "mistletoe (>=0.7,<1.0)"]
+codehilite = ["pygments"]
+toc = ["python-slugify"]
+
+[[package]]
 name = "markupsafe"
 version = "2.0.1"
 description = "Safely add untrusted strings to HTML/XML markup."
@@ -1040,14 +1054,14 @@ python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
 
 [[package]]
 name = "pyopenssl"
-version = "20.0.1"
+version = "21.0.0"
 description = "Python wrapper module around the OpenSSL library"
 category = "dev"
 optional = false
-python-versions = ">=2.7,!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*"
+python-versions = ">=2.7,!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*,!=3.5.*"
 
 [package.dependencies]
-cryptography = ">=3.2"
+cryptography = ">=3.3"
 six = ">=1.5.2"
 
 [package.extras]
@@ -1513,7 +1527,7 @@ locale = ["Babel (>=1.3)"]
 
 [[package]]
 name = "zipp"
-version = "3.5.0"
+version = "3.5.1"
 description = "Backport of pathlib-compatible object wrapper for zip files"
 category = "main"
 optional = false
@@ -1566,12 +1580,12 @@ blinker = [
     {file = "blinker-1.4.tar.gz", hash = "sha256:471aee25f3992bd325afa3772f1063dbdbbca947a041b8b89466dc00d606f8b6"},
 ]
 boto3 = [
-    {file = "boto3-1.18.48-py3-none-any.whl", hash = "sha256:c388da7dc1a596755f39de990a72e05cee558d098e81de63de55bd9598cc5134"},
-    {file = "boto3-1.18.48.tar.gz", hash = "sha256:7b45b224442c479de4bc6e6e9cb0557b642fc7a77edc8702e393ccaa2e0aa128"},
+    {file = "boto3-1.18.50-py3-none-any.whl", hash = "sha256:6c9f2b50827ba9233a143b71746b7f1caee0467cf5004d7b43d5a7d5f468827b"},
+    {file = "boto3-1.18.50.tar.gz", hash = "sha256:f7ab057556461678dda5597ceb08b233a82b7bbfb29b47d18b2fa102bd5ad680"},
 ]
 botocore = [
-    {file = "botocore-1.21.48-py3-none-any.whl", hash = "sha256:9d5b70be2f417d0aa30788049fd20473ad27218eccd05e71f545b4b4e09c79a0"},
-    {file = "botocore-1.21.48.tar.gz", hash = "sha256:2c25a76f09223b2f00ad578df34492b7b84cd4828fc90c08ccbdd1d70abbd7eb"},
+    {file = "botocore-1.21.50-py3-none-any.whl", hash = "sha256:3c24e20ad2b155c5a031db2ed060191df282369c5e59225ef20126cdfa6f082f"},
+    {file = "botocore-1.21.50.tar.gz", hash = "sha256:06e4d529071accac2ef93de1f9827dce0b41b0b6d9f81bd81d31aa2342d72631"},
 ]
 certifi = [
     {file = "certifi-2021.5.30-py2.py3-none-any.whl", hash = "sha256:50b1e4f8446b06f41be7dd6338db18e0990601dce795c2b1686458aa7e8fa7d8"},
@@ -1827,8 +1841,8 @@ flask-wtf = [
     {file = "Flask_WTF-0.15.1-py2.py3-none-any.whl", hash = "sha256:6ff7af73458f182180906a37a783e290bdc8a3817fe4ad17227563137ca285bf"},
 ]
 frictionless = [
-    {file = "frictionless-4.17.1-py2.py3-none-any.whl", hash = "sha256:2574918836677bd42c2ff5bd66d59a4d40d9a72f60800d15230f61e399fb2fac"},
-    {file = "frictionless-4.17.1.tar.gz", hash = "sha256:e0b6aea23072014ee1e1cd57f2228f462b21d263cc998b2aa738a17a789fafff"},
+    {file = "frictionless-4.18.1-py2.py3-none-any.whl", hash = "sha256:3de59e2bc76949e9f3a07c8be3cd54d8714408467499a27e5ba7041cf02b08c0"},
+    {file = "frictionless-4.18.1.tar.gz", hash = "sha256:45117e2981bfafd3832d1d36e98968d61045c1710d36625d382f0e7b21d7e7d7"},
 ]
 future = [
     {file = "future-0.18.2.tar.gz", hash = "sha256:b1bead90b70cf6ec3f0710ae53a525360fa360d306a86583adc6bf83a4db537d"},
@@ -1996,6 +2010,10 @@ mako = [
     {file = "Mako-1.1.5-py2.py3-none-any.whl", hash = "sha256:6804ee66a7f6a6416910463b00d76a7b25194cd27f1918500c5bd7be2a088a23"},
     {file = "Mako-1.1.5.tar.gz", hash = "sha256:169fa52af22a91900d852e937400e79f535496191c63712e3b9fda5a9bed6fc3"},
 ]
+marko = [
+    {file = "marko-1.1.0-py3-none-any.whl", hash = "sha256:151953cf41c3a76029c8b23368faf323a29d4788c7d1e0a1c64423f4ddedf68e"},
+    {file = "marko-1.1.0.tar.gz", hash = "sha256:764316137a2f1ada070958870208ea5b6e4eda879ee4b743552aaebf9d0397f7"},
+]
 markupsafe = [
     {file = "MarkupSafe-2.0.1-cp36-cp36m-macosx_10_9_x86_64.whl", hash = "sha256:f9081981fe268bd86831e5c75f7de206ef275defcb82bc70740ae6dc507aee51"},
     {file = "MarkupSafe-2.0.1-cp36-cp36m-manylinux1_i686.whl", hash = "sha256:0955295dd5eec6cb6cc2fe1698f4c6d84af2e92de33fbcac4111913cd100a6ff"},
@@ -2116,8 +2134,8 @@ pyflakes = [
     {file = "pyflakes-2.3.1.tar.gz", hash = "sha256:f5bc8ecabc05bb9d291eb5203d6810b49040f6ff446a756326104746cc00c1db"},
 ]
 pyopenssl = [
-    {file = "pyOpenSSL-20.0.1-py2.py3-none-any.whl", hash = "sha256:818ae18e06922c066f777a33f1fca45786d85edfe71cd043de6379337a7f274b"},
-    {file = "pyOpenSSL-20.0.1.tar.gz", hash = "sha256:4c231c759543ba02560fcd2480c48dcec4dae34c9da7d3747c508227e0624b51"},
+    {file = "pyOpenSSL-21.0.0-py2.py3-none-any.whl", hash = "sha256:8935bd4920ab9abfebb07c41a4f58296407ed77f04bd1a92914044b848ba1ed6"},
+    {file = "pyOpenSSL-21.0.0.tar.gz", hash = "sha256:5e2d8c5e46d0d865ae933bef5230090bdaf5506281e9eec60fa250ee80600cb3"},
 ]
 pyparsing = [
     {file = "pyparsing-2.4.7-py2.py3-none-any.whl", hash = "sha256:ef9d7589ef3c200abe66653d3f1ab1033c3c419ae9b9bdb1240a85b024efc88b"},
@@ -2348,6 +2366,6 @@ wtforms = [
     {file = "WTForms-2.3.3.tar.gz", hash = "sha256:81195de0ac94fbc8368abbaf9197b88c4f3ffd6c2719b5bf5fc9da744f3d829c"},
 ]
 zipp = [
-    {file = "zipp-3.5.0-py3-none-any.whl", hash = "sha256:957cfda87797e389580cb8b9e3870841ca991e2125350677b2ca83a0e99390a3"},
-    {file = "zipp-3.5.0.tar.gz", hash = "sha256:f5812b1e007e48cff63449a5e9f4e7ebea716b4111f9c4f9a645f91d579bf0c4"},
+    {file = "zipp-3.5.1-py3-none-any.whl", hash = "sha256:8dc6c4d5a809d659067cc713f76bcf42fae8ae641db12fddfa93694a15abc96b"},
+    {file = "zipp-3.5.1.tar.gz", hash = "sha256:1fc9641b26f3bd81069b7738b039f2819cab6e3fc3399a953e19d92cc81eff4d"},
 ]
