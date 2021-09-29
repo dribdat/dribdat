@@ -13,15 +13,14 @@
   </h2>
 
   <div class="text-right">
-  {% if detail_view %}
-    <a href="{{ url_for('project.project_edit', project_id=project.id) }}" title="Edit project" class="btn btn-lg btn-warning">
-      <i class="fa fa-pencil" aria-hidden="true"></i>
-      Basics</a>
-  {% else %}
-    <a href="{{ url_for('project.project_details', project_id=project.id) }}" title="Edit project details" class="btn btn-lg btn-warning">
-      <i class="fa fa-pencil" aria-hidden="true"></i>
-      Details</a>
-  {% endif %}
+    <div class="btn-group">
+      <a href="{{ url_for('project.project_edit', project_id=project.id) }}" title="Edit project" class="btn btn-lg btn-warning {% if not detail_view %}disabled{% endif %}">
+        <i class="fa fa-pencil" aria-hidden="true"></i>
+        Basics</a>
+      <a href="{{ url_for('project.project_details', project_id=project.id) }}" title="Edit project details" class="btn btn-lg btn-info {% if detail_view %}disabled{% endif %}">
+        <i class="fa fa-pencil" aria-hidden="true"></i>
+        Details</a>
+    </div>
   </div>
 
   {% if config.S3_KEY %}
