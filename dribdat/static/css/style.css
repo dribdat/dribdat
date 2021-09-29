@@ -561,6 +561,7 @@ nav .navbar-nav .nav-item {
 }
 .project-page .project-info {
   min-height: 240px;
+  overflow-x: auto;
   background-color: rgba(255, 255, 255, 0.8);
   color: black;
   padding: 5px;
@@ -1198,13 +1199,22 @@ Code of Conduct
 		0 0 0 10px cyan; }
 
 /* ------------
-Challenges view
+Issues list view
 --------------- */
 .list-data .list-group-item {
     border-left: none; border-right: none; border-top: none;
-    border-bottom: 1px solid #aaa;
+    /* border-bottom: 1px solid #aaa; */
     border-radius: 0px;
     margin-right: 1em;
+    text-align: left;
+    color: inherit;
+    text-decoration: none;
+}
+.list-data .list-group-item.link-more {
+    color: blue;
+}
+.list-data .list-group-item:hover {
+    background: lightyellow;
 }
 .list-data .list-group-item img {
     height: 1em;
@@ -1220,11 +1230,9 @@ Challenges view
   }
 }
 .list-data a.list-group-item:nth-child(1) {
-    border-top: 1px solid #aaa;
+    /* border-top: 1px solid #aaa; */
 }
-.widget-github {
-  text-align: center;
-}
+.widget.widget-github { text-align: left; }
 
 /* -------------
 Instruction page

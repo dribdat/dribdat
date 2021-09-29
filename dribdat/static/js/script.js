@@ -304,7 +304,7 @@
 
   // Show GitHub issues
   $('#issues-list').each(function() {
-    var per_page = 10;
+    var per_page = 5;
     var $self = $(this);
     var userAndRepo = $self.data('github');
     var url_api = 'https://api.github.com/repos/' + userAndRepo + '/issues';
@@ -313,9 +313,10 @@
       $self.empty();
       $.each(data, function(index) {
         if (index == per_page) {
+          return;
           return $self.append(
             '<a href="' + url_www +
-            '" class="list-group-item" target="_blank">More issues ...</a>'
+            '" class="list-group-item link-more" target="_blank">All issues ...</a>'
           );
         }
         $self.append(
