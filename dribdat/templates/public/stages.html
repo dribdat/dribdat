@@ -28,7 +28,6 @@
 
       {% if step.index > 0 %}
         <h3 class="title">{{ step.phase }}</h3>
-        <p class="subtitle"><b>{{ step.description }}</b></p>
       {% endif %}
 
       {% if step.projects %}
@@ -39,6 +38,10 @@
           {% endfor %}
           </div>
       </div><!-- /profile-projects -->
+      {% endif %}
+
+      {% if step.index > 0 %}
+        <p class="subtitle"><b>{{ step.description }}</b></p>
       {% endif %}
 
       {% if step.conditions %}

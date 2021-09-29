@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 """The app module, containing the app factory function."""
-from flask import Flask, render_template, redirect, url_for
+from flask import Flask, render_template
 from flask_cors import CORS
+from werkzeug.middleware.proxy_fix import ProxyFix
 
 from dribdat import commands, public, user, admin
 from dribdat.assets import assets
@@ -15,15 +16,18 @@ from dribdat.extensions import (
 from dribdat.settings import ProdConfig
 from dribdat.utils import timesince
 from dribdat.onebox import make_oembedplus
+
 from flask_misaka import Misaka
 from flask_talisman import Talisman
 from flask_dance.contrib import (slack, azure, github)
 from micawber.providers import bootstrap_basic
 from whitenoise import WhiteNoise
+from pytz import timezone
 
 
 def init_app(config_object=ProdConfig):
-    """An application factory, as explained here: http://flask.pocoo.org/docs/patterns/appfactories/.
+    """An application factory
+    See: http://flask.pocoo.org/docs/patterns/appfactories/
 
     :param config_object: The configuration object to use.
     """
@@ -31,13 +35,18 @@ def init_app(config_object=ProdConfig):
     app.config.from_object(config_object)
 
     # Set up cross-site access to the API
-    cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
-    app.config['CORS_HEADERS'] = 'Content-Type'
+    if app.config['SERVER_CORS']:
+        CORS(app, resources={r"/api/*": {"origins": "*"}})
+        app.config['CORS_HEADERS'] = 'Content-Type'
 
-    # Set up optimized static file hosting
-    app.wsgi_app = WhiteNoise(app.wsgi_app, prefix='static/')
-    for static in ('css', 'img', 'js', 'public'):
-        app.wsgi_app.add_files('dribdat/static/' + static)
+    # Set up using an external proxy/static server
+    if app.config['SERVER_PROXY']:
+        app.wsgi_app = ProxyFix(app, x_for=1, x_host=1)
+    else:
+        # Internally optimize static file hosting
+        app.wsgi_app = WhiteNoise(app.wsgi_app, prefix='static/')
+        for static in ('css', 'img', 'js', 'public'):
+            app.wsgi_app.add_files('dribdat/static/' + static)
 
     register_extensions(app)
     register_blueprints(app)
@@ -65,8 +74,8 @@ def register_extensions(app):
 def init_talisman(app):
     if 'SERVER_SSL' in app.config and app.config['SERVER_SSL']:
         Talisman(app,
-            content_security_policy=app.config['CSP_DIRECTIVES'],
-            frame_options_allow_from='*')
+                 content_security_policy=app.config['CSP_DIRECTIVES'],
+                 frame_options_allow_from='*')
 
 
 def register_blueprints(app):
@@ -79,11 +88,13 @@ def register_blueprints(app):
     app.register_blueprint(admin.views.blueprint)
     return None
 
+
 def register_oauthhandlers(app):
     """ Set up OAuth handlers based on configuration """
     # TODO: move to auth class
     blueprint = None
-    if not app.config["OAUTH_TYPE"]: return
+    if not app.config["OAUTH_TYPE"]:
+        return
     if app.config["OAUTH_TYPE"] == 'slack':
         blueprint = slack.make_slack_blueprint(
             client_id=app.config["OAUTH_ID"],
@@ -115,6 +126,7 @@ def register_oauthhandlers(app):
         )
     if blueprint is not None:
         app.register_blueprint(blueprint, url_prefix="/oauth")
+
 
 def register_errorhandlers(app):
     """Register error handlers."""
@@ -149,24 +161,34 @@ def register_commands(app):
 
 def register_filters(app):
     # Library filters
-    Misaka(app, autolink=True, fenced_code=True, strikethrough=True, tables=True)
+    Misaka(app, autolink=True, fenced_code=True,
+           strikethrough=True, tables=True)
 
     # Registration of handlers for micawber
     app.oembed_providers = bootstrap_basic()
+
     @app.template_filter()
     def onebox(value):
-        return make_oembedplus(value, app.oembed_providers, maxwidth=600, maxheight=400)
+        return make_oembedplus(
+            value, app.oembed_providers, maxwidth=600, maxheight=400
+        )
 
-    # Custom filterss
+    # Timezone helper
+    app.tz = timezone(app.config['TIME_ZONE'])
+
+    # Custom filters
     @app.template_filter()
     def since_date(value):
         return timesince(value)
+
     @app.template_filter()
     def until_date(value):
         return timesince(value, default="now!", until=True)
+
     @app.template_filter()
     def format_date(value, format='%d.%m.%Y'):
         return value.strftime(format)
+
     @app.template_filter()
     def format_datetime(value, format='%d.%m.%Y %H:%M'):
         return value.strftime(format)

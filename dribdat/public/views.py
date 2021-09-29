@@ -48,7 +48,7 @@ def info_current_hackathon_json():
 @blueprint.route("/about/")
 def about():
     """ Renders a simple about page """
-    return render_template("public/about.html", current_event=current_event())
+    return render_template("public/about.html")
 
 
 @blueprint.route("/favicon.ico")
@@ -99,16 +99,12 @@ def user(username):
             + 'organizing team if you have any questions.',
             'warning'
         )
-    event = current_event()
-    cert_path = user.get_cert_path(event)
     submissions = user.posted_challenges()
     projects = user.joined_projects(False)
     score = sum([p.score for p in projects])
     posts = user.latest_posts()
     return render_template("public/userprofile.html", active="profile",
-                           current_event=event, event=event, user=user,
-                           cert_path=cert_path,
-                           projects=projects, score=score,
+                           user=user, projects=projects, score=score,
                            submissions=submissions, posts=posts)
 
 
@@ -144,8 +140,12 @@ def event(event_id):
 def event_participants(event_id):
     event = Event.query.filter_by(id=event_id).first_or_404()
     users = GetEventUsers(event)
+    cert_path = None
+    if current_user and not current_user.is_anonymous:
+        cert_path = current_user.get_cert_path(event)
     usercount = len(users) if users else 0
     return render_template("public/eventusers.html",
+                           cert_path=cert_path,
                            current_event=event, participants=users,
                            usercount=usercount, active="participants")
 
@@ -251,5 +251,4 @@ def dribs():
     dribs = dribs.order_by(Activity.id.desc())
     dribs = dribs.paginate(int(page), int(per_page))
     return render_template("public/dribs.html",
-                           endpoint='public.dribs', active='dribs',
-                           current_event=current_event(), data=dribs)
+                           endpoint='public.dribs', active='dribs', data=dribs)

@@ -109,10 +109,22 @@
 
   // Upload images
   $('#uploadImage').each(function() {
-    var $togglebtn = $('button[data-target="#uploadImage"]');
-    $('.fld-longtext').append($togglebtn);
-    $('.fld-image_url').append($togglebtn.clone());
     var $dialog = $(this);
+    var $togglebtn = $('button[data-target="#uploadImage"]');
+    // Enable the available fields
+    var $longtext = $('.fld-longtext');
+    var $imageurl = $('.fld-image_url');
+    if ($longtext.length > 0) {
+      $longtext.append($togglebtn.clone().show());
+    } else {
+      $dialog.find("[data-target='pitch']").hide();
+    }
+    if ($imageurl.length > 0) {
+      $imageurl.append($togglebtn.clone().show());
+    } else {
+      $dialog.find("[data-target='cover']").hide();
+    }
+    // Set up the file dialog
     var $inputfd = $dialog.find('input[type="file"]');
     $inputfd.change(function() {
       var imgfile = $inputfd[0].files[0];
@@ -292,7 +304,7 @@
 
   // Show GitHub issues
   $('#issues-list').each(function() {
-    var per_page = 10;
+    var per_page = 5;
     var $self = $(this);
     var userAndRepo = $self.data('github');
     var url_api = 'https://api.github.com/repos/' + userAndRepo + '/issues';
@@ -301,9 +313,10 @@
       $self.empty();
       $.each(data, function(index) {
         if (index == per_page) {
+          return;
           return $self.append(
             '<a href="' + url_www +
-            '" class="list-group-item" target="_blank">More issues ...</a>'
+            '" class="list-group-item link-more" target="_blank">All issues ...</a>'
           );
         }
         $self.append(

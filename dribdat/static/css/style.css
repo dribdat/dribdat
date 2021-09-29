@@ -46,6 +46,7 @@ form input[type="checkbox"] {
 }
 .form-project-post .checkbox input {
   opacity: 1;
+  margin-right: 1em;
 }
 .form-project-post .checkbox input:checked {
   opacity: 0;
@@ -560,6 +561,7 @@ nav .navbar-nav .nav-item {
 }
 .project-page .project-info {
   min-height: 240px;
+  overflow-x: auto;
   background-color: rgba(255, 255, 255, 0.8);
   color: black;
   padding: 5px;
@@ -571,6 +573,12 @@ nav .navbar-nav .nav-item {
 }
 .project-page .project-star i {
   padding-right: 5px;
+}
+.project-edit-cover {
+  z-index: 99;
+  position: absolute;
+  margin-top: -2em;
+  margin-left: 1em;
 }
 .project-page img {
   max-width: 100%;
@@ -1113,15 +1121,11 @@ pre { color: #333; background: white; }
 .profile-projects center {
   margin-top: 5px;
 }
-.profile-story {
-  margin-top: 2em;
-}
-.profile-goals {
-  font-size: 120%;
-  margin-top: 1em;
-}
-.profile-text {
+.userprofile .profile-text {
+  font-size: 125%;
+  padding: 1em 1em 0.1em;
   background: white;
+  box-shadow: 5px 5px 5px rgba(0,0,0,0.2);
 }
 .team-roles {
   display: inline-block;
@@ -1195,13 +1199,22 @@ Code of Conduct
 		0 0 0 10px cyan; }
 
 /* ------------
-Challenges view
+Issues list view
 --------------- */
 .list-data .list-group-item {
     border-left: none; border-right: none; border-top: none;
-    border-bottom: 1px solid #aaa;
+    /* border-bottom: 1px solid #aaa; */
     border-radius: 0px;
     margin-right: 1em;
+    text-align: left;
+    color: inherit;
+    text-decoration: none;
+}
+.list-data .list-group-item.link-more {
+    color: blue;
+}
+.list-data .list-group-item:hover {
+    background: lightyellow;
 }
 .list-data .list-group-item img {
     height: 1em;
@@ -1217,11 +1230,9 @@ Challenges view
   }
 }
 .list-data a.list-group-item:nth-child(1) {
-    border-top: 1px solid #aaa;
+    /* border-top: 1px solid #aaa; */
 }
-.widget-github {
-  text-align: center;
-}
+.widget.widget-github { text-align: left; }
 
 /* -------------
 Instruction page
@@ -1296,8 +1307,9 @@ Instruction page
   position: absolute;
   opacity: 0.6;
   z-index: -9;
-  margin-top: -2em;
-  margin-left: 2em;
+  left: 50%;
+  top: 70px;
+  margin-left: -60px;
 }
 
 /* ------------

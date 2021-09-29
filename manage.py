@@ -4,20 +4,23 @@
 import os
 import click
 
-from flask import Flask
 from flask.cli import FlaskGroup
 
 from dribdat.app import init_app
 from dribdat.settings import DevConfig, ProdConfig
-from dribdat.database import db
 
 HERE = os.path.abspath(os.path.dirname(__file__))
 TEST_PATH = os.path.join(HERE, 'tests')
 
+
 def shell_context():
     """Return context dict for a shell session"""
     from dribdat.user.models import User, Event, Project, Category, Activity
-    return {'User': User, 'Event':Event, 'Project':Project, 'Category':Category, 'Activity':Activity}
+    return {
+        'User': User, 'Event': Event, 'Project': Project,
+        'Category': Category, 'Activity': Activity
+    }
+
 
 def create_app(script_info=None):
     """Initialise the app object"""
@@ -28,12 +31,14 @@ def create_app(script_info=None):
     app.shell_context_processor(shell_context)
     return app
 
+
 @click.command()
 def featuretest():
     """Run feature tests."""
     import pytest
     feat_test = os.path.join(TEST_PATH, 'test_features.py')
     return pytest.main([feat_test, '--disable-warnings'])
+
 
 @click.command()
 def test():
@@ -47,6 +52,7 @@ def test():
 @click.group(cls=FlaskGroup, create_app=create_app)
 def cli():
     """This is a management script for this application."""
+
 
 cli.add_command(test)
 cli.add_command(featuretest)

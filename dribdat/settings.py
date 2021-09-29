@@ -6,6 +6,7 @@ from dotenv import load_dotenv
 load_dotenv()
 os_env = os.environ
 
+
 class Config(object):
     """Base configuration."""
 
@@ -42,7 +43,10 @@ class Config(object):
     # Server settings
     SERVER_NAME = os_env.get('SERVER_URL', '127.0.0.1:5000')
     SERVER_SSL = os_env.get('SERVER_SSL', None)
-    CSP_DIRECTIVES = os_env.get('CSP_DIRECTIVES', "default-src * 'unsafe-inline' 'unsafe-eval' data:")
+    SERVER_CORS = bool(os_env.get('SERVER_CORS', True))
+    SERVER_PROXY = bool(os_env.get('SERVER_PROXY', False))
+    CSP_DIRECTIVES = os_env.get(
+        'CSP_DIRECTIVES', "default-src * 'unsafe-inline' 'unsafe-eval' data:")
     TIME_ZONE = os_env.get('TIME_ZONE', 'UTC')
     MAX_CONTENT_LENGTH = int(os_env.get('MAX_CONTENT_LENGTH', 1 * 1024 * 1024))
 
@@ -69,16 +73,18 @@ class ProdConfig(Config):
     ENV = 'prod'
     DEBUG = False
     DEBUG_TB_ENABLED = False  # Disable Debug toolbar
-    PREFERRED_URL_SCHEME = 'https' # For generating external URLs
+    PREFERRED_URL_SCHEME = 'https'  # For generating external URLs
     CACHE_TYPE = os_env.get('CACHE_TYPE', 'simple')
     CACHE_DEFAULT_TIMEOUT = int(os_env.get('CACHE_DEFAULT_TIMEOUT', '300'))
     CACHE_REDIS_URL = os_env.get('CACHE_REDIS_URL', 'simple')
     CACHE_MEMCACHED_SERVERS = os_env.get('MEMCACHED_SERVERS', '')
     CACHE_MEMCACHED_USERNAME = os_env.get('MEMCACHED_USERNAME', '')
     CACHE_MEMCACHED_PASSWORD = os_env.get('MEMCACHED_PASSWORD', '')
-    SQLALCHEMY_DATABASE_URI = os_env.get('DATABASE_URL', 'postgresql://localhost/example')
+    SQLALCHEMY_DATABASE_URI = os_env.get(
+        'DATABASE_URL', 'postgresql://localhost/example')
     if SQLALCHEMY_DATABASE_URI.startswith('postgres:'):
-        SQLALCHEMY_DATABASE_URI = SQLALCHEMY_DATABASE_URI.replace('postgres:', 'postgresql:')
+        SQLALCHEMY_DATABASE_URI = SQLALCHEMY_DATABASE_URI.replace(
+            'postgres:', 'postgresql:')
 
 
 class DevConfig(Config):
