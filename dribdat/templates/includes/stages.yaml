@@ -13,14 +13,14 @@ stages:
         -
           field: summary
           min: 5
-          help: Your challenge must have a short summary.
+          help: Your challenge needs a short summary.
         -
           field: excerpt
           min: 123
           help: At least 123 characters in the challenge pitch.
       agree:
-        - The challenge is well documented, including links to data sources or contacts.
-        - We accept this challenge, deemed realistic within the time limits of the event.
+        - The challenge is well documented, with links to resources and contacts.
+        - We accept this challenge as realistic in the time limits of the event.
   -
     id: 5
     name: NEW
@@ -38,8 +38,8 @@ stages:
           test: validurl
           help: Provide a contact link in the Details of your project page.
       agree:
-        - We have a shared channel or working area for our team to speak and collaborate.
-        - Our team members are committed to working together for the duration of the event.
+        - We have a shared channel or working area in which to collaborate.
+        - Our team members will work together for the duration of the event.
   -
     id: 10
     name: RESEARCHED
@@ -50,10 +50,10 @@ stages:
         -
           field: source_url
           test: validurl
-          help: Provide a source link on your project page.
+          help: Provide a source link in your project Details.
       agree:
-        - A source code repository or shared folder has been set up and shared with the team.
-        - We have better defined the achievable scope of the project, and have documented our basic intent.
+        - A source code repository or shared folder has been set up and shared.
+        - We have defined the scope of the project, and have documented our goals.
   -
     id: 20
     name: SKETCHED
@@ -64,10 +64,10 @@ stages:
         -
           field: image_url
           test: validurl
-          help: Provide an image link on your project page.
+          help: Upload or link to an image in your project Details.
       agree:
-        - Everyone on the team was able to contribute to the design and attach their ideas or questions.
-        - We have used a wireframing tool, or just pen and paper, to sketch and share a vision for the project.
+        - Everyone on the team was able to contribute something to the design.
+        - We used a wireframing tool, or just paper, to sketch and share our idea.
   -
     id: 30
     name: PROTOTYPED
@@ -80,8 +80,8 @@ stages:
           test: validurl
           help: Provide a project link to an online demo, embedded if possible.
       agree:
-        - This prototype was created by our team. Contributions from others do not include major functionality, and is less than 20% of the codebase.
-        - We own the rights, use open licenses, or received written permission for all data, assets and software demonstrated in our prototype.
+        - Contributions from outside of our team do not include any major functionality.
+        - We own the rights, use open licenses, or have written permission for all data, assets and code included.
   -
     id: 40
     name: LAUNCHED
@@ -92,10 +92,10 @@ stages:
         -
           field: autotext_url
           test: validurl
-          help: Link and sync a remote repository to your project.
+          help: Link and sync a remote repository or README for your project.
       agree:
-        - A demo or presentation has been made accessible, and shared here along with the sources.
-        - Every team member is thanked, and any third-party assets or software are attributed.
+        - Any third-party data, assets or software are correctly attributed.
+        - We have thanked every team member and mentor.
   -
     id: 50
     name: LIVE
@@ -106,7 +106,7 @@ stages:
         -
           field: download_url
           test: validurl
-          help: Provide a working download link on your project page.
+          help: Provide a working download link in your project Details.
       agree:
-        - The results of our project can be obtained under an open license.
-        - It is possible to contact the maintainers with questions and feedback.
+        - The full results of our project can be obtained under an open license.
+        - It is possible to contact the maintainers with questions or feedback.

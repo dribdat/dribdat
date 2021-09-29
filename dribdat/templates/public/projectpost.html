@@ -8,11 +8,13 @@
 
 {% block content %}
 
-  <div class="mt-5">&nbsp;</div>
-
-  <div class="honeycomb d-none d-md-block">
-      {{ misc.render_project_hexagon(project) }}
-  </div>
+  <h2>
+    Post on
+      <a href="{{ url_for('project.project_view', project_id=project.id) }}"
+        onclick="if(!window.confirm('Your post will not be saved - continue?')) return false"
+        title="Back to project">{{ project.name }}
+      </a>
+  </h2>
 
   {% if all_valid %}
     <h4 class="text-center mt-5 mb-3">
