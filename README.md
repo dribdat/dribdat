@@ -38,85 +38,82 @@ At this point you should be ready to start with Docker Compose:
 
 Optimize your dribdat instance with the following environment variables in production:
 
-* `TIME_ZONE` - set if your event is not in UTC time (e.g. "Europe/Zurich" - see [pytz docs](https://pythonhosted.org/pytz/))
-* `SERVER_URL` - fully qualified domain name where the site is hosted
-* `SERVER_SSL` - redirect all visitors to HTTPS, applying CSP
-* `SERVER_PROXY` - set to True to use an [external proxy](https://flask.palletsprojects.com/en/2.0.x/deploying/wsgi-standalone/#proxy-setups) and static files server
-* `CSP_DIRECTIVES` - configure content security policy - see [Talisman docs](https://github.com/GoogleCloudPlatform/flask-talisman#content-security-policy)
+* `TIME_ZONE` - set if your event is not in UTC time (e.g. "Europe/Zurich" - see [pytz docs](https://pythonhosted.org/pytz/)).
+* `SERVER_URL` - fully qualified domain name where the site is hosted.
 * `DATABASE_URL` - connects to PostgreSQL or another database via `postgresql://username:password@...` (in Heroku this is set automatically)
-* `CACHE_TYPE` - speed up the site with Redis or Memcache - see [Flask-Caching](https://flask-caching.readthedocs.io/en/latest/index.html#configuring-flask-caching)
-* `DRIBDAT_ENV` - 'dev' to enable debugging, 'prod' to optimise assets for production
+* `DRIBDAT_SECRET` - a long scary string for hashing your passwords - in Heroku this is set automatically.
+* `DRIBDAT_ENV` - 'dev' to enable debugging, 'prod' to optimise for production.
+
+Advanced configurations are used to improve the **production setup**:
+
+* `SERVER_SSL` - redirect all visitors to HTTPS, applying [CSP rules](https://developers.google.com/web/fundamentals/security/csp).
+* `SERVER_PROXY` - set to True to use an [external proxy](https://flask.palletsprojects.com/en/2.0.x/deploying/wsgi-standalone/#proxy-setups) and static files server.
+* `SERVER_CORS` - set to False to disable the [CORS whitelist](https://flask.palletsprojects.com/en/2.0.x/deploying/wsgi-standalone/#proxy-setups) for external API access.
+* `CSP_DIRECTIVES` - configure content security policy - see [Talisman docs](https://github.com/GoogleCloudPlatform/flask-talisman#content-security-policy).
+* `CACHE_TYPE` - speed up the site with Redis or Memcache - see [Flask-Caching](https://flask-caching.readthedocs.io/en/latest/index.html#configuring-flask-caching).
 
 The following options can be used to toggle **application features**:
 
-* `DRIBDAT_THEME` - can be set to one of the [Bootswatch themes](https://bootswatch.com/)
-* `DRIBDAT_STYLE` - provide the address to a CSS stylesheet for custom global styles
-* `DRIBDAT_CLOCK` - use 'up' or 'down' to change the position, or 'off' to hide the countdown clock
-* `DRIBDAT_SECRET` - a long scary string for hashing your passwords - in Heroku this is set automatically
-* `DRIBDAT_APIKEY` - for connecting clients to the remote [API](#api)
-* `DRIBDAT_USER_APPROVE` - set to True so that any new non-SSO accounts are inactive until approved by an admin
-* `DRIBDAT_NOT_REGISTER` - set to True to hide the registration, so new users can only join this server via SSO
-* `DRIBDAT_ALLOW_EVENTS` - set to True to allow regular users to suggest new events on this site (which only admins can then edit and promote)
+* `DRIBDAT_THEME` - can be set to one of the [Bootswatch themes](https://bootswatch.com/).
+* `DRIBDAT_STYLE` - provide the address to a CSS stylesheet for custom global styles.
+* `DRIBDAT_CLOCK` - use 'up' or 'down' to change the position, or 'off' to hide the countdown clock.
+* `DRIBDAT_APIKEY` - a secret key for connecting bots with write access to the remote [API](#api).
+* `DRIBDAT_USER_APPROVE` - set to True so that any new non-SSO accounts are inactive until approved by an admin.
+* `DRIBDAT_NOT_REGISTER` - set to True to hide the registration, so new users can only join this server via SSO.
+* `DRIBDAT_ALLOW_EVENTS` - set to True to allow regular users to suggest new events on this site (which only admins can then edit and promote).
 
 Support for **Web analytics** can be configured using one of the following variables:
 
 * `ANALYTICS_FATHOM` ([Fathom](https://usefathom.com/) - with optional `ANALYTICS_FATHOM_SITE` if you use a custom site)
 * `ANALYTICS_SIMPLE` ([Simple Analytics](https://simpleanalytics.com))
 * `ANALYTICS_GOOGLE` (starts with "UA-...")
-* `ANALYTICS_HREF` - an optional link in the footer to a public dashboard for your analytics
+* `ANALYTICS_HREF` - an optional link in the footer to a public dashboard for your analytics.
 
 OAuth 2.0 support for **Single Sign-On** (SSO) is currently available using [Flask Dance](https://flask-dance.readthedocs.io/), and requires SSL to be enabled (using `SERVER_SSL`=1 in production or `OAUTHLIB_INSECURE_TRANSPORT` in development). Register your app with the provider (see SSO tips below), and set the following variables:
 
 * `OAUTH_TYPE` - e.g. 'Slack', 'GitHub', 'Azure'
-* `OAUTH_ID` - the Client ID of your app
-* `OAUTH_SECRET` - the Client Secret of your app
-* `OAUTH_DOMAIN` - (optional) subdomain of your Slack instance, or AD tenant for Azure
-* `OAUTH_SKIP_LOGIN` - (optional) when enabled, the dribdat login screen is not shown at all
+* `OAUTH_ID` - the Client ID of your app.
+* `OAUTH_SECRET` - the Client Secret of your app.
+* `OAUTH_DOMAIN` - (optional) subdomain of your Slack instance, or AD tenant for Azure.
+* `OAUTH_SKIP_LOGIN` - (optional) when enabled, the dribdat login screen is not shown at all.
 
 For **uploading images** and other files directly within dribdat, you can configure S3 through Amazon and compatible providers:
 
 * `S3_KEY` - the access key (20 characters, all caps)
 * `S3_SECRET` - the generated secret (long, mixed case)
-* `S3_BUCKET` - the name of your S3 bucket
-* `S3_REGION` - defaults to 'eu-west-1'
-* `S3_FOLDER` - skip unless you want to store to a subfolder
-* `S3_HTTPS` - URL for web access to your bucket's public files
-* `S3_ENDPOINT` - alternative endpoint for self-hosted Object Storage
-* `MAX_CONTENT_LENGTH` - defaults to 1048576 bytes (1 MB) file size
+* `S3_BUCKET` - the name of your S3 bucket.
+* `S3_REGION` - defaults to 'eu-west-1'.
+* `S3_FOLDER` - skip unless you want to store to a subfolder.
+* `S3_HTTPS` - URL for web access to your bucket's public files.
+* `S3_ENDPOINT` - alternative endpoint for self-hosted Object Storage.
+* `MAX_CONTENT_LENGTH` - defaults to 1048576 bytes (1 MB) file size.
 
 To customize some of the default content, you can edit the template include files, for example the default [quickstart](dribdat/templates/includes/quickstart.md) or [stages](dribdat/templates/includes/stages.yaml) - as long as you're not limited by ephemeral storage of your deployment.
 
 ## API
 
-There are a number of API calls that admins can use to easily get to the data in Dribdat in CSV or JSON format. These are linked in the About page in a running app. Additionally, the site has a  See GitHub issues for development status.
+There are a number of API calls that admins can use to easily get to the data in Dribdat in various formats. The full list of calls is shown in the **About** or Search page in a running app. For example, to get basic data on an event:
 
-Basic data on an event:
-
-- `/api/event/<EVENT ID>/info.json`
+- `/hackathon.json`
 - `/api/event/current/info.json`
-
-Retrieve data on all projects from an event:
-
-- `/api/event/<EVENT ID>/projects.csv`
-- `/api/event/<EVENT ID>/projects.json`
 - `/api/event/current/projects.json`
-
-Recent activity in projects (all or specific):
-
+- `/api/event/<EVENT ID>/info.json`
 - `/api/project/activity.json`
 - `/api/<PROJECT ID>/activity.json`
 
-Search project contents:
+To search all project contents:
 
 - `/api/project/search.json?q=<text_query>`
 
 Use the `limit` query parameter to get more or less than 10 results.
 
+For more details see [api.py](dribdat/public/api.py)
+
+## Write access (beta)
+
 If you would like to use external clients, like the chatbot, to remote control Dribdat you need to set `DRIBDAT_APIKEY`. The (experimental) call used to push data into projects is:
 
 - `/api/project/push.json`
-
-For more details see [api.py](dribdat/public/api.py)
 
 # Developer guide
 
@@ -209,6 +206,48 @@ Dark Bootswatch themes do not play well with the *navbar-light* component used i
 To get client keys, go to the [Slack API](https://api.slack.com/apps/), [Azure portal](https://portal.azure.com/#blade/Microsoft_AAD_RegisteredApps/ApplicationsListBlade), or add the [GitHub App](https://github.com/apps/dribdat) to your account or organization.
 
 Cannot determine SSO callback for app registration? Try `<my server url>/oauth/slack/authorized` (replace `slack` with your OAuth provider).
+
+### Using a proxy server
+
+Besides encouraging the use of [Gunicorn](https://flask.palletsprojects.com/en/2.0.x/deploying/wsgi-standalone/#) to run the applocation, a web proxy server is typically used in production to optimize your deployment, add SSL certificates, etc. Here is an example configuration using [nginx](https://nginx.org/) if you are running your application on port 5000:
+
+```
+upstream dribdat-cluster {
+  server localhost:5000;
+}
+server {
+  listen 80;
+  server_name my.dribdat.net;
+
+  # File size limit for uploads
+  client_max_body_size 10m;
+  keepalive_timeout 0;
+  tcp_nopush on;
+  tcp_nodelay on;
+
+  # Configure compression
+  gzip on; gzip_vary on;
+  gzip_types text/plain text/css application/x-javascript text/xml application/xml application/xml+rss text/javascript;
+
+  location / {
+    # In case archived URLs were bookmarked
+    rewrite ^(.*).html$ $1;
+    # Set up the Proxy
+    proxy_redirect off;
+    proxy_pass http://dribdat-cluster;
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP  $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+  }
+
+  location /static {
+    # To host assets directly from Nginx
+    expires 2d;
+    alias /srv/dribdat/dribdat/static;
+  }
+}
+```
 
 ### Restore admin access
 

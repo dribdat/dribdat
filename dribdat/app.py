@@ -34,14 +34,15 @@ def init_app(config_object=ProdConfig):
     app.config.from_object(config_object)
 
     # Set up cross-site access to the API
-    CORS(app, resources={r"/api/*": {"origins": "*"}})
-    app.config['CORS_HEADERS'] = 'Content-Type'
+    if app.config['SERVER_CORS']:
+        CORS(app, resources={r"/api/*": {"origins": "*"}})
+        app.config['CORS_HEADERS'] = 'Content-Type'
 
     # Set up using an external proxy/static server
     if app.config['SERVER_PROXY']:
         app.wsgi_app = ProxyFix(app, x_for=1, x_host=1)
     else:
-        # Set up for optimized static file hosting
+        # Internally optimize static file hosting
         app.wsgi_app = WhiteNoise(app.wsgi_app, prefix='static/')
         for static in ('css', 'img', 'js', 'public'):
             app.wsgi_app.add_files('dribdat/static/' + static)
