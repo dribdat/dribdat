@@ -6,6 +6,7 @@ from dotenv import load_dotenv
 load_dotenv()
 os_env = os.environ
 
+
 class Config(object):
     """Base configuration."""
 
@@ -42,6 +43,7 @@ class Config(object):
     # Server settings
     SERVER_NAME = os_env.get('SERVER_URL', '127.0.0.1:5000')
     SERVER_SSL = os_env.get('SERVER_SSL', None)
+    SERVER_PROXY = bool(os_env.get('SERVER_PROXY', False))
     CSP_DIRECTIVES = os_env.get('CSP_DIRECTIVES', "default-src * 'unsafe-inline' 'unsafe-eval' data:")
     TIME_ZONE = os_env.get('TIME_ZONE', 'UTC')
     MAX_CONTENT_LENGTH = int(os_env.get('MAX_CONTENT_LENGTH', 1 * 1024 * 1024))
