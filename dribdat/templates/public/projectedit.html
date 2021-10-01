@@ -24,8 +24,14 @@
   </div>
 
   {% if config.S3_KEY %}
-  <button type="button" class="btn btn-primary mt-2" style="display:none" data-toggle="modal" data-target="#uploadImage">
+  <button type="button" class="btn btn-primary mt-2 m-1" style="display:none" data-toggle="modal" data-target="#uploadImage">
     Upload an image
+  </button>
+  {% endif %}
+
+  {% if config.S3_KEY %}
+  <button type="button" class="btn btn-dark mt-2 m-1" style="display:none" data-toggle="modal" data-target="#uploadFile">
+    Upload a file
   </button>
   {% endif %}
 
@@ -35,7 +41,7 @@
     {{ render_form(url_for('project.project_edit', project_id=project.id), form) }}
   {% endif %}
 
-  <!-- Upload dialog -->
+  <!-- Upload image dialog -->
   <div class="modal fade uploader" id="uploadImage" tabindex="-1" role="dialog" aria-labelledby="uploadLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
@@ -61,11 +67,11 @@
           </center>
           <div class="input-group" style="margin-top:1em">
             <div class="input-group-prepend">
-              <span class="input-group-text" id="inputFileLabel">Select</span>
+              <span class="input-group-text" id="inputImageLabel">Select</span>
             </div>
             <div class="custom-file">
               <input type="file" class="custom-file-input" id="inputImageFile"
-                name="image" aria-describedby="inputFileLabel" accept="image/*"
+                name="image" aria-describedby="inputImageLabel" accept="image/*"
                 data-maxsize="{{ config.MAX_CONTENT_LENGTH }}">
               <label class="custom-file-label" for="inputImageFile">Choose file</label>
             </div>
@@ -90,5 +96,54 @@
         </div>
       </div>
     </div>
-  </div>
+  </div><!-- / Upload Image -->
+
+  <!-- Upload File dialog -->
+  <div class="modal fade uploader" id="uploadFile" tabindex="-1" role="dialog" aria-labelledby="uploadFileLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="uploadFileLabel">Upload a file</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p class="upload-note">
+            Currently only <b><a href="https://frictionlessdata.io/field-guide/" target="_blank">Data Packages</a></b> are accepted.
+            These can be for example generated with the <a href="https://create.frictionlessdata.io/" target="_blank">Creator</a> tool.
+            Max {{ (config.MAX_CONTENT_LENGTH/(1024*1024))|round(1) }} MB.
+          </p>
+          <div class="input-group" style="margin-top:1em">
+            <div class="input-group-prepend">
+              <span class="input-group-text" id="inputFileLabel">Select</span>
+            </div>
+            <div class="custom-file">
+              <input type="file" class="custom-file-input" id="inputFile"
+                name="image" aria-describedby="inputFileLabel" accept="application/json"
+                data-maxsize="{{ config.MAX_CONTENT_LENGTH }}">
+              <label class="custom-file-label" for="inputImageFile">Choose file</label>
+            </div>
+          </div>
+          <center class="col hidden" style="margin-top:1em" id="file-confirm">
+            <div class="btn-group">
+              <button class="btn btn-warning" data-target="weblink">
+                Use as project link
+              </button>
+              <button class="btn btn-info" data-target="pitch">
+                Add to pitch content
+              </button>
+              <button class="btn btn-primary" data-target="xclip">
+                &#128203;
+                Copy to clipboard
+              </button>
+            </div>
+          </center>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div><!-- / Upload File -->
 {% endblock %}

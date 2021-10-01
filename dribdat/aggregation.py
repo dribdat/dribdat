@@ -45,12 +45,31 @@ def GetProjectData(url):
         return FetchBitbucketProject(apiurl)
 
     # The fun begins
-    elif url.find('/datapackage.json') > 0:
+    elif url.find('.json') > 0:  # not /datapackage
         return FetchDataProject(url)
 
     # Now we're really rock'n'rollin'
     else:
         return FetchWebProject(url)
+
+
+def AddProjectData(project):
+    data = GetProjectData(project.autotext_url)
+    if 'name' not in data:
+        return project
+    if len(data['name']) > 0:
+        project.name = data['name'][0:80]
+    if 'summary' in data and len(data['summary']) > 0:
+        project.summary = data['summary'][0:140]
+    if 'description' in data and len(data['description']) > 0:
+        project.longtext = data['description']
+    if 'homepage_url' in data and len(data['homepage_url']) > 0:
+        project.webpage_url = data['homepage_url'][0:2048]
+    if 'source_url' in data and len(data['source_url']) > 0:
+        project.source_url = data['source_url'][0:2048]
+    if 'image_url' in data and len(data['image_url']) > 0:
+        project.image_url = data['image_url'][0:2048]
+    return project
 
 
 def SyncProjectData(project, data):
