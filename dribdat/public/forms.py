@@ -159,6 +159,16 @@ class ProjectPost(FlaskForm):
     submit = SubmitField(u'Save post')
 
 
+class ProjectComment(FlaskForm):
+    id = HiddenField('id')
+    note = TextAreaField(
+        u'Comments and reviews',
+        [length(max=280), DataRequired()],
+        description=u'A suggestion or constructive feedback for the team.'
+                    + ' Please note the Code of Conduct.')
+    submit = SubmitField(u'Save comment')
+
+
 class ProjectBoost(FlaskForm):
     id = HiddenField('id')
     note = TextAreaField(u'Short praise and comments', [

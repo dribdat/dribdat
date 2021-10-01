@@ -460,7 +460,6 @@ class Project(PkModel):
                 'author': author,
                 'name': a.name,
                 'date': a.timestamp,
-                # 'resource': a.resource,
                 'ref_url': a.ref_url,
                 'id': a.id,
             }
@@ -705,28 +704,20 @@ class Category(PkModel):
 class Activity(PkModel):
     """ Public, real time, conversational """
     __tablename__ = 'activities'
-    name = Column(db.Enum(
+    name = Column(db.Enum('review',
                           'boost',
                           'create',
                           'update',
                           'star',
                           name="activity_type"))
     action = Column(db.String(32), nullable=True)
-    # 'external',
-    # 'commit',
-    # 'boost',
-    # 'sync',
-    # 'post',
-    # ...
+    # 'external', 'commit', 'sync', 'post', ...
     timestamp = Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)
     content = Column(db.UnicodeText, nullable=True)
     ref_url = Column(db.String(2048), nullable=True)
 
     user_id = reference_col('users', nullable=True)
     user = relationship('User', backref='activities')
-
-    # resource_id = reference_col('resources', nullable=True)
-    # resource = relationship('Resource', backref='activities')
 
     project_id = reference_col('projects', nullable=True)
     project = relationship('Project', backref='activities')

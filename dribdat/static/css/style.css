@@ -621,7 +621,13 @@ nav .navbar-nav .nav-item {
   font-size: 150%;
 }
 .project-page .timeline-card .close { margin: 0.4em; }
-
+.project-page .timeline-review .timeline-content { background: #f2fef2; border-top: none; }
+.project-page .timeline-update .timeline-content { background: #ffc; border-top: none; }
+.project-page .timeline-finish .timeline-content,
+.project-page .timeline-start .timeline-content { background: #aaa; }
+.project-page .timeline-finish .date,
+.project-page .timeline-start .date { color: white; }
+.project-page .timeline-item { margin-bottom: 20px; }
 .timeline-boost .timeline-img-header {
   background: teal;
 }
