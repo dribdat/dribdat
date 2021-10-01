@@ -271,6 +271,13 @@ alter table projects alter column webpage_url type character varying(2048);
 insert into alembic_version values ('7c3929047190')
 ```
 
+If you get errors like *Invalid input value for enum activity_type*, there were issues in upgrading your instance that may require a manual SQL entry. Try running these commands in your `psql` console:
+
+```
+ALTER TYPE activity_type ADD VALUE 'boost';
+ALTER TYPE activity_type ADD VALUE 'review';
+```
+
 See also further instructions in the `force-migrate.sh` script.
 
 ### Test locally using SSL
