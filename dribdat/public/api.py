@@ -258,18 +258,59 @@ def event_push_datapackage():
         return jsonify(error='Invalid key')
     if 'sources' not in data or data['sources'][0]['title'] != 'dribdat':
         return jsonify(error='Invalid source')
-    event = None
+
     for res in data['resources']:
         if res['name'] == 'event':
-            evt = res['data'][0]
-            print('Creating event', evt['name'])
-            event = Event()
-            for fld in evt:
-                print('Importing', fld)
-                event[fld] = res['data'][fld]
+            for evt in res['data']:
+                name = evt['name']
+                event = Event.query.filter_by(name=name).first()
+                if not event:
+                    print('Creating event', name)
+                    event = Event()
+                else:
+                    print('Updating event', name)
+                event.set_from_data(evt)
+                event.save()
+
+        elif res['name'] == 'category':
+            for ctg in res['data']:
+                name = ctg['name']
+                category = Category.query.filter_by(name=name).first()
+                if not category:
+                    print('Creating category', name)
+                    category = Category()
+                else:
+                    print('Updating category', name)
+                category.set_from_data(ctg)
+                category.save()
+
         elif res['name'] == 'projects':
-            for project in res['data']:
-                print('Creating project', project['name'])
+            for pjt in res['data']:
+                name = pjt['name']
+                event_name = pjt['event_name']
+                event = Event.query.filter_by(name=event_name).first()
+                if not event:
+                    print('Error: event not found', event_name)
+                    continue
+                project = Project.query.filter_by(name=name).first()
+                if not project:
+                    print('Creating project', name)
+                    project = Project()
+                else:
+                    print('Updating project', name)
+                project.set_from_data(pjt)
+                project.event = event
+                if 'category_name' in pjt:
+                    cname = pjt['category_name']
+                    category = Category.query.filter_by(name=cname).first()
+                    if category:
+                        project.category = category
+                if 'maintainer' in pjt:
+                    uname = pjt['maintainer']
+                    user = User.query.filter_by(username=uname).first()
+                    if user:
+                        project.user = user
+                project.save()
     return jsonify(success='Updated', event=event.name)
 
 @blueprint.route('/project/push.json', methods=["PUT", "POST"])

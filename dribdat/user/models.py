@@ -27,7 +27,7 @@ from flask import current_app
 from flask_login import UserMixin
 
 from time import mktime
-
+from dateutil.parser import parse
 import datetime as dt
 import hashlib
 import re
@@ -99,11 +99,11 @@ class User(UserMixin, PkModel):
             'id': self.id,
             'username': self.username,
             'email': self.email,
-            'url': self.webpage_url,
-            'sso': self.sso_id,
+            'webpage_url': self.webpage_url,
+            'sso_id': self.sso_id,
             'roles': ",".join([r.name for r in self.roles]),
             'active': self.active,
-            'admin': self.is_admin,
+            'is_admin': self.is_admin,
         }
 
     def socialize(self):
@@ -232,6 +232,7 @@ class Event(PkModel):
     custom_css = Column(db.UnicodeText(), nullable=True)
     community_embed = Column(db.UnicodeText(), nullable=True)
     certificate_path = Column(db.String(1024), nullable=True)
+
     is_hidden = Column(db.Boolean(), default=False)
     is_current = Column(db.Boolean(), default=False)
     lock_editing = Column(db.Boolean(), default=False)
@@ -264,6 +265,20 @@ class Event(PkModel):
         d['boilerplate'] = self.boilerplate or ''
         d['instruction'] = self.instruction or ''
         return d
+
+    def set_from_data(self, data):
+        self.name = data['name']
+        self.summary = data['summary']
+        self.hostname = data['hostname']
+        self.location = data['location']
+        self.community_url = data['community_url']
+        self.webpage_url = data['webpage_url']
+        self.logo_url = data['logo_url']
+        self.description = data['description']
+        self.boilerplate = data['boilerplate']
+        self.instruction = data['instruction']
+        self.starts_at = parse(data['starts_at'])
+        self.ends_at = parse(data['ends_at'])
 
     def get_schema(self, host_url=''):
         """ Returns hackathon.json formatted metadata """
@@ -587,6 +602,27 @@ class Project(PkModel):
             "url": host_url + self.url
         }
 
+    def set_from_data(self, data):
+        self.name = data['name']
+        self.summary = data['summary']
+        self.hashtag = data['hashtag']
+        self.score = data['score']
+        self.progress = data['progress']
+        self.image_url = data['image_url']
+        self.source_url = data['source_url']
+        self.webpage_url = data['webpage_url']
+        self.autotext_url = data['autotext_url']
+        self.download_url = data['download_url']
+        self.contact_url = data['contact_url']
+        self.logo_color = data['logo_color']
+        self.logo_icon = data['logo_icon']
+        self.is_autoupdate = data['is_autoupdate']
+        self.is_webembed = data['is_webembed']
+        self.created_at = parse(data['created_at'])
+        self.updated_at = parse(data['updated_at'])
+        self.longtext = data['longtext']
+        self.autotext = data['autotext']
+
     def update(self):
         """ Process data submission """
         # Correct fields
@@ -694,12 +730,18 @@ class Category(PkModel):
 
     @property
     def data(self):
-        return {
+        d = {
             'id': self.id,
             'name': self.name,
             'description': self.description,
-            # 'event_id': self.event_id,
+            'logo_color': self.logo_color,
+            'logo_url': self.logo_url,
         }
+        if self.event:
+            d['event_id'] = self.event_id
+            d['event_name'] = self.event.name
+            d['event_url'] = self.event.url
+        return d
 
     def __init__(self, name=None, **kwargs):
         if name:
