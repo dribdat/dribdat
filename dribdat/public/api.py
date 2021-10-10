@@ -16,12 +16,13 @@ from ..extensions import db
 from ..utils import timesince, random_password, format_date
 from ..decorators import admin_required
 
-from ..user.models import Event, Project, Activity
+from ..user.models import Event, Project, Activity, Category, User
 from ..aggregation import GetProjectData, AddProjectData, GetEventUsers
 
 from ..apiutils import (
     get_projects_by_event, get_project_summaries,
     get_event_users, get_event_activities,
+    get_event_categories,
     expand_project_urls,
     gen_csv,
 )
@@ -260,7 +261,7 @@ def event_push_datapackage():
         return jsonify(error='Invalid source')
 
     for res in data['resources']:
-        if res['name'] == 'event':
+        if res['name'] == 'events':
             for evt in res['data']:
                 name = evt['name']
                 event = Event.query.filter_by(name=name).first()
@@ -272,7 +273,7 @@ def event_push_datapackage():
                 event.set_from_data(evt)
                 event.save()
 
-        elif res['name'] == 'category':
+        elif res['name'] == 'categories':
             for ctg in res['data']:
                 name = ctg['name']
                 category = Category.query.filter_by(name=name).first()
@@ -284,14 +285,21 @@ def event_push_datapackage():
                 category.set_from_data(ctg)
                 category.save()
 
+        elif res['name'] == 'users':
+            for usr in res['data']:
+                name = usr['username']
+                user = User.query.filter_by(username=name).first()
+                if not user:
+                    print('Creating user', name)
+                    user = User()
+                else:
+                    print('Updating user', name)
+                user.set_from_data(usr)
+                user.save()
+
         elif res['name'] == 'projects':
             for pjt in res['data']:
                 name = pjt['name']
-                event_name = pjt['event_name']
-                event = Event.query.filter_by(name=event_name).first()
-                if not event:
-                    print('Error: event not found', event_name)
-                    continue
                 project = Project.query.filter_by(name=name).first()
                 if not project:
                     print('Creating project', name)
@@ -299,18 +307,32 @@ def event_push_datapackage():
                 else:
                     print('Updating project', name)
                 project.set_from_data(pjt)
+                # Search for event
+                event_name = pjt['event_name']
+                event = Event.query.filter_by(name=event_name).first()
+                if not event:
+                    print('Error: event not found!', event_name)
+                    continue
                 project.event = event
-                if 'category_name' in pjt:
-                    cname = pjt['category_name']
-                    category = Category.query.filter_by(name=cname).first()
-                    if category:
-                        project.category = category
-                if 'maintainer' in pjt:
-                    uname = pjt['maintainer']
-                    user = User.query.filter_by(username=uname).first()
-                    if user:
-                        project.user = user
                 project.save()
+
+    # Activities last
+    for res in data['resources']:
+        if res['name'] == 'activities':
+            for act in res['data']:
+                aname = act['name']
+                tstamp = datetime.fromtimestamp(act['time'])
+                activity = Activity.query.filter_by(name=aname, timestamp=tstamp).first()
+                if activity: continue
+                print('Creating activity', tstamp)
+                pname = act['project_name']
+                proj = Project.query.filter_by(name=pname).first()
+                if not proj:
+                    print('Error! Project not found.', pname)
+                activity = Activity(aname, proj.id)
+                activity.set_from_data(act)
+                activity.save()
+
     return jsonify(success='Updated', event=event.name)
 
 @blueprint.route('/project/push.json', methods=["PUT", "POST"])
@@ -480,7 +502,7 @@ def package_event(event, format):
     # Generate resources
     # print("Generating in-memory JSON of event")
     package.add_resource(Resource(
-            name='event',
+            name='events',
             data=[event.get_full_data()],
         ))
     # print("Generating in-memory JSON of projects")
@@ -491,13 +513,18 @@ def package_event(event, format):
     if format == 'zip':
         # print("Generating in-memory JSON of participants")
         package.add_resource(Resource(
-                name='participants',
+                name='users',
                 data=get_event_users(event),
             ))
         # print("Generating in-memory JSON of activities")
         package.add_resource(Resource(
                 name='activities',
                 data=get_event_activities(event.id, 500),
+            ))
+        # print("Generating in-memory JSON of activities")
+        package.add_resource(Resource(
+                name='categories',
+                data=get_event_categories(event.id),
             ))
         # print("Adding supplementary README")
         package.add_resource(Resource(

@@ -106,6 +106,17 @@ class User(UserMixin, PkModel):
             'is_admin': self.is_admin,
         }
 
+    def set_from_data(self, data):
+        self.webpage_url = data['webpage_url']
+        my_roles = [r.name for r in self.roles]
+        for r in data['roles'].split(','):
+            if r in my_roles: continue
+            role = Role.query.filter_by(name=r).first()
+            if not role:
+                role = Role(r)
+                role.save()
+            self.roles.append(role)
+
     def socialize(self):
         """ Parse the user's web profile """
         self.cardtype = ""
@@ -268,15 +279,15 @@ class Event(PkModel):
 
     def set_from_data(self, data):
         self.name = data['name']
-        self.summary = data['summary']
-        self.hostname = data['hostname']
-        self.location = data['location']
-        self.community_url = data['community_url']
-        self.webpage_url = data['webpage_url']
-        self.logo_url = data['logo_url']
-        self.description = data['description']
-        self.boilerplate = data['boilerplate']
-        self.instruction = data['instruction']
+        self.summary = data['summary'] or ''
+        self.hostname = data['hostname'] or ''
+        self.location = data['location'] or ''
+        self.logo_url = data['logo_url'] or ''
+        self.webpage_url = data['webpage_url'] or ''
+        self.community_url = data['community_url'] or ''
+        self.description = data['description'] or ''
+        self.boilerplate = data['boilerplate'] or ''
+        self.instruction = data['instruction'] or ''
         self.starts_at = parse(data['starts_at'])
         self.ends_at = parse(data['ends_at'])
 
@@ -622,6 +633,16 @@ class Project(PkModel):
         self.updated_at = parse(data['updated_at'])
         self.longtext = data['longtext']
         self.autotext = data['autotext']
+        if 'maintainer' in data:
+            uname = data['maintainer']
+            user = User.query.filter_by(username=uname).first()
+            if user:
+                self.user = user
+        if 'category_name' in data:
+            cname = data['category_name']
+            category = Category.query.filter_by(name=cname).first()
+            if category:
+                self.category = category
 
     def update(self):
         """ Process data submission """
@@ -735,13 +756,24 @@ class Category(PkModel):
             'name': self.name,
             'description': self.description,
             'logo_color': self.logo_color,
-            'logo_url': self.logo_url,
+            'logo_icon': self.logo_icon,
         }
         if self.event:
             d['event_id'] = self.event_id
             d['event_name'] = self.event.name
             d['event_url'] = self.event.url
         return d
+
+    def set_from_data(self, data):
+        self.name = data['name']
+        self.description = data['description']
+        self.logo_color = data['logo_color']
+        self.logo_icon = data['logo_icon']
+        if 'event_name' in data:
+            ename = data['event_name']
+            evt = Event.query.filter_by(name=ename).first()
+            if evt:
+                self.event = evt
 
     def __init__(self, name=None, **kwargs):
         if name:
@@ -779,10 +811,11 @@ class Activity(PkModel):
         localtime = current_app.tz.localize(self.timestamp)
         a = {
             'id': self.id,
-            'name': self.name,
             'time': int(mktime(self.timestamp.timetuple())),
             'date': format_date(localtime, '%Y-%m-%dT%H:%M'),
             'timesince': timesince(localtime),
+            'name': self.name,
+            'action': self.action or '',
             'content': self.content or '',
             'ref_url': self.ref_url or '',
         }
@@ -795,6 +828,18 @@ class Activity(PkModel):
             a['project_score'] = self.project_score or 0
             a['project_phase'] = getProjectPhase(self.project)
         return a
+
+    def set_from_data(self, data):
+        self.name = data['name']
+        self.action = data['action']
+        self.content = data['content']
+        self.ref_url = data['ref_url']
+        self.timestamp = dt.datetime.fromtimestamp(data['time'])
+        if 'user_name' in data:
+            uname = data['user_name']
+            user = User.query.filter_by(username=uname).first()
+            if user:
+                self.user = user
 
     def __init__(self, name, project_id, **kwargs):
         if name:

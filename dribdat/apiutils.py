@@ -29,6 +29,14 @@ def get_event_activities(event_id=None, limit=50, q=None, action=None):
         query = query.filter(Activity.action==action)
     return [a.data for a in query.order_by(Activity.id.desc()).limit(limit).all()]
 
+def get_event_categories(event_id=None):
+    if event_id is not None:
+        event = Event.query.filter_by(id=event_id).first_or_404()
+        query = Category.query.filter_by(event_id=event.id)
+    else:
+        query = Category.query
+    return [c.data for c in query.order_by(Category.id.asc()).all()]
+
 def get_event_users(event):
     """ Returns plain user objects without personal data """
     userdata = []
@@ -36,9 +44,9 @@ def get_event_users(event):
         ud = u.data
         userdata.append({
             'id': ud['id'],
-            'name': ud['username'],
             'roles': ud['roles'],
-            'url': ud['url'],
+            'username': ud['username'],
+            'webpage_url': ud['webpage_url'],
         })
     return userdata
 
