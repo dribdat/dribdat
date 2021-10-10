@@ -250,6 +250,28 @@ def project_search_json():
 # ------ UPDATE ---------
 
 
+@blueprint.route('/event/push/datapackage', methods=["PUT", "POST"])
+def event_push_datapackage():
+    """ API: Pushes event data """
+    data = request.get_json(force=True)
+    if 'key' not in data or data['key'] != current_app.config['SECRET_API']:
+        return jsonify(error='Invalid key')
+    if 'sources' not in data or data['sources'][0]['title'] != 'dribdat':
+        return jsonify(error='Invalid source')
+    event = None
+    for res in data['resources']:
+        if res['name'] == 'event':
+            evt = res['data'][0]
+            print('Creating event', evt['name'])
+            event = Event()
+            for fld in evt:
+                print('Importing', fld)
+                event[fld] = res['data'][fld]
+        elif res['name'] == 'projects':
+            for project in res['data']:
+                print('Creating project', project['name'])
+    return jsonify(success='Updated', event=event.name)
+
 @blueprint.route('/project/push.json', methods=["PUT", "POST"])
 def project_push_json():
     """ API: Pushes data into a project """
