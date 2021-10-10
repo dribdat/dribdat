@@ -394,7 +394,7 @@ class Project(PkModel):
     longtext = Column(db.UnicodeText(), nullable=False, default=u"")
 
     logo_color = Column(db.String(7), nullable=True)
-    logo_icon = Column(db.String(40), nullable=True)
+    logo_icon = Column(db.String(40), nullable=True) # currently not used
 
     created_at = Column(db.DateTime, nullable=False,
                         default=dt.datetime.utcnow)
@@ -539,17 +539,25 @@ class Project(PkModel):
             'source_url': self.source_url or '',
             'webpage_url': self.webpage_url or '',
             'autotext_url': self.autotext_url or '',
+            'download_url': self.download_url or '',
             'contact_url': self.contact_url or '',
             'logo_color': self.logo_color or '',
+            'logo_icon': self.logo_icon or '',
+            'is_autoupdate': self.is_autoupdate,
+            'is_webembed': self.is_webembed,
             'excerpt': '',
         }
         d['created_at'] = format_date(self.created_at, '%Y-%m-%dT%H:%M')
         d['updated_at'] = format_date(self.updated_at, '%Y-%m-%dT%H:%M')
         d['team'] = [u.username for u in self.team()]
         if self.longtext and len(self.longtext) > 10:
-            d['excerpt'] = self.longtext[:300] + '...'
+            d['excerpt'] = self.longtext[:300]
+            if len(self.longtext) > 300:
+                d['excerpt'] += '...'
         elif self.is_autoupdate and self.autotext:
-            d['excerpt'] = self.autotext[:300] + '...'
+            d['excerpt'] = self.autotext[:300]
+            if len(self.autotext) > 300:
+                d['excerpt'] += '...'
         if self.user is not None:
             d['maintainer'] = self.user.username
         if self.event is not None:
