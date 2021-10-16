@@ -272,6 +272,10 @@ class Event(PkModel):
         d['description'] = self.description or ''
         d['boilerplate'] = self.boilerplate or ''
         d['instruction'] = self.instruction or ''
+        # And by full, we mean really full!
+        d['custom_css'] = self.custom_css or ''
+        d['community_embed'] = self.community_embed or ''
+        d['certificate_path'] = self.certificate_path or ''
         return d
 
     def set_from_data(self, data):
@@ -282,11 +286,14 @@ class Event(PkModel):
         self.logo_url = data['logo_url'] or ''
         self.webpage_url = data['webpage_url'] or ''
         self.community_url = data['community_url'] or ''
+        self.starts_at = parse(data['starts_at'])
+        self.ends_at = parse(data['ends_at'])
         self.description = data['description'] or ''
         self.boilerplate = data['boilerplate'] or ''
         self.instruction = data['instruction'] or ''
-        self.starts_at = parse(data['starts_at'])
-        self.ends_at = parse(data['ends_at'])
+        self.custom_css = data['custom_css'] or ''
+        self.community_embed = data['community_embed'] or ''
+        self.certificate_path = data['certificate_path'] or ''
 
     def get_schema(self, host_url=''):
         """ Returns hackathon.json formatted metadata """

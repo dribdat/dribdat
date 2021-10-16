@@ -260,16 +260,19 @@ def event_load_datapackage():
         return jsonify(status='Error', errors=['Missing datapackage.json url'])
     dry_run = True
     all_data = False
+    status = "Preview"
     import_level = request.args.get('import')
     if import_level == 'basic':
         dry_run = False
+        status = "Basic"
     if import_level == 'full':
         dry_run = False
         all_data = True
+        status = "Complete"
     results = ImportEventByURL(url, dry_run, all_data)
     if 'errors' in results:
         return jsonify(status='Error', errors=results['errors'])
-    return jsonify(status='Complete', results=results)
+    return jsonify(status=status, results=results)
 
 
 @blueprint.route('/event/push/datapackage', methods=["PUT", "POST"])

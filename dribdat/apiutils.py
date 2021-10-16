@@ -45,8 +45,11 @@ def get_event_categories(event_id=None):
 
 def get_event_users(event):
     """ Returns plain user objects without personal data """
+    eventusers = GetEventUsers(event)
+    if not eventusers:
+        return []
     userdata = []
-    for u in GetEventUsers(event):
+    for u in eventusers:
         ud = u.data
         userdata.append({
             'id': ud['id'],
