@@ -594,7 +594,9 @@ class Project(PkModel):
     def get_schema(self, host_url=''):
         """ Schema.org compatible metadata """
         # TODO: accurately detect project license based on component etc.
-        if "creativecommons" in self.event.community_embed:
+        if not self.event.community_embed:
+            content_license = ''
+        elif "creativecommons" in self.event.community_embed:
             content_license = "https://creativecommons.org/licenses/by/4.0/"
         else:
             content_license = ''

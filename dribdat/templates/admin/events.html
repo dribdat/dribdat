@@ -105,55 +105,52 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="uploadFileLabel">Upload Event</h5>
+        <h5 class="modal-title" id="uploadFileLabel">Import Event</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
+      <form method="get" action="{{ url_for('api.event_load_datapackage') }}">
       <div class="modal-body">
-        <p class="upload-note">
+        <p class="upload-note mt-0 mb-2">
           Currently only <b><a href="https://frictionlessdata.io/field-guide/" target="_blank">Data Packages</a></b> are accepted.
           These can be exported using recent versions of dribdat:
           click the drop-down button next to an event listing in the admin.
           Max {{ (config.MAX_CONTENT_LENGTH/(1024*1024))|round(1) }} MB.
           You can enter the URL of a remote instance to get around this limit.
         </p>
-        <div class="input-group" style="margin-top:1em">
+        <div class="input-group mb-1 hidden">
           <div class="input-group-prepend">
             <span class="input-group-text" id="inputFileLabel">Select</span>
           </div>
           <div class="custom-file">
-            <input type="file" class="custom-file-input" id="inputFile"
+            <input type="file" class="form-control custom-file-input" id="inputFile"
               name="image" aria-describedby="inputFileLabel" accept="application/json"
               data-maxsize="{{ config.MAX_CONTENT_LENGTH }}">
             <label class="custom-file-label" for="inputImageFile">Choose file</label>
           </div>
         </div>
-        <div class="input-group" style="margin-top:1em">
+        <center class="mb-1">or</center>
+        <div class="input-group mb-2">
           <div class="input-group-prepend">
             <span class="input-group-text" id="inputUrlLabel">URL</span>
           </div>
-          <div class="custom-file">
-            <input type="text" class="input-group-text" style="width:50em;background:white" id="inputUrl"
-              name="image" aria-describedby="inputUrlLabel">
-          </div>
+          <input type="text" class="form-control"
+            id="inputUrl" name="url" aria-describedby="inputUrlLabel">
         </div>
-        <center class="col" style="margin-top:1em" id="file-confirm">
-          <div class="btn-group">
-            <button class="btn btn-primary" data-target="xclip">
-              Validate and preview
-            </button>
-            <button class="btn btn-warning" data-target="weblink">
-              Import only basic event data
-            </button>
-            <button class="btn btn-info" data-target="pitch">
-              Include event, projects, users
-            </button>
-          </div>
+        <input type="radio" name="import" value="none" checked>
+          Validate and preview<br>
+        <input type="radio" name="import" value="basic">
+          Import only basic event data<br>
+        <input type="radio" name="import" value="full">
+          Include event, projects, users<br>
+        <center class="col" id="file-confirm">
+          <input type="submit" value="Import" class="btn btn-info" data-target="full">
         </center>
       </div>
+      </form>
       <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
       </div>
     </div>
   </div>

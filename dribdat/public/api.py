@@ -16,9 +16,9 @@ from ..extensions import db
 from ..utils import timesince, random_password, format_date
 from ..decorators import admin_required
 
-from ..user.models import Event, Project, Activity, Category, User
+from ..user.models import Event, Project, Activity
 from ..aggregation import GetProjectData, AddProjectData, GetEventUsers
-
+from ..apipackage import ImportEventPackage, ImportEventByURL
 from ..apiutils import (
     get_projects_by_event, get_project_summaries,
     get_event_users, get_event_activities,
@@ -251,89 +251,39 @@ def project_search_json():
 # ------ UPDATE ---------
 
 
+@blueprint.route('/event/load/datapackage', methods=["GET"])
+@admin_required
+def event_load_datapackage():
+    """ API: Loads event data from URL """
+    url = request.args.get('url')
+    if not url or 'datapackage.json' not in url:
+        return jsonify(status='Error', errors=['Missing datapackage.json url'])
+    dry_run = True
+    all_data = False
+    import_level = request.args.get('import')
+    if import_level == 'basic':
+        dry_run = False
+    if import_level == 'full':
+        dry_run = False
+        all_data = True
+    results = ImportEventByURL(url, dry_run, all_data)
+    if 'errors' in results:
+        return jsonify(status='Error', errors=results['errors'])
+    return jsonify(status='Complete', results=results)
+
+
 @blueprint.route('/event/push/datapackage', methods=["PUT", "POST"])
 def event_push_datapackage():
     """ API: Pushes event data """
+    key = request.headers.get('key')
+    if not key or key != current_app.config['SECRET_API']:
+        return jsonify(status='Error', errors=['Invalid API key'])
     data = request.get_json(force=True)
-    if 'key' not in data or data['key'] != current_app.config['SECRET_API']:
-        return jsonify(error='Invalid key')
-    if 'sources' not in data or data['sources'][0]['title'] != 'dribdat':
-        return jsonify(error='Invalid source')
+    results = ImportEventPackage(data)
+    if 'errors' in results:
+        return jsonify(status='Error', errors=results['errors'])
+    return jsonify(status='Complete', results=results)
 
-    for res in data['resources']:
-        if res['name'] == 'events':
-            for evt in res['data']:
-                name = evt['name']
-                event = Event.query.filter_by(name=name).first()
-                if not event:
-                    print('Creating event', name)
-                    event = Event()
-                else:
-                    print('Updating event', name)
-                event.set_from_data(evt)
-                event.save()
-
-        elif res['name'] == 'categories':
-            for ctg in res['data']:
-                name = ctg['name']
-                category = Category.query.filter_by(name=name).first()
-                if not category:
-                    print('Creating category', name)
-                    category = Category()
-                else:
-                    print('Updating category', name)
-                category.set_from_data(ctg)
-                category.save()
-
-        elif res['name'] == 'users':
-            for usr in res['data']:
-                name = usr['username']
-                user = User.query.filter_by(username=name).first()
-                if not user:
-                    print('Creating user', name)
-                    user = User()
-                else:
-                    print('Updating user', name)
-                user.set_from_data(usr)
-                user.save()
-
-        elif res['name'] == 'projects':
-            for pjt in res['data']:
-                name = pjt['name']
-                project = Project.query.filter_by(name=name).first()
-                if not project:
-                    print('Creating project', name)
-                    project = Project()
-                else:
-                    print('Updating project', name)
-                project.set_from_data(pjt)
-                # Search for event
-                event_name = pjt['event_name']
-                event = Event.query.filter_by(name=event_name).first()
-                if not event:
-                    print('Error: event not found!', event_name)
-                    continue
-                project.event = event
-                project.save()
-
-    # Activities last
-    for res in data['resources']:
-        if res['name'] == 'activities':
-            for act in res['data']:
-                aname = act['name']
-                tstamp = datetime.fromtimestamp(act['time'])
-                activity = Activity.query.filter_by(name=aname, timestamp=tstamp).first()
-                if activity: continue
-                print('Creating activity', tstamp)
-                pname = act['project_name']
-                proj = Project.query.filter_by(name=pname).first()
-                if not proj:
-                    print('Error! Project not found.', pname)
-                activity = Activity(aname, proj.id)
-                activity.set_from_data(act)
-                activity.save()
-
-    return jsonify(success='Updated', event=event.name)
 
 @blueprint.route('/project/push.json', methods=["PUT", "POST"])
 def project_push_json():
