@@ -107,15 +107,12 @@ class User(UserMixin, PkModel):
         }
 
     def set_from_data(self, data):
+        self.active = False  # login disabled on imported user
+        self.username = data['username']
         self.webpage_url = data['webpage_url']
-        my_roles = [r.name for r in self.roles]
-        for r in data['roles'].split(','):
-            if r in my_roles: continue
-            role = Role.query.filter_by(name=r).first()
-            if not role:
-                role = Role(r)
-                role.save()
-            self.roles.append(role)
+        if 'email' not in data:
+            data['email'] = self.username + '@localhost.localdomain'
+        self.email = data['email']
 
     def socialize(self):
         """ Parse the user's web profile """
@@ -420,7 +417,7 @@ class Project(PkModel):
     longtext = Column(db.UnicodeText(), nullable=False, default=u"")
 
     logo_color = Column(db.String(7), nullable=True)
-    logo_icon = Column(db.String(40), nullable=True) # currently not used
+    logo_icon = Column(db.String(40), nullable=True)  # currently not used
 
     created_at = Column(db.DateTime, nullable=False,
                         default=dt.datetime.utcnow)
