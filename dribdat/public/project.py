@@ -145,7 +145,7 @@ def project_post(project_id):
             found_next = False
             if all_valid:
                 for a in projectProgressList(True, False):
-                    print(a[0])
+                    # print(a[0])
                     if found_next:
                         project.progress = a[0]
                         flash('Your project has been promoted!', 'info')

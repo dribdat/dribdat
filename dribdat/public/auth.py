@@ -2,7 +2,7 @@
 """Authentication views."""
 
 from flask import (Blueprint, request, render_template, flash, url_for,
-                    redirect, session, current_app, jsonify)
+                   redirect, current_app)
 
 from flask_login import login_user, logout_user, login_required, current_user
 
@@ -19,13 +19,16 @@ from flask_dance.contrib.github import github
 
 blueprint = Blueprint('auth', __name__, static_folder="../static")
 
+
 def current_event():
     return Event.query.filter_by(is_current=True).first()
+
 
 @login_manager.user_loader
 def load_user(user_id):
     """Load user by ID."""
     return User.get_by_id(int(user_id))
+
 
 def oauth_type():
     """Check if Slack or another OAuth has been configured"""
@@ -47,14 +50,20 @@ def login():
         if form.validate_on_submit():
             login_user(form.user, remember=True)
             if not form.user.active:
-                flash('This user account is under review. Please update your profile and contact the organizing team to access all functions of this platform.', 'warning')
+                flash(
+                    'This user account is under review. '
+                    + 'Please update your profile and contact the organizing '
+                    + 'team to access all functions of this platform.',
+                    'warning')
             else:
-                flash("You are logged in! Time to make something awesome ≧◡≦", 'success')
+                flash("You are logged in! Time to make something awesome ≧◡≦",
+                      'success')
             redirect_url = request.args.get("next") or url_for("public.home")
             return redirect(redirect_url)
         else:
             flash_errors(form)
-    return render_template("public/login.html", form=form, oauth_type=oauth_type())
+    return render_template("public/login.html",
+                           form=form, oauth_type=oauth_type())
 
 
 @blueprint.route("/register/", methods=['GET', 'POST'])
@@ -86,14 +95,20 @@ def register():
         elif current_app.config['DRIBDAT_USER_APPROVE']:
             new_user.active = False
             new_user.save()
-            flash("Thank you for registering. New accounts require approval from the event organizers. Please update your profile and await activation.", 'warning')
+            flash("Thank you for registering. New accounts require approval "
+                  + "from the event organizers. Please update your profile "
+                  + "and await activation.",
+                  'warning')
         else:
-            flash("Thank you for registering. You can now log in and submit projects.", 'success')
+            flash(
+                "Thank you for registering. You can now log in and submit "
+                + "projects.", 'success')
         login_user(new_user, remember=True)
         return redirect(url_for('public.home'))
     else:
         flash_errors(form)
-    return render_template('public/register.html', form=form, oauth_type=oauth_type())
+    return render_template('public/register.html',
+                           form=form, oauth_type=oauth_type())
 
 
 @blueprint.route('/logout/')
@@ -116,13 +131,16 @@ def forgot():
 def user_profile():
     user = current_user
     if not user.active:
-        flash('This user account is under review. Please update your profile and contact the organizing team to access all functions of this platform.', 'warning')
+        flash('This user account is under review. Please update your profile '
+              + ' and contact the organizing team to access all functions of '
+              + 'this platform.', 'warning')
     form = UserForm(obj=user, next=request.args.get('next'))
     form.roles.choices = [(r.id, r.name) for r in Role.query.order_by('name')]
 
     if form.validate_on_submit():
         # Assign roles
-        user.roles = [Role.query.filter_by(id=r).first() for r in form.roles.data]
+        user.roles = [Role.query.filter_by(
+            id=r).first() for r in form.roles.data]
         del form.roles
 
         # Sanitize username
@@ -147,7 +165,9 @@ def user_profile():
         del form.roles
     else:
         form.roles.data = [(r.id) for r in user.roles]
-    return render_template('public/useredit.html', user=user, form=form, active='profile')
+    return render_template('public/useredit.html',
+                           user=user, form=form, active='profile')
+
 
 def get_or_create_sso_user(sso_id, sso_name, sso_email, sso_webpage=''):
     """ Matches a user account based on SSO_ID """
@@ -168,7 +188,9 @@ def get_or_create_sso_user(sso_id, sso_name, sso_email, sso_webpage=''):
                 username = sso_name.lower().replace(" ", "_")
                 user = User.query.filter_by(username=username).first()
                 if user:
-                    flash('Duplicate username (%s), please try again or contact an admin.' % username, 'warning')
+                    flash(
+                        'Duplicate username (%s), please try again or '
+                        + 'contact an admin.' % username, 'warning')
                     return redirect(url_for("auth.login", local=1))
                 user = User.create(
                     username=username,
@@ -183,7 +205,9 @@ def get_or_create_sso_user(sso_id, sso_name, sso_email, sso_webpage=''):
             return redirect(url_for("auth.user_profile"))
     login_user(user, remember=True)
     if not user.active:
-        flash('This user account is under review. Please update your profile and contact the organizing team to access all functions of this platform.', 'warning')
+        flash('This user account is under review. Please update your profile '
+              + 'and contact the organizing team to access all functions of '
+              + 'this platform.', 'warning')
     else:
         flash(u'Logged in! Time to make something awesome ≧◡≦', 'success')
 
@@ -204,9 +228,9 @@ def slack_login():
         flash('Unable to access Slack data', 'danger')
         return redirect(url_for("auth.login", local=1))
     resp_data = resp.json()
-    if not 'user' in resp_data:
+    if 'user' not in resp_data:
         flash('Invalid Slack data format', 'danger')
-        print(resp_data)
+        # print(resp_data)
         return redirect(url_for("auth.login", local=1))
     resp_user = resp_data['user']
     return get_or_create_sso_user(
@@ -227,15 +251,16 @@ def azure_login():
         flash('Unable to access Azure data', 'danger')
         return redirect(url_for("auth.login", local=1))
     resp_user = resp.json()
-    if not 'mail' in resp_user:
+    if 'mail' not in resp_user:
         flash('Invalid Azure data format', 'danger')
-        print(resp_user)
+        # print(resp_user)
         return redirect(url_for("auth.login", local=1))
     return get_or_create_sso_user(
         resp_user['id'],
         resp_user['displayName'],
         resp_user['mail'],
     )
+
 
 @blueprint.route("/github_login", methods=["GET", "POST"])
 def github_login():
@@ -248,9 +273,9 @@ def github_login():
         flash('Unable to access GitHub data', 'danger')
         return redirect(url_for("auth.login", local=1))
     resp_user = resp.json()
-    if not 'email' in resp_user or not 'login' in resp_user:
+    if 'email' not in resp_user or 'login' not in resp_user:
         flash('Invalid GitHub data format', 'danger')
-        print(resp_user)
+        # print(resp_user)
         return redirect(url_for("auth.login", local=1))
 
     resp_emails = github.get("/user/emails")

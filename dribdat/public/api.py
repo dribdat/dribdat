@@ -488,7 +488,7 @@ def package_event(event, format):
     # Generate data package
     fp_package = tempfile.NamedTemporaryFile(
         prefix='datapackage-', suffix='.zip')
-    print("Saving at", fp_package.name)
+    # print("Saving at", fp_package.name)
     if format == 'json':
         return jsonify(package)
     elif format == 'zip':
