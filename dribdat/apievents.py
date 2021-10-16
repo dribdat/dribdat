@@ -3,8 +3,8 @@
 
 import logging
 import requests
-import datetime as dt
 from dateutil import parser
+
 
 def FetchGithubCommits(full_name, since=None, until=None):
     apiurl = "https://api.github.com/repos/%s/commits?per_page=50" % full_name
@@ -19,14 +19,18 @@ def FetchGithubCommits(full_name, since=None, until=None):
         return []
     json = data.json()
     if 'message' in json:
-        logging.warn("Could not sync GitHub commits on %s: %s" % (full_name, json['message']))
+        logging.warn("Could not sync GitHub commits on %s: %s"
+                     % (full_name, json['message']))
         return []
     commitlog = []
     for entry in json:
-        if not 'commit' in entry: continue
+        if 'commit' not in entry:
+            continue
         commit = entry['commit']
         datestamp = parser.parse(commit['committer']['date'])
-        if 'author' in entry and entry['author'] is not None and 'login' in entry['author']:
+        if 'author' in entry and \
+                entry['author'] is not None and \
+                'login' in entry['author']:
             author = entry['author']['login']
         else:
             author = commit['committer']['name'][:100]

@@ -25,7 +25,7 @@ def FetchGitlabProject(project_url):
     if data.text.find('{') < 0:
         return {}
     json = data.json()
-    if not 'name' in json:
+    if 'name' not in json:
         return {}
     readmeurl = "%s/raw/master/README.md" % (WEB_BASE % project_url)
     readmedata = requests.get(readmeurl)
@@ -48,7 +48,7 @@ def FetchGithubProject(project_url):
     if data.text.find('{') < 0:
         return {}
     json = data.json()
-    if not 'name' in json or not 'full_name' in json:
+    if 'name' not in json or 'full_name' not in json:
         return {}
     repo_full_name = json['full_name']
     default_branch = json['default_branch'] or 'main'
@@ -57,7 +57,7 @@ def FetchGithubProject(project_url):
     if readmedata.text.find('{') < 0:
         return {}
     readme = readmedata.json()
-    if not 'content' in readme:
+    if 'content' not in readme:
         readme = ''
     else:
         readme = b64decode(readme['content']).decode('utf-8')
@@ -96,7 +96,7 @@ def FetchBitbucketProject(project_url):
         print('No data at', project_url)
         return {}
     json = data.json()
-    if not 'name' in json:
+    if 'name' not in json:
         print('Invalid format at', project_url)
         return {}
     readme = ''
@@ -111,7 +111,9 @@ def FetchBitbucketProject(project_url):
     if json['has_issues']:
         contact_url = "%s/issues" % web_url
     image_url = ''
-    if 'project' in json and 'links' in json['project'] and 'avatar' in json['project']['links']:
+    if 'project' in json and \
+            'links' in json['project'] \
+            and 'avatar' in json['project']['links']:
         image_url = json['project']['links']['avatar']['href']
     elif 'links' in json and 'avatar' in json['links']:
         image_url = json['links']['avatar']['href']
@@ -146,7 +148,9 @@ def FetchDataProject(project_url):
     if readme_url.startswith('http') and readme_url != project_url:
         text_content = requests.get(readme_url).text
     contact_url = ''
-    if 'maintainers' in json and len(json['maintainers']) > 0 and 'web' in json['maintainers'][0]:
+    if 'maintainers' in json and \
+            len(json['maintainers']) > 0 and \
+            'web' in json['maintainers'][0]:
         contact_url = json['maintainers'][0]['web']
     return {
         'type': 'Data Package',
@@ -155,7 +159,8 @@ def FetchDataProject(project_url):
         'description': text_content,
         # 'homepage_url': DP_VIEWER_URL % project_url,
         'source_url': project_url,
-        'image_url': url_for('static', filename='img/datapackage_icon.png', _external=True),
+        'image_url': url_for('static', filename='img/datapackage_icon.png',
+                             _external=True),
         'contact_url': contact_url,
     }
 
@@ -180,10 +185,39 @@ ALLOWED_HTML_ATTR['font'] = ['color']
 def FetchWebProject(project_url):
     try:
         data = requests.get(project_url)
-    except:
+    except requests.exceptions.RequestException:
         print("Could not connect to %s" % project_url)
         return {}
 
+    # Google Document
+    if project_url.startswith('https://docs.google.com/document'):
+        return FetchWebGoogleDoc(data.text, project_url)
+    # CodiMD / HackMD
+    elif data.text.find('<div id="doc" ') > 0:
+        return FetchWebCodiMD(data.text, project_url)
+    # DokuWiki
+    elif data.text.find('<meta name="generator" content="DokuWiki"/>') > 0:
+        return FetchWebDokuWiki(data.text, project_url)
+    # Etherpad
+    elif data.text.find('pad.importExport.exportetherpad') > 0:
+        return FetchWebEtherpad(data.text, project_url)
+    # Instructables
+    elif project_url.startswith('https://www.instructables.com/'):
+        return FetchWebInstructables(data.text, project_url)
+
+
+def FetchWebGoogleDoc(text, url):
+    doc = pq(text)
+    doc("style").remove()
+    ptitle = doc("div#title") or doc("div#header")
+    if len(ptitle) < 1:
+        return {}
+    content = doc("div#contents")
+    if len(content) < 1:
+        return {}
+    html_content = bleach.clean(content.html().strip(), strip=True,
+                                tags=ALLOWED_HTML_TAGS,
+                                attributes=ALLOWED_HTML_ATTR)
     obj = {}
     # {
     #     'type': 'Google', ...
@@ -193,116 +227,108 @@ def FetchWebProject(project_url):
     #     'image_url': image_url
     #     'source_url': project_url,
     # }
+    obj['type'] = 'Google Docs'
+    obj['name'] = ptitle.text()
+    obj['description'] = html_content
+    obj['source_url'] = url
+    obj['image_url'] = url_for(
+        'static', filename='img/document_icon.png', _external=True)
+    return obj
 
-    # Google Document
-    if project_url.startswith('https://docs.google.com/document'):
-        doc = pq(data.text)
-        doc("style").remove()
-        ptitle = doc("div#title") or doc("div#header")
-        if len(ptitle) < 1:
-            return {}
-        content = doc("div#contents")
-        if len(content) < 1:
-            return {}
-        html_content = bleach.clean(content.html().strip(), strip=True,
-                                    tags=ALLOWED_HTML_TAGS, attributes=ALLOWED_HTML_ATTR)
 
-        obj['type'] = 'Google Docs'
-        obj['name'] = ptitle.text()
-        obj['description'] = html_content
-        obj['source_url'] = project_url
-        obj['image_url'] = url_for(
-            'static', filename='img/document_icon.png', _external=True)
+def FetchWebCodiMD(text, url):
+    doc = pq(text)
+    ptitle = doc("title")
+    if len(ptitle) < 1:
+        return {}
+    content = doc("div#doc").html()
+    if len(content) < 1:
+        return {}
+    obj = {}
+    obj['type'] = 'Markdown'
+    obj['name'] = ptitle.text()
+    obj['description'] = markdown(content)
+    obj['source_url'] = url
+    obj['image_url'] = url_for(
+        'static', filename='img/codimd.png', _external=True)
+    return obj
 
-    # CodiMD / HackMD
-    elif data.text.find('<div id="doc" ') > 0:
-        doc = pq(data.text)
-        ptitle = doc("title")
-        if len(ptitle) < 1:
-            return {}
-        content = doc("div#doc").html()
-        if len(content) < 1:
-            return {}
 
-        obj['type'] = 'Markdown'
-        obj['name'] = ptitle.text()
-        obj['description'] = markdown(content)
-        obj['source_url'] = project_url
-        obj['image_url'] = url_for(
-            'static', filename='img/codimd.png', _external=True)
+def FetchWebDokuWiki(text, url):
+    doc = pq(text)
+    ptitle = doc("span.pageId")
+    if len(ptitle) < 1:
+        return {}
+    content = doc("div.dw-content")
+    if len(content) < 1:
+        return {}
+    html_content = bleach.clean(content.html().strip(), strip=True,
+                                tags=ALLOWED_HTML_TAGS,
+                                attributes=ALLOWED_HTML_ATTR)
+    obj = {}
+    obj['type'] = 'DokuWiki'
+    obj['name'] = ptitle.text().replace('project:', '')
+    obj['description'] = html_content
+    obj['source_url'] = url
+    obj['image_url'] = url_for(
+        'static', filename='img/dokuwiki_icon.png', _external=True)
+    return obj
 
-    # DokuWiki
-    elif data.text.find('<meta name="generator" content="DokuWiki"/>') > 0:
-        doc = pq(data.text)
-        ptitle = doc("span.pageId")
-        if len(ptitle) < 1:
-            return {}
-        content = doc("div.dw-content")
-        if len(content) < 1:
-            return {}
-        html_content = bleach.clean(content.html().strip(), strip=True,
-                                    tags=ALLOWED_HTML_TAGS, attributes=ALLOWED_HTML_ATTR)
 
-        obj['type'] = 'DokuWiki'
-        obj['name'] = ptitle.text().replace('project:', '')
-        obj['description'] = html_content
-        obj['source_url'] = project_url
-        obj['image_url'] = url_for(
-            'static', filename='img/dokuwiki_icon.png', _external=True)
+def FetchWebEtherpad(text, url):
+    ptitle = url.split('/')[-1]
+    if len(ptitle) < 1:
+        return {}
+    text_content = requests.get("%s/export/txt" % url).text
+    obj = {}
+    obj['type'] = 'Etherpad'
+    obj['name'] = ptitle.replace('_', ' ')
+    obj['description'] = text_content
+    obj['source_url'] = url
+    obj['image_url'] = url_for(
+        'static', filename='img/document_white.png', _external=True)
+    return obj
 
-    # Etherpad
-    elif data.text.find('pad.importExport.exportetherpad') > 0:
-        ptitle = project_url.split('/')[-1]
-        if len(ptitle) < 1:
-            return {}
-        text_content = requests.get("%s/export/txt" % project_url).text
 
-        obj['type'] = 'Etherpad'
-        obj['name'] = ptitle.replace('_', ' ')
-        obj['description'] = text_content
-        obj['source_url'] = project_url
-        obj['image_url'] = url_for(
-            'static', filename='img/document_white.png', _external=True)
-
-    # Instructables
-    elif project_url.startswith('https://www.instructables.com/'):
-        doc = pq(data.text)
-        ptitle = doc(".header-title")
-        if len(ptitle) < 1:
-            return {}
-        content = doc(".main-content")
-        if len(content) < 1:
-            return {}
-        html_content = ""
-        for step in content.find(".step"):
-            step_title = pq(step).find('.step-title')
-            if step_title is not None:
-                html_content += '<h3>' + step_title.text() + '</h3>'
-            # Grab photos
-            for img in pq(step).find('noscript'):
-                if not '{{ file' in pq(img).html():
-                    html_content += pq(img).html()
-            # Iterate through body
-            step_content = pq(step).find('.step-body')
-            if step_content is None:
-                continue
-            for elem in pq(step_content).children():
-                if elem.tag == 'pre':
-                    if elem.text is None:
-                        continue
-                    html_content += '<pre>' + elem.text + '</pre>'
-                else:
-                    p = pq(elem).html()
-                    if p is None:
-                        continue
-                    p = bleach.clean(p.strip(), strip=True,
-                                     tags=ALLOWED_HTML_TAGS, attributes=ALLOWED_HTML_ATTR)
-                    html_content += '<' + elem.tag + '>' + p + '</' + elem.tag + '>'
-
-        obj['type'] = 'Instructables'
-        obj['name'] = ptitle.text()
-        obj['description'] = html_content
-        obj['source_url'] = project_url
-        obj['image_url'] = "https://upload.wikimedia.org/wikipedia/fr/thumb/c/c6/InstructsblesRobot.png/150px-InstructsblesRobot.png"
-
+def FetchWebInstructables(text, url):
+    doc = pq(text)
+    ptitle = doc(".header-title")
+    if len(ptitle) < 1:
+        return {}
+    content = doc(".main-content")
+    if len(content) < 1:
+        return {}
+    html_content = ""
+    for step in content.find(".step"):
+        step_title = pq(step).find('.step-title')
+        if step_title is not None:
+            html_content += '<h3>' + step_title.text() + '</h3>'
+        # Grab photos
+        for img in pq(step).find('noscript'):
+            if '{{ file' not in pq(img).html():
+                html_content += pq(img).html()
+        # Iterate through body
+        step_content = pq(step).find('.step-body')
+        if step_content is None:
+            continue
+        for elem in pq(step_content).children():
+            if elem.tag == 'pre':
+                if elem.text is None:
+                    continue
+                html_content += '<pre>' + elem.text + '</pre>'
+            else:
+                p = pq(elem).html()
+                if p is None:
+                    continue
+                p = bleach.clean(p.strip(), strip=True,
+                                 tags=ALLOWED_HTML_TAGS,
+                                 attributes=ALLOWED_HTML_ATTR)
+                html_content += '<%s>%s</%s>' % (elem.tag, p, elem.tag)
+    obj = {}
+    obj['type'] = 'Instructables'
+    obj['name'] = ptitle.text()
+    obj['description'] = html_content
+    obj['source_url'] = url
+    obj['image_url'] = url_for(
+        'static', filename='img/instructables.png', _external=True)
     return obj
