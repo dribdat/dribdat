@@ -1,6 +1,4 @@
-# &#128203; Let's get started 
-
-Time to roll up your sleeves and plan your next event. Here are some tips from the hackathon pros - feel free to skip this dialog if this is not your first time organizing an event!
+Planning your next event? Here are some tips from hackathon pros - feel free to skip this dialogue if this is not your first time organizing an event!
 
 ### Challenges
 

@@ -104,11 +104,6 @@
       <a href="{{ url_for('public.event_instruction', event_id=current_event.id) }}" class="btn btn-lg btn-info">
         <span>Resources</span>
       </a>
-    {% elif current_event.has_started %}
-      <a href="{{ url_for('public.event_participants', event_id=current_event.id) }}" class="btn btn-lg btn-light">
-        <i class="fa fa-user" aria-hidden="true"></i>
-        <span>Who is who</span>
-      </a>
     {% endif %}
   </div>
 {% endif %}
@@ -161,16 +156,6 @@
         <i class="fa fa-id-card-o" aria-hidden="true"></i>
         {{ current_event.countdown|until_date }}</a>
     {% endif %}
-    {% if current_event.webpage_url %}
-      <a href="{{ current_event.webpage_url }}" class="btn btn-default">
-        <i class="fa fa-info-circle" aria-hidden="true"></i>
-        <span>Info</span></a>
-    {% endif %}
-    {% if current_event.community_url %}
-      <a href="{{ current_event.community_url }}" target="community" class="btn btn-default">
-        <i class="fa fa-comment"></i>
-        <span>Community</span></a>
-    {% endif %}
     <a href="{{ url_for('public.event_stages', event_id=current_event.id) }}" class="btn btn-default">
       <i class="fa fa-signal" aria-hidden="true"></i>
       <span>By Stage</span>
@@ -182,19 +167,31 @@
       <i class="fa fa-child" aria-hidden="true"></i>
       <span>People</span>
     </a>
-    {% if current_user and current_user.active and current_user.is_admin %}
+    {% if current_event.webpage_url %}
+      <a href="{{ current_event.webpage_url }}" class="btn btn-default">
+        <i class="fa fa-info-circle" aria-hidden="true"></i>
+        <span>Info</span></a>
+    {% endif %}
+    {% if current_event.community_url %}
+      <a href="{{ current_event.community_url }}" target="community" class="btn btn-default">
+        <i class="fa fa-comment"></i>
+        <span>Connect</span></a>
+    {% endif %}
+  </div>
+  {% if current_user and current_user.active and current_user.is_admin %}
+    <div role="group" aria-label="Event administration">
       <!-- admin only until we have proper social sharing -->
-      <a href="{{ url_for('public.event', event_id=current_event.id, _external=True) }}" class="btn btn-default" id="embed-link">
+      <a href="{{ url_for('public.event', event_id=current_event.id, _external=True) }}" class="btn btn-secondary" id="embed-link">
         <i class="fa fa-external-link" aria-hidden="true"></i>
         Share</a>
       <a href="{{ url_for('admin.event', event_id=current_event.id) }}" class="btn btn-warning">
         <i class="fa fa-pencil" aria-hidden="true"></i>
         Event</a>
-      <a href="{{ url_for('admin.project_new', event_id=current_event.id) }}" class="btn btn-info">
-        <i class="fa fa-cube"></i>
+      <a href="{{ url_for('admin.project_new', event_id=current_event.id) }}" class="btn btn-success">
+        <i class="fa fa-rocket"></i>
         Add project</a>
-    {% endif %}
-  </div>
+    </div>
+  {% endif %}
 
   {% if current_event and current_event.countdown and not 'off' in config.DRIBDAT_CLOCK %}
     <a class="container-countdown" href="#top" title="{{ current_event.countdown }}">
