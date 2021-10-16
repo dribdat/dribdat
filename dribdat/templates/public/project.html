@@ -317,7 +317,7 @@
   <a name="team"></a>
   {% if project_team %}
     <div class="widget widget-team">
-      <h5>Team</h5>
+      <h1 title="Team">&#x1f465;</h1>
       {% for user in project_team %}
         {{ misc.render_user_profile(user) }}
         {% if current_user.is_admin %}
@@ -327,7 +327,18 @@
         {% endif %}
       {% endfor %}
     </div>
-  {% elif project.user and not project.event.lock_resources %}
+  {% endif %}
+  {% if current_user.is_admin and not project.event.lock_resources %}
+  <!-- Add arbitrary user to the team -->
+  <center class="mb-3 mt-3">
+    <form action="{{ url_for('project.project_star_user', project_id=project.id)}}" method="post">
+      <i class="fa fa-child" aria-hidden="true"></i>
+      <input type="text" name="username" placeholder="username" size="12" />
+      <input type="submit" value="Add to team" />
+    </form>
+  </center>
+  {% endif %}
+  {% if not project_team and project.user and not project.event.lock_resources %}
     <div class="widget widget-team">
       {{ misc.render_user_profile(project.user) }}
       <p class="started-at">
@@ -392,17 +403,6 @@
        Boost</a>
   {% endif %}
 </div></center>
-{% endif %}
-
-{% if current_user.is_admin %}
-<!-- Add arbitrary user to the team -->
-<center class="mb-3 mt-3">
-  <form action="{{ url_for('project.project_star_user', project_id=project.id)}}" method="post">
-    <i class="fa fa-child" aria-hidden="true"></i>
-    <input type="text" name="username" placeholder="Enter username ..." />
-    <input type="submit" value="+ Add" />
-  </form>
-</center>
 {% endif %}
 
 <div class="panel panel-default community-embed">
