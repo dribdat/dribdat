@@ -145,8 +145,11 @@ def FetchDataProject(project_url):
         readme_url = json['homepage']
     else:
         readme_url = project_url.replace('datapackage.json', 'README.md')
+    text_content = ""
     if readme_url.startswith('http') and readme_url != project_url:
         text_content = requests.get(readme_url).text
+    if not text_content and 'description' in json:
+        text_content = json['description']
     contact_url = ''
     if 'maintainers' in json and \
             len(json['maintainers']) > 0 and \
