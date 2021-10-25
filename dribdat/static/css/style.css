@@ -1383,6 +1383,16 @@ SlackIn button
   background: url('/static/img/sso/github-sign-in.png') no-repeat;
   width: 372px; height: 64px;
 }
+.account-register a { margin-left: 3.5em; font-size: 125%; }
+.account-register::before,
+.sso-login::after {
+  content: 'or';
+  display: block;
+  margin: 1em 5em;
+  font-size: 200%;
+  font-family: cursive;
+  font-style: italic;
+}
 
 .__slackin { margin-bottom: 10px; display: block; }
 

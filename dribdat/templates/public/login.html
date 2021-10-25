@@ -8,17 +8,23 @@
   <h1>Log in</h1>
   <br/>
   {% if oauth_type == 'slack' %}
-    <p><a class="btn signin-slack" href="{{ url_for('slack.login') }}">
-      Sign in with Slack
-    </a></p>
+    <p class="sso-login">
+      <a class="btn signin-slack" href="{{ url_for('slack.login') }}">
+        Sign in with Slack
+      </a>
+    </p>
   {% elif oauth_type == 'azure' %}
-    <p><a class="btn signin-azure" href="{{ url_for('azure.login') }}">
-      Sign in with Microsoft Teams
-    </a></p>
+    <p class="sso-login">
+      <a class="btn signin-azure" href="{{ url_for('azure.login') }}">
+        Sign in with Microsoft Teams
+      </a>
+    </p>
   {% elif oauth_type == 'github' %}
-    <p><a class="btn signin-github" href="{{ url_for('github.login') }}">
-      Sign in with GitHub
-    </a></p>
+    <p class="sso-login">
+      <a class="btn signin-github" href="{{ url_for('github.login') }}">
+        Sign in with GitHub
+      </a>
+    </p>
   {% endif %}
   <form id="loginForm" method="POST" action="/login/" role="login" class="navbar-form form-inline">
     {{ form.hidden_tag() }}
@@ -26,16 +32,17 @@
       {{ form.username(placeholder="Username", class_="form-control") }}
       {{ form.password(placeholder="Password", class_="form-control") }}
       <button type="submit" class="btn btn-default btn-primary btn-submit">Enter</button>
-      {% if not config.DRIBDAT_NOT_REGISTER %}
-        &nbsp; or &nbsp;
-        <a class="btn btn-warning btn-submit" href="{{ url_for('auth.register') }}">Create an account</a>
-      {% endif %}
     </div>
   </form>
   {% if not config.DRIBDAT_NOT_REGISTER %}
     <br>
     <p>Forgot your password?
       <a href="{{ url_for('auth.forgot') }}">Help me to get back in</a>.
+    </p>
+  {% endif %}
+  {% if not config.DRIBDAT_NOT_REGISTER %}
+    <p class="account-register">
+      <a class="btn btn-warning btn-submit" href="{{ url_for('auth.register') }}">Create an account</a>
     </p>
   {% endif %}
 </div>
