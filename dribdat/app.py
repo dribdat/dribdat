@@ -41,7 +41,7 @@ def init_app(config_object=ProdConfig):
 
     # Set up using an external proxy/static server
     if app.config['SERVER_PROXY']:
-        app.wsgi_app = ProxyFix(app, x_for=1, x_host=1)
+        app.wsgi_app = ProxyFix(app, x_for=1, x_proto=1, x_host=1)
     else:
         # Internally optimize static file hosting
         app.wsgi_app = WhiteNoise(app.wsgi_app, prefix='static/')
