@@ -99,14 +99,14 @@ python-versions = "*"
 
 [[package]]
 name = "boto3"
-version = "1.18.63"
+version = "1.19.2"
 description = "The AWS SDK for Python"
 category = "main"
 optional = false
 python-versions = ">= 3.6"
 
 [package.dependencies]
-botocore = ">=1.21.63,<1.22.0"
+botocore = ">=1.22.2,<1.23.0"
 jmespath = ">=0.7.1,<1.0.0"
 s3transfer = ">=0.5.0,<0.6.0"
 
@@ -115,7 +115,7 @@ crt = ["botocore[crt] (>=1.21.0,<2.0a0)"]
 
 [[package]]
 name = "botocore"
-version = "1.21.63"
+version = "1.22.2"
 description = "Low-level, data-driven core of boto 3."
 category = "main"
 optional = false
@@ -127,7 +127,7 @@ python-dateutil = ">=2.1,<3.0.0"
 urllib3 = ">=1.25.4,<1.27"
 
 [package.extras]
-crt = ["awscrt (==0.11.24)"]
+crt = ["awscrt (==0.12.5)"]
 
 [[package]]
 name = "certifi"
@@ -303,7 +303,7 @@ doc = ["sphinx", "sphinx-rtd-theme", "sphinxcontrib-spelling"]
 
 [[package]]
 name = "faker"
-version = "9.3.1"
+version = "9.5.2"
 description = "Faker is a Python package that generates fake data for you."
 category = "dev"
 optional = false
@@ -312,6 +312,7 @@ python-versions = ">=3.6"
 [package.dependencies]
 python-dateutil = ">=2.4"
 text-unidecode = "1.3"
+typing-extensions = {version = ">=3.10.0.2", markers = "python_version < \"3.8\""}
 
 [[package]]
 name = "flake8"
@@ -389,7 +390,7 @@ flake8 = "*"
 
 [[package]]
 name = "flake8-quotes"
-version = "3.3.0"
+version = "3.3.1"
 description = "Flake8 lint for quotes."
 category = "dev"
 optional = false
@@ -585,7 +586,7 @@ email = ["email-validator"]
 
 [[package]]
 name = "frictionless"
-version = "4.19.3"
+version = "4.19.5"
 description = "Frictionless is a framework to describe, extract, validate, and transform tabular data"
 category = "main"
 optional = false
@@ -730,7 +731,7 @@ testing = ["pytest (>=4.6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytes
 
 [[package]]
 name = "importlib-resources"
-version = "5.2.2"
+version = "5.3.0"
 description = "Read resources from Python packages"
 category = "main"
 optional = false
@@ -741,7 +742,7 @@ zipp = {version = ">=3.1.0", markers = "python_version < \"3.10\""}
 
 [package.extras]
 docs = ["sphinx", "jaraco.packaging (>=8.2)", "rst.linker (>=1.9)"]
-testing = ["pytest (>=4.6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytest-cov", "pytest-enabler (>=1.0.1)", "pytest-black (>=0.3.7)", "pytest-mypy"]
+testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytest-cov", "pytest-enabler (>=1.0.1)", "pytest-black (>=0.3.7)", "pytest-mypy"]
 
 [[package]]
 name = "iniconfig"
@@ -1068,11 +1069,14 @@ test = ["flaky", "pretend", "pytest (>=3.0.1)"]
 
 [[package]]
 name = "pyparsing"
-version = "2.4.7"
+version = "3.0.1"
 description = "Python parsing module"
 category = "main"
 optional = false
-python-versions = ">=2.6, !=3.0.*, !=3.1.*, !=3.2.*"
+python-versions = ">=3.6"
+
+[package.extras]
+diagrams = ["jinja2", "railroad-diagrams"]
 
 [[package]]
 name = "pyquery"
@@ -1578,12 +1582,12 @@ blinker = [
     {file = "blinker-1.4.tar.gz", hash = "sha256:471aee25f3992bd325afa3772f1063dbdbbca947a041b8b89466dc00d606f8b6"},
 ]
 boto3 = [
-    {file = "boto3-1.18.63-py3-none-any.whl", hash = "sha256:d551607496cb975318e310618189a93d61c6f4970fdfcf1f3e7070c76420ffe3"},
-    {file = "boto3-1.18.63.tar.gz", hash = "sha256:94a9d020bdbd39b9487816e0a2d82a69e3236409708a560ebb02b62babb37276"},
+    {file = "boto3-1.19.2-py3-none-any.whl", hash = "sha256:1b8fac5f11ee1d185770d7619f2212e67e636ce190512770d0d36fd162739628"},
+    {file = "boto3-1.19.2.tar.gz", hash = "sha256:11a6035060230e92327d4f10fef6bc44188b2cd68504012bc25ed62ac31d670b"},
 ]
 botocore = [
-    {file = "botocore-1.21.63-py3-none-any.whl", hash = "sha256:1bbd2bbcb2ea35e3331178fd23a31166503c3d09ce605f6d99a3347a2216134b"},
-    {file = "botocore-1.21.63.tar.gz", hash = "sha256:38c0a98aefc3ff01d9970d84939ff48dd994c49c81cf34ee366860d774852f88"},
+    {file = "botocore-1.22.2-py3-none-any.whl", hash = "sha256:681d0d854d08beb9a5727152e95a884439b76cf19fb38d69ca2f17f1404d48ae"},
+    {file = "botocore-1.22.2.tar.gz", hash = "sha256:011360e79a4b843aa6591573cfa61e8eddc99b91adab1dfdb9a2b7f2c8511193"},
 ]
 certifi = [
     {file = "certifi-2021.10.8-py2.py3-none-any.whl", hash = "sha256:d62a0163eb4c2344ac042ab2bdf75399a71a2d8c7d47eac2e2ee91b9d6339569"},
@@ -1765,8 +1769,8 @@ factory-boy = [
     {file = "factory_boy-3.2.0.tar.gz", hash = "sha256:401cc00ff339a022f84d64a4339503d1689e8263a4478d876e58a3295b155c5b"},
 ]
 faker = [
-    {file = "Faker-9.3.1-py3-none-any.whl", hash = "sha256:429a91d73dbac02609d6b616ef15bd4c3f22ed6532dcfceb46f3b8c28c78257a"},
-    {file = "Faker-9.3.1.tar.gz", hash = "sha256:cdd9e9af2fba5c96ee2ec4ac8419bba458e26b58a2b98c1f6467ee66096bee52"},
+    {file = "Faker-9.5.2-py3-none-any.whl", hash = "sha256:449ab92ab9bd663095df251444b9e974862f81f0dfa479ba9c5ae7277ec85827"},
+    {file = "Faker-9.5.2.tar.gz", hash = "sha256:262d51b4e536adf58f09fdccc510b69a5a7348d9ca698402c0fccfaed93c60a7"},
 ]
 flake8 = [
     {file = "flake8-4.0.1-py2.py3-none-any.whl", hash = "sha256:479b1304f72536a55948cb40a32dce8bb0ffe3501e26eaf292c7e60eb5e0428d"},
@@ -1792,7 +1796,7 @@ flake8-polyfill = [
     {file = "flake8_polyfill-1.0.2-py2.py3-none-any.whl", hash = "sha256:12be6a34ee3ab795b19ca73505e7b55826d5f6ad7230d31b18e106400169b9e9"},
 ]
 flake8-quotes = [
-    {file = "flake8-quotes-3.3.0.tar.gz", hash = "sha256:f1dd87830ed77ff2ce47fc0ee0fd87ae20e8f045355354ffbf4dcaa18d528217"},
+    {file = "flake8-quotes-3.3.1.tar.gz", hash = "sha256:633adca6fb8a08131536af0d750b44d6985b9aba46f498871e21588c3e6f525a"},
 ]
 flask = [
     {file = "Flask-2.0.2-py3-none-any.whl", hash = "sha256:cb90f62f1d8e4dc4621f52106613488b5ba826b2e1e10a33eac92f723093ab6a"},
@@ -1852,8 +1856,8 @@ flask-wtf = [
     {file = "Flask_WTF-0.15.1-py2.py3-none-any.whl", hash = "sha256:6ff7af73458f182180906a37a783e290bdc8a3817fe4ad17227563137ca285bf"},
 ]
 frictionless = [
-    {file = "frictionless-4.19.3-py2.py3-none-any.whl", hash = "sha256:cc8becce00c8706c61cc9c80c32a8ffa529ad820e1944f382321ed54308e5007"},
-    {file = "frictionless-4.19.3.tar.gz", hash = "sha256:4f834ed603b65575f589659e8f3a6ce47322f26b8ca7f8aa676247a5183aadc6"},
+    {file = "frictionless-4.19.5-py2.py3-none-any.whl", hash = "sha256:301db9ba3f6653cde3372bb661bf716c66c1acae1c6b3573be99232d45e70623"},
+    {file = "frictionless-4.19.5.tar.gz", hash = "sha256:8b19247195f475e2f8e8a4e91e689957dc4e2ab2d463383ccd3d8870ffc21d29"},
 ]
 future = [
     {file = "future-0.18.2.tar.gz", hash = "sha256:b1bead90b70cf6ec3f0710ae53a525360fa360d306a86583adc6bf83a4db537d"},
@@ -1935,8 +1939,8 @@ importlib-metadata = [
     {file = "importlib_metadata-4.2.0.tar.gz", hash = "sha256:b7e52a1f8dec14a75ea73e0891f3060099ca1d8e6a462a4dff11c3e119ea1b31"},
 ]
 importlib-resources = [
-    {file = "importlib_resources-5.2.2-py3-none-any.whl", hash = "sha256:2480d8e07d1890056cb53c96e3de44fead9c62f2ba949b0f2e4c4345f4afa977"},
-    {file = "importlib_resources-5.2.2.tar.gz", hash = "sha256:a65882a4d0fe5fbf702273456ba2ce74fe44892c25e42e057aca526b702a6d4b"},
+    {file = "importlib_resources-5.3.0-py3-none-any.whl", hash = "sha256:7a65eb0d8ee98eedab76e6deb51195c67f8e575959f6356a6e15fd7e1148f2a3"},
+    {file = "importlib_resources-5.3.0.tar.gz", hash = "sha256:f2e58e721b505a79abe67f5868d99f8886aec8594c962c7490d0c22925f518da"},
 ]
 iniconfig = [
     {file = "iniconfig-1.1.1-py2.py3-none-any.whl", hash = "sha256:011e24c64b7f47f6ebd835bb12a743f2fbe9a26d4cecaa7f53bc4f35ee9da8b3"},
@@ -2149,8 +2153,8 @@ pyopenssl = [
     {file = "pyOpenSSL-21.0.0.tar.gz", hash = "sha256:5e2d8c5e46d0d865ae933bef5230090bdaf5506281e9eec60fa250ee80600cb3"},
 ]
 pyparsing = [
-    {file = "pyparsing-2.4.7-py2.py3-none-any.whl", hash = "sha256:ef9d7589ef3c200abe66653d3f1ab1033c3c419ae9b9bdb1240a85b024efc88b"},
-    {file = "pyparsing-2.4.7.tar.gz", hash = "sha256:c203ec8783bf771a155b207279b9bccb8dea02d8f0c9e5f8ead507bc3246ecc1"},
+    {file = "pyparsing-3.0.1-py3-none-any.whl", hash = "sha256:fd93fc45c47893c300bd98f5dd1b41c0e783eaeb727e7cea210dcc09d64ce7c3"},
+    {file = "pyparsing-3.0.1.tar.gz", hash = "sha256:84196357aa3566d64ad123d7a3c67b0e597a115c4934b097580e5ce220b91531"},
 ]
 pyquery = [
     {file = "pyquery-1.4.3-py3-none-any.whl", hash = "sha256:1fc33b7699455ed25c75282bc8f80ace1ac078b0dda5a933dacbd8b1c1f83963"},
