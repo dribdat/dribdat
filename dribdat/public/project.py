@@ -7,7 +7,8 @@ from flask_login import login_required, current_user
 
 from dribdat.user.models import Event, Project, Activity, User
 from dribdat.public.forms import (
-    ProjectNew, ProjectForm, ProjectDetailForm, ProjectPost, ProjectBoost,
+    ProjectNew, ProjectForm, ProjectDetailForm,
+    ProjectPost, ProjectBoost, ProjectComment,
 )
 from dribdat.database import db
 from dribdat.extensions import cache
@@ -129,7 +130,7 @@ def project_post(project_id):
     event = project.event
     starred = IsProjectStarred(project, current_user)
     allow_post = starred
-    #or (not current_user.is_anonymous and current_user.is_admin)
+    # or (not current_user.is_anonymous and current_user.is_admin)
     # allow_post = allow_post and not event.lock_resources
     if not allow_post:
         flash('You do not have access to post to this project.', 'warning')
@@ -144,7 +145,7 @@ def project_post(project_id):
             found_next = False
             if all_valid:
                 for a in projectProgressList(True, False):
-                    print(a[0])
+                    # print(a[0])
                     if found_next:
                         project.progress = a[0]
                         flash('Your project has been promoted!', 'info')
@@ -172,11 +173,32 @@ def project_post(project_id):
 
     return render_template(
         'public/projectpost.html',
-        current_event=event, project=project, form=form, stage=stage, all_valid=all_valid,
+        current_event=event, project=project, form=form,
+        stage=stage, all_valid=all_valid,
     )
 
 
-@blueprint.route('/<int:project_id>/unpost/<int:activity_id>', methods=['GET', 'POST'])
+@blueprint.route('/<int:project_id>/comment', methods=['GET', 'POST'])
+@login_required
+def project_comment(project_id):
+    project = Project.query.filter_by(id=project_id).first_or_404()
+    event = project.event
+    form = ProjectComment(obj=project, next=request.args.get('next'))
+    # Process form
+    if form.validate_on_submit():
+        # Update project data
+        project_action(project_id, 'review',
+                       action='post', text=form.note.data)
+        return redirect(url_for(
+            'project.project_view_posted', project_id=project.id))
+
+    return render_template(
+        'public/projectpost.html',
+        current_event=event, project=project, form=form
+    )
+
+
+@blueprint.route('/<int:project_id>/unpost/<int:activity_id>', methods=['GET'])
 @login_required
 def post_delete(project_id, activity_id):
     project = Project.query.filter_by(id=project_id).first_or_404()
@@ -219,10 +241,13 @@ def project_action(project_id, of_type=None, as_view=True, then_redirect=False,
     suggestions = None
     if not event.lock_resources:
         suggestions = getSuggestionsForStage(project.progress)
-    return render_template('public/project.html', current_event=event, project=project,
-                           project_starred=starred, project_team=project_team, project_dribs=project_dribs,
-                           allow_edit=allow_edit, allow_post=allow_post,
-                           suggestions=suggestions, latest_activity=latest_activity)
+    return render_template(
+        'public/project.html', current_event=event, project=project,
+        project_starred=starred, project_team=project_team,
+        project_dribs=project_dribs,
+        allow_edit=allow_edit, allow_post=allow_post,
+        suggestions=suggestions, latest_activity=latest_activity
+    )
 
 
 @blueprint.route('/<int:project_id>/star/me', methods=['GET', 'POST'])
@@ -244,7 +269,8 @@ def project_star_user(project_id):
         flash("User [%s] not found. Please try again." % username, 'warning')
         return redirect(url_for('project.project_view', project_id=project_id))
     flash('Added %s to the team!' % username, 'success')
-    return project_action(project_id, 'star', then_redirect=True, for_user=user)
+    return project_action(
+        project_id, 'star', then_redirect=True, for_user=user)
 
 
 @blueprint.route('/<int:project_id>/unstar/me', methods=['GET', 'POST'])
@@ -254,7 +280,7 @@ def project_unstar_me(project_id):
     return project_action(project_id, 'unstar', then_redirect=True)
 
 
-@blueprint.route('/<int:project_id>/unstar/<int:user_id>', methods=['GET', 'POST'])
+@blueprint.route('/<int:project_id>/unstar/<int:user_id>', methods=['GET'])
 @login_required
 @admin_required
 def project_unstar(project_id, user_id):
@@ -270,7 +296,10 @@ def project_unstar(project_id, user_id):
 @login_required
 def project_new(event_id):
     if not isUserActive(current_user):
-        flash("Your account needs to be activated: please contact an organizer.", 'warning')
+        flash(
+            "Your account needs to be activated - "
+            + " please contact an organizer.", 'warning'
+        )
         return redirect(url_for('public.event', event_id=event_id))
     form = None
     event = Event.query.filter_by(id=event_id).first_or_404()
@@ -306,8 +335,12 @@ def project_new(event_id):
             if len(project.autotext_url) > 1:
                 return project_autoupdate(project.id)
             else:
-                return redirect(url_for('project.project_view', project_id=project.id))
-    return render_template('public/projectnew.html', active="projectnew", current_event=event, form=form)
+                purl = url_for('project.project_view', project_id=project.id)
+                return redirect(purl)
+    return render_template(
+        'public/projectnew.html', active="projectnew",
+        current_event=event, form=form
+    )
 
 
 @blueprint.route('/<int:project_id>/autoupdate')
@@ -321,8 +354,10 @@ def project_autoupdate(project_id):
         flash('You may not sync this project.', 'warning')
         return project_action(project_id)
     data = GetProjectData(project.autotext_url)
-    if not 'name' in data:
-        flash("Could not sync: check that the Remote Link contains a README.", 'warning')
+    if 'name' not in data:
+        flash(
+            "Could not sync: check that the Remote Link contains a README.",
+            'warning')
         return project_action(project_id)
     SyncProjectData(project, data)
     project_action(project.id, 'update', action='sync',

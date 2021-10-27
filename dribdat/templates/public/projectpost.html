@@ -30,7 +30,11 @@
   {% endif %}
 
   <div class="form-project-post">
-    {{ render_form(url_for('project.project_post', project_id=project.id), form) }}
+    {% if stage %}
+      {{ render_form(url_for('project.project_post', project_id=project.id), form) }}
+    {% else %}
+      {{ render_form(url_for('project.project_comment', project_id=project.id), form) }}
+    {% endif %}
   </div>
 
   {% if stage %}

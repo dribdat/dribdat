@@ -21,7 +21,13 @@ def upgrade():
         batch_op.drop_column('resource_id')
         batch_op.alter_column(
             'name',
-            sa.Enum('boost', 'create', 'update', 'star', name='activity_type')
+            sa.Enum(
+                'review',
+                'boost',
+                'create',
+                'update',
+                'star',
+                name='activity_type')
         )
     with op.batch_alter_table('resources') as batch_op:
         batch_op.add_column(

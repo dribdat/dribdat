@@ -55,6 +55,13 @@
         {% endfor %}
       {% endif %}
 
+      <li class="nav-item">
+        <a class="nav-link" href="{{ url_for('public.about') }}">
+          <i class="fa fa-search" aria-hidden="true"></i>
+          Search
+        </a>
+      </li>
+
       {% if current_user and current_user.is_authenticated %}
           <li class="nav-item">
             <a class="nav-link{{ ' active' if active == 'profile' }}" href="{{ url_for('public.user', username=current_user.username) }}" title="{{ current_user.username }}">
@@ -72,19 +79,12 @@
           {% endif %}
       {% else %}
         <li class="nav-item">
-          <a class="nav-link" href="{{ url_for('auth.login') }}">
+          <a class="nav-link nav-login" href="{{ url_for('auth.login') }}">
             <i class="fa fa-sign-in" aria-hidden="true"></i>
             Login
           </a>
         </li>
       {% endif %}
-
-      <li class="nav-item">
-        <a class="nav-link" href="{{ url_for('public.about') }}">
-          <i class="fa fa-search" aria-hidden="true"></i>
-          Search
-      </a>
-    </li>
 
     </ul>
   </div><!-- /.navbar-collapse -->

@@ -27,7 +27,7 @@ from flask import current_app
 from flask_login import UserMixin
 
 from time import mktime
-
+from dateutil.parser import parse
 import datetime as dt
 import hashlib
 import re
@@ -99,12 +99,20 @@ class User(UserMixin, PkModel):
             'id': self.id,
             'username': self.username,
             'email': self.email,
-            'url': self.webpage_url,
-            'sso': self.sso_id,
+            'webpage_url': self.webpage_url,
+            'sso_id': self.sso_id,
             'roles': ",".join([r.name for r in self.roles]),
             'active': self.active,
-            'admin': self.is_admin,
+            'is_admin': self.is_admin,
         }
+
+    def set_from_data(self, data):
+        self.active = False  # login disabled on imported user
+        self.username = data['username']
+        self.webpage_url = data['webpage_url']
+        if 'email' not in data:
+            data['email'] = self.username + '@localhost.localdomain'
+        self.email = data['email']
 
     def socialize(self):
         """ Parse the user's web profile """
@@ -232,6 +240,7 @@ class Event(PkModel):
     custom_css = Column(db.UnicodeText(), nullable=True)
     community_embed = Column(db.UnicodeText(), nullable=True)
     certificate_path = Column(db.String(1024), nullable=True)
+
     is_hidden = Column(db.Boolean(), default=False)
     is_current = Column(db.Boolean(), default=False)
     lock_editing = Column(db.Boolean(), default=False)
@@ -263,7 +272,28 @@ class Event(PkModel):
         d['description'] = self.description or ''
         d['boilerplate'] = self.boilerplate or ''
         d['instruction'] = self.instruction or ''
+        # And by full, we mean really full!
+        d['custom_css'] = self.custom_css or ''
+        d['community_embed'] = self.community_embed or ''
+        d['certificate_path'] = self.certificate_path or ''
         return d
+
+    def set_from_data(self, data):
+        self.name = data['name']
+        self.summary = data['summary'] or ''
+        self.hostname = data['hostname'] or ''
+        self.location = data['location'] or ''
+        self.logo_url = data['logo_url'] or ''
+        self.webpage_url = data['webpage_url'] or ''
+        self.community_url = data['community_url'] or ''
+        self.starts_at = parse(data['starts_at'])
+        self.ends_at = parse(data['ends_at'])
+        self.description = data['description'] or ''
+        self.boilerplate = data['boilerplate'] or ''
+        self.instruction = data['instruction'] or ''
+        self.custom_css = data['custom_css'] or ''
+        self.community_embed = data['community_embed'] or ''
+        self.certificate_path = data['certificate_path'] or ''
 
     def get_schema(self, host_url=''):
         """ Returns hackathon.json formatted metadata """
@@ -394,7 +424,7 @@ class Project(PkModel):
     longtext = Column(db.UnicodeText(), nullable=False, default=u"")
 
     logo_color = Column(db.String(7), nullable=True)
-    logo_icon = Column(db.String(40), nullable=True)
+    logo_icon = Column(db.String(40), nullable=True)  # currently not used
 
     created_at = Column(db.DateTime, nullable=False,
                         default=dt.datetime.utcnow)
@@ -460,7 +490,6 @@ class Project(PkModel):
                 'author': author,
                 'name': a.name,
                 'date': a.timestamp,
-                # 'resource': a.resource,
                 'ref_url': a.ref_url,
                 'id': a.id,
             }
@@ -540,17 +569,25 @@ class Project(PkModel):
             'source_url': self.source_url or '',
             'webpage_url': self.webpage_url or '',
             'autotext_url': self.autotext_url or '',
+            'download_url': self.download_url or '',
             'contact_url': self.contact_url or '',
             'logo_color': self.logo_color or '',
+            'logo_icon': self.logo_icon or '',
+            'is_autoupdate': self.is_autoupdate,
+            'is_webembed': self.is_webembed,
             'excerpt': '',
         }
         d['created_at'] = format_date(self.created_at, '%Y-%m-%dT%H:%M')
         d['updated_at'] = format_date(self.updated_at, '%Y-%m-%dT%H:%M')
         d['team'] = [u.username for u in self.team()]
         if self.longtext and len(self.longtext) > 10:
-            d['excerpt'] = self.longtext[:300] + '...'
+            d['excerpt'] = self.longtext[:300]
+            if len(self.longtext) > 300:
+                d['excerpt'] += '...'
         elif self.is_autoupdate and self.autotext:
-            d['excerpt'] = self.autotext[:300] + '...'
+            d['excerpt'] = self.autotext[:300]
+            if len(self.autotext) > 300:
+                d['excerpt'] += '...'
         if self.user is not None:
             d['maintainer'] = self.user.username
         if self.event is not None:
@@ -564,7 +601,9 @@ class Project(PkModel):
     def get_schema(self, host_url=''):
         """ Schema.org compatible metadata """
         # TODO: accurately detect project license based on component etc.
-        if "creativecommons" in self.event.community_embed:
+        if not self.event.community_embed:
+            content_license = ''
+        elif "creativecommons" in self.event.community_embed:
             content_license = "https://creativecommons.org/licenses/by/4.0/"
         else:
             content_license = ''
@@ -579,6 +618,37 @@ class Project(PkModel):
             "license": content_license,
             "url": host_url + self.url
         }
+
+    def set_from_data(self, data):
+        self.name = data['name']
+        self.summary = data['summary']
+        self.hashtag = data['hashtag']
+        self.score = data['score']
+        self.progress = data['progress']
+        self.image_url = data['image_url']
+        self.source_url = data['source_url']
+        self.webpage_url = data['webpage_url']
+        self.autotext_url = data['autotext_url']
+        self.download_url = data['download_url']
+        self.contact_url = data['contact_url']
+        self.logo_color = data['logo_color']
+        self.logo_icon = data['logo_icon']
+        self.is_autoupdate = data['is_autoupdate']
+        self.is_webembed = data['is_webembed']
+        self.created_at = parse(data['created_at'])
+        self.updated_at = parse(data['updated_at'])
+        self.longtext = data['longtext']
+        self.autotext = data['autotext']
+        if 'maintainer' in data:
+            uname = data['maintainer']
+            user = User.query.filter_by(username=uname).first()
+            if user:
+                self.user = user
+        if 'category_name' in data:
+            cname = data['category_name']
+            category = Category.query.filter_by(name=cname).first()
+            if category:
+                self.category = category
 
     def update(self):
         """ Process data submission """
@@ -687,12 +757,29 @@ class Category(PkModel):
 
     @property
     def data(self):
-        return {
+        d = {
             'id': self.id,
             'name': self.name,
             'description': self.description,
-            # 'event_id': self.event_id,
+            'logo_color': self.logo_color,
+            'logo_icon': self.logo_icon,
         }
+        if self.event:
+            d['event_id'] = self.event_id
+            d['event_name'] = self.event.name
+            d['event_url'] = self.event.url
+        return d
+
+    def set_from_data(self, data):
+        self.name = data['name']
+        self.description = data['description']
+        self.logo_color = data['logo_color']
+        self.logo_icon = data['logo_icon']
+        if 'event_name' in data:
+            ename = data['event_name']
+            evt = Event.query.filter_by(name=ename).first()
+            if evt:
+                self.event = evt
 
     def __init__(self, name=None, **kwargs):
         if name:
@@ -705,28 +792,20 @@ class Category(PkModel):
 class Activity(PkModel):
     """ Public, real time, conversational """
     __tablename__ = 'activities'
-    name = Column(db.Enum(
+    name = Column(db.Enum('review',
                           'boost',
                           'create',
                           'update',
                           'star',
                           name="activity_type"))
     action = Column(db.String(32), nullable=True)
-    # 'external',
-    # 'commit',
-    # 'boost',
-    # 'sync',
-    # 'post',
-    # ...
+    # 'external', 'commit', 'sync', 'post', ...
     timestamp = Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)
     content = Column(db.UnicodeText, nullable=True)
     ref_url = Column(db.String(2048), nullable=True)
 
     user_id = reference_col('users', nullable=True)
     user = relationship('User', backref='activities')
-
-    # resource_id = reference_col('resources', nullable=True)
-    # resource = relationship('Resource', backref='activities')
 
     project_id = reference_col('projects', nullable=True)
     project = relationship('Project', backref='activities')
@@ -738,10 +817,11 @@ class Activity(PkModel):
         localtime = current_app.tz.localize(self.timestamp)
         a = {
             'id': self.id,
-            'name': self.name,
             'time': int(mktime(self.timestamp.timetuple())),
             'date': format_date(localtime, '%Y-%m-%dT%H:%M'),
             'timesince': timesince(localtime),
+            'name': self.name,
+            'action': self.action or '',
             'content': self.content or '',
             'ref_url': self.ref_url or '',
         }
@@ -754,6 +834,18 @@ class Activity(PkModel):
             a['project_score'] = self.project_score or 0
             a['project_phase'] = getProjectPhase(self.project)
         return a
+
+    def set_from_data(self, data):
+        self.name = data['name']
+        self.action = data['action']
+        self.content = data['content']
+        self.ref_url = data['ref_url']
+        self.timestamp = dt.datetime.fromtimestamp(data['time'])
+        if 'user_name' in data:
+            uname = data['user_name']
+            user = User.query.filter_by(username=uname).first()
+            if user:
+                self.user = user
 
     def __init__(self, name, project_id, **kwargs):
         if name:

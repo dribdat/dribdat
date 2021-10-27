@@ -7,14 +7,15 @@
 
 {% block content %}
 <div class="container">
-    <div class="jumbotron alert alert-info">
-      <!-- <a class="close" title="Close" href="#" data-dismiss="alert">&times;</a> -->
-      <div class="container scroll-after-500">
-        {{ tips|markdown }}
-      </div>
+  <h1>&#128203; Get started</h1>
+  <div class="jumbotron alert alert-info">
+    <!-- <a class="close" title="Close" href="#" data-dismiss="alert">&times;</a> -->
+    <div class="container scroll-after-500">
+      {{ tips|markdown }}
     </div>
-    <center class="mt-2">
-      <a href="{{ url_for('public.event_new') }}" class="btn btn-lg btn-success">Continue &#9654;</a>
-    </center>
+  </div>
+  <center class="mt-2">
+    <a href="{{ url_for('public.event_new') }}" class="btn btn-lg btn-success">Continue &#9654;</a>
+  </center>
 </div>
 {% endblock %}

@@ -21,7 +21,7 @@ from datetime import datetime
 import random
 import string
 
-from os import path
+# from os import path
 
 
 blueprint = Blueprint('admin', __name__, url_prefix='/admin')
@@ -51,7 +51,8 @@ def index():
             'height': 9
         },
     ]
-    return render_template('admin/index.html', stats=stats, default_event=event, active='index')
+    return render_template('admin/index.html',
+                           stats=stats, default_event=event, active='index')
 
 
 @blueprint.route('/users')
@@ -81,7 +82,8 @@ def users(page=1):
             User.username.asc()
         )
     users = users.paginate(page, per_page=20)
-    return render_template('admin/users.html', data=users, endpoint='admin.users', active='users')
+    return render_template('admin/users.html',
+                           data=users, endpoint='admin.users', active='users')
 
 
 @blueprint.route('/user/<int:user_id>', methods=['GET', 'POST'])
@@ -151,7 +153,9 @@ def user_delete(user_id):
 
 
 def get_random_alphanumeric_string(length=24):
-    return ''.join((random.SystemRandom().choice(string.ascii_letters + string.digits) for i in range(length)))
+    return ''.join(
+        (random.SystemRandom().choice(string.ascii_letters + string.digits)
+         for i in range(length)))
 
 
 """ Retrieves a user by name """
@@ -254,11 +258,11 @@ def event(event_id):
 def event_delete(event_id):
     event = Event.query.filter_by(id=event_id).first_or_404()
     if event.is_current:
-        flash('Event must not be set as current in order to delete.', 'warning')
+        flash('Event must not be set as current to delete.', 'warning')
     elif len(event.categories) > 0:
-        flash('No categories may be assigned to event in order to delete.', 'warning')
+        flash('No categories may be assigned to event to delete.', 'warning')
     elif len(event.projects) > 0:
-        flash('No projects may be assigned to event in order to delete.', 'warning')
+        flash('No projects may be assigned to event to delete.', 'warning')
     else:
         event.delete()
         cache.clear()
@@ -276,7 +280,7 @@ def event_autosync(event_id):
         if not project.is_autoupdate:
             continue
         data = GetProjectData(project.autotext_url)
-        if not 'name' in data:
+        if 'name' not in data:
             flash("Could not sync: %s" % project.name, 'warning')
             continue
         SyncProjectData(project, data)
@@ -298,7 +302,9 @@ def projects(page=1):
     projects = Project.query.order_by(
         Project.updated_at.desc()
     ).paginate(page, per_page=10)
-    return render_template('admin/projects.html', data=projects, endpoint='admin.projects', active='projects')
+    return render_template('admin/projects.html',
+                           data=projects, endpoint='admin.projects',
+                           active='projects')
 
 
 @blueprint.route('/category/<int:category_id>/projects')
@@ -308,7 +314,8 @@ def category_projects(category_id):
     category = Category.query.filter_by(id=category_id).first_or_404()
     projects = Project.query.filter_by(
         category_id=category_id).order_by(Project.id.desc())
-    return render_template('admin/projects.html', projects=projects, category_name=category.name, active='projects')
+    return render_template('admin/projects.html', projects=projects,
+                           category_name=category.name, active='projects')
 
 
 @blueprint.route('/event/<int:event_id>/projects')
@@ -318,7 +325,8 @@ def event_projects(event_id):
     event = Event.query.filter_by(id=event_id).first_or_404()
     projects = Project.query.filter_by(
         event_id=event_id).order_by(Project.id.desc())
-    return render_template('admin/projects.html', projects=projects, event=event, active='projects')
+    return render_template('admin/projects.html',
+                           projects=projects, event=event, active='projects')
 
 
 @blueprint.route('/project/<int:project_id>', methods=['GET', 'POST'])
@@ -344,7 +352,8 @@ def project_view(project_id):
         db.session.add(project)
         db.session.commit()
         flash('Project updated.', 'success')
-        return redirect(url_for("admin.event_projects", event_id=project.event.id))
+        return redirect(url_for("admin.event_projects",
+                                event_id=project.event.id))
 
     if project.user:
         form.user_name.data = project.user.username
@@ -402,7 +411,8 @@ def project_new():
         db.session.commit()
         cache.clear()
         flash('Project added.', 'success')
-        return redirect(url_for("admin.event_projects", event_id=project.event.id))
+        return redirect(url_for("admin.event_projects",
+                                event_id=project.event.id))
     if project.user:
         form.user_name.data = project.user.username
     return render_template('admin/projectnew.html', form=form)
@@ -425,7 +435,8 @@ def project_autodata(project_id):
 @admin_required
 def categories():
     categories = Category.query.order_by(Category.event_id.desc()).all()
-    return render_template('admin/categories.html', categories=categories, active='categories')
+    return render_template('admin/categories.html', categories=categories,
+                           active='categories')
 
 
 @blueprint.route('/category/<int:category_id>', methods=['GET', 'POST'])
@@ -486,7 +497,7 @@ def category_new():
 def category_delete(category_id):
     category = Category.query.filter_by(id=category_id).first_or_404()
     if len(category.projects) > 0:
-        flash('No projects may be assigned to category in order to delete.', 'warning')
+        flash('No projects may be assigned to category to delete.', 'warning')
     else:
         cache.clear()
         category.delete()
@@ -504,7 +515,8 @@ def category_delete(category_id):
 def presets():
     roles = Role.query.all()
     categories = Category.query.order_by(Category.event_id.desc()).all()
-    return render_template('admin/presets.html', categories=categories, roles=roles, active='roles')
+    return render_template('admin/presets.html', categories=categories,
+                           roles=roles, active='roles')
 
 
 @blueprint.route('/role/<int:role_id>', methods=['GET', 'POST'])
@@ -554,7 +566,7 @@ def role_new():
 def role_delete(role_id):
     role = Role.query.filter_by(id=role_id).first_or_404()
     if len(role.users) > 0:
-        flash('No users may be assigned to role in order to delete.', 'warning')
+        flash('No users may be assigned to role to delete.', 'warning')
     else:
         cache.clear()
         role.delete()
@@ -574,7 +586,8 @@ def resources(page=1):
     resources = Resource.query.order_by(
         Resource.id.desc()
     ).paginate(page, per_page=10)
-    return render_template('admin/resources.html', data=resources, endpoint='admin.resources', active='resources')
+    return render_template('admin/resources.html', data=resources,
+                           endpoint='admin.resources', active='resources')
 
 
 @blueprint.route('/resource/<int:resource_id>', methods=['GET', 'POST'])
@@ -624,7 +637,7 @@ def resource_new():
 def resource_delete(resource_id):
     resource = Resource.query.filter_by(id=resource_id).first_or_404()
     # if resource.count_mentions() > 0:
-    #     flash('No projects may reference a resource in order to delete.', 'warning')
+    #     flash('No projects may reference a resource to delete.', 'warning')
     # else:
     cache.clear()
     resource.delete()

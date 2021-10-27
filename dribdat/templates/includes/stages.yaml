@@ -81,7 +81,7 @@ stages:
           help: Provide a project link to an online demo, embedded if possible.
       agree:
         - Contributions from outside of our team do not include any major functionality.
-        - We own the rights, use open licenses, or have written permission for all data, assets and code included.
+        - We have the rights, open licenses, or permission to use all data, assets and code.
   -
     id: 40
     name: LAUNCHED
@@ -95,7 +95,7 @@ stages:
           help: Link and sync a remote repository or README for your project.
       agree:
         - Any third-party data, assets or software are correctly attributed.
-        - We have thanked every team member and mentor.
+        - We have thanked every team member, contributor, and mentor.
   -
     id: 50
     name: LIVE

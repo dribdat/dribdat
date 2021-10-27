@@ -178,6 +178,74 @@
     }); // -change
   }); // -#uploadImage
 
+
+
+  // Upload files
+  $('#uploadFile').each(function() {
+    var $dialog = $(this);
+    var $togglebtn = $('button[data-target="#uploadFile"]');
+    // Enable the available fields
+    var $longtext = $('.fld-longtext');
+    var $webpageurl = $('.fld-webpage_url');
+    // Append button to the pitch editor
+    $longtext.append($togglebtn.clone().show());
+    // $webpageurl.append($togglebtn.clone().show());
+    // Set up the file dialog
+    var $inputfd = $dialog.find('input[type="file"]');
+    $inputfd.change(function() {
+      var thefile = $inputfd[0].files[0];
+      // Check file size limits
+      var maxsize = parseInt($inputfd.data('maxsize'));
+      if (thefile.size > maxsize) {
+        return alert("Please upload a smaller file (1 MB limit)");
+      }
+      // Create upload object
+      var fdd = new FormData();
+      fdd.append('file', thefile);
+      $.ajax({
+        url: '/api/project/uploader',
+        type: 'post',
+        data: fdd,
+        processData: false,
+        contentType: false,
+        success: function(response) {
+          if (response.indexOf('http') !== 0) {
+             return alert('File could not be uploaded :(\n' + response);
+          }
+          var path = $inputfd.val();
+          var filename = path.split(/(\\|\/)/g).pop();
+          $dialog.find(".preview input").val(response);
+          $dialog.find(".hidden").show();
+          $('#file-confirm').show().find('button').click(function() {
+            if ($(this).data('target') == 'weblink') {
+              // Replace the cover
+              $('#webpage_url').val(response);
+              $dialog.modal('hide');
+            } else if ($(this).data('target') == 'pitch') {
+              // Append to pitch
+              $('#longtext').val($('#longtext').val() +
+                '\n\n' + '📦 [File: ' + filename + '](' + response + ')');
+              $dialog.modal('hide');
+            } else {
+              // Copy to clipboard
+              if (navigator.clipboard) {
+                navigator.clipboard.writeText(response);
+                $dialog.modal('hide');
+              } else {
+                $dialog.find(".preview input").click().select();
+                document.execCommand("copy");
+              }
+            }
+          });
+        },
+        error: function(e) {
+          alert("Sorry, an error has occurred.\n" + e.statusText);
+        }
+      }); // -ajax
+    }); // -change
+  }); // -#uploadImage
+
+
   // Simple delay function, thanks to Christian C. Salvadó
   function delay(callback, ms) {
     var timer = 0;

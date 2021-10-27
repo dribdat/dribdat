@@ -28,14 +28,20 @@
 {% block content %}
 <div class="btn-group project-edit-buttons" role="group" aria-label="Project tools">
 
-  {% if allow_post and project.is_challenge %}
-   <a id="project-post" href="{{ url_for('project.project_post', project_id=project.id) }}" title="Post an update to this project" class="btn btn-lg btn-success">
-     <i class="fa fa-rocket" aria-hidden="true"></i>
-     Post to Project</a>
-  {% elif allow_post %}
-   <a id="project-post" href="{{ url_for('project.project_post', project_id=project.id) }}" title="Post an update to this project" class="btn btn-lg btn-success">
-     <i class="fa fa-clipboard" aria-hidden="true"></i>
-     Post</a>
+  {% if allow_post %}
+    {% if project.is_challenge %}
+     <a id="project-post" href="{{ url_for('project.project_post', project_id=project.id) }}" title="Post a start to this project" class="btn btn-lg btn-success">
+       <i class="fa fa-rocket" aria-hidden="true"></i>
+       Start Project</a>
+    {% else %}
+     <a id="project-post" href="{{ url_for('project.project_post', project_id=project.id) }}" title="Post an update to this project" class="btn btn-lg btn-success">
+       <i class="fa fa-clipboard" aria-hidden="true"></i>
+       Post</a>
+     {% endif %}
+  {% elif current_user and current_user.active and not project.is_challenge %}
+     <a id="project-comment" href="{{ url_for('project.project_comment', project_id=project.id) }}" title="Write a public comment" class="btn btn-lg btn-info">
+       <i class="fa fa-comment" aria-hidden="true"></i>
+       Comment</a>
   {% endif %}
   {% if allow_edit %}
     {% if project.is_autoupdate %}
@@ -256,7 +262,7 @@
     <section class="timeline">
       {% for s in project_dribs %}
       <div class="timeline-item timeline-{{ s.name }}">
-        <div class="timeline-img" title="{{ s.name }}">
+        <div class="timeline-img" title="{{ s.date|format_datetime }} ({{ s.name }})">
           {% if s.icon %}
             <i class="fa fa-{{ s.icon }}" aria-hidden="true"></i>
           {% endif %}
@@ -283,7 +289,7 @@
           {% if s.ref_url %}
             <a href="{{ s.ref_url }}" target="_blank">
           {% endif %}
-              {{s.date|format_datetime}}
+              {{ s.date|format_datetime }}
               {% if s.author %} ~ <b>{{ s.author }}</b>{% endif %}
           {% if s.ref_url %}
             </a>
@@ -311,7 +317,7 @@
   <a name="team"></a>
   {% if project_team %}
     <div class="widget widget-team">
-      <h5>Team</h5>
+      <h1 title="Team">&#x1f465;</h1>
       {% for user in project_team %}
         {{ misc.render_user_profile(user) }}
         {% if current_user.is_admin %}
@@ -321,7 +327,18 @@
         {% endif %}
       {% endfor %}
     </div>
-  {% elif project.user and not project.event.lock_resources %}
+  {% endif %}
+  {% if current_user.is_admin and not project.event.lock_resources %}
+  <!-- Add arbitrary user to the team -->
+  <center class="mb-3 mt-3">
+    <form action="{{ url_for('project.project_star_user', project_id=project.id)}}" method="post">
+      <i class="fa fa-child" aria-hidden="true"></i>
+      <input type="text" name="username" placeholder="username" size="12" />
+      <input type="submit" value="Add to team" />
+    </form>
+  </center>
+  {% endif %}
+  {% if not project_team and project.user and not project.event.lock_resources %}
     <div class="widget widget-team">
       {{ misc.render_user_profile(project.user) }}
       <p class="started-at">
@@ -386,17 +403,6 @@
        Boost</a>
   {% endif %}
 </div></center>
-{% endif %}
-
-{% if current_user.is_admin %}
-<!-- Add arbitrary user to the team -->
-<center class="mb-3 mt-3">
-  <form action="{{ url_for('project.project_star_user', project_id=project.id)}}" method="post">
-    <i class="fa fa-child" aria-hidden="true"></i>
-    <input type="text" name="username" placeholder="Enter username ..." />
-    <input type="submit" value="+ Add" />
-  </form>
-</center>
 {% endif %}
 
 <div class="panel panel-default community-embed">

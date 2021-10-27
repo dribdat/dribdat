@@ -2,7 +2,11 @@
 
 {% block content %}
 <div class="container admin-events">
+  <div class="btn-group float-right mb-2">
     <a href="{{ url_for('public.event_new') }}" class="btn btn-success btn-lg">Start an event</a>
+    <button type="button" class="btn btn-dark" data-toggle="modal" data-target="#importEvent">
+      Import</button>
+  </div>
     <h2>Events</h2>
     <table class='table table-hover'>
         <thead>
@@ -95,4 +99,68 @@
         {% endfor %}
     </table>
 </div>
+
+<!-- Upload Event dialog -->
+<div class="modal fade uploader" id="importEvent" tabindex="-1" role="dialog" aria-labelledby="uploadFileLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <form method="get" action="{{ url_for('api.event_load_datapackage') }}">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="uploadFileLabel">Import Event</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p class="upload-note mt-0 mb-2">
+          Currently only <b><a href="https://frictionlessdata.io/field-guide/" target="_blank">Data Packages</a></b> are accepted.
+          These can be exported using recent versions of dribdat:
+          click the drop-down button next to an event listing in the admin.
+        </p>
+        <!--
+        <p>
+          Max {{ (config.MAX_CONTENT_LENGTH/(1024*1024))|round(1) }} MB.
+          You can enter the URL of a remote instance to get around this limit.
+        </p>
+        <div class="input-group mb-1 hidden">
+          <div class="input-group-prepend">
+            <span class="input-group-text" id="inputFileLabel">Select</span>
+          </div>
+          <div class="custom-file">
+            <input type="file" class="form-control custom-file-input" id="inputFile"
+              name="image" aria-describedby="inputFileLabel" accept="application/json"
+              data-maxsize="{{ config.MAX_CONTENT_LENGTH }}">
+            <label class="custom-file-label" for="inputImageFile">Choose file</label>
+          </div>
+        </div>
+        <center class="mb-1">or</center>
+        -->
+        <div class="input-group mb-4">
+          <div class="input-group-prepend">
+            <span class="input-group-text" id="inputUrlLabel">URL</span>
+          </div>
+          <input type="text" class="form-control"
+            id="inputUrl" name="url" aria-describedby="inputUrlLabel">
+        </div>
+        <div class="form-group form-check">
+          <input type="radio" name="import" value="none" checked class="form-check-input" id="importCheck1">
+          <label class="form-check-label" for="importCheck1">Validate and preview</label>
+        </div>
+        <div class="form-group form-check">
+          <input type="radio" name="import" value="basic" checked class="form-check-input" id="importCheck2">
+          <label class="form-check-label" for="importCheck2">Import only basic event data</label>
+        </div>
+        <div class="form-group form-check">
+          <input type="radio" name="import" value="full" checked class="form-check-input" id="importCheck3">
+          <label class="form-check-label" for="importCheck3">Include event, projects, users</label>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <input type="submit" value="Import" class="btn btn-primary">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+      </div>
+    </div>
+  </form>
+  </div>
+</div><!-- / Upload Event -->
 {% endblock %}

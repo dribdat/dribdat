@@ -138,6 +138,9 @@ def getActivityByType(a):
         # title = "Synchronized"
         text = "Readme updated"
         icon = 'taxi'
+    elif a.action == 'post' and a.name == 'review':
+        text = a.content
+        icon = 'comment'
     elif a.action == 'post' and a.content is not None:
         text = a.content
         icon = 'pencil'
@@ -155,9 +158,7 @@ def getActivityByType(a):
         text = "Worked on the pitch"
         icon = 'paperclip'
     elif a.name == 'create':
-        title = "Project started"
-        text = "Initialized by %s &#x1F389;" % author
-        author = None
+        text = "Challenge started."
         icon = 'rocket'
     elif a.name == 'boost':
         title = a.action
