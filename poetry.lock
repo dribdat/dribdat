@@ -99,14 +99,14 @@ python-versions = "*"
 
 [[package]]
 name = "boto3"
-version = "1.19.2"
+version = "1.19.4"
 description = "The AWS SDK for Python"
 category = "main"
 optional = false
 python-versions = ">= 3.6"
 
 [package.dependencies]
-botocore = ">=1.22.2,<1.23.0"
+botocore = ">=1.22.4,<1.23.0"
 jmespath = ">=0.7.1,<1.0.0"
 s3transfer = ">=0.5.0,<0.6.0"
 
@@ -115,7 +115,7 @@ crt = ["botocore[crt] (>=1.21.0,<2.0a0)"]
 
 [[package]]
 name = "botocore"
-version = "1.22.2"
+version = "1.22.4"
 description = "Low-level, data-driven core of boto 3."
 category = "main"
 optional = false
@@ -288,7 +288,7 @@ six = ">=1.10.0"
 
 [[package]]
 name = "factory-boy"
-version = "3.2.0"
+version = "3.2.1"
 description = "A versatile test fixtures replacement based on thoughtbot's factory_bot for Ruby."
 category = "dev"
 optional = false
@@ -303,7 +303,7 @@ doc = ["sphinx", "sphinx-rtd-theme", "sphinxcontrib-spelling"]
 
 [[package]]
 name = "faker"
-version = "9.5.2"
+version = "9.6.0"
 description = "Faker is a Python package that generates fake data for you."
 category = "dev"
 optional = false
@@ -1582,12 +1582,12 @@ blinker = [
     {file = "blinker-1.4.tar.gz", hash = "sha256:471aee25f3992bd325afa3772f1063dbdbbca947a041b8b89466dc00d606f8b6"},
 ]
 boto3 = [
-    {file = "boto3-1.19.2-py3-none-any.whl", hash = "sha256:1b8fac5f11ee1d185770d7619f2212e67e636ce190512770d0d36fd162739628"},
-    {file = "boto3-1.19.2.tar.gz", hash = "sha256:11a6035060230e92327d4f10fef6bc44188b2cd68504012bc25ed62ac31d670b"},
+    {file = "boto3-1.19.4-py3-none-any.whl", hash = "sha256:492962f8cd5ff4aaaaa6bfb321eb526e4758755856226e233b5ead3b3a9c35a5"},
+    {file = "boto3-1.19.4.tar.gz", hash = "sha256:5493c0af5ab79e15f3a37d8b9c86461ac04bae5cb5b82fb911c78dbcfbdab07e"},
 ]
 botocore = [
-    {file = "botocore-1.22.2-py3-none-any.whl", hash = "sha256:681d0d854d08beb9a5727152e95a884439b76cf19fb38d69ca2f17f1404d48ae"},
-    {file = "botocore-1.22.2.tar.gz", hash = "sha256:011360e79a4b843aa6591573cfa61e8eddc99b91adab1dfdb9a2b7f2c8511193"},
+    {file = "botocore-1.22.4-py3-none-any.whl", hash = "sha256:579e682b1453fa142dd2f76d09e9c567017f2ae85000329084db8bb49316c228"},
+    {file = "botocore-1.22.4.tar.gz", hash = "sha256:ecc6f90dc27c4d74246a83474edf5ad272e614bebe8c5fb8b9516db4437dbf59"},
 ]
 certifi = [
     {file = "certifi-2021.10.8-py2.py3-none-any.whl", hash = "sha256:d62a0163eb4c2344ac042ab2bdf75399a71a2d8c7d47eac2e2ee91b9d6339569"},
@@ -1765,12 +1765,12 @@ eventlet = [
     {file = "eventlet-0.30.2.tar.gz", hash = "sha256:1811b122d9a45eb5bafba092d36911bca825f835cb648a862bbf984030acff9d"},
 ]
 factory-boy = [
-    {file = "factory_boy-3.2.0-py2.py3-none-any.whl", hash = "sha256:1d3db4b44b8c8c54cdd8b83ae4bdb9aeb121e464400035f1f03ae0e1eade56a4"},
-    {file = "factory_boy-3.2.0.tar.gz", hash = "sha256:401cc00ff339a022f84d64a4339503d1689e8263a4478d876e58a3295b155c5b"},
+    {file = "factory_boy-3.2.1-py2.py3-none-any.whl", hash = "sha256:eb02a7dd1b577ef606b75a253b9818e6f9eaf996d94449c9d5ebb124f90dc795"},
+    {file = "factory_boy-3.2.1.tar.gz", hash = "sha256:a98d277b0c047c75eb6e4ab8508a7f81fb03d2cb21986f627913546ef7a2a55e"},
 ]
 faker = [
-    {file = "Faker-9.5.2-py3-none-any.whl", hash = "sha256:449ab92ab9bd663095df251444b9e974862f81f0dfa479ba9c5ae7277ec85827"},
-    {file = "Faker-9.5.2.tar.gz", hash = "sha256:262d51b4e536adf58f09fdccc510b69a5a7348d9ca698402c0fccfaed93c60a7"},
+    {file = "Faker-9.6.0-py3-none-any.whl", hash = "sha256:8ffd1ca479364a2ea78fe23a5710d5f940c50576f45c3f62edf9f7f9242cec0b"},
+    {file = "Faker-9.6.0.tar.gz", hash = "sha256:072b61422be9da464b0bb40cdb44267dd584582056b77a2982d7c66c767f044c"},
 ]
 flake8 = [
     {file = "flake8-4.0.1-py2.py3-none-any.whl", hash = "sha256:479b1304f72536a55948cb40a32dce8bb0ffe3501e26eaf292c7e60eb5e0428d"},
