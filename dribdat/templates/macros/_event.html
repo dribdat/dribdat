@@ -74,7 +74,7 @@
 	            </p>
 	        {% endif %}
 	        <p class="an-event-description">
-	          {{event.summary or event.description|markdown|striptags|truncate(500)}}
+	          {{event.summary or event.description or event.oneliner|markdown|striptags|truncate(500)}}
 	        </p>
 	      </div>
 	      <div class="btn-group an-event-actions" role="group">
