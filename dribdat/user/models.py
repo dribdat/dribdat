@@ -297,7 +297,7 @@ class Event(PkModel):
 
     def get_schema(self, host_url=''):
         """ Returns hackathon.json formatted metadata """
-        desc = self.summary or re.sub('<[^>]*>', '', self.description)
+        desc = self.summary or re.sub('<[^>]*>', '', self.description or '')
         return {
             "@context": "http://schema.org",
             "@type": "Event",
