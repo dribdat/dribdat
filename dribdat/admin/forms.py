@@ -16,7 +16,9 @@ from datetime import time, datetime
 from dribdat.user.models import User, Project, Event, Role, Resource
 from ..user.validators import UniqueValidator
 from ..user import projectProgressList, resourceTypeList
-
+from wtforms import (
+    SelectMultipleField,
+)
 
 class UserForm(FlaskForm):
     next = HiddenField()
@@ -30,6 +32,14 @@ class UserForm(FlaskForm):
     active = BooleanField(u"Active", default=True)
     submit = SubmitField(u'Save')
 
+class UserProfileForm(FlaskForm):
+    next = HiddenField()
+    id = HiddenField('id')
+    roles = SelectMultipleField(u'Roles', coerce=int)
+    webpage_url = URLField(u'Online profile', [length(max=128)])
+    my_story = TextAreaField(u'My story')
+    my_goals = TextAreaField(u'My goals')
+    submit = SubmitField(u'Save')
 
 class EventForm(FlaskForm):
     next = HiddenField()

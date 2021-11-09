@@ -1,0 +1,17 @@
+{% from "macros/_form.html" import render_form %}
+
+{% extends "admin/layout.html" %}
+
+{% block content %}
+<div class="container">
+    <h4>Edit profile</h4>
+
+    <p>
+        <a href="{{ url_for('public.user', username=user.username )}}" class="btn btn-success" target="_blank">View profile</a>
+        <a href="{{ url_for('admin.user', user_id=user.id )}}" class="btn btn-warning" target="_blank">Edit account</a>
+    </p>
+
+    {{ render_form(url_for('admin.user_profile', user_id=user.id), form) }}
+
+</div>
+{% endblock %}

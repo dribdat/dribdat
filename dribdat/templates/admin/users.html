@@ -3,8 +3,17 @@
 {% block content %}
 <div class="container admin-users">
     <a href="{{ url_for('admin.user_new') }}" class="btn btn-success btn-lg">Add user</a>
-    <h2>Users</h2>
-    {% include "includes/pagination.html" %}
+
+    <h2 class="float-left">Users</h2>
+
+    <form action="{{ url_for(endpoint) }}" class="row g-3">
+      <div class="col-auto ml-3 pr-0">
+        <input class="form-control" placeholder="Search ..." name="search">
+      </div><div class="col-auto">
+        <input class="btn btn-light" type="submit" value="Go">
+      </div>
+    </form>
+  {% include "includes/pagination.html" %}
     <table class='table table-hover'>
         <thead>
             <tr>
