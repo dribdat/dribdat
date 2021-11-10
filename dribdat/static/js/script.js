@@ -382,10 +382,11 @@
       $.each(data, function(index) {
         if (index == per_page) {
           return;
-          return $self.append(
-            '<a href="' + url_www +
-            '" class="list-group-item link-more" target="_blank">All issues ...</a>'
-          );
+          // Show link to more issues:
+          // return $self.append(
+          //   '<a href="' + url_www +
+          //   '" class="list-group-item link-more" target="_blank">All issues ...</a>'
+          // );
         }
         $self.append(
           '<a href="' + this.html_url +
@@ -412,6 +413,28 @@
   // Admin button tips
   $('.admin-defaults button').click(function() {
     $('input#name').val($(this).text());
+  });
+
+  // Admin event import
+  // this is the id of the form
+  $("#importEvent form").submit(function(e) {
+    e.preventDefault();
+    var $form = $(this);
+    var url = $form.attr('action');
+    $.ajax({
+      type: "POST",
+      url: url,
+      data: $form.serialize(),
+      success: function(data) {
+        // Handle response
+        console.log(data);
+        $form.find('.message-ok').show();
+      },
+      error: function(err) {
+        console.error(err.statusText);
+        $form.find('.message-error').show();
+      }
+    });
   });
 
   // Ye olde darke moude
