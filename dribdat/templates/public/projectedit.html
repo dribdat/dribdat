@@ -3,17 +3,18 @@
 {% extends "layout.html" %}
 
 {% block page_title %}Edit: {{project.name}}{% endblock %}
-{% block body_class %}projectform{% endblock %}
+{% block body_class %}projectform projectedit{% endblock %}
 
 {% block content %}
   <h2 class="huge">
     Edit
       <a href="{{ url_for('project.project_view', project_id=project.id) }}" title="Back to project">
       project</a>
+      {% if detail_view %}details{% else %}basics{% endif %}
   </h2>
 
   <div class="text-right">
-    <div class="btn-group">
+    <div class="btn-group switch-editor">
       <a href="{{ url_for('project.project_edit', project_id=project.id) }}" title="Edit project" class="btn btn-lg btn-warning {% if not detail_view %}disabled{% endif %}">
         <i class="fa fa-pencil" aria-hidden="true"></i>
         Basics</a>

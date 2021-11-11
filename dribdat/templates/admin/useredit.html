@@ -6,7 +6,10 @@
 <div class="container">
     <h4>Edit account</h4>
 
-    <p><a href="{{ url_for('public.user', username=user.username )}}" class="btn btn-success" target="_blank">View profile</a></p>
+    <p>
+        <a href="{{ url_for('public.user', username=user.username )}}" class="btn btn-success" target="_blank">View profile</a>
+        <a href="{{ url_for('admin.user_profile', user_id=user.id )}}" class="btn btn-warning" target="_blank">Edit profile</a>
+    </p>
 
     {{ render_form(url_for('admin.user', user_id=user.id), form) }}
 

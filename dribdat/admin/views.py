@@ -12,7 +12,8 @@ from ..decorators import admin_required
 from ..aggregation import GetProjectData, SyncProjectData
 from ..user.models import Role, User, Event, Project, Category, Resource
 from .forms import (
-    RoleForm, UserForm,
+    RoleForm,
+    UserForm, UserProfileForm,
     EventForm, ProjectForm,
     CategoryForm, ResourceForm,
 )
@@ -61,6 +62,7 @@ def index():
 @admin_required
 def users(page=1):
     sort_by = request.args.get('sort')
+    search_by = request.args.get('search')
     if sort_by == 'id':
         users = User.query.order_by(
             User.id.asc()
@@ -81,6 +83,9 @@ def users(page=1):
         users = User.query.order_by(
             User.username.asc()
         )
+    if search_by and len(search_by)>1:
+        q = "%%%s%%" % search_by
+        users = users.filter(User.username.like(q))
     users = users.paginate(page, per_page=20)
     return render_template('admin/users.html',
                            data=users, endpoint='admin.users', active='users')
@@ -110,6 +115,32 @@ def user(user_id):
 
     return render_template('admin/useredit.html', user=user, form=form)
 
+
+@blueprint.route('/user/<int:user_id>/profile', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def user_profile(user_id):
+    user = User.query.filter_by(id=user_id).first_or_404()
+    form = UserProfileForm(obj=user, next=request.args.get('next'))
+    form.roles.choices = [(r.id, r.name) for r in Role.query.order_by('name')]
+    if form.validate_on_submit():
+        del form.id
+        # Assign roles
+        user.roles = [Role.query.filter_by(
+            id=r).first() for r in form.roles.data]
+        del form.roles
+        form.populate_obj(user)
+        db.session.add(user)
+        db.session.commit()
+
+        flash('User updated.', 'success')
+        return users()
+
+    if not form.roles.choices:
+        del form.roles
+    else:
+        form.roles.data = [(r.id) for r in user.roles]
+    return render_template('admin/userprofile.html', user=user, form=form)
 
 @blueprint.route('/user/new', methods=['GET', 'POST'])
 @login_required

@@ -113,9 +113,11 @@
       </div>
       <div class="modal-body">
         <p class="upload-note mt-0 mb-2">
-          Currently only <b><a href="https://frictionlessdata.io/field-guide/" target="_blank">Data Packages</a></b> are accepted.
-          These can be exported using recent versions of dribdat:
-          click the drop-down button next to an event listing in the admin.
+          Expects a
+          <b><a href="https://frictionlessdata.io/field-guide/" target="_blank">Data Package</a></b>
+          exported from dribdat.
+          There must not already be an event, category or project having the same name on this server as one in the package.
+          To export event data, tap the drop-down button next to an event listing in the admin.
         </p>
         <!--
         <p>
@@ -139,7 +141,7 @@
           <div class="input-group-prepend">
             <span class="input-group-text" id="inputUrlLabel">URL</span>
           </div>
-          <input type="text" class="form-control"
+          <input type="text" class="form-control" placeholder="https://..."
             id="inputUrl" name="url" aria-describedby="inputUrlLabel">
         </div>
         <div class="form-group form-check">
@@ -154,6 +156,13 @@
           <input type="radio" name="import" value="full" checked class="form-check-input" id="importCheck3">
           <label class="form-check-label" for="importCheck3">Include event, projects, users</label>
         </div>
+        <p class="message-error hidden alert alert-warning">
+          There was an error. Please check your window log for details.
+        </p>
+        <p class="message-ok hidden alert alert-success">
+          Import complete.
+          You can now close this dialog or import additional events.
+        </p>
       </div>
       <div class="modal-footer">
         <input type="submit" value="Import" class="btn btn-primary">

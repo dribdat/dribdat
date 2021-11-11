@@ -2,6 +2,7 @@
 {% import "macros/_misc.html" as misc %}
 
 {% block page_title %}{{current_event.name}} / Participants{% endblock %}
+{% block body_class %}eventusers{% endblock %}
 
 {% block content %}
 {% cache 300, 'eventusers-%d' % current_event.id %}
