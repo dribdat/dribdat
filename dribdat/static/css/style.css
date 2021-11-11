@@ -368,10 +368,9 @@ nav .nav-login {
 .hexagon {
   background-size: cover;
   background-position: center;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
-  transition: all 0.3s cubic-bezier(.25,.8,.25,1);
   margin-bottom: 73px;
   border-bottom: 4px solid transparent;
+  transition: all 0.3s cubic-bezier(.25,.8,.25,1);
 }
 
 .hexagon:hover {
@@ -393,10 +392,12 @@ nav .nav-login {
   border-bottom: 1px dashed rgba(0,0,200,0.4);
 }
 .challenge.hexagon::before {
+  background-color: white;
   border-top: 1px dashed rgba(0,0,200,0.4);
   border-bottom: 1px dashed rgba(0,0,200,0.4);
 }
 .challenge.hexagon::after {
+  background-color: white;
   border-top: 1px dashed rgba(0,0,200,0.4);
   border-bottom: 1px dashed rgba(0,0,200,0.4);
 }
@@ -432,13 +433,19 @@ nav .nav-login {
 .project .hexagontent .progress-bar {
   background-color: #aaa;
 }
-.honeycomb .project { opacity: 0.4; }
-.honeycomb .project.category-highlight { opacity: 1.0; }
-.honeycomb .project.hexalist {
+.honeycomb .hexagon {
+  opacity: 0.4;
+  box-shadow: none;
+}
+.honeycomb .hexagon.category-highlight {
+  opacity: 1.0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.15), 0 1px 2px rgba(0,0,0,0.3);
+}
+.honeycomb .hexagon.hexalist {
   display: none; background: white !important; color: black;
 }
-.honeycomb .project.hexalist.category-highlight { display: block; }
-.project.hexalist .hexagontent {
+.honeycomb .hexagon.hexalist.category-highlight { display: block; }
+.hexagon.hexalist .hexagontent {
   overflow: visible;
   position: relative;
   transform: none;
@@ -447,10 +454,10 @@ nav .nav-login {
   text-align: left;
   margin-bottom: 10px;
 }
-.project.hexalist .hexagontent i.fa,
-.project.hexalist .hexagontent br { display: none; }
-.project.hexalist .hexagontent small { font-size: 100%; }
-.project.hexalist.challenge .hexagontent .progress { visibility: hidden; }
+.hexagon.hexalist .hexagontent i.fa,
+.hexagon.hexalist .hexagontent br { display: none; }
+.hexagon.hexalist .hexagontent small { font-size: 100%; }
+.challenge.hexalist .hexagontent .progress { visibility: hidden; }
 .project.hexalist .hexagontent .progress {
   float: left;
   position: initial;
