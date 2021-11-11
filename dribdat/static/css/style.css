@@ -520,9 +520,6 @@ nav .nav-login {
   font-weight: bold;
   font-size: 3rem;
 }
-.project-page .project-category {
-  font-size: 70%;
-}
 .project-page .project-team {
   font-weight: normal;
   color: #999;
@@ -951,6 +948,18 @@ pre { color: #333; background: white; }
   float: right;
   margin-right: 15px;
   text-align: right;
+}
+.project-page .project-category {
+  float: right;
+  font-size: 110%;
+  font-weight: bold;
+  margin-top: 0.6em;
+  margin-right: 15px;
+  text-align: right;
+  clear: both;
+}
+.project-page .project-category a:hover {
+  text-decoration: none;
 }
 .project-edit-buttons {
   left: -1.5em;
