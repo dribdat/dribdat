@@ -321,7 +321,7 @@ def project_new(event_id):
             form.populate_obj(project)
             project.event = event
             if event.has_started:
-                project.progress = 1  # Start as team
+                project.progress = 5  # Start as team
             else:
                 project.progress = -1  # Start as challenge
             project.update()
