@@ -28,7 +28,7 @@
 {% block content %}
 <div class="btn-group project-edit-buttons" role="group" aria-label="Project tools">
 
-  {% if allow_post and not project.event.lock_editing and not project.is_challenge %}
+  {% if allow_post and not project.event.lock_editing %}
      <a id="project-post" href="{{ url_for('project.project_post', project_id=project.id) }}" title="Post to this project" class="btn btn-lg btn-success">
        <i class="fa fa-paper-plane" aria-hidden="true"></i>
        Post Progress
