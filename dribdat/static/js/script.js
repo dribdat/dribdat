@@ -22,8 +22,8 @@
     var $inputfield = $(this);
     var $indicator = $inputfield.parent()
       .append('<span class="autotext-indicator" style="visibility:hidden">' +
-        '<i style="color:red" class="fa fa-circle-o"></i>&nbsp;' +
-        '<button type="button">Fetch content</button>' +
+        '<button class="btn btn-warning" type="button">Sync content</button>' +
+        '<i style="margin:0px 1em; color:red" class="fa fa-circle-o"></i>' +
       '</span>')
       .find('.autotext-indicator');
 
@@ -45,13 +45,14 @@
       $button.attr('disabled', 'disabled').html('Please wait ...');
       // Call updater API
       $.getJSON('/api/project/autofill?url=' + url, function(data) {
-        $indicator.find('i').css('color', 'green');
-        $button.removeAttr('disabled').html('Update now');
+        $button.removeAttr('disabled').html('Sync again');
         if (typeof data.name === 'undefined' || data.name === '') {
           window.alert('Enter a valid link to sync from a supported site.');
           $('#is_autoupdate').prop('checked', false);
+          $indicator.find('i').css('color', 'red');
           return;
         }
+        $indicator.find('i').css('color', 'green');
         // Set form values
         if (!$('input#name').val())
           $('input#name').val(data.name);
