@@ -358,10 +358,26 @@
 
 </div><!-- /.jumbotron .project-page -->
 
+<center class="project-footer-controls">
 
+{% if not project.event.lock_editing and not project_starred %}
+  {% if current_user and current_user.active %}
+    <a href="{{ url_for('project.project_star', project_id=project.id) }}" class="btn btn-lg btn-success project-star"
+      title="Join this project">
+       <i class="fa fa-thumbs-up"></i>
+       Join
+    </a>
+  {% else %}
+    <a href="{{ url_for('auth.login') }}" class="btn btn-lg btn-success project-star"
+      title="Login to join this project">
+     <i class="fa fa-thumbs-up"></i>
+     Join
+    </a>
+  {% endif %}
+{% endif %}
 
 {% if allow_edit %}
-<center><div class="btn-group">
+<div class="btn-group">
   <a href="{{ url_for('project.project_post', project_id=project.id) }}" title="Write a progress update" class="btn btn-lg btn-success">
     <i class="fa fa-paper-plane" aria-hidden="true"></i>
     Post</a>
@@ -391,8 +407,10 @@
     </form>
   </center>
   {% endif %}
-</div></center>
+</div>
 {% endif %}
+
+</center>
 
 <div class="panel panel-default community-embed">
   <div class="panel-body"><i class="fa fa-comment"></i>
