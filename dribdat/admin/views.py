@@ -84,8 +84,8 @@ def users(page=1):
             User.username.asc()
         )
     if search_by and len(search_by)>1:
-        q = "%%%s%%" % search_by
-        users = users.filter(User.username.like(q))
+        q = "%%%s%%" % search_by.lower()
+        users = users.filter(User.username.ilike(q))
     users = users.paginate(page, per_page=20)
     return render_template('admin/users.html',
                            data=users, endpoint='admin.users', active='users')
