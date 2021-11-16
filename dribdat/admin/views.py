@@ -62,7 +62,6 @@ def index():
 @admin_required
 def users(page=1):
     sort_by = request.args.get('sort')
-    search_by = request.args.get('search')
     if sort_by == 'id':
         users = User.query.order_by(
             User.id.asc()
@@ -83,6 +82,7 @@ def users(page=1):
         users = User.query.order_by(
             User.username.asc()
         )
+    search_by = request.args.get('search')
     if search_by and len(search_by) > 1:
         q = "%%%s%%" % search_by.lower()
         users = users.filter(User.username.ilike(q))
@@ -333,7 +333,12 @@ def event_autosync(event_id):
 def projects(page=1):
     projects = Project.query.order_by(
         Project.updated_at.desc()
-    ).paginate(page, per_page=10)
+    )
+    search_by = request.args.get('search')
+    if search_by and len(search_by) > 1:
+        q = "%%%s%%" % search_by.lower()
+        projects = projects.filter(Project.name.ilike(q))
+    projects = projects.paginate(page, per_page=10)
     return render_template('admin/projects.html',
                            data=projects, endpoint='admin.projects',
                            active='projects')

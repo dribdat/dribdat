@@ -6,14 +6,9 @@
 
     <h2 class="float-left">Users</h2>
 
-    <form action="{{ url_for(endpoint) }}" class="row g-3">
-      <div class="col-auto ml-3 pr-0">
-        <input class="form-control" placeholder="Search ..." name="search">
-      </div><div class="col-auto">
-        <input class="btn btn-light" type="submit" value="Go">
-      </div>
-    </form>
-  {% include "includes/pagination.html" %}
+    {% include "includes/search.html" %}
+    {% include "includes/pagination.html" %}
+
     <table class='table table-hover'>
         <thead>
             <tr>

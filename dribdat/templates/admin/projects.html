@@ -4,7 +4,9 @@
 <div class="container admin-projects">
     <a href="{{ url_for('admin.project_new') }}" class="btn btn-success btn-lg">Add project</a>
     <h2>Projects</h2>
+
     {% if category_name %}<h4>Category: <b>{{ category_name }}</b></h4>{% endif %}
+
     {% if event %}
       <div class="btn-group projects-extra">
         <a href="{{ url_for('admin.event_autosync', event_id=event.id) }}" class="btn btn-warning">
@@ -19,6 +21,12 @@
         <i class="fa fa-pencil" aria-hidden="true"></i>
         Event</a>
     {% endif %}
+
+    {% if data %}
+      {% include "includes/search.html" %}
+      {% include "includes/pagination.html" %}
+    {% endif %}
+
     <table class='table table-hover'>
         <thead>
             <tr>
