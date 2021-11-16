@@ -238,13 +238,19 @@ def project_action(project_id, of_type=None, as_view=True, then_redirect=False,
     project_team = project.team()
     latest_activity = project.latest_activity()
     project_dribs = project.all_dribs()
+    if project.image_url:
+        project_image_url = project.image_url
+    elif event.logo_url:
+        project_image_url = event.logo_url
+    else:
+        project_image_url = url_for('static', filename='img/badge-black.png', _external=True)
     suggestions = None
     if not event.lock_resources:
         suggestions = getSuggestionsForStage(project.progress)
     return render_template(
         'public/project.html', current_event=event, project=project,
         project_starred=starred, project_team=project_team,
-        project_dribs=project_dribs,
+        project_dribs=project_dribs, project_image_url=project_image_url,
         allow_edit=allow_edit, allow_post=allow_post,
         suggestions=suggestions, latest_activity=latest_activity
     )
