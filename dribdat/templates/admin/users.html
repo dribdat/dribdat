@@ -3,8 +3,12 @@
 {% block content %}
 <div class="container admin-users">
     <a href="{{ url_for('admin.user_new') }}" class="btn btn-success btn-lg">Add user</a>
-    <h2>Users</h2>
+
+    <h2 class="float-left">Users</h2>
+
+    {% include "includes/search.html" %}
     {% include "includes/pagination.html" %}
+
     <table class='table table-hover'>
         <thead>
             <tr>

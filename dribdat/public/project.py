@@ -238,13 +238,20 @@ def project_action(project_id, of_type=None, as_view=True, then_redirect=False,
     project_team = project.team()
     latest_activity = project.latest_activity()
     project_dribs = project.all_dribs()
+    if project.image_url:
+        project_image_url = project.image_url
+    elif event.logo_url:
+        project_image_url = event.logo_url
+    else:
+        project_image_url = url_for(
+            'static', filename='img/badge-black.png', _external=True)
     suggestions = None
     if not event.lock_resources:
         suggestions = getSuggestionsForStage(project.progress)
     return render_template(
         'public/project.html', current_event=event, project=project,
         project_starred=starred, project_team=project_team,
-        project_dribs=project_dribs,
+        project_dribs=project_dribs, project_image_url=project_image_url,
         allow_edit=allow_edit, allow_post=allow_post,
         suggestions=suggestions, latest_activity=latest_activity
     )
@@ -321,13 +328,13 @@ def project_new(event_id):
             form.populate_obj(project)
             project.event = event
             if event.has_started:
-                project.progress = 0
+                project.progress = 5  # Start as team
             else:
                 project.progress = -1  # Start as challenge
             project.update()
             db.session.add(project)
             db.session.commit()
-            flash('New challenge added.', 'success')
+            flash('Invite your team to Join this page!', 'success')
             project_action(project.id, 'create', False)
             cache.clear()
             if event.has_started:
@@ -354,9 +361,9 @@ def project_autoupdate(project_id):
         flash('You may not sync this project.', 'warning')
         return project_action(project_id)
     data = GetProjectData(project.autotext_url)
-    if 'name' not in data:
+    if not data or 'name' not in data:
         flash(
-            "Could not sync: check that the Remote Link contains a README.",
+            "Could not sync: check that the remote site contains a README.",
             'warning')
         return project_action(project_id)
     SyncProjectData(project, data)

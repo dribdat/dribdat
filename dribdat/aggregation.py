@@ -189,7 +189,7 @@ def ProjectActivity(project, of_type, user, action=None, comments=None):
 
 
 def SyncCommitData(project, commits):
-    if project.event is None or project.user is None or len(commits) == 0:
+    if project.event is None or len(commits) == 0:
         return
     prevactivities = Activity.query.filter_by(
             name='update', action='commit', project_id=project.id

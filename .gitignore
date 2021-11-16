@@ -22,8 +22,10 @@ develop-eggs
 lib
 lib64
 
-# Installer logs
+# Installer
 pip-log.txt
+start.sh
+debug.sh
 
 # Unit test /  coverage reports
 .coverage

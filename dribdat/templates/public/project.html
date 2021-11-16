@@ -7,7 +7,7 @@
   <meta property="og:type" content="website">
   <meta property="og:url" content="{{ url_for('project.project_view', project_id=project.id, _external=True) }}">
   <meta property="og:title" content="{{project.name}}">
-  <meta property="og:image" content="{% if project.image_url %}{{project.image_url}}{% else %}{{ url_for('static', filename='img/badge-black.png', _external=True) }}{% endif %}">
+  <meta property="og:image" content="{{project_image_url}}">
   <meta property="og:description" content="{% if project.summary %}{{project.summary}}{% else %}{{ project.longtext|striptags|truncate(120) }}{% endif %}">
   <meta name="twitter:site" content="@opendatach">
   <meta name="twitter:card" content="summary">
@@ -28,16 +28,11 @@
 {% block content %}
 <div class="btn-group project-edit-buttons" role="group" aria-label="Project tools">
 
-  {% if allow_post %}
-    {% if project.is_challenge %}
-     <a id="project-post" href="{{ url_for('project.project_post', project_id=project.id) }}" title="Post a start to this project" class="btn btn-lg btn-success">
-       <i class="fa fa-rocket" aria-hidden="true"></i>
-       Start Project</a>
-    {% else %}
-     <a id="project-post" href="{{ url_for('project.project_post', project_id=project.id) }}" title="Post an update to this project" class="btn btn-lg btn-success">
-       <i class="fa fa-clipboard" aria-hidden="true"></i>
-       Post</a>
-     {% endif %}
+  {% if allow_post and not project.event.lock_editing %}
+     <a id="project-post" href="{{ url_for('project.project_post', project_id=project.id) }}" title="Post to this project" class="btn btn-lg btn-success">
+       <i class="fa fa-paper-plane" aria-hidden="true"></i>
+       Post Progress
+     </a>
   {% elif current_user and current_user.active and not project.is_challenge %}
      <a id="project-comment" href="{{ url_for('project.project_comment', project_id=project.id) }}" title="Write a public comment" class="btn btn-lg btn-info">
        <i class="fa fa-comment" aria-hidden="true"></i>
@@ -59,32 +54,29 @@
       <a href="{{ url_for('project.project_unstar_me', project_id=project.id) }}" class="project-star btn btn-lg btn-secondary"
         title="Click to stop being a member of the project"
         onclick="return confirm('Are you sure you wish to leave this team?')">
-        <i class="fa fa-star"></i>
+        <i class="fa fa-thumbs-up"></i>
       </a>
     {% elif current_user and current_user.active %}
-      <a href="{{ url_for('project.project_star', project_id=project.id) }}" class="btn btn-lg btn-primary project-star"
-        title="Join this project">
-       <i class="fa fa-star-o"></i>
-       Join
-      </a>
+      {% if project.is_challenge %}
+        <a href="{{ url_for('project.project_star', project_id=project.id) }}" class="btn btn-lg btn-success project-star"
+          title="Follow this challenge">
+           <i class="fa fa-thumbs-up"></i>
+           Join
+        </a>
+      {% else %}
+        <a href="{{ url_for('project.project_star', project_id=project.id) }}" class="btn btn-lg btn-success project-star"
+          title="Join this project">
+           <i class="fa fa-thumbs-up"></i>
+           Join
+        </a>
+      {% endif %}
     {% else %}
-      <a href="{{ url_for('auth.login') }}" class="btn btn-lg btn-primary project-star"
+      <a href="{{ url_for('auth.login') }}" class="btn btn-lg btn-success project-star"
         title="Login to join this project">
-       <i class="fa fa-star-o"></i>
+       <i class="fa fa-thumbs-up"></i>
        Join
       </a>
     {% endif %}
-  {% endif %}
-
-  {% if current_user.is_admin %}
-
-    {% if project.event.lock_editing and project_starred %}
-    <!-- Always allow admins to un-star -->
-    <a href="{{ url_for('project.project_unstar_me', project_id=project.id) }}"  class="project-star btn btn-lg btn-secondary">
-      <i class="fa fa-star"></i>
-    </a>
-    {% endif %}
-
   {% endif %}
 
 </div><br clear="all">
@@ -114,20 +106,20 @@
     </a>
   </div>
 
-  <div class="project-name">
-  {% if project.logo_icon %}
-      <i class="fa fa-{{project.logo_icon}}"></i>
-  {% endif %}
-    <h2>{{project.name}}</h2>
-
   {% if project.category %}
     <div class="project-category">
       {% if project.category.logo_icon %}
         <i class="fa fa-{{project.category.logo_icon}}"></i>
       {% endif %}
-      <a href="#category">{{ project.category.name }}</a>
+      <a href="#category" title="Category">{{ project.category.name }}</a>
     </div>
   {% endif %}
+
+  <div class="project-name">
+  {% if project.logo_icon %}
+      <i class="fa fa-{{project.logo_icon}}"></i>
+  {% endif %}
+    <h2>{{project.name}}</h2>
 
   {% if project.summary %}
     <p class="project-summary">
@@ -251,17 +243,9 @@
   {% if not project.is_challenge and not project.event.lock_resources %}
   <div class="tab-pane fade" id="dribs-md" role="tabpanel" aria-labelledby="dribs-tab-md">
 
-    {% if current_user and current_user.is_authenticated %}
-    <center style="position:relative" class="mt-3">
-      <a id="project-post" href="{{ url_for('project.project_post', project_id=project.id) }}" title="Post an update to this project" class="btn btn-success">
-        <i class="fa fa-clipboard" aria-hidden="true"></i>
-        Post an update</a>
-    </center>
-    {% endif %}
-
     <section class="timeline">
       {% for s in project_dribs %}
-      <div class="timeline-item timeline-{{ s.name }}">
+      <div class="timeline-item timeline-{{ s.name }} timeline-{{ s.icon }}">
         <div class="timeline-img" title="{{ s.date|format_datetime }} ({{ s.name }})">
           {% if s.icon %}
             <i class="fa fa-{{ s.icon }}" aria-hidden="true"></i>
@@ -328,16 +312,7 @@
       {% endfor %}
     </div>
   {% endif %}
-  {% if current_user.is_admin and not project.event.lock_resources %}
-  <!-- Add arbitrary user to the team -->
-  <center class="mb-3 mt-3">
-    <form action="{{ url_for('project.project_star_user', project_id=project.id)}}" method="post">
-      <i class="fa fa-child" aria-hidden="true"></i>
-      <input type="text" name="username" placeholder="username" size="12" />
-      <input type="submit" value="Add to team" />
-    </form>
-  </center>
-  {% endif %}
+
   {% if not project_team and project.user and not project.event.lock_resources %}
     <div class="widget widget-team">
       {{ misc.render_user_profile(project.user) }}
@@ -383,10 +358,29 @@
 
 </div><!-- /.jumbotron .project-page -->
 
+<center class="project-footer-controls">
 
+{% if not project.event.lock_editing and not project_starred %}
+  {% if current_user and current_user.active %}
+    <a href="{{ url_for('project.project_star', project_id=project.id) }}" class="btn btn-lg btn-success project-star"
+      title="Join this project">
+       <i class="fa fa-thumbs-up"></i>
+       Join
+    </a>
+  {% else %}
+    <a href="{{ url_for('auth.login') }}" class="btn btn-lg btn-success project-star"
+      title="Login to join this project">
+     <i class="fa fa-thumbs-up"></i>
+     Join
+    </a>
+  {% endif %}
+{% endif %}
 
 {% if allow_edit %}
-<center><div class="btn-group">
+<div class="btn-group">
+  <a href="{{ url_for('project.project_post', project_id=project.id) }}" title="Write a progress update" class="btn btn-lg btn-success">
+    <i class="fa fa-paper-plane" aria-hidden="true"></i>
+    Post</a>
   <a href="{{ url_for('project.project_edit', project_id=project.id) }}" title="Edit project" class="btn btn-lg btn-warning">
     <i class="fa fa-pencil" aria-hidden="true"></i>
     Edit</a>
@@ -398,12 +392,25 @@
       <i class="fa fa-pencil" aria-hidden="true"></i>
       Admin</a>
 
-    <a href="{{ url_for('project.project_boost', project_id=project.id) }}" class="btn btn-lg btn-info project-boost" title="Boost this project">
+    <a href="{{ url_for('project.project_boost', project_id=project.id) }}" class="btn btn-lg btn-secondary project-boost" title="Boost this project">
        <i class="fa fa-rocket" aria-hidden="true"></i>
        Boost</a>
   {% endif %}
-</div></center>
+
+
+  {% if current_user.is_admin and not project.event.lock_resources %}
+  <!-- Add arbitrary user to the team -->
+  <center class="widget-team-add btn-lg">
+    <form action="{{ url_for('project.project_star_user', project_id=project.id)}}" method="post">
+      <input type="text" name="username" placeholder="username" size="12" />
+      <input type="submit" value="Invite" />
+    </form>
+  </center>
+  {% endif %}
+</div>
 {% endif %}
+
+</center>
 
 <div class="panel panel-default community-embed">
   <div class="panel-body"><i class="fa fa-comment"></i>

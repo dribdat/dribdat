@@ -2,6 +2,7 @@
 """Application configuration."""
 import os
 from dotenv import load_dotenv
+from distutils.util import strtobool
 
 load_dotenv()
 os_env = os.environ
@@ -19,16 +20,16 @@ class Config(object):
     DRIBDAT_THEME = os_env.get('DRIBDAT_THEME', 'simplex')
 
     # Application options
-    DRIBDAT_USER_APPROVE = os_env.get('DRIBDAT_USER_APPROVE', False)
-    DRIBDAT_NOT_REGISTER = os_env.get('DRIBDAT_NOT_REGISTER', False)
-    DRIBDAT_ALLOW_EVENTS = os_env.get('DRIBDAT_ALLOW_EVENTS', True)
+    DRIBDAT_USER_APPROVE = bool(strtobool(os_env.get('DRIBDAT_USER_APPROVE', 'False')))
+    DRIBDAT_NOT_REGISTER = bool(strtobool(os_env.get('DRIBDAT_NOT_REGISTER', 'False')))
+    DRIBDAT_ALLOW_EVENTS = bool(strtobool(os_env.get('DRIBDAT_ALLOW_EVENTS', 'True')))
 
     # Single sign-on support
     OAUTH_ID = os_env.get('OAUTH_ID', None)
     OAUTH_TYPE = os_env.get('OAUTH_TYPE', '').lower()
     OAUTH_SECRET = os_env.get('OAUTH_SECRET', None)
     OAUTH_DOMAIN = os_env.get('OAUTH_DOMAIN', None)
-    OAUTH_SKIP_LOGIN = os_env.get('OAUTH_SKIP_LOGIN', False)
+    OAUTH_SKIP_LOGIN = bool(strtobool(os_env.get('OAUTH_SKIP_LOGIN', 'False')))
 
     # Application settings
     APP_DIR = os.path.abspath(os.path.dirname(__file__))  # This directory
@@ -43,8 +44,8 @@ class Config(object):
     # Server settings
     SERVER_NAME = os_env.get('SERVER_URL', '127.0.0.1:5000')
     SERVER_SSL = os_env.get('SERVER_SSL', None)
-    SERVER_CORS = bool(os_env.get('SERVER_CORS', True))
-    SERVER_PROXY = bool(os_env.get('SERVER_PROXY', False))
+    SERVER_CORS = bool(strtobool(os_env.get('SERVER_CORS', 'True')))
+    SERVER_PROXY = bool(strtobool(os_env.get('SERVER_PROXY', 'False')))
     CSP_DIRECTIVES = os_env.get(
         'CSP_DIRECTIVES', "default-src * 'unsafe-inline' 'unsafe-eval' data:")
     TIME_ZONE = os_env.get('TIME_ZONE', 'UTC')

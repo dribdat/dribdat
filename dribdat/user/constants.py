@@ -146,8 +146,7 @@ def getActivityByType(a):
         icon = 'pencil'
     elif a.name == 'star':
         # title = "Team forming"
-        text = "%s has joined!" % author
-        author = None
+        text = "Joined the team"
         icon = 'thumbs-up'
     elif a.name == 'update' and a.action == 'commit':
         # title = "Code commit"
@@ -158,7 +157,7 @@ def getActivityByType(a):
         text = "Worked on the pitch"
         icon = 'paperclip'
     elif a.name == 'create':
-        text = "Challenge started."
+        text = "Challenge started"
         icon = 'rocket'
     elif a.name == 'boost':
         title = a.action

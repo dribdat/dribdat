@@ -15,9 +15,10 @@
         {% for role in roles %}
         <tr>
             <td>
-              <a href="{{ url_for('admin.role', role_id=role.id) }}">
-                {{ role.name }}
-              </a>
+              <a href="{{ url_for('admin.role', role_id=role.id) }}"
+                 class="btn btn-sm btn-warning float-right">
+                Edit</a>
+              {{ role.name }}
             </td>
             <td>
                 {{ role.user_count() }}
@@ -42,13 +43,14 @@
         {% for category in categories %}
         <tr>
             <td>
-              <a href="{{ url_for('admin.category', category_id=category.id) }}">
-                {{ category.name }}
-              </a>
+              {{ category.name }}
             </td>
             <td>{{ category.event.name }}</td>
             <td>
-              <a href="{{ url_for('admin.category_projects', category_id=category.id) }}" class="btn btn-sm btn-primary">
+              <a href="{{ url_for('admin.category', category_id=category.id) }}"
+                 class="btn btn-sm btn-warning">Edit</a>
+              <a href="{{ url_for('admin.category_projects', category_id=category.id) }}"
+                 class="btn btn-sm btn-info">
                 {{ category.project_count() }}&nbsp;projects
               </a>
             </td>

@@ -22,8 +22,8 @@
     var $inputfield = $(this);
     var $indicator = $inputfield.parent()
       .append('<span class="autotext-indicator" style="visibility:hidden">' +
-        '<i style="color:red" class="fa fa-circle-o"></i>&nbsp;' +
-        '<button type="button">Fetch content</button>' +
+        '<button class="btn btn-warning" type="button">Sync content</button>' +
+        '<i style="margin:0px 1em; color:red" class="fa fa-circle-o"></i>' +
       '</span>')
       .find('.autotext-indicator');
 
@@ -45,13 +45,14 @@
       $button.attr('disabled', 'disabled').html('Please wait ...');
       // Call updater API
       $.getJSON('/api/project/autofill?url=' + url, function(data) {
-        $indicator.find('i').css('color', 'green');
-        $button.removeAttr('disabled').html('Update now');
+        $button.removeAttr('disabled').html('Sync again');
         if (typeof data.name === 'undefined' || data.name === '') {
           window.alert('Enter a valid link to sync from a supported site.');
           $('#is_autoupdate').prop('checked', false);
+          $indicator.find('i').css('color', 'red');
           return;
         }
+        $indicator.find('i').css('color', 'green');
         // Set form values
         if (!$('input#name').val())
           $('input#name').val(data.name);
@@ -291,7 +292,7 @@
     $(this).parent().find('.active').removeClass('active');
     $(this).parent().addClass('active');
     var selected_id = $(this).find('input').attr('id');
-    var $projects = $('.honeycomb .project');
+    var $projects = $('.honeycomb .hexagon');
     var $infotext = $('.category-info');
     $('.honeycomb').removeClass('hide-challenges');
 
@@ -382,10 +383,11 @@
       $.each(data, function(index) {
         if (index == per_page) {
           return;
-          return $self.append(
-            '<a href="' + url_www +
-            '" class="list-group-item link-more" target="_blank">All issues ...</a>'
-          );
+          // Show link to more issues:
+          // return $self.append(
+          //   '<a href="' + url_www +
+          //   '" class="list-group-item link-more" target="_blank">All issues ...</a>'
+          // );
         }
         $self.append(
           '<a href="' + this.html_url +
@@ -412,6 +414,28 @@
   // Admin button tips
   $('.admin-defaults button').click(function() {
     $('input#name').val($(this).text());
+  });
+
+  // Admin event import
+  // this is the id of the form
+  $("#importEvent form").submit(function(e) {
+    e.preventDefault();
+    var $form = $(this);
+    var url = $form.attr('action');
+    $.ajax({
+      type: "POST",
+      url: url,
+      data: $form.serialize(),
+      success: function(data) {
+        // Handle response
+        console.log(data);
+        $form.find('.message-ok').show();
+      },
+      error: function(err) {
+        console.error(err.statusText);
+        $form.find('.message-error').show();
+      }
+    });
   });
 
   // Ye olde darke moude

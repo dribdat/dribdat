@@ -297,7 +297,7 @@ class Event(PkModel):
 
     def get_schema(self, host_url=''):
         """ Returns hackathon.json formatted metadata """
-        desc = self.summary or re.sub('<[^>]*>', '', self.description)
+        desc = self.summary or re.sub('<[^>]*>', '', self.description or '')
         return {
             "@context": "http://schema.org",
             "@type": "Event",
@@ -368,7 +368,7 @@ class Event(PkModel):
     @property
     def oneliner(self):
         """ A short online description """
-        ol = self.summary or self.description
+        ol = self.summary or self.description or ''
         ol = re.sub(r"\s+", " ", ol)
         if len(ol) > 140:
             ol = ol[:140] + '...'
