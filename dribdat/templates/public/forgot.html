@@ -7,12 +7,11 @@
 <div class="container-narrow">
   <h1>I forgot ...</h1>
   <br/>
-  {% if slack_enabled %}
-     <p>This site has &#x1f511; <b>Single Sign On</b>
-      - try to reset your password with the provider:</p>
-     <p><a class="btn signin-slack" href="{{ url_for('slack.login') }}">
-       Sign in with Slack
-     </a></p>
+  {% if oauth_type %}
+     <p>This site has &#x1f511;
+      <b><a href="{{ url_for('auth.login') }}">Single Sign On</a></b>
+      enabled through {{ oauth_type }}
+      - please try to reset your password with the corresponding provider.</p>
   {% endif %}
   {% if not config.DRIBDAT_NOT_REGISTER %}
     <br>
