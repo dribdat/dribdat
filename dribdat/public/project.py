@@ -327,13 +327,13 @@ def project_new(event_id):
             form.populate_obj(project)
             project.event = event
             if event.has_started:
-                project.progress = 0
+                project.progress = 5  # Start as team
             else:
                 project.progress = -1  # Start as challenge
             project.update()
             db.session.add(project)
             db.session.commit()
-            flash('New challenge added.', 'success')
+            flash('Invite your team to Join this page!', 'success')
             project_action(project.id, 'create', False)
             cache.clear()
             if event.has_started:

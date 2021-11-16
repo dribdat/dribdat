@@ -291,7 +291,7 @@
     $(this).parent().find('.active').removeClass('active');
     $(this).parent().addClass('active');
     var selected_id = $(this).find('input').attr('id');
-    var $projects = $('.honeycomb .project');
+    var $projects = $('.honeycomb .hexagon');
     var $infotext = $('.category-info');
     $('.honeycomb').removeClass('hide-challenges');
 
