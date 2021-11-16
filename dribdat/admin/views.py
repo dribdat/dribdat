@@ -83,7 +83,7 @@ def users(page=1):
         users = User.query.order_by(
             User.username.asc()
         )
-    if search_by and len(search_by)>1:
+    if search_by and len(search_by) > 1:
         q = "%%%s%%" % search_by.lower()
         users = users.filter(User.username.ilike(q))
     users = users.paginate(page, per_page=20)
@@ -141,6 +141,7 @@ def user_profile(user_id):
     else:
         form.roles.data = [(r.id) for r in user.roles]
     return render_template('admin/userprofile.html', user=user, form=form)
+
 
 @blueprint.route('/user/new', methods=['GET', 'POST'])
 @login_required

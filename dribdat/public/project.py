@@ -243,7 +243,8 @@ def project_action(project_id, of_type=None, as_view=True, then_redirect=False,
     elif event.logo_url:
         project_image_url = event.logo_url
     else:
-        project_image_url = url_for('static', filename='img/badge-black.png', _external=True)
+        project_image_url = url_for(
+            'static', filename='img/badge-black.png', _external=True)
     suggestions = None
     if not event.lock_resources:
         suggestions = getSuggestionsForStage(project.progress)
@@ -360,9 +361,9 @@ def project_autoupdate(project_id):
         flash('You may not sync this project.', 'warning')
         return project_action(project_id)
     data = GetProjectData(project.autotext_url)
-    if 'name' not in data:
+    if not data or 'name' not in data:
         flash(
-            "Could not sync: check that the Remote Link contains a README.",
+            "Could not sync: check that the remote site contains a README.",
             'warning')
         return project_action(project_id)
     SyncProjectData(project, data)
