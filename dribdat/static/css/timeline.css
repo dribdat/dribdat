@@ -137,7 +137,9 @@
   .timeline::before {
     left: 0px; }
   .timeline .timeline-img {
-    left: 0px; }
+     top: -5px;
+     position: relative;
+     margin-top: 0px !important; }
   .timeline .timeline-content {
     width: 100%;
     margin-top: 10px;
