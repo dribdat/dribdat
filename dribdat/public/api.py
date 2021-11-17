@@ -251,17 +251,21 @@ def project_search_json():
 # ------ UPDATE ---------
 
 
-@blueprint.route('/event/load/datapackage', methods=["GET"])
+@blueprint.route('/event/load/datapackage', methods=["GET", "POST"])
 @admin_required
 def event_load_datapackage():
     """ API: Loads event data from URL """
     url = request.args.get('url')
+    if url:
+        import_level = request.args.get('import')
+    else:
+        url = request.form.get('url')
+        import_level = request.form.get('import')
     if not url or 'datapackage.json' not in url:
         return jsonify(status='Error', errors=['Missing datapackage.json url'])
     dry_run = True
     all_data = False
     status = "Preview"
-    import_level = request.args.get('import')
     if import_level == 'basic':
         dry_run = False
         status = "Basic"

@@ -103,18 +103,24 @@ def importProjects(data, DRY_RUN=False):
 
 def importActivities(data, DRY_RUN=False):
     updates = []
+    proj = None
+    pname = ""
     for act in data:
         aname = act['name']
         tstamp = dt.utcfromtimestamp(act['time'])
         activity = Activity.query.filter_by(name=aname,
                                             timestamp=tstamp).first()
         if activity:
+            logging.info('Skipping activity', tstamp)
             continue
         logging.info('Creating activity', tstamp)
-        pname = act['project_name']
-        proj = Project.query.filter_by(name=pname).first()
+        if act['project_name'] != pname:
+            pname = act['project_name']
+            # TODO: unreliable; mapping project_id to new id would be much better
+            proj = Project.query.filter_by(name=pname).first()
         if not proj:
             logging.warn('Error! Project not found: %s' % pname)
+            continue
         activity = Activity(aname, proj.id)
         activity.set_from_data(act)
         if not DRY_RUN:
