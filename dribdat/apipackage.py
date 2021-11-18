@@ -7,7 +7,12 @@ from datetime import datetime as dt
 from frictionless import Package, Resource
 from .user.models import Event, Project, Activity, Category, User, Role
 from .utils import timesince, random_password, format_date
-from .apiutils import get_project_list
+from .apiutils import (
+    get_project_list,
+    get_event_users,
+    get_event_activities,
+    get_event_categories,
+)
 
 def PackageEvent(event, author, host_url='', full_contents=False):
     """ Creates a Data Package from the data of an event """
