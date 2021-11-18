@@ -475,8 +475,9 @@ class Project(PkModel):
                     ).order_by(Activity.timestamp.desc())
         dribs = []
         prev = None
+        only_active = False # show dribs from inactive users
         for a in activities:
-            a_parsed = getActivityByType(a)
+            a_parsed = getActivityByType(a, only_active)
             if a_parsed is None:
                 continue
             (author, title, text, icon) = a_parsed

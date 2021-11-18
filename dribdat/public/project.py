@@ -236,7 +236,7 @@ def project_action(project_id, of_type=None, as_view=True, then_redirect=False,
     allow_post = starred  # and not event.lock_resources
     allow_edit = allow_edit and not event.lock_editing
     project_team = project.team()
-    latest_activity = project.latest_activity()
+    # latest_activity = project.latest_activity() # obsolete
     project_dribs = project.all_dribs()
     if project.image_url:
         project_image_url = project.image_url
@@ -253,7 +253,7 @@ def project_action(project_id, of_type=None, as_view=True, then_redirect=False,
         project_starred=starred, project_team=project_team,
         project_dribs=project_dribs, project_image_url=project_image_url,
         allow_edit=allow_edit, allow_post=allow_post,
-        suggestions=suggestions, latest_activity=latest_activity
+        suggestions=suggestions
     )
 
 

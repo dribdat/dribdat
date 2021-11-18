@@ -613,9 +613,9 @@ nav .nav-login {
 
 .project-page .latest-drib { padding: 1em; }
 
-/* Hides the triangle pointers in the timeline */
-.project-page .timeline-card::after { display: none; }
-.project-page .timeline-img {
+/* -- Timeline (dribs) -- */
+
+.timeline-img {
   width: 2em;
   height: 2em;
   background: #baa;
@@ -628,7 +628,13 @@ nav .nav-login {
   line-height: 1.8em;
   font-size: 150%;
 }
+
+/* Hides the triangle pointers in the timeline */
+.project-page .timeline-card::after { display: none; }
+.project-page .timeline-start .timeline-card::after { display: initial; }
+.project-page .timeline-finish .timeline-card::after { display: initial; }
 .project-page .timeline-card .close { margin: 0.4em; }
+/* Other project timeline customizations */
 .project-page .timeline-review .timeline-content { background: #f2fef2; border-top: none; }
 .project-page .timeline-pencil .timeline-content { background: #ffc; border-top: none; }
 .project-page .timeline-finish .timeline-content,
