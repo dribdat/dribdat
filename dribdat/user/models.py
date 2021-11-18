@@ -298,23 +298,27 @@ class Event(PkModel):
     def get_schema(self, host_url=''):
         """ Returns hackathon.json formatted metadata """
         desc = self.summary or re.sub('<[^>]*>', '', self.description or '')
-        return {
+        d = {
             "@context": "http://schema.org",
             "@type": "Event",
-            "location": {"@type": "Place",
-                         "name": self.hostname,
-                         "address": self.location
-                         },
             "name": self.name,
             "url": host_url + self.url,
             "description": desc,
             "startDate": format_date(self.starts_at, '%Y-%m-%dT%H:%M'),
             "endDate": format_date(self.ends_at, '%Y-%m-%dT%H:%M'),
-            "logo": self.logo_url,
-            "mainEntityOfPage": self.webpage_url,
-            "offers": {"@type": "Offer", "url": self.webpage_url},
             "workPerformed": [p.get_schema(host_url) for p in self.projects]
         }
+        if self.hostname and self.location:
+            d["location"] = {
+                "@type": "Place",
+                "name": self.hostname, "address": self.location
+            }
+        if self.logo_url:
+            d["logo"] = self.logo_url
+        if self.webpage_url:
+            d["mainEntityOfPage"] = self.webpage_url
+            d["offers"] = {"@type": "Offer", "url": self.webpage_url}
+        return d
 
     @property
     def url(self):
