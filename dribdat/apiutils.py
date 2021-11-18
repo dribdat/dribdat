@@ -75,6 +75,12 @@ def get_project_summaries(projects, host_url, is_moar=False):
     return summaries
 
 
+def get_project_list(event_id, host_url='', full_data=False):
+    """ Collect all projects and challenges for an event """
+    projects = get_projects_by_event(event_id)
+    return get_project_summaries(projects, host_url, full_data)
+
+
 def expand_project_urls(projects, host_url):
     for p in projects:
         p['event_url'] = host_url + p['event_url']

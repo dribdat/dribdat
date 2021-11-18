@@ -4,7 +4,85 @@
 import logging
 import requests
 from datetime import datetime as dt
+from frictionless import Package, Resource
 from .user.models import Event, Project, Activity, Category, User, Role
+from .utils import timesince, random_password, format_date
+from .apiutils import get_project_list
+
+def PackageEvent(event, author, host_url='', full_contents=False):
+    """ Creates a Data Package from the data of an event """
+
+    # Set up a data package object
+    package = Package(
+        name='event-%d' % event.id,
+        title=event.name,
+        description="Event and project details collected with dribdat",
+        keywords=["dribdat", "hackathon", "co-creation"],
+        sources=[{"title": "dribdat", "path": "https://dribdat.cc"}],
+        licenses=[{
+            "name": "ODC-PDDL-1.0",
+            "path": "http://opendatacommons.org/licenses/pddl/",
+            "title": "Open Data Commons Public Domain Dedication & License 1.0"
+        }],
+        contributors=[{
+            "title": author.username,
+            "path": author.webpage_url or '',
+            "role": "author"
+        }],
+        homepage=event.webpage_url or '',
+        created=format_date(dt.now(), '%Y-%m-%dT%H:%M'),
+        version="0.1.0",
+    )
+
+    # if False:  # as CSV
+    #     fp_projects = tempfile.NamedTemporaryFile(
+    #         mode='w+t', prefix='projects-', suffix='.csv')
+    #     # print("Writing to temp CSV file", fp_projects.name)
+    #     fp_projects.write(gen_csv(get_project_list(event.id)))
+    #     resource = Resource(fp_projects.name)
+    # if False:
+    #     # print("Generating in-memory rowset")
+    #     project_rows = gen_rows(get_project_list(event.id))
+    #     resource = Resource(
+    #         name='projects',
+    #         data=project_rows,
+    #     )
+
+    # Generate resources
+
+    # print("Generating in-memory JSON of event")
+    package.add_resource(Resource(
+            name='events',
+            data=[event.get_full_data()],
+        ))
+    # print("Generating in-memory JSON of projects")
+    package.add_resource(Resource(
+            name='projects',
+            data=get_project_list(event.id, host_url, True),
+        ))
+    if full_contents:
+        # print("Generating in-memory JSON of participants")
+        package.add_resource(Resource(
+                name='users',
+                data=get_event_users(event),
+            ))
+        # print("Generating in-memory JSON of activities")
+        package.add_resource(Resource(
+                name='activities',
+                data=get_event_activities(event.id, 500),
+            ))
+        # print("Generating in-memory JSON of activities")
+        package.add_resource(Resource(
+                name='categories',
+                data=get_event_categories(event.id),
+            ))
+        # print("Adding supplementary README")
+        package.add_resource(Resource(
+                name='readme',
+                path='PACKAGE.txt',
+            ))
+
+    return package
 
 
 def importEvents(data, DRY_RUN=False):
@@ -116,7 +194,7 @@ def importActivities(data, DRY_RUN=False):
         logging.info('Creating activity', tstamp)
         if act['project_name'] != pname:
             pname = act['project_name']
-            # TODO: unreliable; mapping project_id to new id would be much better
+            # TODO: unreliable; rather use a map of project_id to new id
             proj = Project.query.filter_by(name=pname).first()
         if not proj:
             logging.warn('Error! Project not found: %s' % pname)
@@ -135,12 +213,13 @@ def ImportEventPackage(data, DRY_RUN=False, ALL_DATA=False):
     updates = {}
     # Initial import
     for res in data['resources']:
+        # Import events
         if res['name'] == 'events':
             updates['events'] = importEvents(res['data'], DRY_RUN)
-
+        # Import categories
         elif res['name'] == 'categories' and ALL_DATA:
             updates['categories'] = importCategories(res['data'], DRY_RUN)
-
+        # Import user accounts
         elif res['name'] == 'users' and ALL_DATA:
             updates['users'] = importUsers(res['data'], DRY_RUN)
     # Projects follow users
