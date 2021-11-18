@@ -146,7 +146,9 @@
     <section class="timeline">
     {% for s in posts %}
     <div class="timeline-item timeline-{{ s.name }} timeline-{{ s.icon }}">
-        <div class="timeline-img"></div>
+        <div class="timeline-img">
+            <i class="fa fa-paperclip" aria-hidden="true"></i>
+        </div>
         <div class="timeline-content timeline-card js--fadeInBottom">
           <div class="timeline-img-header">
             <a href="{{ url_for('project.project_view', project_id=s.project_id) }}">
