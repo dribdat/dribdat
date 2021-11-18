@@ -26,8 +26,6 @@ class UserFactory(BaseFactory):
     active = True
 
     class Meta:
-        """Factory configuration."""
-
         model = User
 
 class ProjectFactory(BaseFactory):
@@ -40,6 +38,22 @@ class ProjectFactory(BaseFactory):
     logo_color = "red"
 
     class Meta:
-        """Factory configuration."""
+        model = Project
 
+class EventFactory(BaseFactory):
+    """Event factory."""
+
+    name = Sequence(lambda n: 'Event {0}'.format(n))
+    summary = "Just a sample event"
+
+    class Meta:
+        model = Project
+
+class ActivityFactory(BaseFactory):
+    """Activity factory."""
+
+    name = Sequence(lambda n: 'Event {0}'.format(n))
+    summary = "Just a sample event"
+
+    class Meta:
         model = Project
