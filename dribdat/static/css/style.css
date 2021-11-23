@@ -311,17 +311,15 @@ nav .nav-login {
   margin-top: 40px;
   padding: 30px;
 }
-
 .with-event .start-project {
   margin: 2em 0px;
   text-align: center;
   display: block;
 }
-
 .event-home .event-info .event-summary {
   text-align: center;
-  margin-bottom: 1em;
-  font-size: 125%;
+  margin: 1em 10%;
+  font-size: 180%;
 }
 .event-home .event-info .event-description {
   font-size: 110%;

@@ -129,11 +129,16 @@
   <div class="content">
     {{current_event.instruction|markdown}}
   </div>
+  {% if current_event.has_started %}
   <center class="mt-5 mb-0">
     <a href="{{ url_for('public.event_instruction', event_id=current_event.id) }}#resources" class="btn btn-lg btn-light">
       <i class="fa fa-cube" aria-hidden="true"></i>
       Resources</a>
+    <a href="{{ url_for('public.event_participants', event_id=current_event.id) }}" class="btn btn-lg btn-light">
+      <i class="fa fa-child" aria-hidden="true"></i>
+      Participants</a>
   </center>
+  {% endif %}
 </div>
 {% endif %}
 
