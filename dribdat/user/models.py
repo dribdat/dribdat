@@ -136,11 +136,15 @@ class User(UserMixin, PkModel):
         self.carddata = gravatar_url
         self.save()
 
-    def joined_projects(self, with_challenges=True):
+    def joined_projects(self, with_challenges=True, limit=-1):
         """ Retrieve all projects user has joined """
         activities = Activity.query.filter_by(
                 user_id=self.id, name='star'
-            ).order_by(Activity.timestamp.desc()).all()
+            ).order_by(Activity.timestamp.desc())
+        if limit < 0:
+            activities = activities.all()
+        else:
+            activities = activities.limit(limit)
         projects = []
         for a in activities:
             if a.project not in projects and not a.project.is_hidden:

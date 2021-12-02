@@ -245,7 +245,7 @@ def project_action(project_id, of_type=None, as_view=True, then_redirect=False,
         if not event.lock_resources:
             suggestions = getSuggestionsForStage(project.progress)
     else:
-        suggestions, stage, all_valid = None, None
+        suggestions, stage, all_valid = None, None, None
     # latest_activity = project.latest_activity() # obsolete
     project_dribs = project.all_dribs()
     # Select available project image

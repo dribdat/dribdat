@@ -82,10 +82,13 @@ def home():
     # Select Resource-type events
     resource_events = events.filter(
         Event.lock_resources).order_by(Event.name.asc()).all()
+    # Select my challenges
+    if current_user and not current_user.is_anonymous:
+        my_projects = current_user.joined_projects(True, 3)
     # Send to template
     return render_template("public/home.html",
                            events_next=events_next, events_past=events_past,
-                           events_tips=resource_events,
+                           events_tips=resource_events, my_projects=my_projects,
                            current_event=cur_event)
 
 
@@ -100,7 +103,7 @@ def user(username):
             'warning'
         )
     submissions = user.posted_challenges()
-    projects = user.joined_projects(False)
+    projects = user.joined_projects(True)
     score = sum([p.score for p in projects])
     posts = user.latest_posts()
     return render_template("public/userprofile.html", active="profile",
