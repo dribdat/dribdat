@@ -123,13 +123,13 @@ def validateProjectData(project):
     return stage, all_valid
 
 
-def getActivityByType(a):
+def getActivityByType(a, only_active=True):
     """ Returns Activity item representated as a tuple """
     author = title = text = icon = None
     # Obtain author if available
     if a.user:
         author = a.user.username
-        if not a.user.active:
+        if only_active and not a.user.active:
             return None
     else:
         author = "?"

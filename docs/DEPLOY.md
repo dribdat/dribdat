@@ -88,6 +88,8 @@ For **uploading images** and other files directly within dribdat, you can config
 * `S3_ENDPOINT` - alternative endpoint for self-hosted Object Storage.
 * `MAX_CONTENT_LENGTH` - defaults to 1048576 bytes (1 MB) file size.
 
+Due to the use of the [boto3](https://github.com/boto/boto3/) library for S3 support, there is a dependency on OpenSSL via awscrt. If you use these features, please note that the product includes cryptographic software written by Eric Young (eay@cryptsoft.com) and Tim Hudson (tjh@cryptsoft.com). 
+
 ## Custom content
 
 To customize some of the default content, you can edit the template include files, for example the default [quickstart](dribdat/templates/includes/quickstart.md) or [stages](dribdat/templates/includes/stages.yaml) - as long as you're not limited by ephemeral storage of your deployment.

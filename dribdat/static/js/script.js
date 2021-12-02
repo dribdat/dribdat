@@ -271,13 +271,12 @@
       $ul = $('#search-results').empty();
       $.get(searchForm.attr('action') + '?q=' + q, function(d) {
         d.projects.forEach(function(p) {
-          var card_image = p.image_url ?
-            '<div class="card-image" style="background-image:url(' + p.image_url + ')"></div>' : '';
           $ul.append(
             '<a class="col-md-5 ms-auto card project"' +
-               'href="' + p.url + '">' +
+               'href="' + p.url + '"' +
+               (p.image_url ?
+                 ' style="background-image:url(' + p.image_url + '); padding-left:100px"' : '') + '>' +
               '<div class="card-body">' +
-                card_image +
                 '<h5 class="card-title">' + p.name + '</h5>' +
                 '<p class="card-text">' + p.summary + '</p>' +
               '</div>' +
@@ -422,6 +421,8 @@
     e.preventDefault();
     var $form = $(this);
     var url = $form.attr('action');
+    $form.find('input[type="submit"]').addClass('disabled');
+    $form.find('.message-ok,.message-error').hide();
     $.ajax({
       type: "POST",
       url: url,
@@ -429,9 +430,15 @@
       success: function(data) {
         // Handle response
         console.log(data);
-        $form.find('.message-ok').show();
+        if (data.status == 'Error') {
+          $form.find('.message-error').html(data.errors.join('\n')).show();
+        } else {
+          $form.find('.message-ok').show();
+        }
+        $form.find('input[type="submit"]').removeClass('disabled');
       },
       error: function(err) {
+        $form.find('input[type="submit"]').removeClass('disabled');
         console.error(err.statusText);
         $form.find('.message-error').show();
       }

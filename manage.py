@@ -33,10 +33,11 @@ def create_app(script_info=None):
 
 
 @click.command()
-def featuretest():
+@click.option('--name', default="features", help='Which test file to run.')
+def featuretest(name):
     """Run feature tests."""
     import pytest
-    feat_test = os.path.join(TEST_PATH, 'test_features.py')
+    feat_test = os.path.join(TEST_PATH, "test_%s.py" % name)
     return pytest.main([feat_test, '--disable-warnings'])
 
 

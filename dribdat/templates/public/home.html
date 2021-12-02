@@ -80,7 +80,35 @@
 
 <div class="body-content">
 
+  {% if my_projects %}
+  <h2 class="mt-4">My teams</h2>
+  <div class="resource-list">
+    <div class="profile-projects container-fluid">
+      <div class="row flex-row flex-nowrap pr-2">
+        {% for project in my_projects %}
+          <a class="col-md-4 ms-auto card project"
+             {%- if project.image_url %}
+              style="background-image:url('{{project.image_url}}'); padding-left:100px"
+             {%- endif %}
+             href="{{ url_for('project.project_view', project_id=project.id) }}">
+            <div class="card-body">
+              <h5 class="card-title">{{ project.name }}</h5>
+              <p class="card-text">{{ project.summary }}</p>
+            </div>
+          </a>
+        {% endfor %}
+      </div>
+      <p class="category-tip mb-0 mt-2" style="margin-left:-1em">
+        <span class="user-score" style="background:white">&#x1F4A1;</span>
+        Visit
+        <a href="{{ url_for('public.user', username=current_user.username) }}" title="{{ current_user.username }}">My Profile</a>
+        to see all projects and dribs.
+    </div>
+  </div>
+  {% endif %}
+
   {% if events_next %}
+  <a name="upcoming"></a>
   <h2 class="mt-4">Upcoming</h2>
   <div class="row events-next">
     {% for event in events_next %}
@@ -90,6 +118,7 @@
   {% endif %}
 
   {% if events_tips %}
+  <a name="resources"></a>
   <h2 class="mt-4"><!--Resources--></h2>
   <div class="row events-tips">
     {% for event in events_tips %}
@@ -99,6 +128,7 @@
   {% endif %}
 
   {% if events_past %}
+  <a name="past"></a>
   <h2 class="mt-4">Past events</h2>
   <div class="row events-past">
     {% for event in events_past %}

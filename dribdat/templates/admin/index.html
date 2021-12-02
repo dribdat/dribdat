@@ -29,7 +29,10 @@
 
   <div class="chart-activities">
     <div class="btn-group mb-2 text-center">
-      <a href="{{ url_for('public.event_start') }}" class="btn btn-lg btn-success">Start an Event</a>
+      <a href="{{ url_for('admin.events') }}" class="btn btn-lg btn-warning">All Events</a>
+      <a href="{{ url_for('admin.projects') }}" class="btn btn-lg btn-info">Projects</a>
+      <a href="{{ url_for('admin.users') }}" class="btn btn-lg btn-info">Users</a>
+      <!-- <a href="{{ url_for('public.event_start') }}" class="btn btn-lg btn-success">Start an Event</a> -->
       <!-- <a href="#" id="show-activities" class="btn btn-lg btn-info">Pulse check</a> -->
     </div>
     <div id="activities"></div>
