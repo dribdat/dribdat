@@ -369,6 +369,9 @@ nav .nav-login {
   border-bottom: 4px solid transparent;
   transition: all 0.3s cubic-bezier(.25,.8,.25,1);
 }
+.event-home .hexagon {
+  margin-bottom: 4px;
+}
 
 .hexagon:hover {
   box-shadow: 0 4px 9px rgb(0 0 0 / 5%), 0 9px 15px rgb(0 0 0 / 17%);
