@@ -47,4 +47,6 @@ Additional and :heart:-felt thanks for testing and feedback to:
 
 ## License
 
-This project is open source under the [MIT License](LICENSE)
+This project is open source under the [MIT License](LICENSE).
+
+Due to the use of the [boto3](https://github.com/boto/boto3/) library for S3 support, there is a dependency on OpenSSL via awscrt. If you use these features, please note that the product includes cryptographic software written by Eric Young (eay@cryptsoft.com) and Tim Hudson (tjh@cryptsoft.com).

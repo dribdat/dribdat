@@ -35,12 +35,10 @@
         <div class="row flex-row flex-nowrap">
         {% for project in step.projects %}
             <a class="col-md-5 ms-auto card project"
+              {%- if project.image_url %}
+                style="background-image:url('{{project.image_url}}'); padding-left:100px"
+              {%- endif %}
                href="{{ url_for('project.project_view', project_id=project.id) }}">
-
-              {% if project.image_url %}
-                <img class="project-image" src="{{project.image_url}}">
-              {% endif %}
-
               <div class="card-body">
                 <h5 class="card-title">{{ project.name }}</h5>
                 <p class="card-text">{{ project.summary }}</p>

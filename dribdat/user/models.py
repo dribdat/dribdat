@@ -136,11 +136,15 @@ class User(UserMixin, PkModel):
         self.carddata = gravatar_url
         self.save()
 
-    def joined_projects(self, with_challenges=True):
+    def joined_projects(self, with_challenges=True, limit=-1):
         """ Retrieve all projects user has joined """
         activities = Activity.query.filter_by(
                 user_id=self.id, name='star'
-            ).order_by(Activity.timestamp.desc()).all()
+            ).order_by(Activity.timestamp.desc())
+        if limit < 0:
+            activities = activities.all()
+        else:
+            activities = activities.limit(limit)
         projects = []
         for a in activities:
             if a.project not in projects and not a.project.is_hidden:
@@ -298,23 +302,27 @@ class Event(PkModel):
     def get_schema(self, host_url=''):
         """ Returns hackathon.json formatted metadata """
         desc = self.summary or re.sub('<[^>]*>', '', self.description or '')
-        return {
+        d = {
             "@context": "http://schema.org",
             "@type": "Event",
-            "location": {"@type": "Place",
-                         "name": self.hostname,
-                         "address": self.location
-                         },
             "name": self.name,
             "url": host_url + self.url,
             "description": desc,
             "startDate": format_date(self.starts_at, '%Y-%m-%dT%H:%M'),
             "endDate": format_date(self.ends_at, '%Y-%m-%dT%H:%M'),
-            "logo": self.logo_url,
-            "mainEntityOfPage": self.webpage_url,
-            "offers": {"@type": "Offer", "url": self.webpage_url},
             "workPerformed": [p.get_schema(host_url) for p in self.projects]
         }
+        if self.hostname and self.location:
+            d["location"] = {
+                "@type": "Place",
+                "name": self.hostname, "address": self.location
+            }
+        if self.logo_url:
+            d["logo"] = self.logo_url
+        if self.webpage_url:
+            d["mainEntityOfPage"] = self.webpage_url
+            d["offers"] = {"@type": "Offer", "url": self.webpage_url}
+        return d
 
     @property
     def url(self):
@@ -471,8 +479,9 @@ class Project(PkModel):
                     ).order_by(Activity.timestamp.desc())
         dribs = []
         prev = None
+        only_active = False # show dribs from inactive users
         for a in activities:
-            a_parsed = getActivityByType(a)
+            a_parsed = getActivityByType(a, only_active)
             if a_parsed is None:
                 continue
             (author, title, text, icon) = a_parsed

@@ -67,7 +67,7 @@
           <li class="nav-item">
             <a class="nav-link{{ ' active' if active == 'profile' }}" href="{{ url_for('public.user', username=current_user.username) }}" title="{{ current_user.username }}">
               <i class="fa fa-key" aria-hidden="true"></i>
-              My Profile
+              Profile
             </a>
           </li>
           {% if current_user.is_admin %}
