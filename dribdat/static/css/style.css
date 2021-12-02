@@ -519,6 +519,9 @@ nav .nav-login {
   font-weight: bold;
   font-size: 3rem;
 }
+.project-tips.alert-light {
+  color: black;
+}
 .project-page .project-team {
   font-weight: normal;
   color: #999;

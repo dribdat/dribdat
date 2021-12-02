@@ -235,9 +235,20 @@ def project_action(project_id, of_type=None, as_view=True, then_redirect=False,
         not current_user.is_anonymous and current_user.is_admin)
     allow_post = starred  # and not event.lock_resources
     allow_edit = allow_edit and not event.lock_editing
+    # Obtain list of team members (performance!)
     project_team = project.team()
+    if allow_post:
+        # Evaluate project progress
+        stage, all_valid = validateProjectData(project)
+        # Collect resource tips
+        suggestions = []
+        if not event.lock_resources:
+            suggestions = getSuggestionsForStage(project.progress)
+    else:
+        suggestions, stage, all_valid = None, None
     # latest_activity = project.latest_activity() # obsolete
     project_dribs = project.all_dribs()
+    # Select available project image
     if project.image_url:
         project_image_url = project.image_url
     elif event.logo_url:
@@ -245,14 +256,12 @@ def project_action(project_id, of_type=None, as_view=True, then_redirect=False,
     else:
         project_image_url = url_for(
             'static', filename='img/badge-black.png', _external=True)
-    suggestions = None
-    if not event.lock_resources:
-        suggestions = getSuggestionsForStage(project.progress)
     return render_template(
         'public/project.html', current_event=event, project=project,
         project_starred=starred, project_team=project_team,
         project_dribs=project_dribs, project_image_url=project_image_url,
         allow_edit=allow_edit, allow_post=allow_post,
+        stage=stage, all_valid=all_valid,
         suggestions=suggestions
     )
 
