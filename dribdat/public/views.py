@@ -83,6 +83,7 @@ def home():
     resource_events = events.filter(
         Event.lock_resources).order_by(Event.name.asc()).all()
     # Select my challenges
+    my_projects = None
     if current_user and not current_user.is_anonymous:
         my_projects = current_user.joined_projects(True, 3)
     # Send to template
