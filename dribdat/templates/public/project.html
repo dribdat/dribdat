@@ -33,26 +33,6 @@
       <span aria-hidden="true">&times;</span>
     </button>
     <div class="profile-projects container-fluid">
-      <p class="category-tip mb-3 mt-0" style="margin-left:-1em">
-        <span class="user-score" style="background:white">&#x1F4A1;</span>
-        Suggestions visible only to you and your team.
-        Advance to the
-        <a href="{{ url_for('public.event_stages', event_id=project.event.id) }}">
-          next stage</a> with a <b>Post</b> about your progress.
-      </p>
-      <div class="stage-conditions clearfix">
-        {% for item in stage.conditions.validate %}
-          <div class="mb-3 mr-2 float-left">
-          {% if item.valid %}
-            <i class="fa fa-thumbs-up" style="color:green"></i>
-            {{ item.help }}
-          {% else %}
-            <i class="fa fa-paw" style="color:orange"></i>
-            {{ item.help }}
-          {% endif %}
-          </div>
-        {% endfor %}
-      </div>
       <div class="row flex-row flex-nowrap">
       {% for project in suggestions %}
         <a class="col-md-5 ms-auto card project"
@@ -66,6 +46,24 @@
           </div>
         </a>
       {% endfor %}
+      </div>
+      <p class="category-tip mb-2 mt-1 clearfix" style="margin-left:-1em">
+        <span class="user-score" style="background:white">&#x1F4A1;</span>&nbsp;
+        Tips for you and your team.
+        Get to the next stage with a Post on your progress.
+      </p>
+      <div class="stage-conditions clearfix mb-2">
+        {% for item in stage.conditions.validate %}
+          <div class="mr-2 float-left">
+          {% if item.valid %}
+            <i class="fa fa-thumbs-up" style="color:green"></i>
+            {{ item.help }}
+          {% else %}
+            <i class="fa fa-paw" style="color:orange"></i>
+            {{ item.help }}
+          {% endif %}
+          </div>
+        {% endfor %}
       </div>
     </div><!-- /profile-projects -->
   </div>
