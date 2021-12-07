@@ -167,7 +167,7 @@ def event_stages(event_id):
         project_list = [p.data for p in projects.filter_by(
             progress=s['id']).all()]
         s['projects'].extend(project_list)
-    return render_template("public/stages.html",
+    return render_template("public/eventstages.html",
                            current_event=event, steps=steps, active="stages")
 
 
@@ -186,7 +186,7 @@ def event_instruction(event_id):
             project_list = [p.data for p in projects.filter_by(
                 progress=s['id']).all()]
             s['projects'].extend(project_list)
-    return render_template("public/instruction.html",
+    return render_template("public/eventinstruction.html",
                            current_event=event, steps=steps,
                            active="instruction")
 
