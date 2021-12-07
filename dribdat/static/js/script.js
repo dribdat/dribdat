@@ -157,8 +157,13 @@
               $dialog.modal('hide');
             } else if ($(this).data('target') == 'pitch') {
               // Append to pitch
-              $('#longtext').val($('#longtext').val() +
-                '\n\n' + '![Title](' + response + ')');
+              var imglink = '![Title](' + response + ')';
+              if (typeof toasteditor !== 'undefined') {
+                toasteditor.insertText(imglink);
+              } else {
+                $('#longtext').val($('#longtext').val() +
+                  '\n\n' + imglink);
+              }
               $dialog.modal('hide');
             } else {
               // Copy to clipboard
@@ -178,7 +183,6 @@
       }); // -ajax
     }); // -change
   }); // -#uploadImage
-
 
 
   // Upload files
@@ -224,8 +228,13 @@
               $dialog.modal('hide');
             } else if ($(this).data('target') == 'pitch') {
               // Append to pitch
-              $('#longtext').val($('#longtext').val() +
-                '\n\n' + '📦 [File: ' + filename + '](' + response + ')');
+              var fileLink = '📦 [File: ' + filename + '](' + response + ')';
+              if (typeof toasteditor !== 'undefined') {
+                toasteditor.insertText(fileLink);
+              } else {
+                $('#longtext').val($('#longtext').val() +
+                  '\n\n' + fileLink);
+              }
               $dialog.modal('hide');
             } else {
               // Copy to clipboard

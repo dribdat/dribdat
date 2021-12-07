@@ -5,6 +5,35 @@
 {% block page_title %}Edit: {{project.name}}{% endblock %}
 {% block body_class %}projectform projectedit{% endblock %}
 
+{% block js %}
+  <script src="https://uicdn.toast.com/editor/3.0.0/toastui-editor-all.min.js"></script>
+  <link rel="stylesheet" href="https://uicdn.toast.com/editor/3.0.0/toastui-editor.min.css">
+  <!-- <script src="{{ url_for('static', filename='libs/toastui-editor/dist/toastui-editor.js')}}"></script>
+  <link rel="stylesheet" href="{{ url_for('static', filename='libs/toastui-editor/dist/toastui-editor.css')}}"> -->
+  <script language="javascript">
+    // Initialize rich editor for Markdown
+    const $longtext = $('#longtext');
+    if (typeof toastui !== 'undefined' && $longtext.length>0) {
+      $longtext.after('<div id="mdeditor" style="text-align:left"></div>');
+      const toasteditor = new toastui.Editor({
+        el: document.querySelector('#mdeditor'),
+        previewStyle: 'tab', height: '500px',
+        initialValue: $longtext.hide().text(),
+        toolbarItems: [
+          ['heading', 'bold', 'italic'],
+          ['hr', 'quote', 'strike'],
+          ['ul', 'ol'],
+          ['table', 'link'],
+          ['code', 'codeblock'],
+        ]
+      });
+      $longtext.parents('form').submit(function() {
+        $longtext.val(toasteditor.getMarkdown());
+      });
+    }
+  </script>
+{% endblock %}
+
 {% block content %}
   <h2 class="huge">
     Edit
