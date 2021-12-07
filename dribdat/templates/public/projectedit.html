@@ -12,13 +12,13 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='libs/toastui-editor/dist/toastui-editor.css')}}"> -->
   <script language="javascript">
     // Initialize rich editor for Markdown
-    const $longtext = $('#longtext');
-    if (typeof toastui !== 'undefined' && $longtext.length>0) {
-      $longtext.after('<div id="mdeditor" style="text-align:left"></div>');
+    const $mdsource = $('#longtext');
+    if (typeof toastui !== 'undefined' && $mdsource.length>0) {
+      $mdsource.after('<div id="mdeditor" style="text-align:left"></div>');
       const toasteditor = new toastui.Editor({
         el: document.querySelector('#mdeditor'),
         previewStyle: 'tab', height: '500px',
-        initialValue: $longtext.hide().text(),
+        initialValue: $mdsource.hide().text(),
         toolbarItems: [
           ['heading', 'bold', 'italic'],
           ['hr', 'quote', 'strike'],
@@ -27,8 +27,8 @@
           ['code', 'codeblock'],
         ]
       });
-      $longtext.parents('form').submit(function() {
-        $longtext.val(toasteditor.getMarkdown());
+      $mdsource.parents('form').submit(function() {
+        $mdsource.val(toasteditor.getMarkdown());
       });
     }
   </script>

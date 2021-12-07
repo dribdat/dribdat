@@ -118,7 +118,15 @@ form input[type="checkbox"] {
   border: 1px solid rgba(200,0,0,0.1);
   box-shadow: 5px 5px 0px rgba(200,0,0,0.5);
 }
-
+.nav-item.admin-area {
+  box-shadow: 0px 5px 0px rgba(200,0,0,0.5);
+}
+.admin .navbar {
+  box-shadow: 0px 5px 0px rgba(200,0,0,0.5);
+}
+.admin .navbar .nav-item.admin-area {
+  box-shadow: none;
+}
 /* footer */
 
 footer {
@@ -856,6 +864,9 @@ nav .nav-login {
   margin-top: 2em;
   display: block;
 }
+.projectform form .autotext-indicator i {
+  margin:0px 1em; color:red;
+}
 
 /* General form styles */
 .userform form label,
@@ -1427,6 +1438,7 @@ SlackIn button
 }
 .account-register a { margin-left: 3.5em; font-size: 125%; }
 .account-register::before,
+.fld-autotext_url::after,
 .sso-login::after {
   content: 'or';
   display: block;

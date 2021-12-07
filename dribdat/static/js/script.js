@@ -6,12 +6,12 @@
     var checkAutotext = function(val, $ind) {
       if (typeof val !== 'string') return;
       if (val.trim() === '') return;
-      $ind.find('i')
-        .removeClass('fa-circle-o fa-check-circle-o')
-        .addClass('fa-check-circle-o')
-        .css('color', 'red');
       $ind
-        .css('visibility', '');
+        .removeClass('d-none')
+        .find('i')
+          .removeClass('fa-circle-o fa-check-circle-o')
+          .addClass('fa-check-circle-o')
+          .css('color', 'red');
       $('#is_autoupdate').click(function() {
         if ($(this).is(':checked'))
           if (!$indicator.find('button').click())
@@ -21,9 +21,10 @@
     // Toggle status indicator
     var $inputfield = $(this);
     var $indicator = $inputfield.parent()
-      .append('<span class="autotext-indicator" style="visibility:hidden">' +
-        '<button class="btn btn-warning" type="button">Sync content</button>' +
-        '<i style="margin:0px 1em; color:red" class="fa fa-circle-o"></i>' +
+      .append('<span class="autotext-indicator d-none btn-group">' +
+        '<a title="Status" class="btn btn-lg btn-light btn-disabled"><i class="fa fa-circle-o"></i></a>' +
+        '<button class="btn btn-lg btn-warning" type="button">' +
+        'Sync content</button>' +
       '</span>')
       .find('.autotext-indicator');
 
@@ -45,7 +46,7 @@
       $button.attr('disabled', 'disabled').html('Please wait ...');
       // Call updater API
       $.getJSON('/api/project/autofill?url=' + url, function(data) {
-        $button.removeAttr('disabled').html('Sync again');
+        $button.removeAttr('disabled').html('Refresh');
         if (typeof data.name === 'undefined' || data.name === '') {
           window.alert('Enter a valid link to sync from a supported site.');
           $('#is_autoupdate').prop('checked', false);
