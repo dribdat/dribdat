@@ -312,7 +312,6 @@ nav .nav-login {
   padding: 30px;
 }
 .with-event .start-project {
-  margin: 2em 0px;
   text-align: center;
   display: block;
 }
@@ -988,7 +987,6 @@ pre { color: #333; background: white; }
 }
 .category-info {
   padding: 0 1em;
-  margin-top: 6em;
   text-align: left;
 }
 .category-info img {

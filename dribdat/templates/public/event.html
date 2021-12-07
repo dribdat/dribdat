@@ -52,7 +52,7 @@
 </center>
 
 
-<div class="honeycomb">
+<div class="honeycomb mb-5">
   <a name="projects"></a>
   <div class="ibws-fix">
   {% for project in projects %}
@@ -64,8 +64,7 @@
   </div>
 </div><!-- /honeycomb -->
 
-
-<div class="category-info">
+<div class="category-info clearfix pt-4 mt-4">
   {% if current_event.has_started and not current_event.has_finished %}
     {% if not current_user or not current_user.active %}
     <div category-id="infobox" class="category-container category-tip">
@@ -75,19 +74,20 @@
   {% endif %}
   {% for category in current_event.categories_for_event() %}
   <div category-id="{{category.id}}" class="category-container" style="border-top:5px solid {{category.logo_color}}; display:none">
-    <h3>{{ category.name }}</h3>
-    {{ category.description|onebox|markdown|safe }}
     {% if current_user and current_user.active and current_user.is_admin %}
-      <br><a href="{{ url_for('admin.category', category_id=category.id) }}" class="btn btn-success btn-sm">
+      <a href="{{ url_for('admin.category', category_id=category.id) }}"
+         class="btn btn-info btn-sm float-right">
         <i class="fa fa-pencil" aria-hidden="true"></i>
         Edit challenge</a>
     {% endif %}
+    <h3>{{ category.name }}</h3>
+    {{ category.description|onebox|markdown|safe }}
   </div>
   {% endfor %}
 </div><!-- /category-info -->
 
 {% if current_event.can_start_project %}
-  <div class="start-project btn-group">
+  <div class="start-project btn-group m-4">
     <a href="{{ url_for('project.project_new', event_id=current_event.id) }}" class="btn btn-lg btn-success">
       {% if current_event.lock_resources %}
         <i class="fa fa-cube"></i>
@@ -174,11 +174,11 @@
       <a href="{{ url_for('public.event', event_id=current_event.id, _external=True) }}" class="btn btn-secondary" id="embed-link">
         <i class="fa fa-external-link" aria-hidden="true"></i>
         Share</a>
-      <a href="{{ url_for('admin.event', event_id=current_event.id) }}" class="btn btn-warning">
+      <a href="{{ url_for('admin.event', event_id=current_event.id) }}" class="btn btn-info">
         <i class="fa fa-pencil" aria-hidden="true"></i>
-        Event</a>
+        Edit Event</a>
       <a href="{{ url_for('admin.project_new', event_id=current_event.id) }}" class="btn btn-success">
-        <i class="fa fa-rocket"></i>
+        <i class="fa fa-plus"></i>
         Add project</a>
     </div>
   {% endif %}
