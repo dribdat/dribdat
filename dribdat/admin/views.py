@@ -389,8 +389,8 @@ def project_view(project_id):
         db.session.add(project)
         db.session.commit()
         flash('Project updated.', 'success')
-        return redirect(url_for("admin.event_projects",
-                                event_id=project.event.id))
+        return redirect(url_for("project.project_view",
+                                project_id=project.id))
 
     if project.user:
         form.user_name.data = project.user.username

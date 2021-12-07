@@ -113,6 +113,12 @@ form input[type="checkbox"] {
   background: #f55; color: #fff;
 }
 
+.btn-group.admin-area {
+  padding: 5px;
+  border: 1px solid rgba(200,0,0,0.1);
+  box-shadow: 5px 5px 0px rgba(200,0,0,0.5);
+}
+
 /* footer */
 
 footer {
@@ -576,7 +582,6 @@ nav .nav-login {
   background-color: rgba(255, 255, 255, 0.8);
   color: black;
   padding: 5px;
-  margin-bottom: 10px;
   /* When shown in tabs */
   border-top: none;
   border-radius: 0px;
