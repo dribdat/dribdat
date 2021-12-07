@@ -191,6 +191,17 @@ def event_instruction(event_id):
                            active="instruction")
 
 
+@blueprint.route("/event/<int:event_id>/categories")
+def event_categories(event_id):
+    event = Event.query.filter_by(id=event_id).first_or_404()
+    steps = event.categories_for_event()
+    projects = Project.query.filter_by(event_id=event.id, is_hidden=False)
+    projects = projects.filter_by(category_id=None)
+    return render_template("public/eventcategories.html",
+                           current_event=event, steps=steps, projects=projects,
+                           active="categories")
+
+
 @blueprint.route('/event/<int:event_id>/print')
 def event_print(event_id):
     now = datetime.utcnow().strftime("%d.%m.%Y %H:%M")
