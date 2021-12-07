@@ -15,7 +15,7 @@
     const $mdsource = $('#longtext');
     if (typeof toastui !== 'undefined' && $mdsource.length>0) {
       $mdsource.after('<div id="mdeditor" style="text-align:left"></div>');
-      const toasteditor = new toastui.Editor({
+      const toasteditor = window.toasteditor = new toastui.Editor({
         el: document.querySelector('#mdeditor'),
         previewStyle: 'tab', height: '500px',
         initialValue: $mdsource.hide().text(),

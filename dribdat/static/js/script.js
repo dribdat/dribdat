@@ -159,8 +159,8 @@
             } else if ($(this).data('target') == 'pitch') {
               // Append to pitch
               var imglink = '![Title](' + response + ')';
-              if (typeof toasteditor !== 'undefined') {
-                toasteditor.insertText(imglink);
+              if (typeof window.toasteditor !== 'undefined') {
+                window.toasteditor.insertText(imglink);
               } else {
                 $('#longtext').val($('#longtext').val() +
                   '\n\n' + imglink);
@@ -230,8 +230,8 @@
             } else if ($(this).data('target') == 'pitch') {
               // Append to pitch
               var fileLink = '📦 [File: ' + filename + '](' + response + ')';
-              if (typeof toasteditor !== 'undefined') {
-                toasteditor.insertText(fileLink);
+              if (typeof window.toasteditor !== 'undefined') {
+                window.toasteditor.insertText(fileLink);
               } else {
                 $('#longtext').val($('#longtext').val() +
                   '\n\n' + fileLink);
