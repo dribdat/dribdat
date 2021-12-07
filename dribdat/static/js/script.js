@@ -275,26 +275,40 @@
   searchForm.find('input[name="q"]')
     .keyup(delay(function(e) {
       if (e.keyCode == 13) { e.preventDefault(); return false; }
-      var q = $(this).val();
-      if (q.length < 4 || q.trim() == lastSearch) return;
-      lastSearch = q.trim();
-      $ul = $('#search-results').empty();
-      $.get(searchForm.attr('action') + '?q=' + q, function(d) {
-        d.projects.forEach(function(p) {
-          $ul.append(
-            '<a class="col-md-5 ms-auto card project"' +
-               'href="' + p.url + '"' +
-               (p.image_url ?
-                 ' style="background-image:url(' + p.image_url + '); padding-left:100px"' : '') + '>' +
-              '<div class="card-body">' +
-                '<h5 class="card-title">' + p.name + '</h5>' +
-                '<p class="card-text">' + p.summary + '</p>' +
-              '</div>' +
-            '</a>'
-          );
-        });
-      });
+      runSearch($(this).val());
     }, 500));
+  checkSearchQuery();
+
+  function runSearch(q) {
+    if (q.length < 4 || q.trim() == lastSearch) return;
+    lastSearch = q.trim();
+    $ul = $('#search-results').empty();
+    $.get(searchForm.attr('action') + '?q=' + q, function(d) {
+      d.projects.forEach(function(p) {
+        $ul.append(
+          '<a class="col-md-5 ms-auto card project"' +
+             'href="' + p.url + '"' +
+             (p.image_url ?
+               ' style="background-image:url(' + p.image_url + '); padding-left:100px"' : '') + '>' +
+            '<div class="card-body">' +
+              '<h5 class="card-title">' + p.name + '</h5>' +
+              '<p class="card-text">' + p.summary + '</p>' +
+            '</div>' +
+          '</a>'
+        );
+      });
+    }); //- get searchForm
+  }
+
+  function checkSearchQuery() {
+    let paramString = (new URL(document.location)).searchParams;
+    let searchParams = new URLSearchParams(paramString);
+    if (searchParams.has("q")) {
+      let q = searchParams.get("q");
+      searchForm.find('input[name="q"]').val(q);
+      runSearch(q);
+    }
+  }
 
   // Clickable categories navigation
   var $navCategories = $('.nav-categories .btn-group label').click(function(e) {

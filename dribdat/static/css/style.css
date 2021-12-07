@@ -127,6 +127,9 @@ form input[type="checkbox"] {
 .admin .navbar .nav-item.admin-area {
   box-shadow: none;
 }
+.nav-link.active {
+  font-weight: bolder;
+}
 /* footer */
 
 footer {
@@ -1042,7 +1045,9 @@ pre { color: #333; background: white; }
 
 .jumbotron {
   padding: 2rem;
-  border: 4px dashed lightgray;
+  border-radius: 0px;
+  border: 2px dotted lightblue;
+  box-shadow: 5px 5px 0px lightblue;
 }
 
 /* tip section */

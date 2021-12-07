@@ -83,7 +83,9 @@ def project_edit_action(project_id, detail_view=False):
         return redirect(url_for('project.project_view', project_id=project.id))
     return render_template(
         'public/projectedit.html', detail_view=detail_view,
-        current_event=project.event, project=project, form=form)
+        current_event=project.event, project=project, form=form,
+        active="projects"
+    )
 
 
 @blueprint.route('/<int:project_id>/boost', methods=['GET', 'POST'])
@@ -120,6 +122,7 @@ def project_boost(project_id):
     return render_template(
         'public/projectboost.html',
         current_event=event, project=project, form=form,
+        active="dribs"
     )
 
 
@@ -175,6 +178,7 @@ def project_post(project_id):
         'public/projectpost.html',
         current_event=event, project=project, form=form,
         stage=stage, all_valid=all_valid,
+        active="dribs"
     )
 
 
@@ -194,7 +198,8 @@ def project_comment(project_id):
 
     return render_template(
         'public/projectpost.html',
-        current_event=event, project=project, form=form
+        current_event=event, project=project, form=form,
+        active="dribs"
     )
 
 
@@ -262,7 +267,8 @@ def project_action(project_id, of_type=None, as_view=True, then_redirect=False,
         project_dribs=project_dribs, project_image_url=project_image_url,
         allow_edit=allow_edit, allow_post=allow_post,
         stage=stage, all_valid=all_valid,
-        suggestions=suggestions
+        suggestions=suggestions,
+        active="projects"
     )
 
 
@@ -354,8 +360,9 @@ def project_new(event_id):
                 purl = url_for('project.project_view', project_id=project.id)
                 return redirect(purl)
     return render_template(
-        'public/projectnew.html', active="projectnew",
-        current_event=event, form=form
+        'public/projectnew.html',
+        current_event=event, form=form,
+        active="projects"
     )
 
 
