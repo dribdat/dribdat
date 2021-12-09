@@ -31,7 +31,7 @@ flask-misaka==1.0.0
 flask-sqlalchemy==2.5.1
 flask-talisman==0.8.1
 flask-wtf==1.0.0
-frictionless==4.22.1
+frictionless==4.22.3
 future==0.18.2
 graphene==3.0
 greenlet==1.1.2
@@ -61,7 +61,7 @@ pycparser==2.21
 pyparsing==3.0.6
 pyquery==1.4.3
 pyrsistent==0.18.0
-pystache==0.5.4
+pystache==0.6.0
 python-dateutil==2.8.2
 python-dotenv==0.19.2
 python-slugify==5.0.2
