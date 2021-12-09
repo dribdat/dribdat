@@ -574,6 +574,7 @@ nav .nav-login {
   margin-top: -170px;
   margin-left: 10px;
   height: 160px;
+  max-width: 320px;
   overflow: hidden;
 }
 .project-page .details {
@@ -616,12 +617,16 @@ nav .nav-login {
   padding: 1rem;
 }
 @media (min-width: 576px) {
+  .project-home #overlayImage { max-width: 500px; }
   .project-page.jumbotron { padding: 2rem; }
   .project.hexalist .hexagontent {
     left: 35%;
   }
   .project-page .project-longtext { margin: 2em; }
   .project-page .project-autotext { margin: 2em; }
+}
+@media (min-width: 1000px) {
+  .project-home #overlayImage { max-width: 800px; }
 }
 .project-page .project-info td,
 .project-page .project-info th { padding: 0.2em 1.4em 0 0; }
