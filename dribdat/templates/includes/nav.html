@@ -56,13 +56,6 @@
         </li>
       {% endif %}
 
-      <li class="nav-item">
-        <a class="nav-link" href="{{ url_for('public.about') }}">
-          <i class="fa fa-search" aria-hidden="true"></i>
-          Search
-        </a>
-      </li>
-
       {% if current_user and current_user.is_authenticated %}
           <li class="nav-item">
             <a class="nav-link{{ ' active' if active == 'profile' }}" href="{{ url_for('public.user', username=current_user.username) }}" title="{{ current_user.username }}">
@@ -71,8 +64,8 @@
             </a>
           </li>
           {% if current_user.is_admin %}
-            <li class="nav-item">
-              <a class="nav-link" href="{{ url_for('admin.index') }}">
+            <li class="nav-item admin-area">
+              <a class="nav-link{{ ' active' if active == 'index' }}" href="{{ url_for('admin.index') }}">
                 <i class="fa fa-gear" aria-hidden="true"></i>
                 Admin
               </a>
@@ -88,6 +81,14 @@
       {% endif %}
 
     </ul>
+
+    <form class="form-inline my-2 my-lg-0" action="{{ url_for('public.about') }}" method="get">
+      <button class="btn my-2 my-sm-0" type="submit">
+        <i class="fa fa-search" aria-hidden="true"></i>
+      </button>
+      <input class="form-control mr-sm-2" type="search" placeholder="" aria-label="Search" name="q" size=7>
+    </form>
+
   </div><!-- /.navbar-collapse -->
 
 </nav>

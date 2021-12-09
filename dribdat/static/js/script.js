@@ -6,12 +6,12 @@
     var checkAutotext = function(val, $ind) {
       if (typeof val !== 'string') return;
       if (val.trim() === '') return;
-      $ind.find('i')
-        .removeClass('fa-circle-o fa-check-circle-o')
-        .addClass('fa-check-circle-o')
-        .css('color', 'red');
       $ind
-        .css('visibility', '');
+        .removeClass('d-none')
+        .find('i')
+          .removeClass('fa-circle-o fa-check-circle-o')
+          .addClass('fa-check-circle-o')
+          .css('color', 'red');
       $('#is_autoupdate').click(function() {
         if ($(this).is(':checked'))
           if (!$indicator.find('button').click())
@@ -21,9 +21,10 @@
     // Toggle status indicator
     var $inputfield = $(this);
     var $indicator = $inputfield.parent()
-      .append('<span class="autotext-indicator" style="visibility:hidden">' +
-        '<button class="btn btn-warning" type="button">Sync content</button>' +
-        '<i style="margin:0px 1em; color:red" class="fa fa-circle-o"></i>' +
+      .append('<span class="autotext-indicator d-none btn-group">' +
+        '<a title="Status" class="btn btn-lg btn-light btn-disabled"><i class="fa fa-circle-o"></i></a>' +
+        '<button class="btn btn-lg btn-warning" type="button">' +
+        'Sync content</button>' +
       '</span>')
       .find('.autotext-indicator');
 
@@ -45,7 +46,7 @@
       $button.attr('disabled', 'disabled').html('Please wait ...');
       // Call updater API
       $.getJSON('/api/project/autofill?url=' + url, function(data) {
-        $button.removeAttr('disabled').html('Sync again');
+        $button.removeAttr('disabled').html('Refresh');
         if (typeof data.name === 'undefined' || data.name === '') {
           window.alert('Enter a valid link to sync from a supported site.');
           $('#is_autoupdate').prop('checked', false);
@@ -157,8 +158,13 @@
               $dialog.modal('hide');
             } else if ($(this).data('target') == 'pitch') {
               // Append to pitch
-              $('#longtext').val($('#longtext').val() +
-                '\n\n' + '![Title](' + response + ')');
+              var imglink = '![Title](' + response + ')';
+              if (typeof window.toasteditor !== 'undefined') {
+                window.toasteditor.insertText(imglink);
+              } else {
+                $('#longtext').val($('#longtext').val() +
+                  '\n\n' + imglink);
+              }
               $dialog.modal('hide');
             } else {
               // Copy to clipboard
@@ -178,7 +184,6 @@
       }); // -ajax
     }); // -change
   }); // -#uploadImage
-
 
 
   // Upload files
@@ -224,8 +229,13 @@
               $dialog.modal('hide');
             } else if ($(this).data('target') == 'pitch') {
               // Append to pitch
-              $('#longtext').val($('#longtext').val() +
-                '\n\n' + '📦 [File: ' + filename + '](' + response + ')');
+              var fileLink = '📦 [File: ' + filename + '](' + response + ')';
+              if (typeof window.toasteditor !== 'undefined') {
+                window.toasteditor.insertText(fileLink);
+              } else {
+                $('#longtext').val($('#longtext').val() +
+                  '\n\n' + fileLink);
+              }
               $dialog.modal('hide');
             } else {
               // Copy to clipboard
@@ -265,26 +275,40 @@
   searchForm.find('input[name="q"]')
     .keyup(delay(function(e) {
       if (e.keyCode == 13) { e.preventDefault(); return false; }
-      var q = $(this).val();
-      if (q.length < 4 || q.trim() == lastSearch) return;
-      lastSearch = q.trim();
-      $ul = $('#search-results').empty();
-      $.get(searchForm.attr('action') + '?q=' + q, function(d) {
-        d.projects.forEach(function(p) {
-          $ul.append(
-            '<a class="col-md-5 ms-auto card project"' +
-               'href="' + p.url + '"' +
-               (p.image_url ?
-                 ' style="background-image:url(' + p.image_url + '); padding-left:100px"' : '') + '>' +
-              '<div class="card-body">' +
-                '<h5 class="card-title">' + p.name + '</h5>' +
-                '<p class="card-text">' + p.summary + '</p>' +
-              '</div>' +
-            '</a>'
-          );
-        });
-      });
+      runSearch($(this).val());
     }, 500));
+  checkSearchQuery();
+
+  function runSearch(q) {
+    if (q.length < 4 || q.trim() == lastSearch) return;
+    lastSearch = q.trim();
+    $ul = $('#search-results').empty();
+    $.get(searchForm.attr('action') + '?q=' + q, function(d) {
+      d.projects.forEach(function(p) {
+        $ul.append(
+          '<a class="col-md-5 ms-auto card project"' +
+             'href="' + p.url + '"' +
+             (p.image_url ?
+               ' style="background-image:url(' + p.image_url + '); padding-left:100px"' : '') + '>' +
+            '<div class="card-body">' +
+              '<h5 class="card-title">' + p.name + '</h5>' +
+              '<p class="card-text">' + p.summary + '</p>' +
+            '</div>' +
+          '</a>'
+        );
+      });
+    }); //- get searchForm
+  }
+
+  function checkSearchQuery() {
+    let paramString = (new URL(document.location)).searchParams;
+    let searchParams = new URLSearchParams(paramString);
+    if (searchParams.has("q")) {
+      let q = searchParams.get("q");
+      searchForm.find('input[name="q"]').val(q);
+      runSearch(q);
+    }
+  }
 
   // Clickable categories navigation
   var $navCategories = $('.nav-categories .btn-group label').click(function(e) {

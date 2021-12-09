@@ -93,7 +93,7 @@ class ProjectNew(FlaskForm):
     contact_url = StringField(
         u'Contact', [length(max=2048)],
         description="On which channel, or in which room, to find you.")
-    longtext = TextAreaField(u'Describe your idea')
+    # longtext = TextAreaField(u'Describe your idea')
     submit = SubmitField(u'Save')
 
 

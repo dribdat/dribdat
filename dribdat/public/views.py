@@ -167,7 +167,7 @@ def event_stages(event_id):
         project_list = [p.data for p in projects.filter_by(
             progress=s['id']).all()]
         s['projects'].extend(project_list)
-    return render_template("public/stages.html",
+    return render_template("public/eventstages.html",
                            current_event=event, steps=steps, active="stages")
 
 
@@ -186,9 +186,20 @@ def event_instruction(event_id):
             project_list = [p.data for p in projects.filter_by(
                 progress=s['id']).all()]
             s['projects'].extend(project_list)
-    return render_template("public/instruction.html",
+    return render_template("public/eventinstruction.html",
                            current_event=event, steps=steps,
                            active="instruction")
+
+
+@blueprint.route("/event/<int:event_id>/categories")
+def event_categories(event_id):
+    event = Event.query.filter_by(id=event_id).first_or_404()
+    steps = event.categories_for_event()
+    projects = Project.query.filter_by(event_id=event.id, is_hidden=False)
+    projects = projects.filter_by(category_id=None)
+    return render_template("public/eventcategories.html",
+                           current_event=event, steps=steps, projects=projects,
+                           active="categories")
 
 
 @blueprint.route('/event/<int:event_id>/print')

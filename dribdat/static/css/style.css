@@ -113,6 +113,23 @@ form input[type="checkbox"] {
   background: #f55; color: #fff;
 }
 
+.btn-group.admin-area {
+  padding: 5px;
+  border: 1px solid rgba(200,0,0,0.1);
+  box-shadow: 5px 5px 0px rgba(200,0,0,0.5);
+}
+.nav-item.admin-area {
+  box-shadow: 0px 5px 0px rgba(200,0,0,0.5);
+}
+.admin .navbar {
+  box-shadow: 0px 5px 0px rgba(200,0,0,0.5);
+}
+.admin .navbar .nav-item.admin-area {
+  box-shadow: none;
+}
+.nav-link.active {
+  font-weight: bolder;
+}
 /* footer */
 
 footer {
@@ -311,17 +328,14 @@ nav .nav-login {
   margin-top: 40px;
   padding: 30px;
 }
-
 .with-event .start-project {
-  margin: 2em 0px;
   text-align: center;
   display: block;
 }
-
 .event-home .event-info .event-summary {
   text-align: center;
-  margin-bottom: 1em;
-  font-size: 125%;
+  margin: 1em 10%;
+  font-size: 180%;
 }
 .event-home .event-info .event-description {
   font-size: 110%;
@@ -370,6 +384,9 @@ nav .nav-login {
   margin-bottom: 73px;
   border-bottom: 4px solid transparent;
   transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+}
+.event-home .hexagon {
+  margin-bottom: 4px;
 }
 
 .hexagon:hover {
@@ -557,6 +574,7 @@ nav .nav-login {
   margin-top: -170px;
   margin-left: 10px;
   height: 160px;
+  max-width: 320px;
   overflow: hidden;
 }
 .project-page .details {
@@ -576,7 +594,6 @@ nav .nav-login {
   background-color: rgba(255, 255, 255, 0.8);
   color: black;
   padding: 5px;
-  margin-bottom: 10px;
   /* When shown in tabs */
   border-top: none;
   border-radius: 0px;
@@ -600,12 +617,16 @@ nav .nav-login {
   padding: 1rem;
 }
 @media (min-width: 576px) {
+  .project-home #overlayImage { max-width: 500px; }
   .project-page.jumbotron { padding: 2rem; }
   .project.hexalist .hexagontent {
     left: 35%;
   }
   .project-page .project-longtext { margin: 2em; }
   .project-page .project-autotext { margin: 2em; }
+}
+@media (min-width: 1000px) {
+  .project-home #overlayImage { max-width: 800px; }
 }
 .project-page .project-info td,
 .project-page .project-info th { padding: 0.2em 1.4em 0 0; }
@@ -851,6 +872,9 @@ nav .nav-login {
   margin-top: 2em;
   display: block;
 }
+.projectform form .autotext-indicator i {
+  margin:0px 1em; color:red;
+}
 
 /* General form styles */
 .userform form label,
@@ -987,7 +1011,6 @@ pre { color: #333; background: white; }
 }
 .category-info {
   padding: 0 1em;
-  margin-top: 6em;
   text-align: left;
 }
 .category-info img {
@@ -1027,7 +1050,9 @@ pre { color: #333; background: white; }
 
 .jumbotron {
   padding: 2rem;
-  border: 4px dashed lightgray;
+  border-radius: 0px;
+  border: 2px dotted lightblue;
+  box-shadow: 5px 5px 0px lightblue;
 }
 
 /* tip section */
@@ -1423,6 +1448,7 @@ SlackIn button
 }
 .account-register a { margin-left: 3.5em; font-size: 125%; }
 .account-register::before,
+.fld-autotext_url::after,
 .sso-login::after {
   content: 'or';
   display: block;

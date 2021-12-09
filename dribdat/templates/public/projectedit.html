@@ -5,6 +5,17 @@
 {% block page_title %}Edit: {{project.name}}{% endblock %}
 {% block body_class %}projectform projectedit{% endblock %}
 
+{% block js %}
+  {% if config.ENV == 'prod' %}
+    <script src="https://uicdn.toast.com/editor/3.0.0/toastui-editor-all.min.js"></script>
+    <link href="https://uicdn.toast.com/editor/3.0.0/toastui-editor.min.css" rel="stylesheet">
+  {% else %}
+    <script src="{{ url_for('static', filename='libs/toastui-all/toastui-editor-all.min.js')}}"></script>
+    <link href="{{ url_for('static', filename='libs/toastui-editor/dist/toastui-editor.css')}}" rel="stylesheet">
+  {% endif %}
+  <script src="{{ url_for('static', filename='js/editor.js')}}"></script>
+{% endblock %}
+
 {% block content %}
   <h2 class="huge">
     Edit

@@ -299,7 +299,7 @@
   </div><!-- /dribs-md -->
   {% endif %}
 
-</div><!-- /project-content -->
+  </div><!-- /project-content -->
 
   {% if project.source_url and 'github.com' in project.source_url %}
     <div class="widget widget-github">
@@ -372,59 +372,92 @@
 
 <center class="project-footer-controls">
 
-{% if not project.event.lock_editing and not project_starred %}
-  {% if current_user and current_user.active %}
-    <a href="{{ url_for('project.project_star', project_id=project.id) }}" class="btn btn-lg btn-success project-star"
-      title="Join this project">
+<div role="group" aria-label="Project controls" class="btn-group project-controls">
+
+  {% if not project.event.lock_editing and not project_starred %}
+    {% if current_user and current_user.active %}
+      <a href="{{ url_for('project.project_star', project_id=project.id) }}" class="btn btn-lg btn-success project-star"
+        title="Join this project">
+         <i class="fa fa-thumbs-up"></i>
+         Join
+      </a>
+    {% else %}
+      <a href="{{ url_for('auth.login') }}" class="btn btn-lg btn-success project-star"
+        title="Login to join this project">
        <i class="fa fa-thumbs-up"></i>
        Join
-    </a>
-  {% else %}
-    <a href="{{ url_for('auth.login') }}" class="btn btn-lg btn-success project-star"
-      title="Login to join this project">
-     <i class="fa fa-thumbs-up"></i>
-     Join
-    </a>
+      </a>
+    {% endif %}
   {% endif %}
-{% endif %}
 
-{% if allow_edit %}
-<div class="btn-group">
-  <a href="{{ url_for('project.project_post', project_id=project.id) }}" title="Write a progress update" class="btn btn-lg btn-success">
-    <i class="fa fa-paper-plane" aria-hidden="true"></i>
-    Post</a>
-  <a href="{{ url_for('project.project_edit', project_id=project.id) }}" title="Edit project" class="btn btn-lg btn-warning">
+  {% if allow_edit %}
+  <div class="btn-group">
+    <a href="{{ url_for('project.project_post', project_id=project.id) }}" class="btn btn-lg btn-success"
+       title="Write a progress update">
+      <i class="fa fa-paper-plane" aria-hidden="true"></i>
+      Post</a>
+    <a href="{{ url_for('project.project_edit', project_id=project.id) }}" class="btn btn-lg btn-warning"
+       title="Edit basic project data">
+      <i class="fa fa-pencil" aria-hidden="true"></i>
+      Edit</a>
+    <a href="{{ url_for('project.project_details', project_id=project.id) }}" class="btn btn-lg btn-info"
+       title="Edit project details" >
+      <i class="fa fa-pencil" aria-hidden="true"></i>
+      Details</a>
+  </div>
+  {% endif %}
+</div><!-- / .project-controls -->
+
+{% if current_user.is_admin and not project.event.lock_resources %}
+<div role="group" aria-label="Project administration" class="ml-3 btn-group admin-area" title="Admin area">
+
+  <a class="btn btn-lg btn-success" data-toggle="modal" data-target="#addUser"
+     title="Add a user to this project (admin only)">
+    <i class="fa fa-plus" aria-hidden="true"></i>
+    Add</a>
+
+  <!-- Add arbitrary user to the team -->
+  <div class="modal fade widget-team-add" id="addUser" tabindex="-1"
+      role="dialog" aria-labelledby="addUserLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="addUserLabel">Add user to team</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p class="text-small text-left">
+            Use the <a href="{{ url_for('admin.users')}}" target="_blank">admin</a>
+            to look up a user, and place the exact username here to add to the team.
+            You can also remove a user with the <b>X</b> button next to their profile.
+          </p>
+          <form action="{{ url_for('project.project_star_user', project_id=project.id)}}" method="post">
+            <input type="text" name="username" placeholder="username" size="12" />
+            <input type="submit" value="Invite" />
+          </form>
+        </div>
+      </div>
+    </div>
+  </div><!-- /modal -->
+
+  <a href="{{ url_for('admin.project_view', project_id=project.id) }}" class="btn btn-lg btn-info"
+     title="Edit full details (admin only)">
     <i class="fa fa-pencil" aria-hidden="true"></i>
     Edit</a>
-  <a href="{{ url_for('project.project_details', project_id=project.id) }}" title="Edit project details" class="btn btn-lg btn-info">
-    <i class="fa fa-pencil" aria-hidden="true"></i>
-    Details</a>
-  {% if current_user.is_admin %}
-    <a href="{{ url_for('admin.project_view', project_id=project.id) }}" title="Edit full details" class="btn btn-lg btn-secondary">
-      <i class="fa fa-pencil" aria-hidden="true"></i>
-      Admin</a>
 
-    <a href="{{ url_for('project.project_boost', project_id=project.id) }}" class="btn btn-lg btn-secondary project-boost" title="Boost this project">
-       <i class="fa fa-rocket" aria-hidden="true"></i>
-       Boost</a>
-  {% endif %}
+  <a href="{{ url_for('project.project_boost', project_id=project.id) }}" class="btn btn-lg btn-primary project-boost"
+     title="Boost this project (admin only)">
+     <i class="fa fa-rocket" aria-hidden="true"></i>
+     Boost</a>
 
-
-  {% if current_user.is_admin and not project.event.lock_resources %}
-  <!-- Add arbitrary user to the team -->
-  <center class="widget-team-add btn-lg">
-    <form action="{{ url_for('project.project_star_user', project_id=project.id)}}" method="post">
-      <input type="text" name="username" placeholder="username" size="12" />
-      <input type="submit" value="Invite" />
-    </form>
-  </center>
-  {% endif %}
-</div>
+</div><!-- / .admin-area -->
 {% endif %}
 
-</center>
+</center><!-- /.project-footer-controls -->
 
-<div class="panel panel-default community-embed">
+<div class="panel panel-default community-embed mt-4">
   <div class="panel-body"><i class="fa fa-comment"></i>
     {{project.event.community_embed|safe}}
   </div>
