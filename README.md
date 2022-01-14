@@ -33,7 +33,9 @@ If you need support with your deployment, please reach out through our website: 
 
 This project is currently mantained by [@loleg](https://github.com/loleg) and [@gonzalocasas](https://github.com/gonzalocasas). You can chat with us on Mattermost, linked to the badge at the top of this README. See [Contributors](https://github.com/dataletsch/dribdat/graphs/contributors) for a full list of people who have helped us with the code, and [Forks](https://github.com/dataletsch/dribdat/network/members) to find other users of this project.
 
-Special thanks to the [Open Data](https://opendata.ch), [Open Networking](https://opennetworkinfrastructure.org/) and [Open Source](https://dinacon.ch) communities in Switzerland for the many trials and feedbacks. We are also grateful to F. Wieser and M.-C. Gasser at [Swisscom](http://swisscom.com) for conceptual inputs and financial support at an early stage of this project. This code is originally based on Steven Loria's [flask-cookiecutter](https://github.com/sloria/cookiecutter-flask), which we of course encourage you to use in YOUR next project!
+Special thanks to the [Open Data](https://opendata.ch), [Open Networking](https://opennetworkinfrastructure.org/) and [Open Source](https://dinacon.ch) communities in Switzerland for the many trials and feedbacks. We are also grateful to F. Wieser and M.-C. Gasser at [Swisscom](http://swisscom.com) for conceptual inputs and financial support at an early stage of this project.
+
+This code is originally based on Steven Loria's [cookiecutter-flask](https://github.com/sloria/cookiecutter-flask). A more modern version of this is [cookiecutter-flask-restful](https://github.com/karec/cookiecutter-flask-restful).
 
 Additional and :heart:-felt thanks for testing and feedback to:
 
