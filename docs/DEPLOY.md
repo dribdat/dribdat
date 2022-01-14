@@ -67,13 +67,17 @@ If you are required by law to use a cookie warning or banner, you can add this t
 
 ## Authentication
 
-OAuth 2.0 support for **Single Sign-On** (SSO) is currently available using [Flask Dance](https://flask-dance.readthedocs.io/), and requires SSL to be enabled (using `SERVER_SSL`=1 in production or `OAUTHLIB_INSECURE_TRANSPORT` in development). Register your app with the provider (see SSO tips below), and set the following variables:
+OAuth 2.0 support for **Single Sign-On** (SSO) is currently available using [Flask Dance](https://flask-dance.readthedocs.io/), and requires SSL to be enabled (using `SERVER_SSL`=1 in production or `OAUTHLIB_INSECURE_TRANSPORT` in development).
+
+Register your app with the provider, and set the following variables:
 
 * `OAUTH_TYPE` - e.g. 'Slack', 'GitHub', 'Azure'
 * `OAUTH_ID` - the Client ID of your app.
 * `OAUTH_SECRET` - the Client Secret of your app.
 * `OAUTH_DOMAIN` - (optional) subdomain of your Slack instance, or AD tenant for Azure.
 * `OAUTH_SKIP_LOGIN` - (optional) when enabled, the dribdat login screen is not shown at all.
+
+You can find more advice in the [Troubleshooting](TROUBLE.md#need-help-setting-up-sso) guide.
 
 ## File storage
 
@@ -88,7 +92,7 @@ For **uploading images** and other files directly within dribdat, you can config
 * `S3_ENDPOINT` - alternative endpoint for self-hosted Object Storage.
 * `MAX_CONTENT_LENGTH` - defaults to 1048576 bytes (1 MB) file size.
 
-Due to the use of the [boto3](https://github.com/boto/boto3/) library for S3 support, there is a dependency on OpenSSL via awscrt. If you use these features, please note that the product includes cryptographic software written by Eric Young (eay@cryptsoft.com) and Tim Hudson (tjh@cryptsoft.com). 
+Due to the use of the [boto3](https://github.com/boto/boto3/) library for S3 support, there is a dependency on OpenSSL via awscrt. If you use these features, please note that the product includes cryptographic software written by Eric Young (eay@cryptsoft.com) and Tim Hudson (tjh@cryptsoft.com).
 
 ## Custom content
 
