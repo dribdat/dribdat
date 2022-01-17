@@ -21,6 +21,7 @@ from ..apipackage import ImportEventPackage, ImportEventByURL, PackageEvent
 from ..apiutils import (
     get_project_list,
     get_event_activities,
+    get_schema_for_user_projects,
     expand_project_urls,
     gen_csv,
 )
@@ -392,6 +393,7 @@ def project_uploader():
                           )
     return '/'.join([current_app.config['S3_HTTPS'], s3_filepath])
 
+# ------ DATA PACKAGE API --------
 
 # TODO: move to packager.py ?
 
@@ -430,3 +432,13 @@ def package_current_event(format):
 def package_specific_event(event_id, format):
     event = Event.query.filter_by(id=event_id).first_or_404()
     return generate_event_package(event, format)
+
+# ------ USER API --------
+
+@blueprint.route('/user/current/hackathon.json')
+def current_user_hackathon_json():
+    """ API: Outputs JSON-LD about a User's Event according to schema """
+    """ See https://schema.org/Hackathon """
+    host_url = request.host_url
+    data = get_schema_for_user_projects(current_user, host_url)
+    return jsonify(data)
