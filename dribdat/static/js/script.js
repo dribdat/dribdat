@@ -229,7 +229,7 @@
               $dialog.modal('hide');
             } else if ($(this).data('target') == 'pitch') {
               // Append to pitch
-              var fileLink = '📦 [File: ' + filename + '](' + response + ')';
+              var fileLink = '📦 File: [' + filename + '](' + response + ')';
               if (typeof window.toasteditor !== 'undefined') {
                 window.toasteditor.insertText(fileLink);
               } else {
