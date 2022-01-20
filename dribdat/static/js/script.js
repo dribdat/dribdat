@@ -117,7 +117,7 @@
     var $longtext = $('.fld-longtext');
     var $imageurl = $('.fld-image_url');
     if ($longtext.length > 0) {
-      $longtext.append($togglebtn.clone().show());
+      $longtext.prepend($togglebtn.clone().show());
     } else {
       $dialog.find("[data-target='pitch']").hide();
     }
@@ -194,7 +194,7 @@
     var $longtext = $('.fld-longtext');
     var $webpageurl = $('.fld-webpage_url');
     // Append button to the pitch editor
-    $longtext.append($togglebtn.clone().show());
+    $longtext.prepend($togglebtn.clone().show());
     // $webpageurl.append($togglebtn.clone().show());
     // Set up the file dialog
     var $inputfd = $dialog.find('input[type="file"]');

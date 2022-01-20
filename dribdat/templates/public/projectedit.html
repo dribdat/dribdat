@@ -40,15 +40,22 @@
     </div>
   </div>
 
+  <button id="activateEditor" type="button" class="btn btn-light" aria-pressed="false">
+    <i class="fa fa-hand-o-down text-info" area-hidden="true"></i>
+    Markdown editor
+  </button>
+
   {% if config.S3_KEY %}
-  <button type="button" class="btn btn-primary mt-2 m-1" style="display:none" data-toggle="modal" data-target="#uploadImage">
+  <button type="button" class="btn btn-light mt-2 m-1" style="display:none" data-toggle="modal" data-target="#uploadImage">
+    <i class="fa fa-image text-info" area-hidden="true"></i>
     Upload an image
   </button>
   {% endif %}
 
   {% if config.S3_KEY %}
-  <button type="button" class="btn btn-dark mt-2 m-1" style="display:none" data-toggle="modal" data-target="#uploadFile">
-    Upload a file
+  <button type="button" class="btn btn-light mt-2 m-1" style="display:none" data-toggle="modal" data-target="#uploadFile">
+    <i class="fa fa-folder text-info" area-hidden="true"></i>
+    Attach dataset
   </button>
   {% endif %}
 
@@ -120,7 +127,7 @@
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="uploadFileLabel">Upload a file</h5>
+          <h5 class="modal-title" id="uploadFileLabel">Attach dataset</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
