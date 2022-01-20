@@ -26,7 +26,6 @@ from ..apiutils import (
     gen_csv,
 )
 
-from datetime import datetime
 import tempfile
 
 blueprint = Blueprint('api', __name__, url_prefix='/api')
@@ -64,7 +63,7 @@ def info_event_hackathon_json(event_id):
 def request_project_list(event_id):
     is_moar = bool(request.args.get('moar', type=bool))
     host_url = request.host_url
-    return get_project_list(event.id, host_url, is_moar)
+    return get_project_list(event_id, host_url, is_moar)
 
 
 @blueprint.route('/event/current/projects.json')
@@ -333,7 +332,6 @@ def project_push_json():
 
 # ------ FRONTEND -------
 
-
 @blueprint.route('/project/autofill', methods=['GET', 'POST'])
 @login_required
 def project_autofill():
@@ -342,10 +340,16 @@ def project_autofill():
     data = GetProjectData(url)
     return jsonify(data)
 
+# ------ UPLOADING -------
 
 # TODO: move to separate upload.py ?
 
-ACCEPTED_TYPES = ['png', 'jpg', 'jpeg', 'gif', 'json']
+ACCEPTED_TYPES = [
+    'png', 'jpg', 'jpeg', 'gif',  # ʕ·͡ᴥ·ʔ
+    'json', 'geojson',            # ( ͡° ͜ʖ ͡°)
+    'csv', 'tsv',                 # ¯\_(ツ)_/¯
+    'xlsx', 'pdf',                # (ノಠ ∩ಠ)ノ彡
+]
 
 
 @blueprint.route('/project/uploader', methods=["POST"])

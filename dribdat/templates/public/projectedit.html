@@ -55,7 +55,7 @@
   {% if config.S3_KEY %}
   <button type="button" class="btn btn-light mt-2 m-1" style="display:none" data-toggle="modal" data-target="#uploadFile">
     <i class="fa fa-folder text-info" area-hidden="true"></i>
-    Attach dataset
+    Attach data
   </button>
   {% endif %}
 
@@ -127,16 +127,24 @@
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="uploadFileLabel">Attach dataset</h5>
+          <h5 class="modal-title" id="uploadFileLabel">Attach data</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
         <div class="modal-body">
           <p class="upload-note">
-            Currently only <b><a href="https://frictionlessdata.io/field-guide/" target="_blank">Data Packages</a></b> are accepted.
-            These can be for example generated with the <a href="https://create.frictionlessdata.io/" target="_blank">Creator</a> tool.
-            Max {{ (config.MAX_CONTENT_LENGTH/(1024*1024))|round(1) }} MB.
+            <b><a href="https://frictionlessdata.io/field-guide/" target="_blank">Data Packages</a></b>
+            in <sp>JSON</sp> format can be generated from a
+            <a href="https://github.com/schoolofdata-ch/datapackage-template" target="_blank">template</a> or with the
+            <a href="https://create.frictionlessdata.io/" target="_blank">Creator tool</a>.
+            Additional formats permitted:
+            <sp>GeoJSON</sp>
+            <sp>CSV</sp>
+            <sp>TSV</sp>
+            <sp>XLSX</sp>
+            <sp>PDF</sp>
+            up to {{ (config.MAX_CONTENT_LENGTH/(1024*1024))|round(1) }} MB in size.
           </p>
           <div class="input-group" style="margin-top:1em">
             <div class="input-group-prepend">
