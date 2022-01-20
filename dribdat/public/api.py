@@ -332,6 +332,7 @@ def project_push_json():
 
 # ------ FRONTEND -------
 
+
 @blueprint.route('/project/autofill', methods=['GET', 'POST'])
 @login_required
 def project_autofill():
@@ -343,6 +344,7 @@ def project_autofill():
 # ------ UPLOADING -------
 
 # TODO: move to separate upload.py ?
+
 
 ACCEPTED_TYPES = [
     'png', 'jpg', 'jpeg', 'gif',  # ʕ·͡ᴥ·ʔ
@@ -401,6 +403,7 @@ def project_uploader():
 
 # TODO: move to packager.py ?
 
+
 def generate_event_package(event, format='json'):
     """ Creates a Data Package from the data of an event """
 
@@ -438,6 +441,7 @@ def package_specific_event(event_id, format):
     return generate_event_package(event, format)
 
 # ------ USER API --------
+
 
 @blueprint.route('/user/current/hackathon.json')
 def current_user_hackathon_json():

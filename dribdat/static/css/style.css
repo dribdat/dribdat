@@ -16,6 +16,14 @@ textarea { resize: vertical; }
 .bigger { font-size: 125%; }
 .huge { font-size: 4rem; opacity: 0.6; }
 
+sp {
+  box-shadow: 2px 2px 0px rgb(0 0 0 / 30%);
+  padding: 1px 5px;
+  background: #eee;
+  margin: 1px 2px;
+  font-family: monospace;
+}
+
 /* Forms */
 form input[type="checkbox"] {
   margin-right: 0.5em;
