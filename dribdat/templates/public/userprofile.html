@@ -11,7 +11,7 @@
   <div class="col-sm text-right">
     <a href="{{ url_for('auth.user_profile') }}" class="btn btn-secondary btn-warning btn-lg">
       <i class="fa fa-child"></i>
-      Edit my profile
+      Edit Profile
     </a>
 
     <a id="project-post"
@@ -20,6 +20,10 @@
       <i class="fa fa-clipboard" aria-hidden="true"></i>
       Write a Post</a>
 
+    <a href="{{ url_for('api.current_user_hackathon_json') }}" download class="btn btn-light btn-lg">
+      <i class="fa fa-download"></i>
+      My Data
+    </a>
     <a href="{{ url_for('auth.logout') }}" class="btn btn-secondary btn-lg hidden">
       <i class="fa fa-sign-out"></i>
       Logout
