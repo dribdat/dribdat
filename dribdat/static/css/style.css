@@ -1393,6 +1393,14 @@ Instruction page
 Search engine
 --------------- */
 
+.navbar .form-inline .form-control {
+  background-color: transparent;
+  border-color: rgba(0,0,0,0.1);
+}
+.navbar .form-inline .form-control:focus {
+  background-color: white;
+}
+
 #search-results .card-image {
   width: 48px;
   height: 7em;
