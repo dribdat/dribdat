@@ -49,7 +49,7 @@ class EventForm(FlaskForm):
         [length(max=80), UniqueValidator(Event, 'name'), DataRequired()])
     is_current = BooleanField(
         u'Featured', default=False,
-        description=u'📣 Pin this event to the top of the homepage.')
+        description=u'📣 Pin this event (only one at a time) to the homepage.')
     is_hidden = BooleanField(
         u'Hidden', default=False,
         description=u'🚧 This event is not shown on the homepage.')
