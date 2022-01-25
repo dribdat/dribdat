@@ -35,7 +35,7 @@ This project is currently mantained by [@loleg](https://github.com/loleg) and [@
 
 Special thanks to the [Open Data](https://opendata.ch), [Open Networking](https://opennetworkinfrastructure.org/) and [Open Source](https://dinacon.ch) communities in Switzerland for the many trials and feedbacks. We are also grateful to F. Wieser and M.-C. Gasser at [Swisscom](http://swisscom.com) for conceptual inputs and financial support at an early stage of this project.
 
-This code is originally based on Steven Loria's [cookiecutter-flask](https://github.com/sloria/cookiecutter-flask). A more modern version of this is [cookiecutter-flask-restful](https://github.com/karec/cookiecutter-flask-restful).
+This code is originally based on Steven Loria's [cookiecutter-flask](https://github.com/sloria/cookiecutter-flask). A more modern version of which is [cookiecutter-flask-restful](https://github.com/karec/cookiecutter-flask-restful).
 
 Additional and :heart:-felt thanks for testing and feedback to:
 
@@ -49,6 +49,7 @@ Additional and :heart:-felt thanks for testing and feedback to:
 - [@khashashin](https://github.com/khashashin)
 - [@philshem](https://github.com/philshem)
 
+.. and all the hackathon contributors!
 
 ## License
 
