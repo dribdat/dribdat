@@ -19,7 +19,7 @@ For more background and references, see the [Usage Guide](docs/USAGE.md) and [Ab
 
 This project can be deployed to any server capable of serving Python applications, and is set up for fast deployment using [Docker](https://github.com/dribdat/dribdat/blob/main/docs/DEPLOY.md#with-docker) or to the [Heroku](http://heroku.com) cloud:
 
-[![Deploy with Heroku](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy)
+[![Deploy with Heroku](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy?template=https://github.com/dribdat/dribdat)
 
 The first user that registers becomes an admin, so don't delay! If you would like to run dribdat on any other cloud or local machine, there are additional instructions in the [Deployment guide](docs/DEPLOY.md).
 
