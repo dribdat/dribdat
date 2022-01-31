@@ -29,13 +29,16 @@
     </div>
   {% endif %}
 
-  <div class="form-project-post">
+  <div class="form-project-post" id="search" action="/api/project/search.json">
     {% if stage %}
       {{ render_form(url_for('project.project_post', project_id=project.id), form) }}
     {% else %}
       {{ render_form(url_for('project.project_comment', project_id=project.id), form) }}
     {% endif %}
   </div>
+
+  <div class="row flex-row flex-nowrap ml-0 mt-1 mb-1 pt-2 pb-2" id="search-results"></div>
+  <div class="text-center" id="search-matches"></div>
 
   {% if stage %}
   {% if all_valid and stage['name'] == 'LIVE' %}

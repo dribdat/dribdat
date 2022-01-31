@@ -271,7 +271,9 @@
 
   // About page simple stupid search
   var lastSearch = null;
-  var searchForm = $('form#search');
+  var searchForm = $('#search');
+  var searchAction = searchForm.attr('action');
+  var searchIgnore = searchForm.find('#id').val();
   searchForm.find('input[name="q"]')
     .keyup(delay(function(e) {
       if (e.keyCode == 13) { e.preventDefault(); return false; }
@@ -279,14 +281,43 @@
     }, 500));
   checkSearchQuery();
 
+  // Post editor smart search
+  $('.projectpost .form-project-post #note')
+    .keyup(delay(function(e) {
+      if (e.keyCode == 13) { e.preventDefault(); return false; }
+      var lastWord = $(this).val();
+      if (lastWord.length < 4) return false;
+      lastWord = lastWord.trim().split(' ');
+      if (lastWord.length < 1) return false;
+      lastWord = lastWord[lastWord.length-1];
+      runSearch(lastWord);
+    }, 500));
+
   function runSearch(q) {
     if (q.length < 4 || q.trim() == lastSearch) return;
     lastSearch = q.trim();
-    $ul = $('#search-results').empty();
-    $.get(searchForm.attr('action') + '?q=' + q, function(d) {
-      d.projects.forEach(function(p) {
+    $.get(searchAction + '?q=' + q, function(d) {
+      // Filter out the current project, if there is one
+      var projects = d.projects;
+      if (typeof searchIgnore !== undefined && searchIgnore) {
+        const si = parseInt(searchIgnore);
+        projects = projects.filter(function(d) { return d.id !== si });
+      }
+      // Reset search containers
+      $ul = $('#search-results').empty();
+      $sm = $('#search-matches').empty();
+      // Search count indicator
+      if (projects.length > 0) {
+        $sm.html(
+          '<span class="user-score">' + (projects.length) + '</span> ' +
+          'projects match'
+        );
+      }
+      // Create project cards
+      projects.forEach(function(p) {
         $ul.append(
-          '<a class="col-md-5 ms-auto card project"' +
+          '<a class="col col-2 col-sm-2 col-md-4 col-lg-4 ms-auto mr-1 card project" ' +
+             'target="_blank" ' +
              'href="' + p.url + '"' +
              (p.image_url ?
                ' style="background-image:url(' + p.image_url + '); padding-left:100px"' : '') + '>' +
