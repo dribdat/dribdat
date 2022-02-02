@@ -48,7 +48,7 @@ def info_current_hackathon_json():
 @blueprint.route("/about/")
 def about():
     """ Renders a simple about page """
-    return render_template("public/about.html")
+    return render_template("public/about.html", active="about")
 
 
 @blueprint.route("/favicon.ico")
