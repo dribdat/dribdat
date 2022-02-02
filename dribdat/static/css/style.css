@@ -660,6 +660,9 @@ nav .nav-login {
   line-height: 1.8em;
   font-size: 150%;
 }
+.timeline-content .content img {
+  width: 100%;
+}
 
 /* Hides the triangle pointers in the timeline */
 .project-page .timeline-card::after { display: none; }
