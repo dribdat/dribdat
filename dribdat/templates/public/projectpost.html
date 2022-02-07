@@ -37,51 +37,53 @@
     {% endif %}
   </div>
 
-  <div class="row flex-row flex-nowrap ml-0 mt-1 mb-1 pt-2 pb-2" id="search-results"></div>
-  <div class="text-center" id="search-matches"></div>
+  <div class="profile-projects container-fluid mt-5">
+    <div class="row flex-row flex-nowrap ml-0 mt-1 mb-1 pt-2 pb-2" id="search-results"></div>
+    <div class="text-center" id="search-matches"><i>Waiting to make a suggestion ...</i></div>
+  </div>
 
   {% if stage %}
-  {% if all_valid and stage['name'] == 'LIVE' %}
-    <div class="alert alert-success mt-1" role="alert">
-      <i class="fa fa-thumbs-up"></i>
-      Your project is ready for action!
-    </div>
-  {% else %}
-  {% if not all_valid %}
-  <div class="form-project-stage" style="{% if all_valid %}border-color:lightgreen{% endif %}">
-    <h5 class="text-center mb-3">
-      To reach the
-      <a href="{{ url_for('public.event_stages', event_id=current_event.id) }}" target="_blank">
-        next stage</a>
-      &#128161;
-    </h5>
-    {% for item in stage.conditions.validate %}
-      {% if item.valid %}
-        <div class="alert alert-success" role="alert">
-          <i class="fa fa-thumbs-up"></i>
-          {{ item.help }}
-        </div>
-      {% else %}
-        <div class="alert alert-warning" role="alert">
-          <i class="fa fa-paw"></i>
-          {{ item.help }}
-        </div>
-      {% endif %}
-    {% endfor %}
+    {% if all_valid and stage['name'] == 'LIVE' %}
+      <div class="alert alert-success mt-1" role="alert">
+        <i class="fa fa-thumbs-up"></i>
+        Your project is ready for action!
+      </div>
+    {% else %}
+      {% if not all_valid %}
+      <div class="form-project-stage" style="{% if all_valid %}border-color:lightgreen{% endif %}">
+        <h5 class="text-center mb-3">
+          To reach the
+          <a href="{{ url_for('public.event_stages', event_id=current_event.id) }}" target="_blank">
+            next stage</a>
+          &#128161;
+        </h5>
+        {% for item in stage.conditions.validate %}
+          {% if item.valid %}
+            <div class="alert alert-success" role="alert">
+              <i class="fa fa-thumbs-up"></i>
+              {{ item.help }}
+            </div>
+          {% else %}
+            <div class="alert alert-warning" role="alert">
+              <i class="fa fa-paw"></i>
+              {{ item.help }}
+            </div>
+          {% endif %}
+        {% endfor %}
 
-    <p class="text-center mt-3 mb-0 hidden"><small>
-      &#x1F3AF;
-      To Post on another project, <b>Join</b> it or visit
-      <a href="{{ url_for('public.user', username=current_user.username) }}">your profile</a>
-      to switch.
-      For more info see
-      <a href="{{ url_for('public.event_stages', event_id=current_event.id) }}" target="_blank">
-        <i class="fa fa-arrow-right" aria-hidden="true"></i>
-        Stages</a>
-    </small></p>
-  </div>
-  {% endif %}
-  {% endif %}
+        <p class="text-center mt-3 mb-0 hidden"><small>
+          &#x1F3AF;
+          To Post on another project, <b>Join</b> it or visit
+          <a href="{{ url_for('public.user', username=current_user.username) }}">your profile</a>
+          to switch.
+          For more info see
+          <a href="{{ url_for('public.event_stages', event_id=current_event.id) }}" target="_blank">
+            <i class="fa fa-arrow-right" aria-hidden="true"></i>
+            Stages</a>
+        </small></p>
+      </div>
+      {% endif %}
+    {% endif %}
   {% endif %}
 
   <center class="mt-3">
