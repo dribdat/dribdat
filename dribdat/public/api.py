@@ -21,11 +21,11 @@ from ..apipackage import ImportEventPackage, ImportEventByURL, PackageEvent
 from ..apiutils import (
     get_project_list,
     get_event_activities,
+    get_schema_for_user_projects,
     expand_project_urls,
     gen_csv,
 )
 
-from datetime import datetime
 import tempfile
 
 blueprint = Blueprint('api', __name__, url_prefix='/api')
@@ -63,7 +63,7 @@ def info_event_hackathon_json(event_id):
 def request_project_list(event_id):
     is_moar = bool(request.args.get('moar', type=bool))
     host_url = request.host_url
-    return get_project_list(event.id, host_url, is_moar)
+    return get_project_list(event_id, host_url, is_moar)
 
 
 @blueprint.route('/event/current/projects.json')
@@ -299,8 +299,7 @@ def project_push_json():
         project = Project()
         project.user_id = 1
         project.progress = 0
-        # project.autotext_url = "#bot"
-        # project.is_autoupdate = True
+        project.is_autoupdate = True
         project.event = Event.query.filter_by(is_current=True).first()
     elif project.user_id != 1 or project.is_hidden:
         return jsonify(error='Access denied')
@@ -341,10 +340,17 @@ def project_autofill():
     data = GetProjectData(url)
     return jsonify(data)
 
+# ------ UPLOADING -------
 
 # TODO: move to separate upload.py ?
 
-ACCEPTED_TYPES = ['png', 'jpg', 'jpeg', 'gif', 'json']
+
+ACCEPTED_TYPES = [
+    'png', 'jpg', 'jpeg', 'gif',  # ʕ·͡ᴥ·ʔ
+    'json', 'geojson',            # ( ͡° ͜ʖ ͡°)
+    'csv', 'tsv',                 # ¯\_(ツ)_/¯
+    'xlsx', 'pdf',                # (ノಠ ∩ಠ)ノ彡
+]
 
 
 @blueprint.route('/project/uploader', methods=["POST"])
@@ -392,8 +398,10 @@ def project_uploader():
                           )
     return '/'.join([current_app.config['S3_HTTPS'], s3_filepath])
 
+# ------ DATA PACKAGE API --------
 
 # TODO: move to packager.py ?
+
 
 def generate_event_package(event, format='json'):
     """ Creates a Data Package from the data of an event """
@@ -430,3 +438,14 @@ def package_current_event(format):
 def package_specific_event(event_id, format):
     event = Event.query.filter_by(id=event_id).first_or_404()
     return generate_event_package(event, format)
+
+# ------ USER API --------
+
+
+@blueprint.route('/user/current/hackathon.json')
+def current_user_hackathon_json():
+    """ API: Outputs JSON-LD about a User's Event according to schema """
+    """ See https://schema.org/Hackathon """
+    host_url = request.host_url
+    data = get_schema_for_user_projects(current_user, host_url)
+    return jsonify(data)

@@ -80,14 +80,16 @@
         </li>
       {% endif %}
 
+      <form class="form-inline nav-item" action="{{ url_for('public.about') }}" method="get">
+        <button class="btn my-2 my-sm-0 {% if active != 'about' %}text-secondary{% endif %}" type="submit">
+          <i class="fa fa-search" aria-hidden="true"></i>
+        </button>
+        <!-- <input class="form-control mr-sm-2" type="search" placeholder="" aria-label="Search" name="q" size=7> -->
+      </form>
+
     </ul>
 
-    <form class="form-inline my-2 my-lg-0" action="{{ url_for('public.about') }}" method="get">
-      <button class="btn my-2 my-sm-0" type="submit">
-        <i class="fa fa-search" aria-hidden="true"></i>
-      </button>
-      <input class="form-control mr-sm-2" type="search" placeholder="" aria-label="Search" name="q" size=7>
-    </form>
+
 
   </div><!-- /.navbar-collapse -->
 

@@ -14,10 +14,12 @@ PY3 = version_info[0] == 3
 
 
 def get_projects_by_event(event_id):
+    """ Get all the visible projects that belong to an event """
     return Project.query.filter_by(event_id=event_id, is_hidden=False)
 
 
 def get_event_activities(event_id=None, limit=50, q=None, action=None):
+    """ Fetch activities of a given event """
     if event_id is not None:
         event = Event.query.filter_by(id=event_id).first_or_404()
         query = Activity.query \
@@ -35,6 +37,7 @@ def get_event_activities(event_id=None, limit=50, q=None, action=None):
 
 
 def get_event_categories(event_id=None):
+    """ Fetch the categories of a given event """
     if event_id is not None:
         event = Event.query.filter_by(id=event_id).first_or_404()
         query = Category.query.filter_by(event_id=event.id)
@@ -61,6 +64,7 @@ def get_event_users(event):
 
 
 def get_project_summaries(projects, host_url, is_moar=False):
+    """ Collect data for each project in a list """
     if is_moar:
         summaries = []
         for project in projects:
@@ -82,12 +86,31 @@ def get_project_list(event_id, host_url='', full_data=False):
 
 
 def expand_project_urls(projects, host_url):
+    """ Expand the URLs of projects with that of the host server """
     for p in projects:
         p['event_url'] = host_url + p['event_url']
         p['url'] = host_url + p['url']
         p['team'] = ', '.join(p['team'])
     return projects
 
+def get_schema_for_user_projects(user, host_url):
+    """ Generates the metadata for a given user's projects """
+    my_projects = user.joined_projects()
+    if len(my_projects) == 0:
+        return { 'message': "You must join and contribute to at least one project." }
+    my_events = {}
+    for p in my_projects:
+        if p.event_id not in my_events.keys():
+            event_data = p.event.get_schema(host_url)
+            event_data["workPerformed"] = []
+            my_events[p.event_id] = event_data
+        my_events[p.event_id]["workPerformed"].append(
+            p.get_schema(host_url)
+        )
+    # Sort in reverse chronological order
+    my_schema = [ my_events[e] for e in my_events ]
+    my_schema.sort(key=lambda x: x['startDate'], reverse=True)
+    return my_schema
 
 def gen_rows(csvdata):
     """ Generate rows from data """

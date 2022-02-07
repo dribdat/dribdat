@@ -48,7 +48,7 @@ def info_current_hackathon_json():
 @blueprint.route("/about/")
 def about():
     """ Renders a simple about page """
-    return render_template("public/about.html")
+    return render_template("public/about.html", active="about")
 
 
 @blueprint.route("/favicon.ico")
@@ -72,7 +72,7 @@ def home():
     timed_events = events.filter(Event.lock_resources.isnot(
         True)).order_by(Event.starts_at.desc())
     today = datetime.utcnow()
-    events_next = timed_events.filter(Event.starts_at > today).all()
+    events_next = timed_events.filter(Event.ends_at > today).all()
     events_past = timed_events.filter(Event.ends_at < today).all()
     # Select a featured event if none is selected
     if cur_event is None:

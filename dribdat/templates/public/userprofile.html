@@ -9,10 +9,6 @@
 
   {% if current_user and current_user.is_authenticated and current_user.id == user.id %}
   <div class="col-sm text-right">
-    <a href="{{ url_for('auth.user_profile') }}" class="btn btn-secondary btn-warning btn-lg">
-      <i class="fa fa-child"></i>
-      Edit my profile
-    </a>
 
     <a id="project-post"
        href="{{ url_for('public.user_post', username=current_user.username) }}"
@@ -20,10 +16,22 @@
       <i class="fa fa-clipboard" aria-hidden="true"></i>
       Write a Post</a>
 
-    <a href="{{ url_for('auth.logout') }}" class="btn btn-secondary btn-lg hidden">
-      <i class="fa fa-sign-out"></i>
-      Logout
+    <a href="{{ url_for('auth.user_profile') }}" class="btn btn-secondary btn-warning btn-lg">
+      <i class="fa fa-child"></i>
+      Edit Profile
     </a>
+
+    <a href="{{ url_for('api.current_user_hackathon_json') }}" download
+      title="Download a snapshot of my contributions" class="btn btn-light btn-lg">
+      <i class="fa fa-download"></i>
+      My Data
+    </a>
+
+    <a href="{{ url_for('auth.logout') }}" class="btn btn-secondary btn-lg"
+      title="Sign out of this account">
+      <i class="fa fa-sign-out"></i>
+    </a>
+
   </div>
   {% endif %}
 
@@ -154,7 +162,7 @@
     </div>
     <div class="timeline-content timeline-card js--fadeInBottom">
       <div class="timeline-img-header">
-      <a href="{{ url_for('project.project_view', project_id=s.project_id) }}">
+      <a href="{{ url_for('project.project_view', project_id=s.project_id) }}#log">
         <h2>{{s.project_name}}</h2>
       </a>
       </div>

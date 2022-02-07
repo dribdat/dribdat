@@ -29,13 +29,17 @@ RESOURCE_TYPES = {
     6: ('inspired by', "Is inspired by this"),
 }
 
+# Content length
+MAX_EXCERPT_LENGTH = 500
 
+
+# TODO: clean up
 def resourceTypeList(verbose=False):
     vb = 1 if verbose else 0
     pl = [(g, RESOURCE_TYPES[g][vb]) for g in RESOURCE_TYPES]
     return sorted(pl, key=lambda x: x[0])
 
-
+# TODO: clean up
 def getResourceType(resource, verbose=False):
     vb = 1 if verbose else 0
     if resource is None:
@@ -135,8 +139,7 @@ def getActivityByType(a, only_active=True):
         author = "?"
     # Based on action, populate activity fields
     if a.action == 'sync':
-        # title = "Synchronized"
-        text = "Readme updated"
+        text = "Readme connected"
         icon = 'taxi'
     elif a.action == 'post' and a.name == 'review':
         text = a.content

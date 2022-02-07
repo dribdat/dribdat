@@ -16,6 +16,14 @@ textarea { resize: vertical; }
 .bigger { font-size: 125%; }
 .huge { font-size: 4rem; opacity: 0.6; }
 
+sp {
+  box-shadow: 2px 2px 0px rgb(0 0 0 / 30%);
+  padding: 1px 5px;
+  background: #eee;
+  margin: 1px 2px;
+  font-family: monospace;
+}
+
 /* Forms */
 form input[type="checkbox"] {
   margin-right: 0.5em;
@@ -651,6 +659,9 @@ nav .nav-login {
   text-align: center;
   line-height: 1.8em;
   font-size: 150%;
+}
+.timeline-content .content img {
+  width: 100%;
 }
 
 /* Hides the triangle pointers in the timeline */
@@ -1384,6 +1395,14 @@ Instruction page
 /* ------------
 Search engine
 --------------- */
+
+.navbar .form-inline .form-control {
+  background-color: transparent;
+  border-color: rgba(0,0,0,0.1);
+}
+.navbar .form-inline .form-control:focus {
+  background-color: white;
+}
 
 #search-results .card-image {
   width: 48px;

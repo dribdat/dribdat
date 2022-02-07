@@ -33,10 +33,8 @@ def project_view(project_id):
     return project_action(project_id, None)
 
 
-@blueprint.route('/<int:project_id>/posted')
+@blueprint.route('/<int:project_id>/log')
 def project_view_posted(project_id):
-    flash('Thanks for your Post in the project Log!', 'success')
-    # TODO: open log
     return project_action(project_id, None)
 
 
@@ -148,18 +146,16 @@ def project_post(project_id):
             found_next = False
             if all_valid:
                 for a in projectProgressList(True, False):
-                    # print(a[0])
                     if found_next:
                         project.progress = a[0]
-                        flash('Your project has been promoted!', 'info')
+                        flash("Promoted to stage '%s'" % project.progress, 'info')
                         break
                     if a[0] == project.progress or \
                         not project.progress or \
                             project.progress < 0:
                         found_next = True
-                        # print("Founddd")
-            if not all_valid or not found_next:
-                flash('Your project did not meet stage requirements.', 'info')
+            #if not all_valid or not found_next:
+            #    flash('Your project did not meet stage requirements.', 'info')
 
         # Update project data
         del form.id
@@ -171,8 +167,15 @@ def project_post(project_id):
         cache.clear()
         project_action(project_id, 'update',
                        action='post', text=form.note.data)
-        return redirect(url_for(
-            'project.project_view_posted', project_id=project.id))
+
+        flash("Thanks for sharing!", 'success')
+
+        # Continue with project autoupdate
+        if project.is_autoupdateable:
+            return project_autoupdate(project.id)
+        else:
+            return redirect(url_for(
+                'project.project_view_posted', project_id=project.id))
 
     return render_template(
         'public/projectpost.html',
@@ -193,6 +196,8 @@ def project_comment(project_id):
         # Update project data
         project_action(project_id, 'review',
                        action='post', text=form.note.data)
+
+        flash("Thanks for your feedback!", 'success')
         return redirect(url_for(
             'project.project_view_posted', project_id=project.id))
 
@@ -276,7 +281,8 @@ def project_action(project_id, of_type=None, as_view=True, then_redirect=False,
 @login_required
 def project_star(project_id):
     if not isUserActive(current_user):
-        return "User not allowed. Please contact event organizers."
+        flash("User currently not allowed to join projects. Please ask the organizers for activation.", 'warning')
+        return redirect(url_for('project.project_view', project_id=project_id))
     flash('Welcome to the team!', 'success')
     return project_action(project_id, 'star', then_redirect=True)
 
@@ -370,20 +376,28 @@ def project_new(event_id):
 @login_required
 def project_autoupdate(project_id):
     project = Project.query.filter_by(id=project_id).first_or_404()
+    if not project.is_autoupdateable:
+        return project_action(project_id)
+    # Check user permissions
     starred = IsProjectStarred(project, current_user)
     allow_edit = starred or (
         not current_user.is_anonymous and current_user.is_admin)
-    if not allow_edit or project.is_hidden or not project.is_autoupdate:
+    if not allow_edit or project.is_hidden:
         flash('You may not sync this project.', 'warning')
-        return project_action(project_id)
+        return redirect(url_for('project.project_view', project_id=project_id))
+    # Start update process
+    has_autotext = project.autotext and len(project.autotext) > 1
     data = GetProjectData(project.autotext_url)
     if not data or 'name' not in data:
-        flash(
-            "Could not sync: check that the remote site contains a README.",
-            'warning')
-        return project_action(project_id)
+        flash("To Sync: ensure a README on the remote site.", 'warning')
+        return redirect(url_for('project.project_view', project_id=project_id))
     SyncProjectData(project, data)
-    project_action(project.id, 'update', action='sync',
-                   text=str(len(project.autotext)) + ' bytes')
-    flash("Project data synced from %s" % data['type'], 'success')
-    return redirect(url_for('project.project_view', project_id=project.id))
+    # Confirmation messages
+    if not has_autotext:
+        if project.autotext and len(project.autotext) > 1:
+            project_action(project.id, 'update', action='sync',
+                           text=str(len(project.autotext)) + ' bytes')
+            flash("Thanks for contributing on %s" % data['type'], 'success')
+        else:
+            flash("Could not sync: remote README has no data.", 'warning')
+    return redirect(url_for('project.project_view_posted', project_id=project_id))

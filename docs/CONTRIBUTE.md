@@ -1,8 +1,17 @@
+Developer Guide
+---
+
 This document contains additional information on contributing to dribdat as a developer. If you are just interested in connecting to dribdat's API, scroll down to the [API overview](#api-guide)
 
 For more background references, see the [README](README.md).
 
-# Developer Guide
+## Software Architecture
+
+This code is originally based on [cookiecutter-flask](https://github.com/cookiecutter-flask/cookiecutter-flask), which has a number of helpful [developer features](https://github.com/cookiecutter-flask/cookiecutter-flask#features). It is a Python 3 project that uses the Flask microframework and SQLAlchemy for data modelling on the backend. A plain JSON API, along with Jinja templates and WTForms, serves data to a frontend based on Bootstrap 3 and jQuery.
+
+![Sketch of project architecture](../dribdat/static/img/architecture-dribdat.svg.png)
+
+## Getting started
 
 Install Python, Virtualenv and Pip, or [Poetry](https://python-poetry.org/) to start working with the code.
 

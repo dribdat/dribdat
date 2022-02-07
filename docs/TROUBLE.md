@@ -15,7 +15,7 @@ Dark Bootswatch themes do not play well with the *navbar-light* component used i
 
 ## Need help setting up SSO
 
-To get client keys, go to the [Slack API](https://api.slack.com/apps/), [Azure portal](https://portal.azure.com/#blade/Microsoft_AAD_RegisteredApps/ApplicationsListBlade), or add the [GitHub App](https://github.com/apps/dribdat) to your account or organization.
+To get client keys, go to the [Slack API](https://api.slack.com/apps/), [Azure portal](https://portal.azure.com/#blade/Microsoft_AAD_RegisteredApps/ApplicationsListBlade), or add the [GitHub App](https://github.com/apps/dribdat) to your account or organization. You can also use [custom OAuth 2](https://flask-dance.readthedocs.io/en/latest/providers.html#custom) provider if you provide all external registration URLs.
 
 Cannot determine SSO callback for app registration? Try `<my server url>/oauth/slack/authorized` (replace `slack` with your OAuth provider).
 
@@ -55,3 +55,11 @@ See also further instructions in the `force-migrate.sh` script.
 Some development scenarios and OAuth testing requires SSL. To use this in development with self-signed certificates (you will get a browser warning), start the server with `./manage.py run --cert=adhoc`
 
 You can also try to test SSO providers with `OAUTHLIB_INSECURE_TRANSPORT=true` (do not use in production!)
+
+## Installation on Alpine Linux
+
+The project has so far mostly been developed on Fedora and Ubuntu Linux. Users on Alpine, BSD and other distributions are welcome to share their experience with us in the Issues. Some additional system packages are needed for a successful local (non-Docker) deployment:
+
+```
+apk add libxml2-dev libxslt-dev rust cargo
+```
