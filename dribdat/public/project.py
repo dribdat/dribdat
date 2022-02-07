@@ -400,6 +400,4 @@ def project_autoupdate(project_id):
             flash("Thanks for contributing on %s" % data['type'], 'success')
         else:
             flash("Could not sync: remote README has no data.", 'warning')
-    else:
-        flash("Thanks for your contributions (synced)", 'success')
     return redirect(url_for('project.project_view_posted', project_id=project_id))
