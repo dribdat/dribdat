@@ -276,7 +276,8 @@ def project_action(project_id, of_type=None, as_view=True, then_redirect=False,
 @login_required
 def project_star(project_id):
     if not isUserActive(current_user):
-        return "User not allowed. Please contact event organizers."
+        flash("User currently not allowed to join projects. Please ask the organizers for activation.", 'warning')
+        return redirect(url_for('project.project_view', project_id=project_id))
     flash('Welcome to the team!', 'success')
     return project_action(project_id, 'star', then_redirect=True)
 

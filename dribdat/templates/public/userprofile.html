@@ -9,10 +9,6 @@
 
   {% if current_user and current_user.is_authenticated and current_user.id == user.id %}
   <div class="col-sm text-right">
-    <a href="{{ url_for('auth.user_profile') }}" class="btn btn-secondary btn-warning btn-lg">
-      <i class="fa fa-child"></i>
-      Edit Profile
-    </a>
 
     <a id="project-post"
        href="{{ url_for('public.user_post', username=current_user.username) }}"
@@ -20,14 +16,22 @@
       <i class="fa fa-clipboard" aria-hidden="true"></i>
       Write a Post</a>
 
-    <a href="{{ url_for('api.current_user_hackathon_json') }}" download class="btn btn-light btn-lg">
+    <a href="{{ url_for('auth.user_profile') }}" class="btn btn-secondary btn-warning btn-lg">
+      <i class="fa fa-child"></i>
+      Edit Profile
+    </a>
+
+    <a href="{{ url_for('api.current_user_hackathon_json') }}" download
+      title="Download a snapshot of my contributions" class="btn btn-light btn-lg">
       <i class="fa fa-download"></i>
       My Data
     </a>
-    <a href="{{ url_for('auth.logout') }}" class="btn btn-secondary btn-lg hidden">
+
+    <a href="{{ url_for('auth.logout') }}" class="btn btn-secondary btn-lg"
+      title="Sign out of this account">
       <i class="fa fa-sign-out"></i>
-      Logout
     </a>
+
   </div>
   {% endif %}
 
