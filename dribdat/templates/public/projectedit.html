@@ -40,10 +40,12 @@
     </div>
   </div>
 
+  {% if not detail_view %}
   <button id="activateEditor" type="button" class="btn btn-light" aria-pressed="false">
     <i class="fa fa-hand-o-down text-info" area-hidden="true"></i>
     Markdown editor
   </button>
+  {% endif %}
 
   {% if config.S3_KEY %}
   <button type="button" class="btn btn-light mt-2 m-1" style="display:none" data-toggle="modal" data-target="#uploadImage">

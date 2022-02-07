@@ -74,7 +74,7 @@
   {% if allow_post and not project.event.lock_editing %}
      <a id="project-post" href="{{ url_for('project.project_post', project_id=project.id) }}" title="Post to this project" class="btn btn-lg btn-success">
        <i class="fa fa-paper-plane" aria-hidden="true"></i>
-       Post Progress
+       Post an update
      </a>
   {% elif current_user and current_user.active and not project.is_challenge %}
      <a id="project-comment" href="{{ url_for('project.project_comment', project_id=project.id) }}" title="Write a public comment" class="btn btn-lg btn-info">
@@ -82,13 +82,9 @@
        Comment</a>
   {% endif %}
   {% if allow_edit %}
-    {% if project.is_autoupdate %}
-      <a href="{{ url_for('project.project_autoupdate', project_id=project.id) }}" title="Sync external data" class="btn btn-lg btn-warning">
-        <i class="fa fa-refresh" aria-hidden="true"></i>
-        Sync</a>
-    {% endif %}
     <a href="{{ url_for('project.project_edit', project_id=project.id) }}" title="Edit project" class="btn btn-lg btn-warning">
       <i class="fa fa-pencil" aria-hidden="true"></i>
+      Edit
     </a>
   {% endif %}
 
@@ -390,6 +386,11 @@
        title="Edit project details" >
       <i class="fa fa-pencil" aria-hidden="true"></i>
       Details</a>
+    {% if project.is_autoupdate %}
+      <a href="{{ url_for('project.project_autoupdate', project_id=project.id) }}" title="Sync external data" class="btn btn-lg btn-warning">
+        <i class="fa fa-refresh" aria-hidden="true"></i>
+        Sync</a>
+    {% endif %}
   </div>
   {% endif %}
 </div><!-- / .project-controls -->

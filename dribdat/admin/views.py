@@ -309,7 +309,7 @@ def event_autosync(event_id):
     event = Event.query.filter_by(id=event_id).first_or_404()
     count = 0
     for project in event.projects:
-        if not project.is_autoupdate:
+        if not project.is_autoupdateable:
             continue
         data = GetProjectData(project.autotext_url)
         if 'name' not in data:

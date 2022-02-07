@@ -4,6 +4,7 @@
 from sqlalchemy import Table, or_
 
 from dribdat.user.constants import (
+    MAX_EXCERPT_LENGTH,
     PR_CHALLENGE,
     getProjectPhase,
     getResourceType,
@@ -426,7 +427,7 @@ class Project(PkModel):
 
     is_hidden = Column(db.Boolean(), default=False)
     is_webembed = Column(db.Boolean(), default=False)
-    is_autoupdate = Column(db.Boolean(), default=True)
+    is_autoupdate = Column(db.Boolean(), default=True) # remotely managed (by bot)
 
     autotext = Column(db.UnicodeText(), nullable=True, default=u"")
     longtext = Column(db.UnicodeText(), nullable=False, default=u"")
@@ -545,6 +546,11 @@ class Project(PkModel):
         return self.progress <= PR_CHALLENGE
 
     @property
+    def is_autoupdateable(self):
+        """ True if this project can be autoupdated """
+        return self.autotext_url and self.autotext_url.strip()
+
+    @property
     def webembed(self):
         """ Detect and return supported embed widgets """
         return format_webembed(self.webpage_url)
@@ -582,20 +588,18 @@ class Project(PkModel):
             'contact_url': self.contact_url or '',
             'logo_color': self.logo_color or '',
             'logo_icon': self.logo_icon or '',
-            'is_autoupdate': self.is_autoupdate,
-            'is_webembed': self.is_webembed,
             'excerpt': '',
         }
         d['created_at'] = format_date(self.created_at, '%Y-%m-%dT%H:%M')
         d['updated_at'] = format_date(self.updated_at, '%Y-%m-%dT%H:%M')
         d['team'] = [u.username for u in self.team()]
         if self.longtext and len(self.longtext) > 10:
-            d['excerpt'] = self.longtext[:300]
-            if len(self.longtext) > 300:
+            d['excerpt'] = self.longtext[:MAX_EXCERPT_LENGTH]
+            if len(self.longtext) > MAX_EXCERPT_LENGTH:
                 d['excerpt'] += '...'
-        elif self.is_autoupdate and self.autotext:
-            d['excerpt'] = self.autotext[:300]
-            if len(self.autotext) > 300:
+        elif self.is_autoupdateable and self.autotext.strip():
+            d['excerpt'] = self.autotext[:MAX_EXCERPT_LENGTH]
+            if len(self.autotext) > MAX_EXCERPT_LENGTH:
                 d['excerpt'] += '...'
         if self.user is not None:
             d['maintainer'] = self.user.username
@@ -668,11 +672,6 @@ class Project(PkModel):
             self.logo_icon = self.logo_icon.replace('fa-', '')
         if self.logo_color == '#000000':
             self.logo_color = ''
-        # Check update status
-        self.is_autoupdate = bool(
-            self.autotext_url and self.autotext_url.strip())
-        if not self.is_autoupdate:
-            self.autotext = ''
         # Set the timestamp
         self.updated_at = dt.datetime.utcnow()
         self.update_null_fields()

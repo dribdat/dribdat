@@ -168,13 +168,14 @@ def project_post(project_id):
         project_action(project_id, 'update',
                        action='post', text=form.note.data)
 
-        # Continue with project autoupdate
-        if project.is_autoupdate:
-            return project_autoupdate(project.id)
-
         flash("Thanks for sharing!", 'success')
-        return redirect(url_for(
-            'project.project_view_posted', project_id=project.id))
+
+        # Continue with project autoupdate
+        if project.is_autoupdateable:
+            return project_autoupdate(project.id)
+        else:
+            return redirect(url_for(
+                'project.project_view_posted', project_id=project.id))
 
     return render_template(
         'public/projectpost.html',
@@ -375,18 +376,23 @@ def project_new(event_id):
 @login_required
 def project_autoupdate(project_id):
     project = Project.query.filter_by(id=project_id).first_or_404()
+    if not project.is_autoupdateable:
+        return project_action(project_id)
+    # Check user permissions
     starred = IsProjectStarred(project, current_user)
     allow_edit = starred or (
         not current_user.is_anonymous and current_user.is_admin)
-    if not allow_edit or project.is_hidden or not project.is_autoupdate:
+    if not allow_edit or project.is_hidden:
         flash('You may not sync this project.', 'warning')
-        return project_action(project_id)
+        return redirect(url_for('project.project_view', project_id=project_id))
+    # Start update process
     has_autotext = project.autotext and len(project.autotext) > 1
     data = GetProjectData(project.autotext_url)
     if not data or 'name' not in data:
         flash("To Sync: ensure a README on the remote site.", 'warning')
-        return project_action(project_id)
+        return redirect(url_for('project.project_view', project_id=project_id))
     SyncProjectData(project, data)
+    # Confirmation messages
     if not has_autotext:
         if project.autotext and len(project.autotext) > 1:
             project_action(project.id, 'update', action='sync',
@@ -396,4 +402,4 @@ def project_autoupdate(project_id):
             flash("Could not sync: remote README has no data.", 'warning')
     else:
         flash("Thanks for your contributions (synced)", 'success')
-    return redirect(url_for('project.project_view_posted', project_id=project.id))
+    return redirect(url_for('project.project_view_posted', project_id=project_id))
