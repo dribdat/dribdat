@@ -135,8 +135,7 @@ def getActivityByType(a, only_active=True):
         author = "?"
     # Based on action, populate activity fields
     if a.action == 'sync':
-        # title = "Synchronized"
-        text = "Readme updated"
+        text = "Readme connected"
         icon = 'taxi'
     elif a.action == 'post' and a.name == 'review':
         text = a.content

@@ -94,6 +94,11 @@
     $(this).addClass('active');
   });
 
+  // Open up the LOG if navigated
+  if (window.location.hash == '#log' || window.location.pathname.endsWith('/log')) {
+    $('#dribs-tab-md').click();
+  }
+
   // Check image size on render
   $('.project-home .project-image-container').each(function() {
     var $self = $(this);
