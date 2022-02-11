@@ -6,8 +6,8 @@ stages:
   -
     id: 0
     name: CHALLENGE
-    phase: Challenge
-    description: 🚧 This is an idea or challenge description
+    phase: Define
+    description: 🚧 Ask questions and come around the issues that matter
     conditions:
       validate:
         -
@@ -17,34 +17,34 @@ stages:
         -
           field: excerpt
           min: 123
-          help: At least 123 characters in the challenge pitch.
+          help: At least 123 characters in the challenge description.
       agree:
-        - The challenge is well documented, with links to resources and contacts.
-        - We accept this challenge as realistic in the time limits of the event.
+        - We have formulated our question in a way that hints at what kind of data will be needed. Which in turns helps to scope the project.
+        - The data needed is readily available, acquisition is realistic given our time limits.
   -
     id: 5
     name: NEW
-    phase: Researching
-    description: 👪 A team has formed and started a project
+    phase: Find
+    description: 👪 You can’t do much if you can’t find the data!
     conditions:
       validate:
         -
           field: team
           min: 1
           max: 5
-          help: Between 1 and 5 members need to join your project.
+          help: Between 1 and 5 people should join your data expedition.
         -
-          field: contact_url
+          field: download_url
           test: validurl
-          help: Provide a contact link in the Details of your project page.
+          help: Provide a download link to your data repository in the Details of your project page.
       agree:
-        - We have a shared channel or working area in which to collaborate.
+        - We have a shared collaboration space in which to work on the data.
         - Our team members will work together for the duration of the event.
   -
     id: 10
     name: RESEARCHED
-    phase: Sketching
-    description: ⚗️ Scoping research has been done and documented
+    phase: Get
+    description: ⚗️ Scoping of data collection or improvement strategy has been done.
     conditions:
       validate:
         -
@@ -52,13 +52,13 @@ stages:
           test: validurl
           help: Provide a source link in your project Details.
       agree:
-        - A source code repository or shared folder has been set up and shared.
-        - We have defined the scope of the project, and have documented our goals.
+        - A source code repository has been set up where data quality improvements can be made.
+        - We have considered crowdsourcing, offline data collection, web scraping, etc.
   -
     id: 20
     name: SKETCHED
-    phase: Prototyping
-    description: 🎨 Initial designs have been sketched and shared
+    phase: Verify
+    description: 🎨 The overall details of the dataset have been evaluated
     conditions:
       validate:
         -
@@ -66,27 +66,27 @@ stages:
           test: validurl
           help: Upload or link to an image in your project Details.
       agree:
-        - Everyone on the team was able to contribute something to the design.
-        - We used a wireframing tool, or just paper, to sketch and share our idea.
+        - Check the meta-data, the methodology of collection, if we know who organised the dataset and it’s a credible source.
+        - Attach a screenshot of the dataset or a simple preview visualization as an image.
   -
     id: 30
     name: PROTOTYPED
-    phase: Launching
-    description: 🐣 A prototype of the idea has been developed
+    phase: Clean
+    description: 🐣 Efforts to improve the quality of the data are in progress.
     conditions:
       validate:
         -
           field: webpage_url
           test: validurl
-          help: Provide a project link to an online demo, embedded if possible.
+          help: Online access to browse the dataset in the Project Link.
       agree:
-        - Contributions from outside of our team do not include any major functionality.
         - We have the rights, open licenses, or permission to use all data, assets and code.
+        - We have the skills and tools that will help us get the data into a machine-readable format and analyse it.
   -
     id: 40
     name: LAUNCHED
-    phase: Promoting
-    description: 🎈 The prototype has been deployed and presented
+    phase: Analyse
+    description: 🎈 Get insights about the problem we defined in the beginning.
     conditions:
       validate:
         -
@@ -94,19 +94,20 @@ stages:
           test: validurl
           help: Link and sync a remote repository or README for your project.
       agree:
-        - Any third-party data, assets or software are correctly attributed.
-        - We have thanked every team member, contributor, and mentor.
+        - Explore the data in Python, R, Julia, etc. or use spreadsheets or statistical suites.
+        - Use data visualisations to get insights of different variables.
   -
     id: 50
     name: LIVE
-    phase: Supporting
-    description: 🚀 This project is live and available to the public
+    phase: Present
+    description: 🚀 Think about the audience, answer questions, make the results and yourself available to the public
     conditions:
       validate:
         -
-          field: download_url
+          field: contact_url
           test: validurl
-          help: Provide a working download link in your project Details.
+          help: Provide a working contact link in your project Details.
       agree:
-        - The full results of our project can be obtained under an open license.
+        - Make sure to attribute and thank all contributors and dependencies.
         - It is possible to contact the maintainers with questions or feedback.
+        - The full results of our project can be obtained under an open license.
