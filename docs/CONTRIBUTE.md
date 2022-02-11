@@ -67,6 +67,8 @@ Using the [Heroku toolchain](https://devcenter.heroku.com/categories/command-lin
 
 To run all tests, whose source is in the **tests** folder, run: `python manage.py test`
 
+To run just a specific test, specify it by name, e.g. `python manage.py test --name features`
+
 ### Migrations
 
 Whenever a database migration needs to be made. Run the following commands:

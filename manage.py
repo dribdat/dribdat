@@ -33,21 +33,15 @@ def create_app(script_info=None):
 
 
 @click.command()
-@click.option('--name', default="features", help='Which test file to run.')
-def featuretest(name):
-    """Run feature tests."""
-    import pytest
-    feat_test = os.path.join(TEST_PATH, "test_%s.py" % name)
-    return pytest.main([feat_test, '--disable-warnings'])
-
-
-@click.command()
-def test():
-    """Run all tests."""
-    import pytest
-    test_opts = [TEST_PATH]
-    exit_code = pytest.main(test_opts)
-    return exit_code
+@click.option('--name', default=None, help='Which test set to run (features, functional, ..)')
+def test(name):
+    """Run all or just a subset of tests."""
+    if name:
+        feat_test = os.path.join(TEST_PATH, "test_%s.py" % name)
+    else:
+        feat_test = TEST_PATH
+    import subprocess
+    return subprocess.call(['pytest', feat_test])
 
 
 @click.group(cls=FlaskGroup, create_app=create_app)
@@ -56,7 +50,6 @@ def cli():
 
 
 cli.add_command(test)
-cli.add_command(featuretest)
 
 if __name__ == '__main__':
     cli()
