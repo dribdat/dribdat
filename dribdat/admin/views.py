@@ -194,10 +194,9 @@ def get_random_alphanumeric_string(length=24):
 
 
 def get_user_by_name(username):
+    if not username: return None
     username = username.strip()
-    print(username)
-    if not username:
-        return None
+    if not username: return None
     user = User.query.filter_by(username=username).first()
     if not user:
         flash('Username %s not found!' % username, 'warning')

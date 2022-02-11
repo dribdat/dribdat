@@ -28,3 +28,19 @@ EOF""" % (url, url)
 
         result = make_onebox(test_markdown)
         assert 'onebox' in result
+
+    def test_project_api(self, project, testapp):
+        """Make sure Project APIs respond correctly."""
+
+        project = ProjectFactory()
+        project.name = 'example'
+        project.autotext = 'some test readme content'
+        project.save()
+
+        print(project.data)
+
+        assert 'example' in project.data['name']
+        assert project.data['excerpt'] is ''
+        project.autotext_url = 'https:/...'
+        assert 'test' in project.autotext
+        assert 'test' in project.data['excerpt']
