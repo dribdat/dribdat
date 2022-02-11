@@ -7,6 +7,15 @@ from os import path
 
 import pytz, re, csv, yaml
 
+def strtobool(text):
+    """ Truthy conversion as per PEP 632 """
+    tls = str(text).lower().strip()
+    if tls in ['y', 'yes', 't', 'true', 'on', '1']:
+        return True
+    if tls in ['n', 'no', 'f', 'false', 'off', '0']:
+        return False
+    raise ValueError("{} is not convertable to boolean".format(tls))
+
 def sanitize_input(text):
     """ Removes unsavoury characters """
     return re.sub(r"[^a-zA-Z0-9_]+", '', text)
