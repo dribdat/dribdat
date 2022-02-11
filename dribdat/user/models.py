@@ -593,14 +593,16 @@ class Project(PkModel):
         d['created_at'] = format_date(self.created_at, '%Y-%m-%dT%H:%M')
         d['updated_at'] = format_date(self.updated_at, '%Y-%m-%dT%H:%M')
         d['team'] = [u.username for u in self.team()]
+        # Generate excerpt based on summary data
         if self.longtext and len(self.longtext) > 10:
             d['excerpt'] = self.longtext[:MAX_EXCERPT_LENGTH]
             if len(self.longtext) > MAX_EXCERPT_LENGTH:
                 d['excerpt'] += '...'
-        elif self.is_autoupdateable and self.autotext.strip():
-            d['excerpt'] = self.autotext[:MAX_EXCERPT_LENGTH]
-            if len(self.autotext) > MAX_EXCERPT_LENGTH:
-                d['excerpt'] += '...'
+        elif self.is_autoupdateable:
+            if self.autotext and len(self.autotext) > 10:
+                d['excerpt'] = self.autotext[:MAX_EXCERPT_LENGTH]
+                if len(self.autotext) > MAX_EXCERPT_LENGTH:
+                    d['excerpt'] += '...'
         if self.user is not None:
             d['maintainer'] = self.user.username
         if self.event is not None:
@@ -646,12 +648,14 @@ class Project(PkModel):
         self.contact_url = data['contact_url']
         self.logo_color = data['logo_color']
         self.logo_icon = data['logo_icon']
-        self.is_autoupdate = data['is_autoupdate']
-        self.is_webembed = data['is_webembed']
         self.created_at = parse(data['created_at'])
         self.updated_at = parse(data['updated_at'])
         self.longtext = data['longtext']
         self.autotext = data['autotext']
+        if 'is_autoupdate' in data:
+            self.is_autoupdate = data['is_autoupdate']
+        if 'is_webembed' in data:
+            self.is_webembed = data['is_webembed']
         if 'maintainer' in data:
             uname = data['maintainer']
             user = User.query.filter_by(username=uname).first()

@@ -2,7 +2,7 @@
 """Application configuration."""
 import os
 from dotenv import load_dotenv
-from distutils.util import strtobool
+from .utils import strtobool
 
 load_dotenv()
 os_env = os.environ
@@ -37,12 +37,12 @@ class Config(object):
     ASSETS_DEBUG = False
     DEBUG_TB_ENABLED = False  # Disable Debug toolbar
     DEBUG_TB_INTERCEPT_REDIRECTS = False
-    CACHE_TYPE = 'null'
+    CACHE_TYPE = 'NullCache'
     CACHE_NO_NULL_WARNING = True
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
     # Server settings
-    SERVER_NAME = os_env.get('SERVER_URL', '127.0.0.1:5000')
+    SERVER_NAME = os_env.get('SERVER_URL', os_env.get('SERVER_NAME', 'localhost.localdomain:5000'))
     SERVER_SSL = os_env.get('SERVER_SSL', None)
     SERVER_CORS = bool(strtobool(os_env.get('SERVER_CORS', 'True')))
     SERVER_PROXY = bool(strtobool(os_env.get('SERVER_PROXY', 'False')))
@@ -75,12 +75,12 @@ class ProdConfig(Config):
     DEBUG = False
     DEBUG_TB_ENABLED = False  # Disable Debug toolbar
     PREFERRED_URL_SCHEME = 'https'  # For generating external URLs
-    CACHE_TYPE = os_env.get('CACHE_TYPE', 'simple')
-    CACHE_DEFAULT_TIMEOUT = int(os_env.get('CACHE_DEFAULT_TIMEOUT', '300'))
-    CACHE_REDIS_URL = os_env.get('CACHE_REDIS_URL', 'simple')
+    CACHE_TYPE = os_env.get('CACHE_TYPE', 'SimpleCache')
+    CACHE_REDIS_URL = os_env.get('CACHE_REDIS_URL', '')
     CACHE_MEMCACHED_SERVERS = os_env.get('MEMCACHED_SERVERS', '')
     CACHE_MEMCACHED_USERNAME = os_env.get('MEMCACHED_USERNAME', '')
     CACHE_MEMCACHED_PASSWORD = os_env.get('MEMCACHED_PASSWORD', '')
+    CACHE_DEFAULT_TIMEOUT = int(os_env.get('CACHE_DEFAULT_TIMEOUT', '300'))
     SQLALCHEMY_DATABASE_URI = os_env.get(
         'DATABASE_URL', 'postgresql://localhost/example')
     if SQLALCHEMY_DATABASE_URI.startswith('postgres:'):
@@ -94,6 +94,7 @@ class DevConfig(Config):
     ENV = 'dev'
     DEBUG = True
     DB_NAME = 'dev.db'
+    SERVER_NAME = '127.0.0.1:5000'
     # Put the db file in project root
     DB_PATH = os.path.join(Config.PROJECT_ROOT, DB_NAME)
     SQLALCHEMY_DATABASE_URI = 'sqlite:///{0}'.format(DB_PATH)
@@ -110,6 +111,6 @@ class TestConfig(Config):
     SQLALCHEMY_DATABASE_URI = 'sqlite://'
     SERVER_NAME = 'localhost'
     # Pytest complains, but not sure how to fully change server name
-    # SERVER_NAME = 'localhost.localdomain' results in 404 errors
+    # SERVER_NAME = 'localhost.localdomain' #results in 404 errors
     WTF_CSRF_ENABLED = False  # Allows form testing
     PRESERVE_CONTEXT_ON_EXCEPTION = False
