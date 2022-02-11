@@ -3,9 +3,9 @@
 import boto3
 from flask import (
     Blueprint, current_app,
-    Response, request,
+    Response, request, redirect,
     stream_with_context, send_file,
-    jsonify,
+    jsonify, flash, url_for
 )
 from flask_login import login_required, current_user
 
@@ -26,7 +26,8 @@ from ..apiutils import (
     gen_csv,
 )
 
-import tempfile
+import tempfile, json
+from os import path
 
 blueprint = Blueprint('api', __name__, url_prefix='/api')
 
@@ -252,13 +253,13 @@ def project_search_json():
 def event_load_datapackage():
     """ API: Loads event data from URL """
     url = request.args.get('url')
+    filedata = request.files['file']
     if url:
         import_level = request.args.get('import')
     else:
         url = request.form.get('url')
         import_level = request.form.get('import')
-    if not url or 'datapackage.json' not in url:
-        return jsonify(status='Error', errors=['Missing datapackage.json url'])
+    # Configuration
     dry_run = True
     all_data = False
     status = "Preview"
@@ -269,10 +270,30 @@ def event_load_datapackage():
         dry_run = False
         all_data = True
         status = "Complete"
-    results = ImportEventByURL(url, dry_run, all_data)
-    if 'errors' in results:
-        return jsonify(status='Error', errors=results['errors'])
-    return jsonify(status=status, results=results)
+    # File handling
+    if filedata and filedata.filename != '':
+        ext = filedata.filename.split('.')[-1].lower()
+        if ext not in ['json']:
+            return 'Invalid format (allowed: JSON)'
+        with tempfile.TemporaryDirectory() as tmpdir:
+            filepath = path.join(tmpdir, filedata.filename)
+            filedata.save(filepath)
+            try:
+                with open(filepath, mode='rb') as file:
+                    data = json.load(file)
+                results = ImportEventPackage(data, dry_run, all_data)
+            except json.decoder.JSONDecodeError:
+                return 'Could not load package due to JSON error'
+        if 'errors' in results:
+            return 'Error: %s' % ','.join(results['errors'])
+        flash("Data Package uploaded", 'success')
+        return redirect(url_for("admin.events"))
+    elif not url or 'datapackage.json' not in url:
+        return jsonify(status='Error', errors=['Missing datapackage.json url'])
+    else:
+        if 'errors' in results:
+            return jsonify(status='Error', errors=results['errors'])
+        return jsonify(status=status, results=results)
 
 
 @blueprint.route('/event/push/datapackage', methods=["PUT", "POST"])
@@ -366,7 +387,7 @@ def project_uploader():
         return 'No filename'
     ext = img.filename.split('.')[-1].lower()
     if ext not in ACCEPTED_TYPES:
-        return 'Invalid format'
+        return 'Invalid format (allowed: %s)' % ','.join(ACCEPTED_TYPES)
     filename = random_password(24) + '.' + ext
     # with tempfile.TemporaryDirectory() as tmpdir:
     # img.save(path.join(tmpdir, filename))

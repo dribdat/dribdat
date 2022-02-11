@@ -648,12 +648,14 @@ class Project(PkModel):
         self.contact_url = data['contact_url']
         self.logo_color = data['logo_color']
         self.logo_icon = data['logo_icon']
-        self.is_autoupdate = data['is_autoupdate']
-        self.is_webembed = data['is_webembed']
         self.created_at = parse(data['created_at'])
         self.updated_at = parse(data['updated_at'])
         self.longtext = data['longtext']
         self.autotext = data['autotext']
+        if 'is_autoupdate' in data:
+            self.is_autoupdate = data['is_autoupdate']
+        if 'is_webembed' in data:
+            self.is_webembed = data['is_webembed']
         if 'maintainer' in data:
             uname = data['maintainer']
             user = User.query.filter_by(username=uname).first()

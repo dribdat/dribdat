@@ -241,8 +241,8 @@ def ImportEventPackage(data, DRY_RUN=False, ALL_DATA=False):
 
 def ImportEventByURL(url, DRY_RUN=False, ALL_DATA=False):
     try:
-        data = requests.get(url)
+        data = requests.get(url).json()
     except requests.exceptions.RequestException:
         logging.error("Could not connect to %s" % url)
         return {}
-    return ImportEventPackage(data.json(), DRY_RUN, ALL_DATA)
+    return ImportEventPackage(data, DRY_RUN, ALL_DATA)

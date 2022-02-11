@@ -94,6 +94,7 @@ class DevConfig(Config):
     ENV = 'dev'
     DEBUG = True
     DB_NAME = 'dev.db'
+    SERVER_NAME = '127.0.0.1:5000'
     # Put the db file in project root
     DB_PATH = os.path.join(Config.PROJECT_ROOT, DB_NAME)
     SQLALCHEMY_DATABASE_URI = 'sqlite:///{0}'.format(DB_PATH)

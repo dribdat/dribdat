@@ -103,7 +103,8 @@
 <!-- Upload Event dialog -->
 <div class="modal fade uploader" id="importEvent" tabindex="-1" role="dialog" aria-labelledby="uploadFileLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
-    <form method="get" action="{{ url_for('api.event_load_datapackage') }}">
+    <form action="{{ url_for('api.event_load_datapackage') }}"
+          method="post" enctype="multipart/form-data">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="uploadFileLabel">Import Event</h5>
@@ -143,6 +144,13 @@
           </div>
           <input type="text" class="form-control" placeholder="https://..."
             id="inputUrl" name="url" aria-describedby="inputUrlLabel">
+        </div>
+        <div class="input-group mb-4">
+          <div class="input-group-prepend">
+            <span class="input-group-text" id="inputFileLabel">Upload</span>
+          </div>
+          <input type="file" class="form-control" placeholder="https://..."
+            id="inputFile" name="file" aria-describedby="inputFileLabel">
         </div>
         <div class="form-group form-check">
           <input type="radio" name="import" value="none" checked class="form-check-input" id="importCheck1">

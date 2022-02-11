@@ -478,8 +478,9 @@
   // Admin event import
   // this is the id of the form
   $("#importEvent form").submit(function(e) {
-    e.preventDefault();
     var $form = $(this);
+    if ($form.find('input[type="file"]').val().length>0) return;
+    e.preventDefault();
     var url = $form.attr('action');
     $form.find('input[type="submit"]').addClass('disabled');
     $form.find('.message-ok,.message-error').hide();
