@@ -6,26 +6,26 @@ stages:
   -
     id: 0
     name: CHALLENGE
-    phase: Define
-    description: 🚧 Ask questions and come around the issues that matter
+    phase: Identify
+    description: 🚧 Ask questions to find the data and issues that matter.
     conditions:
       validate:
         -
           field: summary
           min: 5
-          help: Your challenge needs a short summary.
+          help: Your data challenge needs a short summary.
         -
           field: excerpt
           min: 123
-          help: At least 123 characters in the challenge description.
+          help: Please write at least one paragraph (123 chars) in the description.
       agree:
-        - We have formulated our question in a way that hints at what kind of data will be needed. Which in turns helps to scope the project.
-        - The data needed is readily available, acquisition is realistic given our time limits.
+        - The question is formulated in a way that hints at what kind of data will be needed, helping to scope the project.
+        - The data needed is readily available, and acquisition is realistic given our time limits.
   -
     id: 5
     name: NEW
     phase: Find
-    description: 👪 You can’t do much if you can’t find the data!
+    description: 👪 Collecting the necessary resources in a shared space.
     conditions:
       validate:
         -
@@ -38,13 +38,13 @@ stages:
           test: validurl
           help: Provide a download link to your data repository in the Details of your project page.
       agree:
-        - We have a shared collaboration space in which to work on the data.
-        - Our team members will work together for the duration of the event.
+        - Our team members have agreed to work together for the duration of the event.
+        - We have a shared collaboration space (repository) in which to work on the data.
   -
     id: 10
     name: RESEARCHED
     phase: Get
-    description: ⚗️ Scoping of data collection or improvement strategy has been done.
+    description: ⚗️ Scoping of data collection or improvement strategy.
     conditions:
       validate:
         -
@@ -53,12 +53,13 @@ stages:
           help: Provide a source link in your project Details.
       agree:
         - A source code repository has been set up where data quality improvements can be made.
-        - We have considered crowdsourcing, offline data collection, web scraping, etc.
+        - Aggregation (download, mirroring, crowdsourcing, web scraping..) is in progress.
+        - The schema, ontology, and metadata are being elaborated and documented.
   -
     id: 20
     name: SKETCHED
     phase: Verify
-    description: 🎨 The overall details of the dataset have been evaluated
+    description: 🎨 Evaluating and documenting the dataset in more detail.
     conditions:
       validate:
         -
@@ -66,13 +67,14 @@ stages:
           test: validurl
           help: Upload or link to an image in your project Details.
       agree:
-        - Check the meta-data, the methodology of collection, if we know who organised the dataset and it’s a credible source.
-        - Attach a screenshot of the dataset or a simple preview visualization as an image.
+        - Check the metadata and methods behind your data, to learn who organised this, and decide whether they are a credible source.
+        - Annotate the dataset to explain your detailed evaluation of the structure and content.
+        - A screenshot or preview of the dataset is attached as an image.
   -
     id: 30
     name: PROTOTYPED
     phase: Clean
-    description: 🐣 Efforts to improve the quality of the data are in progress.
+    description: 🐣 Efforts to improve the quality of the data.
     conditions:
       validate:
         -
@@ -80,13 +82,14 @@ stages:
           test: validurl
           help: Online access to browse the dataset in the Project Link.
       agree:
-        - We have the rights, open licenses, or permission to use all data, assets and code.
-        - We have the skills and tools that will help us get the data into a machine-readable format and analyse it.
+        - A wide angle view has been gained on the data using a spreadsheet, data wrangling or statistical program.
+        - We have checked the rights, open licenses, and permissions to use all data, assets and code.
+        - The necessary infrastructure for data processing is available to us, and can be maintained.
   -
     id: 40
     name: LAUNCHED
     phase: Analyse
-    description: 🎈 Get insights about the problem we defined in the beginning.
+    description: 🎈 Gaining insights on the problem defined in the beginning.
     conditions:
       validate:
         -
@@ -94,13 +97,14 @@ stages:
           test: validurl
           help: Link and sync a remote repository or README for your project.
       agree:
-        - Explore the data in Python, R, Julia, etc. or use spreadsheets or statistical suites.
+        - Gain depth in a programming language like Julia, Python, D3 or R.
         - Use data visualisations to get insights of different variables.
+        - Correlate and link data fields, with critical reflection of causality.
   -
     id: 50
     name: LIVE
-    phase: Present
-    description: 🚀 Think about the audience, answer questions, make the results and yourself available to the public
+    phase: Communicate
+    description: 🚀 Thinking about audience and making the results public.
     conditions:
       validate:
         -
@@ -108,6 +112,6 @@ stages:
           test: validurl
           help: Provide a working contact link in your project Details.
       agree:
-        - Make sure to attribute and thank all contributors and dependencies.
-        - It is possible to contact the maintainers with questions or feedback.
-        - The full results of our project can be obtained under an open license.
+        - The full results of this work have been showcased and published under an open license.
+        - Contact with the maintainers is possible to ask questions or send feedback.
+        - We have made sure to attribute all sources and thank all contributors.
