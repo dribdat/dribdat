@@ -10,7 +10,7 @@
     "@toast-ui/editor": "^3",
     "bootstrap": "^4",
     "bootswatch": "^4",
-    "flipclock": "^0",
+    "flipdown": "^0.3.2",
     "font-awesome": "^4",
     "jquery": "^3",
     "jquery-resizable-dom": "^0",

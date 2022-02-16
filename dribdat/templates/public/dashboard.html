@@ -7,7 +7,7 @@
 {% block content %}
 
 <script src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/flipclock@0/dist/flipclock.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/flipdown@0/dist/flipdown.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jquery-resizable-dom@0.35.0/dist/jquery-resizable.min.js"></script>
 
@@ -44,7 +44,7 @@
       </div>
 
       {% if current_event.countdown %}
-        <div class="event-countdown" data-start="{{ current_event.countdown }}"></div>
+        <div id="clockDashboard" class="event-countdown flipdown" data-start="{{ current_event.countdown }}"></div>
       {% endif %}
     </main>
 

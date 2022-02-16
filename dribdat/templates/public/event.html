@@ -188,7 +188,7 @@
 
   {% if current_event and current_event.countdown and not 'off' in config.DRIBDAT_CLOCK %}
     <a class="container-countdown" href="#top" title="{{ current_event.countdown }}">
-      <div class="event-countdown" data-start="{{ current_event.countdown }}"></div>
+      <div id="clockEvent" class="event-countdown flipdown" data-start="{{ current_event.countdown }}"></div>
     </a>
   {% endif %}
 </center>
