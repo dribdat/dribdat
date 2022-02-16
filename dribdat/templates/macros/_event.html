@@ -6,7 +6,7 @@
 		 style="border-bottom-color:{{project.logo_color}}">
 		<div class="hexagontent{{ ' with-icon' if project.logo_icon }}">
 			{% if project.is_challenge and project.team %}
-				<span class="team-count" title="# count of members">{{ project.team|count }}</span>
+				<span class="team-count" title="# following">{{ project.team|count }}</span>
 			{% endif %}
 			{% if project.logo_icon %}
 				<i class="fa fa-{{project.logo_icon}}"></i><br>

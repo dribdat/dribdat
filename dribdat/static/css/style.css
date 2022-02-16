@@ -406,14 +406,14 @@ nav .nav-login {
 }
 
 .hexagon .team-count {
-  top: -2.2em;
+  top: -2em;
   right: -0.8em;
   min-width: 2em;
   position: absolute;
   color: black;
   font-size: 80%;
   background: rgba(255, 255, 255, 0.8);
-  border: 1px solid rgba(0, 0, 0, 0.3);
+  border: 1px dashed rgba(0,0,200,0.4);
 }
 
 .project-page.phase-Challenge .progress,
