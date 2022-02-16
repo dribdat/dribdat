@@ -9,8 +9,9 @@
       var datesched = Date.parse(startdate.replace(' ', 'T'));
       var timeleft = datesched - datenow;
       if (isNaN(timeleft) || timeleft < 0) return;
+      var unixtime = datesched / 1000;
       // Start the clock
-      new FlipDown(datesched, $(this).attr('id')).start();
+      new FlipDown(unixtime, $(this).attr('id')).start();
     });
 
   });

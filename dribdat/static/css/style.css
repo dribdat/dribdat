@@ -269,22 +269,12 @@ nav .nav-login {
 }
 
 /* Customize the flipclock widget */
-.event-countdown .flip-clock {
+.event-countdown {
   margin-top: 20px;
+  display: inline-block;
 }
-.event-countdown .flip-clock-label {
+.event-countdown .rotor-group-heading {
   display: none;
-}
-@media (max-width: 1200px) {
-  .event-countdown .flip-clock .flip-clock-group * {
-    width: 38px;
-  }
-  .event-countdown .flip-clock {
-    position: relative;
-    left: 50%;
-    width: 360px;
-    margin-left: -180px;
-  }
 }
 @media (max-width: 400px) {
   .event-countdown {
@@ -295,9 +285,6 @@ nav .nav-login {
   width: 100%;
   display: block;
   text-align: center;
-}
-.event-countdown {
-  display: inline-block;
 }
 @media (max-width: 1190px) {
   .event-footer .event-countdown {
