@@ -406,8 +406,9 @@ nav .nav-login {
 }
 
 .project-page.phase-Challenge .progress,
-.hide-challenges .challenge,
 .challenge.hexagon .progress { display: none; }
+.hide-challenges .challenge { opacity: 0.1 !important; }
+
 .challenge.hexagon .hexagontent {
   color: #35a;
   font-weight: normal;
