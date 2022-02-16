@@ -4,8 +4,8 @@
 <div class="container admin-events">
   <div class="btn-group float-right mb-2">
     <a href="{{ url_for('public.event_new') }}" class="btn btn-success btn-lg">Start an event</a>
-    <button type="button" class="btn btn-dark" data-toggle="modal" data-target="#importEvent">
-      Import</button>
+    <button type="button" class="btn btn-lg btn-dark" data-toggle="modal" data-target="#importEvent">
+      Import data</button>
   </div>
     <h2>Events</h2>
     <table class='table table-hover'>
@@ -107,7 +107,7 @@
           method="post" enctype="multipart/form-data">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="uploadFileLabel">Import Event</h5>
+        <h5 class="modal-title" id="uploadFileLabel">Import Event data</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>

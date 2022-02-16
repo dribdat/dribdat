@@ -1156,6 +1156,7 @@ pre { color: #333; background: white; }
 .profile-projects::-webkit-scrollbar {
   display: none;
 }
+.profile-projects .row .card.challenge,
 .profile-projects .row .card.project {
   height: 8em;
   width: 20em;

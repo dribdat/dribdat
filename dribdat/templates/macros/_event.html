@@ -2,7 +2,7 @@
 <!-- Based on Hexagon Tiles by Graham Pyne http://codepen.io/gpyne/pen/iElhp/ -->
 	<a href="{{ url_for('project.project_view', project_id=project.id) }}"
 		 title="{{ project.summary }}"
-		 class="hexagon {{ 'challenge' if project.phase=='Challenge' else 'project' }} category-highlight"
+		 class="hexagon {{ 'challenge' if project.is_challenge else 'project' }} category-highlight"
 		 category-id="{{ project.category_id }}"
 		 style="border-bottom-color:{{project.logo_color}}">
 		<div class="hexagontent{{ ' with-icon' if project.logo_icon }}">
@@ -24,7 +24,7 @@
 {% endmacro %}
 
 {% macro render_project_card(project) %}
-	<a class="col-md-5 ms-auto card project"
+	<a class="col-md-5 ms-auto card {{ 'challenge' if project.is_challenge else 'project' }}"
 		 href="{{ url_for('project.project_view', project_id=project.id) }}">
 
 		{% if project.image_url %}
