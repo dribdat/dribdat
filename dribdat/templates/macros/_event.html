@@ -1,15 +1,17 @@
 {% macro render_project_hexagon(project) %}
 <!-- Based on Hexagon Tiles by Graham Pyne http://codepen.io/gpyne/pen/iElhp/ -->
 	<a href="{{ url_for('project.project_view', project_id=project.id) }}"
-		 title="{{ project.summary }}"
 		 class="hexagon {{ 'challenge' if project.is_challenge else 'project' }} category-highlight"
 		 category-id="{{ project.category_id }}"
 		 style="border-bottom-color:{{project.logo_color}}">
 		<div class="hexagontent{{ ' with-icon' if project.logo_icon }}">
+			{% if project.team %}
+				<span class="team-count" title="# count of members">{{ project.team|count }}</span>
+			{% endif %}
 			{% if project.logo_icon %}
 				<i class="fa fa-{{project.logo_icon}}"></i><br>
 			{% endif %}
-			<span>{{ project.name|truncate(32, True, '..') }}</span>
+			<span title="{{ project.summary }}">{{ project.name|truncate(32, True, '..') }}</span>
 			{% if project.image_url %}
 				<div class="hexaicon" style="background-image:url('{{project.image_url}}')"></div>
 			{% endif %}

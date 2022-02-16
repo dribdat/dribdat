@@ -405,6 +405,17 @@ nav .nav-login {
   transform: scale(1.2);
 }
 
+.hexagon .team-count {
+  top: -2.2em;
+  right: -0.8em;
+  min-width: 2em;
+  position: absolute;
+  color: black;
+  font-size: 80%;
+  background: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(0, 0, 0, 0.3);
+}
+
 .project-page.phase-Challenge .progress,
 .challenge.hexagon .progress { display: none; }
 .hide-challenges .challenge { opacity: 0.1 !important; }
@@ -1142,6 +1153,7 @@ pre { color: #333; background: white; }
   text-align: center;
   margin-top: 1em;
 }
+.team-count,
 .user-score {
   min-width: 2.5em;
   text-align: center;
