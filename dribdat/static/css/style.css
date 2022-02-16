@@ -995,6 +995,10 @@ pre { color: #333; background: white; }
   margin-right: 15px;
   text-align: right;
 }
+.project-page .project-score {
+  text-align: center;
+  min-width: 8em;
+}
 .project-page .project-category {
   float: right;
   font-size: 110%;
