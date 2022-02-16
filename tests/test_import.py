@@ -1,14 +1,11 @@
 # -*- coding: utf-8 -*-
-"""Dribdat data import export tests.
-"""
-from flask import url_for
-import pytest
+""" Dribdat data import export tests. """
 
-from dribdat.user.models import Event, Project, Activity, User, Role
-
+from dribdat.user.models import Event, Project, Activity, Role
 from dribdat.apipackage import ImportEventPackage, PackageEvent
-
-from .factories import *
+from dribdat.aggregation import ProjectActivity
+from dribdat.apiutils import get_schema_for_user_projects
+from .factories import UserFactory
 
 
 class TestImport:
@@ -43,7 +40,51 @@ class TestImport:
         proj1.delete()
         event.delete()
 
-        assert Event.query.filter_by(name="Test Event").count() is 0
+        assert Event.query.filter_by(name="Test Event").count() == 0
 
-        event_import = ImportEventPackage(dp_json)
-        assert Event.query.filter_by(name="Test Event").count() is 1
+        ImportEventPackage(dp_json)
+        assert Event.query.filter_by(name="Test Event").count() == 1
+
+    def test_user_schema(self, project, testapp):
+        """Test user schema."""
+
+        event = Event(name="Test Event", summary="Just testin")
+        event.save()
+        user = UserFactory(username="Test Author")
+        user.save()
+
+        # Generate importable schema for local host
+        hosturl = "https://localhost"
+
+        # Initially just a warning message
+        schema = get_schema_for_user_projects(user, hosturl)
+        assert 'message' in schema
+
+        # Join a project
+        proj1 = Project(name="Test Project")
+        proj1.event = event
+        proj1.user = user
+        proj1.save()
+        ProjectActivity(proj1, "star", user)
+
+        # Now we are a member of one project
+        schema = get_schema_for_user_projects(user, hosturl)
+        assert len(schema) == 1
+        assert len(schema[0]["workPerformed"]) == 1
+
+        # Create another project
+        proj2 = Project(name="Another Project")
+        proj2.event = event
+        proj2.user = user
+        proj2.save()
+        ProjectActivity(proj2, "star", user)
+
+        # Now we are a member of two projects
+        schema = get_schema_for_user_projects(user, hosturl)
+        assert len(schema[0]["workPerformed"]) == 2
+
+        # Clean up
+        proj1.delete()
+        proj2.delete()
+        event.delete()
+        user.delete()

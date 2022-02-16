@@ -93,11 +93,12 @@ def expand_project_urls(projects, host_url):
         p['team'] = ', '.join(p['team'])
     return projects
 
+
 def get_schema_for_user_projects(user, host_url):
     """ Generates the metadata for a given user's projects """
     my_projects = user.joined_projects()
     if len(my_projects) == 0:
-        return { 'message': "You must join and contribute to at least one project." }
+        return {'message': "Please join and contribute to at least 1 project."}
     my_events = {}
     for p in my_projects:
         if p.event_id not in my_events.keys():
@@ -108,9 +109,10 @@ def get_schema_for_user_projects(user, host_url):
             p.get_schema(host_url)
         )
     # Sort in reverse chronological order
-    my_schema = [ my_events[e] for e in my_events ]
+    my_schema = [my_events[e] for e in my_events]
     my_schema.sort(key=lambda x: x['startDate'], reverse=True)
     return my_schema
+
 
 def gen_rows(csvdata):
     """ Generate rows from data """

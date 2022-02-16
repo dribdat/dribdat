@@ -624,10 +624,13 @@ class Project(PkModel):
             content_license = "https://creativecommons.org/licenses/by/4.0/"
         else:
             content_license = ''
+        cleansummary = None
+        if self.summary:
+            cleansummary = re.sub('<[^>]*>', '', self.summary)
         return {
             "@type": "CreativeWork",
             "name": self.name,
-            "description": re.sub('<[^>]*>', '', self.summary),
+            "description": cleansummary,
             "dateCreated": format_date(self.created_at, '%Y-%m-%dT%H:%M'),
             "dateUpdated": format_date(self.updated_at, '%Y-%m-%dT%H:%M'),
             "discussionUrl": self.contact_url,

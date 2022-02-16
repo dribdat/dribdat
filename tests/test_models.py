@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 """Model unit tests."""
+
 import datetime as dt
 
 import pytest
@@ -64,6 +65,7 @@ class TestUser:
         user.save()
         assert role in user.roles
 
+
 @pytest.mark.usefixtures('db')
 class TestEvent:
     """Event tests."""
@@ -112,7 +114,8 @@ class TestEvent:
         assert event.name == "test"
         assert event.countdown is not None
         assert event.countdown == tz_event
-        assert timesince(event.countdown, until=True) == "%d hours to go" % timediff_hours
+        assert timesince(
+            event.countdown, until=True) == "%d hours to go" % timediff_hours
 
 
 # @pytest.mark.usefixtures('db')
