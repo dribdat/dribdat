@@ -7,44 +7,41 @@ stages:
     id: 0
     name: CHALLENGE
     phase: Identify
-    description: 🚧 Ask questions to find the data and issues that matter.
+    description: 🚧 Asking questions with data about issues that matter.
     conditions:
       validate:
         -
           field: summary
           min: 5
-          help: Your data challenge needs a short summary.
+          help: Your challenge should have a short summary.
         -
           field: excerpt
           min: 123
           help: Please write at least one paragraph (123 chars) in the description.
       agree:
-        - The question is formulated in a way that hints at what kind of data will be needed, helping to scope the project.
-        - The data needed is readily available, and acquisition is realistic given our time limits.
+        - Questions are formulated in a way that hint at what data will be needed, helping to scope the project.
+        - Links to readily available data sources and other resources have been provided.
+        - Acquiring data to meet the challenge is realistic within our time limits.
   -
     id: 5
     name: NEW
     phase: Find
-    description: 👪 Collecting the necessary resources in a shared space.
+    description: 👪 Collecting resources together in a shared space.
     conditions:
       validate:
         -
           field: team
           min: 1
           max: 5
-          help: Between 1 and 5 people should join your data expedition.
-        -
-          field: download_url
-          test: validurl
-          help: Provide a download link to your data repository in the Details of your project page.
+          help: Between 1 and 5 people should join your project or data expedition.
       agree:
         - Our team members have agreed to work together for the duration of the event.
-        - We have a shared collaboration space (repository) in which to work on the data.
+        - We are collecting data, and sharing it in an accessible collaboration space.
   -
     id: 10
     name: RESEARCHED
     phase: Get
-    description: ⚗️ Scoping of data collection or improvement strategy.
+    description: ⚗️ Scoping of data collection and prototyping strategy.
     conditions:
       validate:
         -
@@ -52,14 +49,14 @@ stages:
           test: validurl
           help: Provide a source link in your project Details.
       agree:
-        - A source code repository has been set up where data quality improvements can be made.
-        - Aggregation (download, mirroring, crowdsourcing, web scraping..) is in progress.
-        - The schema, ontology, and metadata are being elaborated and documented.
+        - A shared repository has been set up where work on code and data can be tracked.
+        - Aggregation of data (download, crowdsourcing, scraping, etc.) is in progress.
+        - Link any relevant data schema or code frameworks in your documentation.
   -
     id: 20
     name: SKETCHED
     phase: Verify
-    description: 🎨 Evaluating and documenting the dataset in more detail.
+    description: 🎨 Evaluating and explaining to fellow humans.
     conditions:
       validate:
         -
@@ -67,24 +64,23 @@ stages:
           test: validurl
           help: Upload or link to an image in your project Details.
       agree:
-        - Check the metadata and methods behind your data, to learn who organised this, and decide whether they are a credible source.
-        - Annotate the dataset to explain your detailed evaluation of the structure and content.
-        - A screenshot or preview of the dataset is attached as an image.
+        - Check the metadata and methods of your data, decide whether they come from a credible source.
+        - Annotate key datasets to explain your understanding of the structure and content.
+        - We made wireframes or sketches of our idea, attaching it here as an image.
   -
     id: 30
     name: PROTOTYPED
     phase: Clean
-    description: 🐣 Efforts to improve the quality of the data.
+    description: 🐣 Efforts to improve the quality of the output.
     conditions:
       validate:
         -
           field: webpage_url
           test: validurl
-          help: Online access to browse the dataset in the Project Link.
+          help: Online access to browse your data or demo in the Project Link.
       agree:
-        - A wide angle view has been gained on the data using a spreadsheet, data wrangling or statistical program.
-        - We have checked the rights, open licenses, and permissions to use all data, assets and code.
-        - The necessary infrastructure for data processing is available to us, and can be maintained.
+        - We have checked the rights, open licenses, and permissions to use all assets, data, and code.
+        - Perspective was gained on the data using a spreadsheet, data wrangling or statistical program.
   -
     id: 40
     name: LAUNCHED
@@ -97,9 +93,9 @@ stages:
           test: validurl
           help: Link and sync a remote repository or README for your project.
       agree:
-        - Gain depth in a programming language like Julia, Python, D3 or R.
-        - Use data visualisations to get insights of different variables.
-        - Correlate and link data fields, with critical reflection of causality.
+        - Gain more depth by exploring data in code, with data visualisations and interfaces.
+        - While correlating and linking data fields, we made critical reflection of causality.
+        - The necessary infrastructure for hosting is available, and can be maintained.
   -
     id: 50
     name: LIVE
@@ -110,8 +106,12 @@ stages:
         -
           field: contact_url
           test: validurl
-          help: Provide a working contact link in your project Details.
+          help: Provide a contact link in your project Details.
+        -
+          field: download_url
+          test: validurl
+          help: Provide a download link in your project Details.
       agree:
         - The full results of this work have been showcased and published under an open license.
         - Contact with the maintainers is possible to ask questions or send feedback.
-        - We have made sure to attribute all sources and thank all contributors.
+        - We have made sure to attribute all sources, and to thank all contributors.
