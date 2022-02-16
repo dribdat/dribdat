@@ -181,22 +181,22 @@ ul.help-block {
   margin-right: 45px;
 }
 .section-header .section-header-logo img {
-  height: 6em;
+  height: 8em;
   margin-bottom: 2em;
-}
-.section-header .event-hostname,
-.section-header .event-location {
-  font-size: 110%; color: #555;
-  display: inline-block;
-}
-.section-header .event-hostname::before {
-  content: ' - ';
 }
 .section-header .section-header-content div {
   color: initial;
+  font-size: 125%;
+  display: inline-block;
+  margin-right: 1em;
 }
-.section-header .section-header-content .event-date {
-  font-size: 120%;
+.section-header .section-header-content .event-hostname {
+  display: block;
+  font-weight: 600;
+}
+.section-header .section-header-content .fa {
+  opacity: 0.5;
+  width: 1.2em;
 }
 .section-header a:hover {
   text-decoration: none;
