@@ -74,11 +74,6 @@ def home():
     today = datetime.utcnow()
     events_next = timed_events.filter(Event.ends_at > today).all()
     events_past = timed_events.filter(Event.ends_at < today).all()
-    # Select a featured event if none is selected
-    if cur_event is None:
-        events_now = timed_events.filter(
-            Event.starts_at <= today).filter(Event.ends_at >= today)
-        cur_event = events_now.first()
     # Select Resource-type events
     resource_events = events.filter(
         Event.lock_resources).order_by(Event.name.asc()).all()
