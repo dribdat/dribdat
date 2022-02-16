@@ -5,7 +5,7 @@
 		 category-id="{{ project.category_id }}"
 		 style="border-bottom-color:{{project.logo_color}}">
 		<div class="hexagontent{{ ' with-icon' if project.logo_icon }}">
-			{% if project.team %}
+			{% if project.is_challenge and project.team %}
 				<span class="team-count" title="# count of members">{{ project.team|count }}</span>
 			{% endif %}
 			{% if project.logo_icon %}
