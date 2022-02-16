@@ -58,8 +58,8 @@
   {% for project in projects %}
     {{ misc.render_project_hexagon(project) }}
   {% endfor %}
-  {% if project_count % 6 != 0 %}
-    <a class="hexagon" style="visibility:hidden"></a>
+  {% if project_count > 6 and project_count % 3 == 0 %}
+    <a class="hexagon gridfix {{ 'float-left' if project_count % 2 != 0 }}"></a>
   {% endif %}
   </div>
 </div><!-- /honeycomb -->
