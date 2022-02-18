@@ -247,7 +247,7 @@ def project_action(project_id, of_type=None, as_view=True, then_redirect=False,
     allow_post = starred  # and not event.lock_resources
     allow_edit = allow_edit and not event.lock_editing
     # Obtain list of team members (performance!)
-    project_team = project.team()
+    project_team = project.team
     if allow_post:
         # Evaluate project progress
         stage, all_valid = validateProjectData(project)

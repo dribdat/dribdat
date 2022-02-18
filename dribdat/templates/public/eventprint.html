@@ -33,7 +33,7 @@
         {% endif %}
         <li>Team:
           <ul class="project-team" title="team">
-          {% for user in project.team() %}
+          {% for user in project.team %}
             <li><a href="{{user.webpage_url}}" target="_blank">{{ user.username }}</a></li>
           {% endfor %}
           </ul>

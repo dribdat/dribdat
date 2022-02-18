@@ -184,7 +184,7 @@ def project_info_json(project_id):
     """ API: Outputs JSON info for a specific project """
     project = Project.query.filter_by(id=project_id).first_or_404()
     activities = []
-    for user in project.team():
+    for user in project.get_team():
         activities.append({
             'id': user.id,
             'name': user.username,

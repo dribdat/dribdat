@@ -463,7 +463,7 @@ class Project(PkModel):
         q = q.order_by(Activity.timestamp.desc())
         return q.limit(max)
 
-    def team(self):
+    def get_team(self):
         """ Return all starring users (A team) """
         activities = Activity.query.filter_by(
             name='star', project_id=self.id
@@ -473,6 +473,11 @@ class Project(PkModel):
             if a.user and a.user not in members and a.user.active:
                 members.append(a.user)
         return members
+
+    @property
+    def team(self):
+        """ Array of project team """
+        return [u.username for u in self.get_team()]
 
     def all_dribs(self):
         """ Query which formats the project's timeline """
@@ -576,6 +581,7 @@ class Project(PkModel):
             'id': self.id,
             'url': self.url,
             'name': self.name,
+            'team': self.team,
             'score': self.score,
             'phase': self.phase,
             'is_challenge': self.is_challenge,
@@ -594,7 +600,6 @@ class Project(PkModel):
         }
         d['created_at'] = format_date(self.created_at, '%Y-%m-%dT%H:%M')
         d['updated_at'] = format_date(self.updated_at, '%Y-%m-%dT%H:%M')
-        d['team'] = [u.username for u in self.team()]
         # Generate excerpt based on summary data
         if self.longtext and len(self.longtext) > 10:
             d['excerpt'] = self.longtext[:MAX_EXCERPT_LENGTH]
