@@ -1,5 +1,5 @@
-{% macro render_project_hexagon(project) %}
 <!-- Based on Hexagon Tiles by Graham Pyne http://codepen.io/gpyne/pen/iElhp/ -->
+{% macro render_project_hexagon(project) %}
 	<a href="{{ url_for('project.project_view', project_id=project.id) }}"
 		 class="hexagon {{ 'challenge' if project.is_challenge else 'project' }} category-highlight"
 		 category-id="{{ project.category_id }}"
