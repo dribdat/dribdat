@@ -427,7 +427,8 @@ class Project(PkModel):
 
     is_hidden = Column(db.Boolean(), default=False)
     is_webembed = Column(db.Boolean(), default=False)
-    is_autoupdate = Column(db.Boolean(), default=True) # remotely managed (by bot)
+    # remotely managed (by bot)
+    is_autoupdate = Column(db.Boolean(), default=True)
 
     autotext = Column(db.UnicodeText(), nullable=True, default=u"")
     longtext = Column(db.UnicodeText(), nullable=False, default=u"")
@@ -462,7 +463,7 @@ class Project(PkModel):
         q = q.order_by(Activity.timestamp.desc())
         return q.limit(max)
 
-    def team(self):
+    def get_team(self):
         """ Return all starring users (A team) """
         activities = Activity.query.filter_by(
             name='star', project_id=self.id
@@ -473,6 +474,11 @@ class Project(PkModel):
                 members.append(a.user)
         return members
 
+    @property
+    def team(self):
+        """ Array of project team """
+        return [u.username for u in self.get_team()]
+
     def all_dribs(self):
         """ Query which formats the project's timeline """
         activities = Activity.query.filter_by(
@@ -480,7 +486,7 @@ class Project(PkModel):
                     ).order_by(Activity.timestamp.desc())
         dribs = []
         prev = None
-        only_active = False # show dribs from inactive users
+        only_active = False  # show dribs from inactive users
         for a in activities:
             a_parsed = getActivityByType(a, only_active)
             if a_parsed is None:
@@ -575,8 +581,10 @@ class Project(PkModel):
             'id': self.id,
             'url': self.url,
             'name': self.name,
+            'team': self.team,
             'score': self.score,
             'phase': self.phase,
+            'is_challenge': self.is_challenge,
             'progress': self.progress,
             'summary': self.summary or '',
             'hashtag': self.hashtag or '',
@@ -592,7 +600,6 @@ class Project(PkModel):
         }
         d['created_at'] = format_date(self.created_at, '%Y-%m-%dT%H:%M')
         d['updated_at'] = format_date(self.updated_at, '%Y-%m-%dT%H:%M')
-        d['team'] = [u.username for u in self.team()]
         # Generate excerpt based on summary data
         if self.longtext and len(self.longtext) > 10:
             d['excerpt'] = self.longtext[:MAX_EXCERPT_LENGTH]
@@ -622,10 +629,13 @@ class Project(PkModel):
             content_license = "https://creativecommons.org/licenses/by/4.0/"
         else:
             content_license = ''
+        cleansummary = None
+        if self.summary:
+            cleansummary = re.sub('<[^>]*>', '', self.summary)
         return {
             "@type": "CreativeWork",
             "name": self.name,
-            "description": re.sub('<[^>]*>', '', self.summary),
+            "description": cleansummary,
             "dateCreated": format_date(self.created_at, '%Y-%m-%dT%H:%M'),
             "dateUpdated": format_date(self.updated_at, '%Y-%m-%dT%H:%M'),
             "discussionUrl": self.contact_url,
@@ -638,8 +648,8 @@ class Project(PkModel):
         self.name = data['name']
         self.summary = data['summary']
         self.hashtag = data['hashtag']
-        self.score = data['score']
-        self.progress = data['progress']
+        self.score = int(data['score'])
+        self.progress = int(data['progress'])
         self.image_url = data['image_url']
         self.source_url = data['source_url']
         self.webpage_url = data['webpage_url']

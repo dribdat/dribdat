@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 """Test configs."""
+
 from dribdat.app import init_app
 from dribdat.settings import DevConfig, ProdConfig
 from dribdat.utils import strtobool
+
 
 def test_production_config():
     """Production config."""
@@ -23,5 +25,5 @@ def test_dev_config():
 
 def test_truthy_config():
     """ Test conversion of truthy variables. """
-    assert strtobool(' tRuE') == True
-    assert strtobool('0') == False
+    assert strtobool(' tRuE') is True
+    assert strtobool('0') is False

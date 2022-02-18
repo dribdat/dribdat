@@ -9,12 +9,9 @@
       var datesched = Date.parse(startdate.replace(' ', 'T'));
       var timeleft = datesched - datenow;
       if (isNaN(timeleft) || timeleft < 0) return;
-
-      var clock = new FlipClock(this, new Date(datesched), {
-        face: 'DayCounter',
-        countdown: true
-      });
-      // clock.setCountdown(true);
+      var unixtime = datesched / 1000;
+      // Start the clock
+      new FlipDown(unixtime, $(this).attr('id')).start();
     });
 
   });

@@ -52,15 +52,12 @@
 </center>
 
 
-<div class="honeycomb mb-5">
+<div class="honeycomb mb-5 {% if project_count < 7 %}text-center{% endif %}">
   <a name="projects"></a>
   <div class="ibws-fix">
   {% for project in projects %}
     {{ misc.render_project_hexagon(project) }}
   {% endfor %}
-  {% if project_count % 6 != 0 %}
-    <a class="hexagon" style="visibility:hidden"></a>
-  {% endif %}
   </div>
 </div><!-- /honeycomb -->
 
@@ -109,7 +106,7 @@
 {% endif %}
 
 {% if current_event.description %}
-<div class="event-info">
+<div class="event-info mt-2 mb-2">
   <div class="content">
     <a name="info"></a>
     <div class="event-description">
@@ -120,7 +117,7 @@
 {% endif %}
 
 {% if current_event.instruction %}
-<div class="jumbotron event-instruction mt-2 mb-2">
+<div class="jumbotron event-instruction mt-4 mb-2">
   <div class="content">
     {{current_event.instruction|markdown}}
   </div>
@@ -188,7 +185,7 @@
 
   {% if current_event and current_event.countdown and not 'off' in config.DRIBDAT_CLOCK %}
     <a class="container-countdown" href="#top" title="{{ current_event.countdown }}">
-      <div class="event-countdown" data-start="{{ current_event.countdown }}"></div>
+      <div id="clockEvent" class="event-countdown flipdown" data-start="{{ current_event.countdown }}"></div>
     </a>
   {% endif %}
 </center>

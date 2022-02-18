@@ -141,7 +141,7 @@ def GetEventUsers(event):
     users = []
     userlist = []
     for p in event.projects:
-        for u in p.team():
+        for u in p.get_team():
             if u.active and u.id not in userlist:
                 userlist.append(u.id)
                 users.append(u)

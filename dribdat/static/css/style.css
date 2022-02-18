@@ -181,22 +181,22 @@ ul.help-block {
   margin-right: 45px;
 }
 .section-header .section-header-logo img {
-  height: 6em;
+  height: 8em;
   margin-bottom: 2em;
-}
-.section-header .event-hostname,
-.section-header .event-location {
-  font-size: 110%; color: #555;
-  display: inline-block;
-}
-.section-header .event-hostname::before {
-  content: ' - ';
 }
 .section-header .section-header-content div {
   color: initial;
+  font-size: 125%;
+  display: inline-block;
+  margin-right: 1em;
 }
-.section-header .section-header-content .event-date {
-  font-size: 120%;
+.section-header .section-header-content .event-hostname {
+  display: block;
+  font-weight: 600;
+}
+.section-header .section-header-content .fa {
+  opacity: 0.5;
+  width: 1.2em;
 }
 .section-header a:hover {
   text-decoration: none;
@@ -269,22 +269,12 @@ nav .nav-login {
 }
 
 /* Customize the flipclock widget */
-.event-countdown .flip-clock {
+.event-countdown {
   margin-top: 20px;
+  display: inline-block;
 }
-.event-countdown .flip-clock-label {
+.event-countdown .rotor-group-heading {
   display: none;
-}
-@media (max-width: 1200px) {
-  .event-countdown .flip-clock .flip-clock-group * {
-    width: 38px;
-  }
-  .event-countdown .flip-clock {
-    position: relative;
-    left: 50%;
-    width: 360px;
-    margin-left: -180px;
-  }
 }
 @media (max-width: 400px) {
   .event-countdown {
@@ -295,9 +285,6 @@ nav .nav-login {
   width: 100%;
   display: block;
   text-align: center;
-}
-.event-countdown {
-  display: inline-block;
 }
 @media (max-width: 1190px) {
   .event-footer .event-countdown {
@@ -340,6 +327,10 @@ nav .nav-login {
   text-align: center;
   display: block;
 }
+.event-home .event-info {
+  box-shadow: 3px 3px 0px rgb(0 0 0 / 30%);
+  border: 1px solid rgba(0,0,0,0.3);
+}
 .event-home .event-info .event-summary {
   text-align: center;
   margin: 1em 10%;
@@ -354,24 +345,20 @@ nav .nav-login {
 /* ---- Hexagonal hawtness ---- */
 
 .event-home .honeycomb {
-  /*margin: 30px 0px 100px 0px;
-  left: 50%;*/
   width: 760px;
+  margin-top: 30px;
 }
-@media (max-width: 980px) {
+@media (max-width: 900px) {
   .event-home .honeycomb {
-    width: auto;
-    /* left: inherit; */
+    margin-top: 0px;
+    width: 600px;
   }
 }
-@media (max-width: 420px) {
-  .event-home .honeycomb .hexagon {
-    /* margin-bottom: auto; */
-    /* top: auto; */
-  }
+@media (max-width: 560px) {
   .event-home .honeycomb {
+    margin-top: 0px;
     text-align: center;
-    clear: both;
+    width: 300px;
   }
 }
 
@@ -396,15 +383,30 @@ nav .nav-login {
 .event-home .hexagon {
   margin-bottom: 4px;
 }
-
+.hexagon.gridfix {
+  visibility: hidden;
+  margin-top: 2em;
+}
 .hexagon:hover {
   box-shadow: 0 4px 9px rgb(0 0 0 / 5%), 0 9px 15px rgb(0 0 0 / 17%);
   transform: scale(1.2);
 }
 
+.hexagon .team-count {
+  top: -2em;
+  right: -0.8em;
+  min-width: 2em;
+  position: absolute;
+  color: black;
+  font-size: 80%;
+  background: rgba(255, 255, 255, 0.8);
+  border: 1px dashed rgba(0,0,200,0.4);
+}
+
 .project-page.phase-Challenge .progress,
-.hide-challenges .challenge,
 .challenge.hexagon .progress { display: none; }
+.hide-challenges .challenge { opacity: 0.1 !important; }
+
 .challenge.hexagon .hexagontent {
   color: #35a;
   font-weight: normal;
@@ -457,16 +459,35 @@ nav .nav-login {
 .project .hexagontent .progress-bar {
   background-color: #aaa;
 }
+
+.honeycomb {
+  text-align: left;
+}
 .honeycomb .hexagon {
   opacity: 0.4;
   box-shadow: none;
+  margin: 3px 21px;
+  clear: none;
+}
+.honeycomb .hexagon, .hexagon::before, .honeycomb .hexagon::after {
+  width: 82px;
+  height: 142px;
+}
+.honeycomb .hexagon:nth-child(even) {
+  top: 73px;
+  clear: both;
 }
 .honeycomb .hexagon.category-highlight {
   opacity: 1.0;
   box-shadow: 0 1px 3px rgba(0,0,0,0.15), 0 1px 2px rgba(0,0,0,0.3);
 }
+.honeycomb .hexagontent {
+  font-size: 1.0rem;
+}
 .honeycomb .hexagon.hexalist {
-  display: none; background: white !important; color: black;
+  display: none;
+  background: white !important;
+  color: black;
 }
 .honeycomb .hexagon.hexalist.category-highlight { display: block; }
 .hexagon.hexalist .hexagontent {
@@ -992,6 +1013,10 @@ pre { color: #333; background: white; }
   margin-right: 15px;
   text-align: right;
 }
+.project-page .project-score {
+  text-align: center;
+  min-width: 8em;
+}
 .project-page .project-category {
   float: right;
   font-size: 110%;
@@ -1134,6 +1159,7 @@ pre { color: #333; background: white; }
   text-align: center;
   margin-top: 1em;
 }
+.team-count,
 .user-score {
   min-width: 2.5em;
   text-align: center;
@@ -1152,10 +1178,14 @@ pre { color: #333; background: white; }
 }
 .profile-projects.honeycomb {
   padding: 1.5em 4em;
+  height: 20em;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 .profile-projects::-webkit-scrollbar {
   display: none;
 }
+.profile-projects .row .card.challenge,
 .profile-projects .row .card.project {
   height: 8em;
   width: 20em;

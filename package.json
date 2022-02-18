@@ -8,12 +8,12 @@
   "private": false,
   "dependencies": {
     "@toast-ui/editor": "^3",
-    "bootstrap": "^4.3.1",
-    "bootswatch": "^4.5.2",
-    "flipclock": "^0.10.5",
-    "font-awesome": "^4.7.0",
-    "jquery": "^3.4.1",
-    "jquery-resizable-dom": "^0.35.0",
-    "popper.js": "^1.16.1"
+    "bootstrap": "^4",
+    "bootswatch": "^4",
+    "flipdown": "^0.3.2",
+    "font-awesome": "^4",
+    "jquery": "^3",
+    "jquery-resizable-dom": "^0",
+    "popper.js": "^1"
   }
 }

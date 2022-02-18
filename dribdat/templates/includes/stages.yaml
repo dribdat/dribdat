@@ -6,45 +6,42 @@ stages:
   -
     id: 0
     name: CHALLENGE
-    phase: Challenge
-    description: 🚧 This is an idea or challenge description
+    phase: Identify
+    description: 🚧 Asking questions with data about issues that matter.
     conditions:
       validate:
         -
           field: summary
           min: 5
-          help: Your challenge needs a short summary.
+          help: Your challenge should have a short summary.
         -
           field: excerpt
           min: 123
-          help: At least 123 characters in the challenge pitch.
+          help: Please write at least one paragraph (123 chars) in the description.
       agree:
-        - The challenge is well documented, with links to resources and contacts.
-        - We accept this challenge as realistic in the time limits of the event.
+        - Questions are formulated in a way that hint at what data will be needed, helping to scope the project.
+        - Links to readily available data sources and other resources have been provided.
+        - Acquiring data to meet the challenge is realistic within our time limits.
   -
     id: 5
     name: NEW
-    phase: Researching
-    description: 👪 A team has formed and started a project
+    phase: Find
+    description: 👪 Collecting resources together in a shared space.
     conditions:
       validate:
         -
           field: team
           min: 1
           max: 5
-          help: Between 1 and 5 members need to join your project.
-        -
-          field: contact_url
-          test: validurl
-          help: Provide a contact link in the Details of your project page.
+          help: Between 1 and 5 people should join your project or data expedition.
       agree:
-        - We have a shared channel or working area in which to collaborate.
-        - Our team members will work together for the duration of the event.
+        - Our team members have agreed to work together for the duration of the event.
+        - We are collecting data, and sharing it in an accessible collaboration space.
   -
     id: 10
     name: RESEARCHED
-    phase: Sketching
-    description: ⚗️ Scoping research has been done and documented
+    phase: Get
+    description: ⚗️ Scoping of data collection and prototyping strategy.
     conditions:
       validate:
         -
@@ -52,13 +49,14 @@ stages:
           test: validurl
           help: Provide a source link in your project Details.
       agree:
-        - A source code repository or shared folder has been set up and shared.
-        - We have defined the scope of the project, and have documented our goals.
+        - A shared repository has been set up where work on code and data can be tracked.
+        - Aggregation of data (download, crowdsourcing, scraping, etc.) is in progress.
+        - Link any relevant data schema or code frameworks in your documentation.
   -
     id: 20
     name: SKETCHED
-    phase: Prototyping
-    description: 🎨 Initial designs have been sketched and shared
+    phase: Verify
+    description: 🎨 Evaluating and explaining to fellow humans.
     conditions:
       validate:
         -
@@ -66,27 +64,28 @@ stages:
           test: validurl
           help: Upload or link to an image in your project Details.
       agree:
-        - Everyone on the team was able to contribute something to the design.
-        - We used a wireframing tool, or just paper, to sketch and share our idea.
+        - Check the metadata and methods of your data, decide whether they come from a credible source.
+        - Annotate key datasets to explain your understanding of the structure and content.
+        - We made wireframes or sketches of our idea, attaching it here as an image.
   -
     id: 30
     name: PROTOTYPED
-    phase: Launching
-    description: 🐣 A prototype of the idea has been developed
+    phase: Clean
+    description: 🐣 Efforts to improve the quality of the output.
     conditions:
       validate:
         -
           field: webpage_url
           test: validurl
-          help: Provide a project link to an online demo, embedded if possible.
+          help: Online access to browse your data or demo in the Project Link.
       agree:
-        - Contributions from outside of our team do not include any major functionality.
-        - We have the rights, open licenses, or permission to use all data, assets and code.
+        - We have checked the rights, open licenses, and permissions to use all assets, data, and code.
+        - Perspective was gained on the data using a spreadsheet, data wrangling or statistical program.
   -
     id: 40
     name: LAUNCHED
-    phase: Promoting
-    description: 🎈 The prototype has been deployed and presented
+    phase: Analyse
+    description: 🎈 Gaining insights on the problem defined in the beginning.
     conditions:
       validate:
         -
@@ -94,19 +93,25 @@ stages:
           test: validurl
           help: Link and sync a remote repository or README for your project.
       agree:
-        - Any third-party data, assets or software are correctly attributed.
-        - We have thanked every team member, contributor, and mentor.
+        - Gain more depth by exploring data in code, with data visualisations and interfaces.
+        - While correlating and linking data fields, we made critical reflection of causality.
+        - The necessary infrastructure for hosting is available, and can be maintained.
   -
     id: 50
     name: LIVE
-    phase: Supporting
-    description: 🚀 This project is live and available to the public
+    phase: Communicate
+    description: 🚀 Thinking about audience and making the results public.
     conditions:
       validate:
         -
+          field: contact_url
+          test: validurl
+          help: Provide a contact link in your project Details.
+        -
           field: download_url
           test: validurl
-          help: Provide a working download link in your project Details.
+          help: Provide a download link in your project Details.
       agree:
-        - The full results of our project can be obtained under an open license.
-        - It is possible to contact the maintainers with questions or feedback.
+        - The full results of this work have been showcased and published under an open license.
+        - Contact with the maintainers is possible to ask questions or send feedback.
+        - We have made sure to attribute all sources, and to thank all contributors.
