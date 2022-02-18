@@ -1177,8 +1177,10 @@ pre { color: #333; background: white; }
   border-radius: 20px;
 }
 .profile-projects.honeycomb {
-  min-height: 20em;
   padding: 1.5em 4em;
+  height: 20em;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 .profile-projects::-webkit-scrollbar {
   display: none;
