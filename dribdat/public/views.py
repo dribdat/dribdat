@@ -209,7 +209,6 @@ def event_print(event_id):
 
 
 @blueprint.route('/event/start', methods=['GET'])
-@login_required
 def event_start():
     if not current_app.config['DRIBDAT_ALLOW_EVENTS']:
         if not current_user.is_admin:
