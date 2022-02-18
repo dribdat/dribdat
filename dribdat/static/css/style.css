@@ -327,6 +327,10 @@ nav .nav-login {
   text-align: center;
   display: block;
 }
+.event-home .event-info {
+  box-shadow: 3px 3px 0px rgb(0 0 0 / 30%);
+  border: 1px solid rgba(0,0,0,0.3);
+}
 .event-home .event-info .event-summary {
   text-align: center;
   margin: 1em 10%;
