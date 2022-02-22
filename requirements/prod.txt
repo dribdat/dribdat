@@ -31,7 +31,7 @@ flask-misaka==1.0.0
 flask-sqlalchemy==2.5.1
 flask-talisman==0.8.1
 flask-wtf==1.0.0
-frictionless==4.25.1
+frictionless==4.26.0
 future==0.18.2
 graphene==3.0
 greenlet==1.1.2
