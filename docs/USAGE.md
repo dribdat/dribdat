@@ -16,19 +16,20 @@ The **Refresh** feature allows you to connect a README from your open source rep
 
 By updating your progress using the **Post** button, you can regularly check in your status and any roadblocks.
 
-## What does it actually look like?
+## What does dribdat look like?
 
 As we are really into making the most of those time constraints, the homepage and dashboard feature a big animated countdown clock:
 
-![](dribdat/static/img/screenshot_countdown.png)
+![](../dribdat/static/img/screenshot_countdown.png)
 
 Here is how a dribdat-powered event looks like in the heat of things:
 
-![](dribdat/static/img/screenshot_makezurich.jpg)
+![](../dribdat/static/img/screenshot_makezurich.jpg)
+_[now.makezurich.ch](https://now.makezurich.ch)_
 
 The picture below explains the various parts of a typical challenge or project page:
 
-![](dribdat/static/img/project_page_overview.png)
+![](../dribdat/static/img/project_page_overview.png)
 
 This basic documentation makes it easy for fellow participants to understand the challenge - or what you've worked on in response to it - as well as allow the audience, the jury, and so on, to discover your work and respond to it.
 
@@ -81,7 +82,7 @@ These are sometimes categorized according to the challenge topic they address at
 
 If your team does not yet have a project, then you may (administrators can disable this) be able to create one with the green **Start project** button (which is called **Announce Challenge** before the event begins) to create a project:
 
-![](dribdat/static/img/screenshot_start.png)
+![](../dribdat/static/img/screenshot_start.png)
 
 Once you have found your group, open the project page, and tap on the blue **Join** button at the top, which looks like this:
 
@@ -161,7 +162,7 @@ You can add both with this snippet in your event's **Community code**:
 
 The administrative interface shown below allows defining details of the event and managing project data.
 
-![](dribdat/static/img/screenshot_admin_projects.png)
+![](../dribdat/static/img/screenshot_admin_projects.png)
 
 Here you can see challenges and projects, with a rating of how completely they are documented. In the `Events` screen there are links to a *Print* view for a summary of all projects on one page, and the ability to *Embed* results into another website. The look and feel of the projects as well as instructions for teams can be customized per-event.
 
