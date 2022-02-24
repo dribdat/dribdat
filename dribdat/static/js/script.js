@@ -511,6 +511,7 @@
     dm = Boolean(window.darkmode);
     if (toggle) dm = !dm;
     if (dm) {
+      // Invert page colors
       $('body').css('-webkit-filter','invert(100%)')
                .css('-moz-filter','invert(100%)')
                .css('-o-filter','invert(100%)')
@@ -519,6 +520,8 @@
                .css('height', '100%');
     } else {
       $('body').attr('style','');
+      // Adjust clock theme
+      // $('.flipdown').removeClass('flipdown__theme-dark').addClass('flipdown__theme-light');
     }
     localStorage.setItem('darkmode', dm ? '1' : '0');
     window.darkmode = dm;

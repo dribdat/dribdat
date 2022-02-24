@@ -9,7 +9,7 @@ certifi==2021.10.8
 cffi==1.15.0
 chardet==4.0.0
 charset-normalizer==2.0.12; python_version >= "3"
-click==8.0.3
+click==8.0.4
 colorama==0.4.4
 cssmin==0.2.0
 cssselect==1.1.0
@@ -64,7 +64,7 @@ pyrsistent==0.18.0
 pystache==0.6.0
 python-dateutil==2.8.2
 python-dotenv==0.19.2
-python-slugify==5.0.2
+python-slugify==6.1.0
 pytz==2021.3
 pyyaml==5.4.1
 redis==4.1.3
