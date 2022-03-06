@@ -77,6 +77,8 @@ shellingham==1.4.0
 simpleeval==0.9.11
 six==1.16.0
 sqlalchemy==1.4.22
+sqlalchemy-continuum==1.3.12
+sqlalchemy-utils==0.38.2; python_version >= "3.4" and python_version < "4.0"
 stringcase==1.2.0
 text-unidecode==1.3
 typer==0.4.0

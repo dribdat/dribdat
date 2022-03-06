@@ -2,6 +2,8 @@
 """User models."""
 
 from sqlalchemy import Table, or_
+from sqlalchemy_continuum import make_versioned
+from sqlalchemy_continuum.plugins import FlaskPlugin
 
 from dribdat.user.constants import (
     MAX_EXCERPT_LENGTH,
@@ -38,6 +40,7 @@ from future.standard_library import install_aliases
 install_aliases()
 
 
+# Set up user roles mapping
 users_roles = Table(
     'users_roles', db.metadata,
     Column('user_id', db.Integer, db.ForeignKey(
@@ -45,6 +48,10 @@ users_roles = Table(
     Column('role_id', db.Integer, db.ForeignKey(
         'roles.id'), primary_key=True)
 )
+
+
+# Init SQLAlchemy Continuum
+make_versioned(plugins=[FlaskPlugin()])
 
 
 class Role(PkModel):
@@ -413,6 +420,7 @@ class Event(PkModel):
 
 class Project(PkModel):
     """ You know, for kids! """
+    __versioned__ = {}
     __tablename__ = 'projects'
     name = Column(db.String(80), unique=True, nullable=False)
     summary = Column(db.String(140), nullable=True)
