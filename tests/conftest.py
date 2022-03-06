@@ -10,6 +10,8 @@ from dribdat.settings import TestConfig
 
 from .factories import UserFactory, ProjectFactory
 
+from sqlalchemy.orm import configure_mappers
+
 
 @pytest.fixture(scope='function')
 def app():
@@ -34,6 +36,7 @@ def db(app):
     """A database for the tests."""
     _db.app = app
     with app.app_context():
+        configure_mappers() # explicit for Continuum
         _db.create_all()
 
     yield _db
