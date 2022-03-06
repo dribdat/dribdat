@@ -152,6 +152,7 @@ def ProjectActivity(project, of_type, user, action=None, comments=None):
     activity = Activity(
         name=of_type,
         project_id=project.id,
+        project_progress=project.progress,
         action=action
     )
     activity.user_id = user.id

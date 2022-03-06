@@ -687,8 +687,9 @@ nav .nav-login {
 
 /* Hides the triangle pointers in the timeline */
 .project-page .timeline-card::after { display: none; }
-.project-page .timeline-start .timeline-card::after { display: initial; }
-.project-page .timeline-finish .timeline-card::after { display: initial; }
+.project-page .timeline-start .timeline-card::after,
+.project-page .timeline-finish .timeline-card::after,
+.project-page .timeline-progress .timeline-card::after { display: initial; }
 .project-page .timeline-card .close { margin: 0.4em; }
 /* Other project timeline customizations */
 .project-page .timeline-review .timeline-content { background: #f2fef2; border-top: none; }
@@ -697,6 +698,8 @@ nav .nav-login {
 .project-page .timeline-start .timeline-content { background: #aaa; }
 .project-page .timeline-finish .date,
 .project-page .timeline-start .date { color: white; }
+.project-page .timeline-progress .timeline-img-header { background: lightblue; border: 5px solid #aaa; }
+.project-page .timeline-progress .timeline-content .date { display: none; }
 .project-page .timeline-item { margin-bottom: 20px; }
 .timeline-boost .timeline-img-header {
   background: teal;

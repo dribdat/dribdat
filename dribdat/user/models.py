@@ -494,11 +494,17 @@ class Project(PkModel):
             (author, title, text, icon) = a_parsed
             # Check if last signal very similar
             if prev is not None:
-                if (
-                    prev['title'] == title and prev['text'] == text
+                if prev['title'] == title and prev['text'] == text:
                     # and (prev['date']-a.timestamp).total_seconds() < 120
-                ):
                     continue
+                if prev['progress'] != a.project_progress:
+                    projectStage = getStageByProgress(a.project_progress)['phase']
+                    dribs.append({
+                        'title': projectStage,
+                        'date': a.timestamp,
+                        'icon': 'rocket',
+                        'name': 'progress',
+                    })
             prev = {
                 'icon': icon,
                 'title': title,
@@ -507,6 +513,7 @@ class Project(PkModel):
                 'name': a.name,
                 'date': a.timestamp,
                 'ref_url': a.ref_url,
+                'progress': a.project_progress,
                 'id': a.id,
             }
             dribs.append(prev)
