@@ -161,15 +161,15 @@
   {% endif %}
   </div><!-- /.project-name -->
 
-  <div class="badges">
-    {% for s in project_dribs %}
-      {% if s.icon and s.name == 'boost' %}
-      <a class="boost" href="#" onclick="$('#dribs-tab-md').click(); return false" title="{{ s.title }}">
-        <i class="fa fa-{{ s.icon }}" aria-hidden="true"></i>
-      </a>
-      {% endif %}
-    {% endfor %}
-  </div>
+  {% if project_badge %}
+    <div class="badges">
+      {% for s in project_badge %}
+        <a class="boost" href="#" onclick="$('#dribs-tab-md').click(); return false" title="{{ s.title }}">
+          <i class="fa fa-{{ s.icon }}" aria-hidden="true"></i>
+        </a>
+      {% endfor %}
+    </div>
+  {% endif %}
 
   {% if not project.event.lock_resources and not project.is_challenge %}
   <ul class="nav nav-pills nav-fill md-tabs" id="projectTabs" role="tablist">
@@ -261,8 +261,10 @@
           {% endif %}
 
           {% if s.id and current_user.is_admin %}
-            <a class="close" title="Delete post" href="{{ url_for('project.post_delete', project_id=project.id, activity_id=s.id) }}"
+            <a class="close delete" title="Delete post" href="{{ url_for('project.post_delete', project_id=project.id, activity_id=s.id) }}"
               onclick="if(!window.confirm('Delete this post?')) return false">&times;</a>
+            <a class="close revert" title="Revert post" href="{{ url_for('project.post_revert', project_id=project.id, activity_id=s.id) }}"
+              onclick="if(!window.confirm('Revert to this version?')) return false">&#9100;</a>
           {% endif %}
 
           {% if s.text %}
@@ -386,7 +388,7 @@
        title="Edit project details" >
       <i class="fa fa-pencil" aria-hidden="true"></i>
       Details</a>
-    {% if project.is_autoupdate %}
+    {% if project.is_autoupdateable %}
       <a href="{{ url_for('project.project_autoupdate', project_id=project.id) }}" title="Sync external data" class="btn btn-lg btn-warning">
         <i class="fa fa-refresh" aria-hidden="true"></i>
         Sync</a>

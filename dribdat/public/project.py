@@ -219,6 +219,24 @@ def post_delete(project_id, activity_id):
     return project_view(project.id)
 
 
+@blueprint.route('/<int:project_id>/undo/<int:activity_id>', methods=['GET'])
+@login_required
+def post_revert(project_id, activity_id):
+    project = Project.query.filter_by(id=project_id).first_or_404()
+    activity = Activity.query.filter_by(id=activity_id).first_or_404()
+    if not activity.project_version:
+        flash('Could not revert: data not available.', 'warning')
+    elif activity.project_version == 0:
+        flash('Could not revert: this is the earliest version.', 'warning')
+    else:
+        revert_to = activity.project_version
+        project.versions[revert_to - 1].revert()
+        flash('Project data reverted to version %d.' % revert_to, 'success')
+        return project_view(project.id)
+    return redirect(url_for(
+        'project.project_view_posted', project_id=project.id))
+
+
 def getSuggestionsForStage(progress):
     """ Get all projects which are published in a resource-type event """
     project_list = []
@@ -261,6 +279,7 @@ def project_action(project_id, of_type=None, as_view=True, then_redirect=False,
         suggestions, stage, all_valid = None, None, None
     # latest_activity = project.latest_activity() # obsolete
     project_dribs = project.all_dribs()
+    project_badge = [ s for s in project_dribs if s['name'] == 'boost' ]
     # Select available project image
     if project.image_url:
         project_image_url = project.image_url
@@ -271,7 +290,7 @@ def project_action(project_id, of_type=None, as_view=True, then_redirect=False,
             'static', filename='img/badge-black.png', _external=True)
     return render_template(
         'public/project.html', current_event=event, project=project,
-        project_starred=starred, project_team=project_team,
+        project_starred=starred, project_team=project_team, project_badge=project_badge,
         project_dribs=project_dribs, project_image_url=project_image_url,
         allow_edit=allow_edit, allow_post=allow_post, lock_editing=lock_editing,
         stage=stage, all_valid=all_valid,

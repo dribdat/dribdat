@@ -7,6 +7,8 @@ from flask import current_app
 
 from alembic import context
 
+from sqlalchemy.orm import configure_mappers
+
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
 config = context.config
@@ -20,6 +22,11 @@ logger = logging.getLogger('alembic.env')
 # for 'autogenerate' support
 # from myapp import mymodel
 # target_metadata = mymodel.Base.metadata
+
+# set up for SQLAlchemy Continuum
+from dribdat.user.models import Project
+configure_mappers()
+
 config.set_main_option(
     'sqlalchemy.url',
     str(current_app.extensions['migrate'].db.engine.url).replace('%', '%%'))

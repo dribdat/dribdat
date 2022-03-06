@@ -139,7 +139,7 @@ def getActivityByType(a, only_active=True):
         author = "?"
     # Based on action, populate activity fields
     if a.action == 'sync':
-        text = "Readme connected"
+        text = "Repository updated"
         icon = 'taxi'
     elif a.action == 'post' and a.name == 'review':
         text = a.content
@@ -149,7 +149,7 @@ def getActivityByType(a, only_active=True):
         icon = 'pencil'
     elif a.name == 'star':
         # title = "Team forming"
-        text = "Joined"
+        text = "Joined the team"
         icon = 'thumbs-up'
     elif a.name == 'update' and a.action == 'commit':
         # title = "Code commit"
@@ -157,7 +157,9 @@ def getActivityByType(a, only_active=True):
         author = None
         icon = 'random'
     elif a.name == 'update':
-        text = "Edited"
+        text = "Edited content"
+        if a.project_version:
+            text += " version %d" % a.project_version
         icon = 'paperclip'
     elif a.name == 'create':
         text = "Challenge started"

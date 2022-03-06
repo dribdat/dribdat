@@ -847,7 +847,8 @@ class Activity(PkModel):
     project_id = reference_col('projects', nullable=True)
     project = relationship('Project', backref='activities')
     project_progress = Column(db.Integer, nullable=True)
-    project_score = Column(db.Integer, nullable=True)
+    project_version  = Column(db.Integer, nullable=True)
+    project_score    = Column(db.Integer, nullable=True)
 
     @property
     def data(self):
