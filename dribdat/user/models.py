@@ -500,19 +500,21 @@ class Project(PkModel):
             if a_parsed is None:
                 continue
             (author, title, text, icon) = a_parsed
-            # Check if last signal very similar
             if prev is not None:
+                # Skip repeat signals
                 if prev['title'] == title and prev['text'] == text:
-                    # and (prev['date']-a.timestamp).total_seconds() < 120
+                    # if prev['date']-a.timestamp).total_seconds() < 120:
                     continue
+                # Show changes in progress
                 if prev['progress'] != a.project_progress:
-                    projectStage = getStageByProgress(a.project_progress)['phase']
-                    dribs.append({
-                        'title': projectStage,
-                        'date': a.timestamp,
-                        'icon': 'rocket',
-                        'name': 'progress',
-                    })
+                    projectStage = getStageByProgress(a.project_progress)
+                    if projectStage is not None:
+                        dribs.append({
+                            'title': projectStage['phase'],
+                            'date': a.timestamp,
+                            'icon': 'rocket',
+                            'name': 'progress',
+                        })
             prev = {
                 'icon': icon,
                 'title': title,
