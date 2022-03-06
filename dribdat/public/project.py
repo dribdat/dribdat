@@ -241,11 +241,13 @@ def project_action(project_id, of_type=None, as_view=True, then_redirect=False,
         return True
     if then_redirect:
         return redirect(url_for('project.project_view', project_id=project.id))
+    # The next line seems rather inefficient
     starred = IsProjectStarred(project, for_user)
-    allow_edit = starred or (
-        not current_user.is_anonymous and current_user.is_admin)
-    allow_post = starred  # and not event.lock_resources
-    allow_edit = allow_edit and not event.lock_editing
+    # Figure out permissions (hackybehack!)
+    allow_edit = not current_user.is_anonymous and current_user.is_admin
+    lock_editing = event.lock_editing
+    allow_post = starred
+    allow_edit = (starred or allow_edit) and not lock_editing
     # Obtain list of team members (performance!)
     project_team = project.get_team()
     if allow_post:
@@ -271,7 +273,7 @@ def project_action(project_id, of_type=None, as_view=True, then_redirect=False,
         'public/project.html', current_event=event, project=project,
         project_starred=starred, project_team=project_team,
         project_dribs=project_dribs, project_image_url=project_image_url,
-        allow_edit=allow_edit, allow_post=allow_post,
+        allow_edit=allow_edit, allow_post=allow_post, lock_editing=lock_editing,
         stage=stage, all_valid=all_valid,
         suggestions=suggestions,
         active="projects"
