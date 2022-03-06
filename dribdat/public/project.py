@@ -279,7 +279,7 @@ def project_action(project_id, of_type=None, as_view=True, then_redirect=False,
         suggestions, stage, all_valid = None, None, None
     # latest_activity = project.latest_activity() # obsolete
     project_dribs = project.all_dribs()
-    project_badge = [ s for s in project_dribs if s['name'] == 'boost' ]
+    project_badge = [s for s in project_dribs if s['name'] == 'boost']
     # Select available project image
     if project.image_url:
         project_image_url = project.image_url
@@ -290,9 +290,11 @@ def project_action(project_id, of_type=None, as_view=True, then_redirect=False,
             'static', filename='img/badge-black.png', _external=True)
     return render_template(
         'public/project.html', current_event=event, project=project,
-        project_starred=starred, project_team=project_team, project_badge=project_badge,
-        project_dribs=project_dribs, project_image_url=project_image_url,
-        allow_edit=allow_edit, allow_post=allow_post, lock_editing=lock_editing,
+        project_starred=starred, project_team=project_team,
+        project_badge=project_badge, project_dribs=project_dribs,
+        project_image_url=project_image_url,
+        allow_edit=allow_edit, allow_post=allow_post,
+        lock_editing=lock_editing,
         stage=stage, all_valid=all_valid,
         suggestions=suggestions,
         active="projects"

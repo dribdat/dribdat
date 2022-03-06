@@ -263,8 +263,10 @@
           {% if s.id and current_user.is_admin %}
             <a class="close delete" title="Delete post" href="{{ url_for('project.post_delete', project_id=project.id, activity_id=s.id) }}"
               onclick="if(!window.confirm('Delete this post?')) return false">&times;</a>
-            <a class="close revert" title="Revert post" href="{{ url_for('project.post_revert', project_id=project.id, activity_id=s.id) }}"
-              onclick="if(!window.confirm('Revert to this version?')) return false">&#9100;</a>
+            {% if s.icon == 'paperclip' %}
+              <a class="close revert" title="Revert post" href="{{ url_for('project.post_revert', project_id=project.id, activity_id=s.id) }}"
+                onclick="if(!window.confirm('Revert to this version?')) return false">&#9100;</a>
+            {% endif %}
           {% endif %}
 
           {% if s.text %}
