@@ -94,6 +94,11 @@
     $(this).addClass('active');
   });
 
+  // Push template selection to form
+  $('.template-select label input').change(function() {
+    $('input#template').val($(this).val());
+  });
+
   // Open up the LOG if navigated
   if (window.location.hash == '#log' || window.location.pathname.endsWith('/log')) {
     $('#dribs-tab-md').click();

@@ -71,6 +71,11 @@ form input[type="checkbox"] {
   margin-top: -.36em;
   z-index: -1;
 }
+.template-select .card-body .fa {
+  font-size: 1.4em;
+  float: right;
+  opacity: 0.5;
+}
 
 .upload-note {
   font-size: 90%;
@@ -80,7 +85,7 @@ form input[type="checkbox"] {
 .admin .form-group .control-label {
   font-size: 125%; font-weight: bold;
 }
-.form-group .radio-inline {
+.admin .form-group .radio-inline {
   margin-right: 1em;
 }
 .admin .form-group .checkbox .help-inline {
@@ -1100,6 +1105,9 @@ pre { color: #333; background: white; }
   border: 2px dotted lightblue;
   box-shadow: 5px 5px 0px lightblue;
 }
+.alert.jumbotron {
+  padding: 1rem;
+}
 
 /* tip section */
 
@@ -1199,7 +1207,7 @@ pre { color: #333; background: white; }
 }
 .profile-projects .row {
   overflow-x: auto;
-  background-image: repeating-linear-gradient(90deg, #e5e5e5, #e5e5e5 30px, #eee 30px, #eee 60px);
+  background-image: repeating-linear-gradient(130deg, #e5e5e5, #e5e5e5 5px, #eee 10px, transparent 30px);
 }
 .profile-projects .row::-webkit-scrollbar {
   display: none;

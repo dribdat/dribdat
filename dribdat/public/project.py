@@ -361,40 +361,60 @@ def project_new(event_id):
     if event.lock_starting:
         flash('Starting a new project is disabled for this event.', 'error')
         return redirect(url_for('public.event', event_id=event.id))
-    if isUserActive(current_user):
-        project = Project()
-        project.user_id = current_user.id
-        form = ProjectNew(obj=project, next=request.args.get('next'))
-        form.category_id.choices = [(c.id, c.name)
-                                    for c in project.categories_all(event)]
-        if len(form.category_id.choices) > 0:
-            form.category_id.choices.insert(0, (-1, ''))
+    if not isUserActive(current_user):
+        flash('Your user account is not permitted to start projects.', 'error')
+        return redirect(url_for('public.event', event_id=event.id))
+    # Collect resource tips
+    suggestions = []
+    if not event.lock_resources:
+        suggestions = getSuggestionsForStage(0)
+    # Project form
+    project = Project()
+    project.user_id = current_user.id
+    form = ProjectNew(obj=project, next=request.args.get('next'))
+    form.category_id.choices = [(c.id, c.name)
+                                for c in project.categories_all(event)]
+    if len(form.category_id.choices) > 0:
+        form.category_id.choices.insert(0, (-1, ''))
+    else:
+        del form.category_id
+    if form.validate_on_submit():
+        tpl_id = None
+        if form.template.data:
+            tpl_id = form.template.data
+        del form.id
+        del form.template
+        form.populate_obj(project)
+        if tpl_id:
+            template = Project.query.get(tpl_id)
+            project.longtext = template.longtext
+            project.image_url = template.image_url
+            project.source_url = template.source_url
+            project.webpage_url = template.webpage_url
+            project.download_url = template.download_url
+        # Check event state
+        project.event = event
+        if event.has_started:
+            project.progress = 5  # Start as team
         else:
-            del form.category_id
-        if form.validate_on_submit():
-            del form.id
-            form.populate_obj(project)
-            project.event = event
-            if event.has_started:
-                project.progress = 5  # Start as team
-            else:
-                project.progress = -1  # Start as challenge
-            project.update()
-            db.session.add(project)
-            db.session.commit()
-            flash('Invite your team to Join this page!', 'success')
-            project_action(project.id, 'create', False)
-            cache.clear()
-            if event.has_started:
-                project_action(project.id, 'star', False)  # Join team
-            if len(project.autotext_url) > 1:
-                return project_autoupdate(project.id)
-            else:
-                purl = url_for('project.project_view', project_id=project.id)
-                return redirect(purl)
+            project.progress = -1  # Start as challenge
+        # Update the project
+        project.update()
+        db.session.add(project)
+        db.session.commit()
+        flash('Now invite your team to Join this page!', 'success')
+        project_action(project.id, 'create', False)
+        cache.clear()
+        if event.has_started:
+            project_action(project.id, 'star', False)  # Join team
+        if len(project.autotext_url) > 1:
+            return project_autoupdate(project.id)
+        else:
+            purl = url_for('project.project_view', project_id=project.id)
+            return redirect(purl)
     return render_template(
         'public/projectnew.html',
-        current_event=event, form=form,
+        current_event=event, form=form, suggestions=suggestions,
         active="projects"
     )
 
