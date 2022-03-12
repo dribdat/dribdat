@@ -128,16 +128,18 @@
 
 <div class="jumbotron project-page phase-{{ project.phase }}" {% if project.logo_color %} style="border-color:{{project.logo_color}}"{% endif %}>
 
-  <div class="project-score">
-    <a href="{{ url_for('public.event_stages', event_id=project.event.id) }}" style="text-decoration:none">
-      <span class="label label-info">{{ project.phase }}</span>
-      <div class="progress" title="A score based on profile completeness and voting results">
-        <div class="progress-bar" role="progressbar" aria-valuenow="{{project.score}}" aria-valuemin="0" aria-valuemax="70" style="width:{{project.score}}%">
-          {{project.score}}
+  {% if project.score and project.score > 0 %}
+    <div class="project-score">
+      <a href="{{ url_for('public.event_stages', event_id=project.event.id) }}" style="text-decoration:none">
+        <span class="label label-info">{{ project.phase }}</span>
+        <div class="progress" title="A score based on profile completeness and voting results">
+          <div class="progress-bar" role="progressbar" aria-valuenow="{{project.score}}" aria-valuemin="0" aria-valuemax="70" style="width:{{project.score}}%">
+            {{project.score}}
+          </div>
         </div>
-      </div>
-    </a>
-  </div>
+      </a>
+    </div>
+  {% endif %}
 
   {% if project.category %}
     <div class="project-category">

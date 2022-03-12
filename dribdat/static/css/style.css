@@ -348,17 +348,23 @@ nav .nav-login {
   width: 760px;
   margin-top: 30px;
 }
+.hexagon.blank { display: none; }
 @media (max-width: 900px) {
   .event-home .honeycomb {
     margin-top: 0px;
     width: 600px;
   }
+  .hexagon.blank { display: inline-block; }
 }
 @media (max-width: 560px) {
   .event-home .honeycomb {
     margin-top: 0px;
-    text-align: center;
     width: 300px;
+  }
+}
+@media (max-width: 480px) {
+  .event-home .honeycomb {
+    text-align: center;
   }
 }
 
@@ -391,7 +397,9 @@ nav .nav-login {
   box-shadow: 0 4px 9px rgb(0 0 0 / 5%), 0 9px 15px rgb(0 0 0 / 17%);
   transform: scale(1.2);
 }
-
+.hexagon.blank {
+  visibility: hidden;
+}
 .hexagon .team-count {
   top: -2em;
   right: -0.8em;

@@ -52,12 +52,15 @@
 </center>
 
 
-<div class="honeycomb mb-5 {% if project_count < 7 %}text-center{% endif %}">
+<div class="honeycomb mb-5">
   <a name="projects"></a>
   <div class="ibws-fix">
   {% for project in projects %}
     {{ misc.render_project_hexagon(project) }}
   {% endfor %}
+  {% if project_count % 2 != 0 %}
+    {{ misc.render_empty_hexagon() }}
+  {% endif %}
   </div>
 </div><!-- /honeycomb -->
 
