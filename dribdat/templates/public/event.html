@@ -105,6 +105,11 @@
         <span>Resources</span>
       </a>
     {% endif %}
+    {% if current_event.community_url %}
+      <a href="{{ current_event.community_url }}" target="community" class="btn btn-lg btn-info">
+        <i class="fa fa-comment"></i>
+        Connect</a>
+    {% endif %}
   </div>
 {% endif %}
 

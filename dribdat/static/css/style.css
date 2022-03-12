@@ -292,7 +292,6 @@ nav .nav-login {
     position: initial;
     left: initial;
     margin: 0px;
-    width: 0px;
   }
 }
 @media (min-width: 2000px) {
@@ -1183,18 +1182,26 @@ pre { color: #333; background: white; }
 }
 .profile-projects {
   padding: 1em 2em;
-  overflow-x: auto;
   width: 100%;
   background: #f0f0f0;
   border-radius: 20px;
 }
 .profile-projects.honeycomb {
   padding: 1.5em 4em;
-  height: 20em;
   overflow-x: hidden;
   overflow-y: auto;
 }
-.profile-projects::-webkit-scrollbar {
+.profile-projects.honeycomb .hexagon {
+  margin-bottom: 80px;
+}
+.profile-projects.honeycomb .hexagon:first-child {
+  margin-left: 40px;
+}
+.profile-projects .row {
+  overflow-x: auto;
+  background-image: repeating-linear-gradient(90deg, #e5e5e5, #e5e5e5 30px, #eee 30px, #eee 60px);
+}
+.profile-projects .row::-webkit-scrollbar {
   display: none;
 }
 .profile-projects .row .card.challenge,
@@ -1202,6 +1209,8 @@ pre { color: #333; background: white; }
   height: 8em;
   width: 20em;
   margin-right: 5px;
+  margin-top: 20px;
+  margin-bottom: 20px;
   overflow: hidden;
   display: inline-block;
   padding: 0px;

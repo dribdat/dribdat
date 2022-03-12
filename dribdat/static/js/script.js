@@ -315,7 +315,8 @@
       if (projects.length > 0) {
         $sm.html(
           '<span class="user-score">' + (projects.length) + '</span> ' +
-          'projects match'
+          'projects match' +
+          (projects.length > 3 ? '&nbsp;&#9654;&#9654;' : '')
         );
       }
       // Create project cards
@@ -390,7 +391,7 @@
   });
 
   // Horizontal desktop dragging of project pages
-  $('.profile-projects').each(function() {
+  $('.profile-projects .row').each(function() {
     const ele = $(this)[0];
     // thanks to Nguyen Huu Phuoc
     ele.style.cursor = 'grab';
