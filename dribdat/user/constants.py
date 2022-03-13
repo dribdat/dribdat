@@ -163,8 +163,8 @@ def getActivityByType(a, only_active=True):
             text += " version %d" % a.project_version
         icon = 'paperclip'
     elif a.name == 'create':
-        text = "Challenge started"
-        icon = 'rocket'
+        text = "Challenge posted"
+        icon = 'globe'
     elif a.name == 'boost':
         title = a.action
         text = a.content

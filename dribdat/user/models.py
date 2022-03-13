@@ -512,7 +512,7 @@ class Project(PkModel):
                         dribs.append({
                             'title': projectStage['phase'],
                             'date': a.timestamp,
-                            'icon': 'rocket',
+                            'icon': 'arrow-up',
                             'name': 'progress',
                         })
             prev = {
