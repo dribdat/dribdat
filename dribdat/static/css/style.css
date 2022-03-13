@@ -1225,15 +1225,16 @@ pre { color: #333; background: white; }
   border-radius: 20px;
 }
 .profile-projects.honeycomb {
-  padding: 1.5em 4em;
-  overflow-x: hidden;
-  overflow-y: auto;
+  padding: 0px;
+  background: transparent;
+}
+.profile-projects.honeycomb .row {
+  padding: 10px 40px;
+  overflow: hidden;
+  background: none;
 }
 .profile-projects.honeycomb .hexagon {
   margin-bottom: 80px;
-}
-.profile-projects.honeycomb .hexagon:first-child {
-  margin-left: 40px;
 }
 .profile-projects .row {
   overflow-x: auto;
@@ -1319,6 +1320,10 @@ pre { color: #333; background: white; }
   .profile-projects .project-score,
   .profile-projects .card .project-image
   { display: none; }
+  .profile-projects .card {
+    background: none !important;
+    padding-left: 0px !important;
+  }
 }
 
 /* Embed view of the projects */
