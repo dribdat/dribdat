@@ -46,6 +46,7 @@
       <div class="content">
         <h3>Get the data</h3>
         <p>
+          You can use the <b>My Data</b> button on your profile to download a summary of your contributions.<br>
           There is a simple open API for accessing data from this site in machine-readable form over the Web.
         </p>
         <p>Download data on the featured or past (replace <tt>current</tt> by <tt>id</tt>) events</p>
@@ -78,25 +79,27 @@
         configure <b>Presets</b>, and edit or sync <b>Projects</b> and
         Challenges - which are either a Category, or just a project in challenge status.</p>
       {% if config.DRIBDAT_ALLOW_EVENTS %}
-      <div class="text-center mt-2 mb-4">
-        <a href="{{ url_for('public.event_start') }}" class="btn btn-light"> &#129337; Start another Event</a>
-      </div>
+      <center class="mt-2 mb-4">
+        <a href="{{ url_for('public.event_start') }}" class="btn btn-success"> 📅 Start another Event</a>
+      </center>
       {% endif %}
       <p>If you would like to use this platform for your event,
         see the <a href="https://github.com/dribdat/dribdat/blob/main/docs/DEPLOY.md#show-me-the-back-end" target="_blank">installation guide</a>,
         contact the organisers of the events listed here - or just fork the open source project
         and set it up to your liking!</p>
       <p>
-        <a href="https://github.com/dribdat/dribdat/blob/main/docs/USAGE.md#usage" class="btn btn-success">User guide</a>
-        <a href="https://github.com/dribdat/dribdat/issues" class="btn btn-primary">Issues &raquo;</a>
+        <a href="https://github.com/dribdat/dribdat/blob/main/docs/USAGE.md#usage" class="btn btn-primary">User guide</a>
+        <a href="https://github.com/dribdat/dribdat/issues" class="btn btn-warning">Issues &raquo;</a>
         <a href="https://dribdat.cc" class="btn btn-info">Homepage</a>
       </p>
     </div><!-- /organiser -->
-    <hr>
-    <div class="row">
-      dribdat is distributed under the [MIT license](https://github.com/dribdat/dribdat/blob/main/LICENSE) -
-      visit <a href="https://app.fossa.com/projects/git%2Bgithub.com%2Floleg%2Fdribdat/refs/branch/main/3296a528a7ac2c09486c7cfae513d64d263cc238/preview">FOSSA</a>
-      for a list of bundled code works.
+    <div class="row text-center">
+      <p>
+        dribdat is distributed under the
+        <a href="https://github.com/dribdat/dribdat/blob/main/LICENSE" target="_blank">MIT license</a> -
+        visit <a href="https://app.fossa.com/projects/git%2Bgithub.com%2Floleg%2Fdribdat/refs/branch/main/3296a528a7ac2c09486c7cfae513d64d263cc238/preview">FOSSA</a>
+        for a list of bundled code works.
+      </p>
     </div>
   </div>
 </div>
