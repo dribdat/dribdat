@@ -6,9 +6,10 @@ import datetime as dt
 import pytest
 import pytz
 
-from dribdat.user.models import Role, User, Event, Project
+from dribdat.user.models import Role, User, Event
 from dribdat.utils import timesince
 from dribdat.settings import Config
+from dribdat.aggregation import ProjectActivity
 
 from .factories import UserFactory, ProjectFactory
 
@@ -118,7 +119,6 @@ class TestEvent:
             event.countdown, until=True) == "%d hours to go" % timediff_hours
 
 
-
 @pytest.mark.usefixtures('db')
 class TestProject:
     """Project tests."""
@@ -141,6 +141,20 @@ class TestProject:
         project.versions[0].revert()
         assert project.name != TEST_NAME
         assert project.versions.count() == 3
+
+    def test_project_roles(self, db):
+        """Test role factory."""
+        project = ProjectFactory()
+        project.save()
+        role1 = Role(name='a role')
+        role1.save()
+        role2 = Role(name='another role')
+        role2.save()
+        user = UserFactory()
+        user.roles.append(role1)
+        user.save()
+        ProjectActivity(project, 'star', user)
+        assert role2 in project.get_missing_roles()
 
 # @pytest.mark.usefixtures('db')
 # class TestResource:

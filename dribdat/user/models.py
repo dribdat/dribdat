@@ -482,6 +482,15 @@ class Project(PkModel):
                 members.append(a.user)
         return members
 
+    def get_missing_roles(self):
+        get_roles = Role.query.order_by('name')
+        rollcall = []
+        for p in self.get_team():
+            for r in p.roles:
+                if r not in rollcall:
+                    rollcall.append(r)
+        return [r for r in get_roles if r not in rollcall and r.name]
+
     @property
     def team(self):
         """ Array of project team """

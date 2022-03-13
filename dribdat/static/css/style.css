@@ -1152,6 +1152,27 @@ pre { color: #333; background: white; }
   border: 2px solid #ccc;
   box-shadow: 2px 2px 2px blue;
 }
+.widget-team .kick-user {
+  position: absolute;
+  font-size: 150%;
+}
+.widget-team .kick-user:hover {
+  font-weight: bold;
+  text-decoration: none;
+}
+.missing-roles .role {
+  width: 200px;
+  height: auto;
+  display: inline-block;
+  background: rgba(0,0,0,0.02);
+  border: 2px dotted rgba(0,0,100,0.2);
+  border-radius: 10px;
+  padding: 1em;
+  margin-right: 5px;
+  overflow: hidden;
+  text-align: left;
+}
+
 .profile-header {
   margin-top: 1em;
 }

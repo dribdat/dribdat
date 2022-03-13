@@ -275,8 +275,10 @@ def project_action(project_id, of_type=None, as_view=True, then_redirect=False,
         suggestions = []
         if not event.lock_resources:
             suggestions = getSuggestionsForStage(project.progress)
+        # Suggest missing team roles
+        missing_roles = project.get_missing_roles()
     else:
-        suggestions, stage, all_valid = None, None, None
+        suggestions, stage, all_valid, missing_roles = None, None, None, None
     # latest_activity = project.latest_activity() # obsolete
     project_dribs = project.all_dribs()
     project_badge = [s for s in project_dribs if s['name'] == 'boost']
@@ -294,7 +296,7 @@ def project_action(project_id, of_type=None, as_view=True, then_redirect=False,
         project_badge=project_badge, project_dribs=project_dribs,
         project_image_url=project_image_url,
         allow_edit=allow_edit, allow_post=allow_post,
-        lock_editing=lock_editing,
+        lock_editing=lock_editing, missing_roles=missing_roles,
         stage=stage, all_valid=all_valid,
         suggestions=suggestions,
         active="projects"

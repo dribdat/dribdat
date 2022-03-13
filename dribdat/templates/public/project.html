@@ -314,10 +314,19 @@
       {% for user in project_team %}
         {{ misc.render_user_profile(user) }}
         {% if current_user.is_admin %}
-          <a href="{{ url_for('project.project_unstar', project_id=project.id, user_id=user.id) }}"
+          <a href="{{ url_for('project.project_unstar', project_id=project.id, user_id=user.id) }}" class="kick-user"
             title="Kick this user from team" onclick="if(!window.confirm('Kick {{ user.username }}?')) return false"
             >&times;</a>
         {% endif %}
+      {% endfor %}
+    </div>
+  {% endif %}
+  {% if missing_roles %}
+    <div class="widget widget-team missing-roles" title="This role is not yet filled. Try to find another team member!">
+      {% for role in missing_roles %}
+        <div class="role" data-id="{{ role.id }}">
+          <span>{{ role.name }}</span>
+        </div>
       {% endfor %}
     </div>
   {% endif %}
