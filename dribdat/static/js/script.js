@@ -34,6 +34,8 @@
     // On keypress
     $inputfield.on('keyup', function(e) {
       checkAutotext($inputfield.val(), $indicator);
+      // Clear template selection
+      $('.template-select label input').prop('checked', false);
     });
 
     // Update button
@@ -97,6 +99,7 @@
   // Push template selection to form
   $('.template-select label input').change(function() {
     $('input#template').val($(this).val());
+    $('#autotext_url').val('');
   });
 
   // Open up the LOG if navigated

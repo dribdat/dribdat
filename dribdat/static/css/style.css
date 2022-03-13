@@ -1071,7 +1071,7 @@ pre { color: #333; background: white; }
   margin-top: 15px;
   padding-top: 10px;
 }
-.category-tip { opacity: 0.6; }
+.category-tip { opacity: 0.8; }
 
 .event-participants.jumbotron {
   padding: 2rem;
@@ -1207,10 +1207,14 @@ pre { color: #333; background: white; }
 }
 .profile-projects .row {
   overflow-x: auto;
-  background-image: repeating-linear-gradient(130deg, #e5e5e5, #e5e5e5 5px, #eee 10px, transparent 30px);
+  background-image: repeating-linear-gradient(125deg, #e5e5e5, #e5e5e5 5px, #eee 5px, transparent 30px);
 }
 .profile-projects .row::-webkit-scrollbar {
   display: none;
+}
+.profile-projects .row .card.challenge:first-child,
+.profile-projects .row .card.project:first-child {
+  margin-left: 20px;
 }
 .profile-projects .row .card.challenge,
 .profile-projects .row .card.project {

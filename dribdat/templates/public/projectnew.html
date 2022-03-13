@@ -20,13 +20,13 @@
       <div class="profile-projects container-fluid template-select">
         <div class="row flex-row flex-nowrap">
         {% for project in suggestions %}
-          <a class="col-md-5 ms-auto card project"
+          <div class="col-md-5 ms-auto card project"
             {%- if project.image_url %}
               style="background-image:url('{{project.image_url}}'); padding-left:100px"
-            {%- endif %}
-            href="{{ url_for('project.project_view', project_id=project.id) }}" target="_blank">
+            {%- endif %}>
             <div class="card-body">
-              <i class="fa fa-eye"></i>
+              <a href="{{ url_for('project.project_view', project_id=project.id) }}" target="_blank">
+                <i class="fa fa-eye"></i></a>
               <label for="tpl_{{ project.id }}">
                 <h5 class="card-title">
                   <input type="radio" name="template" value="{{ project.id }}" id="tpl_{{ project.id }}">
@@ -35,12 +35,12 @@
                 <p class="card-text">{{ project.summary }}</p>
               </label>
             </div>
-          </a>
+          </div>
         {% endfor %}
         </div>
         <p class="category-tip mb-2 mt-1 clearfix" style="margin-left:-1em">
           <span class="user-score" style="background:white">&#x1F4A1;</span>&nbsp;
-          Select one of these templates to pre-fill your content.
+          Select a template to pre-fill your content, or load a Readme from elsewhere to get started.
         </p>
       </div><!-- /profile-projects -->
     {% endif %}
