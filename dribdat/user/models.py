@@ -2,6 +2,8 @@
 """User models."""
 
 from sqlalchemy import Table, or_
+from sqlalchemy_continuum import make_versioned
+from sqlalchemy_continuum.plugins import FlaskPlugin
 
 from dribdat.user.constants import (
     MAX_EXCERPT_LENGTH,
@@ -38,6 +40,7 @@ from future.standard_library import install_aliases
 install_aliases()
 
 
+# Set up user roles mapping
 users_roles = Table(
     'users_roles', db.metadata,
     Column('user_id', db.Integer, db.ForeignKey(
@@ -45,6 +48,10 @@ users_roles = Table(
     Column('role_id', db.Integer, db.ForeignKey(
         'roles.id'), primary_key=True)
 )
+
+
+# Init SQLAlchemy Continuum
+make_versioned(plugins=[FlaskPlugin()])
 
 
 class Role(PkModel):
@@ -413,6 +420,7 @@ class Event(PkModel):
 
 class Project(PkModel):
     """ You know, for kids! """
+    __versioned__ = {}
     __tablename__ = 'projects'
     name = Column(db.String(80), unique=True, nullable=False)
     summary = Column(db.String(140), nullable=True)
@@ -474,6 +482,15 @@ class Project(PkModel):
                 members.append(a.user)
         return members
 
+    def get_missing_roles(self):
+        get_roles = Role.query.order_by('name')
+        rollcall = []
+        for p in self.get_team():
+            for r in p.roles:
+                if r not in rollcall:
+                    rollcall.append(r)
+        return [r for r in get_roles if r not in rollcall and r.name]
+
     @property
     def team(self):
         """ Array of project team """
@@ -492,13 +509,21 @@ class Project(PkModel):
             if a_parsed is None:
                 continue
             (author, title, text, icon) = a_parsed
-            # Check if last signal very similar
             if prev is not None:
-                if (
-                    prev['title'] == title and prev['text'] == text
-                    # and (prev['date']-a.timestamp).total_seconds() < 120
-                ):
+                # Skip repeat signals
+                if prev['title'] == title and prev['text'] == text:
+                    # if prev['date']-a.timestamp).total_seconds() < 120:
                     continue
+                # Show changes in progress
+                if prev['progress'] != a.project_progress:
+                    projectStage = getStageByProgress(a.project_progress)
+                    if projectStage is not None:
+                        dribs.append({
+                            'title': projectStage['phase'],
+                            'date': a.timestamp,
+                            'icon': 'arrow-up',
+                            'name': 'progress',
+                        })
             prev = {
                 'icon': icon,
                 'title': title,
@@ -507,6 +532,7 @@ class Project(PkModel):
                 'name': a.name,
                 'date': a.timestamp,
                 'ref_url': a.ref_url,
+                'progress': a.project_progress,
                 'id': a.id,
             }
             dribs.append(prev)
@@ -832,6 +858,7 @@ class Activity(PkModel):
     project_id = reference_col('projects', nullable=True)
     project = relationship('Project', backref='activities')
     project_progress = Column(db.Integer, nullable=True)
+    project_version = Column(db.Integer, nullable=True)
     project_score = Column(db.Integer, nullable=True)
 
     @property

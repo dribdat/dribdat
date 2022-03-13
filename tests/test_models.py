@@ -9,8 +9,9 @@ import pytz
 from dribdat.user.models import Role, User, Event
 from dribdat.utils import timesince
 from dribdat.settings import Config
+from dribdat.aggregation import ProjectActivity
 
-from .factories import UserFactory
+from .factories import UserFactory, ProjectFactory
 
 
 @pytest.mark.usefixtures('db')
@@ -117,6 +118,43 @@ class TestEvent:
         assert timesince(
             event.countdown, until=True) == "%d hours to go" % timediff_hours
 
+
+@pytest.mark.usefixtures('db')
+class TestProject:
+    """Project tests."""
+
+    def test_project_factory(self, db):
+        """Test factory."""
+        project = ProjectFactory()
+        db.session.add(project)
+        db.session.commit()
+        assert bool(project.name)
+        assert bool(project.summary)
+        assert bool(project.created_at)
+        assert project.is_hidden is False
+        TEST_NAME = u'Updated name'
+        assert project.versions.count() == 1
+        project.name = TEST_NAME
+        db.session.commit()
+        assert project.name == TEST_NAME
+        assert project.versions.count() == 2
+        project.versions[0].revert()
+        assert project.name != TEST_NAME
+        assert project.versions.count() == 3
+
+    def test_project_roles(self, db):
+        """Test role factory."""
+        project = ProjectFactory()
+        project.save()
+        role1 = Role(name='a role')
+        role1.save()
+        role2 = Role(name='another role')
+        role2.save()
+        user = UserFactory()
+        user.roles.append(role1)
+        user.save()
+        ProjectActivity(project, 'star', user)
+        assert role2 in project.get_missing_roles()
 
 # @pytest.mark.usefixtures('db')
 # class TestResource:

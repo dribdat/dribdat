@@ -62,8 +62,8 @@ class EventForm(FlaskForm):
     lock_resources = BooleanField(
         u'Resource area', default=False,
         description=u'💡 Used as toolbox, ignoring start and finish.')
-    starts_date = DateField(u'Starts date', default=datetime.now())
-    starts_time = TimeField(u'Starts time', default=time(9, 0, 0))
+    starts_date = DateField(u'Starting date', default=datetime.now())
+    starts_time = TimeField(u'Starting time', default=time(9, 0, 0))
     ends_date = DateField(u'Finish date', default=datetime.now())
     ends_time = TimeField(u'Finish time', default=time(16, 0, 0))
     summary = StringField(

@@ -49,20 +49,21 @@
       </div>
       <p class="category-tip mb-2 mt-1 clearfix" style="margin-left:-1em">
         <span class="user-score" style="background:white">&#x1F4A1;</span>&nbsp;
-        Tips for you and your team.
-        Get to the next stage with a Post on your progress.
+        Resources for you and your team. Advance to the next stage with a Post.
       </p>
       <div class="stage-conditions clearfix mb-2">
         {% for item in stage.conditions.validate %}
-          <div class="mr-2 float-left">
           {% if item.valid %}
-            <i class="fa fa-thumbs-up" style="color:green"></i>
-            {{ item.help }}
+            <div class="mr-2 float-left stage-ok">
+              <i class="fa fa-thumbs-up"></i>
+              {{ item.help }}
+            </div>
           {% else %}
-            <i class="fa fa-paw" style="color:orange"></i>
-            {{ item.help }}
+            <div class="mr-2 float-left stage-no">
+              <i class="fa fa-paw"></i>
+              {{ item.help }}
+            </div>
           {% endif %}
-          </div>
         {% endfor %}
       </div>
     </div><!-- /profile-projects -->
@@ -71,7 +72,7 @@
 
 <div class="btn-group project-edit-buttons" role="group" aria-label="Project tools">
 
-  {% if allow_post and not project.event.lock_editing %}
+  {% if allow_post and not lock_editing %}
      <a id="project-post" href="{{ url_for('project.project_post', project_id=project.id) }}" title="Post to this project" class="btn btn-lg btn-success">
        <i class="fa fa-paper-plane" aria-hidden="true"></i>
        Post an update
@@ -88,7 +89,7 @@
     </a>
   {% endif %}
 
-  {% if not project.event.lock_editing %}
+  {% if not lock_editing %}
     {% if project_starred %}
       <a href="{{ url_for('project.project_unstar_me', project_id=project.id) }}" class="project-star btn btn-lg btn-secondary"
         title="Click to stop being a member of the project"
@@ -128,16 +129,18 @@
 
 <div class="jumbotron project-page phase-{{ project.phase }}" {% if project.logo_color %} style="border-color:{{project.logo_color}}"{% endif %}>
 
-  <div class="project-score">
-    <a href="{{ url_for('public.event_stages', event_id=project.event.id) }}" style="text-decoration:none">
-      <span class="label label-info">{{ project.phase }}</span>
-      <div class="progress" title="A score based on profile completeness and voting results">
-        <div class="progress-bar" role="progressbar" aria-valuenow="{{project.score}}" aria-valuemin="0" aria-valuemax="70" style="width:{{project.score}}%">
-          {{project.score}}
+  {% if project.score and project.score > 1 %}
+    <div class="project-score">
+      <a href="{{ url_for('public.event_stages', event_id=project.event.id) }}" style="text-decoration:none">
+        <span class="label label-info">{{ project.phase }}</span>
+        <div class="progress" title="A score based on profile completeness and voting results">
+          <div class="progress-bar" role="progressbar" aria-valuenow="{{project.score}}" aria-valuemin="0" aria-valuemax="70" style="width:{{project.score}}%">
+            {{project.score}}
+          </div>
         </div>
-      </div>
-    </a>
-  </div>
+      </a>
+    </div>
+  {% endif %}
 
   {% if project.category %}
     <div class="project-category">
@@ -161,15 +164,15 @@
   {% endif %}
   </div><!-- /.project-name -->
 
-  <div class="badges">
-    {% for s in project_dribs %}
-      {% if s.icon and s.name == 'boost' %}
-      <a class="boost" href="#" onclick="$('#dribs-tab-md').click(); return false" title="{{ s.title }}">
-        <i class="fa fa-{{ s.icon }}" aria-hidden="true"></i>
-      </a>
-      {% endif %}
-    {% endfor %}
-  </div>
+  {% if project_badge %}
+    <div class="badges">
+      {% for s in project_badge %}
+        <a class="boost" href="#" onclick="$('#dribs-tab-md').click(); return false" title="{{ s.title }}">
+          <i class="fa fa-{{ s.icon }}" aria-hidden="true"></i>
+        </a>
+      {% endfor %}
+    </div>
+  {% endif %}
 
   {% if not project.event.lock_resources and not project.is_challenge %}
   <ul class="nav nav-pills nav-fill md-tabs" id="projectTabs" role="tablist">
@@ -196,7 +199,7 @@
 
 <div class="tab-pane fade show active" id="project-md" role="tabpanel" aria-labelledby="project-tab-md">
 
-  {% if current_user and current_user.active and not project.webpage_url and not project.longtext and not project.event.lock_editing %}
+  {% if current_user and current_user.active and not project.webpage_url and not project.longtext and not lock_editing %}
   <div class="alert alert-success" role="alert">
     <a class="close" title="Close" href="#" data-dismiss="alert">&times;</a>
     <!-- Helpful comment for new projects -->
@@ -261,8 +264,12 @@
           {% endif %}
 
           {% if s.id and current_user.is_admin %}
-            <a class="close" title="Delete post" href="{{ url_for('project.post_delete', project_id=project.id, activity_id=s.id) }}"
+            <a class="close delete" title="Delete post" href="{{ url_for('project.post_delete', project_id=project.id, activity_id=s.id) }}"
               onclick="if(!window.confirm('Delete this post?')) return false">&times;</a>
+            {% if s.icon == 'paperclip' %}
+              <a class="close revert" title="Revert post" href="{{ url_for('project.post_revert', project_id=project.id, activity_id=s.id) }}"
+                onclick="if(!window.confirm('Revert to this version?')) return false">&#9100;</a>
+            {% endif %}
           {% endif %}
 
           {% if s.text %}
@@ -307,10 +314,19 @@
       {% for user in project_team %}
         {{ misc.render_user_profile(user) }}
         {% if current_user.is_admin %}
-          <a href="{{ url_for('project.project_unstar', project_id=project.id, user_id=user.id) }}"
-            title="Kick this user from team" onclick="if(!window.confirm('Kick {{ user.username }}?')) return false"
+          <a href="{{ url_for('project.project_unstar', project_id=project.id, user_id=user.id) }}" class="kick-user"
+            title="Remove this user from team" onclick="if(!window.confirm('Are you sure you wish to remove {{ user.username }} ?')) return false"
             >&times;</a>
         {% endif %}
+      {% endfor %}
+    </div>
+  {% endif %}
+  {% if missing_roles %}
+    <div class="widget widget-team missing-roles" title="This role is not yet filled. Try to find another team member!">
+      {% for role in missing_roles %}
+        <div class="role" data-id="{{ role.id }}">
+          <span>{{ role.name }}</span>
+        </div>
       {% endfor %}
     </div>
   {% endif %}
@@ -364,11 +380,11 @@
 
 <div role="group" aria-label="Project controls" class="btn-group project-controls">
 
-  {% if not project.event.lock_editing and not project_starred %}
+  {% if not lock_editing and not project_starred %}
     <a href="{{ url_for('project.project_star', project_id=project.id) }}" class="btn btn-lg btn-success project-star"
       title="Join this project">
        <i class="fa fa-thumbs-up"></i>
-       Join the team
+       Join
     </a>
   {% endif %}
 
@@ -386,7 +402,7 @@
        title="Edit project details" >
       <i class="fa fa-pencil" aria-hidden="true"></i>
       Details</a>
-    {% if project.is_autoupdate %}
+    {% if project.is_autoupdateable %}
       <a href="{{ url_for('project.project_autoupdate', project_id=project.id) }}" title="Sync external data" class="btn btn-lg btn-warning">
         <i class="fa fa-refresh" aria-hidden="true"></i>
         Sync</a>
@@ -400,7 +416,7 @@
 
   <a class="btn btn-lg btn-success" data-toggle="modal" data-target="#addUser"
      title="Add a user to this project (admin only)">
-    <i class="fa fa-plus" aria-hidden="true"></i>
+    <i class="fa fa-child" aria-hidden="true"></i>
     Add</a>
 
   <!-- Add arbitrary user to the team -->

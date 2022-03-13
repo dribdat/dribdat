@@ -34,6 +34,8 @@
     // On keypress
     $inputfield.on('keyup', function(e) {
       checkAutotext($inputfield.val(), $indicator);
+      // Clear template selection
+      $('.template-select label input').prop('checked', false);
     });
 
     // Update button
@@ -92,6 +94,12 @@
   // Open up the README on click
   $('.project-autotext').click(function() {
     $(this).addClass('active');
+  });
+
+  // Push template selection to form
+  $('.template-select label input').change(function() {
+    $('input#template').val($(this).val());
+    $('#autotext_url').val('');
   });
 
   // Open up the LOG if navigated
@@ -286,17 +294,17 @@
     }, 500));
   checkSearchQuery();
 
-  // Post editor smart search
-  $('.projectpost .form-project-post #note')
-    .keyup(delay(function(e) {
-      if (e.keyCode == 13) { e.preventDefault(); return false; }
-      var lastWord = $(this).val();
-      if (lastWord.length < 4) return false;
-      lastWord = lastWord.trim().split(' ');
-      if (lastWord.length < 1) return false;
-      lastWord = lastWord[lastWord.length-1];
-      runSearch(lastWord);
-    }, 500));
+  // Post editor smart search (REMOVED)
+  // $('.projectpost .form-project-post #note')
+  //   .keyup(delay(function(e) {
+  //     if (e.keyCode == 13) { e.preventDefault(); return false; }
+  //     var lastWord = $(this).val();
+  //     if (lastWord.length < 4) return false;
+  //     lastWord = lastWord.trim().split(' ');
+  //     if (lastWord.length < 1) return false;
+  //     lastWord = lastWord[lastWord.length-1];
+  //     runSearch(lastWord);
+  //   }, 500));
 
   function runSearch(q) {
     if (q.length < 4 || q.trim() == lastSearch) return;
@@ -315,7 +323,8 @@
       if (projects.length > 0) {
         $sm.html(
           '<span class="user-score">' + (projects.length) + '</span> ' +
-          'projects match'
+          'projects match' +
+          (projects.length > 3 ? '&nbsp;&#9654;&#9654;' : '')
         );
       }
       // Create project cards
@@ -390,7 +399,7 @@
   });
 
   // Horizontal desktop dragging of project pages
-  $('.profile-projects').each(function() {
+  $('.profile-projects .row').each(function() {
     const ele = $(this)[0];
     // thanks to Nguyen Huu Phuoc
     ele.style.cursor = 'grab';

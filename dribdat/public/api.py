@@ -26,7 +26,8 @@ from ..apiutils import (
     gen_csv,
 )
 
-import tempfile, json
+import tempfile
+import json
 from os import path
 
 blueprint = Blueprint('api', __name__, url_prefix='/api')
@@ -286,7 +287,8 @@ def event_load_datapackage():
                 return 'Could not load package due to JSON error'
         if 'errors' in results:
             return 'Error: %s' % ','.join(results['errors'])
-        flash("Data Package uploaded", 'success')
+        event_names = ', '.join([r['name'] for r in results['events']])
+        flash("Events uploaded: %s" % event_names, 'success')
         return redirect(url_for("admin.events"))
     elif not url or 'datapackage.json' not in url:
         return jsonify(status='Error', errors=['Missing datapackage.json url'])

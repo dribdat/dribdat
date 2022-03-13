@@ -37,7 +37,7 @@ EOF""" % (url, url)
         project.autotext = 'some test readme content'
         project.save()
 
-        print(project.data)
+        # print(project.data)
 
         assert 'example' in project.data['name']
         assert project.data['excerpt'] is ''

@@ -93,7 +93,7 @@ class ProjectNew(FlaskForm):
     contact_url = StringField(
         u'Contact', [length(max=2048)],
         description="On which channel, or in which room, to find you.")
-    # longtext = TextAreaField(u'Describe your idea')
+    template = HiddenField('template')
     submit = SubmitField(u'Save')
 
 
@@ -108,8 +108,8 @@ class ProjectForm(FlaskForm):
         description="The headline of your project, in up to 140 characters.")
     longtext = TextAreaField(
         u'Pitch',
-        description="To format, use Markdown or HTML. Links on their "
-        + "own line may get rich previews.")
+        description="To format, use Markdown or HTML. Links to Speaker Deck"
+        + " and many other sites (oembed.com) get a live preview.")
     webpage_url = URLField(
         u'Project link', [length(max=2048)],
         description="URL to a live demo, presentation, or a link to get "
@@ -183,8 +183,8 @@ class NewEventForm(FlaskForm):
     name = StringField(
         u'Title',
         [length(max=80), UniqueValidator(Event, 'name'), DataRequired()])
-    starts_date = DateField(u'Starts date', default=datetime.now())
-    starts_time = TimeField(u'Starts time', default=time(9, 0, 0))
+    starts_date = DateField(u'Starting date', default=datetime.now())
+    starts_time = TimeField(u'Starting time', default=time(9, 0, 0))
     ends_date = DateField(u'Finish date', default=datetime.now())
     ends_time = TimeField(u'Finish time', default=time(16, 0, 0))
     summary = StringField(

@@ -21,9 +21,9 @@
       &#128640; Ready for the next level?
     </h4>
     <div class="form-project-confirm alert alert-success mb-3" role="alert">
-      <label><input type="checkbox">&nbsp;
+      <label><input type="checkbox"><br>
       {% for item in stage.conditions.agree %}
-        <span>{{ item }}</span><br>
+        <span>&mdash; {{ item }}</span><br>
       {% endfor %}
       </label>
     </div>
@@ -37,10 +37,11 @@
     {% endif %}
   </div>
 
+  <!-- Inline search results (REMOVED)
   <div class="profile-projects container-fluid mt-5">
     <div class="row flex-row flex-nowrap ml-0 mt-1 mb-1 pt-2 pb-2" id="search-results"></div>
     <div class="text-center" id="search-matches"><i>Waiting to make a suggestion ...</i></div>
-  </div>
+  </div> -->
 
   {% if stage %}
     {% if all_valid and stage['name'] == 'LIVE' %}

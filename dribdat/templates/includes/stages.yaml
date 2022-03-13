@@ -17,7 +17,7 @@ stages:
         -
           field: excerpt
           min: 123
-          help: Please write at least one paragraph (123 chars) in the description.
+          help: Write at least one paragraph (123 chars) in the description, upload some sketches.
       agree:
         - Questions are formulated in a way that hint at what data will be needed, helping to scope the project.
         - Links to readily available data sources and other resources have been provided.
@@ -33,7 +33,7 @@ stages:
           field: team
           min: 1
           max: 5
-          help: Between 1 and 5 people should join your project or data expedition.
+          help: Between 1 and 5 people should Join your project or expedition.
       agree:
         - Our team members have agreed to work together for the duration of the event.
         - We are collecting data, and sharing it in an accessible collaboration space.

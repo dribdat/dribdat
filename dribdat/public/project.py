@@ -219,6 +219,24 @@ def post_delete(project_id, activity_id):
     return project_view(project.id)
 
 
+@blueprint.route('/<int:project_id>/undo/<int:activity_id>', methods=['GET'])
+@login_required
+def post_revert(project_id, activity_id):
+    project = Project.query.filter_by(id=project_id).first_or_404()
+    activity = Activity.query.filter_by(id=activity_id).first_or_404()
+    if not activity.project_version:
+        flash('Could not revert: data not available.', 'warning')
+    elif activity.project_version == 0:
+        flash('Could not revert: this is the earliest version.', 'warning')
+    else:
+        revert_to = activity.project_version
+        project.versions[revert_to - 1].revert()
+        flash('Project data reverted to version %d.' % revert_to, 'success')
+        return project_view(project.id)
+    return redirect(url_for(
+        'project.project_view_posted', project_id=project.id))
+
+
 def getSuggestionsForStage(progress):
     """ Get all projects which are published in a resource-type event """
     project_list = []
@@ -241,11 +259,13 @@ def project_action(project_id, of_type=None, as_view=True, then_redirect=False,
         return True
     if then_redirect:
         return redirect(url_for('project.project_view', project_id=project.id))
+    # The next line seems rather inefficient
     starred = IsProjectStarred(project, for_user)
-    allow_edit = starred or (
-        not current_user.is_anonymous and current_user.is_admin)
-    allow_post = starred  # and not event.lock_resources
-    allow_edit = allow_edit and not event.lock_editing
+    # Figure out permissions (hackybehack!)
+    allow_edit = not current_user.is_anonymous and current_user.is_admin
+    lock_editing = event.lock_editing
+    allow_post = starred
+    allow_edit = (starred or allow_edit) and not lock_editing
     # Obtain list of team members (performance!)
     project_team = project.get_team()
     if allow_post:
@@ -255,10 +275,13 @@ def project_action(project_id, of_type=None, as_view=True, then_redirect=False,
         suggestions = []
         if not event.lock_resources:
             suggestions = getSuggestionsForStage(project.progress)
+        # Suggest missing team roles
+        missing_roles = project.get_missing_roles()
     else:
-        suggestions, stage, all_valid = None, None, None
+        suggestions, stage, all_valid, missing_roles = None, None, None, None
     # latest_activity = project.latest_activity() # obsolete
     project_dribs = project.all_dribs()
+    project_badge = [s for s in project_dribs if s['name'] == 'boost']
     # Select available project image
     if project.image_url:
         project_image_url = project.image_url
@@ -270,8 +293,10 @@ def project_action(project_id, of_type=None, as_view=True, then_redirect=False,
     return render_template(
         'public/project.html', current_event=event, project=project,
         project_starred=starred, project_team=project_team,
-        project_dribs=project_dribs, project_image_url=project_image_url,
+        project_badge=project_badge, project_dribs=project_dribs,
+        project_image_url=project_image_url,
         allow_edit=allow_edit, allow_post=allow_post,
+        lock_editing=lock_editing, missing_roles=missing_roles,
         stage=stage, all_valid=all_valid,
         suggestions=suggestions,
         active="projects"
@@ -338,40 +363,60 @@ def project_new(event_id):
     if event.lock_starting:
         flash('Starting a new project is disabled for this event.', 'error')
         return redirect(url_for('public.event', event_id=event.id))
-    if isUserActive(current_user):
-        project = Project()
-        project.user_id = current_user.id
-        form = ProjectNew(obj=project, next=request.args.get('next'))
-        form.category_id.choices = [(c.id, c.name)
-                                    for c in project.categories_all(event)]
-        if len(form.category_id.choices) > 0:
-            form.category_id.choices.insert(0, (-1, ''))
+    if not isUserActive(current_user):
+        flash('Your user account is not permitted to start projects.', 'error')
+        return redirect(url_for('public.event', event_id=event.id))
+    # Collect resource tips
+    suggestions = []
+    if not event.lock_resources:
+        suggestions = getSuggestionsForStage(0)
+    # Project form
+    project = Project()
+    project.user_id = current_user.id
+    form = ProjectNew(obj=project, next=request.args.get('next'))
+    form.category_id.choices = [(c.id, c.name)
+                                for c in project.categories_all(event)]
+    if len(form.category_id.choices) > 0:
+        form.category_id.choices.insert(0, (-1, ''))
+    else:
+        del form.category_id
+    if form.validate_on_submit():
+        tpl_id = None
+        if form.template.data:
+            tpl_id = form.template.data
+        del form.id
+        del form.template
+        form.populate_obj(project)
+        if tpl_id:
+            template = Project.query.get(tpl_id)
+            project.longtext = template.longtext
+            project.image_url = template.image_url
+            project.source_url = template.source_url
+            project.webpage_url = template.webpage_url
+            project.download_url = template.download_url
+        # Check event state
+        project.event = event
+        if event.has_started:
+            project.progress = 5  # Start as team
         else:
-            del form.category_id
-        if form.validate_on_submit():
-            del form.id
-            form.populate_obj(project)
-            project.event = event
-            if event.has_started:
-                project.progress = 5  # Start as team
-            else:
-                project.progress = -1  # Start as challenge
-            project.update()
-            db.session.add(project)
-            db.session.commit()
-            flash('Invite your team to Join this page!', 'success')
-            project_action(project.id, 'create', False)
-            cache.clear()
-            if event.has_started:
-                project_action(project.id, 'star', False)  # Join team
-            if len(project.autotext_url) > 1:
-                return project_autoupdate(project.id)
-            else:
-                purl = url_for('project.project_view', project_id=project.id)
-                return redirect(purl)
+            project.progress = -1  # Start as challenge
+        # Update the project
+        project.update()
+        db.session.add(project)
+        db.session.commit()
+        flash('Now invite your team to Join this page!', 'success')
+        project_action(project.id, 'create', False)
+        cache.clear()
+        if event.has_started:
+            project_action(project.id, 'star', False)  # Join team
+        if len(project.autotext_url) > 1:
+            return project_autoupdate(project.id)
+        else:
+            purl = url_for('project.project_view', project_id=project.id)
+            return redirect(purl)
     return render_template(
         'public/projectnew.html',
-        current_event=event, form=form,
+        current_event=event, form=form, suggestions=suggestions,
         active="projects"
     )
 

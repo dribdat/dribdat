@@ -39,6 +39,7 @@ def resourceTypeList(verbose=False):
     pl = [(g, RESOURCE_TYPES[g][vb]) for g in RESOURCE_TYPES]
     return sorted(pl, key=lambda x: x[0])
 
+
 # TODO: clean up
 def getResourceType(resource, verbose=False):
     vb = 1 if verbose else 0
@@ -139,8 +140,8 @@ def getActivityByType(a, only_active=True):
         author = "?"
     # Based on action, populate activity fields
     if a.action == 'sync':
-        text = "Readme connected"
-        icon = 'taxi'
+        text = "Repository updated"
+        icon = 'code'
     elif a.action == 'post' and a.name == 'review':
         text = a.content
         icon = 'comment'
@@ -157,11 +158,13 @@ def getActivityByType(a, only_active=True):
         author = None
         icon = 'random'
     elif a.name == 'update':
-        text = "Worked on the pitch"
+        text = "Edited content"
+        if a.project_version:
+            text += " version %d" % a.project_version
         icon = 'paperclip'
     elif a.name == 'create':
-        text = "Challenge started"
-        icon = 'rocket'
+        text = "Challenge posted"
+        icon = 'flag-checkered'
     elif a.name == 'boost':
         title = a.action
         text = a.content

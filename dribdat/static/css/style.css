@@ -71,6 +71,11 @@ form input[type="checkbox"] {
   margin-top: -.36em;
   z-index: -1;
 }
+.template-select .card-body .fa {
+  font-size: 1.4em;
+  float: right;
+  opacity: 0.5;
+}
 
 .upload-note {
   font-size: 90%;
@@ -80,7 +85,7 @@ form input[type="checkbox"] {
 .admin .form-group .control-label {
   font-size: 125%; font-weight: bold;
 }
-.form-group .radio-inline {
+.admin .form-group .radio-inline {
   margin-right: 1em;
 }
 .admin .form-group .checkbox .help-inline {
@@ -292,7 +297,6 @@ nav .nav-login {
     position: initial;
     left: initial;
     margin: 0px;
-    width: 0px;
   }
 }
 @media (min-width: 2000px) {
@@ -348,17 +352,23 @@ nav .nav-login {
   width: 760px;
   margin-top: 30px;
 }
+.hexagon.blank { display: none; }
 @media (max-width: 900px) {
   .event-home .honeycomb {
     margin-top: 0px;
     width: 600px;
   }
+  .hexagon.blank { display: inline-block; }
 }
 @media (max-width: 560px) {
   .event-home .honeycomb {
     margin-top: 0px;
-    text-align: center;
     width: 300px;
+  }
+}
+@media (max-width: 480px) {
+  .event-home .honeycomb {
+    text-align: center;
   }
 }
 
@@ -391,7 +401,9 @@ nav .nav-login {
   box-shadow: 0 4px 9px rgb(0 0 0 / 5%), 0 9px 15px rgb(0 0 0 / 17%);
   transform: scale(1.2);
 }
-
+.hexagon.blank {
+  visibility: hidden;
+}
 .hexagon .team-count {
   top: -2em;
   right: -0.8em;
@@ -687,8 +699,9 @@ nav .nav-login {
 
 /* Hides the triangle pointers in the timeline */
 .project-page .timeline-card::after { display: none; }
-.project-page .timeline-start .timeline-card::after { display: initial; }
-.project-page .timeline-finish .timeline-card::after { display: initial; }
+.project-page .timeline-start .timeline-card::after,
+.project-page .timeline-finish .timeline-card::after,
+.project-page .timeline-progress .timeline-card::after { display: initial; }
 .project-page .timeline-card .close { margin: 0.4em; }
 /* Other project timeline customizations */
 .project-page .timeline-review .timeline-content { background: #f2fef2; border-top: none; }
@@ -697,6 +710,8 @@ nav .nav-login {
 .project-page .timeline-start .timeline-content { background: #aaa; }
 .project-page .timeline-finish .date,
 .project-page .timeline-start .date { color: white; }
+.project-page .timeline-progress .timeline-img-header { background: lightblue; border: 5px solid #aaa; }
+.project-page .timeline-progress .timeline-content .date { display: none; }
 .project-page .timeline-item { margin-bottom: 20px; }
 .timeline-boost .timeline-img-header {
   background: teal;
@@ -1029,6 +1044,15 @@ pre { color: #333; background: white; }
 .project-page .project-category a:hover {
   text-decoration: none;
 }
+.profile-projects .stage-conditions .stage-no {
+  font-weight: bold;
+}
+.profile-projects .stage-conditions .stage-ok .fa {
+  color: green;
+}
+.profile-projects .stage-conditions .stage-no .fa {
+  color: orange;
+}
 .project-edit-buttons {
   left: -1.5em;
   float: right;
@@ -1056,7 +1080,7 @@ pre { color: #333; background: white; }
   margin-top: 15px;
   padding-top: 10px;
 }
-.category-tip { opacity: 0.6; }
+.category-tip { opacity: 0.8; }
 
 .event-participants.jumbotron {
   padding: 2rem;
@@ -1090,6 +1114,9 @@ pre { color: #333; background: white; }
   border: 2px dotted lightblue;
   box-shadow: 5px 5px 0px lightblue;
 }
+.alert.jumbotron {
+  padding: 1rem;
+}
 
 /* tip section */
 
@@ -1111,7 +1138,7 @@ pre { color: #333; background: white; }
 }
 .team-gravatar {
   width: 200px;
-  height: 60px;
+  height: 5em;
   display: inline-block;
   background: rgba(255,255,255,0.5);
   border: 2px solid #eee;
@@ -1122,8 +1149,31 @@ pre { color: #333; background: white; }
 }
 .team-gravatar:hover {
   text-decoration: none;
-  border: 2px solid blue;
+  border: 2px solid #ccc;
+  box-shadow: 2px 2px 2px blue;
 }
+.widget-team .kick-user {
+  position: absolute;
+  font-size: 150%;
+  margin-left: -2.2em;
+}
+.widget-team .kick-user:hover {
+  font-weight: bold;
+  text-decoration: none;
+}
+.missing-roles .role {
+  width: 200px;
+  height: auto;
+  display: inline-block;
+  background: rgba(0,0,0,0.02);
+  border: 2px dotted rgba(0,0,100,0.2);
+  border-radius: 10px;
+  padding: 1em;
+  margin-right: 5px;
+  overflow: hidden;
+  text-align: left;
+}
+
 .profile-header {
   margin-top: 1em;
 }
@@ -1171,25 +1221,40 @@ pre { color: #333; background: white; }
 }
 .profile-projects {
   padding: 1em 2em;
-  overflow-x: auto;
   width: 100%;
   background: #f0f0f0;
   border-radius: 20px;
 }
 .profile-projects.honeycomb {
-  padding: 1.5em 4em;
-  height: 20em;
-  overflow-x: hidden;
-  overflow-y: auto;
+  padding: 0px;
+  background: transparent;
 }
-.profile-projects::-webkit-scrollbar {
+.profile-projects.honeycomb .row {
+  padding: 10px 40px;
+  overflow: hidden;
+  background: none;
+}
+.profile-projects.honeycomb .hexagon {
+  margin-bottom: 80px;
+}
+.profile-projects .row {
+  overflow-x: auto;
+  background-image: repeating-linear-gradient(125deg, #e5e5e5, #e5e5e5 5px, #eee 5px, transparent 30px);
+}
+.profile-projects .row::-webkit-scrollbar {
   display: none;
+}
+.profile-projects .row .card.challenge:first-child,
+.profile-projects .row .card.project:first-child {
+  margin-left: 20px;
 }
 .profile-projects .row .card.challenge,
 .profile-projects .row .card.project {
   height: 8em;
   width: 20em;
   margin-right: 5px;
+  margin-top: 20px;
+  margin-bottom: 20px;
   overflow: hidden;
   display: inline-block;
   padding: 0px;
@@ -1243,18 +1308,23 @@ pre { color: #333; background: white; }
 }
 .team-roles em {
     display: block;
-    font-size: 70%;
+    font-size: 90%;
     font-style: normal;
     color: #eee;
-    background: rgba(0,0,0,0.2);
+    background: rgba(0,0,0,0.5);
     padding: 1px 3px;
-    border-radius: 4px;
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
     margin-bottom: 1px;
 }
 @media (max-width: 760px) {
   .profile-projects .project-score,
   .profile-projects .card .project-image
   { display: none; }
+  .profile-projects .card {
+    background: none !important;
+    padding-left: 0px !important;
+  }
 }
 
 /* Embed view of the projects */
