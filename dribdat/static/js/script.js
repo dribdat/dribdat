@@ -294,17 +294,17 @@
     }, 500));
   checkSearchQuery();
 
-  // Post editor smart search
-  $('.projectpost .form-project-post #note')
-    .keyup(delay(function(e) {
-      if (e.keyCode == 13) { e.preventDefault(); return false; }
-      var lastWord = $(this).val();
-      if (lastWord.length < 4) return false;
-      lastWord = lastWord.trim().split(' ');
-      if (lastWord.length < 1) return false;
-      lastWord = lastWord[lastWord.length-1];
-      runSearch(lastWord);
-    }, 500));
+  // Post editor smart search (REMOVED)
+  // $('.projectpost .form-project-post #note')
+  //   .keyup(delay(function(e) {
+  //     if (e.keyCode == 13) { e.preventDefault(); return false; }
+  //     var lastWord = $(this).val();
+  //     if (lastWord.length < 4) return false;
+  //     lastWord = lastWord.trim().split(' ');
+  //     if (lastWord.length < 1) return false;
+  //     lastWord = lastWord[lastWord.length-1];
+  //     runSearch(lastWord);
+  //   }, 500));
 
   function runSearch(q) {
     if (q.length < 4 || q.trim() == lastSearch) return;
