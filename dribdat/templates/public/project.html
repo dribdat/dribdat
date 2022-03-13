@@ -315,7 +315,7 @@
         {{ misc.render_user_profile(user) }}
         {% if current_user.is_admin %}
           <a href="{{ url_for('project.project_unstar', project_id=project.id, user_id=user.id) }}" class="kick-user"
-            title="Kick this user from team" onclick="if(!window.confirm('Kick {{ user.username }}?')) return false"
+            title="Remove this user from team" onclick="if(!window.confirm('Are you sure you wish to remove {{ user.username }} ?')) return false"
             >&times;</a>
         {% endif %}
       {% endfor %}
@@ -416,7 +416,7 @@
 
   <a class="btn btn-lg btn-success" data-toggle="modal" data-target="#addUser"
      title="Add a user to this project (admin only)">
-    <i class="fa fa-plus" aria-hidden="true"></i>
+    <i class="fa fa-child" aria-hidden="true"></i>
     Add</a>
 
   <!-- Add arbitrary user to the team -->

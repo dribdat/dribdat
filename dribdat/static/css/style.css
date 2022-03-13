@@ -1155,6 +1155,7 @@ pre { color: #333; background: white; }
 .widget-team .kick-user {
   position: absolute;
   font-size: 150%;
+  margin-left: -2.2em;
 }
 .widget-team .kick-user:hover {
   font-weight: bold;
