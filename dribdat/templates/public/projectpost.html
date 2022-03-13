@@ -21,9 +21,9 @@
       &#128640; Ready for the next level?
     </h4>
     <div class="form-project-confirm alert alert-success mb-3" role="alert">
-      <label><input type="checkbox">&nbsp;
+      <label><input type="checkbox"><br>
       {% for item in stage.conditions.agree %}
-        <span>{{ item }}</span><br>
+        <span>&mdash; {{ item }}</span><br>
       {% endfor %}
       </label>
     </div>

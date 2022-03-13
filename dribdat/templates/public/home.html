@@ -146,7 +146,10 @@
         {% endif %}
         {% if config.DRIBDAT_ALLOW_EVENTS %}
           <div class="text-center">
-            <a href="{{ url_for('public.event_start') }}" class="btn btn-lg btn-success">Start another Event</a>
+            <a href="{{ url_for('public.event_start') }}" class="btn btn-lg btn-success">
+              <i class="fa fa-calendar mr-2" aria-hidden="true"></i>
+              Start another Event
+            </a>
           </div>
         {% endif %}
       </div>

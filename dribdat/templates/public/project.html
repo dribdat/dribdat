@@ -49,20 +49,21 @@
       </div>
       <p class="category-tip mb-2 mt-1 clearfix" style="margin-left:-1em">
         <span class="user-score" style="background:white">&#x1F4A1;</span>&nbsp;
-        Tips for you and your team.
-        Get to the next stage with a Post on your progress.
+        Resources for you and your team. Advance to the next stage with a Post.
       </p>
       <div class="stage-conditions clearfix mb-2">
         {% for item in stage.conditions.validate %}
-          <div class="mr-2 float-left">
           {% if item.valid %}
-            <i class="fa fa-thumbs-up" style="color:green"></i>
-            {{ item.help }}
+            <div class="mr-2 float-left stage-ok">
+              <i class="fa fa-thumbs-up"></i>
+              {{ item.help }}
+            </div>
           {% else %}
-            <i class="fa fa-paw" style="color:orange"></i>
-            {{ item.help }}
+            <div class="mr-2 float-left stage-no">
+              <i class="fa fa-paw"></i>
+              {{ item.help }}
+            </div>
           {% endif %}
-          </div>
         {% endfor %}
       </div>
     </div><!-- /profile-projects -->

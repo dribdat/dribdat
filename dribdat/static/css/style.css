@@ -1044,6 +1044,15 @@ pre { color: #333; background: white; }
 .project-page .project-category a:hover {
   text-decoration: none;
 }
+.profile-projects .stage-conditions .stage-no {
+  font-weight: bold;
+}
+.profile-projects .stage-conditions .stage-ok .fa {
+  color: green;
+}
+.profile-projects .stage-conditions .stage-no .fa {
+  color: orange;
+}
 .project-edit-buttons {
   left: -1.5em;
   float: right;
