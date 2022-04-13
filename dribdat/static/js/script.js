@@ -107,6 +107,24 @@
     $('#dribs-tab-md').click();
   }
 
+  // Ajaxify dribs pagination
+  $('#next-dribs').click(function(e) {
+    e.preventDefault(); e.stopPropagation();
+    var $self = $(this);
+    if ($self.hasClass('disabled')) return;
+    $self.addClass('disabled'); // while loading / finished
+    $.get($self.attr('href'), function(d) {
+      $('section.timeline').prepend($(d).find('section.timeline').html());
+      $next = $(d).find('#next-dribs');
+      if ($next.length) {
+        $self.removeClass('disabled').attr('href', $next.attr('href'));
+      } else {
+        $self.removeClass('btn-primary').html('BOF');
+      }
+    });
+  })
+
+
   // Check image size on render
   $('.project-home .project-image-container').each(function() {
     var $self = $(this);
