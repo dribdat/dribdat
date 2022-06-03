@@ -1,5 +1,27 @@
 (function($, window) {
 
+  // Initialize Barba.js
+  barba.init({
+    // schema: {
+    //   prefix: 'data-custom',
+    //   wrapper: 'wrap'
+    // }
+    // https://barba.js.org/docs/getstarted/basic-transition/#Animation
+    // transitions: [{
+    //   name: 'opacity-transition',
+    //   leave(data) {
+    //     return gsap.to(data.current.container, {
+    //       opacity: 0
+    //     });
+    //   },
+    //   enter(data) {
+    //     return gsap.from(data.next.container, {
+    //       opacity: 0
+    //     });
+    //   }
+    // }]
+  });
+
   // Initialize project data loader
   $('#autotext_url').each(function() {
 
