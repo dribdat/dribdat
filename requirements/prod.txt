@@ -16,9 +16,9 @@ cssselect==1.1.0
 dataclasses==0.6; python_version < "3.7"
 decorator==5.1.1
 deprecated==1.2.13
-dnspython==2.2.1
+dnspython==1.16.0
 email-validator==1.2.1
-eventlet==0.33.1
+eventlet==0.30.2
 flask==2.1.2
 flask-assets==2.0
 flask-bcrypt==1.0.1
