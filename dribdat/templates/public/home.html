@@ -45,7 +45,7 @@
         {% endif %}
         <a href="{{ url_for('public.event', event_id=current_event.id) }}" class="btn btn-lg btn-warning"><b>
           {% if current_event.has_finished %}
-          <i class="fa fa-trophy" aria-hidden="true"></i>
+          <i class="fa fa-cube" aria-hidden="true"></i>
           Results
           {% elif current_event.has_started %}
           <i class="fa fa-rocket" aria-hidden="true"></i>

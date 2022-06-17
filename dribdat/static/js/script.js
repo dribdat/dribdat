@@ -1,5 +1,27 @@
 (function($, window) {
 
+  // Initialize Barba.js
+  barba.init({
+    // schema: {
+    //   prefix: 'data-custom',
+    //   wrapper: 'wrap'
+    // }
+    // https://barba.js.org/docs/getstarted/basic-transition/#Animation
+    // transitions: [{
+    //   name: 'opacity-transition',
+    //   leave(data) {
+    //     return gsap.to(data.current.container, {
+    //       opacity: 0
+    //     });
+    //   },
+    //   enter(data) {
+    //     return gsap.from(data.next.container, {
+    //       opacity: 0
+    //     });
+    //   }
+    // }]
+  });
+
   // Initialize project data loader
   $('#autotext_url').each(function() {
 
@@ -106,6 +128,24 @@
   if (window.location.hash == '#log' || window.location.pathname.endsWith('/log')) {
     $('#dribs-tab-md').click();
   }
+
+  // Ajaxify dribs pagination
+  $('#next-dribs').click(function(e) {
+    e.preventDefault(); e.stopPropagation();
+    var $self = $(this);
+    if ($self.hasClass('disabled')) return;
+    $self.addClass('disabled'); // while loading / finished
+    $.get($self.attr('href'), function(d) {
+      $('section.timeline').prepend($(d).find('section.timeline').html());
+      $next = $(d).find('#next-dribs');
+      if ($next.length) {
+        $self.removeClass('disabled').attr('href', $next.attr('href'));
+      } else {
+        $self.removeClass('btn-primary').html('BOF');
+      }
+    });
+  })
+
 
   // Check image size on render
   $('.project-home .project-image-container').each(function() {

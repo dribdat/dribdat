@@ -372,7 +372,7 @@ ACCEPTED_TYPES = [
     'png', 'jpg', 'jpeg', 'gif',  # ʕ·͡ᴥ·ʔ
     'json', 'geojson',            # ( ͡° ͜ʖ ͡°)
     'csv', 'tsv',                 # ¯\_(ツ)_/¯
-    'xlsx', 'pdf',                # (ノಠ ∩ಠ)ノ彡
+    'ods', 'pdf',                # (ノಠ ∩ಠ)ノ彡
 ]
 
 

@@ -13,7 +13,7 @@ This code is originally based on [cookiecutter-flask](https://github.com/cookiec
 
 ## Getting started
 
-Install Python, Virtualenv and Pip, or [Poetry](https://python-poetry.org/) to start working with the code.
+Install Python (3.7+), Virtualenv and Pip, or [Poetry](https://python-poetry.org/) to start working with the code.
 
 You may need to install additional libraries (`libffi`) for the [misaka](http://misaka.61924.nl/) package, which depends on [CFFI](https://cffi.readthedocs.io/en/latest/installation.html#platform-specific-instructions), e.g. `sudo dnf install libffi-devel`
 

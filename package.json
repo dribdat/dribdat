@@ -7,6 +7,7 @@
   "license": "MIT",
   "private": false,
   "dependencies": {
+    "@barba/core": "^2.9.7",
     "@toast-ui/editor": "^3",
     "bootstrap": "^4",
     "bootswatch": "^4",

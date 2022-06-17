@@ -1,8 +1,8 @@
 [tool.poetry]
 name = "dribdat"
-version = "0.6"
+version = "0.7"
 description = "Open source platform for collaborative events"
-authors = ["Oleg Lavrovsky <oleg@datalets.ch>"]
+authors = ["Oleg Lavrovsky <dribdat@datalets.ch>"]
 
 [tool.poetry.dependencies]
 bleach = ">=3.1.4"
@@ -37,7 +37,7 @@ misaka = ">=2.1.0"
 psycopg2-binary = ">=2.7.3.1"
 pyquery = ">=1.2.17"
 pystache = ">=0.5.4"
-python = ">=3.6,<4"
+python = ">=3.7,<4"
 python-dotenv = ">=0.13.0"
 pytz = ">=2021.1"
 pyyaml = "^5.4.1"

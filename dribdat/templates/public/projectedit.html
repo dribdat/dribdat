@@ -137,15 +137,14 @@
         <div class="modal-body">
           <p class="upload-note">
             <b><a href="https://frictionlessdata.io/field-guide/" target="_blank">Data Packages</a></b>
-            in <sp>JSON</sp> format can be generated from a
+            in <sp>JSON</sp> or <sp>GeoJSON</sp> format can be generated from a
             <a href="https://github.com/schoolofdata-ch/datapackage-template" target="_blank">template</a> or with the
             <a href="https://create.frictionlessdata.io/" target="_blank">Creator tool</a>.
-            Additional formats permitted:
-            <sp>GeoJSON</sp>
+            Other open formats permitted:
             <sp>CSV</sp>
-            <sp>TSV</sp>
-            <sp>XLSX</sp>
             <sp>PDF</sp>
+            <sp>ODS</sp>
+            <sp>TSV</sp>
             up to {{ (config.MAX_CONTENT_LENGTH/(1024*1024))|round(1) }} MB in size.
           </p>
           <div class="input-group" style="margin-top:1em">
@@ -154,7 +153,7 @@
             </div>
             <div class="custom-file">
               <input type="file" class="custom-file-input" id="inputFile"
-                name="image" aria-describedby="inputFileLabel" accept="application/json"
+                name="image" aria-describedby="inputFileLabel" accept="application/json,.geojson,.csv,.tsv,.pdf,application/vnd.oasis.opendocument.spreadsheet"
                 data-maxsize="{{ config.MAX_CONTENT_LENGTH }}">
               <label class="custom-file-label" for="inputImageFile">Choose file</label>
             </div>

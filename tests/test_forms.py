@@ -29,7 +29,7 @@ class TestRegisterForm:
 
     def test_validate_success(self, db):
         """Register with success."""
-        form = RegisterForm(username='newusername', email='new@test.test',
+        form = RegisterForm(username='newusername', email='new@dribdat.cc',
                             password='example', confirm='example')
         assert form.validate() is True
 

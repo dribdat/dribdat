@@ -20,6 +20,7 @@ from wtforms import (
     SelectMultipleField,
 )
 
+
 class UserForm(FlaskForm):
     next = HiddenField()
     id = HiddenField('id')
@@ -32,6 +33,7 @@ class UserForm(FlaskForm):
     active = BooleanField(u"Active", default=True)
     submit = SubmitField(u'Save')
 
+
 class UserProfileForm(FlaskForm):
     next = HiddenField()
     id = HiddenField('id')
@@ -40,6 +42,7 @@ class UserProfileForm(FlaskForm):
     my_story = TextAreaField(u'My story')
     my_goals = TextAreaField(u'My goals')
     submit = SubmitField(u'Save')
+
 
 class EventForm(FlaskForm):
     next = HiddenField()
@@ -154,8 +157,8 @@ class CategoryForm(FlaskForm):
     description = TextAreaField(u'Description',
                                 description=u'Markdown and HTML supported')
     logo_color = StringField(u'Custom color', [length(max=7)])
-    logo_icon = StringField(u'Custom icon (fontawesome.io/icons)',
-                            [length(max=20)])
+    logo_icon = StringField(u'Custom icon', [length(max=20)],
+                            description=u'fontawesome.com/v5/cheatsheet')
     event_id = SelectField(u'Specific to an event, or global if blank',
                            coerce=int)
     submit = SubmitField(u'Save')

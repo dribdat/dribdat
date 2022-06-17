@@ -259,5 +259,6 @@ def dribs():
     dribs = Activity.query.filter(Activity.action == "post")
     dribs = dribs.order_by(Activity.id.desc())
     dribs = dribs.paginate(int(page), int(per_page))
+    dribs.items = [d for d in dribs.items if not d.project.is_hidden]
     return render_template("public/dribs.html",
                            endpoint='public.dribs', active='dribs', data=dribs)

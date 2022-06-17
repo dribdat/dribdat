@@ -23,7 +23,7 @@
     {% if projects %}
       <label class="btn btn-default active" title="All projects">
         <input type="radio" name="category" id="" autocomplete="off" checked>
-          <i class="fa fa-trophy"></i><br>
+          <i class="fa fa-cube"></i><br>
           <span> </span>
       </label>
     {% endif %}
@@ -39,7 +39,7 @@
     {% if projects and current_event.has_finished %}
       <label class="btn btn-default" title="Hide challenges">
         <input type="radio" name="category" id="challenges" autocomplete="off">
-          <i class="fa fa-cubes"></i><br>
+          <i class="fa fa-cube"></i><br>
           <span> </span>
       </label>
       <!-- <label class="btn btn-default" title="List view">
@@ -90,13 +90,13 @@
   <div class="start-project btn-group m-4">
     <a href="{{ url_for('project.project_new', event_id=current_event.id) }}" class="btn btn-lg btn-success">
       {% if current_event.lock_resources %}
-        <i class="fa fa-cube"></i>
+        <i class="fa fa-cubes"></i>
         <span>Share a resource</span>
       {% elif current_event.has_started %}
         <i class="fa fa-rocket"></i>
         <span>Start a project</span>
       {% elif not current_event.has_finished %}
-        <i class="fa fa-trophy"></i>
+        <i class="fa fa-cube"></i>
         <span>Post a challenge</span>
       {% endif %}
     </a>
