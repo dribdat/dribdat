@@ -2,6 +2,7 @@
 
   // Initialize Barba.js
   barba.init({
+    cacheIgnore: true // ['/', '/login', '/admin/*'] // requires router
     // schema: {
     //   prefix: 'data-custom',
     //   wrapper: 'wrap'
