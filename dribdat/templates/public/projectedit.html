@@ -13,7 +13,6 @@
     <script src="{{ url_for('static', filename='libs/toastui-all/toastui-editor-all.min.js')}}"></script>
     <link href="{{ url_for('static', filename='libs/toastui-editor/dist/toastui-editor.css')}}" rel="stylesheet">
   {% endif %}
-  <script src="{{ url_for('static', filename='js/editor.js')}}"></script>
 {% endblock %}
 
 {% block content %}
@@ -41,7 +40,7 @@
   </div>
 
   {% if not detail_view %}
-  <button id="activateEditor" type="button" class="btn btn-light" aria-pressed="false">
+  <button id="activateEditor" type="button" class="btn btn-light hidden" aria-pressed="false">
     <i class="fa fa-hand-o-down text-info" area-hidden="true"></i>
     Markdown editor
   </button>

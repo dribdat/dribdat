@@ -36,18 +36,6 @@
           <span>{{ category.name }}</span>
       </label>
     {% endfor %}
-    {% if projects and current_event.has_finished %}
-      <label class="btn btn-default" title="Hide challenges">
-        <input type="radio" name="category" id="challenges" autocomplete="off">
-          <i class="fa fa-cube"></i><br>
-          <span> </span>
-      </label>
-      <!-- <label class="btn btn-default" title="List view">
-        <input type="radio" name="category" id="list" autocomplete="off">
-          <i class="fa fa-bars"></i><br>
-          <span> </span>
-      </label> -->
-    {% endif %}
   </div>
 </center>
 

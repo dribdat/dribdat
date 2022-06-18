@@ -1,28 +1,6 @@
 (function($, window) {
 
-  // Initialize Barba.js
-  barba.init({
-    cacheIgnore: true // ['/', '/login', '/admin/*'] // requires router
-    // schema: {
-    //   prefix: 'data-custom',
-    //   wrapper: 'wrap'
-    // }
-    // https://barba.js.org/docs/getstarted/basic-transition/#Animation
-    // transitions: [{
-    //   name: 'opacity-transition',
-    //   leave(data) {
-    //     return gsap.to(data.current.container, {
-    //       opacity: 0
-    //     });
-    //   },
-    //   enter(data) {
-    //     return gsap.from(data.next.container, {
-    //       opacity: 0
-    //     });
-    //   }
-    // }]
-  });
-
+function dribdat_init() {
   // Initialize project data loader
   $('#autotext_url').each(function() {
 
@@ -584,4 +562,99 @@
     setDarkMode(true);
   });
 
+  init_clock();
+  init_editor();
+  console.info('dribdat ready.');
+}
+
+function init_clock() {
+  // Initialise home page countdown
+  $('.event-countdown').each(function() {
+    var startdate = $(this).data('start');
+    var datenow = Date.now();
+    var datesched = Date.parse(startdate.replace(' ', 'T'));
+    var timeleft = datesched - datenow;
+    if (isNaN(timeleft) || timeleft < 0) return;
+    var unixtime = datesched / 1000;
+    // Start the clock
+    new FlipDown(unixtime, $(this).attr('id')).start();
+  });
+}
+
+function init_editor() {
+  const $activateEditor = $('#activateEditor');
+  const $longtext = $('#longtext');
+
+  // Move button to editing area
+  $longtext.first().each(function() {
+    $(this).before($activateEditor);
+  });
+
+  // Handle button
+  $activateEditor.show().on('click', function() {
+    if (typeof toastui !== 'object') return;
+    $longtext.after('<div id="mdeditor" style="text-align:left"></div>');
+
+    // Initialize rich editor for Markdown
+    const toasteditor = window.toasteditor = new toastui.Editor({
+      el: document.querySelector('#mdeditor'),
+      previewStyle: 'tab', height: '500px',
+      initialValue: $longtext.hide().text(),
+      usageStatistics: false,
+      toolbarItems: [
+        ['heading', 'bold', 'italic'],
+        ['hr', 'quote', 'strike'],
+        ['ul', 'ol'],
+        ['table', 'link'],
+        ['code', 'codeblock'],
+      ]
+    });
+
+    // Handle form submission
+    $longtext.parents('form').submit(function() {
+      $longtext.val(toasteditor.getMarkdown());
+    });
+    $(this).hide();
+  });
+}
+
+  // First init
+  $(document).ready(function() {
+    dribdat_init();
+  });
+
+  // Refresh every page load
+  barba.hooks.after(() => {
+    dribdat_init();
+  });
+
+  // Initialize Barba.js
+  barba.init({
+    // views: [{
+    //   namespace: 'home',
+    //   beforeEnter() {
+    //   },
+    //   afterEnter() {
+    //   }
+    // }]
+    // cacheIgnore: true // ['/', '/login', '/admin/*'] // requires router
+    // schema: {
+    //   prefix: 'data-custom',
+    //   wrapper: 'wrap'
+    // }
+    // https://barba.js.org/docs/getstarted/basic-transition/#Animation
+    // transitions: [{
+    //   name: 'opacity-transition',
+    //   leave(data) {
+    //     return gsap.to(data.current.container, {
+    //       opacity: 0
+    //     });
+    //   },
+    //   enter(data) {
+    //     return gsap.from(data.next.container, {
+    //       opacity: 0
+    //     });
+    //   }
+    // }]
+  });
 }).call(this, jQuery, window);

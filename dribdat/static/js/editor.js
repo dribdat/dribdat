@@ -7,7 +7,7 @@ $longtext.first().each(function() {
 });
 
 // Handle button
-$activateEditor.on('click', function() {
+$activateEditor.show().on('click', function() {
   if (typeof toastui !== 'object') return;
   $longtext.after('<div id="mdeditor" style="text-align:left"></div>');
 

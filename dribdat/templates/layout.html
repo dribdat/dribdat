@@ -45,20 +45,26 @@
   {% assets "css_all" %}
     <link rel="stylesheet" href="{{ ASSET_URL }}">
   {% endassets %}
-  <link rel="stylesheet" href="{{ config.DRIBDAT_STYLE }}">
-  <link rel="shortcut icon" href="/favicon.ico">
+  {% if config.DRIBDAT_STYLE %}
+    <link rel="stylesheet" href="{{ config.DRIBDAT_STYLE }}">
+  {% endif %}
+  <link rel="shortcut icon" href="{{ url_for('static', filename='img/favicon.ico')}}">
 
 </head>
 <body class="{% block body_class %}{% endblock %}" data-barba="wrapper">
 {% with form=form, tabs=tabs, event=current_event %}
-{% if not request.args.get('clean') and not request.args.get('minimal') %}
 {% include "includes/nav.html" %}
-{% endif %}
 {% if event %}
-{% if not request.args.get('minimal') %}
-{% include "includes/header.html" %}
+  {% include "includes/header.html" %}
+  {% if event.custom_css %}
+    <style id="custom_css" type="text/css">{{ event.custom_css|replace('<','')|safe }}</style>
+  {% endif %}
 {% endif %}
-<style id="custom_css" type="text/css">{{ event.custom_css|replace('<','')|safe }}</style>
+{% if request.args.get('clean') %}
+  <style type="text/css">body > nav { display: none !important; }</style>
+{% endif %}
+{% if request.args.get('minimal') %}
+  <style type="text/css">body > nav, body > .event-header { display: none !important; }</style>
 {% endif %}
 {% endwith %}
 

@@ -14,9 +14,7 @@ css = Bundle(
 )
 
 js = Bundle(
-    "js/plugins.js",
     "js/script.js",
-    "js/clock.js",
     filters='jsmin',
     output="public/js/common.js"
 )
