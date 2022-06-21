@@ -32,7 +32,7 @@ flask-misaka==1.0.0
 flask-sqlalchemy==2.5.1
 flask-talisman==1.0.0
 flask-wtf==1.0.1
-frictionless==4.38.0
+frictionless==4.40.0
 future==0.18.2
 graphene==3.1
 graphql-core==3.2.1

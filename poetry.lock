@@ -603,7 +603,7 @@ email = ["email-validator"]
 
 [[package]]
 name = "frictionless"
-version = "4.38.0"
+version = "4.40.0"
 description = "Data management framework for Python that provides functionality to describe, extract, validate, and transform tabular data"
 category = "main"
 optional = false
@@ -1958,8 +1958,8 @@ flask-wtf = [
     {file = "Flask_WTF-1.0.1-py3-none-any.whl", hash = "sha256:9d733658c80be551ce7d5bc13c7a7ac0d80df509be1e23827c847d9520f4359a"},
 ]
 frictionless = [
-    {file = "frictionless-4.38.0-py2.py3-none-any.whl", hash = "sha256:0d1a05a15d006b6d9216afbf30385f0a5bb0d76d318c8149f808a79d0e608161"},
-    {file = "frictionless-4.38.0.tar.gz", hash = "sha256:800cf8cc37c35a026faf52b0310a1630855d933fa329a6e95b82b56fa3868ed7"},
+    {file = "frictionless-4.40.0-py2.py3-none-any.whl", hash = "sha256:19460d984ff570c832756cf07631b7ca79505443b4d6f79e3a505059d85ab274"},
+    {file = "frictionless-4.40.0.tar.gz", hash = "sha256:7a90d84b6702a312dfa32a14b0e16d78274c2d1cdafcf50c4d4b9bd3d3a92c3a"},
 ]
 future = [
     {file = "future-0.18.2.tar.gz", hash = "sha256:b1bead90b70cf6ec3f0710ae53a525360fa360d306a86583adc6bf83a4db537d"},

@@ -1,6 +1,5 @@
 (function($, window) {
 
-function dribdat_init() {
   // Initialize project data loader
   $('#autotext_url').each(function() {
 
@@ -75,7 +74,7 @@ function dribdat_init() {
       });
       return true;
     });
-  });
+  }); // -autotext_url each
 
   // Allow project progress on acknowledge
   $('.form-project-post label[for="has_progress"]').each(function() {
@@ -124,7 +123,6 @@ function dribdat_init() {
       }
     });
   })
-
 
   // Check image size on render
   $('.project-home .project-image-container').each(function() {
@@ -217,7 +215,6 @@ function dribdat_init() {
     }); // -change
   }); // -#uploadImage
 
-
   // Upload files
   $('#uploadFile').each(function() {
     var $dialog = $(this);
@@ -286,7 +283,7 @@ function dribdat_init() {
         }
       }); // -ajax
     }); // -change
-  }); // -#uploadImage
+  }); // -#uploadImage Files
 
 
   // Simple delay function, thanks to Christian C. Salvadó
@@ -311,19 +308,6 @@ function dribdat_init() {
       if (e.keyCode == 13) { e.preventDefault(); return false; }
       runSearch($(this).val());
     }, 500));
-  checkSearchQuery();
-
-  // Post editor smart search (REMOVED)
-  // $('.projectpost .form-project-post #note')
-  //   .keyup(delay(function(e) {
-  //     if (e.keyCode == 13) { e.preventDefault(); return false; }
-  //     var lastWord = $(this).val();
-  //     if (lastWord.length < 4) return false;
-  //     lastWord = lastWord.trim().split(' ');
-  //     if (lastWord.length < 1) return false;
-  //     lastWord = lastWord[lastWord.length-1];
-  //     runSearch(lastWord);
-  //   }, 500));
 
   function runSearch(q) {
     if (q.length < 4 || q.trim() == lastSearch) return;
@@ -362,7 +346,7 @@ function dribdat_init() {
         );
       });
     }); //- get searchForm
-  }
+  } // -runSearch
 
   function checkSearchQuery() {
     let paramString = (new URL(document.location)).searchParams;
@@ -401,13 +385,15 @@ function dribdat_init() {
       $('.category-container', $infotext).hide();
       $('[category-id="' + selected_id + '"]', $infotext).show();
     }
-  });
+  }); // -navCategories
+
   // Toggle challenges after the hackathon
   // $('.event-finished .nav-categories #challenges').parent().click();
 
   // Roll up categories if there is only one, and no projects
-  if ($navCategories.length === 1)
+  if ($navCategories.length === 1) {
     $navCategories.click().parent().parent().hide();
+  }
 
   // Show embed code when button clicked
   $('#embed-link').click(function(e) {
@@ -449,7 +435,7 @@ function dribdat_init() {
         document.removeEventListener('mouseup', mouseUpHandler);
     };
     ele.addEventListener('mousedown', mouseDownHandler);
-  });
+  }); // -profile-projects row
 
   // Show project history
   $('#show-history').click(function(e) {
@@ -483,7 +469,7 @@ function dribdat_init() {
         );
       });
     });
-  });
+  }); // -issues-list
 
   // Make embedded iframes resizable
   $('.resizable').each(function() {
@@ -532,7 +518,7 @@ function dribdat_init() {
         $form.find('.message-error').show();
       }
     });
-  });
+  }); // -importEvent form
 
   // Ye olde darke moude
   function setDarkMode(toggle) {
@@ -560,101 +546,64 @@ function dribdat_init() {
   $('.darkmode').click(function(e) {
     e.preventDefault(); e.stopPropagation();
     setDarkMode(true);
-  });
+  }); //-darkmode
 
+  function init_clock() {
+    // Initialise home page countdown
+    $('.event-countdown').each(function() {
+      var startdate = $(this).data('start');
+      var datenow = Date.now();
+      var datesched = Date.parse(startdate.replace(' ', 'T'));
+      var timeleft = datesched - datenow;
+      if (isNaN(timeleft) || timeleft < 0) return;
+      var unixtime = datesched / 1000;
+      // Start the clock
+      new FlipDown(unixtime, $(this).attr('id')).start();
+    });
+  }
+
+  function init_editor() {
+    const $activateEditor = $('#activateEditor');
+    const $longtext = $('#longtext');
+
+    // Move button to editing area
+    $longtext.first().each(function() {
+      $(this).before($activateEditor);
+    });
+
+    // Handle button
+    $activateEditor.show().on('click', function() {
+      if (typeof toastui !== 'object') return;
+      $longtext.after('<div id="mdeditor" style="text-align:left"></div>');
+
+      // Initialize rich editor for Markdown
+      const toasteditor = window.toasteditor = new toastui.Editor({
+        el: document.querySelector('#mdeditor'),
+        previewStyle: 'tab', height: '500px',
+        initialValue: $longtext.hide().text(),
+        usageStatistics: false,
+        toolbarItems: [
+          ['heading', 'bold', 'italic'],
+          ['hr', 'quote', 'strike'],
+          ['ul', 'ol'],
+          ['table', 'link'],
+          ['code', 'codeblock'],
+        ]
+      });
+
+      // Handle form submission
+      $longtext.parents('form').submit(function() {
+        $longtext.val(toasteditor.getMarkdown());
+      });
+      $(this).hide();
+    });
+  } //- init_editor
+
+  // Bootup
   init_clock();
   init_editor();
+  checkSearchQuery();
+  
   console.info('dribdat ready.');
-}
 
-function init_clock() {
-  // Initialise home page countdown
-  $('.event-countdown').each(function() {
-    var startdate = $(this).data('start');
-    var datenow = Date.now();
-    var datesched = Date.parse(startdate.replace(' ', 'T'));
-    var timeleft = datesched - datenow;
-    if (isNaN(timeleft) || timeleft < 0) return;
-    var unixtime = datesched / 1000;
-    // Start the clock
-    new FlipDown(unixtime, $(this).attr('id')).start();
-  });
-}
-
-function init_editor() {
-  const $activateEditor = $('#activateEditor');
-  const $longtext = $('#longtext');
-
-  // Move button to editing area
-  $longtext.first().each(function() {
-    $(this).before($activateEditor);
-  });
-
-  // Handle button
-  $activateEditor.show().on('click', function() {
-    if (typeof toastui !== 'object') return;
-    $longtext.after('<div id="mdeditor" style="text-align:left"></div>');
-
-    // Initialize rich editor for Markdown
-    const toasteditor = window.toasteditor = new toastui.Editor({
-      el: document.querySelector('#mdeditor'),
-      previewStyle: 'tab', height: '500px',
-      initialValue: $longtext.hide().text(),
-      usageStatistics: false,
-      toolbarItems: [
-        ['heading', 'bold', 'italic'],
-        ['hr', 'quote', 'strike'],
-        ['ul', 'ol'],
-        ['table', 'link'],
-        ['code', 'codeblock'],
-      ]
-    });
-
-    // Handle form submission
-    $longtext.parents('form').submit(function() {
-      $longtext.val(toasteditor.getMarkdown());
-    });
-    $(this).hide();
-  });
-}
-
-  // First init
-  $(document).ready(function() {
-    dribdat_init();
-  });
-
-  // Refresh every page load
-  barba.hooks.after(() => {
-    dribdat_init();
-  });
-
-  // Initialize Barba.js
-  barba.init({
-    // views: [{
-    //   namespace: 'home',
-    //   beforeEnter() {
-    //   },
-    //   afterEnter() {
-    //   }
-    // }]
-    // cacheIgnore: true // ['/', '/login', '/admin/*'] // requires router
-    // schema: {
-    //   prefix: 'data-custom',
-    //   wrapper: 'wrap'
-    // }
-    // https://barba.js.org/docs/getstarted/basic-transition/#Animation
-    // transitions: [{
-    //   name: 'opacity-transition',
-    //   leave(data) {
-    //     return gsap.to(data.current.container, {
-    //       opacity: 0
-    //     });
-    //   },
-    //   enter(data) {
-    //     return gsap.from(data.next.container, {
-    //       opacity: 0
-    //     });
-    //   }
-    // }]
-  });
 }).call(this, jQuery, window);
