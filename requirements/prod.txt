@@ -1,19 +1,21 @@
 -i https://pypi.org/simple
 alembic==1.8.0
+aniso8601==9.0.1
+async-timeout==4.0.2
 attrs==21.4.0
 bcrypt==3.2.2
-bleach==5.0.0
+bleach==5.0.1
 boto3==1.19.12
 botocore==1.22.12
+cachelib==0.9.0
 certifi==2022.6.15
-cffi==1.15.0
-chardet==4.0.0
-charset-normalizer==2.0.12; python_version >= "3"
+cffi==1.15.1
+chardet==5.0.0
+charset-normalizer==2.1.0
 click==8.1.3
 colorama==0.4.5
 cssmin==0.2.0
 cssselect==1.1.0
-dataclasses==0.6; python_version < "3.7"
 decorator==5.1.1
 deprecated==1.2.13
 dnspython==1.16.0
@@ -22,7 +24,7 @@ eventlet==0.30.2
 flask==2.1.2
 flask-assets==2.0
 flask-bcrypt==1.0.1
-flask-caching==1.11.1
+flask-caching==2.0.0
 flask-cors==3.0.10
 flask-dance==5.1.0
 flask-hashing==1.1
@@ -32,25 +34,25 @@ flask-misaka==1.0.0
 flask-sqlalchemy==2.5.1
 flask-talisman==1.0.0
 flask-wtf==1.0.1
-frictionless==4.40.0
+frictionless==4.40.3
 future==0.18.2
 graphene==3.1
 graphql-core==3.2.1
 graphql-relay==3.2.0
 greenlet==1.1.2
 gunicorn==20.1.0
-hiredis==2.0.0; python_version >= "3.6"
+hiredis==2.0.0
 idna==3.3
 importlib-metadata==4.2.0; python_version < "3.10"
-importlib-resources==5.7.1; python_version < "3.9"
+importlib-resources==5.8.0; python_version < "3.9"
 isodate==0.6.1
 itsdangerous==2.1.2
 jinja2==3.1.2
 jmespath==0.10.0
 jsmin==3.0.1
-jsonschema==4.6.0
-lxml==4.9.0
-mako==1.2.0
+jsonschema==4.6.1
+lxml==4.9.1
+mako==1.2.1
 marko==1.2.1
 markupsafe==2.1.1
 micawber==0.5.4
@@ -69,8 +71,8 @@ python-dotenv==0.20.0
 python-slugify==6.1.2
 pytz==2022.1
 pyyaml==5.4.1
-redis==4.3.3
-requests==2.28.0
+redis==4.3.4
+requests==2.28.1
 requests-oauthlib==1.3.1
 rfc3986==2.0.0
 s3transfer==0.5.2
@@ -79,11 +81,13 @@ simpleeval==0.9.12
 six==1.16.0
 sqlalchemy==1.4.22
 sqlalchemy-continuum==1.3.12
-sqlalchemy-utils==0.38.2; python_version >= "3.4" and python_version < "4.0"
+sqlalchemy-utils==0.38.2
 stringcase==1.2.0
+tableschema-to-template==0.0.12
+tabulate==0.8.10
 text-unidecode==1.3
-typer==0.4.1
-typing-extensions==4.2.0; python_version < "3.8"
+typer==0.4.2
+typing-extensions==4.3.0; python_version < "3.8"
 urllib3==1.26.9
 urlobject==2.4.3
 validators==0.20.0
@@ -91,6 +95,7 @@ webassets==2.0
 webencodings==0.5.1
 werkzeug==2.0.3
 whitenoise==5.3.0
+wrapt==1.14.1
 wtforms==2.3.3
 xlsxwriter==3.0.3
 zipp==3.8.0; python_version < "3.9"
