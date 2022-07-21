@@ -26,11 +26,11 @@
 <div class="jumbotron bg-white">
 
   <div class="container">
-    <div class="row"><center style="width:100%">
+    <div class="row">
       <h1 style="font-weight:bold; font-family:monospace">
-        ? dribdat_
+        ? About dribdat_
       </h1>
-    </center></div>
+    </div>
     <div class="row">
       <p>This is an <a href="https://github.com/dribdat/dribdat">open source</a> project board for splendid collaboration that we use to run this site.
         Here we <b>collect and showcase all projects</b> from an event in one place, under open conditions. On the event page you can learn about topics, datasets, and
@@ -53,8 +53,8 @@
         <ul>
           <li><a href="/hackathon.json">/hackathon.json</a> (JSON <a href="https://schema.org/Hackathon">Schema</a>)</li>
           <li><a href="/api/event/current/info.json">/api/event/current/info.json</a> (JSON basic info)</li>
-          <li><a href="/api/event/current/datapackage.json">/api/event/current/datapackage.json</a> (full Data Package)</li>
-          <li><a href="/api/event/current/datapackage.zip">/api/event/current/datapackage.zip</a> (Data Package as ZIP)</li>
+          <li><a href="/api/event/current/datapackage.json">/api/event/current/datapackage.json</a> (Data Package)</li>
+          <li><a href="/api/event/current/datapackage.zip">/api/event/current/datapackage.zip</a> (Full data when authenticated)</li>
         </ul>
         <p>Retrieve project data from the <tt>current</tt> (or <tt>id</tt>) event</p>
         <ul>
@@ -104,6 +104,6 @@
   </div>
 </div>
 <center style="margin-top:1em">
-  <i><b>All our hack are belong to us.</b></i>
+  <a href="https://dribdat.cc" target="_blank"><img src="{{ url_for('static', filename='img/logo11.png') }}" height="128" alt="All our hack are belong to us."></a>
 </center>
 {% endblock %}

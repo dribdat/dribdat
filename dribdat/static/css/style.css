@@ -272,6 +272,10 @@ nav .nav-login {
 .home .an-event-meta b {
   display: block;
 }
+.home-buttons .btn-lg {
+  font-size: 120%;
+  line-height: 2em;
+}
 
 /* Customize the flipclock widget */
 .event-countdown {
@@ -1239,7 +1243,7 @@ pre { color: #333; background: white; }
 }
 .profile-projects .row {
   overflow-x: auto;
-  background-image: repeating-linear-gradient(125deg, #e5e5e5, #e5e5e5 5px, #eee 5px, transparent 30px);
+  background-image: repeating-linear-gradient(125deg, #fcfcfc, #e9e9e9 5px, #eee 2px, transparent 30px);
 }
 .profile-projects .row::-webkit-scrollbar {
   display: none;
