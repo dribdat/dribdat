@@ -15,15 +15,19 @@ def format_webembed(url):
         return url
     if url.startswith('https://query.wikidata.org/'):
         # Fix WikiData queries
-        url = url.replace('https://query.wikidata.org/', 'https://query.wikidata.org/embed.html')
+        url = url.replace('https://query.wikidata.org/',
+                          'https://query.wikidata.org/embed.html')
     elif url.startswith('https://youtu.be/'):
         # Fix YouTube mobile link
-        url = url.replace('https://youtu.be/', 'https://www.youtube.com/embed/')
+        url = url.replace('https://youtu.be/',
+                          'https://www.youtube.com/embed/')
     elif url.startswith('https://www.youtube.com/watch?'):
         # Fix YouTube web link
-        url = url.replace('https://www.youtube.com/watch?v=', 'https://www.youtube.com/embed/')
+        url = url.replace('https://www.youtube.com/watch?v=',
+                          'https://www.youtube.com/embed/')
     # TODO: add more embeddables here
     return '<iframe src="%s"></iframe>' % url
+
 
 TEMPLATE_PROJECT = r"""
 <div class="onebox">
@@ -49,7 +53,8 @@ def repl_onebox(mat=None, li=[]):
             project_id = int(url.split('/')[-1])
             from .user.models import Project
             project = Project.query.filter_by(id=project_id).first()
-            if not project: return mat.group()
+            if not project:
+                return mat.group()
             pd = project.data
             # project.url returns a relative path?
             pd['link'] = project_link
