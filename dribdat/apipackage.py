@@ -14,8 +14,20 @@ from .apiutils import (
     get_event_categories,
 )
 
-def PackageEvent(event, author, host_url='', full_contents=False):
+def PackageEvent(event, author=None, host_url='', full_contents=False):
     """ Creates a Data Package from the data of an event """
+
+    # Define the author, if available
+    contributors = []
+    if author and not author.is_anonymous:
+        contributors.append({
+            "title": author.username,
+            "path": author.webpage_url or '',
+            "role": "author"
+        })
+    else:
+        # Disallow anon access to full data
+        full_contents = False
 
     # Set up a data package object
     package = Package(
@@ -29,11 +41,7 @@ def PackageEvent(event, author, host_url='', full_contents=False):
             "path": "http://opendatacommons.org/licenses/pddl/",
             "title": "Open Data Commons Public Domain Dedication & License 1.0"
         }],
-        contributors=[{
-            "title": author.username,
-            "path": author.webpage_url or '',
-            "role": "author"
-        }],
+        contributors=contributors,
         homepage=event.webpage_url or '',
         created=format_date(dt.now(), '%Y-%m-%dT%H:%M'),
         version="0.1.0",
