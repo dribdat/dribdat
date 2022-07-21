@@ -22,7 +22,7 @@ class Config(object):
     # Application options
     DRIBDAT_USER_APPROVE = bool(strtobool(os_env.get('DRIBDAT_USER_APPROVE', 'False')))
     DRIBDAT_NOT_REGISTER = bool(strtobool(os_env.get('DRIBDAT_NOT_REGISTER', 'False')))
-    DRIBDAT_ALLOW_EVENTS = bool(strtobool(os_env.get('DRIBDAT_ALLOW_EVENTS', 'True')))
+    DRIBDAT_ALLOW_EVENTS = bool(strtobool(os_env.get('DRIBDAT_ALLOW_EVENTS', 'False')))
 
     # Single sign-on support
     OAUTH_ID = os_env.get('OAUTH_ID', None)
