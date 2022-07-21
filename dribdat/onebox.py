@@ -7,7 +7,6 @@ import logging
 
 from flask import url_for
 
-from micawber import parse_text
 from micawber.parsers import standalone_url_re, full_handler
 
 
@@ -15,8 +14,15 @@ def format_webembed(url):
     if url.lower().startswith('<iframe '):
         return url
     if url.startswith('https://query.wikidata.org/'):
+        # Fix WikiData queries
         url = url.replace('https://query.wikidata.org/', 'https://query.wikidata.org/embed.html')
-    # TODO: add more embeddables
+    elif url.startswith('https://youtu.be/'):
+        # Fix YouTube mobile link
+        url = url.replace('https://youtu.be/', 'https://www.youtube.com/embed/')
+    elif url.startswith('https://www.youtube.com/watch?'):
+        # Fix YouTube web link
+        url = url.replace('https://www.youtube.com/watch?v=', 'https://www.youtube.com/embed/')
+    # TODO: add more embeddables here
     return '<iframe src="%s"></iframe>' % url
 
 TEMPLATE_PROJECT = r"""
@@ -30,8 +36,9 @@ TEMPLATE_PROJECT = r"""
 </div>
 """
 
+
 def repl_onebox(mat=None, li=[]):
-    if mat == None:
+    if mat is None:
         li[:] = []
         return
     if mat.group(1):
@@ -49,10 +56,12 @@ def repl_onebox(mat=None, li=[]):
             return pystache.render(TEMPLATE_PROJECT, pd)
     return mat.group()
 
+
 def make_onebox(raw_html):
     url = re.escape(url_for('public.home', _external=True))
     regexp = re.compile('<a href="(%s.+?)">(%s.+?)</a>' % (url, url))
     return re.sub(regexp, repl_onebox, raw_html)
+
 
 def make_oembedplus(text, oembed_providers, **params):
     lines = text.splitlines()
@@ -66,7 +75,7 @@ def make_oembedplus(text, oembed_providers, **params):
             url = line.strip()
             try:
                 response = oembed_providers.request(url, **params)
-            except Exception as e:
+            except Exception:
                 logging.info("OEmbed could not parse: <%s>" % url)
             else:
                 line = full_handler(url, response, **params)
