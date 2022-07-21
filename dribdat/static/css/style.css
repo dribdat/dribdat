@@ -309,6 +309,9 @@ nav .nav-login {
   }
 }
 
+.community-embed {
+  margin-top: 4em;
+}
 .community-embed .fa-comment {
   position: relative;
   color: rgba(255,255,255, 0.1);
