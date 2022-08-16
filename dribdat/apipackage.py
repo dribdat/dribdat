@@ -6,13 +6,14 @@ import requests
 from datetime import datetime as dt
 from frictionless import Package, Resource
 from .user.models import Event, Project, Activity, Category, User, Role
-from .utils import timesince, random_password, format_date
+from .utils import format_date
 from .apiutils import (
     get_project_list,
     get_event_users,
     get_event_activities,
     get_event_categories,
 )
+
 
 def PackageEvent(event, author=None, host_url='', full_contents=False):
     """ Creates a Data Package from the data of an event """
@@ -157,6 +158,7 @@ def importUserRoles(user, new_roles, DRY_RUN=False):
     for r in new_roles.split(','):
         if r in my_roles:
             continue
+        # Check that role is a new one
         role = Role.query.filter_by(name=r).first()
         if not role:
             role = Role(r)

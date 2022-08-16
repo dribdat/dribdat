@@ -194,9 +194,11 @@ def get_random_alphanumeric_string(length=24):
 
 
 def get_user_by_name(username):
-    if not username: return None
+    if not username:
+        return None
     username = username.strip()
-    if not username: return None
+    if not username:
+        return None
     user = User.query.filter_by(username=username).first()
     if not user:
         flash('Username %s not found!' % username, 'warning')
@@ -572,7 +574,9 @@ def role(role_id):
         flash('Role updated.', 'success')
         return redirect(url_for("admin.presets"))
 
-    return render_template('admin/role.html', role=role, form=form)
+    return render_template(
+            'admin/role.html',
+            role=role, form=form, users=role.users[:50])
 
 
 @blueprint.route('/role/new', methods=['GET', 'POST'])
