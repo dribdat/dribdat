@@ -6,7 +6,7 @@ import requests
 from datetime import datetime as dt
 from frictionless import Package, Resource
 from .user.models import Event, Project, Activity, Category, User, Role
-from .utils import timesince, random_password, format_date
+from .utils import format_date
 from .apiutils import (
     get_project_list,
     get_event_users,
@@ -14,8 +14,21 @@ from .apiutils import (
     get_event_categories,
 )
 
-def PackageEvent(event, author, host_url='', full_contents=False):
+
+def PackageEvent(event, author=None, host_url='', full_contents=False):
     """ Creates a Data Package from the data of an event """
+
+    # Define the author, if available
+    contributors = []
+    if author and not author.is_anonymous:
+        contributors.append({
+            "title": author.username,
+            "path": author.webpage_url or '',
+            "role": "author"
+        })
+    else:
+        # Disallow anon access to full data
+        full_contents = False
 
     # Set up a data package object
     package = Package(
@@ -29,11 +42,7 @@ def PackageEvent(event, author, host_url='', full_contents=False):
             "path": "http://opendatacommons.org/licenses/pddl/",
             "title": "Open Data Commons Public Domain Dedication & License 1.0"
         }],
-        contributors=[{
-            "title": author.username,
-            "path": author.webpage_url or '',
-            "role": "author"
-        }],
+        contributors=contributors,
         homepage=event.webpage_url or '',
         created=format_date(dt.now(), '%Y-%m-%dT%H:%M'),
         version="0.1.0",
@@ -149,6 +158,7 @@ def importUserRoles(user, new_roles, DRY_RUN=False):
     for r in new_roles.split(','):
         if r in my_roles:
             continue
+        # Check that role is a new one
         role = Role.query.filter_by(name=r).first()
         if not role:
             role = Role(r)

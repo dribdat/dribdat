@@ -52,7 +52,7 @@ The following options can be used to toggle **application features**:
 * `DRIBDAT_APIKEY` - a secret key for connecting bots with write access to the remote [API](#api).
 * `DRIBDAT_USER_APPROVE` - set to True so that any new non-SSO accounts are inactive until approved by an admin.
 * `DRIBDAT_NOT_REGISTER` - set to True to hide the registration, so new users can only join this server via SSO.
-* `DRIBDAT_ALLOW_EVENTS` - set to True to allow regular users to suggest new events on this site (which only admins can then edit and promote).
+* `DRIBDAT_ALLOW_EVENTS` - set to True to allow regular users to start new events, which admins can edit to make visible on the home page.
 
 ## Statistics
 

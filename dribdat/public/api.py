@@ -423,9 +423,6 @@ def project_uploader():
 
 # ------ DATA PACKAGE API --------
 
-# TODO: move to packager.py ?
-
-
 def generate_event_package(event, format='json'):
     """ Creates a Data Package from the data of an event """
 
@@ -449,7 +446,6 @@ def generate_event_package(event, format='json'):
 
 
 @blueprint.route('/event/current/datapackage.<format>', methods=["GET"])
-@login_required
 def package_current_event(format):
     event = Event.query.filter_by(is_current=True).first() or \
             Event.query.order_by(Event.id.desc()).first_or_404()
@@ -457,10 +453,10 @@ def package_current_event(format):
 
 
 @blueprint.route('/event/<int:event_id>/datapackage.<format>', methods=["GET"])
-@login_required
 def package_specific_event(event_id, format):
     event = Event.query.filter_by(id=event_id).first_or_404()
     return generate_event_package(event, format)
+
 
 # ------ USER API --------
 
