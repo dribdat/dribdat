@@ -386,7 +386,7 @@ nav .nav-login {
 .event-started {
 }
 /* Styles for an event that has finished */
-.event-finished .hexagontent .progress {
+.event-finished .project .progress {
   display: none;
 }
 
@@ -464,18 +464,24 @@ nav .nav-login {
 .project .hexagontent .fa {
   font-size: 240%;
 }
-.project .hexagontent .progress {
+.project .progress {
+  z-index: 999;
+  opacity: 0;
+  position: absolute;
   margin-top: 1em;
   margin-bottom: 0px;
-  height: 3px;
-  position: relative;
-  width: 72px;
-  margin-left: -36px;
+  height: 10px;
+  width: 100px;
+  margin-left: -52px;
   left: 50%;
-  opacity: 1;
   border: 1px solid white;
+  bottom: 1%;
+  box-shadow: 3px 3px 3px rgb(0 0 0 / 50%);
 }
-.project .hexagontent .progress-bar {
+.project:hover .progress {
+  opacity: 0.8;
+}
+.project .progress .progress-bar {
   background-color: #aaa;
 }
 
@@ -521,8 +527,8 @@ nav .nav-login {
 .hexagon.hexalist .hexagontent i.fa,
 .hexagon.hexalist .hexagontent br { display: none; }
 .hexagon.hexalist .hexagontent small { font-size: 100%; }
-.challenge.hexalist .hexagontent .progress { visibility: hidden; }
-.project.hexalist .hexagontent .progress {
+.challenge.hexalist .progress { visibility: hidden; }
+.project.hexalist .progress {
   float: left;
   position: initial;
   margin-right: 20px;
@@ -561,13 +567,14 @@ nav .nav-login {
   background-position: center;
 }
 .hexagon .hexaicon {
-  width: 1.5em; height: 1.5em;
+  width: 2em;
+  height: 2em;
   background-color: white;
   background-size: cover;
   position: relative;
   left: 50%;
-  margin: 0.5em 0 0.5em -0.5em;
-  box-shadow: -2px -2px 1px rgba(0,0,0,0.2);
+  margin: 0.5em 0 0 -1em;
+  box-shadow: -2px -2px 1px rgb(0 0 0 / 20%);
   border-radius: 1em;
 }
 .project.hexagon:nth-child(even) { background-color: rgba(230, 200, 160, 0.95); }

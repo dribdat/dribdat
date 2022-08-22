@@ -15,13 +15,13 @@
 			{% if project.image_url %}
 				<div class="hexaicon" style="background-image:url('{{project.image_url}}')"></div>
 			{% endif %}
-			{% if project.score and project.score > 0 %}
-			<div class="progress">
-				<div class="progress-bar" role="progressbar" aria-valuenow="{{project.score}}" aria-valuemin="0" aria-valuemax="70" style="width:{{project.score}}%">
-				</div>
-			</div>
-			{% endif %}
 		</div>
+		{% if project.score and project.score > 0 %}
+		<div class="progress">
+			<div class="progress-bar" role="progressbar" aria-valuenow="{{project.score}}" aria-valuemin="0" aria-valuemax="70" style="width:{{project.score}}%">
+			</div>
+		</div>
+		{% endif %}
 	</a>
 {% endmacro %}
 
