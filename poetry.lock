@@ -613,7 +613,7 @@ email = ["email-validator"]
 
 [[package]]
 name = "frictionless"
-version = "4.40.6"
+version = "4.40.7"
 description = "Data management framework for Python that provides functionality to describe, extract, validate, and transform tabular data"
 category = "main"
 optional = false
@@ -635,23 +635,23 @@ simpleeval = ">=0.9.11"
 stringcase = ">=1.2"
 tableschema-to-template = ">=0.0.12"
 tabulate = ">=0.8.10"
-typer = {version = "0.5.0", extras = ["all"]}
+typer = {version = ">=0.5", extras = ["all"]}
 validators = ">=0.18"
 
 [package.extras]
-sql = ["sqlalchemy (>=1.3)"]
-spss = ["savReaderWriter (>=3.0)"]
-server = ["flask (>=1.1)", "gunicorn (>=20.0)"]
-s3 = ["boto3 (>=1.9)"]
-pandas = ["pandas (>=1.0)"]
-ods = ["lxml (>=4.0)", "ezodf (>=0.3)"]
-json = ["jsonlines (>=1.2)", "ijson (>=3.0)"]
-html = ["pyquery (>=1.4)"]
-gsheets = ["pygsheets (>=2.0)"]
-excel = ["tableschema-to-template (>=0.0.12)", "xlwt (>=1.2)", "xlrd (>=1.2)", "openpyxl (>=3.0)"]
-dev = ["yattag", "docstring-parser", "pydoc-markdown", "pytest-timeout", "python-dotenv", "requests-mock", "oauth2client", "pytest-only", "pytest-vcr", "pytest-cov", "psycopg2", "livemark", "pymysql", "ipython", "pytest", "pylama", "pyflakes (==2.4.0)", "black", "moto", "mypy"]
-ckan = ["ckanapi (>=4.3)"]
 bigquery = ["google-api-python-client (>=1.12.1)"]
+ckan = ["ckanapi (>=4.3)"]
+dev = ["mypy", "moto", "black", "pyflakes (==2.4.0)", "pylama", "pytest", "ipython", "pymysql", "livemark", "psycopg2", "pytest-cov", "pytest-vcr", "pytest-only", "oauth2client", "requests-mock", "python-dotenv", "pytest-timeout", "pydoc-markdown", "docstring-parser", "yattag"]
+excel = ["openpyxl (>=3.0)", "xlrd (>=1.2)", "xlwt (>=1.2)", "tableschema-to-template (>=0.0.12)"]
+gsheets = ["pygsheets (>=2.0)"]
+html = ["pyquery (>=1.4)"]
+json = ["ijson (>=3.0)", "jsonlines (>=1.2)"]
+ods = ["ezodf (>=0.3)", "lxml (>=4.0)"]
+pandas = ["pandas (>=1.0)"]
+s3 = ["boto3 (>=1.9)"]
+server = ["gunicorn (>=20.0)", "flask (>=1.1)"]
+spss = ["savReaderWriter (>=3.0)"]
+sql = ["sqlalchemy (>=1.3)"]
 
 [[package]]
 name = "future"
@@ -1480,7 +1480,7 @@ python-versions = ">=3.7"
 
 [[package]]
 name = "typer"
-version = "0.5.0"
+version = "0.6.1"
 description = "Typer, build great CLIs. Easy to code. Based on Python type hints."
 category = "main"
 optional = false
@@ -1508,7 +1508,7 @@ python-versions = ">=3.7"
 
 [[package]]
 name = "urllib3"
-version = "1.26.11"
+version = "1.26.12"
 description = "HTTP library with thread-safe connection pooling, file post, and more."
 category = "main"
 optional = false
@@ -1516,7 +1516,7 @@ python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*, !=3.5.*, 
 
 [package.extras]
 brotli = ["brotlicffi (>=0.8.0)", "brotli (>=1.0.9)", "brotlipy (>=0.6.0)"]
-secure = ["pyOpenSSL (>=0.14)", "cryptography (>=1.3.4)", "idna (>=2.0.0)", "certifi", "ipaddress"]
+secure = ["pyOpenSSL (>=0.14)", "cryptography (>=1.3.4)", "idna (>=2.0.0)", "certifi", "urllib3-secure-extra", "ipaddress"]
 socks = ["PySocks (>=1.5.6,!=1.5.7,<2.0)"]
 
 [[package]]

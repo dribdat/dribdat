@@ -35,7 +35,7 @@ flask-sqlalchemy==2.5.1; (python_version >= "2.7" and python_full_version < "3.0
 flask-talisman==1.0.0
 flask-wtf==1.0.1; python_version >= "3.6"
 flask==2.1.3; python_version >= "3.7"
-frictionless==4.40.6
+frictionless==4.40.7
 future==0.18.2; (python_version >= "2.6" and python_full_version < "3.0.0") or (python_full_version >= "3.3.0")
 graphene==3.1
 graphql-core==3.2.1; python_version >= "3.6" and python_version < "4"
@@ -90,9 +90,9 @@ stringcase==1.2.0
 tableschema-to-template==0.0.12; python_version >= "3.6"
 tabulate==0.8.10; python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.5.0"
 text-unidecode==1.3; python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.6.0"
-typer==0.5.0; python_version >= "3.6"
+typer==0.6.1; python_version >= "3.6"
 typing-extensions==4.3.0; python_version < "3.8" and python_version >= "3.7" and (python_version >= "3.6" and python_full_version < "3.0.0" and python_version < "3.8" or python_full_version >= "3.6.0" and python_version < "3.8" and python_version >= "3.6") and python_full_version >= "3.6.3" and python_full_version < "4.0.0"
-urllib3==1.26.11; python_version >= "3.7" and python_full_version < "3.0.0" and python_version < "4" or python_full_version >= "3.6.0" and python_version < "4" and python_version >= "3.7"
+urllib3==1.26.12; python_version >= "3.7" and python_full_version < "3.0.0" and python_version < "4" or python_full_version >= "3.6.0" and python_version < "4" and python_version >= "3.7"
 urlobject==2.4.3; python_version >= "3.6"
 validators==0.20.0; python_version >= "3.4"
 webassets==2.0

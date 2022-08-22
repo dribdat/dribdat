@@ -89,7 +89,7 @@
     </a>
   {% endif %}
 
-  {% if not lock_editing %}
+  {% if not lock_editing and not project.event.has_finished %}
     {% if project_starred %}
       <a href="{{ url_for('project.project_unstar_me', project_id=project.id) }}" class="project-star btn btn-lg btn-secondary"
         title="Click to stop being a member of the project"
@@ -378,17 +378,8 @@
 
 <center class="project-footer-controls">
 
+{% if allow_edit %}
 <div role="group" aria-label="Project controls" class="btn-group project-controls">
-
-  {% if not lock_editing and not project_starred %}
-    <a href="{{ url_for('project.project_star', project_id=project.id) }}" class="btn btn-lg btn-success project-star"
-      title="Join this project">
-       <i class="fa fa-thumbs-up"></i>
-       Join
-    </a>
-  {% endif %}
-
-  {% if allow_edit %}
   <div class="btn-group">
     <a href="{{ url_for('project.project_post', project_id=project.id) }}" class="btn btn-lg btn-success"
        title="Write a progress update">
@@ -408,8 +399,8 @@
         Sync</a>
     {% endif %}
   </div>
-  {% endif %}
 </div><!-- / .project-controls -->
+{% endif %}
 
 {% if current_user.is_admin and not project.event.lock_resources %}
 <div role="group" aria-label="Project administration" class="ml-3 btn-group admin-area" title="Admin area">
