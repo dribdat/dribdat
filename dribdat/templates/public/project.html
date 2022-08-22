@@ -353,8 +353,10 @@
 
   <div class="project-buttons" role="group" aria-label="Main navigation">
     {% if project.contact_url %}
-      {% if project.contact_url.startswith('http') %}
+      {% if project.contact_url.startswith('http') or project.contact_url.startswith('mailto:') %}
         <a href="{{ project.contact_url }}" target="_blank" class="btn btn-lg" title="Contact the team"><span>&#x1f44b;</span> Contact</a>
+      {% elif '@' in project.contact_url %}
+        <a href="mailto:{{ project.contact_url }}" target="_blank" class="btn btn-lg" title="Contact the team"><span>&#x1f44b;</span> E-mail</a>
       {% else %}
         <div class="btn btn-lg" title="Contact the team"><span>&#x1f44b;</span> {{ project.contact_url }}</div>
       {% endif %}
