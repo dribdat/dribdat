@@ -9,7 +9,7 @@
 
 `dribdat` is an open source web platform for data-driven team collaboration. Designed for [awesome](https://github.com/dribdat/awesome-hackathon) hackathons, it is a Swiss Army Knife of everything you need for your event: a website, countdown clock and challenge board, project log and progress tracker, integrations with popular chat platforms and code repositories, open data support and APIs.
 
-For more background and references, see the [Usage Guide](docs/USAGE.md) and [About Page](docs/ABOUT.md). If you need help or advice in setting up your event, or would like to contribute to the project: please get in touch via [GitHub Issues](https://github.com/dribdat/dribdat/issues) or [website](https://dribdat.cc). Follow us on [Twitter](https://twitter.com/dribdat) and get updates on our [OpenCollective](https://opencollective.com/dribdat/updates).
+For more background and references, see the [User Handbook](https://docs.dribdat.cc/usage/). If you need help or advice in setting up your event, or would like to contribute to the project: please get in touch via [GitHub Issues](https://github.com/dribdat/dribdat/issues) or [website](https://dribdat.cc). Follow us on [Twitter](https://twitter.com/dribdat) and get updates on our [OpenCollective](https://opencollective.com/dribdat/updates).
 
 ![Screenshot of dribdat](dribdat/static/img/screenshot_sandbox.png)
 
@@ -17,17 +17,15 @@ For more background and references, see the [Usage Guide](docs/USAGE.md) and [Ab
 
 # Quickstart
 
-This project can be deployed to any server capable of serving Python applications, and is set up for fast deployment using [Docker](https://github.com/dribdat/dribdat/blob/main/docs/DEPLOY.md#with-docker) or to the [Heroku](http://heroku.com) cloud:
+This project can be deployed to any server capable of serving Python applications, and is set up for fast deployment using [Docker](https://github.com/dribdat/dribdat/blob/main/docs/DEPLOY.md#with-docker).
 
-[![Deploy with Heroku](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy?template=https://github.com/dribdat/dribdat)
+The first user that registers becomes an admin, so don't delay! If you would like to run dribdat on any other cloud or local machine, there are additional instructions in the [Deployment guide](https://docs.dribdat.cc/deploy/).
 
-The first user that registers becomes an admin, so don't delay! If you would like to run dribdat on any other cloud or local machine, there are additional instructions in the [Deployment guide](docs/DEPLOY.md).
-
-Information on contributing and extending dribdat, as well as running it on your local machine, can be found in the [Developer guide](docs/CONTRIBUTE.md) which includes API documentation and more.
+Information on contributing and extending dribdat, as well as running it on your local machine, can be found in the [Developer guide](https://docs.dribdat.cc/contribute/) which includes API documentation, and more.
 
 See also **[backboard](https://github.com/dribdat/backboard)**, a sample responsive web application, and our **[dridbot](https://github.com/dribdat/dridbot)** chat client, which both demonstrate reuse of the dribdat API.
 
-If you need support with your deployment, please reach out through our website: [dribdat.cc](https://dribdat.cc)
+If you need support with your deployment, please reach out through Issues or the contact form on our website: [dribdat.cc](https://dribdat.cc)
 
 # Credits
 
