@@ -137,8 +137,9 @@ def importUsers(data, DRY_RUN=False):
     updates = []
     for usr in data:
         name = usr['username']
-        user = User.query.filter_by(username=name).first()
-        if user:
+        email = usr['email']
+        if User.query.filter_by(username=name).first() or \
+           User.query.filter_by(email=email).first():
             # Do not update existing user data
             logging.info('Skipping user: %s' % name)
             continue
