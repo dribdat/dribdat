@@ -17,7 +17,7 @@ from ..decorators import admin_required
 
 from ..user.models import Event, Project, Activity
 from ..aggregation import GetProjectData, AddProjectData, GetEventUsers
-from ..apipackage import ImportEventPackage, ImportEventByURL, PackageEvent
+from ..apipackage import ImportEventPackage, PackageEvent
 from ..apiutils import (
     get_project_list,
     get_event_activities,
@@ -87,7 +87,8 @@ def project_list_csv(event_id, event_name):
         'Content-Disposition': 'attachment; filename='
         + event_name + '_dribdat.csv'
     }
-    return Response(stream_with_context(gen_csv(request_project_list(event_id))),
+    csvlist = gen_csv(request_project_list(event_id))
+    return Response(stream_with_context(csvlist),
                     mimetype='text/csv',
                     headers=headers)
 
@@ -390,9 +391,14 @@ def project_uploader():
     ext = img.filename.split('.')[-1].lower()
     if ext not in ACCEPTED_TYPES:
         return 'Invalid format (allowed: %s)' % ','.join(ACCEPTED_TYPES)
-    filename = random_password(24) + '.' + ext
+    # use random subfolder inside user id folder
+    filename = '/'.join([
+                    str(current_user.id),
+                    random_password(24),
+                    img.filename
+                ])
     # with tempfile.TemporaryDirectory() as tmpdir:
-    # img.save(path.join(tmpdir, filename))
+    #   img.save(path.join(tmpdir, filename))
     if 'S3_FOLDER' in current_app.config:
         s3_filepath = '/'.join([current_app.config['S3_FOLDER'], filename])
     else:
@@ -421,7 +427,9 @@ def project_uploader():
                           )
     return '/'.join([current_app.config['S3_HTTPS'], s3_filepath])
 
+
 # ------ DATA PACKAGE API --------
+
 
 def generate_event_package(event, format='json'):
     """ Creates a Data Package from the data of an event """
