@@ -78,7 +78,7 @@ def PackageEvent(event, author=None, host_url='', full_contents=False):
         # print("Generating in-memory JSON of participants")
         package.add_resource(Resource(
                 name='users',
-                data=get_event_users(event),
+                data=get_event_users(event, full_contents),
             ))
         # print("Generating in-memory JSON of activities")
         package.add_resource(Resource(

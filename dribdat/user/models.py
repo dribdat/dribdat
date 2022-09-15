@@ -105,13 +105,17 @@ class User(UserMixin, PkModel):
     def data(self):
         return {
             'id': self.id,
-            'username': self.username,
             'email': self.email,
-            'webpage_url': self.webpage_url,
             'sso_id': self.sso_id,
-            'roles': ",".join([r.name for r in self.roles]),
             'active': self.active,
             'is_admin': self.is_admin,
+            'username': self.username,
+            'webpage_url': self.webpage_url,
+            'roles': ",".join([r.name for r in self.roles]),
+            'cardtype': self.cardtype,
+            'carddata': self.carddata,
+            'my_story': self.my_story,
+            'my_goals': self.my_goals,
         }
 
     def set_from_data(self, data):

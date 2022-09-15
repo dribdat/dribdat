@@ -1,1 +1,1 @@
-This page now lives at [docs.dribdat.cc](https://docs.dribdat.cc/deploy/)
+This page now lives at [docs.dribdat.cc](https://docs.dribdat.cc/deploy)

@@ -46,20 +46,22 @@ def get_event_categories(event_id=None):
     return [c.data for c in query.order_by(Category.id.asc()).all()]
 
 
-def get_event_users(event):
-    """ Returns plain user objects without personal data """
+def get_event_users(event, full_data=False):
+    """ Returns plain user objects and personal data """
     eventusers = GetEventUsers(event)
     if not eventusers:
         return []
     userdata = []
     for u in eventusers:
-        ud = u.data
-        userdata.append({
-            'id': ud['id'],
-            'roles': ud['roles'],
-            'username': ud['username'],
-            'webpage_url': ud['webpage_url'],
-        })
+        if full_data:
+            userdata.append(u.data)
+        else:
+            userdata.append({
+                'id': u.data['id'],
+                'roles': u.data['roles'],
+                'username': u.data['username'],
+                'webpage_url': u.data['webpage_url'],
+            })
     return userdata
 
 
@@ -75,7 +77,7 @@ def get_project_summaries(projects, host_url, is_moar=False):
     else:
         summaries = [p.data for p in projects]
     summaries = expand_project_urls(summaries, host_url)
-    summaries.sort(key=lambda x: x['score'], reverse=True)
+    summaries.sort(key=lambda x: x['score'] or 0, reverse=True)
     return summaries
 
 
