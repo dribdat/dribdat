@@ -130,14 +130,23 @@ def forgot():
 @login_required
 def user_profile():
     user = current_user
+    user_is_valid = True
     if not user.active:
         flash('This user account is under review. Please update your profile '
               + ' and contact the organizing team to access all functions of '
               + 'this platform.', 'warning')
+
     form = UserForm(obj=user, next=request.args.get('next'))
     form.roles.choices = [(r.id, r.name) for r in Role.query.order_by('name')]
 
-    if form.validate_on_submit():
+    # Check conflicting PKs
+    if form.email.data != user.email:
+        if User.query.filter_by(email=form.email.data).first() is not None:
+            flash('This e-mail address is already registered.', 'error')
+            user_is_valid = False
+
+    # Validation has passed
+    if form.validate_on_submit() and user_is_valid:
         # Assign roles
         user.roles = [Role.query.filter_by(
             id=r).first() for r in form.roles.data]
