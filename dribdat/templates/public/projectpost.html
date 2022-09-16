@@ -1,5 +1,6 @@
 {% from "macros/_form.html" import render_form %}
 {% import "macros/_event.html" as misc %}
+{% from "macros/_upload.html" import modal_image_upload %}
 
 {% extends "layout.html" %}
 
@@ -17,16 +18,24 @@
   </h2>
 
   {% if all_valid %}
-    <h4 class="text-center mt-5 mb-3">
-      &#128640; Ready for the next level?
-    </h4>
     <div class="form-project-confirm alert alert-success mb-3" role="alert">
-      <label><input type="checkbox"><br>
+      <label><input type="checkbox">
       {% for item in stage.conditions.agree %}
         <span>&mdash; {{ item }}</span><br>
       {% endfor %}
       </label>
     </div>
+    <h5 class="text-center mt-0" style="margin-bottom:2.7em" id="next-level-hint">
+      Ready for the next level? &#128640;
+    </h5>
+  {% endif %}
+
+  {% if config.S3_KEY %}
+    <button type="button" class="btn btn-light" title="Attach image"
+            style="display:none; margin-top:-3em; left:50%; margin-left:-2em; position:absolute"
+            data-toggle="modal" data-target="#uploadImage">
+      <i class="fa fa-image text-info" area-hidden="true"></i>
+    </button>
   {% endif %}
 
   <div class="form-project-post" id="search" action="/api/project/search.json">
@@ -94,5 +103,7 @@
       <i class="fa fa-arrow-left" aria-hidden="true"></i> Cancel and return to project
     </a>
   </center>
+
+  {{ modal_image_upload() }}
 
 {% endblock %}

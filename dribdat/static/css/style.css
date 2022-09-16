@@ -1493,10 +1493,16 @@ Instruction page
   border: 3px dashed lightgray;
   padding: 1em;
 }
+.form-project-confirm input {
+  transform: scale(1.5);
+  position: absolute;
+  left: 15px;
+}
 .form-project-confirm label {
   clear: both;
   margin-top: 0.5em;
   cursor: pointer;
+  padding: 0 0 0 2em;
 }
 .form-project-confirm:hover {
   background-color: lightyellow;
