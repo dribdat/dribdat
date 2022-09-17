@@ -1,6 +1,5 @@
 {% from "macros/_form.html" import render_form %}
 {% import "macros/_event.html" as misc %}
-{% from "macros/_upload.html" import modal_image_upload %}
 
 {% extends "layout.html" %}
 
@@ -31,10 +30,11 @@
   {% endif %}
 
   {% if config.S3_KEY %}
-    <button type="button" class="btn btn-light" title="Attach image"
-            style="display:none; margin-top:-3em; left:50%; margin-left:-2em; position:absolute"
+    <button title="Attach image" class="btn btn-light post-image-btn"
+            style="display:none" type="button"
             data-toggle="modal" data-target="#uploadImage">
       <i class="fa fa-image text-info" area-hidden="true"></i>
+      Attach a screenshot
     </button>
   {% endif %}
 
@@ -104,6 +104,6 @@
     </a>
   </center>
 
-  {{ modal_image_upload() }}
+  {% include "includes/uploader.html" %}
 
 {% endblock %}

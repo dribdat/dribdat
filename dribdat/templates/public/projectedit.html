@@ -1,5 +1,4 @@
 {% from "macros/_form.html" import render_form %}
-{% from "macros/_upload.html" import modal_image_upload, modal_file_upload %}
 
 {% extends "layout.html" %}
 
@@ -76,7 +75,6 @@
 </div>
 {% endif %}
 
-{{ modal_file_upload() }}
-{{ modal_image_upload() }}
+{% include "includes/uploader.html" %}
 
 {% endblock %}
