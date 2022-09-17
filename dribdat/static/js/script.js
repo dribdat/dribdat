@@ -195,12 +195,12 @@
               $dialog.modal('hide');
             } else if ($(this).data('target') == 'post') {
               // Append to post
-              var imglink = '![Title](' + response + ')';
+              var imglink = '![](' + response + ')';
               $('#note').val(imglink + ' ' + $('#note').val());
               $dialog.modal('hide');
             } else if ($(this).data('target') == 'pitch') {
               // Append to pitch
-              var imglink = '![Title](' + response + ')';
+              var imglink = '![ Title ](' + response + ')';
               if (typeof window.toasteditor !== 'undefined') {
                 window.toasteditor.insertText(imglink);
               } else {
