@@ -53,7 +53,7 @@ jmespath==0.10.0; python_version >= "3.6" and python_full_version < "3.0.0" or p
 jsmin==3.0.1
 jsonschema==4.14.0; python_version >= "3.7"
 lxml==4.9.1; python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.5.0"
-mako==1.2.1; python_version >= "3.7"
+mako==1.2.2; python_version >= "3.7"
 marko==1.2.1; python_version >= "3.6"
 markupsafe==2.1.1; python_version >= "3.7"
 micawber==0.5.4
