@@ -197,6 +197,9 @@ class NewEventForm(FlaskForm):
     location = StringField(
         u'Located at', [length(max=255)],
         description=u'The event locale or virtual space')
+    hashtags = StringField(
+        u'Hashtags', [length(max=255)],
+        description=u'Social media hashtags for this event')
     description = TextAreaField(
         u'Description', description=u'Markdown and HTML supported')
     logo_url = URLField(

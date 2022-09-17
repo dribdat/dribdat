@@ -115,7 +115,7 @@
     if ($self.hasClass('disabled')) return;
     $self.addClass('disabled'); // while loading / finished
     $.get($self.attr('href'), function(d) {
-      $('section.timeline').prepend($(d).find('section.timeline').html());
+      $('section.timeline').append($(d).find('section.timeline').html());
       $next = $(d).find('#next-dribs');
       if ($next.length) {
         $self.removeClass('disabled').attr('href', $next.attr('href'));

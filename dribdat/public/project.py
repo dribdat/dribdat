@@ -20,6 +20,7 @@ from dribdat.user import (
     validateProjectData, projectProgressList, isUserActive,
 )
 from ..decorators import admin_required
+from urllib.parse import quote_plus
 
 blueprint = Blueprint('project', __name__,
                       static_folder="../static", url_prefix='/project')
@@ -290,6 +291,15 @@ def project_action(project_id, of_type=None, as_view=True, then_redirect=False,
     else:
         project_image_url = url_for(
             'static', filename='img/badge-black.png', _external=True)
+    # Generate social links
+
+    share = {
+        'text': quote_plus(" ".join([
+            project.hashtag or project.name,
+            event.hashtags or '#dribdat' ])),
+        'url': quote_plus(request.url)
+    }
+    # Dump all that data into a template
     return render_template(
         'public/project.html', current_event=event, project=project,
         project_starred=starred, project_team=project_team,
@@ -298,7 +308,7 @@ def project_action(project_id, of_type=None, as_view=True, then_redirect=False,
         allow_edit=allow_edit, allow_post=allow_post,
         lock_editing=lock_editing, missing_roles=missing_roles,
         stage=stage, all_valid=all_valid,
-        suggestions=suggestions,
+        suggestions=suggestions, share=share,
         active="projects"
     )
 

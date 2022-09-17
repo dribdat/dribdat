@@ -61,6 +61,7 @@
     {% endif %}
 
     {% if data.has_next %}
+      <!-- More dribs button. TODO: use id or date of last drib -->
       <a href="{{ url_for(endpoint, page=data.next_num) }}" id="next-dribs"
         title="Load another page of dribs" style="width:100%"
         class="btn btn-primary btn-lg">More!</a>
