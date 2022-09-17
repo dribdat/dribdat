@@ -1,5 +1,6 @@
 {% extends "layout.html" %}
 {% import "macros/_misc.html" as misc %}
+{% import "macros/_social.html" as social %}
 
 {% block page_title %}{{project.name}} - {{project.event.name}}{% endblock %}
 
@@ -465,7 +466,7 @@
   </div>
 </div>
 
-{% include "includes/social.html" %}
+{{ social.share_links(share.text, share.url) }}
 
 {% if not project.event.lock_resources %}
 <center class="mt-5">

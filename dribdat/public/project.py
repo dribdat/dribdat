@@ -292,7 +292,6 @@ def project_action(project_id, of_type=None, as_view=True, then_redirect=False,
         project_image_url = url_for(
             'static', filename='img/badge-black.png', _external=True)
     # Generate social links
-
     share = {
         'text': quote_plus(" ".join([
             project.hashtag or project.name,

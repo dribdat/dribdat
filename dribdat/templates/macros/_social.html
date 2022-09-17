@@ -1,46 +1,49 @@
 <!-- Social media links, generated with https://github.com/mxstbr/sharing -->
+
+{% macro share_links(share_text, share_url) %}
 <div class="social-media">
 
 <!-- Sharingbutton Mastodon -->
-<a class="resp-sharing-button__link" href="https://toot.kytta.dev/?instance=https%3A%2F%2Fmastodon.xyz&text={{ share.text }}%20{{ share.url }}" target="_blank" rel="noopener" title="Toot">
+<a class="resp-sharing-button__link" href="https://toot.kytta.dev/?instance=https%3A%2F%2Fmastodon.xyz&text={{ share_text }}%20{{ share_url }}" target="_blank" rel="noopener" title="Toot">
   <div class="resp-sharing-button resp-sharing-button--mastodon resp-sharing-button--small"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
 		<svg xmlns="http://www.w3.org/2000/svg" width="61.076954mm" height="65.47831mm" viewBox="0 0 216.4144 232.00976"><path fill-rule="evenodd" d="M211.80734 139.0875c-3.18125 16.36625-28.4925 34.2775-57.5625 37.74875-15.15875 1.80875-30.08375 3.47125-45.99875 2.74125-26.0275-1.1925-46.565-6.2125-46.565-6.2125 0 2.53375.15625 4.94625.46875 7.2025 3.38375 25.68625 25.47 27.225 46.39125 27.9425 21.11625.7225 39.91875-5.20625 39.91875-5.20625l.8675 19.09s-14.77 7.93125-41.08125 9.39c-14.50875.7975-32.52375-.365-53.50625-5.91875C9.23234 213.82 1.40609 165.31125.20859 116.09125c-.365-14.61375-.14-28.39375-.14-39.91875 0-50.33 32.97625-65.0825 32.97625-65.0825C49.67234 3.45375 78.20359.2425 107.86484 0h.72875c29.66125.2425 58.21125 3.45375 74.8375 11.09 0 0 32.975 14.7525 32.975 65.0825 0 0 .41375 37.13375-4.59875 62.915"/><path fill="#2b90d9" d="M177.50984 80.077v60.94125h-24.14375v-59.15c0-12.46875-5.24625-18.7975-15.74-18.7975-11.6025 0-17.4175 7.5075-17.4175 22.3525v32.37625H96.20734V85.42325c0-14.845-5.81625-22.3525-17.41875-22.3525-10.49375 0-15.74 6.32875-15.74 18.7975v59.15H38.90484V80.077c0-12.455 3.17125-22.3525 9.54125-29.675 6.56875-7.3225 15.17125-11.07625 25.85-11.07625 12.355 0 21.71125 4.74875 27.8975 14.2475l6.01375 10.08125 6.015-10.08125c6.185-9.49875 15.54125-14.2475 27.8975-14.2475 10.6775 0 19.28 3.75375 25.85 11.07625 6.36875 7.3225 9.54 17.22 9.54 29.675"/></svg>
   </div></div>
 </a>
 
 <!-- Sharingbutton Hacker News -->
-<a class="resp-sharing-button__link" href="https://news.ycombinator.com/submitlink?u={{ share.url }}&amp;t={{ share.text }}" target="_blank" rel="noopener" title="Share on Hacker News">
+<a class="resp-sharing-button__link" href="https://news.ycombinator.com/submitlink?u={{ share_url }}&amp;t={{ share_text }}" target="_blank" rel="noopener" title="Share on Hacker News">
   <div class="resp-sharing-button resp-sharing-button--hackernews resp-sharing-button--small"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
 		<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 140 140"><path fill-rule="evenodd" d="M60.94 82.314L17 0h20.08l25.85 52.093c.397.927.86 1.888 1.39 2.883.53.994.995 2.02 1.393 3.08.265.4.463.764.596 1.095.13.334.262.63.395.898.662 1.325 1.26 2.618 1.79 3.877.53 1.26.993 2.42 1.39 3.48 1.06-2.254 2.22-4.673 3.48-7.258 1.26-2.585 2.552-5.27 3.877-8.052L103.49 0h18.69L77.84 83.308v53.087h-16.9v-54.08z"></path></svg>
 	</div></div>
 </a>
 
 <!-- Sharingbutton Twitter -->
-<a class="resp-sharing-button__link" href="https://twitter.com/intent/tweet/?text={{ share.text }}&amp;url={{ share.url }}" target="_blank" rel="noopener" title="Tweet">
+<a class="resp-sharing-button__link" href="https://twitter.com/intent/tweet/?text={{ share_text }}&amp;url={{ share_url }}" target="_blank" rel="noopener" title="Tweet">
   <div class="resp-sharing-button resp-sharing-button--twitter resp-sharing-button--small"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M23.44 4.83c-.8.37-1.5.38-2.22.02.93-.56.98-.96 1.32-2.02-.88.52-1.86.9-2.9 1.1-.82-.88-2-1.43-3.3-1.43-2.5 0-4.55 2.04-4.55 4.54 0 .36.03.7.1 1.04-3.77-.2-7.12-2-9.36-4.75-.4.67-.6 1.45-.6 2.3 0 1.56.8 2.95 2 3.77-.74-.03-1.44-.23-2.05-.57v.06c0 2.2 1.56 4.03 3.64 4.44-.67.2-1.37.2-2.06.08.58 1.8 2.26 3.12 4.25 3.16C5.78 18.1 3.37 18.74 1 18.46c2 1.3 4.4 2.04 6.97 2.04 8.35 0 12.92-6.92 12.92-12.93 0-.2 0-.4-.02-.6.9-.63 1.96-1.22 2.56-2.14z"/></svg>
 	</div></div>
 </a>
 
 <!-- Sharingbutton LinkedIn -->
-<a class="resp-sharing-button__link" href="https://www.linkedin.com/shareArticle?mini=true&amp;url={{ share.url }}&amp;title={{ share.text }}&amp;summary={{ share.text }}&amp;source={{ share.url }}" target="_blank" rel="noopener" title="Share on LinkedIn">
+<a class="resp-sharing-button__link" href="https://www.linkedin.com/shareArticle?mini=true&amp;url={{ share_url }}&amp;title={{ share_text }}&amp;summary={{ share_text }}&amp;source={{ share_url }}" target="_blank" rel="noopener" title="Share on LinkedIn">
   <div class="resp-sharing-button resp-sharing-button--linkedin resp-sharing-button--small"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M6.5 21.5h-5v-13h5v13zM4 6.5C2.5 6.5 1.5 5.3 1.5 4s1-2.4 2.5-2.4c1.6 0 2.5 1 2.6 2.5 0 1.4-1 2.5-2.6 2.5zm11.5 6c-1 0-2 1-2 2v7h-5v-13h5V10s1.6-1.5 4-1.5c3 0 5 2.2 5 6.3v6.7h-5v-7c0-1-1-2-2-2z"/></svg>
 	</div></div>
 </a>
 
 <!-- Sharingbutton Facebook -->
-<a class="resp-sharing-button__link" href="https://facebook.com/sharer/sharer.php?u={{ share.url }}" target="_blank" rel="noopener" title="Post on Facebook">
+<a class="resp-sharing-button__link" href="https://facebook.com/sharer/sharer.php?u={{ share_url }}" target="_blank" rel="noopener" title="Post on Facebook">
   <div class="resp-sharing-button resp-sharing-button--facebook resp-sharing-button--small"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18.77 7.46H14.5v-1.9c0-.9.6-1.1 1-1.1h3V.5h-4.33C10.24.5 9.5 3.44 9.5 5.32v2.15h-3v4h3v12h5v-12h3.85l.42-4z"/></svg>
 	</div></div>
 </a>
 
 <!-- Sharingbutton Telegram -->
-<a class="resp-sharing-button__link" href="https://telegram.me/share/url?text={{ share.text }}&amp;url={{ share.url }}" target="_blank" rel="noopener" title="Post on Telegram">
+<a class="resp-sharing-button__link" href="https://telegram.me/share/url?text={{ share_text }}&amp;url={{ share_url }}" target="_blank" rel="noopener" title="Post on Telegram">
   <div class="resp-sharing-button resp-sharing-button--telegram resp-sharing-button--small"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M.707 8.475C.275 8.64 0 9.508 0 9.508s.284.867.718 1.03l5.09 1.897 1.986 6.38a1.102 1.102 0 0 0 1.75.527l2.96-2.41a.405.405 0 0 1 .494-.013l5.34 3.87a1.1 1.1 0 0 0 1.046.135 1.1 1.1 0 0 0 .682-.803l3.91-18.795A1.102 1.102 0 0 0 22.5.075L.706 8.475z"/></svg>
 	</div></div>
 </a>
 
 </div><!-- /.social-media -->
+{% endmacro %}

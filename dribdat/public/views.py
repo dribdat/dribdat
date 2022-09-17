@@ -4,6 +4,7 @@ from dribdat.utils import load_event_presets
 from flask import (Blueprint, request, render_template, flash, url_for,
                    redirect, current_app, jsonify)
 from flask_login import login_required, current_user
+from urllib.parse import quote_plus
 
 from dribdat.user.models import User, Event, Project, Activity
 from dribdat.public.forms import NewEventForm
@@ -260,5 +261,13 @@ def dribs():
     dribs = dribs.order_by(Activity.id.desc())
     dribs = dribs.paginate(int(page), int(per_page))
     dribs.items = [d for d in dribs.items if not d.project.is_hidden]
+    # Generate social links
+    for d in dribs.items:
+        d.share = {
+            'text': quote_plus(" ".join([
+                d.project.hashtag or d.project.name,
+                d.project.event.hashtags or '#dribdat' ])),
+            'url': quote_plus(request.host_url + d.project.url)
+        }
     return render_template("public/dribs.html",
                            endpoint='public.dribs', active='dribs', data=dribs)

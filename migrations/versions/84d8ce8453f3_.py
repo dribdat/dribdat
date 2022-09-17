@@ -1,4 +1,4 @@
-"""empty message
+"""Add hashtags to events
 
 Revision ID: 84d8ce8453f3
 Revises: 0c5ae11e7666

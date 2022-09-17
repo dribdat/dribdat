@@ -272,6 +272,7 @@ class Event(PkModel):
             'summary': self.summary or '',
             'hostname': self.hostname or '',
             'location': self.location or '',
+            'hashtags': self.hashtags or '',
             'starts_at': self.starts_at,
             'has_started': self.has_started,
             'ends_at': self.ends_at,
@@ -300,6 +301,7 @@ class Event(PkModel):
         self.summary = data['summary'] or ''
         self.hostname = data['hostname'] or ''
         self.location = data['location'] or ''
+        self.hashtags = data['hashtags'] or ''
         self.logo_url = data['logo_url'] or ''
         self.webpage_url = data['webpage_url'] or ''
         self.community_url = data['community_url'] or ''

@@ -3,6 +3,16 @@
   text-align: center;
 }
 
+.timeline-item .social-media {
+  max-height: 0px; opacity: 0;
+  transition: max-height 0.2s ease-out;
+}
+.timeline-item:focus-within .social-media,
+.timeline-item:active .social-media,
+.timeline-item:hover .social-media {
+  max-height: 200px; opacity: 1;
+}
+
 /* Social media styles, generated with https://github.com/mxstbr/sharing */
 
 .resp-sharing-button__link,
