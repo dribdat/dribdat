@@ -6,8 +6,8 @@ stages:
   -
     id: 0
     name: CHALLENGE
-    phase: Identify
-    description: 🚧 Asking questions with data about issues that matter.
+    phase: Ask
+    description: 🚧 Define questions to answer with data about issues that matter.
     conditions:
       validate:
         -
@@ -19,8 +19,7 @@ stages:
           min: 123
           help: Write at least one paragraph (123 chars) in the description, upload some sketches.
       agree:
-        - Questions are formulated in a way that hint at what data will be needed, helping to scope the project.
-        - Links to readily available data sources and other resources have been provided.
+        - Your questions hint at what data will be needed, helping to scope the project.
         - Acquiring data to meet the challenge is realistic within our time limits.
   -
     id: 5
@@ -36,7 +35,7 @@ stages:
           help: Between 1 and 5 people should Join your project or expedition.
       agree:
         - Our team members have agreed to work together for the duration of the event.
-        - We are collecting data, and sharing it in an accessible collaboration space.
+        - We are obtaining data, and sharing it in a space accessible to everyone.
   -
     id: 10
     name: RESEARCHED
@@ -49,9 +48,8 @@ stages:
           test: validurl
           help: Provide a source link in your project Details.
       agree:
-        - A shared repository has been set up where work on code and data can be tracked.
-        - Aggregation of data (download, crowdsourcing, scraping, etc.) is in progress.
-        - Link any relevant data schema or code frameworks in your documentation.
+        - Check the metadata and context of your data, the credibility of your sources.
+        - A shared repository has been set up, your work on code and data is backed up.
   -
     id: 20
     name: SKETCHED
@@ -64,9 +62,8 @@ stages:
           test: validurl
           help: Upload or link to an image in your project Details.
       agree:
-        - Check the metadata and methods of your data, decide whether they come from a credible source.
         - Annotate key datasets to explain your understanding of the structure and content.
-        - We made wireframes or sketches of our idea, attaching it here as an image.
+        - Make wireframes or sketches of your idea, attaching it here as an image.
   -
     id: 30
     name: PROTOTYPED
@@ -79,8 +76,8 @@ stages:
           test: validurl
           help: Online access to browse your data or demo in the Project Link.
       agree:
-        - We have checked the rights, open licenses, and permissions to use all assets, data, and code.
-        - Perspective was gained on the data using a spreadsheet, data wrangling or statistical program.
+        - We have checked the rights / licenses / permissions to use all assets, data, and code.
+        - Link any third-party resources, data schema or code frameworks in your documentation.
   -
     id: 40
     name: LAUNCHED
@@ -89,29 +86,25 @@ stages:
     conditions:
       validate:
         -
-          field: autotext_url
-          test: validurl
-          help: Link and sync a remote repository or README for your project.
-      agree:
-        - Gain more depth by exploring data in code, with data visualisations and interfaces.
-        - While correlating and linking data fields, we made critical reflection of causality.
-        - The necessary infrastructure for hosting is available, and can be maintained.
-  -
-    id: 50
-    name: LIVE
-    phase: Communicate
-    description: 🚀 Thinking about audience and making the results public.
-    conditions:
-      validate:
-        -
           field: contact_url
           test: validurl
           help: Provide a contact link in your project Details.
+      agree:
+        - Gain more depth by exploring data with visualisations and interfaces.
+        - While correlating and linking data fields, we are critical of causality.
+        - Contact with the maintainers is possible to ask questions or send feedback.
+  -
+    id: 50
+    name: LIVE
+    phase: Share
+    description: 🚀 Thinking about audience and making the results public.
+    conditions:
+      validate:
         -
           field: download_url
           test: validurl
           help: Provide a download link in your project Details.
       agree:
         - The full results of this work have been showcased and published under an open license.
-        - Contact with the maintainers is possible to ask questions or send feedback.
-        - We have made sure to attribute all sources, and to thank all contributors.
+        - The necessary infrastructure for hosting is available, and can be maintained.
+        - We have correctly attributed all sources, and thanked all contributors.

@@ -71,6 +71,15 @@ form input[type="checkbox"] {
   margin-top: -.36em;
   z-index: -1;
 }
+.form-project-post .post-image-btn {
+  float: left;
+  margin-right: -15em;
+}
+@media (max-width: 760px) {
+  .form-project-post .post-image-btn {
+    margin-right: -2em;
+  }
+}
 .template-select .card-body .fa {
   font-size: 1.4em;
   float: right;
@@ -1493,10 +1502,16 @@ Instruction page
   border: 3px dashed lightgray;
   padding: 1em;
 }
+.form-project-confirm input {
+  transform: scale(1.5);
+  position: absolute;
+  left: 15px;
+}
 .form-project-confirm label {
   clear: both;
   margin-top: 0.5em;
   cursor: pointer;
+  padding: 0 0 0 2em;
 }
 .form-project-confirm:hover {
   background-color: lightyellow;

@@ -78,7 +78,7 @@ def PackageEvent(event, author=None, host_url='', full_contents=False):
         # print("Generating in-memory JSON of participants")
         package.add_resource(Resource(
                 name='users',
-                data=get_event_users(event),
+                data=get_event_users(event, full_contents),
             ))
         # print("Generating in-memory JSON of activities")
         package.add_resource(Resource(
@@ -137,8 +137,9 @@ def importUsers(data, DRY_RUN=False):
     updates = []
     for usr in data:
         name = usr['username']
-        user = User.query.filter_by(username=name).first()
-        if user:
+        email = usr['email']
+        if User.query.filter_by(username=name).first() or \
+           User.query.filter_by(email=email).first():
             # Do not update existing user data
             logging.info('Skipping user: %s' % name)
             continue

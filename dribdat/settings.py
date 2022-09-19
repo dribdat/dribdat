@@ -20,9 +20,12 @@ class Config(object):
     DRIBDAT_THEME = os_env.get('DRIBDAT_THEME', 'simplex')
 
     # Application options
-    DRIBDAT_USER_APPROVE = bool(strtobool(os_env.get('DRIBDAT_USER_APPROVE', 'False')))
-    DRIBDAT_NOT_REGISTER = bool(strtobool(os_env.get('DRIBDAT_NOT_REGISTER', 'False')))
-    DRIBDAT_ALLOW_EVENTS = bool(strtobool(os_env.get('DRIBDAT_ALLOW_EVENTS', 'False')))
+    DRIBDAT_USER_APPROVE = os_env.get('DRIBDAT_USER_APPROVE', 'False')
+    DRIBDAT_USER_APPROVE = bool(strtobool(DRIBDAT_USER_APPROVE))
+    DRIBDAT_NOT_REGISTER = os_env.get('DRIBDAT_NOT_REGISTER', 'False')
+    DRIBDAT_NOT_REGISTER = bool(strtobool(DRIBDAT_NOT_REGISTER))
+    DRIBDAT_ALLOW_EVENTS = os_env.get('DRIBDAT_ALLOW_EVENTS', 'False')
+    DRIBDAT_ALLOW_EVENTS = bool(strtobool(DRIBDAT_ALLOW_EVENTS))
 
     # Single sign-on support
     OAUTH_ID = os_env.get('OAUTH_ID', None)
@@ -42,7 +45,8 @@ class Config(object):
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
     # Server settings
-    SERVER_NAME = os_env.get('SERVER_URL', os_env.get('SERVER_NAME', 'localhost.localdomain:5000'))
+    SERVER_NAME = os_env.get('SERVER_URL', os_env.get(
+        'SERVER_NAME', 'localhost.localdomain:5000'))
     SERVER_SSL = os_env.get('SERVER_SSL', None)
     SERVER_CORS = bool(strtobool(os_env.get('SERVER_CORS', 'True')))
     SERVER_PROXY = bool(strtobool(os_env.get('SERVER_PROXY', 'False')))

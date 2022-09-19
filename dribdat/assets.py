@@ -8,6 +8,7 @@ assets = Environment()
 css = Bundle(
     "css/honeycomb.css",
     "css/timeline.css",
+    "css/social.css",
     "css/style.css",
     filters="cssmin",
     output="public/css/common.css"

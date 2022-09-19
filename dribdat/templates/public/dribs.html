@@ -1,5 +1,7 @@
 {% extends "layout.html" %}
 
+{% import "macros/_social.html" as social %}
+
 {% block page_title %}Dribs{% endblock %}
 
 {% block body_class %}dribs-page{% endblock %}
@@ -49,11 +51,18 @@
           {% endif %}
             <div class="date" title="{{ s.data.date }}">
               {{s.data.timesince}}
-              {% if s.user %} ~ <b>{{ s.user.username }}</b>{% endif %}
+              {% if s.user %}
+                ~
+                <a class="userlink"
+                  href="{{ url_for('public.user', username=s.user.username )}}">
+                  {{ s.user.username }}</a>
+              {% endif %}
             </div>
           {% if s.ref_url %}
             </a>
           {% endif %}
+
+          {{ social.share_links(s.share.text, s.share.url) }}
         </div>
       </div>
       {% endfor %}
@@ -61,6 +70,7 @@
     {% endif %}
 
     {% if data.has_next %}
+      <!-- More dribs button. TODO: use id or date of last drib -->
       <a href="{{ url_for(endpoint, page=data.next_num) }}" id="next-dribs"
         title="Load another page of dribs" style="width:100%"
         class="btn btn-primary btn-lg">More!</a>

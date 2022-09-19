@@ -1,5 +1,6 @@
 {% extends "layout.html" %}
 {% import "macros/_misc.html" as misc %}
+{% import "macros/_social.html" as social %}
 
 {% block page_title %}{{project.name}} - {{project.event.name}}{% endblock %}
 
@@ -72,12 +73,18 @@
 
 <div class="btn-group project-edit-buttons" role="group" aria-label="Project tools">
 
-  {% if allow_post and not lock_editing %}
+  {% if allow_post %}
      <a id="project-post" href="{{ url_for('project.project_post', project_id=project.id) }}" title="Post to this project" class="btn btn-lg btn-success">
        <i class="fa fa-paper-plane" aria-hidden="true"></i>
-       Post an update
+       Write update
      </a>
-  {% elif current_user and current_user.active and not project.is_challenge %}
+     {% if cert_path %}
+        <a id="get-certified" href="{{ cert_path }}" download class="btn btn-lg btn-info">
+          <i class="fa fa-download"></i>
+          Certificate
+        </a>
+     {% endif %}
+  {% elif current_user and current_user.active and not project.is_challenge and not project.event.lock_resources %}
      <a id="project-comment" href="{{ url_for('project.project_comment', project_id=project.id) }}" title="Write a public comment" class="btn btn-lg btn-info">
        <i class="fa fa-comment" aria-hidden="true"></i>
        Comment</a>
@@ -168,6 +175,15 @@
       {{project.summary}}
     </p>
   {% endif %}
+
+  {% if project.hashtag %}
+    <p class="project-hashtag">
+      <a href="{{ project.event.community_url or '#' }}" target="_blank">
+        {{project.hashtag}}
+      </a>
+    </p>
+  {% endif %}
+
   </div><!-- /.project-name -->
 
   {% if project_badge %}
@@ -289,7 +305,12 @@
             <a href="{{ s.ref_url }}" target="_blank">
           {% endif %}
               {{ s.date|format_datetime }}
-              {% if s.author %} ~ <b>{{ s.author }}</b>{% endif %}
+              {% if s.author %}
+                ~
+                <a class="userlink"
+                  href="{{ url_for('public.user', username=s.author )}}">
+                  {{ s.author }}</a>
+              {% endif %}
           {% if s.ref_url %}
             </a>
           {% endif %}
@@ -386,29 +407,33 @@
 
 <center class="project-footer-controls">
 
-{% if allow_edit %}
 <div role="group" aria-label="Project controls" class="btn-group project-controls">
   <div class="btn-group">
+
+    {% if allow_post %}
     <a href="{{ url_for('project.project_post', project_id=project.id) }}" class="btn btn-lg btn-success"
        title="Write a progress update">
       <i class="fa fa-paper-plane" aria-hidden="true"></i>
       Post</a>
-    <a href="{{ url_for('project.project_edit', project_id=project.id) }}" class="btn btn-lg btn-warning"
-       title="Edit basic project data">
-      <i class="fa fa-pencil" aria-hidden="true"></i>
-      Edit</a>
-    <a href="{{ url_for('project.project_details', project_id=project.id) }}" class="btn btn-lg btn-info"
-       title="Edit project details" >
-      <i class="fa fa-pencil" aria-hidden="true"></i>
-      Details</a>
-    {% if project.is_autoupdateable %}
+    {% endif %}
+    {% if allow_edit %}
+      <a href="{{ url_for('project.project_edit', project_id=project.id) }}" class="btn btn-lg btn-warning"
+         title="Edit basic project data">
+        <i class="fa fa-pencil" aria-hidden="true"></i>
+        Edit</a>
+      <a href="{{ url_for('project.project_details', project_id=project.id) }}" class="btn btn-lg btn-info"
+         title="Edit project details" >
+        <i class="fa fa-pencil" aria-hidden="true"></i>
+        Details</a>
+    {% endif %}
+    {% if allow_edit and project.is_autoupdateable %}
       <a href="{{ url_for('project.project_autoupdate', project_id=project.id) }}" title="Sync external data" class="btn btn-lg btn-warning">
         <i class="fa fa-refresh" aria-hidden="true"></i>
         Sync</a>
     {% endif %}
+
   </div>
 </div><!-- / .project-controls -->
-{% endif %}
 
 {% if current_user.is_admin and not project.event.lock_resources %}
 <div role="group" aria-label="Project administration" class="ml-3 btn-group admin-area" title="Admin area">
@@ -464,6 +489,8 @@
     {{project.event.community_embed|safe}}
   </div>
 </div>
+
+{{ social.share_links(share.text, share.url) }}
 
 {% if not project.event.lock_resources %}
 <center class="mt-5">

@@ -5,37 +5,58 @@
 {% block body_class %}userprofile{% endblock %}
 
 {% block content %}
+
+{% if current_user and current_user.is_authenticated %}
 <div class="row">
-
-  {% if current_user and current_user.is_authenticated and current_user.id == user.id %}
   <div class="col-sm text-right">
+  {% if current_user.id == user.id %}
 
-    <a id="project-post"
-       href="{{ url_for('public.user_post', username=current_user.username) }}"
-       title="Post an update to your current project" class="btn btn-success btn-lg">
-      <i class="fa fa-clipboard" aria-hidden="true"></i>
-      Write a Post</a>
+    <div class="btn-group">
+      <a id="project-post"
+         href="{{ url_for('public.user_post', username=current_user.username) }}"
+         title="Post an update to your current project" class="btn btn-success btn-lg">
+        <i class="fa fa-clipboard" aria-hidden="true"></i>
+        Write a Post</a>
 
-    <a href="{{ url_for('auth.user_profile') }}" class="btn btn-secondary btn-warning btn-lg">
-      <i class="fa fa-child"></i>
-      Edit Profile
-    </a>
+      <a href="{{ url_for('auth.user_profile') }}" class="btn btn-secondary btn-warning btn-lg">
+        <i class="fa fa-child"></i>
+        Edit Profile
+      </a>
 
-    <a href="{{ url_for('api.current_user_hackathon_json') }}" download
-      title="Download a snapshot of my contributions" class="btn btn-light btn-lg">
-      <i class="fa fa-download"></i>
-      My Data
-    </a>
+      <a href="{{ url_for('api.current_user_hackathon_json') }}" download
+        title="Download a snapshot of my contributions" class="btn btn-light btn-lg">
+        <i class="fa fa-download"></i>
+        My Data
+      </a>
 
-    <a href="{{ url_for('auth.logout') }}" class="btn btn-secondary btn-lg"
-      title="Sign out of this account">
-      <i class="fa fa-sign-out"></i>
-    </a>
+      <a href="{{ url_for('auth.logout') }}" class="btn btn-secondary btn-lg"
+        title="Sign out of this account">
+        <i class="fa fa-sign-out"></i>
+      </a>
+    </div>
 
-  </div>
+  {% elif current_user.is_admin %}
+
+    <div class="btn-group">
+      <a id="user-email"
+         href="mailto:{{ user.email }}"
+         class="btn btn-info btn-lg">
+        <i class="fa fa-email" aria-hidden="true"></i>
+        Write E-mail</a>
+
+      <a id="user-edit"
+          href="{{ url_for('admin.user', user_id=user.id )}}"
+          class="btn btn-secondary btn-warning btn-lg">
+        <i class="fa fa-child"></i>
+        Edit Profile
+      </a>
+    </div>
+    
   {% endif %}
-
+  </div>
 </div>
+{% endif %}
+
 <div class="row">
 
   <h1 class="profile-header huge">

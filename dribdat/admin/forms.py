@@ -81,6 +81,10 @@ class EventForm(FlaskForm):
         u'Located at',
         [length(max=255)],
         description=u'The event locale or virtual space')
+    hashtags = StringField(
+        u'Hashtags',
+        [length(max=255)],
+        description=u'Social media hashtags for this event')
     description = TextAreaField(
         u'Description',
         description=u'Markdown and HTML supported')
@@ -129,7 +133,7 @@ class ProjectForm(FlaskForm):
     hashtag = StringField(
         u'Hashtag',
         [length(max=255)],
-        description="Uniquely identifies the team channel")
+        description="Team channel or social media hashtag")
     autotext_url = URLField(
         u'Readme',
         [length(max=2048)],

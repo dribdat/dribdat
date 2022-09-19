@@ -20,6 +20,7 @@ from dribdat.user import (
     validateProjectData, projectProgressList, isUserActive,
 )
 from ..decorators import admin_required
+from urllib.parse import quote, quote_plus
 
 blueprint = Blueprint('project', __name__,
                       static_folder="../static", url_prefix='/project')
@@ -264,7 +265,7 @@ def project_action(project_id, of_type=None, as_view=True, then_redirect=False,
     # Figure out permissions (hackybehack!)
     allow_edit = not current_user.is_anonymous and current_user.is_admin
     lock_editing = event.lock_editing
-    allow_post = starred
+    allow_post = starred and not event.lock_resources
     allow_edit = (starred or allow_edit) and not lock_editing
     # Obtain list of team members (performance!)
     project_team = project.get_team()
@@ -290,6 +291,18 @@ def project_action(project_id, of_type=None, as_view=True, then_redirect=False,
     else:
         project_image_url = url_for(
             'static', filename='img/badge-black.png', _external=True)
+    # Generate social links
+    share = {
+        'text': quote(" ".join([
+            project.hashtag or project.name,
+            event.hashtags or '#dribdat']).strip()),
+        'url': quote_plus(request.url)
+    }
+    # Generate a certificate if available
+    cert_path = None
+    if current_user and not current_user.is_anonymous:
+        cert_path = current_user.get_cert_path(event)
+    # Dump all that data into a template
     return render_template(
         'public/project.html', current_event=event, project=project,
         project_starred=starred, project_team=project_team,
@@ -297,8 +310,8 @@ def project_action(project_id, of_type=None, as_view=True, then_redirect=False,
         project_image_url=project_image_url,
         allow_edit=allow_edit, allow_post=allow_post,
         lock_editing=lock_editing, missing_roles=missing_roles,
-        stage=stage, all_valid=all_valid,
-        suggestions=suggestions,
+        stage=stage, all_valid=all_valid, cert_path=cert_path,
+        suggestions=suggestions, share=share,
         active="projects"
     )
 

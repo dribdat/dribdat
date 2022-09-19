@@ -12,12 +12,17 @@ from dribdat.extensions import cache
 from dribdat.aggregation import GetEventUsers
 from dribdat.user import getProjectStages, isUserActive
 
+from urllib.parse import quote, quote_plus
 from datetime import datetime
+import re
 
 blueprint = Blueprint('public', __name__, static_folder="../static")
 
-
+# Loads confiuration for events
 EVENT_PRESET = load_event_presets()
+
+# Removes markdown and HTML tags
+RE_NO_TAGS = re.compile(r'\!\[[^\]]*\]\([^\)]+\)|\[|\]|<[^>]+>')
 
 
 def current_event(): return Event.current()
@@ -83,8 +88,10 @@ def home():
         my_projects = current_user.joined_projects(True, 3)
     # Send to template
     return render_template("public/home.html",
-                           events_next=events_next, events_past=events_past,
-                           events_tips=resource_events, my_projects=my_projects,
+                           events_next=events_next,
+                           events_past=events_past,
+                           events_tips=resource_events,
+                           my_projects=my_projects,
                            current_event=cur_event)
 
 
@@ -260,5 +267,13 @@ def dribs():
     dribs = dribs.order_by(Activity.id.desc())
     dribs = dribs.paginate(int(page), int(per_page))
     dribs.items = [d for d in dribs.items if not d.project.is_hidden]
+    # Generate social links
+    for d in dribs.items:
+        d.share = {
+            'text': quote(" ".join([
+                RE_NO_TAGS.sub('', d.content or d.project.name),
+                d.project.event.hashtags or '#dribdat']).strip()),
+            'url': quote_plus(request.host_url + d.project.url)
+        }
     return render_template("public/dribs.html",
                            endpoint='public.dribs', active='dribs', data=dribs)

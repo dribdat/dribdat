@@ -85,6 +85,7 @@
       vparent.show();
       all_checked = $('.form-project-confirm input[type="checkbox"]:not(:checked)').length === 0;
       vinput.checked = all_checked;
+      $('#next-level-hint').hide();
     });
   });
 
@@ -114,7 +115,7 @@
     if ($self.hasClass('disabled')) return;
     $self.addClass('disabled'); // while loading / finished
     $.get($self.attr('href'), function(d) {
-      $('section.timeline').prepend($(d).find('section.timeline').html());
+      $('section.timeline').append($(d).find('section.timeline').html());
       $next = $(d).find('#next-dribs');
       if ($next.length) {
         $self.removeClass('disabled').attr('href', $next.attr('href'));
@@ -145,16 +146,22 @@
     var $togglebtn = $('button[data-target="#uploadImage"]');
     // Enable the available fields
     var $longtext = $('.fld-longtext');
-    var $imageurl = $('.fld-image_url');
     if ($longtext.length > 0) {
       $longtext.prepend($togglebtn.clone().show());
     } else {
       $dialog.find("[data-target='pitch']").hide();
     }
+    var $imageurl = $('.fld-image_url');
     if ($imageurl.length > 0) {
       $imageurl.append($togglebtn.clone().show());
     } else {
       $dialog.find("[data-target='cover']").hide();
+    }
+    var $postnote = $('.fld-note');
+    if ($postnote.length > 0) {
+      $('.control-label[for="note"]').parent().prepend($togglebtn.clone().show());
+    } else {
+      $dialog.find("[data-target='post']").hide();
     }
     // Set up the file dialog
     var $inputfd = $dialog.find('input[type="file"]');
@@ -186,9 +193,14 @@
               // Replace the cover
               $('#image_url').val(response);
               $dialog.modal('hide');
+            } else if ($(this).data('target') == 'post') {
+              // Append to post
+              var imglink = '![](' + response + ')';
+              $('#note').val(imglink + ' ' + $('#note').val());
+              $dialog.modal('hide');
             } else if ($(this).data('target') == 'pitch') {
               // Append to pitch
-              var imglink = '![Title](' + response + ')';
+              var imglink = '![ Title ](' + response + ')';
               if (typeof window.toasteditor !== 'undefined') {
                 window.toasteditor.insertText(imglink);
               } else {
@@ -603,7 +615,7 @@
   init_clock();
   init_editor();
   checkSearchQuery();
-  
+
   console.info('dribdat ready.');
 
 }).call(this, jQuery, window);

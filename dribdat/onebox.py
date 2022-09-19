@@ -12,6 +12,8 @@ from micawber.parsers import standalone_url_re, full_handler
 
 def format_webembed(url):
     if url.lower().startswith('<iframe '):
+        # Allow IFRAMEs
+        # TODO: add a setting
         return url
     if url.startswith('https://query.wikidata.org/'):
         # Fix WikiData queries

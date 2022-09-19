@@ -105,13 +105,17 @@ class User(UserMixin, PkModel):
     def data(self):
         return {
             'id': self.id,
-            'username': self.username,
             'email': self.email,
-            'webpage_url': self.webpage_url,
             'sso_id': self.sso_id,
-            'roles': ",".join([r.name for r in self.roles]),
             'active': self.active,
             'is_admin': self.is_admin,
+            'username': self.username,
+            'webpage_url': self.webpage_url,
+            'roles': ",".join([r.name for r in self.roles]),
+            'cardtype': self.cardtype,
+            'carddata': self.carddata,
+            'my_story': self.my_story,
+            'my_goals': self.my_goals,
         }
 
     def set_from_data(self, data):
@@ -119,7 +123,7 @@ class User(UserMixin, PkModel):
         self.username = data['username']
         self.webpage_url = data['webpage_url']
         if 'email' not in data:
-            data['email'] = self.username + '@localhost.localdomain'
+            data['email'] = self.username + '@' + self.sso_id + '.localdomain'
         self.email = data['email']
 
     def socialize(self):
@@ -237,6 +241,7 @@ class Event(PkModel):
     summary = Column(db.String(140), nullable=True)
     hostname = Column(db.String(80), nullable=True)
     location = Column(db.String(255), nullable=True)
+    hashtags = Column(db.String(255), nullable=True)
 
     description = Column(db.UnicodeText(), nullable=True)
     boilerplate = Column(db.UnicodeText(), nullable=True)
@@ -267,6 +272,7 @@ class Event(PkModel):
             'summary': self.summary or '',
             'hostname': self.hostname or '',
             'location': self.location or '',
+            'hashtags': self.hashtags or '',
             'starts_at': self.starts_at,
             'has_started': self.has_started,
             'ends_at': self.ends_at,
@@ -295,6 +301,7 @@ class Event(PkModel):
         self.summary = data['summary'] or ''
         self.hostname = data['hostname'] or ''
         self.location = data['location'] or ''
+        self.hashtags = data['hashtags'] or ''
         self.logo_url = data['logo_url'] or ''
         self.webpage_url = data['webpage_url'] or ''
         self.community_url = data['community_url'] or ''
