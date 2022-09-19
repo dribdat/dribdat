@@ -20,7 +20,7 @@ from dribdat.user import (
     validateProjectData, projectProgressList, isUserActive,
 )
 from ..decorators import admin_required
-from urllib.parse import quote_plus
+from urllib.parse import quote, quote_plus
 
 blueprint = Blueprint('project', __name__,
                       static_folder="../static", url_prefix='/project')
@@ -293,9 +293,9 @@ def project_action(project_id, of_type=None, as_view=True, then_redirect=False,
             'static', filename='img/badge-black.png', _external=True)
     # Generate social links
     share = {
-        'text': quote_plus(" ".join([
+        'text': quote(" ".join([
             project.hashtag or project.name,
-            event.hashtags or '#dribdat' ])),
+            event.hashtags or '#dribdat']).strip()),
         'url': quote_plus(request.url)
     }
     # Generate a certificate if available

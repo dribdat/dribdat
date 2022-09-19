@@ -12,7 +12,7 @@ from dribdat.extensions import cache
 from dribdat.aggregation import GetEventUsers
 from dribdat.user import getProjectStages, isUserActive
 
-from urllib.parse import quote_plus
+from urllib.parse import quote, quote_plus
 from datetime import datetime
 import re
 
@@ -270,9 +270,9 @@ def dribs():
     # Generate social links
     for d in dribs.items:
         d.share = {
-            'text': quote_plus(" ".join([
+            'text': quote(" ".join([
                 RE_NO_TAGS.sub('', d.content or d.project.name),
-                d.project.event.hashtags or '#dribdat'])),
+                d.project.event.hashtags or '#dribdat']).strip()),
             'url': quote_plus(request.host_url + d.project.url)
         }
     return render_template("public/dribs.html",
