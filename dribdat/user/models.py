@@ -123,7 +123,7 @@ class User(UserMixin, PkModel):
         self.username = data['username']
         self.webpage_url = data['webpage_url']
         if 'email' not in data:
-            data['email'] = self.username + '@localhost.localdomain'
+            data['email'] = self.username + '@' + self.sso_id + '.localdomain'
         self.email = data['email']
 
     def socialize(self):

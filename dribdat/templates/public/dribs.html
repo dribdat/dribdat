@@ -51,7 +51,12 @@
           {% endif %}
             <div class="date" title="{{ s.data.date }}">
               {{s.data.timesince}}
-              {% if s.user %} ~ <b>{{ s.user.username }}</b>{% endif %}
+              {% if s.user %}
+                ~
+                <a class="userlink"
+                  href="{{ url_for('public.user', username=s.user.username )}}">
+                  {{ s.user.username }}</a>
+              {% endif %}
             </div>
           {% if s.ref_url %}
             </a>
