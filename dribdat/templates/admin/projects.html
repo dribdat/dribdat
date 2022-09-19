@@ -30,7 +30,7 @@
     <table class='table table-hover'>
         <thead>
             <tr>
-              <th>Name <small> _ Phase</small></th>
+              <th>Name <small>(Phase)</small></th>
               <th>Category</th>
               <th>Created</th>
               <th>Updated</th>
@@ -43,7 +43,9 @@
               <a href="{{ url_for('project.project_view', project_id=project.id) }}">
                 {{ project.name }}
               </a>
-              <small><br>{{ project.phase }}</small>
+              <br>
+              <small>({{ project.phase }})</small>
+              <small><b>{{ project.hashtag or '' }}</b></small>
             </td>
             <td>{{ project.category.name }}</td>
             <td>{{ project.created_at|format_date }}

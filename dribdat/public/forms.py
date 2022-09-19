@@ -123,19 +123,19 @@ class ProjectDetailForm(FlaskForm):
     id = HiddenField('id')
     autotext_url = URLField(
         u'Readme', [length(max=255)],
-        description="URL to external documentation "
-        + "(code repository, online doc,..)")
+        description="Link to code repository or online document.")
     source_url = URLField(
         u'Sources', [length(max=255)],
-        description="URL of your source code repository or project data.")
+        description="Link to source code repository or project data.")
     download_url = URLField(
         u'Download', [length(max=255)],
-        description="URL to a release page, website, app store,.. "
-        + " where your project may be installed.")
+        description="Link to a release page to get a copy of your project.")
     contact_url = StringField(
         u'Contact us', [length(max=255)],
-        description="URL of an issues page, contact form, chat channel, "
-        + "forum thread, social media account,..")
+        description="Link to an issues page, contact form, forum thread, etc.")
+    hashtag = StringField(
+        u'Hashtag', [length(max=255)],
+        description="Team channel or social media hashtag.")
     # Note: relative links allowed in image_url -> StringField
     image_url = StringField(
         u'Cover image', [length(max=255)],

@@ -175,6 +175,15 @@
       {{project.summary}}
     </p>
   {% endif %}
+
+  {% if project.hashtag %}
+    <p class="project-hashtag">
+      <a href="{{ project.event.community_url or '#' }}" target="_blank">
+        {{project.hashtag}}
+      </a>
+    </p>
+  {% endif %}
+
   </div><!-- /.project-name -->
 
   {% if project_badge %}
