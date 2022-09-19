@@ -271,7 +271,7 @@ def dribs():
     for d in dribs.items:
         d.share = {
             'text': quote_plus(" ".join([
-                RE_NO_TAGS.sub('', d.content),
+                RE_NO_TAGS.sub('', d.content or d.project.name),
                 d.project.event.hashtags or '#dribdat'])),
             'url': quote_plus(request.host_url + d.project.url)
         }
