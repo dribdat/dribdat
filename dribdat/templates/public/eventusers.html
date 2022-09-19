@@ -6,17 +6,18 @@
 
 {% block content %}
 {% cache 300, 'eventusers-%d' % current_event.id %}
-<h1 class="huge">Contributors</h1>
 
 {% if cert_path %}
-<div class="get-certified float-right m-1">
-  <a href="{{ cert_path }}"
-      download class="btn btn-success">
+<div class="get-certified text-right m-0" style="font-size:2rem">
+  <span>✔️</span>&nbsp;
+  <a href="{{ cert_path }}" download class="btn btn-info">
     <i class="fa fa-download"></i>
     Download Certificate
   </a>
 </div>
 {% endif %}
+
+<h1 class="huge">Contributors</h1>
 
 <div class="event-participants jumbotron">
 {% if participants %}
