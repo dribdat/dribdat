@@ -137,7 +137,8 @@ def importUsers(data, DRY_RUN=False):
     updates = []
     for usr in data:
         name = usr['username']
-        email = usr['email']
+        if name is None or len(name) < 4: continue
+        email = usr['email'] if 'email' in usr else ''
         if User.query.filter_by(username=name).first() or \
            User.query.filter_by(email=email).first():
             # Do not update existing user data
