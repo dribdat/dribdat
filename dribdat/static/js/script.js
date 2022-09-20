@@ -360,6 +360,7 @@
     }); //- get searchForm
   } // -runSearch
 
+  // Runs an inline search based on the document URL
   function checkSearchQuery() {
     let paramString = (new URL(document.location)).searchParams;
     let searchParams = new URLSearchParams(paramString);

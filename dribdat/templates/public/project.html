@@ -28,12 +28,24 @@
 
 {% block content %}
 
-{% if project_starred and allow_edit and (suggestions or stage) %}
+{% if project_starred and allow_edit and (suggestions or stage) and project.progress < 50 %}
   <div class="alert alert-light resource-list project-tips">
     <button type="button" class="close" data-dismiss="alert" aria-label="Dismiss" title="Dismiss">
       <span aria-hidden="true">&times;</span>
     </button>
     <div class="profile-projects container-fluid">
+      <p class="category-tip pt-2 m-0 clearfix" style="margin-left:-1em">
+        <span class="user-score" style="background:white">&#x1F4A1;</span>&nbsp;
+        {% if project.progress < 5 %}
+          Advance to the next stage by posting an Update.
+        {% elif project.progress < 20 %}
+          Find tips, examples and resources to inspire your team.
+        {% elif project.progress < 40 %}
+          Write down what you are doing regularly to help stay on track.
+        {% else %}
+          Give credit to everyone involved and all sources you used.
+        {% endif %}
+      </p>
       <div class="row flex-row flex-nowrap">
       {% for project in suggestions %}
         <a class="col-md-5 ms-auto card project"
@@ -48,25 +60,21 @@
         </a>
       {% endfor %}
       </div>
-      <p class="category-tip mb-2 mt-1 clearfix" style="margin-left:-1em">
-        <span class="user-score" style="background:white">&#x1F4A1;</span>&nbsp;
-        Resources for you and your team. Advance to the next stage with a Post.
-      </p>
-      <div class="stage-conditions clearfix mb-2">
+      <p class="stage-conditions clearfix pl-2 pb-3">
         {% for item in stage.conditions.validate %}
           {% if item.valid %}
-            <div class="mr-2 float-left stage-ok">
+            <span class="mr-2 float-left stage-ok">
               <i class="fa fa-thumbs-up"></i>
               {{ item.help }}
-            </div>
+            </span>
           {% else %}
-            <div class="mr-2 float-left stage-no">
+            <span class="mr-2 float-left stage-no">
               <i class="fa fa-paw"></i>
               {{ item.help }}
-            </div>
+            </span>
           {% endif %}
         {% endfor %}
-      </div>
+      </p>
     </div><!-- /profile-projects -->
   </div>
 {% endif %}

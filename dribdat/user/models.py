@@ -123,7 +123,7 @@ class User(UserMixin, PkModel):
         self.username = data['username']
         self.webpage_url = data['webpage_url']
         if 'email' not in data:
-            data['email'] = self.username + '@' + self.sso_id + '.localdomain'
+            data['email'] = "%s@%d.localdomain" % (self.username, data['id'])
         self.email = data['email']
 
     def socialize(self):
@@ -299,20 +299,20 @@ class Event(PkModel):
     def set_from_data(self, data):
         self.name = data['name']
         self.summary = data['summary'] or ''
-        self.hostname = data['hostname'] or ''
-        self.location = data['location'] or ''
-        self.hashtags = data['hashtags'] or ''
-        self.logo_url = data['logo_url'] or ''
-        self.webpage_url = data['webpage_url'] or ''
-        self.community_url = data['community_url'] or ''
-        self.starts_at = parse(data['starts_at'])
         self.ends_at = parse(data['ends_at'])
-        self.description = data['description'] or ''
-        self.boilerplate = data['boilerplate'] or ''
-        self.instruction = data['instruction'] or ''
-        self.custom_css = data['custom_css'] or ''
-        self.community_embed = data['community_embed'] or ''
-        self.certificate_path = data['certificate_path'] or ''
+        self.starts_at = parse(data['starts_at'])
+        self.hostname = data['hostname'] or '' if 'hostname' in data else ''
+        self.location = data['location'] or '' if 'location' in data else ''
+        self.hashtags = data['hashtags'] or '' if 'hashtags' in data else ''
+        self.logo_url = data['logo_url'] or '' if 'logo_url' in data else ''
+        self.custom_css = data['custom_css'] or '' if 'custom_css' in data else ''
+        self.description = data['description'] or '' if 'description' in data else ''
+        self.boilerplate = data['boilerplate'] or '' if 'boilerplate' in data else ''
+        self.instruction = data['instruction'] or '' if 'instruction' in data else ''
+        self.webpage_url = data['webpage_url'] or '' if 'webpage_url' in data else ''
+        self.community_url = data['community_url'] or '' if 'community_url' in data else ''
+        self.community_embed = data['community_embed'] or '' if 'community_embed' in data else ''
+        self.certificate_path = data['certificate_path'] or '' if 'certificate_path' in data else ''
 
     def get_schema(self, host_url=''):
         """ Returns hackathon.json formatted metadata """
@@ -472,101 +472,11 @@ class Project(PkModel):
     progress = Column(db.Integer(), nullable=True, default=-1)
     score = Column(db.Integer(), nullable=True, default=0)
 
-    def latest_activity(self, max=5):
-        """ Convenience query for latest activity """
-        q = Activity.query.filter_by(project_id=self.id)
-        q = q.order_by(Activity.timestamp.desc())
-        return q.limit(max)
-
-    def get_team(self):
-        """ Return all starring users (A team) """
-        activities = Activity.query.filter_by(
-            name='star', project_id=self.id
-        ).all()
-        members = []
-        for a in activities:
-            if a.user and a.user not in members and a.user.active:
-                members.append(a.user)
-        return members
-
-    def get_missing_roles(self):
-        get_roles = Role.query.order_by('name')
-        rollcall = []
-        for p in self.get_team():
-            for r in p.roles:
-                if r not in rollcall:
-                    rollcall.append(r)
-        return [r for r in get_roles if r not in rollcall and r.name]
-
     @property
     def team(self):
         """ Array of project team """
         return [u.username for u in self.get_team()]
-
-    def all_dribs(self):
-        """ Query which formats the project's timeline """
-        activities = Activity.query.filter_by(
-                        project_id=self.id
-                    ).order_by(Activity.timestamp.desc())
-        dribs = []
-        prev = None
-        only_active = False  # show dribs from inactive users
-        for a in activities:
-            a_parsed = getActivityByType(a, only_active)
-            if a_parsed is None:
-                continue
-            (author, title, text, icon) = a_parsed
-            if prev is not None:
-                # Skip repeat signals
-                if prev['title'] == title and prev['text'] == text:
-                    # if prev['date']-a.timestamp).total_seconds() < 120:
-                    continue
-                # Show changes in progress
-                if prev['progress'] != a.project_progress:
-                    projectStage = getStageByProgress(a.project_progress)
-                    if projectStage is not None:
-                        dribs.append({
-                            'title': projectStage['phase'],
-                            'date': a.timestamp,
-                            'icon': 'arrow-up',
-                            'name': 'progress',
-                        })
-            prev = {
-                'icon': icon,
-                'title': title,
-                'text': text,
-                'author': author,
-                'name': a.name,
-                'date': a.timestamp,
-                'ref_url': a.ref_url,
-                'progress': a.project_progress,
-                'id': a.id,
-            }
-            dribs.append(prev)
-        if self.event.has_started or self.event.has_finished:
-            dribs.append({
-                'title': "Event started",
-                'date': self.event.starts_at,
-                'icon': 'calendar',
-                'name': 'start',
-            })
-        if self.event.has_finished:
-            dribs.append({
-                'title': "Event finished",
-                'date': self.event.ends_at,
-                'icon': 'bullhorn',
-                'name': 'finish',
-            })
-        return sorted(dribs, key=lambda x: x['date'], reverse=True)
-
-    def categories_all(self, event=None):
-        """ Convenience query for all categories """
-        if self.event:
-            return self.event.categories_for_event()
-        if event is not None:
-            return event.categories_for_event()
-        return Category.query.order_by('name')
-
+        
     @property
     def stage(self):
         """ Assessment of progress stage with full data """
@@ -652,6 +562,96 @@ class Project(PkModel):
             d['category_id'] = self.category.id
             d['category_name'] = self.category.name
         return d
+
+    def latest_activity(self, max=5):
+        """ Convenience query for latest activity """
+        q = Activity.query.filter_by(project_id=self.id)
+        q = q.order_by(Activity.timestamp.desc())
+        return q.limit(max)
+
+    def get_team(self):
+        """ Return all starring users (A team) """
+        activities = Activity.query.filter_by(
+            name='star', project_id=self.id
+        ).all()
+        members = []
+        for a in activities:
+            if a.user and a.user not in members and a.user.active:
+                members.append(a.user)
+        return members
+
+    def get_missing_roles(self):
+        get_roles = Role.query.order_by('name')
+        rollcall = []
+        for p in self.get_team():
+            for r in p.roles:
+                if r not in rollcall:
+                    rollcall.append(r)
+        return [r for r in get_roles if r not in rollcall and r.name]
+
+    def all_dribs(self):
+        """ Query which formats the project's timeline """
+        activities = Activity.query.filter_by(
+                        project_id=self.id
+                    ).order_by(Activity.timestamp.desc())
+        dribs = []
+        prev = None
+        only_active = False  # show dribs from inactive users
+        for a in activities:
+            a_parsed = getActivityByType(a, only_active)
+            if a_parsed is None:
+                continue
+            (author, title, text, icon) = a_parsed
+            if prev is not None:
+                # Skip repeat signals
+                if prev['title'] == title and prev['text'] == text:
+                    # if prev['date']-a.timestamp).total_seconds() < 120:
+                    continue
+                # Show changes in progress
+                if prev['progress'] != a.project_progress:
+                    projectStage = getStageByProgress(a.project_progress)
+                    if projectStage is not None:
+                        dribs.append({
+                            'title': projectStage['phase'],
+                            'date': a.timestamp,
+                            'icon': 'arrow-up',
+                            'name': 'progress',
+                        })
+            prev = {
+                'icon': icon,
+                'title': title,
+                'text': text,
+                'author': author,
+                'name': a.name,
+                'date': a.timestamp,
+                'ref_url': a.ref_url,
+                'progress': a.project_progress,
+                'id': a.id,
+            }
+            dribs.append(prev)
+        if self.event.has_started or self.event.has_finished:
+            dribs.append({
+                'title': "Event started",
+                'date': self.event.starts_at,
+                'icon': 'calendar',
+                'name': 'start',
+            })
+        if self.event.has_finished:
+            dribs.append({
+                'title': "Event finished",
+                'date': self.event.ends_at,
+                'icon': 'bullhorn',
+                'name': 'finish',
+            })
+        return sorted(dribs, key=lambda x: x['date'], reverse=True)
+
+    def categories_all(self, event=None):
+        """ Convenience query for all categories """
+        if self.event:
+            return self.event.categories_for_event()
+        if event is not None:
+            return event.categories_for_event()
+        return Category.query.order_by('name')
 
     def get_schema(self, host_url=''):
         """ Schema.org compatible metadata """

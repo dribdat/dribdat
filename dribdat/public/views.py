@@ -108,20 +108,34 @@ def user(username):
     submissions = user.posted_challenges()
     projects = user.joined_projects(True)
     score = sum([p.score for p in projects])
-    posts = user.latest_posts()
+    posts = user.latest_posts(20)
     return render_template("public/userprofile.html", active="profile",
                            user=user, projects=projects, score=score,
                            submissions=submissions, posts=posts)
 
 
-@blueprint.route('/user/<username>/post', methods=['GET'])
-def user_post(username):
-    user = User.query.filter_by(username=username).first_or_404()
-    projects = user.joined_projects(False)
+@blueprint.route('/user/_post', methods=['GET'])
+@login_required
+def user_post():
+    projects = current_user.joined_projects(False)
     if not len(projects) > 0:
         flash('Please Join a project to be able to Post an update.', 'info')
         return redirect(url_for("public.home"))
     return redirect(url_for("project.project_post", project_id=projects[0].id))
+
+
+@blueprint.route('/user/_cert', methods=['GET'])
+@login_required
+def user_cert():
+    projects = current_user.joined_projects(False)
+    if not len(projects) > 0:
+        flash('Please Join a project you worked on to get a certificate.', 'info')
+        return redirect(url_for("public.home"))
+    cert_path = current_user.get_cert_path(projects[0].event)
+    if not cert_path:
+        flash('A certificate is not yet available for this event.', 'info')
+        return redirect(url_for("public.user", username=current_user.username))
+    return redirect(cert_path)
 
 
 @blueprint.route("/event/<int:event_id>")
