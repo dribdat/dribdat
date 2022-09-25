@@ -333,8 +333,8 @@ def project_star(project_id):
 @login_required
 @admin_required
 def project_star_user(project_id):
-    username = request.form['username']
-    user = User.query.filter_by(username=username).first()
+    username = request.form['username'].strip()
+    user = User.query.filter(User.username.ilike(username)).first()
     if user is None:
         flash("User [%s] not found. Please try again." % username, 'warning')
         return redirect(url_for('project.project_view', project_id=project_id))

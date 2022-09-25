@@ -40,10 +40,16 @@
   </div>
 
   {% if not detail_view %}
-  <button id="activateEditor" type="button" class="btn btn-light hidden" aria-pressed="false">
-    <i class="fa fa-hand-o-down text-info" area-hidden="true"></i>
-    Markdown editor
-  </button>
+  <span id="activateEditor">
+    <button data-do="activate" type="button" class="btn btn-light hidden mt-2 mb-1" aria-pressed="false">
+      <i class="fa fa-pencil text-info" area-hidden="true"></i>
+      Markdown editor
+    </button>
+    <button data-do="reset" type="button" class="btn btn-light hidden mt-2 mb-1" aria-pressed="false">
+      <i class="fa fa-pencil text-info" area-hidden="true"></i>
+      Plain text
+    </button>
+  </span>
   {% endif %}
 
   {% if config.S3_KEY %}

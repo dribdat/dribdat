@@ -6,64 +6,130 @@
 
 {% block content %}
 <div class="container">
-    <p>All projects and challenges as of <b>{{ curdate }}</b></p>
+  <p>
+    All projects and <a href="#challenges">challenges</a> as of <b>{{ curdate }}</b>.
+  </p>
+  <p class="no-print">
+    Download as
+    <a href="{{ url_for('api.project_list_event_csv', event_id=current_event.id)}}" download>
+      CSV file</a>
+     or
+    <a href="{{ url_for('api.package_specific_event', event_id=current_event.id, format='json')}}" download>
+      Data Package</a>.
+  </p>
 
-    {% for project in projects %}
-    <hr>
-    <div class="project-info">
+  {% if not request.args.get('longtext') %}
+    <a href="?longtext=1" class="no-print btn btn-light">Show full text</a>
+  {% endif %}
 
-      <ul class="project-meta">
-        <li>Permalink: <a href="{{ url_for('project.project_view', project_id=project.id) }}">{{ url_for('project.project_view', project_id=project.id, _external=True) }}</a></li>
-        {% if project.webpage_url %}
-        <li>Homepage: <a href="{{ project.webpage_url }}">{{ project.webpage_url }}</a></li>
-        {% endif %}
-        {% if project.source_url %}
-        <li>Source: <a href="{{ project.source_url }}">{{ project.source_url }}</a></li>
-        {% endif %}
-        {% if project.download_url %}
-        <li>Download: <a href="{{ project.download_url }}">{{ project.download_url }}</a></li>
-        {% endif %}
-        {% if project.contact_url %}
-        <li>Contact: <a href="{{ project.contact_url }}">{{ project.contact_url }}</a></li>
-        {% endif %}
-        <li>Updated: <span>{{ project.updated_at|format_date }}</span> ({{project.score}}%)</li>
-        <li>Created: <span>{{ project.created_at|format_date }}</span> by <a href="{{project.user.webpage_url}}" target="_blank">{{ project.user.username }}</a></li>
-        {% if project.category_id %}
-        <li>Category: <b>{{ project.category.name }}</b></li>
-        {% endif %}
-        <li>Team:
-          <ul class="project-team" title="team">
-          {% for user in project.team %}
-            <li><a href="{{user.webpage_url}}" target="_blank">{{ user.username }}</a></li>
-          {% endfor %}
-          </ul>
-        </li>
-      </ul>
+  {% for project in projects %}
+  <hr>
+  <div class="project-info">
 
-      {% if project.image_url %}
-        <img class="project-image" width="128" src="{{project.image_url}}">
+    <ul class="project-meta">
+      <li>Permalink: <a href="{{ url_for('project.project_view', project_id=project.id) }}">{{ url_for('project.project_view', project_id=project.id, _external=True) }}</a></li>
+      {% if project.webpage_url %}
+      <li>Homepage: <a href="{{ project.webpage_url }}">{{ project.webpage_url|truncate(50) }}</a></li>
+      {% endif %}
+      {% if project.source_url %}
+      <li>Source: <a href="{{ project.source_url }}">{{ project.source_url|truncate(50) }}</a></li>
+      {% endif %}
+      {% if project.download_url %}
+      <li>Download: <a href="{{ project.download_url }}">{{ project.download_url|truncate(50) }}</a></li>
+      {% endif %}
+      {% if project.contact_url %}
+      <li>Contact: <a href="{{ project.contact_url }}">{{ project.contact_url|truncate(50) }}</a></li>
+      {% endif %}
+      <li>Updated: <span>{{ project.updated_at|format_date }}</span> ({{project.score}}% complete)</li>
+      <li>Created: <span>{{ project.created_at|format_date }}</span>
+        {% if project.user %}
+        by <a href="{{project.user.webpage_url}}" target="_blank">{{ project.user.username }}</a>
+        {% endif %}</li>
+      {% if project.category_id %}
+      <li>Category: <b>{{ project.category.name }}</b></li>
+      {% endif %}
+    </ul>
+
+    {% if project.image_url %}
+      <img align="right" hspace="10" class="project-image" width="128" src="{{project.image_url}}">
+    {% endif %}
+
+    <h2 style="font-weight:bold">
+      {% if project.logo_icon %}
+        <i class="fa fa-{{project.logo_icon}}"></i>
       {% endif %}
 
-      <h2 style="font-weight:bold">
-        {% if project.logo_icon %}
-          <i class="fa fa-{{project.logo_icon}}"></i>
-        {% endif %}
+      {{project.name}}
+    </h2>
 
-        {{project.name}}
-      </h2>
-
-      {% if project.summary %}
+    {% if project.summary %}
       <p class="project-summary">
         {{project.summary}}
       </p>
-      {% else %}
+    {% endif %}
+
+    {% if request.args.get('longtext') and project.longtext %}
+      <br clear="all">
+      <div class="project-page clear-both">
+        <div class="project-longtext">
+          {{project.longtext|markdown}}
+        </div>
+      </div>
+    {% endif %}
+
+    {% if project.team %}
+      <ul class="project-team" title="team">
+      {% for user in project.team %}
+        <li><a href="{{ url_for('public.user', username=user) }}" target="_blank">
+          {{ user }}
+        </a></li>
+      {% endfor %}
+      </ul>
+    {% endif %}
+  </div>
+
+  <br clear="all">
+  {% endfor %}
+
+  <hr style="page-break-after: always;">
+  <a name="challenges"></a>
+  <center><h1>Challenges</h1></center>
+
+  {% for project in challenges %}
+  <hr>
+  <div class="project-info">
+
+    <ul class="project-meta">
+      <li>Permalink: <a href="{{ url_for('project.project_view', project_id=project.id) }}">{{ url_for('project.project_view', project_id=project.id, _external=True) }}</a></li>
+      <li>Updated: <span>{{ project.updated_at|format_date }}</span></li>
+      <li>Created: <span>{{ project.created_at|format_date }}</span>
+        {% if project.user %}
+        by <a href="{{project.user.webpage_url}}" target="_blank">{{ project.user.username }}</a>
+        {% endif %}</li>
+      {% if project.category_id %}
+      <li>Category: <b>{{ project.category.name }}</b></li>
+      {% endif %}
+    </ul>
+    <h2 style="font-weight:bold">
+      {% if project.logo_icon %}
+        <i class="fa fa-{{project.logo_icon}}"></i>
+      {% endif %}
+
+      {{project.name}}
+    </h2>
+
+    {% if project.summary %}
+      <p class="project-summary">
+        {{project.summary}}
+      </p>
+    {% else %}
       <div class="project-longtext">
         {{project.longtext|truncate(250)|markdown}}
       </div>
-      {% endif %}
-    </div>
+    {% endif %}
+  </div>
 
-    <br clear="all">
-    {% endfor %}
+  <br clear="all">
+  {% endfor %}
 </div>
 {% endblock %}

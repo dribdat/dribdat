@@ -162,7 +162,7 @@ footer {
   /*color: #999999;*/
 }
 footer a {
-  color: #999999;
+  color: #555;
 }
 footer p {
   float: right;
@@ -185,6 +185,14 @@ footer .footer-nav {
   list-style: none;
 }
 footer .footer-nav a { text-decoration: none }
+footer .dribdat-logo {
+  float: left;
+}
+footer .dribdat-logo img {
+  height: 4em;
+  margin-top: -1.5em;
+  margin-left: 2px;
+}
 
 ul.help-block {
   background-color: red; color: white; padding: 5px;
@@ -489,27 +497,6 @@ nav .nav-login {
   line-height: 100%;
 }
 
-.project .progress {
-  z-index: 999;
-  opacity: 0;
-  position: absolute;
-  margin-top: 1em;
-  margin-bottom: 0px;
-  height: 10px;
-  width: 100px;
-  margin-left: -52px;
-  left: 50%;
-  border: 1px solid white;
-  bottom: 1%;
-  box-shadow: 3px 3px 3px rgb(0 0 0 / 50%);
-}
-.project:hover .progress {
-  opacity: 0.8;
-}
-.project .progress .progress-bar {
-  background-color: #aaa;
-}
-
 .honeycomb {
   text-align: left;
 }
@@ -558,6 +545,76 @@ nav .nav-login {
   position: initial;
   margin-right: 20px;
 }
+
+.hexagon {
+  background-size: cover;
+  background-position: center;
+}
+.hexagon .hexaicon {
+  width: 2em;
+  height: 2em;
+  background-color: white;
+  background-size: cover;
+  position: relative;
+  left: 50%;
+  margin: 0.5em 0 0 -1em;
+  box-shadow: -2px -2px 1px rgb(0 0 0 / 20%);
+  border-radius: 1em;
+}
+.project.hexagon:nth-child(even) { background-color: rgba(230, 200, 160, 0.95); }
+.project.hexagon:nth-child(odd) { background-color: rgba(230, 210, 200, 0.95); }
+
+/* --- Tooltips used on honeycomb --- */
+
+.tooltip .tooltip-inner {
+  border-radius: 10px;
+}
+.tooltip .tooltip-inner span { /* Hashtag */
+  font-weight: bold;
+  font-size: 80%;
+  font-family: monospace;
+  display: block;
+  overflow: hidden;
+  max-height: 1.5em;
+  width: 100%;
+}
+.tooltip .tooltip-inner img {
+  max-width: 100%;
+  max-height: 13em;
+  margin: 0.5em 0;
+  display: block;
+}
+.tooltip .tooltip-inner div {
+  display: block;
+  padding: 0.5em;
+  text-align: left;
+  font-size: 150%;
+  letter-spacing: 1em;
+}
+
+/* --- Progress bars on projects --- */
+
+.project .progress {
+  z-index: 999;
+  opacity: 0;
+  position: absolute;
+  margin-top: 1em;
+  margin-bottom: 0px;
+  height: 10px;
+  width: 100px;
+  margin-left: -52px;
+  left: 50%;
+  border: 1px solid white;
+  bottom: 5%;
+  box-shadow: 3px 3px 3px rgb(0 0 0 / 50%);
+}
+.project:hover .progress {
+  opacity: 0.8;
+}
+.project .progress .progress-bar {
+  background-color: #aaa;
+}
+
 .progress-container {
   display: inline-block;
   text-align: center;
@@ -583,27 +640,9 @@ nav .nav-login {
   color: #aaa;
   font-size: 140%;
 }
-
 .project-score .progress-bar {
   min-width: 2em;
 }
-.hexagon {
-  background-size: cover;
-  background-position: center;
-}
-.hexagon .hexaicon {
-  width: 2em;
-  height: 2em;
-  background-color: white;
-  background-size: cover;
-  position: relative;
-  left: 50%;
-  margin: 0.5em 0 0 -1em;
-  box-shadow: -2px -2px 1px rgb(0 0 0 / 20%);
-  border-radius: 1em;
-}
-.project.hexagon:nth-child(even) { background-color: rgba(230, 200, 160, 0.95); }
-.project.hexagon:nth-child(odd) { background-color: rgba(230, 210, 200, 0.95); }
 
 /* --- Project page --- */
 
@@ -776,8 +815,10 @@ nav .nav-login {
   width: 6em;
   background: rgba(255, 255, 255, 0.5);
 }
+.projectedit form .btn:hover,
 .project-buttons .btn:hover {
-  background: #dde;
+  border: 1px solid rgba(0, 0, 100, 0.5);
+  box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2);
 }
 .project-buttons .btn span {
   font-size: 300%; display: block;
@@ -1167,31 +1208,52 @@ pre { color: #333; background: white; }
 /* avatar and profile styles */
 
 .team-gravatar img {
-  margin: 5px;
   vertical-align: top;
-  width: 3.3em;
+  width: 3.8em; height: 3.8em;
+  border: 1px solid rgba(0,0,0,0.1);
 }
 .team-gravatar span {
   width: 48%;
   display: inline-block;
+  padding-left: 0.2em;
 }
 .team-gravatar {
   width: 200px;
   height: 5em;
   display: inline-block;
   background: rgba(255,255,255,0.5);
-  border: 2px solid #eee;
+  border: 2px solid rgba(0,0,0,0.1);
   border-radius: 10px;
-  padding: 2px; margin-right: 5px;
+  padding: 0.5em;
+  margin-right: 5px;
   overflow: hidden;
   text-align: left;
-  box-shadow: 2px 2px 2px grey;
 }
 .team-gravatar:hover {
   text-decoration: none;
-  border: 2px solid #ccc;
-  box-shadow: 2px 2px 2px blue;
+  border: 2px solid white;
+  box-shadow: 2px 2px 2px rgba(0,0,200,0.5);
 }
+
+.team-roles {
+  display: inline-block;
+  float: right;
+  margin: -7px;
+  z-index: 99;
+}
+.team-roles em {
+  display: block;
+  font-size: 90%;
+  font-style: normal;
+  text-align: center;
+  color: #333;
+  padding: 1px 3px;
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+  border-bottom: 1px solid #999;
+  margin-bottom: 1px;
+}
+
 .widget-team .kick-user {
   position: absolute;
   font-size: 150%;
@@ -1346,22 +1408,6 @@ pre { color: #333; background: white; }
   background: white;
   box-shadow: 5px 5px 5px rgba(0,0,0,0.2);
 }
-.team-roles {
-  display: inline-block;
-  float: right;
-  margin: -2px;
-}
-.team-roles em {
-    display: block;
-    font-size: 90%;
-    font-style: normal;
-    color: #eee;
-    background: rgba(0,0,0,0.5);
-    padding: 1px 3px;
-    border-top-right-radius: 4px;
-    border-bottom-right-radius: 4px;
-    margin-bottom: 1px;
-}
 @media (max-width: 760px) {
   .profile-projects .project-score,
   .profile-projects .card .project-image
@@ -1412,6 +1458,10 @@ pre { color: #333; background: white; }
   list-style-type: none;
   border-left: 1px solid #999;
   padding-left: 15px;
+}
+@media only print {
+  .no-print,
+  footer { display: none; }
 }
 
 /* ------------

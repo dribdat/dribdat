@@ -1,12 +1,31 @@
 <!-- Based on Hexagon Tiles by Graham Pyne http://codepen.io/gpyne/pen/iElhp/ -->
 {% macro render_project_hexagon(project) %}
 	<a href="{{ url_for('project.project_view', project_id=project.id) }}"
-		 class="hexagon {{ 
-		 	'challenge' if project.is_challenge else 'project' 
+		 class="hexagon {{
+		 	'challenge' if project.is_challenge else 'project'
 		 }} category-highlight"
 		 category-id="{{ project.category_id }}"
-		 style="border-bottom-color:{{project.logo_color}}">
-		<div class="hexagontent {{ 
+		 {% if project.summary %}
+				 data-toggle="tooltip" data-html="true"
+				 title="{{ project.summary }}{#
+
+		 		 > Hashtag if available in tooltip:
+	 		 #}{% if project.hashtag %}<span>{{project.hashtag}}</span>{% endif %}{#
+
+				 > Add image in tooltip:
+			 #}{% if project.image_url %}<img src='{{project.image_url}}'>{% endif %}{#
+
+				 > Status icons in tooltip:
+			 #}<div>{% if project.contact_url %}&#x1f44b;{% endif %}{#
+			 #}{% if project.webpage_url %}&#x1f310;{% endif %}{#
+			 #}{% if project.download_url %}&#x1f4c2;{% endif %}{#
+			 #}{% if project.source_url %}&#x1f4bb;{% endif %}</div>"
+		 {% endif %}
+		 {% if project.logo_color %}
+		 	 style="border-bottom-color:{{project.logo_color}}"
+		 {% endif %}
+		>
+		<div class="hexagontent {{
 	        'text-md' if 32 < project.name|length else 'text-sm' if 42 < project.name|length
 		}}{{ ' with-icon' if project.logo_icon }}">
 			{% if project.is_challenge and project.team %}
@@ -15,7 +34,7 @@
 			{% if project.logo_icon %}
 				<i class="fa fa-{{project.logo_icon}}"></i><br>
 			{% endif %}
-			<span title="{{ project.summary }}">{{ project.name|truncate(64, True, '..') }}</span>
+			<span class="project-name">{{ project.name|truncate(64, True, '..') }}</span>
 			{% if project.image_url %}
 				<div class="hexaicon" style="background-image:url('{{project.image_url}}')"></div>
 			{% endif %}
