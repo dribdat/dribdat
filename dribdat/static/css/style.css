@@ -162,7 +162,7 @@ footer {
   /*color: #999999;*/
 }
 footer a {
-  color: #999999;
+  color: #555;
 }
 footer p {
   float: right;
@@ -185,6 +185,14 @@ footer .footer-nav {
   list-style: none;
 }
 footer .footer-nav a { text-decoration: none }
+footer .dribdat-logo {
+  float: left;
+}
+footer .dribdat-logo img {
+  height: 4em;
+  margin-top: -1.5em;
+  margin-left: 2px;
+}
 
 ul.help-block {
   background-color: red; color: white; padding: 5px;

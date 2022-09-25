@@ -548,8 +548,10 @@
                .css('-ms-filter','invert(100%)')
                .css('background', 'black')
                .css('height', '100%');
+      $('footer .darkmode span').html('Light');
     } else {
       $('body').attr('style','');
+      $('footer .darkmode span').html('Dark');
       // Adjust clock theme
       // $('.flipdown').removeClass('flipdown__theme-dark').addClass('flipdown__theme-light');
     }
