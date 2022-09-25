@@ -310,7 +310,7 @@ class Event(PkModel):
         self.boilerplate = d['boilerplate'] or '' if 'boilerplate' in d else ''
         self.instruction = d['instruction'] or '' if 'instruction' in d else ''
         self.webpage_url = d['webpage_url'] or '' if 'webpage_url' in d else ''
-        dcu = ['community_url'] or '' if 'community_url' in d else ''
+        dcu = d['community_url'] or '' if 'community_url' in d else ''
         self.community_url = dcu
         dce = d['community_embed'] or '' if 'community_embed' in d else ''
         self.community_embed = dce
