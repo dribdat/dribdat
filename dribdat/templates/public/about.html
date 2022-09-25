@@ -25,22 +25,20 @@
 
 <div class="jumbotron bg-white">
   <div class="container">
-    <div class="text-center">
-      <a href="https://dribdat.cc" target="_blank"><img src="{{ url_for('static', filename='img/logo11.png') }}" height="128" alt="All our hack are belong to us."></a>
-    </div>
     <div class="row">
       <h1 style="font-weight:bold; font-family:monospace">
         ? About dribdat_
       </h1>
     </div>
+
     <div class="row">
-      <p>This is an <a href="https://github.com/dribdat/dribdat">open source</a> project board for splendid collaboration that we use to run this site.
+      <p>This is an <dfn title="MIT Licensed">open source</dfn> project board for splendid collaboration that we use to run this site.
         Here we <b>collect and showcase all projects</b> from an event in one place, under open conditions. On the event page you can learn about topics, datasets, and
         any other information the organisers have provided. To form a team, you can
         <a href="/register/">login</a> and join or start a project.
       <b>Looking for help?</b>
         Visit our <b><a href="https://dribdat.cc" target="_blank">web page</a></b>,
-        read the <b><a href="https://github.com/dribdat/dribdat/blob/main/docs/USAGE.md#usage" target="_blank">User Guide</a></b>,
+        read the <b><a href="https://docs.dribdat.cc/usage" target="_blank">User Guide</a></b>,
         ask your event organiser, or talk to fellow participants!</p>
     </div>
 
@@ -55,15 +53,19 @@
       </center>
       {% endif %}
       <p>If you would like to use this platform for your event,
-        see the <a href="https://github.com/dribdat/dribdat/blob/main/docs/DEPLOY.md#show-me-the-back-end" target="_blank">installation guide</a>,
+        see the <a href="https://docs.dribdat.cc/deploy" target="_blank">installation guide</a>,
         contact the organisers of the events listed here - or just fork the open source project
         and set it up to your liking.</p>
       <p>
-        <a href="https://github.com/dribdat/dribdat/blob/main/docs/USAGE.md#usage" class="btn btn-info">User guide</a>
-        <a href="https://github.com/dribdat/dribdat/issues" class="btn btn-warning">Issues &raquo;</a>
-        <a href="https://dribdat.cc" class="btn btn-dark">Homepage</a>
+        <a href="https://docs.dribdat.cc/" class="btn btn-info">Documentation</a>
+        <a href="https://github.com/dribdat/dribdat/issues" class="btn btn-warning">Issues</a>
+        <a href="https://dribdat.cc" class="btn btn-dark">News &raquo;</a>
       </p>
     </div><!-- /organiser -->
+
+    <div class="float-right">
+      <a href="https://dribdat.cc" target="_blank"><img src="{{ url_for('static', filename='img/logo11.png') }}" height="128" alt="All our hack are belong to us."></a>
+    </div>
 
     <div class="row" id="api">
       <div class="content">
@@ -73,20 +75,20 @@
           There is a simple open API for accessing data from this site in machine-readable form over the Web.
         </p>
         <p>Download data on the featured or past (replace <tt>current</tt> by <tt>id</tt>) events</p>
-        <ul>
+        <ul class="pl-3">
           <li><a href="/hackathon.json">/hackathon.json</a> (JSON <a href="https://schema.org/Hackathon">Schema</a>)</li>
           <li><a href="/api/event/current/info.json">/api/event/current/info.json</a> (JSON basic info)</li>
-          <li><a href="/api/event/current/datapackage.json">/api/event/current/datapackage.json</a> (Data Package)</li>
+          <li><a href="/api/event/current/datapackage.json">/api/event/current/datapackage.json</a> (Frictionless Data Package)</li>
           <li><a href="/api/event/current/datapackage.zip">/api/event/current/datapackage.zip</a> (Full data when authenticated)</li>
         </ul>
         <p>Retrieve project data from the <tt>current</tt> (or <tt>id</tt>) event</p>
-        <ul>
+        <ul class="pl-3">
           <li><a href="/api/event/current/projects.json">/api/event/current/projects</a> (JSON)</li>
           <li><a href="/api/event/current/projects.csv">/api/event/current/projects</a> (CSV)</li>
           <li><a href="/api/event/current/projects.csv?moar=1">/api/event/current/projects</a>? (CSV or JSON with full texts)</li>
         </ul>
         <p>Search the projects, recent activity, and posts (use <tt>q=...</tt> for query, set <tt>limit=10</tt>)</p>
-        <ul>
+        <ul class="pl-3">
           <li><a href="/api/project/search.json">/api/project/search.json</a> (JSON)</li>
           <li><a href="/api/project/activity.json">/api/project/activity.json</a> (JSON)</li>
           <li><a href="/api/project/posts.json">/api/project/posts.json</a> (JSON)</li>
@@ -95,8 +97,14 @@
     </div><!-- /api -->
     <hr>
     <center>
-      dribdat is distributed under the
-      <a href="https://github.com/dribdat/dribdat/blob/main/LICENSE" target="_blank">MIT license</a> -
+      <b>dribdat</b> is distributed under the
+      <a href="https://en.wikipedia.org/wiki/MIT_License" target="_blank">MIT license</a>
+       -
+      source code available on
+        <a href="https://github.com/dridbat/dribdat" target="_blank">GitHub</a>,
+        <a href="https://gitlab.com/dridbat/dribdat" target="_blank">GitLab</a> and
+        <a href="https://codeberg.org/dribdat/dribdat" target="_blank">Codeberg</a>
+       -
       visit <a href="https://app.fossa.com/projects/git%2Bgithub.com%2Floleg%2Fdribdat/refs/branch/main/3296a528a7ac2c09486c7cfae513d64d263cc238/preview">FOSSA</a>
       for a list of bundled code works.
     </center>
