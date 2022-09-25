@@ -403,6 +403,9 @@
   // Toggle challenges after the hackathon
   // $('.event-finished .nav-categories #challenges').parent().click();
 
+  // Enable tooltips on hexagrid
+  $('.honeycomb .hexagon[data-toggle="tooltip"]').tooltip();
+
   // Roll up categories if there is only one, and no projects
   if ($navCategories.length === 1) {
     $navCategories.click().parent().parent().hide();
@@ -575,41 +578,58 @@
     });
   }
 
+  // Initialize rich editor for Markdown
+  function activate_editor() {
+    if (typeof toastui !== 'object') return;
+    const $longtext = $('#longtext');
+    $longtext.after('<div id="mdeditor" style="text-align:left"></div>');
+
+    const toasteditor = window.toasteditor = new toastui.Editor({
+      el: document.querySelector('#mdeditor'),
+      previewStyle: 'tab', height: '500px',
+      initialValue: $longtext.hide().text(),
+      usageStatistics: false,
+      toolbarItems: [
+        ['heading', 'bold', 'italic'],
+        ['hr', 'quote', 'strike'],
+        ['ul', 'ol'],
+        ['table', 'link'],
+        ['code', 'codeblock'],
+      ]
+    });
+
+    // Handle form submission
+    $longtext.parents('form').submit(function() {
+      $longtext.val(toasteditor.getMarkdown());
+    });
+
+    // Save settings
+    localStorage.setItem('markdownhelper', '1');
+    const $activateEditor = $('#activateEditor');
+    $activateEditor.find('[data-do="activate"]').hide();
+    $activateEditor.find('[data-do="reset"]').show().click(function() {
+        if (window.confirm('Save changes first! Continue?')) {
+          localStorage.setItem('markdownhelper', '0');
+          window.location.reload();
+        }
+      });
+  }
+
   function init_editor() {
     const $activateEditor = $('#activateEditor');
     const $longtext = $('#longtext');
 
     // Move button to editing area
-    $longtext.first().each(function() {
-      $(this).before($activateEditor);
-    });
+    $longtext.first().before($activateEditor);
 
-    // Handle button
-    $activateEditor.show().on('click', function() {
-      if (typeof toastui !== 'object') return;
-      $longtext.after('<div id="mdeditor" style="text-align:left"></div>');
+    // Handle activation button
+    $activateEditor.find('[data-do="activate"]')
+                   .show().on('click', activate_editor);
 
-      // Initialize rich editor for Markdown
-      const toasteditor = window.toasteditor = new toastui.Editor({
-        el: document.querySelector('#mdeditor'),
-        previewStyle: 'tab', height: '500px',
-        initialValue: $longtext.hide().text(),
-        usageStatistics: false,
-        toolbarItems: [
-          ['heading', 'bold', 'italic'],
-          ['hr', 'quote', 'strike'],
-          ['ul', 'ol'],
-          ['table', 'link'],
-          ['code', 'codeblock'],
-        ]
-      });
-
-      // Handle form submission
-      $longtext.parents('form').submit(function() {
-        $longtext.val(toasteditor.getMarkdown());
-      });
-      $(this).hide();
-    });
+    // Load settings
+    if (localStorage.getItem('markdownhelper') == '1') {
+      setTimeout(activate_editor, 100);
+    }
   } //- init_editor
 
   // Bootup
