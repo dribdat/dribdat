@@ -476,7 +476,7 @@ class Project(PkModel):
     def team(self):
         """ Array of project team """
         return [u.username for u in self.get_team()]
-        
+
     @property
     def stage(self):
         """ Assessment of progress stage with full data """
@@ -576,7 +576,7 @@ class Project(PkModel):
         ).all()
         members = []
         for a in activities:
-            if a.user and a.user not in members and a.user.active:
+            if a.user and a.user not in members:
                 members.append(a.user)
         return members
 
