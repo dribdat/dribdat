@@ -296,23 +296,26 @@ class Event(PkModel):
         d['certificate_path'] = self.certificate_path or ''
         return d
 
-    def set_from_data(self, data):
-        self.name = data['name']
-        self.summary = data['summary'] or ''
-        self.ends_at = parse(data['ends_at'])
-        self.starts_at = parse(data['starts_at'])
-        self.hostname = data['hostname'] or '' if 'hostname' in data else ''
-        self.location = data['location'] or '' if 'location' in data else ''
-        self.hashtags = data['hashtags'] or '' if 'hashtags' in data else ''
-        self.logo_url = data['logo_url'] or '' if 'logo_url' in data else ''
-        self.custom_css = data['custom_css'] or '' if 'custom_css' in data else ''
-        self.description = data['description'] or '' if 'description' in data else ''
-        self.boilerplate = data['boilerplate'] or '' if 'boilerplate' in data else ''
-        self.instruction = data['instruction'] or '' if 'instruction' in data else ''
-        self.webpage_url = data['webpage_url'] or '' if 'webpage_url' in data else ''
-        self.community_url = data['community_url'] or '' if 'community_url' in data else ''
-        self.community_embed = data['community_embed'] or '' if 'community_embed' in data else ''
-        self.certificate_path = data['certificate_path'] or '' if 'certificate_path' in data else ''
+    def set_from_data(self, d):
+        self.name = d['name']
+        self.summary = d['summary'] or ''
+        self.ends_at = parse(d['ends_at'])
+        self.starts_at = parse(d['starts_at'])
+        self.hostname = d['hostname'] or '' if 'hostname' in d else ''
+        self.location = d['location'] or '' if 'location' in d else ''
+        self.hashtags = d['hashtags'] or '' if 'hashtags' in d else ''
+        self.logo_url = d['logo_url'] or '' if 'logo_url' in d else ''
+        self.custom_css = d['custom_css'] or '' if 'custom_css' in d else ''
+        self.description = d['description'] or '' if 'description' in d else ''
+        self.boilerplate = d['boilerplate'] or '' if 'boilerplate' in d else ''
+        self.instruction = d['instruction'] or '' if 'instruction' in d else ''
+        self.webpage_url = d['webpage_url'] or '' if 'webpage_url' in d else ''
+        dcu = ['community_url'] or '' if 'community_url' in d else ''
+        self.community_url = dcu
+        dce = d['community_embed'] or '' if 'community_embed' in d else ''
+        self.community_embed = dce
+        dcp = d['certificate_path'] or '' if 'certificate_path' in d else ''
+        self.certificate_path = dcp
 
     def get_schema(self, host_url=''):
         """ Returns hackathon.json formatted metadata """

@@ -1459,6 +1459,10 @@ pre { color: #333; background: white; }
   border-left: 1px solid #999;
   padding-left: 15px;
 }
+@media only print {
+  .no-print,
+  footer { display: none; }
+}
 
 /* ------------
 Code of Conduct
