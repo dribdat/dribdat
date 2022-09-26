@@ -13,7 +13,7 @@
 	 		 #}{% if project.hashtag %}<span>{{project.hashtag}}</span>{% endif %}{#
 
 				 > Add image in tooltip:
-			 #}{% if project.image_url %}<img src='{{project.image_url}}'>{% endif %}{#
+			 #}{% if project.image_url %}<img src=`{{project.image_url|quote_plus}}>{% endif %}{#
 
 				 > Status icons in tooltip:
 			 #}<div>{% if project.contact_url %}&#x1f44b;{% endif %}{#
@@ -36,7 +36,7 @@
 			{% endif %}
 			<span class="project-name">{{ project.name|truncate(64, True, '..') }}</span>
 			{% if project.image_url %}
-				<div class="hexaicon" style="background-image:url('{{project.image_url}}')"></div>
+				<div class="hexaicon" style="background-image:url('{{project.image_url|quote_plus}}')"></div>
 			{% endif %}
 		</div>
 		{% if project.score and project.score > 0 %}

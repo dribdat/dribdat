@@ -1,11 +1,14 @@
 # -*- coding: utf-8 -*-
 """Helper utilities and decorators."""
 from flask import flash, current_app
-from datetime import datetime
 from math import floor
 from os import path
 
-import pytz, re, csv, yaml
+import pytz
+import re
+import csv
+import yaml
+
 
 def strtobool(text):
     """ Truthy conversion as per PEP 632 """
@@ -16,14 +19,20 @@ def strtobool(text):
         return False
     raise ValueError("{} is not convertable to boolean".format(tls))
 
+
 def sanitize_input(text):
     """ Removes unsavoury characters """
     return re.sub(r"[^a-zA-Z0-9_]+", '', text)
 
+
 def random_password(pwdlen=20):
     """ A strongly secure random string """
-    import string, random
-    return ''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(pwdlen))
+    import string
+    import random
+    return ''.join(random.SystemRandom()
+                   .choice(string.ascii_uppercase + string.digits)
+                   for _ in range(pwdlen))
+
 
 def flash_errors(form, category='warning'):
     """Flash all errors for a form."""
@@ -31,17 +40,20 @@ def flash_errors(form, category='warning'):
         for error in errors:
             flash('{0} - {1}'.format(getattr(form, field).label.text, error), category)
 
+
 def timesince(dt, default="just now", until=False):
     """
     Returns string representing "time since" e.g.
     3 days ago, 5 hours ago etc.
     - from http://flask.pocoo.org/snippets/33/
     """
-    if dt is None: return ""
+    if dt is None:
+        return ""
     tz = pytz.timezone(current_app.config["TIME_ZONE"])
     tz_now = tz.localize(dt.utcnow())
     dt = dt.astimezone(tz)
-    if dt is None: return ""
+    if dt is None:
+        return ""
     if until and dt > tz_now:
         diff = dt - tz_now
         suffix = "to go"
@@ -59,11 +71,13 @@ def timesince(dt, default="just now", until=False):
     )
     for period, singular, plural in periods:
         if floor(period) > 0:
-            return "%d %s %s" % (period, singular if int(period)==1 else plural, suffix)
+            return "%d %s %s" % (period, singular if int(period) == 1 else plural, suffix)
     return default
+
 
 def format_date(value, format='%Y-%m-%d'):
     return value.strftime(format)
+
 
 def format_date_range(starts_at, ends_at):
     if starts_at.month == ends_at.month:
@@ -89,8 +103,9 @@ def format_date_range(starts_at, ends_at):
             ends_at.year,
         )
 
-""" Load event preset content """
+
 def load_event_presets():
+    """ Load event preset content """
     EVENT_PRESET = {
         'eventstart': '',
         'quickstart': '',
@@ -99,13 +114,14 @@ def load_event_presets():
     for pr in EVENT_PRESET.keys():
         fn = path.join(path.join(path.join(
             path.dirname(__file__),
-                'templates'), 'includes'), pr + '.md')
+            'templates'), 'includes'), pr + '.md')
         with open(fn, mode='r') as file:
             EVENT_PRESET[pr] = file.read()
     return EVENT_PRESET
 
-""" Load structured settings from a CSV file """
+
 def load_csv_presets(filename, by_col='name'):
+    """ Load structured settings from a CSV file """
     fn = path.join(path.join(path.join(
         path.dirname(__file__), 'templates'), 'includes'), filename + '.csv')
     settings_dict = {}
@@ -115,8 +131,9 @@ def load_csv_presets(filename, by_col='name'):
             settings_dict[row[by_col]] = row
     return settings_dict
 
-""" Load structured settings from a YAML file """
+
 def load_yaml_presets(filename, by_col='name'):
+    """ Load structured settings from a YAML file """
     # Expects filename to not have an extension
     # and be equivalent to the top level element
     fn = path.join(path.join(path.join(

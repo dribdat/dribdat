@@ -8,7 +8,7 @@
   <meta property="og:type" content="website">
   <meta property="og:url" content="{{ url_for('project.project_view', project_id=project.id, _external=True) }}">
   <meta property="og:title" content="{{project.name}}">
-  <meta property="og:image" content="{{project_image_url}}">
+  <meta property="og:image" content="{{project_image_url|quote_plus}}">
   <meta property="og:description" content="{% if project.summary %}{{project.summary}}{% else %}{{ project.longtext|striptags|truncate(120) }}{% endif %}">
   <meta name="twitter:site" content="@opendatach">
   <meta name="twitter:card" content="summary">
@@ -138,8 +138,8 @@
 
 {% if project.image_url %}
   <div class="project-image-container"
-    style="background-image:url('{{project.image_url}}'); {% if project.logo_color %}background-color:{{project.logo_color}}; opacity:1.0{% endif %}"
-    data-href="{{project.image_url}}">
+    style="background-image:url('{{project.image_url|quote_plus}}'); {% if project.logo_color %}background-color:{{project.logo_color}}; opacity:1.0{% endif %}"
+    data-href="{{project.image_url|quote_plus}}">
   </div>
   {% if allow_edit %}
     <a class="project-edit-cover" href="{{ url_for('project.project_details', project_id=project.id) }}#image_url" title="Edit cover image">

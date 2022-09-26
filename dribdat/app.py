@@ -20,9 +20,11 @@ from dribdat.onebox import make_oembedplus
 from flask_misaka import Misaka
 from flask_talisman import Talisman
 from flask_dance.contrib import (slack, azure, github)
+
 from micawber.providers import bootstrap_basic
 from whitenoise import WhiteNoise
 from pytz import timezone
+from urllib.parse import quote_plus
 
 
 def init_app(config_object=ProdConfig):
@@ -174,6 +176,9 @@ def register_filters(app):
 
     # Timezone helper
     app.tz = timezone(app.config['TIME_ZONE'])
+
+    # Lambda filters
+    app.jinja_env.filters['quote_plus'] = lambda u: quote_plus(u, ':/')
 
     # Custom filters
     @app.template_filter()
