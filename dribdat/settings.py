@@ -34,6 +34,13 @@ class Config(object):
     OAUTH_DOMAIN = os_env.get('OAUTH_DOMAIN', None)
     OAUTH_SKIP_LOGIN = bool(strtobool(os_env.get('OAUTH_SKIP_LOGIN', 'False')))
 
+    # Mail service support
+    MAIL_PORT = os_env.get('MAIL_PORT', None)
+    MAIL_SERVER = os_env.get('MAIL_SERVER', None)
+    MAIL_USERNAME = os_env.get('MAIL_USERNAME', None)
+    MAIL_PASSWORD = os_env.get('MAIL_PASSWORD', None)
+    MAIL_DEFAULT_SENDER = os_env.get('MAIL_DEFAULT_SENDER', None)
+
     # Application settings
     APP_DIR = os.path.abspath(os.path.dirname(__file__))  # This directory
     PROJECT_ROOT = os.path.abspath(os.path.join(APP_DIR, os.pardir))

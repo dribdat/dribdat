@@ -17,6 +17,7 @@ from dribdat.settings import ProdConfig
 from dribdat.utils import timesince
 from dribdat.onebox import make_oembedplus
 
+from flask_mail import Mail
 from flask_misaka import Misaka
 from flask_talisman import Talisman
 from flask_dance.contrib import (slack, azure, github)
@@ -69,6 +70,7 @@ def register_extensions(app):
     db.init_app(app)
     login_manager.init_app(app)
     migrate.init_app(app, db)
+    mail.init_app(app)
     init_talisman(app)
     return None
 

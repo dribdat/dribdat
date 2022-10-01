@@ -5,6 +5,7 @@ from flask import (Blueprint, request, render_template, flash, url_for,
                    redirect, current_app)
 
 from flask_login import login_user, logout_user, login_required, current_user
+from flask_mail import Message, Mail
 
 from dribdat.user.models import User, Event, Role
 from dribdat.extensions import login_manager
@@ -79,36 +80,66 @@ def register():
         form.email.data = request.args.get('email')
     if request.args.get('web') and not form.webpage_url.data:
         form.webpage_url.data = request.args.get('web')
-    if form.validate_on_submit():
-        sane_username = sanitize_input(form.username.data)
-        new_user = User.create(
-                        username=sane_username,
-                        email=form.email.data,
-                        webpage_url=form.webpage_url.data,
-                        password=form.password.data,
-                        active=True)
-        new_user.socialize()
-        if User.query.count() == 1:
-            new_user.is_admin = True
-            new_user.save()
-            flash("Administrative user created - have fun!", 'success')
-        elif current_app.config['DRIBDAT_USER_APPROVE']:
-            new_user.active = False
-            new_user.save()
-            flash("Thank you for registering. New accounts require approval "
-                  + "from the event organizers. Please update your profile "
-                  + "and await activation.",
-                  'warning')
-        else:
-            flash(
-                "Thank you for registering. You can now log in and submit "
-                + "projects.", 'success')
-        login_user(new_user, remember=True)
-        return redirect(url_for('public.home'))
-    else:
+    if not form.validate_on_submit():
         flash_errors(form)
-    return render_template('public/register.html',
-                           form=form, oauth_type=oauth_type())
+        return render_template('public/register.html',
+                               form=form, oauth_type=oauth_type())
+    # Continue with user creation
+    sane_username = sanitize_input(form.username.data)
+    new_user = User.create(
+                    username=sane_username,
+                    email=form.email.data,
+                    webpage_url=form.webpage_url.data,
+                    password=form.password.data,
+                    active=True)
+    new_user.socialize()
+    if User.query.count() == 1:
+        new_user.is_admin = True
+        new_user.save()
+        flash("Administrative user created - oh joy!", 'success')
+    elif current_app.config['DRIBDAT_USER_APPROVE']:
+        new_user.active = False
+        new_user.save()
+        if current_app.config['MAIL_SERVER']:
+            activation_hash = random_password(24)
+            new_user.sso_id = activation_hash
+            new_user.save()
+            activation_url = url_for('auth.activate', userhash=activation_hash)
+            with current_app.app_context():
+                mail = Mail()
+                msg = Message('Your new dribdat account')
+                msg.recipients = [new_user.email]
+                msg.body = "Thanks for signing up to dribdat at %s \n\n" \
+                           + "Tap here to activate your account:\n%s" \
+                           % (request.base_url, activation_url)
+                mail.send(msg)
+            flash("New accounts require activation. "
+                  + "Please click the dribdat link in your e-mail.", 'success')
+        else:
+            flash("New accounts require approval from the event organizers. "
+                  + "Please update your profile and await activation.",
+                  'success')
+    else:
+        flash(
+            "Thank you for registering. You can now log in and submit "
+            + "projects.", 'success')
+    login_user(new_user, remember=True)
+    return redirect(url_for('public.home'))
+
+
+@blueprint.route("/activate/<userhash>", methods=['GET'])
+def activate(userhash):
+    """Activate or reset new user account."""
+    a_user = User.query.filter_by(sso_id=userhash).first()
+    if a_user is not None:
+        a_user.sso_id = None
+        a_user.active = True
+        a_user.save()
+        login_user(new_user, remember=True)
+        flash("Your user account has been activated.", 'success')
+        return redirect(url_for('auth.user_profile'))
+    flash("Activation not found. Retry or contact an organizer", 'warning')
+    return redirect(url_for('public.home'))
 
 
 @blueprint.route('/logout/')

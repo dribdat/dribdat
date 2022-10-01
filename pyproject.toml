@@ -49,6 +49,7 @@ whitenoise = "^5"
 wtforms = ">=2.1,<3"
 hiredis = "^2.0.0"
 SQLAlchemy-Continuum = "^1.3.12"
+Flask-Mail = "^0.9.1"
 
 [tool.poetry.dev-dependencies]
 factory-boy = "*"
