@@ -35,7 +35,7 @@ class Config(object):
     OAUTH_SKIP_LOGIN = bool(strtobool(os_env.get('OAUTH_SKIP_LOGIN', 'False')))
 
     # Mail service support
-    MAIL_PORT = os_env.get('MAIL_PORT', None)
+    MAIL_PORT = os_env.get('MAIL_PORT', 25)
     MAIL_SERVER = os_env.get('MAIL_SERVER', None)
     MAIL_USERNAME = os_env.get('MAIL_USERNAME', None)
     MAIL_PASSWORD = os_env.get('MAIL_PASSWORD', None)
