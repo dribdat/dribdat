@@ -13,11 +13,8 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        name: [ macos, ubuntu ]
+        name: [ ubuntu ]
         include:
-          - name: macos
-            os: macos-latest
-            python-version: 3.7
           - name: ubuntu
             os: ubuntu-latest
             python-version: 3.9
