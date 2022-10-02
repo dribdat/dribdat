@@ -1,11 +1,19 @@
 # -*- coding: utf-8 -*-
 """The app module, containing the app factory function."""
+
 from flask import Flask, render_template
 from flask_cors import CORS
+from flask_mail import Mail  # noqa: I005
+from flask_misaka import Misaka
+from flask_talisman import Talisman
+from flask_dance.contrib import (slack, azure, github)
 from werkzeug.middleware.proxy_fix import ProxyFix
-
+from micawber.providers import bootstrap_basic
+from whitenoise import WhiteNoise
+from pytz import timezone
+from urllib.parse import quote_plus
 from dribdat import commands, public, user, admin
-from dribdat.assets import assets
+from dribdat.assets import assets  # noqa: I005
 from dribdat.extensions import (
     hashing,
     cache,
@@ -13,23 +21,14 @@ from dribdat.extensions import (
     login_manager,
     migrate,
 )
-from dribdat.settings import ProdConfig
+from dribdat.settings import ProdConfig  # noqa: I005
 from dribdat.utils import timesince
 from dribdat.onebox import make_oembedplus
 
-from flask_mail import Mail
-from flask_misaka import Misaka
-from flask_talisman import Talisman
-from flask_dance.contrib import (slack, azure, github)
-
-from micawber.providers import bootstrap_basic
-from whitenoise import WhiteNoise
-from pytz import timezone
-from urllib.parse import quote_plus
-
 
 def init_app(config_object=ProdConfig):
-    """An application factory
+    """Define an application factory.
+
     See: http://flask.pocoo.org/docs/patterns/appfactories/
 
     :param config_object: The configuration object to use.
@@ -70,12 +69,19 @@ def register_extensions(app):
     db.init_app(app)
     login_manager.init_app(app)
     migrate.init_app(app, db)
-    mail.init_app(app)
+    init_mail(app)
     init_talisman(app)
     return None
 
 
+def init_mail(app):
+    """Initialize Flask Mail support."""
+    if 'MAIL_SERVER' in app.config and app.config['MAIL_SERVER']:
+        mail = Mail(app)
+
+
 def init_talisman(app):
+    """Initialize Talisman support."""
     if 'SERVER_SSL' in app.config and app.config['SERVER_SSL']:
         Talisman(app,
                  content_security_policy=app.config['CSP_DIRECTIVES'],
@@ -94,36 +100,36 @@ def register_blueprints(app):
 
 
 def register_oauthhandlers(app):
-    """ Set up OAuth handlers based on configuration """
+    """Set up OAuth handlers based on configuration."""
     # TODO: move to auth class
     blueprint = None
-    if not app.config["OAUTH_TYPE"]:
+    if not app.config['OAUTH_TYPE']:
         return
-    if app.config["OAUTH_TYPE"] == 'slack':
+    if app.config['OAUTH_TYPE'] == 'slack':
         blueprint = slack.make_slack_blueprint(
-            client_id=app.config["OAUTH_ID"],
-            client_secret=app.config["OAUTH_SECRET"],
+            client_id=app.config['OAUTH_ID'],
+            client_secret=app.config['OAUTH_SECRET'],
             scope="identity.basic,identity.email",
             redirect_to="auth.slack_login",
             login_url="/login",
             # authorized_url=None,
             # session_class=None,
             # storage=None,
-            subdomain=app.config["OAUTH_DOMAIN"],
+            subdomain=app.config['OAUTH_DOMAIN'],
         )
-    elif app.config["OAUTH_TYPE"] == 'azure':
+    elif app.config['OAUTH_TYPE'] == 'azure':
         blueprint = azure.make_azure_blueprint(
-            client_id=app.config["OAUTH_ID"],
-            client_secret=app.config["OAUTH_SECRET"],
-            tenant=app.config["OAUTH_DOMAIN"],
+            client_id=app.config['OAUTH_ID'],
+            client_secret=app.config['OAUTH_SECRET'],
+            tenant=app.config['OAUTH_DOMAIN'],
             scope="profile email User.ReadBasic.All openid",
             redirect_to="auth.azure_login",
             login_url="/login",
         )
-    elif app.config["OAUTH_TYPE"] == 'github':
+    elif app.config['OAUTH_TYPE'] == 'github':
         blueprint = github.make_github_blueprint(
-            client_id=app.config["OAUTH_ID"],
-            client_secret=app.config["OAUTH_SECRET"],
+            client_id=app.config['OAUTH_ID'],
+            client_secret=app.config['OAUTH_SECRET'],
             # scope="user,read:user",
             redirect_to="auth.github_login",
             login_url="/login",
@@ -163,7 +169,9 @@ def register_commands(app):
 
 
 def register_filters(app):
-    # Library filters
+    """Register filters for templates."""
+    #
+    # Conversion of Markdown to HTML
     Misaka(app, autolink=True, fenced_code=True,
            strikethrough=True, tables=True)
 
@@ -201,6 +209,7 @@ def register_filters(app):
 
 
 def register_loggers(app):
+    """Initialize and configure logging."""
     import logging
     stream_handler = logging.StreamHandler()
     app.logger.addHandler(stream_handler)

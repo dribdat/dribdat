@@ -3,25 +3,25 @@
 
 from flask import (Blueprint, request, render_template, flash, url_for,
                    redirect, current_app)
-
 from flask_login import login_user, logout_user, login_required, current_user
-from flask_mail import Message, Mail
-
+from flask_dance.contrib.slack import slack
+from flask_dance.contrib.azure import azure  # noqa: I005
+from flask_dance.contrib.github import github
+# Dribdat modules
 from dribdat.user.models import User, Event, Role
-from dribdat.extensions import login_manager
+from dribdat.extensions import login_manager  # noqa: I005
 from dribdat.utils import flash_errors, random_password, sanitize_input
 from dribdat.public.forms import LoginForm, UserForm
 from dribdat.user.forms import RegisterForm
 from dribdat.database import db
-
-from flask_dance.contrib.slack import slack
-from flask_dance.contrib.azure import azure
-from flask_dance.contrib.github import github
+from dribdat.mailer import user_activation
+# noqa: I005
 
 blueprint = Blueprint('auth', __name__, static_folder="../static")
 
 
 def current_event():
+    """Return the first featured event."""
     return Event.query.filter_by(is_current=True).first()
 
 
@@ -32,7 +32,7 @@ def load_user(user_id):
 
 
 def oauth_type():
-    """Check if Slack or another OAuth has been configured"""
+    """Check if Slack or another OAuth has been configured."""
     if "OAUTH_TYPE" in current_app.config:
         return current_app.config["OAUTH_TYPE"].lower()
     else:
@@ -41,6 +41,7 @@ def oauth_type():
 
 @blueprint.route("/login/", methods=["GET", "POST"])
 def login():
+    """Handle the login route."""
     # Skip login form on forced SSO
     if request.method == "GET" and current_app.config["OAUTH_SKIP_LOGIN"]:
         if not request.args.get('local') and oauth_type():
@@ -94,25 +95,17 @@ def register():
                     active=True)
     new_user.socialize()
     if User.query.count() == 1:
+        # This is the first user account - promote it
         new_user.is_admin = True
         new_user.save()
         flash("Administrative user created - oh joy!", 'success')
     elif current_app.config['DRIBDAT_USER_APPROVE']:
+        # Approval of new user accounts required
         new_user.active = False
         new_user.save()
         if current_app.config['MAIL_SERVER']:
-            activation_hash = random_password(24)
-            new_user.sso_id = activation_hash
-            new_user.save()
-            activation_url = url_for('auth.activate', userhash=activation_hash)
             with current_app.app_context():
-                mail = Mail()
-                msg = Message('Your new dribdat account')
-                msg.recipients = [new_user.email]
-                msg.body = "Thanks for signing up to dribdat at %s \n\n" \
-                           + "Tap here to activate your account:\n%s" \
-                           % (request.base_url, activation_url)
-                mail.send(msg)
+                user_activation(new_user)
             flash("New accounts require activation. "
                   + "Please click the dribdat link in your e-mail.", 'success')
         else:
@@ -135,7 +128,7 @@ def activate(userhash):
         a_user.sso_id = None
         a_user.active = True
         a_user.save()
-        login_user(new_user, remember=True)
+        login_user(a_user, remember=True)
         flash("Your user account has been activated.", 'success')
         return redirect(url_for('auth.user_profile'))
     flash("Activation not found. Retry or contact an organizer", 'warning')
@@ -160,6 +153,7 @@ def forgot():
 @blueprint.route('/user/profile', methods=['GET', 'POST'])
 @login_required
 def user_profile():
+    """Display or edit the current user profile."""
     user = current_user
     user_is_valid = True
     if not user.active:
@@ -210,7 +204,7 @@ def user_profile():
 
 
 def get_or_create_sso_user(sso_id, sso_name, sso_email, sso_webpage=''):
-    """ Matches a user account based on SSO_ID """
+    """Match a user account based on SSO_ID."""
     sso_id = str(sso_id)
     user = User.query.filter_by(sso_id=sso_id).first()
     if not user:
@@ -259,6 +253,7 @@ def get_or_create_sso_user(sso_id, sso_name, sso_email, sso_webpage=''):
 
 @blueprint.route("/slack_login", methods=["GET", "POST"])
 def slack_login():
+    """Handle login via Slack."""
     if not slack.authorized:
         flash('Access denied to Slack', 'danger')
         return redirect(url_for("auth.login", local=1))
@@ -282,6 +277,7 @@ def slack_login():
 
 @blueprint.route("/azure_login", methods=["GET", "POST"])
 def azure_login():
+    """Handle login via Azure."""
     if not azure.authorized:
         flash('Access denied to Azure', 'danger')
         return redirect(url_for("auth.login", local=1))
@@ -304,6 +300,7 @@ def azure_login():
 
 @blueprint.route("/github_login", methods=["GET", "POST"])
 def github_login():
+    """Handle login via GitHub."""
     if not github.authorized:
         flash('Access denied - please try again', 'warning')
         return redirect(url_for("auth.login", local=1))

@@ -120,7 +120,7 @@ form input[type="checkbox"] {
 }
 .alert .close {
   font-size: 1.6rem;
-  margin: 0.5em 0.5em -1em -1em;
+  /*margin: 0.5em 0.5em -1em -1em;*/
 }
 
 /* pagination */
