@@ -131,7 +131,7 @@ class User(UserMixin, PkModel):
         if 'email' not in data:
             data['email'] = "%s@%d.localdomain" % (self.username, data['id'])
         self.email = data['email']
-        self.updated_at = dt.datetime.utcnow
+        self.updated_at = dt.datetime.utcnow()
 
     def socialize(self):
         """Parse the user's web profile."""
