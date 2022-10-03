@@ -18,7 +18,7 @@ depends_on = None
 
 def upgrade():
     op.add_column('users', sa.Column('hashword', sa.String(length=128), nullable=True))
-    op.add_column('users', sa.Column('updated_at', sa.DateTime(), nullable=False))
+    op.add_column('users', sa.Column('updated_at', sa.DateTime(), nullable=True))
 
 
 def downgrade():

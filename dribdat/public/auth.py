@@ -15,6 +15,7 @@ from dribdat.public.forms import LoginForm, UserForm
 from dribdat.user.forms import RegisterForm, EmailForm
 from dribdat.database import db
 from dribdat.mailer import user_activation
+from datetime import datetime
 # noqa: I005
 
 blueprint = Blueprint('auth', __name__, static_folder="../static")
@@ -224,6 +225,7 @@ def user_profile():
             user.set_password(form.password.data)
         else:
             user.password = originalhash
+            user.updated_at = datetime.utcnow()
 
         db.session.add(user)
         db.session.commit()

@@ -83,7 +83,7 @@ class User(UserMixin, PkModel):
     sso_id = Column(db.String(128), nullable=True)
     # A temporary hash for logins
     hashword = Column(db.String(128), nullable=True)
-    updated_at = Column(db.DateTime, nullable=False,
+    updated_at = Column(db.DateTime, nullable=True,
                         default=dt.datetime.utcnow)
     # The hashed password
     password = Column(db.String(128), nullable=True)
