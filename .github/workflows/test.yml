@@ -13,11 +13,8 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        name: [ macos, ubuntu ]
+        name: [ ubuntu ]
         include:
-          - name: macos
-            os: macos-latest
-            python-version: 3.7
           - name: ubuntu
             os: ubuntu-latest
             python-version: 3.9
@@ -38,6 +35,10 @@ jobs:
         with:
           path: ~/.cache
           key: venv-${{ runner.os }}-${{ hashFiles('**/poetry.lock') }}
+      - name: Upgrade pip
+        run: poetry run pip install -U pip
+      - name: Install setuptools
+        run: poetry run pip install -U setuptools
       - name: Install dependencies
         run: poetry install --no-interaction --no-root
       - name: Install library
