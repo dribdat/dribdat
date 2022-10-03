@@ -12,7 +12,7 @@ from dribdat.user.models import User, Event, Role
 from dribdat.extensions import login_manager  # noqa: I005
 from dribdat.utils import flash_errors, random_password, sanitize_input
 from dribdat.public.forms import LoginForm, UserForm
-from dribdat.user.forms import RegisterForm
+from dribdat.user.forms import RegisterForm, EmailForm
 from dribdat.database import db
 from dribdat.mailer import user_activation
 # noqa: I005
@@ -64,6 +64,7 @@ def login():
             return redirect(redirect_url)
         else:
             flash_errors(form)
+    logout_user()
     return render_template("public/login.html",
                            form=form, oauth_type=oauth_type())
 
@@ -83,6 +84,7 @@ def register():
         form.webpage_url.data = request.args.get('web')
     if not form.validate_on_submit():
         flash_errors(form)
+        logout_user()
         return render_template('public/register.html',
                                form=form, oauth_type=oauth_type())
     # Continue with user creation
@@ -116,22 +118,24 @@ def register():
         flash(
             "Thank you for registering. You can now log in and submit "
             + "projects.", 'success')
+    # New user created: start session and go home
     login_user(new_user, remember=True)
     return redirect(url_for('public.home'))
 
 
-@blueprint.route("/activate/<userhash>", methods=['GET'])
-def activate(userhash):
+@blueprint.route("/activate/<userid>/<userhash>", methods=['GET'])
+def activate(userid, userhash):
     """Activate or reset new user account."""
-    a_user = User.query.filter_by(sso_id=userhash).first()
-    if a_user is not None:
-        a_user.sso_id = None
+    a_user = User.query.filter_by(id=userid).first_or_404()
+    if a_user.check_hashword(userhash):
+        a_user.hashword = None
         a_user.active = True
         a_user.save()
         login_user(a_user, remember=True)
         flash("Your user account has been activated.", 'success')
         return redirect(url_for('auth.user_profile'))
-    flash("Activation not found. Retry or contact an organizer", 'warning')
+    flash("Activation not found. Try again, or ask an organizer.", 'warning')
+    logout_user()
     return redirect(url_for('public.home'))
 
 
@@ -147,7 +151,39 @@ def logout():
 @blueprint.route('/forgot/')
 def forgot():
     """Forgot password."""
-    return render_template('public/forgot.html', oauth_type=oauth_type())
+    form = EmailForm(request.form)
+    if not form.validate_on_submit():
+        flash_errors(form)
+    return render_template(
+            'public/forgot.html', 
+            form=form,
+            oauth_type=oauth_type())
+
+
+@blueprint.route("/passwordless/", methods=['POST'])
+def passwordless():
+    """Log in a new user via e-mail."""
+    if current_app.config['DRIBDAT_NOT_REGISTER'] or \
+       not current_app.config['MAIL_SERVER']:
+        flash("Passwordless login currently not possible.", 'warning')
+        return redirect(url_for("auth.login", local=1))
+    form = EmailForm(request.form)
+    if not form.validate_on_submit():
+        flash_errors(form)
+        return redirect(url_for('auth.forgot'))
+    # Continue with user activation
+    flash(
+        "If your account exists, you will shortly receive " 
+        + "an activation mail. Check your Spam folder if you do not. "
+        + "Then click the link in that e-mail to log into this application.", 
+        'success')
+    a_user = User.query.filter_by(email=form.email.data).first()
+    if a_user:
+        # Continue with reset
+        with current_app.app_context():
+            user_activation(a_user)
+    # Don't let people spy on your address
+    return redirect(url_for("auth.login"))
 
 
 @blueprint.route('/user/profile', methods=['GET', 'POST'])

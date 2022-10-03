@@ -79,8 +79,13 @@ class User(UserMixin, PkModel):
     email = Column(db.String(80), unique=True, nullable=False)
     webpage_url = Column(db.String(128), nullable=True)
 
+    # Identification for Single Sign On
     sso_id = Column(db.String(128), nullable=True)
-    #: The hashed password
+    # A temporary hash for logins
+    hashword = Column(db.String(128), nullable=True)
+    updated_at = Column(db.DateTime, nullable=False,
+                        default=dt.datetime.utcnow)
+    # The hashed password
     password = Column(db.String(128), nullable=True)
     created_at = Column(db.DateTime, nullable=False,
                         default=dt.datetime.utcnow)
@@ -114,6 +119,8 @@ class User(UserMixin, PkModel):
             'carddata': self.carddata,
             'my_story': self.my_story,
             'my_goals': self.my_goals,
+            'created_at': self.created_at,
+            'updated_at': self.updated_at,
         }
 
     def set_from_data(self, data):
@@ -124,6 +131,7 @@ class User(UserMixin, PkModel):
         if 'email' not in data:
             data['email'] = "%s@%d.localdomain" % (self.username, data['id'])
         self.email = data['email']
+        self.updated_at = dt.datetime.utcnow
 
     def socialize(self):
         """Parse the user's web profile."""
@@ -223,10 +231,24 @@ class User(UserMixin, PkModel):
     def set_password(self, password):
         """Set password."""
         self.password = hashing.hash_value(password)
+        self.updated_at = dt.datetime.utcnow()
 
     def check_password(self, value):
         """Check password."""
         return hashing.check_value(self.password, value)
+
+    def set_hashword(self, hashword):
+        """Set a hash."""
+        self.hashword = hashing.hash_value(hashword)
+        self.updated_at = dt.datetime.utcnow()
+
+    def check_hashword(self, value):
+        """Check the hash value."""
+        timediff = dt.datetime.utcnow() - self.updated_at
+        if timediff > dt.timedelta(minutes=5):
+            # Time limit exceeded
+            return False
+        return hashing.check_value(self.hashword, value)
 
     def __repr__(self):
         """Represent instance as a unique string."""

@@ -7,7 +7,7 @@
 
 {% block content %}
   <h2>My profile</h2>
-  {% if user.sso_id == 'oleg' %}
+  {% if user.sso_id %}
     &#x1f511; <b>Single Sign On</b> active
   {% endif %}
   {{ render_form(url_for('auth.user_profile'), form) }}

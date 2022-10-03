@@ -1,24 +1,29 @@
 # -*- coding: utf-8 -*-
+"""User account forms."""
+
 from flask_wtf import FlaskForm
-from wtforms import PasswordField, StringField
-from wtforms.validators import DataRequired, Email, EqualTo, Length
+from wtforms import PasswordField, StringField, SubmitField
+from wtforms.validators import DataRequired, Email, EqualTo, Length  # noqa: I005
 from wtforms.fields.html5 import URLField, EmailField
-
-from dribdat.utils import sanitize_input
-
+from dribdat.utils import sanitize_input  # noqa: I005
 from .models import User
 
 
 class RegisterForm(FlaskForm):
-    """ Ye olde user registration form """
+    """Ye olde user registration form."""
+
     username = StringField('Username',
                            validators=[DataRequired(), Length(min=3, max=25)])
     email = EmailField('Email',
-                        validators=[DataRequired(), Email(), Length(min=6, max=40)])
+                       validators=[
+                          DataRequired(), Email(), Length(min=6, max=40)])
     password = PasswordField('Password',
-                             validators=[DataRequired(), Length(min=6, max=40)])
+                             validators=[
+                                DataRequired(), Length(min=6, max=40)])
     confirm = PasswordField('Verify password',
-                            [DataRequired(), EqualTo('password', message='Passwords must match')])
+                            [DataRequired(), EqualTo(
+                                'password', 
+                                message='Passwords must match')])
     webpage_url = URLField(u'Online profile')
 
     def __init__(self, *args, **kwargs):
@@ -41,3 +46,12 @@ class RegisterForm(FlaskForm):
             self.email.errors.append('Email already registered')
             return False
         return True
+
+
+class EmailForm(FlaskForm):
+    """Just the e-mail, please."""
+
+    email = EmailField('Email',
+                       validators=[
+                            DataRequired(), Email(), Length(min=6, max=40)])
+    submit = SubmitField(u'Continue')
