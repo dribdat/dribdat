@@ -54,7 +54,7 @@ class Config(object):
     # Server settings
     SERVER_NAME = os_env.get('SERVER_URL', os_env.get(
         'SERVER_NAME', 'localhost.localdomain:5000'))
-    SERVER_SSL = os_env.get('SERVER_SSL', None)
+    SERVER_SSL = bool(strtobool(os_env.get('SERVER_SSL', 'False')))
     SERVER_CORS = bool(strtobool(os_env.get('SERVER_CORS', 'True')))
     SERVER_PROXY = bool(strtobool(os_env.get('SERVER_PROXY', 'False')))
     CSP_DIRECTIVES = os_env.get(
