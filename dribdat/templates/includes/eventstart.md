@@ -1,4 +1,4 @@
-Planning your next event? Here are some tips from hackathon pros - yes, you can [skip this](/event/new) screen.
+Planning your next event? Here are some tips from hackathon pros. _Yes, you can [skip this page](/event/new)._
 
 ## 🏁 Challenges
 

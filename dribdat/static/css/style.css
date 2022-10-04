@@ -1020,6 +1020,7 @@ nav .nav-login {
 /* General form styles */
 .userform form label,
 .userform form .control-label,
+.eventform form .control-label,
 .projectpost form .control-label,
 .projectform form .control-label {
   font-weight: 400; font-size: 140%;
@@ -1031,6 +1032,7 @@ nav .nav-login {
   margin-top: 1rem;
 }
 .userform form > .form-group,
+.eventform form > .form-group,
 .projectpost form > .form-group,
 .projectform form > .form-group {
   margin-top: 1rem;
@@ -1038,6 +1040,7 @@ nav .nav-login {
   text-align: center;
 }
 .userform form .help-inline,
+.eventform form .help-inline,
 .projectpost form .help-inline,
 .projectform form .help-inline {
   color: #555;
@@ -1045,6 +1048,7 @@ nav .nav-login {
   margin-top: 1em;
 }
 .userform form .form-control,
+.eventform form .form-control,
 .projectpost form .form-control,
 .projectform form .form-control {
   font-size: 125%;
