@@ -5,7 +5,7 @@ from flask import (
 )
 from flask_login import current_user
 from urllib.parse import quote, quote_plus
-from datetime import datetime
+from datetime import datetime, timedelta
 from dribdat.user.models import Event, Project
 from dribdat.public.forms import (
     ProjectForm, ProjectDetailForm,
@@ -28,7 +28,7 @@ def current_event():
 def check_update(obj, minutes=5):
     """Has the object been updated in the last minutes."""
     td = datetime.now() - obj.updated_at
-    return td < datetime.timedelta(minutes=minutes)
+    return td < timedelta(minutes=minutes)
 
 
 def resources_by_stage(progress):
