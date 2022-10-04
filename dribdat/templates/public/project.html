@@ -498,7 +498,9 @@
   </div>
 </div>
 
-{{ social.share_links(share.text, share.url) }}
+{% if config.DRIBDAT_SOCIAL_LINKS %}
+  {{ social.share_links(share.text, share.url) }}
+{% endif %}
 
 {% if not project.event.lock_resources %}
 <center class="mt-5">

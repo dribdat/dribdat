@@ -26,6 +26,8 @@ class Config(object):
     DRIBDAT_NOT_REGISTER = bool(strtobool(DRIBDAT_NOT_REGISTER))
     DRIBDAT_ALLOW_EVENTS = os_env.get('DRIBDAT_ALLOW_EVENTS', 'False')
     DRIBDAT_ALLOW_EVENTS = bool(strtobool(DRIBDAT_ALLOW_EVENTS))
+    DRIBDAT_SOCIAL_LINKS = os_env.get('DRIBDAT_SOCIAL_LINKS', 'True')
+    DRIBDAT_SOCIAL_LINKS = bool(strtobool(DRIBDAT_SOCIAL_LINKS))
 
     # Single sign-on support
     OAUTH_ID = os_env.get('OAUTH_ID', None)

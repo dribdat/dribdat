@@ -62,7 +62,9 @@
             </a>
           {% endif %}
 
-          {{ social.share_links(s.share.text, s.share.url) }}
+          {% if config.DRIBDAT_SOCIAL_LINKS %}
+            {{ social.share_links(s.share.text, s.share.url) }}
+          {% endif %} 
         </div>
       </div>
       {% endfor %}
