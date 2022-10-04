@@ -1072,6 +1072,10 @@ nav .nav-login {
   font-size: 150%;
   width: 100%;
 }
+.with-event .form-group label.required::after {
+    color: #ff0000;
+    content: " *"
+}
 
 /* Code blocks */
 pre { color: #333; background: white; }
