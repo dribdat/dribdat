@@ -4,14 +4,12 @@ from dribdat.utils import load_event_presets
 from flask import (Blueprint, request, render_template, flash, url_for,
                    redirect, current_app, jsonify)
 from flask_login import login_required, current_user
-
 from dribdat.user.models import User, Event, Project, Activity
 from dribdat.public.forms import NewEventForm
 from dribdat.database import db
 from dribdat.extensions import cache
 from dribdat.aggregation import GetEventUsers
 from dribdat.user import getProjectStages, isUserActive
-
 from urllib.parse import quote, quote_plus
 from datetime import datetime
 import re
@@ -25,12 +23,14 @@ EVENT_PRESET = load_event_presets()
 RE_NO_TAGS = re.compile(r'\!\[[^\]]*\]\([^\)]+\)|\[|\]|<[^>]+>')
 
 
-def current_event(): return Event.current()
+def current_event():
+    """Just get a current event."""
+    return Event.current()
 
 
 @blueprint.route("/dashboard/")
 def dashboard():
-    """ Renders a static dashboard """
+    """Render a static dashboard."""
     event = current_event()
     if not event:
         return 'No current event'
@@ -43,7 +43,7 @@ def dashboard():
 
 @blueprint.route('/hackathon.json')
 def info_current_hackathon_json():
-    """ Outputs JSON-LD about the current event """
+    """Output JSON-LD about the current event."""
     # (see also api.py/info_event_hackathon_json)
     event = Event.query.filter_by(is_current=True).first(
     ) or Event.query.order_by(Event.id.desc()).first()
@@ -52,19 +52,20 @@ def info_current_hackathon_json():
 
 @blueprint.route("/about/")
 def about():
-    """ Renders a simple about page """
-    return render_template("public/about.html", active="about")
+    """Render a static about page."""
+    orgs = [u.data for u in User.query.filter_by(is_admin=True)]
+    return render_template("public/about.html", active="about", orgs=orgs)
 
 
 @blueprint.route("/favicon.ico")
 def favicon():
-    """ Favicon just points to a file """
+    """Favicon just points to a file."""
     return redirect(url_for('static', filename='img/favicon.ico'))
 
 
 @blueprint.route("/")
 def home():
-    """ Home page """
+    """Home page."""
     cur_event = current_event()
     if cur_event is not None:
         events = Event.query.filter(Event.id != cur_event.id)
@@ -97,6 +98,7 @@ def home():
 
 @blueprint.route('/user/<username>', methods=['GET'])
 def user(username):
+    """Show a user profile."""
     user = User.query.filter_by(username=username).first_or_404()
     if not isUserActive(user):
         # return "User deactivated. Please contact an event organizer."
@@ -117,6 +119,7 @@ def user(username):
 @blueprint.route('/user/_post', methods=['GET'])
 @login_required
 def user_post():
+    """Redirect to a Post form for my current project."""
     projects = current_user.joined_projects(False)
     if not len(projects) > 0:
         flash('Please Join a project to be able to Post an update.', 'info')
@@ -127,6 +130,7 @@ def user_post():
 @blueprint.route('/user/_cert', methods=['GET'])
 @login_required
 def user_cert():
+    """Download a user certificate."""
     projects = current_user.joined_projects(False)
     if not len(projects) > 0:
         flash('Please Join a project you worked on to get a certificate.', 'info')
@@ -140,6 +144,7 @@ def user_cert():
 
 @blueprint.route("/event/<int:event_id>")
 def event(event_id):
+    """Show an event."""
     event = Event.query.filter_by(id=event_id).first_or_404()
     projects = Project.query.filter_by(event_id=event_id, is_hidden=False)
     if request.args.get('embed'):
@@ -158,6 +163,7 @@ def event(event_id):
 
 @blueprint.route("/event/<int:event_id>/participants")
 def event_participants(event_id):
+    """Show list of participants of an event."""
     event = Event.query.filter_by(id=event_id).first_or_404()
     users = GetEventUsers(event)
     cert_path = None
@@ -172,6 +178,7 @@ def event_participants(event_id):
 
 @blueprint.route("/event/<int:event_id>/stages")
 def event_stages(event_id):
+    """Show projects by stage for an event."""
     event = Event.query.filter_by(id=event_id).first_or_404()
     steps = getProjectStages()
     for s in steps:
@@ -189,6 +196,7 @@ def event_stages(event_id):
 
 @blueprint.route("/event/<int:event_id>/instruction")
 def event_instruction(event_id):
+    """Show instructions of an event."""
     event = Event.query.filter_by(id=event_id).first_or_404()
     steps = getProjectStages()
     for s in steps:
@@ -209,6 +217,7 @@ def event_instruction(event_id):
 
 @blueprint.route("/event/<int:event_id>/categories")
 def event_categories(event_id):
+    """Show categories of an event."""
     event = Event.query.filter_by(id=event_id).first_or_404()
     steps = event.categories_for_event()
     projects = Project.query.filter_by(event_id=event.id, is_hidden=False)
@@ -220,6 +229,7 @@ def event_categories(event_id):
 
 @blueprint.route('/event/<int:event_id>/print')
 def event_print(event_id):
+    """Print the results of an event."""
     now = datetime.utcnow().strftime("%d.%m.%Y %H:%M")
     event = Event.query.filter_by(id=event_id).first_or_404()
     eventdata = Project.query.filter_by(event_id=event_id, is_hidden=False)
@@ -232,7 +242,10 @@ def event_print(event_id):
 
 @blueprint.route('/event/start', methods=['GET'])
 def event_start():
-    if not current_app.config['DRIBDAT_ALLOW_EVENTS']:
+    """Guidelines for new events."""
+    if current_user.is_anonymous:
+        flash('Only logged in users may start events here.', 'danger')
+    elif not current_app.config['DRIBDAT_ALLOW_EVENTS']: 
         if not current_user.is_admin:
             flash('Only administrators may start events here.', 'danger')
     tips = EVENT_PRESET['eventstart']
@@ -242,6 +255,7 @@ def event_start():
 @blueprint.route('/event/new', methods=['GET', 'POST'])
 @login_required
 def event_new():
+    """Start a new event."""
     if not current_app.config['DRIBDAT_ALLOW_EVENTS']:
         if not current_user.is_admin:
             return redirect(url_for("public.event_start"))
@@ -263,19 +277,19 @@ def event_new():
         flash('A new event has been planned!', 'success')
         if not current_user.is_admin:
             flash(
-                'Please contact an administrator to make changes or '
-                + 'to promote this event on the home page.',
+                'Please contact an organiser (see About page)'
+                + 'to make changes or promote this event.',
                 'warning')
         cache.clear()
         return redirect(url_for("public.event", event_id=event.id))
-    return render_template('public/eventnew.html', form=form)
+    return render_template('public/eventnew.html', form=form, active='Event')
 
 #####
 
 
 @blueprint.route("/dribs")
 def dribs():
-    """ Shows the latest logged posts """
+    """Show the latest logged posts."""
     page = request.args.get('page') or 1
     per_page = request.args.get('limit') or 10
     dribs = Activity.query.filter(Activity.action == "post")
