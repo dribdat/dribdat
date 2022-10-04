@@ -188,7 +188,7 @@ def register_filters(app):
     app.tz = timezone(app.config['TIME_ZONE'])
 
     # Lambda filters
-    app.jinja_env.filters['quote_plus'] = lambda u: quote_plus(u, ':/')
+    app.jinja_env.filters['quote_plus'] = lambda u: quote_plus(u, ':/?')
 
     # Custom filters
     @app.template_filter()
