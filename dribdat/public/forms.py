@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+"""Public facing forms."""
 from flask_wtf import FlaskForm
 from wtforms import (
     SubmitField, BooleanField,
@@ -6,9 +7,9 @@ from wtforms import (
     TextAreaField,
     SelectMultipleField,
     SelectField, HiddenField,
-    TimeField, DateField,
 )
 from wtforms.fields.html5 import (
+    TimeField, DateField,
     URLField, EmailField,
 )
 from wtforms.validators import DataRequired, length
@@ -19,7 +20,8 @@ from datetime import time, datetime
 
 
 class LoginForm(FlaskForm):
-    """Login form."""
+    """Display a login form."""
+
     username = StringField('Username', validators=[DataRequired()])
     password = PasswordField('Password', validators=[DataRequired()])
 
@@ -45,6 +47,8 @@ class LoginForm(FlaskForm):
 
 
 class UserForm(FlaskForm):
+    """User profile form."""
+
     id = HiddenField('id')
     roles = SelectMultipleField(
         u'Roles', coerce=int,
@@ -74,6 +78,8 @@ class UserForm(FlaskForm):
 
 
 class ProjectNew(FlaskForm):
+    """Create a project form."""
+
     id = HiddenField('id')
     autotext_url = URLField(
         u'Readme', [length(max=2048)],
@@ -98,6 +104,8 @@ class ProjectNew(FlaskForm):
 
 
 class ProjectForm(FlaskForm):
+    """Edit a project form."""
+
     id = HiddenField('id')
     name = StringField(
         u'Title',
@@ -120,6 +128,8 @@ class ProjectForm(FlaskForm):
 
 
 class ProjectDetailForm(FlaskForm):
+    """Edit a project detail form."""
+
     id = HiddenField('id')
     autotext_url = URLField(
         u'Readme', [length(max=255)],
@@ -150,6 +160,8 @@ class ProjectDetailForm(FlaskForm):
 
 
 class ProjectPost(FlaskForm):
+    """Add a post to a project."""
+
     id = HiddenField('id')
     has_progress = BooleanField(u"Let's go")
     note = TextAreaField(
@@ -160,6 +172,8 @@ class ProjectPost(FlaskForm):
 
 
 class ProjectComment(FlaskForm):
+    """Add a comment to a project."""
+
     id = HiddenField('id')
     note = TextAreaField(
         u'Comments and reviews',
@@ -170,6 +184,8 @@ class ProjectComment(FlaskForm):
 
 
 class ProjectBoost(FlaskForm):
+    """Add a boost to a project."""
+
     id = HiddenField('id')
     note = TextAreaField(u'Short praise and comments', [
                          length(max=140), DataRequired()])
@@ -178,6 +194,8 @@ class ProjectBoost(FlaskForm):
 
 
 class NewEventForm(FlaskForm):
+    """Add a new Event."""
+    
     next = HiddenField()
     id = HiddenField('id')
     name = StringField(

@@ -342,7 +342,7 @@ class Event(PkModel):
         self.certificate_path = dcp
 
     def get_schema(self, host_url=''):
-        """Returns hackathon.json formatted metadata."""
+        """Return hackathon.json formatted metadata."""
         desc = self.summary or re.sub('<[^>]*>', '', self.description or '')
         d = {
             "@context": "http://schema.org",
@@ -498,11 +498,11 @@ class Project(PkModel):
     event_id = reference_col('events', nullable=True)
     event = relationship('Event', backref='projects')
 
-    # And the optional event category
+    # An optional event category
     category_id = reference_col('categories', nullable=True)
     category = relationship('Category', backref='projects')
 
-    # Self-assessment and total score
+    # Assessment and total score
     progress = Column(db.Integer(), nullable=True, default=-1)
     score = Column(db.Integer(), nullable=True, default=0)
 
