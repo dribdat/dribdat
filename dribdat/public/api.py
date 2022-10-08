@@ -5,7 +5,7 @@ from flask import (
     Blueprint, current_app,
     Response, request, redirect,
     stream_with_context, send_file,
-    jsonify, flash, url_for
+    jsonify, flash, url_for, escape
 )
 from flask_login import login_required, current_user
 from werkzeug.utils import secure_filename
@@ -391,11 +391,19 @@ def project_uploader():
     ext = img.filename.split('.')[-1].lower()
     if ext not in ACCEPTED_TYPES:
         return 'Invalid format (allowed: %s)' % ','.join(ACCEPTED_TYPES)
+    # generate a simpler filename
+    keepcharacters = ('.', '_')
+    safe_filename = img.filename.replace(' ', '_')
+    safe_filename = "".join(
+        c for c in safe_filename 
+        if c.isalnum() or c in keepcharacters).rstrip()
+    if not safe_filename:
+        safe_filename = "".join(random_password(8), '.', ext)
     # use random subfolder inside user id folder
     filename = '/'.join([
                     str(current_user.id),
                     random_password(24),
-                    img.filename
+                    safe_filename
                 ])
     # with tempfile.TemporaryDirectory() as tmpdir:
     #   img.save(path.join(tmpdir, filename))
@@ -425,7 +433,7 @@ def project_uploader():
                           ExtraArgs={'ContentType': img.content_type,
                                      'ACL': 'public-read'}
                           )
-    return '/'.join([current_app.config['S3_HTTPS'], s3_filepath])
+    return escape('/'.join([current_app.config['S3_HTTPS'], s3_filepath]))
 
 
 # ------ DATA PACKAGE API --------
