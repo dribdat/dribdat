@@ -73,14 +73,14 @@
 <div class="row">
 
   <h1 class="profile-header huge">
-    <img src="https://www.gravatar.com/avatar/{{user.carddata}}"/>
+    <img src="{{user.carddata}}"/>
     <span>
       {{ user.username }}
     </span>
   </h1>
 
 </div>
-<div class="row">
+<div class="row mb-3">
 
   {% if user.webpage_url %}
   <div class="col-sm">
@@ -129,7 +129,7 @@
 
 {% if not projects %}
   {% if current_user and current_user.id == user.id %}
-    <div class="alert alert-warning">
+    <div class="alert alert-success">
     No projects here yet. Time to <b>Join</b> or <b>Start</b> something awesome!
     </div>
   {% endif %}

@@ -10,7 +10,7 @@ from dribdat.database import db
 from dribdat.extensions import cache
 from dribdat.aggregation import GetEventUsers
 from dribdat.user import getProjectStages, isUserActive
-from urllib.parse import quote, quote_plus
+from urllib.parse import quote, quote_plus, urlparse
 from datetime import datetime
 import re
 
@@ -34,7 +34,12 @@ def dashboard():
     event = current_event()
     if not event:
         return 'No current event'
-    wall = 'twitter.com' in event.community_url
+    wall = False
+    social_domains = ['twitter.com']
+    host = urlparse(event.community_url).hostname
+    for d in social_domains:
+        if host == d:
+            wall = True
     return render_template(
         "public/dashboard.html",
         current_event=event, with_social_wall=wall
@@ -137,7 +142,7 @@ def user_cert():
         # Proceed
         return redirect(why)
     if why == 'projects':
-        flash('Please Join a project you worked on to get a certificate.', 'info')
+        flash('Please Join your team project to get a certificate.', 'info')
     elif why == 'event':
         flash('A certificate is not yet available for this event.', 'info')
     else:

@@ -42,6 +42,17 @@ def FetchGitlabProject(project_url):
     }
 
 
+def FetchGitlabAvatar(email):
+    apiurl = "https://gitlab.com/api/v4/avatar?email=%s&size=80"
+    data = requests.get(apiurl % email)
+    if data.text.find('{') < 0:
+        return None
+    json = data.json()
+    if 'avatar_url' not in json:
+        return None
+    return json['avatar_url']
+
+
 def FetchGithubProject(project_url):
     API_BASE = "https://api.github.com/repos/%s"
     data = requests.get(API_BASE % project_url)

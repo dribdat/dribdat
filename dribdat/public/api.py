@@ -8,6 +8,7 @@ from flask import (
     jsonify, flash, url_for
 )
 from flask_login import login_required, current_user
+from werkzeug.utils import secure_filename
 from sqlalchemy import or_
 from ..extensions import db
 from ..utils import timesince, random_password
@@ -277,7 +278,7 @@ def event_load_datapackage():  # noqa: C901
         if ext not in ['json']:
             return 'Invalid format (allowed: JSON)'
         with tempfile.TemporaryDirectory() as tmpdir:
-            filepath = path.join(tmpdir, filedata.filename)
+            filepath = path.join(tmpdir, secure_filename(filedata.filename))
             filedata.save(filepath)
             try:
                 with open(filepath, mode='rb') as file:

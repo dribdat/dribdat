@@ -24,6 +24,7 @@ from dribdat.database import (
     reference_col,
 )
 from dribdat.extensions import hashing
+from dribdat.apifetch import FetchGitlabAvatar
 from flask import current_app
 from flask_login import UserMixin
 from time import mktime
@@ -31,7 +32,7 @@ from dateutil.parser import parse
 import datetime as dt
 import hashlib
 import re
-from urllib.parse import urlencode
+from urllib.parse import urlencode, urlparse
 # Standard library fix
 from future.standard_library import install_aliases
 install_aliases()  # noqa: I005
@@ -136,23 +137,34 @@ class User(UserMixin, PkModel):
     def socialize(self):
         """Parse the user's web profile."""
         self.cardtype = ""
+        self.carddata = ""
         if self.webpage_url is None:
             self.webpage_url = ""
-        elif 'github.com/' in self.webpage_url:
+        host = urlparse(self.webpage_url).hostname
+        print(host)
+        if host == 'github.com':
             self.cardtype = 'github'
-            # self.carddata = self.webpage_url.strip('/').split('/')[-1]
-        elif 'twitter.com/' in self.webpage_url:
+            username = self.webpage_url.strip('/').split('/')[-1]
+            self.carddata = "https://github.com/%s.png?size=80" % username
+        elif host == 'gitlab.com':
+            self.cardtype = 'gitlab'
+            self.carddata = FetchGitlabAvatar(self.email)
+        elif host == 'twitter.com':
             self.cardtype = 'twitter-square'
-            # self.carddata = self.webpage_url.strip('/').split('/')[-1]
-        elif 'linkedin.com/' in self.webpage_url:
+            # username = self.webpage_url.strip('/').split('/')[-1]
+            # self.carddata = FetchTwitterAvatar(username)
+        elif host == 'linkedin.com':
             self.cardtype = 'linkedin-square'
-        elif 'stackoverflow.com/' in self.webpage_url:
+        elif host and host.endswith('stackoverflow.com'):
             self.cardtype = 'stack-overflow'
-        gr_size = 80
-        email = self.email.lower().encode('utf-8')
-        gravatar_url = hashlib.md5(email).hexdigest() + "?"
-        gravatar_url += urlencode({'s': str(gr_size)})
-        self.carddata = gravatar_url
+        if not self.carddata:
+            # Default: generate a Gravatar link
+            gr_size = 80
+            email = self.email.lower().encode('utf-8')
+            gravatar_url = "https://www.gravatar.com/avatar/"
+            gravatar_url += hashlib.md5(email).hexdigest() + "?"
+            gravatar_url += urlencode({'s': str(gr_size)})
+            self.carddata = gravatar_url
         self.save()
 
     def joined_projects(self, with_challenges=True, limit=-1):
