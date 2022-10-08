@@ -7,7 +7,6 @@ Create Date: 2022-09-17 08:04:21.745061
 """
 from alembic import op
 import sqlalchemy as sa
-from dribdat.user.models import User
 
 # revision identifiers, used by Alembic.
 revision = '84d8ce8453f3'
@@ -20,7 +19,6 @@ def upgrade():
     op.add_column('events', sa.Column('hashtags', sa.String(length=255), nullable=True))
     op.add_column('users', sa.Column('hashword', sa.String(length=128), nullable=True))
     op.add_column('users', sa.Column('updated_at', sa.DateTime(), nullable=True))
-    [u.socialize() for u in User.query.all()]
 
 
 def downgrade():
