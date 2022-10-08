@@ -141,7 +141,6 @@ class User(UserMixin, PkModel):
         if self.webpage_url is None:
             self.webpage_url = ""
         host = urlparse(self.webpage_url).hostname
-        print(host)
         if host == 'github.com':
             self.cardtype = 'github'
             username = self.webpage_url.strip('/').split('/')[-1]
