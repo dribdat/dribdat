@@ -133,7 +133,7 @@ def activate(userid, userhash):
         a_user.active = True
         a_user.save()
         login_user(a_user, remember=True)
-        flash("Your user account has been activated.", 'success')
+        flash("Welcome! Your user account has been activated.", 'success')
         return redirect(url_for('auth.user_profile'))
     flash("Activation not found. Try again, or ask an organizer.", 'warning')
     logout_user()

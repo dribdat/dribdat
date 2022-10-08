@@ -3,8 +3,8 @@
 
 from flask import Flask, render_template
 from flask_cors import CORS
-from flask_mail import Mail  # noqa: I005
 from flask_misaka import Misaka
+from flask_mailman import Mail
 from flask_talisman import Talisman
 from flask_dance.contrib import (slack, azure, github)
 from werkzeug.middleware.proxy_fix import ProxyFix
@@ -69,15 +69,19 @@ def register_extensions(app):
     db.init_app(app)
     login_manager.init_app(app)
     migrate.init_app(app, db)
-    init_mail(app)
+    init_mailman(app)
     init_talisman(app)
     return None
 
 
-def init_mail(app):
-    """Initialize Flask Mail support."""
+def init_mailman(app):
+    """Initialize mailer support."""
     if 'MAIL_SERVER' in app.config and app.config['MAIL_SERVER']:
-        mail = Mail(app)
+        if not app.config['MAIL_DEFAULT_SENDER']:
+            app.logger.warn('MAIL_DEFAULT_SENDER is required to send email')
+        else:
+            mail = Mail()
+            mail.init_app(app)
 
 
 def init_talisman(app):

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """Helper for sending mail."""
 from flask import url_for
-from flask_mail import Message, Mail
+from flask_mailman import EmailMessage
 from dribdat.utils import random_password  # noqa: I005
 
 
@@ -16,9 +16,10 @@ def user_activation(user):
         userid=user.id, 
         userhash=act_hash,
         _external=True)
-    mail = Mail()
-    msg = Message('Your dribdat account')
-    msg.recipients = [user.email]
-    msg.body = "Thanks for signing up at %s\n\n" % base_url \
-               + "Tap here to activate your account:\n\n%s" % act_url
-    mail.send(msg)
+    msg = EmailMessage()
+    msg.subject = 'Your dribdat account'
+    msg.body = \
+        "Thanks for signing up at %s\n\n" % base_url \
+        + "Tap here to activate your account:\n\n%s" % act_url
+    msg.to = [user.email]
+    msg.send()

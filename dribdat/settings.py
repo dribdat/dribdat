@@ -42,6 +42,8 @@ class Config(object):
     MAIL_USERNAME = os_env.get('MAIL_USERNAME', None)
     MAIL_PASSWORD = os_env.get('MAIL_PASSWORD', None)
     MAIL_DEFAULT_SENDER = os_env.get('MAIL_DEFAULT_SENDER', None)
+    MAIL_USE_TLS = bool(strtobool(os_env.get('MAIL_USE_TLS', 'False')))
+    MAIL_USE_SSL = bool(strtobool(os_env.get('MAIL_USE_SSL', 'False')))
 
     # Application settings
     APP_DIR = os.path.abspath(os.path.dirname(__file__))  # This directory
