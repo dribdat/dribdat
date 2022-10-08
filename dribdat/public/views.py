@@ -113,7 +113,8 @@ def user(username):
     posts = user.latest_posts(20)
     return render_template("public/userprofile.html", active="profile",
                            user=user, projects=projects, score=score,
-                           submissions=submissions, posts=posts)
+                           submissions=submissions, posts=posts,
+                           may_certify=user.may_certify()[0])
 
 
 @blueprint.route('/user/_post', methods=['GET'])
@@ -131,15 +132,17 @@ def user_post():
 @login_required
 def user_cert():
     """Download a user certificate."""
-    projects = current_user.joined_projects(False)
-    if not len(projects) > 0:
+    status, why = current_user.may_certify()
+    if status:
+        # Proceed
+        return redirect(why)
+    if why == 'projects':
         flash('Please Join a project you worked on to get a certificate.', 'info')
-        return redirect(url_for("public.home"))
-    cert_path = current_user.get_cert_path(projects[0].event)
-    if not cert_path:
+    elif why == 'event':
         flash('A certificate is not yet available for this event.', 'info')
-        return redirect(url_for("public.user", username=current_user.username))
-    return redirect(cert_path)
+    else:
+        flash('Unknown error occurred.', 'warning')
+    return redirect(url_for("public.user", username=current_user.username))
 
 
 @blueprint.route("/event/<int:event_id>")

@@ -333,15 +333,6 @@
 
   </div><!-- /project-content -->
 
-  {% if project.source_url and 'github.com' in project.source_url %}
-    <div class="widget widget-github">
-      <div data-theme="default" data-width="400" data-height="160" data-github="{{ project.source_url|replace('https://github.com/','') }}" class="github-card"></div>
-      <script src="//cdn.jsdelivr.net/github-cards/latest/widget.js"></script>
-
-      <div id="issues-list" data-github="{{ project.source_url|replace('https://github.com/','') }}" class="list-group list-data"><i>Loading ...</i></div>
-    </div>
-  {% endif %}
-
   <a name="team"></a>
   {% if project_team %}
     <div class="widget widget-team">

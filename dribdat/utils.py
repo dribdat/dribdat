@@ -11,7 +11,7 @@ import yaml
 
 
 def strtobool(text):
-    """ Truthy conversion as per PEP 632 """
+    """Truthy conversion as per PEP 632."""
     tls = str(text).lower().strip()
     if tls in ['y', 'yes', 't', 'true', 'on', '1']:
         return True
@@ -21,12 +21,12 @@ def strtobool(text):
 
 
 def sanitize_input(text):
-    """ Removes unsavoury characters """
+    """Remove unsavoury characters."""
     return re.sub(r"[^a-zA-Z0-9_]+", '', text)
 
 
 def random_password(pwdlen=20):
-    """ A strongly secure random string """
+    """Provide a strongly secure random string."""
     import string
     import random
     return ''.join(random.SystemRandom()
@@ -38,14 +38,14 @@ def flash_errors(form, category='warning'):
     """Flash all errors for a form."""
     for field, errors in form.errors.items():
         for error in errors:
-            flash('{0} - {1}'.format(getattr(form, field).label.text, error), category)
+            flash('{0} - {1}'.format(
+                getattr(form, field).label.text, error), category)
 
 
 def timesince(dt, default="just now", until=False):
-    """
-    Returns string representing "time since" e.g.
-    3 days ago, 5 hours ago etc.
-    - from http://flask.pocoo.org/snippets/33/
+    """Return a string representing 'time since'."""
+    """E.g.: 3 days ago, 5 hours ago etc.
+    See http://flask.pocoo.org/snippets/33/
     """
     if dt is None:
         return ""
@@ -71,15 +71,20 @@ def timesince(dt, default="just now", until=False):
     )
     for period, singular, plural in periods:
         if floor(period) > 0:
-            return "%d %s %s" % (period, singular if int(period) == 1 else plural, suffix)
+            return "%d %s %s" % (
+                period, singular if int(period) == 1 
+                else plural, suffix
+            )
     return default
 
 
 def format_date(value, format='%Y-%m-%d'):
+    """Return a standard format of a date."""
     return value.strftime(format)
 
 
 def format_date_range(starts_at, ends_at):
+    """Return a formatted date range."""
     if starts_at.month == ends_at.month:
         if starts_at.day == ends_at.day:
             dayrange = starts_at.day
@@ -105,23 +110,23 @@ def format_date_range(starts_at, ends_at):
 
 
 def load_event_presets():
-    """ Load event preset content """
-    EVENT_PRESET = {
+    """Load event preset content."""
+    event_preset = {
         'eventstart': '',
         'quickstart': '',
         'codeofconduct': '',
     }
-    for pr in EVENT_PRESET.keys():
+    for pr in event_preset.keys():
         fn = path.join(path.join(path.join(
             path.dirname(__file__),
             'templates'), 'includes'), pr + '.md')
         with open(fn, mode='r') as file:
-            EVENT_PRESET[pr] = file.read()
-    return EVENT_PRESET
+            event_preset[pr] = file.read()
+    return event_preset
 
 
 def load_csv_presets(filename, by_col='name'):
-    """ Load structured settings from a CSV file """
+    """Load structured settings from a CSV file."""
     fn = path.join(path.join(path.join(
         path.dirname(__file__), 'templates'), 'includes'), filename + '.csv')
     settings_dict = {}
@@ -133,7 +138,7 @@ def load_csv_presets(filename, by_col='name'):
 
 
 def load_yaml_presets(filename, by_col='name'):
-    """ Load structured settings from a YAML file """
+    """Load structured settings from a YAML file."""
     # Expects filename to not have an extension
     # and be equivalent to the top level element
     fn = path.join(path.join(path.join(

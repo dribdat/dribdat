@@ -208,6 +208,16 @@ class User(UserMixin, PkModel):
                 user_id=self.id
             ).count()
 
+    def may_certify(self):
+        """Check availability of certificate."""
+        projects = self.joined_projects(False)
+        if not len(projects) > 0:
+            return (False, 'projects')
+        cert_path = self.get_cert_path(projects[0].event)
+        if not cert_path:
+            return (False, 'event')
+        return (True, cert_path)
+
     def get_cert_path(self, event):
         """Generate URL to participation certificate."""
         if not event:

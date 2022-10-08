@@ -54,15 +54,15 @@ def login():
             login_user(form.user, remember=True)
             if not form.user.active:
                 flash(
-                    'This user account is under review. '
-                    + 'Please update your profile and contact the organizing '
-                    + 'team to access all functions of this platform.',
+                    'Your user account is under review. '
+                    + 'Please update your profile, and contact an organizer '
+                    + 'to be able to access all functions of this platform.',
                     'warning')
-            else:
-                flash("You are logged in! Time to make something awesome ≧◡≦",
-                      'success')
-            redirect_url = request.args.get("next") or url_for("public.home")
-            return redirect(redirect_url)
+                username = current_user.username
+                return redirect(url_for('public.user', username=username))
+            flash("You are logged in! Time to make something awesome. ≧◡≦",
+                  'success')
+            return redirect(url_for("public.home"))
         else:
             flash_errors(form)
     logout_user()

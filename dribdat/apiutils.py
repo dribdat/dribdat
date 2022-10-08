@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-""" Helper functions for the API """
+"""Helper functions for the API."""
 # Really just a step towards a full API rebuild
 
 from .aggregation import GetEventUsers
@@ -14,12 +14,12 @@ PY3 = version_info[0] == 3
 
 
 def get_projects_by_event(event_id):
-    """ Get all the visible projects that belong to an event """
+    """Get all the visible projects that belong to an event."""
     return Project.query.filter_by(event_id=event_id, is_hidden=False)
 
 
 def get_event_activities(event_id=None, limit=50, q=None, action=None):
-    """ Fetch activities of a given event """
+    """Fetch activities of a given event."""
     if event_id is not None:
         event = Event.query.filter_by(id=event_id).first_or_404()
         query = Activity.query \
@@ -37,7 +37,7 @@ def get_event_activities(event_id=None, limit=50, q=None, action=None):
 
 
 def get_event_categories(event_id=None):
-    """ Fetch the categories of a given event """
+    """Fetch the categories of a given event."""
     if event_id is not None:
         event = Event.query.filter_by(id=event_id).first_or_404()
         query = Category.query.filter_by(event_id=event.id)
@@ -47,7 +47,7 @@ def get_event_categories(event_id=None):
 
 
 def get_event_users(event, full_data=False):
-    """ Returns plain user objects and personal data """
+    """Return plain user objects and personal data."""
     eventusers = GetEventUsers(event)
     if not eventusers:
         return []
@@ -66,7 +66,7 @@ def get_event_users(event, full_data=False):
 
 
 def get_project_summaries(projects, host_url, is_moar=False):
-    """ Collect data for each project in a list """
+    """Collect data for each project in a list."""
     if is_moar:
         summaries = []
         for project in projects:
@@ -82,13 +82,13 @@ def get_project_summaries(projects, host_url, is_moar=False):
 
 
 def get_project_list(event_id, host_url='', full_data=False):
-    """ Collect all projects and challenges for an event """
+    """Collect all projects and challenges for an event."""
     projects = get_projects_by_event(event_id)
     return get_project_summaries(projects, host_url, full_data)
 
 
 def expand_project_urls(projects, host_url):
-    """ Expand the URLs of projects with that of the host server """
+    """Expand the URLs of projects with that of the host server."""
     for p in projects:
         p['event_url'] = host_url + p['event_url']
         p['url'] = host_url + p['url']
@@ -97,7 +97,7 @@ def expand_project_urls(projects, host_url):
 
 
 def get_schema_for_user_projects(user, host_url):
-    """ Generates the metadata for a given user's projects """
+    """Generate the metadata for a given user's projects."""
     my_projects = user.joined_projects()
     if len(my_projects) == 0:
         return {'message': "Please join and contribute to at least 1 project."}
@@ -117,7 +117,7 @@ def get_schema_for_user_projects(user, host_url):
 
 
 def gen_rows(csvdata):
-    """ Generate rows from data """
+    """Generate rows from data."""
     rkrows = []
     headerline = list(csvdata[0].keys())
     rkrows.append(headerline)
@@ -137,7 +137,7 @@ def gen_rows(csvdata):
 
 
 def gen_csv(csvdata):
-    """ Generate a CSV file from data rows """
+    """Generate a CSV file from data rows."""
     if len(csvdata) < 1:
         return ""
     rowdata = gen_rows(csvdata)

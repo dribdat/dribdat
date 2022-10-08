@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-
+"""API calls for dribdat."""
 import boto3
 from flask import (
     Blueprint, current_app,
@@ -8,13 +8,10 @@ from flask import (
     jsonify, flash, url_for
 )
 from flask_login import login_required, current_user
-
 from sqlalchemy import or_
-
 from ..extensions import db
 from ..utils import timesince, random_password
 from ..decorators import admin_required
-
 from ..user.models import Event, Project, Activity
 from ..aggregation import GetProjectData, AddProjectData, GetEventUsers
 from ..apipackage import ImportEventPackage, PackageEvent
@@ -25,7 +22,6 @@ from ..apiutils import (
     expand_project_urls,
     gen_csv,
 )
-
 import tempfile
 import json
 from os import path
@@ -37,7 +33,7 @@ blueprint = Blueprint('api', __name__, url_prefix='/api')
 
 @blueprint.route('/event/current/info.json')
 def info_current_event_json():
-    """ API: Outputs JSON about the current event """
+    """Output JSON about the current event."""
     event = Event.query.filter_by(is_current=True).first() or \
         Event.query.order_by(Event.id.desc()).first_or_404()
     timeuntil = timesince(event.countdown, until=True)
@@ -46,7 +42,7 @@ def info_current_event_json():
 
 @blueprint.route('/event/<int:event_id>/info.json')
 def info_event_json(event_id):
-    """ API: Outputs JSON about an event """
+    """Output JSON about an event."""
     event = Event.query.filter_by(id=event_id).first_or_404()
     timeuntil = timesince(event.countdown, until=True)
     return jsonify(event=event.data, timeuntil=timeuntil)
@@ -54,8 +50,8 @@ def info_event_json(event_id):
 
 @blueprint.route('/event/<int:event_id>/hackathon.json')
 def info_event_hackathon_json(event_id):
-    """ API: Outputs JSON-LD about an Event according to schema """
-    """ See https://schema.org/Hackathon """
+    """Output JSON-LD about an Event according to schema."""
+    """See https://schema.org/Hackathon."""
     event = Event.query.filter_by(id=event_id).first_or_404()
     return jsonify(event.get_schema(request.host_url))
 
@@ -63,6 +59,7 @@ def info_event_hackathon_json(event_id):
 # ------ EVENT PROJECTS ---------
 
 def request_project_list(event_id):
+    """Fetch a project list."""
     is_moar = bool(request.args.get('moar', type=bool))
     host_url = request.host_url
     return get_project_list(event_id, host_url, is_moar)
@@ -70,7 +67,7 @@ def request_project_list(event_id):
 
 @blueprint.route('/event/current/projects.json')
 def project_list_current_json():
-    """ API: Outputs JSON of projects in the current event with its info """
+    """Output JSON of projects in the current event with its info."""
     event = Event.query.filter_by(is_current=True).first() or \
         Event.query.order_by(Event.id.desc()).first_or_404()
     return jsonify(projects=request_project_list(event.id), event=event.data)
@@ -78,11 +75,12 @@ def project_list_current_json():
 
 @blueprint.route('/event/<int:event_id>/projects.json')
 def project_list_json(event_id):
-    """ API: Outputs JSON of all projects at a specific event """
+    """Output JSON of all projects at a specific event."""
     return jsonify(projects=request_project_list(event_id))
 
 
 def project_list_csv(event_id, event_name):
+    """Fetch a CSV file with projects for an event."""
     headers = {
         'Content-Disposition': 'attachment; filename='
         + event_name + '_dribdat.csv'
@@ -95,14 +93,14 @@ def project_list_csv(event_id, event_name):
 
 @blueprint.route('/event/<int:event_id>/projects.csv')
 def project_list_event_csv(event_id):
-    """ API: Outputs CSV of all projects in an event """
+    """Output CSV of all projects in an event."""
     event = Event.query.filter_by(id=event_id).first_or_404()
     return project_list_csv(event.id, event.name)
 
 
 @blueprint.route('/event/current/projects.csv')
 def project_list_current_csv():
-    """ API: Outputs CSV of projects and challenges in the current event """
+    """Output CSV of projects and challenges in the current event."""
     event = Event.query.filter_by(is_current=True).first() or \
         Event.query.order_by(Event.id.desc()).first_or_404()
     return project_list_csv(event.id, event.name)
@@ -110,7 +108,7 @@ def project_list_current_csv():
 
 @blueprint.route('/event/current/categories.json')
 def categories_list_current_json():
-    """ API: Outputs JSON of categories in the current event """
+    """Output JSON of categories in the current event."""
     event = Event.query.filter_by(is_current=True).first()
     categories = [c.data for c in event.categories_for_event()]
     return jsonify(categories=categories, event=event.data)
@@ -120,7 +118,7 @@ def categories_list_current_json():
 
 @blueprint.route('/event/<int:event_id>/activity.json')
 def event_activity_json(event_id):
-    """ API: Outputs JSON of recent activity in an event """
+    """Output JSON of recent activity in an event."""
     limit = request.args.get('limit') or 50
     q = request.args.get('q') or None
     if q and len(q) < 3:
@@ -130,7 +128,7 @@ def event_activity_json(event_id):
 
 @blueprint.route('/event/current/activity.json')
 def event_activity_current_json():
-    """ API: Outputs JSON of categories in the current event """
+    """Output JSON of categories in the current event."""
     event = Event.query.filter_by(is_current=True).first()
     if not event:
         return jsonify(activities=[])
@@ -139,7 +137,7 @@ def event_activity_current_json():
 
 @blueprint.route('/event/<int:event_id>/activity.csv')
 def event_activity_csv(event_id):
-    """ API: Outputs CSV of an event activity """
+    """Output CSV of an event activity."""
     limit = request.args.get('limit') or 50
     q = request.args.get('q') or None
     if q and len(q) < 3:
@@ -152,7 +150,7 @@ def event_activity_csv(event_id):
 
 @blueprint.route('/project/activity.json')
 def projects_activity_json():
-    """ API: Outputs JSON of recent activity across all projects """
+    """Output JSON of recent activity across all projects."""
     limit = request.args.get('limit') or 10
     q = request.args.get('q') or None
     if q and len(q) < 3:
@@ -162,7 +160,7 @@ def projects_activity_json():
 
 @blueprint.route('/project/posts.json')
 def projects_posts_json():
-    """ API: Outputs JSON of recent posts (activity) across projects """
+    """Output JSON of recent posts (activity) across projects."""
     limit = request.args.get('limit') or 10
     q = request.args.get('q') or None
     if q and len(q) < 3:
@@ -172,7 +170,7 @@ def projects_posts_json():
 
 @blueprint.route('/project/<int:project_id>/activity.json')
 def project_activity_json(project_id):
-    """ API: Outputs JSON of recent activity of a project """
+    """Output JSON of recent activity of a project."""
     limit = request.args.get('limit') or 10
     project = Project.query.filter_by(id=project_id).first_or_404()
     query = Activity.query.filter_by(project_id=project.id).order_by(
@@ -183,7 +181,7 @@ def project_activity_json(project_id):
 
 @blueprint.route('/project/<int:project_id>/info.json')
 def project_info_json(project_id):
-    """ API: Outputs JSON info for a specific project """
+    """Output JSON info for a specific project."""
     project = Project.query.filter_by(id=project_id).first_or_404()
     activities = []
     for user in project.get_team():
@@ -214,6 +212,7 @@ def project_info_json(project_id):
 @blueprint.route('/event/<int:event_id>/participants.csv')
 @admin_required
 def event_participants_csv(event_id):
+    """Download a CSV of event participants."""
     event = Event.query.filter_by(id=event_id).first_or_404()
     userlist = [u.data for u in GetEventUsers(event)]
     headers = {
@@ -229,7 +228,7 @@ def event_participants_csv(event_id):
 
 @blueprint.route('/project/search.json')
 def project_search_json():
-    """ API: Full text search projects """
+    """Run a full text search on projects."""
     q = request.args.get('q')
     if q is None or len(q) < 3:
         return jsonify(projects=[])
@@ -252,8 +251,8 @@ def project_search_json():
 
 @blueprint.route('/event/load/datapackage', methods=["GET", "POST"])
 @admin_required
-def event_load_datapackage():
-    """ API: Loads event data from URL """
+def event_load_datapackage():  # noqa: C901
+    """Load event data from URL."""
     url = request.args.get('url')
     filedata = request.files['file']
     if url:
@@ -301,7 +300,7 @@ def event_load_datapackage():
 
 @blueprint.route('/event/push/datapackage', methods=["PUT", "POST"])
 def event_push_datapackage():
-    """ API: Pushes event data """
+    """Upload event data from a Data Package."""
     key = request.headers.get('key')
     if not key or key != current_app.config['SECRET_API']:
         return jsonify(status='Error', errors=['Invalid API key'])
@@ -313,8 +312,8 @@ def event_push_datapackage():
 
 
 @blueprint.route('/project/push.json', methods=["PUT", "POST"])
-def project_push_json():
-    """ API: Pushes data into a project """
+def project_push_json():  # noqa: C901
+    """Push data into a project."""
     data = request.get_json(force=True)
     if 'key' not in data or data['key'] != current_app.config['SECRET_API']:
         return jsonify(error='Invalid key')
@@ -334,8 +333,8 @@ def project_push_json():
         project.name = project.hashtag.replace('-', ' ')
     if 'summary' in data and len(data['summary']) > 0:
         project.summary = data['summary']
-    hasLongtext = 'longtext' in data and len(data['longtext']) > 0
-    if hasLongtext:
+    has_longtext = 'longtext' in data and len(data['longtext']) > 0
+    if has_longtext:
         project.longtext = data['longtext']
     if 'autotext_url' in data and data['autotext_url'].startswith('http'):
         project.autotext_url = data['autotext_url']
@@ -345,7 +344,7 @@ def project_push_json():
     if 'levelup' in data and 0 < project.progress + data['levelup'] * 10 < 50:
         project.progress = project.progress + data['levelup'] * 10
     # return jsonify(data=data)
-    if project.autotext_url is not None and not hasLongtext:
+    if project.autotext_url is not None and not has_longtext:
         # Now try to autosync
         project = AddProjectData(project)
     project.update()
@@ -359,7 +358,7 @@ def project_push_json():
 @blueprint.route('/project/autofill', methods=['GET', 'POST'])
 @login_required
 def project_autofill():
-    """ API routine used to help sync project data """
+    """Routine used to help sync project data."""
     url = request.args.get('url')
     data = GetProjectData(url)
     return jsonify(data)
@@ -380,7 +379,7 @@ ACCEPTED_TYPES = [
 @blueprint.route('/project/uploader', methods=["POST"])
 @login_required
 def project_uploader():
-    """ API: Enables uploading images and files into a project """
+    """Enable uploading images and files into a project."""
     if not current_app.config['S3_KEY']:
         return ''
     if len(request.files) == 0:
@@ -432,16 +431,12 @@ def project_uploader():
 
 
 def generate_event_package(event, format='json'):
-    """ Creates a Data Package from the data of an event """
-
+    """Create a Data Package from the data of an event."""
     if format not in ['zip', 'json']:
         return "Format not supported"
     full_contents = (format == 'zip')
-
     host_url = request.host_url
-
     package = PackageEvent(event, current_user, host_url, full_contents)
-
     if format == 'json':
         # Generate JSON representation
         return jsonify(package)
@@ -455,13 +450,15 @@ def generate_event_package(event, format='json'):
 
 @blueprint.route('/event/current/datapackage.<format>', methods=["GET"])
 def package_current_event(format):
+    """Download a Data Package for an event."""
     event = Event.query.filter_by(is_current=True).first() or \
-            Event.query.order_by(Event.id.desc()).first_or_404()
+        Event.query.order_by(Event.id.desc()).first_or_404()
     return generate_event_package(event, format)
 
 
 @blueprint.route('/event/<int:event_id>/datapackage.<format>', methods=["GET"])
 def package_specific_event(event_id, format):
+    """Download a Data Package for an event."""
     event = Event.query.filter_by(id=event_id).first_or_404()
     return generate_event_package(event, format)
 
@@ -469,10 +466,10 @@ def package_specific_event(event_id, format):
 # ------ USER API --------
 
 
-@blueprint.route('/user/current/hackathon.json')
+@blueprint.route('/user/current/my-hackathons.json')
 def current_user_hackathon_json():
-    """ API: Outputs JSON-LD about a User's Event according to schema """
-    """ See https://schema.org/Hackathon """
+    """Output JSON-LD about a User's Event according to schema."""
+    """See https://schema.org/Hackathon."""
     host_url = request.host_url
     data = get_schema_for_user_projects(current_user, host_url)
     return jsonify(data)
