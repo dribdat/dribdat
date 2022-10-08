@@ -1314,16 +1314,19 @@ pre { color: #333; background: white; }
   -webkit-border-radius: 50%;
   margin-right: 25px;
 }
+.profile-social {
+  margin-left: 60px;
+}
 .profile-social img, .profile-social i {
   width: 50px;
   font-size: 50px;
-  margin-left: 60px;
   display: inline-block;
   float: left;
   color: #333;
 }
 .profile-social span {
   line-height: 50px;
+  margin-left:  1em;
   color: #007bff;
 }
 .profile-roles {
