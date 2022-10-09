@@ -12,7 +12,7 @@ from micawber.providers import bootstrap_basic
 from whitenoise import WhiteNoise
 from pytz import timezone
 from urllib.parse import quote_plus
-from dribdat import commands, public, user, admin
+from dribdat import commands, public, admin
 from dribdat.assets import assets  # noqa: I005
 from dribdat.extensions import (
     hashing,
@@ -98,7 +98,6 @@ def register_blueprints(app):
     app.register_blueprint(public.project.blueprint)
     app.register_blueprint(public.auth.blueprint)
     app.register_blueprint(public.api.blueprint)
-    app.register_blueprint(user.views.blueprint)
     app.register_blueprint(admin.views.blueprint)
     return None
 
