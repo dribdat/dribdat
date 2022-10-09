@@ -6,9 +6,29 @@
 {% block body_class %}userform{% endblock %}
 
 {% block content %}
-  <h2>My profile</h2>
+  <div class="row">
+    <h2 class="huge col">
+      Edit 
+      <a href="{{ url_for('public.user', username=user.username) }}">
+        profile</a>
+    </h2>
+    <div class="profile-header col text-right">
+      {% if user.carddata %}
+        <img src="{{user.carddata}}"/>
+      {% endif %}
+    </div>
+    <div class="col font-small pt-4">
+      To change your user icon, use a GitHub or GitLab online profile - or sign up to
+      <a href="https://gravatar.com/connect/?source=_signup" target="_blank" rel="noopener noreferrer nofollow">
+        Gravatar</a> with your e-mail address.
+    </div>
+  </div>
+
   {% if user.sso_id %}
-    &#x1f511; <b>Single Sign On</b> active
+    <div class="row">
+      &#x1f511; <b>Single Sign On</b> active
+    </div>
   {% endif %}
+
   {{ render_form(url_for('auth.user_profile'), form) }}
 {% endblock %}

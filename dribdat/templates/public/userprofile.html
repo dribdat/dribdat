@@ -70,34 +70,47 @@
 </div>
 {% endif %}
 
-<div class="row">
+<div class="row mt-2 profile-header">
 
-  <h1 class="profile-header huge">
-    <img src="{{user.carddata}}"/>
+  <div class="col-2 text-center">
+    {% if user.carddata %}
+      <img src="{{user.carddata}}"/>
+    {% endif %}
+  </div>
+
+  <h1 class="col-sm text-left">  
     <span>
       {{ user.username }}
     </span>
   </h1>
 
-</div>
-<div class="row mb-3">
-
   {% if user.webpage_url %}
   <div class="col-sm">
     <div class="profile-social">
       <a href="{{ user.webpage_url }}" class="btn btn-lg btn-light" target="_blank" rel="noopener noreferrer">
-    {% if user.cardtype == '' %}
-      <i class="fa fa-globe"></i>
-      <span>Website</span>
-    {% else %}
-      <i class="fa fa-{{ user.cardtype }}"></i>
-      <span>Follow</span>
-    {% endif %}
+      {% if user.cardtype == '' %}
+        <i class="fa fa-globe"></i>
+        Website
+      {% else %}
+        <i class="fa fa-{{ user.cardtype }}"></i>
+        Follow
+      {% endif %}
       </a>
     </div>
   </div>
   {% endif %}
 
+</div>
+<div class="row mb-3 mt-2">
+
+  {% if score %}
+  <div class="col-2 text-center">
+    <h5 title="Total score across all projects">
+      <span class="user-score">{{ score }}</span>
+    </h5>
+  </div>
+  {% endif %}
+  
   <div class="col-sm">
     <ul class="profile-roles">
     {% for role in user.roles %}
@@ -105,15 +118,9 @@
     {% endfor %}
     </ul>
   </div>
-</div>
 
-{% if score %}
-  <div class="row">
-    <h5 class="ml-4 mt-1" title="Total score across all projects">
-    <span class="user-score">{{ score }}</span>
-    </h5>
-  </div>
-{% endif %}
+  
+</div>
 
 {% if user.my_story %}
 <div class="row">
