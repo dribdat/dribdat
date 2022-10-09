@@ -1,4 +1,4 @@
-"""Add hashtags to events and users
+"""Add hashtags to events
 
 Revision ID: 84d8ce8453f3
 Revises: 0c5ae11e7666
@@ -17,11 +17,9 @@ depends_on = None
 
 def upgrade():
     op.add_column('events', sa.Column('hashtags', sa.String(length=255), nullable=True))
-    op.add_column('users', sa.Column('hashword', sa.String(length=128), nullable=True))
-    op.add_column('users', sa.Column('updated_at', sa.DateTime(), nullable=True))
-
+    op.drop_column('users', 'carddata') # clear card data column
+    op.add_column('users', sa.Column('carddata', sa.String(length=255), nullable=True))
+    # use socialize command to rebuild image index
 
 def downgrade():
     op.drop_column('events', 'hashtags')
-    op.drop_column('users', 'updated_at')
-    op.drop_column('users', 'hashword')

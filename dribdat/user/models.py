@@ -291,6 +291,7 @@ class Event(PkModel):
     instruction = Column(db.UnicodeText(), nullable=True)
 
     logo_url = Column(db.String(255), nullable=True)
+    #image_urls = Column(db.String(2048), nullable=True)
     webpage_url = Column(db.String(255), nullable=True)
     community_url = Column(db.String(255), nullable=True)
 
