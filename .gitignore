@@ -4,6 +4,7 @@ yarn.lock
 *.py[cod]
 .flaskenv
 coverage.xml
+profile/*.prof
 
 # C extensions
 *.so

@@ -4,8 +4,8 @@
 import os
 import click
 from flask.cli import FlaskGroup
-
 from dribdat.app import init_app
+from dribdat.utils import strtobool
 from dribdat.settings import DevConfig, ProdConfig
 
 HERE = os.path.abspath(os.path.dirname(__file__))
@@ -27,6 +27,19 @@ def create_app(script_info=None):
         app = init_app(ProdConfig)
     else:
         app = init_app(DevConfig)
+    # Enable debugger and profiler
+    if bool(strtobool(os.environ.get("FLASK_DEBUG", "False"))):
+        app.config['DEBUG_TB_PROFILER_ENABLED'] = True
+        app.debug = True
+        from flask_debugtoolbar import DebugToolbarExtension
+        DebugToolbarExtension(app)
+        # from werkzeug.middleware.profiler import ProfilerMiddleware
+        # app.wsgi_app = ProfilerMiddleware(
+        #     app.wsgi_app,
+        #     restrictions=[5, 'public'],
+        #     profile_dir='./profile',
+        # )
+    # Pass through shell commands
     app.shell_context_processor(shell_context)
     return app
 
