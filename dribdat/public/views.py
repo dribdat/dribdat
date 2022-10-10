@@ -12,6 +12,7 @@ from dribdat.aggregation import GetEventUsers
 from dribdat.user import getProjectStages, isUserActive
 from urllib.parse import quote, quote_plus, urlparse
 from datetime import datetime
+from sqlalchemy import or_
 import re
 
 blueprint = Blueprint('public', __name__, static_folder="../static")
@@ -300,10 +301,14 @@ def dribs():
     """Show the latest logged posts."""
     page = request.args.get('page') or 1
     per_page = request.args.get('limit') or 10
-    dribs = Activity.query.filter(Activity.action == "post")
+    dribs = Activity.query.filter(or_(
+        Activity.action == "post",
+        Activity.name == "boost"))
     dribs = dribs.order_by(Activity.id.desc())
     dribs = dribs.paginate(int(page), int(per_page))
-    dribs.items = [d for d in dribs.items if not d.project.is_hidden]
+    dribs.items = [
+        d for d in dribs.items
+        if not d.project.is_hidden and d.content]
     # Generate social links
     for d in dribs.items:
         d.share = {
