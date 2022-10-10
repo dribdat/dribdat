@@ -49,7 +49,7 @@ def project_edit_action(project_id, detail_view=False):
     starred = IsProjectStarred(project, current_user)
 
     allow_edit = starred or (isUserActive(current_user)
-                             and current_user.is_admin)    
+                             and current_user.is_admin)
     if not allow_edit:
         flash('You do not have access to edit this project.', 'warning')
         return project_action(project_id, None)
@@ -70,7 +70,8 @@ def project_edit_action(project_id, detail_view=False):
     else:
         # Detail view
         form = ProjectDetailForm(obj=project, next=request.args.get('next'))
-    
+
+    # Continue with form validation
     if form.validate_on_submit():
         del form.id
         form.populate_obj(project)

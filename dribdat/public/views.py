@@ -249,13 +249,13 @@ def event_print(event_id):
 
 
 @blueprint.route('/event/start', methods=['GET'])
+@login_required
 def event_start():
     """Guidelines for new events."""
-    if current_user.is_anonymous:
-        flash('Only logged in users may start events here.', 'danger')
-    elif not current_app.config['DRIBDAT_ALLOW_EVENTS']: 
+    if not current_app.config['DRIBDAT_ALLOW_EVENTS']:
         if not current_user.is_admin:
             flash('Only administrators may start events here.', 'danger')
+            return redirect(url_for("public.home"))
     tips = EVENT_PRESET['eventstart']
     return render_template('public/eventstart.html', tips=tips)
 
