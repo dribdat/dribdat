@@ -146,6 +146,8 @@ def register_oauthhandlers(app):
             base_url=app.config['OAUTH_BASE_URL'],
             token_url=app.config['OAUTH_TOKEN_URL'],
             authorization_url=app.config['OAUTH_AUTH_URL'],
+            redirect_to="auth.oauth_login",
+            login_url="/login",
         )
     if blueprint is not None:
         app.register_blueprint(blueprint, url_prefix="/oauth")
@@ -167,9 +169,10 @@ def register_shellcontext(app):
     """Register shell context objects."""
     def shell_context():
         """Shell context objects."""
+        from dribdat.user.models import User
         return {
             'db': db,
-            'User': user.models.User}
+            'User': User}
 
     app.shell_context_processor(shell_context)
 
