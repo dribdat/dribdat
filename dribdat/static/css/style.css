@@ -1082,8 +1082,9 @@ nav .nav-login {
   margin-top: 1em;
   text-align: center;
 }
-.userform .btn-submit {
+.userform #submit {
   min-width: 7em;
+  font-size: 150%;
 }
 .projectpost .form-actions input,
 .projectform .form-actions input {

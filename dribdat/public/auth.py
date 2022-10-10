@@ -188,6 +188,16 @@ def passwordless():
     return redirect(url_for("auth.login"))
 
 
+@blueprint.route('/user/profile/delete', methods=['POST'])
+@login_required
+def delete_my_account():
+    """Delete the current user profile."""
+    current_user.delete()
+    logout_user()
+    flash('We are sorry to see you go. Your profile has been deleted.', 'info')
+    return redirect(url_for('public.home'))
+
+
 @blueprint.route('/user/profile', methods=['GET', 'POST'])
 @login_required
 def user_profile():
