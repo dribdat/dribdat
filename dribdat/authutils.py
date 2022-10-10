@@ -34,7 +34,7 @@ def get_auth_blueprint(app):
         blueprint = github.make_github_blueprint(
             client_id=app.config['OAUTH_ID'],
             client_secret=app.config['OAUTH_SECRET'],
-            # scope="user,read:user",
+            scope='user:email',
             redirect_to="auth.github_login",
             login_url="/login",
         )
