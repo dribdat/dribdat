@@ -137,6 +137,16 @@ def register_oauthhandlers(app):
             redirect_to="auth.github_login",
             login_url="/login",
         )
+    elif app.config['OAUTH_TYPE'] == 'oauth2':
+        from flask_dance.consumer import OAuth2ConsumerBlueprint
+        blueprint = OAuth2ConsumerBlueprint(
+            "oauth2-provider", __name__,
+            client_id=app.config['OAUTH_ID'],
+            client_secret=app.config['OAUTH_SECRET'],
+            base_url=app.config['OAUTH_BASE_URL'],
+            token_url=app.config['OAUTH_TOKEN_URL'],
+            authorization_url=app.config['OAUTH_AUTH_URL'],
+        )
     if blueprint is not None:
         app.register_blueprint(blueprint, url_prefix="/oauth")
 
