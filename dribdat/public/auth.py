@@ -7,6 +7,7 @@ from flask_login import login_user, logout_user, login_required, current_user
 from flask_dance.contrib.slack import slack
 from flask_dance.contrib.azure import azure  # noqa: I005
 from flask_dance.contrib.github import github
+from dribdat.auth0 import auth0
 # Dribdat modules
 from dribdat.user.models import User, Event, Role
 from dribdat.extensions import login_manager  # noqa: I005
@@ -156,7 +157,7 @@ def forgot():
     if not form.validate_on_submit():
         flash_errors(form)
     return render_template(
-            'public/forgot.html', 
+            'public/forgot.html',
             form=form,
             oauth_type=oauth_type())
 
@@ -174,9 +175,9 @@ def passwordless():
         return redirect(url_for('auth.forgot'))
     # Continue with user activation
     flash(
-        "If your account exists, you will shortly receive " 
+        "If your account exists, you will shortly receive "
         + "an activation mail. Check your Spam folder if you do not. "
-        + "Then click the link in that e-mail to log into this application.", 
+        + "Then click the link in that e-mail to log into this application.",
         'success')
     a_user = User.query.filter_by(email=form.email.data).first()
     if a_user:
@@ -238,7 +239,9 @@ def user_profile():
     else:
         form.roles.data = [(r.id) for r in user.roles]
     return render_template('public/useredit.html',
-                           user=user, form=form, active='profile')
+                           oauth_type=oauth_type(),
+                           user=user, form=form,
+                           active='profile')
 
 
 def get_or_create_sso_user(sso_id, sso_name, sso_email, sso_webpage=''):
@@ -261,8 +264,9 @@ def get_or_create_sso_user(sso_id, sso_name, sso_email, sso_webpage=''):
                 user = User.query.filter_by(username=username).first()
                 if user:
                     flash(
-                        'Duplicate username (%s), please try again or '
-                        + 'contact an admin.' % username, 'warning')
+                        "Duplicate username (%s) - " % username
+                        + 'please change it, or contact an admin for help.',
+                        'warning')
                     return redirect(url_for("auth.login", local=1))
                 user = User.create(
                     username=username,
@@ -367,3 +371,26 @@ def github_login():
             )
     flash('Please verify an e-mail with GitHub', 'danger')
     return redirect(url_for("auth.login", local=1))
+
+
+@blueprint.route("/auth0_login", methods=["GET", "POST"])
+def auth0_login():
+    """Handle login via Auth0."""
+    if not auth0.authorized:
+        flash('Access denied to Auth0', 'danger')
+        return redirect(url_for("auth.login", local=1))
+
+    resp = auth0.get("/userinfo")
+    if not resp.ok:
+        flash('Unable to access Auth0 data', 'danger')
+        return redirect(url_for("auth.login", local=1))
+    resp_data = resp.json()
+    if 'nickname' not in resp_data:
+        flash('Invalid Auth0 data format', 'danger')
+        # print(resp_data)
+        return redirect(url_for("auth.login", local=1))
+    return get_or_create_sso_user(
+        resp_data['sub'],
+        resp_data['nickname'],
+        resp_data['email'],
+    )

@@ -120,6 +120,7 @@ form input[type="checkbox"] {
 }
 .alert .close {
   font-size: 1.6rem;
+  margin: -0.2em -0.3em;
 }
 .alert.project-tips .close {
   margin: 0.2em 0.4em -1em -1em;
@@ -1711,6 +1712,11 @@ SlackIn button
   font-size: 0px; border: 0px !important;
   background: url('/static/img/sso/github-sign-in.png') no-repeat;
   width: 372px; height: 64px;
+}
+.signin-auth0 {
+  font-size: 0px; border: 0px !important;
+  background: url('/static/img/sso/auth0_icon.png') no-repeat;
+  width: 156px; height: 71px;
 }
 .account-register a { margin-left: 3.5em; font-size: 125%; }
 .account-register::before,

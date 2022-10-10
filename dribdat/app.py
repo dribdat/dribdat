@@ -6,7 +6,6 @@ from flask_cors import CORS
 from flask_misaka import Misaka
 from flask_mailman import Mail
 from flask_talisman import Talisman
-from flask_dance.contrib import (slack, azure, github)
 from werkzeug.middleware.proxy_fix import ProxyFix
 from micawber.providers import bootstrap_basic
 from whitenoise import WhiteNoise
@@ -14,6 +13,7 @@ from pytz import timezone
 from urllib.parse import quote_plus
 from dribdat import commands, public, admin
 from dribdat.assets import assets  # noqa: I005
+from dribdat.authutils import get_auth_blueprint
 from dribdat.extensions import (
     hashing,
     cache,
@@ -104,51 +104,7 @@ def register_blueprints(app):
 
 def register_oauthhandlers(app):
     """Set up OAuth handlers based on configuration."""
-    # TODO: move to auth class
-    blueprint = None
-    if not app.config['OAUTH_TYPE']:
-        return
-    if app.config['OAUTH_TYPE'] == 'slack':
-        blueprint = slack.make_slack_blueprint(
-            client_id=app.config['OAUTH_ID'],
-            client_secret=app.config['OAUTH_SECRET'],
-            scope="identity.basic,identity.email",
-            redirect_to="auth.slack_login",
-            login_url="/login",
-            # authorized_url=None,
-            # session_class=None,
-            # storage=None,
-            subdomain=app.config['OAUTH_DOMAIN'],
-        )
-    elif app.config['OAUTH_TYPE'] == 'azure':
-        blueprint = azure.make_azure_blueprint(
-            client_id=app.config['OAUTH_ID'],
-            client_secret=app.config['OAUTH_SECRET'],
-            tenant=app.config['OAUTH_DOMAIN'],
-            scope="profile email User.ReadBasic.All openid",
-            redirect_to="auth.azure_login",
-            login_url="/login",
-        )
-    elif app.config['OAUTH_TYPE'] == 'github':
-        blueprint = github.make_github_blueprint(
-            client_id=app.config['OAUTH_ID'],
-            client_secret=app.config['OAUTH_SECRET'],
-            # scope="user,read:user",
-            redirect_to="auth.github_login",
-            login_url="/login",
-        )
-    elif app.config['OAUTH_TYPE'] == 'oauth2':
-        from flask_dance.consumer import OAuth2ConsumerBlueprint
-        blueprint = OAuth2ConsumerBlueprint(
-            "oauth2-provider", __name__,
-            client_id=app.config['OAUTH_ID'],
-            client_secret=app.config['OAUTH_SECRET'],
-            base_url=app.config['OAUTH_BASE_URL'],
-            token_url=app.config['OAUTH_TOKEN_URL'],
-            authorization_url=app.config['OAUTH_AUTH_URL'],
-            redirect_to="auth.oauth_login",
-            login_url="/login",
-        )
+    blueprint = get_auth_blueprint(app)
     if blueprint is not None:
         app.register_blueprint(blueprint, url_prefix="/oauth")
 

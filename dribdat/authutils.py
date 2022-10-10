@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 """Helper functions for authentication steps."""
 from flask_dance.contrib import (slack, azure, github)
+from dribdat import auth0
 
 
-def get_blueprint(app):
+def get_auth_blueprint(app):
     """Read configuration to produce a Flask-Dance blueprint."""
     if 'OAUTH_TYPE' not in app.config or not app.config['OAUTH_TYPE']:
         return None
@@ -37,16 +38,12 @@ def get_blueprint(app):
             redirect_to="auth.github_login",
             login_url="/login",
         )
-    elif app.config['OAUTH_TYPE'] == 'oauth2':
-        from flask_dance.consumer import OAuth2ConsumerBlueprint
-        blueprint = OAuth2ConsumerBlueprint(
-            "oauth2-provider", __name__,
+    elif app.config['OAUTH_TYPE'] == 'auth0':
+        blueprint = auth0.make_auth0_blueprint(
             client_id=app.config['OAUTH_ID'],
-            client_secret=app.config['OAUTH_SECRET'],
-            base_url=app.config['OAUTH_BASE_URL'],
-            token_url=app.config['OAUTH_TOKEN_URL'],
-            authorization_url=app.config['OAUTH_AUTH_URL'],
-            redirect_to="auth.oauth_login",
+            secret=app.config['OAUTH_SECRET'],
+            domain=app.config['OAUTH_DOMAIN'],
+            redirect_to="auth.auth0_login",
             login_url="/login",
         )
     return blueprint

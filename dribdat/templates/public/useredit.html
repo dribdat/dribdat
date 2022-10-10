@@ -8,7 +8,7 @@
 {% block content %}
   <div class="row">
     <h2 class="huge col">
-      Edit 
+      Edit
       <a href="{{ url_for('public.user', username=user.username) }}">
         profile</a>
     </h2>
@@ -18,17 +18,18 @@
       {% endif %}
     </div>
     <div class="col font-small pt-4">
-      To change your user icon, use a GitHub or GitLab online profile - or sign up to
+      To change picture: link your online profile to GitHub or GitLab - or sign up to
       <a href="https://gravatar.com/connect/?source=_signup" target="_blank" rel="noopener noreferrer nofollow">
         Gravatar</a> with your e-mail address.
     </div>
   </div>
 
-  {% if user.sso_id %}
-    <div class="row">
-      &#x1f511; <b>Single Sign On</b> active
-    </div>
-  {% endif %}
-
   {{ render_form(url_for('auth.user_profile'), form) }}
+
+  {% if user.sso_id %}
+    <center class="m-4">
+      &#x1f511; Single Sign-On&nbsp;<b>enabled</b>
+      &nbsp;(you should change your password on <u>{{oauth_type}})</u>
+    </center>
+  {% endif %}
 {% endblock %}

@@ -25,6 +25,12 @@
         Sign in with GitHub
       </a>
     </p>
+  {% elif oauth_type == 'auth0' %}
+    <p class="sso-login">
+      <a class="btn signin-auth0" href="{{ url_for('auth0.login') }}">
+        Sign in with Auth0
+      </a>
+    </p>
   {% endif %}
   <form id="loginForm" method="POST" action="/login/" role="login" class="navbar-form form-inline">
     {{ form.hidden_tag() }}
