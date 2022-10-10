@@ -58,9 +58,12 @@ def test(name):
 
 
 @click.command()
-def socialize():
+@click.argument('kind', nargs=-1, required=False)
+def socialize(kind):
     """Reset user profile data."""
+    """Parameter: which models to refresh (users, ..)"""
     with create_app().app_context():
+        # TODO: use the kind parameter to refresh projects, etc.
         from dribdat.user.models import User
         q = [u.socialize() for u in User.query.all()]
         print("Updated %d users." % len(q))
