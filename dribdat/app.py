@@ -13,7 +13,7 @@ from pytz import timezone
 from urllib.parse import quote_plus
 from dribdat import commands, public, admin
 from dribdat.assets import assets  # noqa: I005
-from dribdat.authutils import get_auth_blueprint
+from dribdat.sso import get_auth_blueprint
 from dribdat.extensions import (
     hashing,
     cache,
