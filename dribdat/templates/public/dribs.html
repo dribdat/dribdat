@@ -29,9 +29,13 @@
     {% else %}
     <section class="timeline">
       {% for s in data.items %}
-      <div class="timeline-item timeline-{{ s.name }} timeline-{{ s.icon }}">
+      <div class="timeline-item timeline-{{ s.name }}">
         <div class="timeline-img">
-          <i class="fa fa-paperclip" aria-hidden="true"></i>
+          {% if s.name == 'boost' %}
+            <i class="fa fa-trophy" aria-hidden="true"></i>
+          {% else %}
+            <i class="fa fa-paperclip" aria-hidden="true"></i>
+          {% endif %}
         </div>
         <div class="timeline-content timeline-card js--fadeInBottom">
           <div class="timeline-img-header">
@@ -64,7 +68,7 @@
 
           {% if config.DRIBDAT_SOCIAL_LINKS %}
             {{ social.share_links(s.share.text, s.share.url) }}
-          {% endif %} 
+          {% endif %}
         </div>
       </div>
       {% endfor %}

@@ -85,7 +85,7 @@
       vparent.show();
       all_checked = $('.form-project-confirm input[type="checkbox"]:not(:checked)').length === 0;
       vinput.checked = all_checked;
-      $('#next-level-hint').hide();
+      // $('#next-level-hint').hide();
     });
   });
 
@@ -339,7 +339,7 @@
       });
   }
 
-  // Characters remaining, thanks to James Bruton 
+  // Characters remaining, thanks to James Bruton
   function markRequired() {
     var control = $(this).find(".form-control");
     var label = $(this).children("label");

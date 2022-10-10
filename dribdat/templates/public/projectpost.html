@@ -17,40 +17,17 @@
   </h2>
 
   {% if all_valid %}
-    <div class="form-project-confirm alert alert-success mb-3" role="alert">
+    <div class="form-project-confirm alert alert-default mb-3" role="alert">
+      <h5 class="mt-0" id="next-level-hint">&#128640;&nbsp;
+        Ready for the next level?
+      </h5>
       <label><input type="checkbox">
       {% for item in stage.conditions.agree %}
         <span>&mdash; {{ item }}</span><br>
       {% endfor %}
       </label>
     </div>
-    <h5 class="text-center mt-0" style="margin-bottom:2.7em" id="next-level-hint">
-      Ready for the next level? &#128640;
-    </h5>
   {% endif %}
-
-  {% if config.S3_KEY %}
-    <button title="Attach image" class="btn btn-light post-image-btn"
-            style="display:none" type="button"
-            data-toggle="modal" data-target="#uploadImage">
-      <i class="fa fa-image text-info" area-hidden="true"></i>
-      Attach a screenshot
-    </button>
-  {% endif %}
-
-  <div class="form-project-post" id="search" action="/api/project/search.json">
-    {% if stage %}
-      {{ render_form(url_for('project.project_post', project_id=project.id), form) }}
-    {% else %}
-      {{ render_form(url_for('project.project_comment', project_id=project.id), form) }}
-    {% endif %}
-  </div>
-
-  <!-- Inline search results (REMOVED)
-  <div class="profile-projects container-fluid mt-5">
-    <div class="row flex-row flex-nowrap ml-0 mt-1 mb-1 pt-2 pb-2" id="search-results"></div>
-    <div class="text-center" id="search-matches"><i>Waiting to make a suggestion ...</i></div>
-  </div> -->
 
   {% if stage %}
     {% if all_valid and stage['name'] == 'LIVE' %}
@@ -60,12 +37,12 @@
       </div>
     {% else %}
       {% if not all_valid %}
-      <div class="form-project-stage" style="{% if all_valid %}border-color:lightgreen{% endif %}">
-        <h5 class="text-center mb-3">
-          To reach the
-          <a href="{{ url_for('public.event_stages', event_id=current_event.id) }}" target="_blank">
-            next stage</a>
-          &#128161;
+      <div class="form-project-stage">
+        <h5 class="mb-3">
+          Your project is at stage <a href="{{ url_for('public.event_stages', event_id=current_event.id) }}#{{ stage.id }}" target="_blank">
+            <b>&#128161; {{stage.phase}}</b>
+          </a>
+          &mdash; to reach the next one:
         </h5>
         {% for item in stage.conditions.validate %}
           {% if item.valid %}
@@ -95,6 +72,29 @@
       {% endif %}
     {% endif %}
   {% endif %}
+
+  {% if config.S3_KEY %}
+    <button title="Attach image" class="btn btn-light post-image-btn"
+            style="display:none" type="button"
+            data-toggle="modal" data-target="#uploadImage">
+      <i class="fa fa-image text-info" area-hidden="true"></i>
+      Attach a screenshot
+    </button>
+  {% endif %}
+
+  <div class="form-project-post" id="search" action="/api/project/search.json">
+    {% if stage %}
+      {{ render_form(url_for('project.project_post', project_id=project.id), form) }}
+    {% else %}
+      {{ render_form(url_for('project.project_comment', project_id=project.id), form) }}
+    {% endif %}
+  </div>
+
+  <!-- Inline search results (REMOVED)
+  <div class="profile-projects container-fluid mt-5">
+    <div class="row flex-row flex-nowrap ml-0 mt-1 mb-1 pt-2 pb-2" id="search-results"></div>
+    <div class="text-center" id="search-matches"><i>Waiting to make a suggestion ...</i></div>
+  </div> -->
 
   <center class="mt-3">
     <a href="{{ url_for('project.project_view', project_id=project.id) }}"

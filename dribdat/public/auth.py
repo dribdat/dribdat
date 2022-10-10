@@ -7,6 +7,8 @@ from flask_login import login_user, logout_user, login_required, current_user
 from flask_dance.contrib.slack import slack
 from flask_dance.contrib.azure import azure  # noqa: I005
 from flask_dance.contrib.github import github
+from dribdat.sso.auth0 import auth0
+from dribdat.sso.mattermost import mattermost
 # Dribdat modules
 from dribdat.user.models import User, Event, Role
 from dribdat.extensions import login_manager  # noqa: I005
@@ -156,7 +158,7 @@ def forgot():
     if not form.validate_on_submit():
         flash_errors(form)
     return render_template(
-            'public/forgot.html', 
+            'public/forgot.html',
             form=form,
             oauth_type=oauth_type())
 
@@ -174,9 +176,9 @@ def passwordless():
         return redirect(url_for('auth.forgot'))
     # Continue with user activation
     flash(
-        "If your account exists, you will shortly receive " 
+        "If your account exists, you will shortly receive "
         + "an activation mail. Check your Spam folder if you do not. "
-        + "Then click the link in that e-mail to log into this application.", 
+        + "Then click the link in that e-mail to log into this application.",
         'success')
     a_user = User.query.filter_by(email=form.email.data).first()
     if a_user:
@@ -185,6 +187,16 @@ def passwordless():
             user_activation(a_user)
     # Don't let people spy on your address
     return redirect(url_for("auth.login"))
+
+
+@blueprint.route('/user/profile/delete', methods=['POST'])
+@login_required
+def delete_my_account():
+    """Delete the current user profile."""
+    current_user.delete()
+    logout_user()
+    flash('We are sorry to see you go. Your profile has been deleted.', 'info')
+    return redirect(url_for('public.home'))
 
 
 @blueprint.route('/user/profile', methods=['GET', 'POST'])
@@ -238,7 +250,9 @@ def user_profile():
     else:
         form.roles.data = [(r.id) for r in user.roles]
     return render_template('public/useredit.html',
-                           user=user, form=form, active='profile')
+                           oauth_type=oauth_type(),
+                           user=user, form=form,
+                           active='profile')
 
 
 def get_or_create_sso_user(sso_id, sso_name, sso_email, sso_webpage=''):
@@ -261,8 +275,9 @@ def get_or_create_sso_user(sso_id, sso_name, sso_email, sso_webpage=''):
                 user = User.query.filter_by(username=username).first()
                 if user:
                     flash(
-                        'Duplicate username (%s), please try again or '
-                        + 'contact an admin.' % username, 'warning')
+                        "Duplicate username (%s) - " % username
+                        + 'please change it, or contact an admin for help.',
+                        'warning')
                     return redirect(url_for("auth.login", local=1))
                 user = User.create(
                     username=username,
@@ -295,7 +310,7 @@ def slack_login():
     if not slack.authorized:
         flash('Access denied to Slack', 'danger')
         return redirect(url_for("auth.login", local=1))
-
+    # Get remote user data
     resp = slack.get("https://slack.com/api/users.identity")
     if not resp.ok:
         flash('Unable to access Slack data', 'danger')
@@ -319,7 +334,7 @@ def azure_login():
     if not azure.authorized:
         flash('Access denied to Azure', 'danger')
         return redirect(url_for("auth.login", local=1))
-
+    # Get remote user data
     resp = azure.get("https://graph.microsoft.com/v1.0/me/")
     if not resp.ok:
         flash('Unable to access Azure data', 'danger')
@@ -342,7 +357,7 @@ def github_login():
     if not github.authorized:
         flash('Access denied - please try again', 'warning')
         return redirect(url_for("auth.login", local=1))
-
+    # Get remote user data
     resp = github.get("/user")
     if not resp.ok:
         flash('Unable to access GitHub data', 'danger')
@@ -352,7 +367,7 @@ def github_login():
         flash('Invalid GitHub data format', 'danger')
         # print(resp_user)
         return redirect(url_for("auth.login", local=1))
-
+    # Get remote profile data
     resp_emails = github.get("/user/emails")
     if not resp.ok:
         flash('Unable to access GitHub e-mail data', 'danger')
@@ -367,3 +382,54 @@ def github_login():
             )
     flash('Please verify an e-mail with GitHub', 'danger')
     return redirect(url_for("auth.login", local=1))
+
+
+@blueprint.route("/auth0_login", methods=["GET", "POST"])
+def auth0_login():
+    """Handle login via Auth0."""
+    if not auth0.authorized:
+        flash('Access denied to Auth0', 'danger')
+        return redirect(url_for("auth.login", local=1))
+    # Get remote user data
+    resp = auth0.get("/userinfo")
+    if not resp.ok:
+        flash('Unable to access Auth0 data', 'danger')
+        return redirect(url_for("auth.login", local=1))
+    resp_data = resp.json()
+    if 'nickname' not in resp_data:
+        flash('Invalid Auth0 data format', 'danger')
+        # print(resp_data)
+        return redirect(url_for("auth.login", local=1))
+    return get_or_create_sso_user(
+        resp_data['sub'],
+        resp_data['nickname'],
+        resp_data['email'],
+    )
+
+
+@blueprint.route("/mattermost_login", methods=["GET", "POST"])
+def mattermost_login():
+    """Handle login via Mattermost."""
+    if not mattermost.authorized:
+        flash('Access denied to Mattermost', 'danger')
+        return redirect(url_for("auth.login", local=1))
+    # Get remote user data
+    resp = mattermost.get("/api/v4/users/me")
+    if not resp.ok:
+        flash('Unable to access Mattermost data', 'danger')
+        return redirect(url_for("auth.login", local=1))
+    resp_data = resp.json()
+    # print(resp_data)
+    username = None
+    if 'nickname' in resp_data:
+        username = resp_data['nickname']
+    elif 'username' in resp_data:
+        username = resp_data['username']
+    if username is None:
+        flash('Invalid Mattermost data format', 'danger')
+        return redirect(url_for("auth.login", local=1))
+    return get_or_create_sso_user(
+        resp_data['id'],
+        username,
+        resp_data['email'],
+    )

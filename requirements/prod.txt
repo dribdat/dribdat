@@ -3,7 +3,7 @@ alembic==1.8.1; python_version >= "3.7"
 aniso8601==9.0.1
 async-timeout==4.0.2; python_version >= "3.6"
 attrs==22.1.0; python_version >= "3.7"
-bcrypt==4.0.0; python_version >= "3.6"
+bcrypt==4.0.1; python_version >= "3.6"
 bleach==5.0.1; python_version >= "3.7"
 boto3==1.19.12; python_version >= "3.6"
 botocore==1.22.12; python_version >= "3.6"
@@ -102,4 +102,4 @@ werkzeug==2.0.3; python_version >= "3.6"
 whitenoise==5.3.0; python_version >= "3.5" and python_version < "4"
 wrapt==1.14.1; python_version >= "3.6" and python_full_version < "3.0.0" or python_full_version >= "3.5.0" and python_version >= "3.6"
 wtforms==2.3.3
-zipp==3.8.1; python_version < "3.8" and python_version >= "3.7" and (python_version >= "3.6" and python_full_version < "3.0.0" and python_version < "3.8" or python_full_version >= "3.6.0" and python_version < "3.8" and python_version >= "3.6")
+zipp==3.9.0; python_version < "3.8" and python_version >= "3.7" and (python_version >= "3.6" and python_full_version < "3.0.0" and python_version < "3.8" or python_full_version >= "3.6.0" and python_version < "3.8" and python_version >= "3.6")

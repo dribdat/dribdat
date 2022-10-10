@@ -30,21 +30,14 @@
 
 {% if project_starred and allow_edit and (suggestions or stage) and project.progress < 50 %}
   <div class="alert alert-light resource-list project-tips">
-    <button type="button" class="close" data-dismiss="alert" aria-label="Dismiss" title="Dismiss">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Dismiss" title="Hide">
       <span aria-hidden="true">&times;</span>
     </button>
     <div class="profile-projects container-fluid">
-      <p class="category-tip pt-2 m-0 clearfix" style="margin-left:-1em">
+      <p class="category-tip pt-2 m-0 clearfix" style="margin-left:-1em"
+         title="This tip is only visible to you and your team">
         <span class="user-score" style="background:white">&#x1F4A1;</span>&nbsp;
-        {% if project.progress < 5 %}
-          Advance to the next stage by posting an Update.
-        {% elif project.progress < 20 %}
-          Find tips, examples and resources to inspire your team.
-        {% elif project.progress < 40 %}
-          Write down what you are doing regularly to help stay on track.
-        {% else %}
-          Give credit to everyone involved and all sources you used.
-        {% endif %}
+        {{stage.tip}}
       </p>
       <div class="row flex-row flex-nowrap">
       {% for project in suggestions %}
