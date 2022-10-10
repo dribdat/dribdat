@@ -958,16 +958,14 @@ nav .nav-login {
 }
 
 /* Oneboxes in content */
-.onebox {
+.onebox.what {
   border: 2px solid #ddd;
   background: #f0f0f0;
   box-shadow: 5px 5px 8px rgba(0,0,0,0.3);
   color: black;
   padding: 0.5em;
   margin: 0.5em 1em 1em 0px;
-  opacity: 0.8;
   min-height: 6em;
-
   width: 50%;
   display: block;
   clear: both;
@@ -990,10 +988,23 @@ nav .nav-login {
 .onebox p {
   font-size: 90%;
 }
-.onebox img {
-  width: 5em;
+.onebox.honeycomb {
+  max-width: 80%;
+  min-height: 8em;
+  clear: both;
+  display: block;
+  margin: 0px 0px 0px 20px;
+}
+.onebox.honeycomb .hexagon {
   float: left;
-  margin-right: 1em;
+  margin-top: -1em;
+  margin-left: 0em;
+  margin-right: 3em;
+  opacity: 1;
+  transform: scale(0.8);
+}
+.onebox.honeycomb p {
+  opacity: 0.8;
 }
 
 /* Project entry form */
@@ -1535,7 +1546,12 @@ Issues list view
 .list-data a.list-group-item:nth-child(1) {
     /* border-top: 1px solid #aaa; */
 }
-.widget.widget-github { text-align: left; }
+.widget.widget-github {
+  text-align: left;
+}
+.widget.widget-github .list-group-item:last-child {
+  border:none;
+}
 
 /* -------------
 Instruction page
