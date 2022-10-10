@@ -291,7 +291,7 @@ class Event(PkModel):
     instruction = Column(db.UnicodeText(), nullable=True)
 
     logo_url = Column(db.String(255), nullable=True)
-    #image_urls = Column(db.String(2048), nullable=True)
+    # image_urls = Column(db.String(2048), nullable=True)
     webpage_url = Column(db.String(255), nullable=True)
     community_url = Column(db.String(255), nullable=True)
 
@@ -815,32 +815,20 @@ class Project(PkModel):
         # c_a = cqu.filter_by(name="boost").count()
         # score = score + (2 * c_a)
         # Add to the score for every complete documentation field
-        if len(self.summary) > 3:
-            score = score + 1
-        if len(self.image_url) > 3:
-            score = score + 1
-        if len(self.source_url) > 3:
-            score = score + 1
-        if len(self.webpage_url) > 3:
-            score = score + 1
-        if len(self.logo_color) > 3:
-            score = score + 1
-        if len(self.logo_icon) > 3:
-            score = score + 1
+        score = score + 1 * int(len(self.summary) > 3)
+        score = score + 1 * int(len(self.image_url) > 3)
+        score = score + 1 * int(len(self.source_url) > 3)
+        score = score + 1 * int(len(self.webpage_url) > 3)
+        score = score + 1 * int(len(self.logo_color) > 3)
+        score = score + 1 * int(len(self.logo_icon) > 3)
         # Get more points based on how much content you share
-        if len(self.longtext) > 3:
-            score = score + 1
-        if len(self.longtext) > 100:
-            score = score + 3
-        if len(self.longtext) > 500:
-            score = score + 5
+        score = score + 1 * int(len(self.longtext) > 3)
+        score = score + 3 * int(len(self.longtext) > 100)
+        score = score + 5 * int(len(self.longtext) > 500)
         # Points for external (Readme) content
-        if len(self.autotext) > 3:
-            score = score + 1
-        if len(self.autotext) > 100:
-            score = score + 3
-        if len(self.autotext) > 500:
-            score = score + 5
+        score = score + 1 * int(len(self.autotext) > 3)
+        score = score + 3 * int(len(self.autotext) > 100)
+        score = score + 5 * int(len(self.autotext) > 500)
         # Cap at 100%
         score = min(score, 100)
         return score
