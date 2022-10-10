@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """Helper functions for authentication steps."""
 from flask_dance.contrib import (slack, azure, github)
-from dribdat import auth0
+from dribdat.sso import auth0
 
 
 def get_auth_blueprint(app):

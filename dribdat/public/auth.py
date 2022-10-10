@@ -7,7 +7,7 @@ from flask_login import login_user, logout_user, login_required, current_user
 from flask_dance.contrib.slack import slack
 from flask_dance.contrib.azure import azure  # noqa: I005
 from flask_dance.contrib.github import github
-from dribdat.auth0 import auth0
+from dribdat.sso.auth0 import auth0
 # Dribdat modules
 from dribdat.user.models import User, Event, Role
 from dribdat.extensions import login_manager  # noqa: I005
