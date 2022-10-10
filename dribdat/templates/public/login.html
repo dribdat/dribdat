@@ -31,6 +31,12 @@
         Sign in with Auth0
       </a>
     </p>
+  {% elif oauth_type == 'mattermost' %}
+    <p class="sso-login">
+      <a class="btn signin-mattermost" href="{{ url_for('mattermost.login') }}">
+        Sign in with Mattermost
+      </a>
+    </p>
   {% endif %}
   <form id="loginForm" method="POST" action="/login/" role="login" class="navbar-form form-inline">
     {{ form.hidden_tag() }}

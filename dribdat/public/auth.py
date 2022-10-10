@@ -8,6 +8,7 @@ from flask_dance.contrib.slack import slack
 from flask_dance.contrib.azure import azure  # noqa: I005
 from flask_dance.contrib.github import github
 from dribdat.sso.auth0 import auth0
+from dribdat.sso.mattermost import mattermost
 # Dribdat modules
 from dribdat.user.models import User, Event, Role
 from dribdat.extensions import login_manager  # noqa: I005
@@ -309,7 +310,7 @@ def slack_login():
     if not slack.authorized:
         flash('Access denied to Slack', 'danger')
         return redirect(url_for("auth.login", local=1))
-
+    # Get remote user data
     resp = slack.get("https://slack.com/api/users.identity")
     if not resp.ok:
         flash('Unable to access Slack data', 'danger')
@@ -333,7 +334,7 @@ def azure_login():
     if not azure.authorized:
         flash('Access denied to Azure', 'danger')
         return redirect(url_for("auth.login", local=1))
-
+    # Get remote user data
     resp = azure.get("https://graph.microsoft.com/v1.0/me/")
     if not resp.ok:
         flash('Unable to access Azure data', 'danger')
@@ -356,7 +357,7 @@ def github_login():
     if not github.authorized:
         flash('Access denied - please try again', 'warning')
         return redirect(url_for("auth.login", local=1))
-
+    # Get remote user data
     resp = github.get("/user")
     if not resp.ok:
         flash('Unable to access GitHub data', 'danger')
@@ -366,7 +367,7 @@ def github_login():
         flash('Invalid GitHub data format', 'danger')
         # print(resp_user)
         return redirect(url_for("auth.login", local=1))
-
+    # Get remote profile data
     resp_emails = github.get("/user/emails")
     if not resp.ok:
         flash('Unable to access GitHub e-mail data', 'danger')
@@ -389,7 +390,7 @@ def auth0_login():
     if not auth0.authorized:
         flash('Access denied to Auth0', 'danger')
         return redirect(url_for("auth.login", local=1))
-
+    # Get remote user data
     resp = auth0.get("/userinfo")
     if not resp.ok:
         flash('Unable to access Auth0 data', 'danger')
@@ -402,5 +403,33 @@ def auth0_login():
     return get_or_create_sso_user(
         resp_data['sub'],
         resp_data['nickname'],
+        resp_data['email'],
+    )
+
+
+@blueprint.route("/mattermost_login", methods=["GET", "POST"])
+def mattermost_login():
+    """Handle login via Mattermost."""
+    if not mattermost.authorized:
+        flash('Access denied to Mattermost', 'danger')
+        return redirect(url_for("auth.login", local=1))
+    # Get remote user data
+    resp = mattermost.get("/api/v4/users/me")
+    if not resp.ok:
+        flash('Unable to access Mattermost data', 'danger')
+        return redirect(url_for("auth.login", local=1))
+    resp_data = resp.json()
+    # print(resp_data)
+    username = None
+    if 'nickname' in resp_data:
+        username = resp_data['nickname']
+    elif 'username' in resp_data:
+        username = resp_data['username']
+    if username is None:
+        flash('Invalid Mattermost data format', 'danger')
+        return redirect(url_for("auth.login", local=1))
+    return get_or_create_sso_user(
+        resp_data['id'],
+        username,
         resp_data['email'],
     )
