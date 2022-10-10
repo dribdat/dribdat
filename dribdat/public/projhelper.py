@@ -31,8 +31,11 @@ def check_update(obj, minutes=5):
     return td < timedelta(minutes=minutes)
 
 
-def resources_by_stage(progress):
+def resources_by_stage(progress, resource_event=False):
     """Get all projects which are published in a resource-type event."""
+    if resource_event:
+        # No need to make suggestions in a Resource event
+        return []
     project_list = []
     resource_events = [e.id for e in Event.query.filter_by(
         lock_resources=True, is_hidden=False).all()]

@@ -264,15 +264,14 @@ def project_unstar(project_id, user_id):
 
 @blueprint.route('/event/<int:event_id>/project/new', methods=['GET', 'POST'])
 @login_required
-def project_new(event_id):  # noqa: C901
-    """Create a new project."""
+def project_new(event_id):
+    """If allowed to create a new project, do so."""
     if not isUserActive(current_user):
         flash(
             "Your account needs to be activated - "
             + " please contact an organizer.", 'warning'
         )
         return redirect(url_for('public.event', event_id=event_id))
-    form = None
     event = Event.query.filter_by(id=event_id).first_or_404()
     if event.lock_starting:
         flash('Starting a new project is disabled for this event.', 'error')
@@ -280,13 +279,17 @@ def project_new(event_id):  # noqa: C901
     if not isUserActive(current_user):
         flash('Your user account is not permitted to start projects.', 'error')
         return redirect(url_for('public.event', event_id=event.id))
+    # Checks passed, continue ...
+    return create_new_project(event)
 
+
+def create_new_project(event):
+    """Proceed to create a new project."""
     # Collect resource tips (stage 0 projects)
-    suggestions = []
-    if not event.lock_resources:
-        suggestions = resources_by_stage(0)
+    suggestions = resources_by_stage(0, event.lock_resources)
 
     # Project form
+    form = None
     project = Project()
     project.user_id = current_user.id
     form = ProjectNew(obj=project, next=request.args.get('next'))
@@ -297,53 +300,57 @@ def project_new(event_id):  # noqa: C901
     else:
         del form.category_id
 
-    # TODO: Unpack this
-    if form.validate_on_submit():
-        tpl_id = None
-        if form.template.data:
-            tpl_id = form.template.data
-        del form.id
-        del form.template
-        form.populate_obj(project)
+    if not form.validate_on_submit():
+        return render_template(
+            'public/projectnew.html',
+            current_event=event, form=form, suggestions=suggestions,
+            active="projects"
+        )
 
-        # Apply template, if selected
-        if tpl_id:
-            template = Project.query.get(tpl_id)
-            project.longtext = template.longtext
-            project.image_url = template.image_url
-            project.source_url = template.source_url
-            project.webpage_url = template.webpage_url
-            project.download_url = template.download_url
+    # Process form result
+    tpl_id = None
+    if form.template.data:
+        tpl_id = form.template.data
+    del form.id
+    del form.template
+    form.populate_obj(project)
 
-        # Check event state
-        project.event = event
-        if event.has_started:
-            project.progress = 5  # Start as team
-        else:
-            project.progress = -1  # Start as challenge
+    # Apply template, if selected
+    if tpl_id:
+        template = Project.query.get(tpl_id)
+        project.longtext = template.longtext
+        project.image_url = template.image_url
+        project.source_url = template.source_url
+        project.webpage_url = template.webpage_url
+        project.download_url = template.download_url
 
-        # Update the project
-        project.update()
-        db.session.add(project)
-        db.session.commit()
-        flash('Now invite your team to Join this page!', 'success')
-        project_action(project.id, 'create', False)
-        cache.clear()
+    # Start as challenge
+    project.progress = -1
+    project.event = event
+    # Unless the event has started
+    if event.has_started:
+        project.progress = 5
 
-        # Continue to project action ot sync
-        if event.has_started:
-            project_action(project.id, 'star', False)  # Join team
-        if len(project.autotext_url) > 1:
-            return project_autoupdate(project.id)
-        else:
-            purl = url_for('project.project_view', project_id=project.id)
-            return redirect(purl)
+    # Update the project
+    project.update()
+    db.session.add(project)
+    db.session.commit()
+    cache.clear()
 
-    return render_template(
-        'public/projectnew.html',
-        current_event=event, form=form, suggestions=suggestions,
-        active="projects"
-    )
+    flash('Now invite your team to Join this page!', 'success')
+    project_action(project.id, 'create', False)
+
+    # Automatically join new projects
+    if event.has_started:
+        project_action(project.id, 'star', False)
+
+    # Automatically sync data
+    if len(project.autotext_url) > 1:
+        return project_autoupdate(project.id)
+
+    # Continue to project view
+    purl = url_for('project.project_view', project_id=project.id)
+    return redirect(purl)
 
 
 @blueprint.route('/<int:project_id>/autoupdate')
