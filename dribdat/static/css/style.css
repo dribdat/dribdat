@@ -120,7 +120,14 @@ form input[type="checkbox"] {
 }
 .alert .close {
   font-size: 1.6rem;
-  /*margin: 0.5em 0.5em -1em -1em;*/
+}
+.alert.project-tips .close {
+  margin: 0.2em 0.4em -1em -1em;
+  position: relative;
+  z-index: 99;
+}
+.alert.project-tips .user-score {
+  margin: -1em 0em 1em -1em;
 }
 
 /* pagination */
@@ -1584,15 +1591,16 @@ Instruction page
   vertical-align: top;
 }
 .form-project-stage {
-  margin-top: 1em;
+  /* margin-top: 1em; */
   font-size: 125%;
-  border: 3px dashed lightgray;
-  padding: 1em;
+  text-align: left;
+  /* border: 3px dashed lightgray; */
+  /* padding: 1em; */
 }
 .form-project-confirm input {
   transform: scale(1.5);
   position: absolute;
-  left: 15px;
+  left: 20px;
 }
 .form-project-confirm label {
   clear: both;

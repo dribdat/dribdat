@@ -1,6 +1,14 @@
 ---
-# definition of rulesets for advancing through the
-# stages of a dribdat project
+# configuration defaults for a dribdat installation
+
+defaults:
+  roles:
+    - 🖍️ Designer
+    - ⚙️ Developer 
+    - 💡 Ideator
+    - 🛡️ Coach
+
+# definition of rulesets for advancing through the stages of a dribdat project
 
 stages:
   -
@@ -8,6 +16,7 @@ stages:
     name: CHALLENGE
     phase: Ask
     description: 🚧 Define questions to answer with data about issues that matter.
+    tip: Advance to the next stage by posting an Update.
     conditions:
       validate:
         -
@@ -17,7 +26,7 @@ stages:
         -
           field: excerpt
           min: 123
-          help: Write at least one paragraph (123 chars) in the description, upload some sketches.
+          help: Write at least one paragraph (123 chars) in the Pitch or upload a few sketches.
       agree:
         - Your questions hint at what data will be needed, helping to scope the project.
         - Acquiring data to meet the challenge is realistic within our time limits.
@@ -26,6 +35,7 @@ stages:
     name: NEW
     phase: Find
     description: 👪 Collecting resources together in a shared space.
+    tip: Find tips, examples and resources to inspire your team.
     conditions:
       validate:
         -
@@ -41,6 +51,7 @@ stages:
     name: RESEARCHED
     phase: Get
     description: ⚗️ Scoping of data collection and prototyping strategy.
+    tip: Write down what you are doing regularly to help stay on track.
     conditions:
       validate:
         -
@@ -55,6 +66,7 @@ stages:
     name: SKETCHED
     phase: Verify
     description: 🎨 Evaluating and explaining to fellow humans.
+    tip: The more you share, the more feedback you will get.
     conditions:
       validate:
         -
@@ -69,6 +81,7 @@ stages:
     name: PROTOTYPED
     phase: Clean
     description: 🐣 Efforts to improve the quality of the output.
+    tip: Give credit to everyone involved and all sources used.
     conditions:
       validate:
         -
@@ -83,6 +96,7 @@ stages:
     name: LAUNCHED
     phase: Analyse
     description: 🎈 Gaining insights on the problem defined in the beginning.
+    tip: There is no such thing as a stupid question. Just ask.
     conditions:
       validate:
         -
@@ -98,6 +112,7 @@ stages:
     name: LIVE
     phase: Share
     description: 🚀 Thinking about audience and making the results public.
+    tip: There are many ways your explorations may continue.
     conditions:
       validate:
         -
