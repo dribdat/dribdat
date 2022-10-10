@@ -7,10 +7,13 @@ import logging
 
 from flask import url_for
 
+from .user.models import Project
+
 from micawber.parsers import standalone_url_re, full_handler
 
 
 def format_webembed(url):
+    """Create a well-formatted frame for project embeds."""
     if url.lower().startswith('<iframe '):
         # Allow IFRAMEs
         # TODO: add a setting
@@ -43,34 +46,64 @@ TEMPLATE_PROJECT = r"""
 """
 
 
+def project_onebox(url):
+    """Create a OneBox for local projects."""
+    project_id = url.split('/')[-1]
+    if not project_id:
+        return None
+    project = Project.query.filter_by(id=int(project_id)).first()
+    if not project:
+        return None
+    pd = project.data
+    # project.url returns a relative path
+    pd['link'] = url
+    return pystache.render(TEMPLATE_PROJECT, pd)
+
+
+TEMPLATE_GITHUB = r"""
+<div class="widget widget-github">
+<div data-theme="default" data-width="400" data-height="160"
+     data-github="{{repo}}" class="github-card"></div>
+<script src="//cdn.jsdelivr.net/github-cards/latest/widget.js"></script>
+<div id="issues-list" data-github="{{repo}}"
+     class="list-group list-data"><i>Loading ...</i></div>
+</div>
+"""
+
+
+def github_onebox(url='dribdat/dribdat'):
+    """Create a OneBox for GitHub repositories with issue list."""
+    project_repo = url.replace('https://github.com/', '').strip()
+    if not project_repo:
+        return None
+    return pystache.render(TEMPLATE_GITHUB, {'repo': project_repo})
+
+
 def repl_onebox(mat=None, li=[]):
+    """Check and onebox application links."""
     if mat is None:
         li[:] = []
         return
     if mat.group(1):
         url = mat.group(1).strip()
-        # Try to parse a project link
-        if '/project/' in url:
-            project_link = mat.group(1)
-            project_id = int(url.split('/')[-1])
-            from .user.models import Project
-            project = Project.query.filter_by(id=project_id).first()
-            if not project:
-                return mat.group()
-            pd = project.data
-            # project.url returns a relative path?
-            pd['link'] = project_link
-            return pystache.render(TEMPLATE_PROJECT, pd)
+        if url.startswith('https://github.com/'):
+            # Try to parse a GitHub link
+            return github_onebox(url) or mat.group()
+        elif '/project/' in url:
+            # Try to parse a project link
+            return project_onebox(url) or mat.group()
     return mat.group()
 
 
 def make_onebox(raw_html):
+    """Create a onebox container."""
     url = re.escape(url_for('public.home', _external=True))
     regexp = re.compile('<a href="(%s.+?)">(%s.+?)</a>' % (url, url))
     return re.sub(regexp, repl_onebox, raw_html)
 
 
 def make_oembedplus(text, oembed_providers, **params):
+    """Check for additional onebox lines."""
     lines = text.splitlines()
     parsed = []
     home_url = re.escape(url_for('public.home', _external=True))
@@ -88,15 +121,3 @@ def make_oembedplus(text, oembed_providers, **params):
                 line = full_handler(url, response, **params)
         parsed.append(line)
     return '\n'.join(parsed)
-
-
-def github_onebox(project_repo='dribdat/dribdat'):
-    """Create a OneBox for GitHub repositories with issue list."""
-    project_repo = project_repo.replace('https://github.com/', '')
-    return '<div class="widget widget-github">' + \
-        '<div data-theme="default" data-width="400" data-height="160" ' + \
-        'data-github="' + project_repo + \
-        '" class="github-card"></div><script src="//' + \
-        'cdn.jsdelivr.net/github-cards/latest/widget.js"></script>' + \
-        '<div id="issues-list" data-github="' + project_repo + \
-        '" class="list-group list-data"><i>Loading ...</i></div></div>'
