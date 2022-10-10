@@ -16,6 +16,9 @@
     <hr>
     <p>{% if user.sso_id %}&#10003; SSO Enabled{% endif %}</p>
     <p>Created: {{ user.created_at|format_date }}</p>
+    {% if user.updated_at %}
+        <p>Last update: {{ user.updated_at|format_date }}</p>
+    {% endif %}
     <p>Last active: {{ user.last_active }}</p>
 
     <div class="btn-group">

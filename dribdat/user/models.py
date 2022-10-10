@@ -4,7 +4,6 @@
 from sqlalchemy import Table, or_
 from sqlalchemy_continuum import make_versioned
 from sqlalchemy_continuum.plugins import FlaskPlugin
-
 from dribdat.user.constants import (
     MAX_EXCERPT_LENGTH,
     PR_CHALLENGE,
@@ -13,7 +12,7 @@ from dribdat.user.constants import (
     getStageByProgress,
     getActivityByType,
 )
-from dribdat.onebox import format_webembed
+from dribdat.onebox import format_webembed  # noqa: I005
 from dribdat.utils import (
     format_date_range, format_date, timesince
 )
@@ -25,19 +24,18 @@ from dribdat.database import (
     reference_col,
 )
 from dribdat.extensions import hashing
-
+from dribdat.apifetch import FetchGitlabAvatar
 from flask import current_app
 from flask_login import UserMixin
-
 from time import mktime
 from dateutil.parser import parse
 import datetime as dt
 import hashlib
 import re
-
-from urllib.parse import urlencode
+from urllib.parse import urlencode, urlparse
+# Standard library fix
 from future.standard_library import install_aliases
-install_aliases()
+install_aliases()  # noqa: I005
 
 
 # Set up user roles mapping
@@ -55,7 +53,7 @@ make_versioned(plugins=[FlaskPlugin()])
 
 
 class Role(PkModel):
-    """ Loud and proud """
+    """Loud and proud."""
 
     __tablename__ = 'roles'
     name = Column(db.String(80), unique=True, nullable=False)
@@ -68,22 +66,27 @@ class Role(PkModel):
         """Represent instance as a unique string."""
         return f"<Role({self.name})>"
 
-    # Number of users
     def user_count(self):
+        """Return the number of users in this role."""
         users = User.query.filter(User.roles.contains(self))
         return users.count()
 
 
 class User(UserMixin, PkModel):
-    """ Just a regular Joe """
+    """Just a regular Joe."""
 
     __tablename__ = 'users'
     username = Column(db.String(80), unique=True, nullable=False)
     email = Column(db.String(80), unique=True, nullable=False)
     webpage_url = Column(db.String(128), nullable=True)
 
+    # Identification for Single Sign On
     sso_id = Column(db.String(128), nullable=True)
-    #: The hashed password
+    # A temporary hash for logins
+    hashword = Column(db.String(128), nullable=True)
+    updated_at = Column(db.DateTime, nullable=True,
+                        default=dt.datetime.utcnow)
+    # The hashed password
     password = Column(db.String(128), nullable=True)
     created_at = Column(db.DateTime, nullable=False,
                         default=dt.datetime.utcnow)
@@ -103,6 +106,7 @@ class User(UserMixin, PkModel):
 
     @property
     def data(self):
+        """Get JSON representation."""
         return {
             'id': self.id,
             'email': self.email,
@@ -116,40 +120,54 @@ class User(UserMixin, PkModel):
             'carddata': self.carddata,
             'my_story': self.my_story,
             'my_goals': self.my_goals,
+            'created_at': self.created_at,
+            'updated_at': self.updated_at,
         }
 
     def set_from_data(self, data):
+        """Update from JSON representation."""
         self.active = False  # login disabled on imported user
         self.username = data['username']
         self.webpage_url = data['webpage_url']
         if 'email' not in data:
             data['email'] = "%s@%d.localdomain" % (self.username, data['id'])
         self.email = data['email']
+        self.updated_at = dt.datetime.utcnow()
 
     def socialize(self):
-        """ Parse the user's web profile """
+        """Parse the user's web profile."""
         self.cardtype = ""
+        self.carddata = ""
         if self.webpage_url is None:
             self.webpage_url = ""
-        elif 'github.com/' in self.webpage_url:
+        host = urlparse(self.webpage_url).hostname
+        if host == 'github.com':
             self.cardtype = 'github'
-            # self.carddata = self.webpage_url.strip('/').split('/')[-1]
-        elif 'twitter.com/' in self.webpage_url:
+            username = self.webpage_url.strip('/').split('/')[-1]
+            self.carddata = "https://github.com/%s.png?size=80" % username
+        elif host == 'gitlab.com':
+            self.cardtype = 'gitlab'
+            self.carddata = FetchGitlabAvatar(self.email)
+        elif host == 'twitter.com':
             self.cardtype = 'twitter-square'
-            # self.carddata = self.webpage_url.strip('/').split('/')[-1]
-        elif 'linkedin.com/' in self.webpage_url:
+            # username = self.webpage_url.strip('/').split('/')[-1]
+            # self.carddata = FetchTwitterAvatar(username)
+        elif host == 'linkedin.com':
             self.cardtype = 'linkedin-square'
-        elif 'stackoverflow.com/' in self.webpage_url:
+        elif host and host.endswith('stackoverflow.com'):
             self.cardtype = 'stack-overflow'
-        gr_size = 80
-        email = self.email.lower().encode('utf-8')
-        gravatar_url = hashlib.md5(email).hexdigest() + "?"
-        gravatar_url += urlencode({'s': str(gr_size)})
-        self.carddata = gravatar_url
+        if not self.carddata:
+            # Default: generate a Gravatar link
+            gr_size = 80
+            email = self.email.lower().encode('utf-8')
+            gravatar_url = "https://www.gravatar.com/avatar/"
+            gravatar_url += hashlib.md5(email).hexdigest() + "?"
+            gravatar_url += urlencode({'s': str(gr_size)})
+            self.carddata = gravatar_url
         self.save()
 
     def joined_projects(self, with_challenges=True, limit=-1):
-        """ Retrieve all projects user has joined """
+        """Retrieve all projects user has joined."""
         activities = Activity.query.filter_by(
                 user_id=self.id, name='star'
             ).order_by(Activity.timestamp.desc())
@@ -165,14 +183,14 @@ class User(UserMixin, PkModel):
         return projects
 
     def posted_challenges(self):
-        """ Retrieve all challenges user has posted """
+        """Retrieve all challenges user has posted."""
         projects = Project.query.filter_by(
                 user_id=self.id, progress=0, is_hidden=False
             ).order_by(Project.id.desc()).all()
         return projects
 
     def latest_posts(self, max=None):
-        """ Retrieve the latest content from the user """
+        """Retrieve the latest content from the user."""
         activities = Activity.query.filter_by(
                 user_id=self.id, action='post'
             ).order_by(Activity.timestamp.desc())
@@ -186,7 +204,7 @@ class User(UserMixin, PkModel):
 
     @property
     def last_active(self):
-        """ Retrieve last user activity """
+        """Retrieve last user activity."""
         act = Activity.query.filter_by(
                 user_id=self.id
             ).order_by(Activity.timestamp.desc()).first()
@@ -196,13 +214,23 @@ class User(UserMixin, PkModel):
 
     @property
     def activity_count(self):
-        """ Retrieve count of a user's activities """
+        """Retrieve count of a user's activities."""
         return Activity.query.filter_by(
                 user_id=self.id
             ).count()
 
+    def may_certify(self):
+        """Check availability of certificate."""
+        projects = self.joined_projects(False)
+        if not len(projects) > 0:
+            return (False, 'projects')
+        cert_path = self.get_cert_path(projects[0].event)
+        if not cert_path:
+            return (False, 'event')
+        return (True, cert_path)
+
     def get_cert_path(self, event):
-        """ Generate URL to participation certificate """
+        """Generate URL to participation certificate."""
         if not event:
             return None
         if not event.certificate_path:
@@ -224,10 +252,24 @@ class User(UserMixin, PkModel):
     def set_password(self, password):
         """Set password."""
         self.password = hashing.hash_value(password)
+        self.updated_at = dt.datetime.utcnow()
 
     def check_password(self, value):
         """Check password."""
         return hashing.check_value(self.password, value)
+
+    def set_hashword(self, hashword):
+        """Set a hash."""
+        self.hashword = hashing.hash_value(hashword)
+        self.updated_at = dt.datetime.utcnow()
+
+    def check_hashword(self, value):
+        """Check the hash value."""
+        timediff = dt.datetime.utcnow() - self.updated_at
+        if timediff > dt.timedelta(minutes=5):
+            # Time limit exceeded
+            return False
+        return hashing.check_value(self.hashword, value)
 
     def __repr__(self):
         """Represent instance as a unique string."""
@@ -235,7 +277,8 @@ class User(UserMixin, PkModel):
 
 
 class Event(PkModel):
-    """ Tell me what's a-happening """
+    """Tell me what is a-happening here."""
+
     __tablename__ = 'events'
     name = Column(db.String(80), unique=True, nullable=False)
     summary = Column(db.String(140), nullable=True)
@@ -248,6 +291,7 @@ class Event(PkModel):
     instruction = Column(db.UnicodeText(), nullable=True)
 
     logo_url = Column(db.String(255), nullable=True)
+    #image_urls = Column(db.String(2048), nullable=True)
     webpage_url = Column(db.String(255), nullable=True)
     community_url = Column(db.String(255), nullable=True)
 
@@ -266,6 +310,7 @@ class Event(PkModel):
 
     @property
     def data(self):
+        """Get JSON representation."""
         return {
             'id': self.id,
             'name': self.name,
@@ -283,7 +328,7 @@ class Event(PkModel):
         }
 
     def get_full_data(self):
-        """ Returns full JSON event content """
+        """Return full JSON event content."""
         d = self.data
         d['starts_at'] = format_date(self.starts_at, '%Y-%m-%dT%H:%M')
         d['ends_at'] = format_date(self.ends_at, '%Y-%m-%dT%H:%M')
@@ -297,6 +342,7 @@ class Event(PkModel):
         return d
 
     def set_from_data(self, d):
+        """Set from a full JSON event content."""
         self.name = d['name']
         self.summary = d['summary'] or ''
         self.ends_at = parse(d['ends_at'])
@@ -318,7 +364,7 @@ class Event(PkModel):
         self.certificate_path = dcp
 
     def get_schema(self, host_url=''):
-        """ Returns hackathon.json formatted metadata """
+        """Return hackathon.json formatted metadata."""
         desc = self.summary or re.sub('<[^>]*>', '', self.description or '')
         d = {
             "@context": "http://schema.org",
@@ -344,43 +390,49 @@ class Event(PkModel):
 
     @property
     def url(self):
+        """Extra property."""
         return "event/%d" % (self.id)
 
     @property
     def has_started(self):
+        """Extra property."""
         return self.starts_at <= dt.datetime.utcnow() <= self.ends_at
 
     @property
     def has_finished(self):
+        """Extra property."""
         return dt.datetime.utcnow() > self.ends_at
 
     @property
     def can_start_project(self):
+        """Extra property."""
         return not self.has_finished and not self.lock_starting
 
     @property
     def ends_at_tz(self):
+        """Extra property."""
         return current_app.tz.localize(self.ends_at)
 
     @property
     def starts_at_tz(self):
+        """Extra property."""
         return current_app.tz.localize(self.starts_at)
 
     @property
     def countdown(self):
-        """ Normalized countdown timer """
+        """Provide a normalized countdown timer."""
         starts_at = current_app.tz.localize(self.starts_at)
         ends_at = current_app.tz.localize(self.ends_at)
         # Check event time limit (hard coded to 30 days)
         tz_now = current_app.tz.localize(dt.datetime.utcnow())
-        TIME_LIMIT = tz_now + dt.timedelta(days=30)
+        time_limit = tz_now + dt.timedelta(days=30)
         # Show countdown within limits
         if starts_at > tz_now:
-            if starts_at > TIME_LIMIT:
+            if starts_at > time_limit:
                 return None
             return starts_at
         elif ends_at > tz_now:
-            if ends_at > TIME_LIMIT:
+            if ends_at > time_limit:
                 return None
             return ends_at
         else:
@@ -388,12 +440,12 @@ class Event(PkModel):
 
     @property
     def date(self):
-        """ Formatted date range """
+        """Get a formatted date range."""
         return format_date_range(self.starts_at, self.ends_at)
 
     @property
     def oneliner(self):
-        """ A short online description """
+        """Return short online description."""
         ol = self.summary or self.description or ''
         ol = re.sub(r"\s+", " ", ol)
         if len(ol) > 140:
@@ -402,13 +454,13 @@ class Event(PkModel):
 
     @property
     def project_count(self):
-        """ Number of projects """
+        """Return number of projects."""
         if not self.projects:
             return 0
         return len(self.projects)
 
     def categories_for_event(self):
-        """ Event categories """
+        """Event categories."""
         return Category.query.filter(or_(
             Category.event_id is None,
             Category.event_id == -1,
@@ -416,20 +468,21 @@ class Event(PkModel):
         )).order_by('name')
 
     def current():
-        """ Returns currently featured event """
+        """Return currently featured event."""
         # TODO: allow multiple featurettes?
         return Event.query.filter_by(is_current=True).first()
 
-    def __init__(self, name=None, **kwargs):
+    def __init__(self, name=None, **kwargs):  # noqa: D107
         if name:
             db.Model.__init__(self, name=name, **kwargs)
 
-    def __repr__(self):
+    def __repr__(self):  # noqa: D105
         return '<Event({name})>'.format(name=self.name)
 
 
 class Project(PkModel):
-    """ You know, for kids! """
+    """You know, for kids."""
+
     __versioned__ = {}
     __tablename__ = 'projects'
     name = Column(db.String(80), unique=True, nullable=False)
@@ -467,49 +520,49 @@ class Project(PkModel):
     event_id = reference_col('events', nullable=True)
     event = relationship('Event', backref='projects')
 
-    # And the optional event category
+    # An optional event category
     category_id = reference_col('categories', nullable=True)
     category = relationship('Category', backref='projects')
 
-    # Self-assessment and total score
+    # Assessment and total score
     progress = Column(db.Integer(), nullable=True, default=-1)
     score = Column(db.Integer(), nullable=True, default=0)
 
     @property
     def team(self):
-        """ Array of project team """
+        """Array of project team."""
         return [u.username for u in self.get_team()]
 
     @property
     def stage(self):
-        """ Assessment of progress stage with full data """
+        """Assessment of progress stage with full data."""
         return getStageByProgress(self.progress)
 
     @property
     def phase(self):
-        """ Assessment of progress as phase name """
+        """Assessment of progress as phase name."""
         return getProjectPhase(self)
 
     @property
     def is_challenge(self):
-        """ True if this project is in challenge phase """
+        """Return True if this project is in challenge phase."""
         if self.progress is None:
             return False
         return self.progress <= PR_CHALLENGE
 
     @property
     def is_autoupdateable(self):
-        """ True if this project can be autoupdated """
+        """Return True if this project can be autoupdated."""
         return self.autotext_url and self.autotext_url.strip()
 
     @property
     def webembed(self):
-        """ Detect and return supported embed widgets """
+        """Detect and return supported embed widgets."""
         return format_webembed(self.webpage_url)
 
     @property
     def longhtml(self):
-        """ Process project longtext and return HTML """
+        """Process project longtext and return HTML."""
         if not self.longtext or len(self.longtext) < 3:
             return self.longtext
         # TODO: apply onebox filter
@@ -518,11 +571,12 @@ class Project(PkModel):
 
     @property
     def url(self):
-        """ Returns local server URL """
+        """Return local server URL."""
         return "project/%d" % (self.id)
 
     @property
     def data(self):
+        """Get JSON representation."""
         d = {
             'id': self.id,
             'url': self.url,
@@ -567,13 +621,13 @@ class Project(PkModel):
         return d
 
     def latest_activity(self, max=5):
-        """ Convenience query for latest activity """
+        """Query for latest activity."""
         q = Activity.query.filter_by(project_id=self.id)
         q = q.order_by(Activity.timestamp.desc())
         return q.limit(max)
 
     def get_team(self):
-        """ Return all starring users (A team) """
+        """Return all starring users (A team)."""
         activities = Activity.query.filter_by(
             name='star', project_id=self.id
         ).all()
@@ -584,6 +638,7 @@ class Project(PkModel):
         return members
 
     def get_missing_roles(self):
+        """List all roles which are not yet in team."""
         get_roles = Role.query.order_by('name')
         rollcall = []
         for p in self.get_team():
@@ -593,7 +648,7 @@ class Project(PkModel):
         return [r for r in get_roles if r not in rollcall and r.name]
 
     def all_dribs(self):
-        """ Query which formats the project's timeline """
+        """Query which formats the project's timeline."""
         activities = Activity.query.filter_by(
                         project_id=self.id
                     ).order_by(Activity.timestamp.desc())
@@ -612,10 +667,10 @@ class Project(PkModel):
                     continue
                 # Show changes in progress
                 if prev['progress'] != a.project_progress:
-                    projectStage = getStageByProgress(a.project_progress)
-                    if projectStage is not None:
+                    proj_stage = getStageByProgress(a.project_progress)
+                    if proj_stage is not None:
                         dribs.append({
-                            'title': projectStage['phase'],
+                            'title': proj_stage['phase'],
                             'date': a.timestamp,
                             'icon': 'arrow-up',
                             'name': 'progress',
@@ -649,7 +704,7 @@ class Project(PkModel):
         return sorted(dribs, key=lambda x: x['date'], reverse=True)
 
     def categories_all(self, event=None):
-        """ Convenience query for all categories """
+        """Return convenience query for all categories."""
         if self.event:
             return self.event.categories_for_event()
         if event is not None:
@@ -657,7 +712,7 @@ class Project(PkModel):
         return Category.query.order_by('name')
 
     def get_schema(self, host_url=''):
-        """ Schema.org compatible metadata """
+        """Schema.org compatible metadata."""
         # TODO: accurately detect project license based on component etc.
         if not self.event.community_embed:
             content_license = ''
@@ -681,6 +736,7 @@ class Project(PkModel):
         }
 
     def set_from_data(self, data):
+        """Update from JSON representation."""
         self.name = data['name']
         self.summary = data['summary']
         self.hashtag = data['hashtag']
@@ -714,7 +770,7 @@ class Project(PkModel):
                 self.category = category
 
     def update(self):
-        """ Process data submission """
+        """Process data submission."""
         # Correct fields
         if self.category_id == -1:
             self.category_id = None
@@ -728,6 +784,7 @@ class Project(PkModel):
         self.score = self.calculate_score()
 
     def update_null_fields(self):
+        """Reset fields in None-state."""
         if self.summary is None:
             self.summary = ''
         if self.image_url is None:
@@ -745,8 +802,8 @@ class Project(PkModel):
         if self.autotext is None:
             self.autotext = ''
 
-    def calculate_score(self):
-        """ Calculate score of a project based on base progress """
+    def calculate_score(self):  # noqa: C901
+        """Calculate score of a project based on base progress."""
         if self.is_challenge:
             return 0
         score = self.progress or 0
@@ -788,16 +845,17 @@ class Project(PkModel):
         score = min(score, 100)
         return score
 
-    def __init__(self, name=None, **kwargs):
+    def __init__(self, name=None, **kwargs):  # noqa: D107
         if name:
             db.Model.__init__(self, name=name, **kwargs)
 
-    def __repr__(self):
+    def __repr__(self):  # noqa: D105
         return '<Project({name})>'.format(name=self.name)
 
 
 class Category(PkModel):
-    """ Is it a bird? Is it a plane? """
+    """Is it a bird? Is it a plane?."""
+
     __tablename__ = 'categories'
     name = Column(db.String(80), nullable=False)
     description = Column(db.UnicodeText(), nullable=True)
@@ -809,12 +867,14 @@ class Category(PkModel):
     event = relationship('Event', backref='categories')
 
     def project_count(self):
+        """Count projects in this Category."""
         if not self.projects:
             return 0
         return len(self.projects)
 
     @property
     def data(self):
+        """Get JSON representation."""
         d = {
             'id': self.id,
             'name': self.name,
@@ -829,6 +889,7 @@ class Category(PkModel):
         return d
 
     def set_from_data(self, data):
+        """Update from a JSON representation."""
         self.name = data['name']
         self.description = data['description']
         self.logo_color = data['logo_color']
@@ -839,16 +900,17 @@ class Category(PkModel):
             if evt:
                 self.event = evt
 
-    def __init__(self, name=None, **kwargs):
+    def __init__(self, name=None, **kwargs):  # noqa: D107
         if name:
             db.Model.__init__(self, name=name, **kwargs)
 
-    def __repr__(self):
+    def __repr__(self):  # noqa: D105
         return '<Category({name})>'.format(name=self.name)
 
 
 class Activity(PkModel):
-    """ Public, real time, conversational """
+    """Public, real time, conversational."""
+
     __tablename__ = 'activities'
     name = Column(db.Enum('review',
                           'boost',
@@ -873,6 +935,7 @@ class Activity(PkModel):
 
     @property
     def data(self):
+        """Get JSON representation."""
         localtime = current_app.tz.localize(self.timestamp)
         a = {
             'id': self.id,
@@ -895,6 +958,7 @@ class Activity(PkModel):
         return a
 
     def set_from_data(self, data):
+        """Update from a JSON representation."""
         self.name = data['name']
         self.action = data['action']
         self.content = data['content']
@@ -906,7 +970,7 @@ class Activity(PkModel):
             if user:
                 self.user = user
 
-    def __init__(self, name, project_id, **kwargs):
+    def __init__(self, name, project_id, **kwargs):  # noqa: D107
         if name:
             db.Model.__init__(
                 self, name=name,
@@ -914,12 +978,13 @@ class Activity(PkModel):
                 **kwargs
             )
 
-    def __repr__(self):
+    def __repr__(self):  # noqa: D105
         return '<Activity({name})>'.format(name=self.name)
 
 
 class Resource(PkModel):
-    """ Somewhat graph-like in principle """
+    """Somewhat graph-like in principle."""
+
     __tablename__ = 'resources'
     name = Column(db.String(80), nullable=False)
     type_id = Column(db.Integer(), nullable=True, default=0)
@@ -942,11 +1007,12 @@ class Resource(PkModel):
     project = relationship('Project', backref='components')
 
     @property
-    def of_type(self):
+    def of_type(self):  # noqa: D102
         return getResourceType(self)
 
     @property
     def data(self):
+        """Get JSON representation."""
         return {
             'id': self.id,
             'date': self.created_at,
@@ -958,11 +1024,11 @@ class Resource(PkModel):
             # 'project_name': self.project.name
         }
 
-    def __init__(self, name, project_id, **kwargs):
+    def __init__(self, name, project_id, **kwargs):  # noqa: D107
         db.Model.__init__(
             self, name=name, project_id=project_id,
             **kwargs
         )
 
-    def __repr__(self):
+    def __repr__(self):  # noqa: D105
         return '<Resource({name})>'.format(name=self.name)

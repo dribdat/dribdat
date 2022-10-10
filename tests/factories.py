@@ -4,7 +4,7 @@ from factory import PostGenerationMethodCall, Sequence
 from factory.alchemy import SQLAlchemyModelFactory
 
 from dribdat.database import db
-from dribdat.user.models import User, Project
+from dribdat.user.models import User, Project, Event, Activity
 
 
 class BaseFactory(SQLAlchemyModelFactory):
@@ -25,8 +25,9 @@ class UserFactory(BaseFactory):
     password = PostGenerationMethodCall('set_password', 'example')
     active = True
 
-    class Meta:
+    class Meta:  # noqa: D106
         model = User
+
 
 class ProjectFactory(BaseFactory):
     """Project factory."""
@@ -37,8 +38,9 @@ class ProjectFactory(BaseFactory):
     webpage_url = "http://webpage.localhost"
     logo_color = "red"
 
-    class Meta:
+    class Meta:  # noqa: D106
         model = Project
+
 
 class EventFactory(BaseFactory):
     """Event factory."""
@@ -46,14 +48,15 @@ class EventFactory(BaseFactory):
     name = Sequence(lambda n: 'Event {0}'.format(n))
     summary = "Just a sample event"
 
-    class Meta:
-        model = Project
+    class Meta:  # noqa: D106
+        model = Event
+
 
 class ActivityFactory(BaseFactory):
     """Activity factory."""
 
-    name = Sequence(lambda n: 'Event {0}'.format(n))
-    summary = "Just a sample event"
+    name = "review"
+    content = Sequence(lambda n: 'Activity {0}'.format(n))
 
-    class Meta:
-        model = Project
+    class Meta:  # noqa: D106
+        model = Activity

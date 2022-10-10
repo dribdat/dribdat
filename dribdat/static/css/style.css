@@ -120,7 +120,7 @@ form input[type="checkbox"] {
 }
 .alert .close {
   font-size: 1.6rem;
-  margin: 0.5em 0.5em -1em -1em;
+  /*margin: 0.5em 0.5em -1em -1em;*/
 }
 
 /* pagination */
@@ -191,7 +191,13 @@ footer .dribdat-logo {
 footer .dribdat-logo img {
   height: 4em;
   margin-top: -1.5em;
-  margin-left: 2px;
+  margin-left: 13px;
+}
+footer .dribdat-logo:hover {
+  -webkit-filter: invert(100%);
+  -moz-filter: invert(100%);
+  -o-filter: invert(100%);
+  -ms-filter: invert(100%);
 }
 
 ul.help-block {
@@ -240,6 +246,14 @@ nav.navbar .navbar-brand {
   color: black;
   background: white;
   border-radius: 10px;
+}
+nav.navbar .navbar-brand:hover i:nth-child(odd) {
+  color: steelblue;
+  text-shadow: 1px 1px 2px rgba(0,0,100,0.2);
+}
+nav.navbar .navbar-brand:hover i:nth-child(even) {
+  color: grey;
+  text-shadow: 1px 1px 5px orange;
 }
 nav .navbar-nav .fa {
   margin-left:  0.2em;
@@ -1006,6 +1020,7 @@ nav .nav-login {
 /* General form styles */
 .userform form label,
 .userform form .control-label,
+.eventform form .control-label,
 .projectpost form .control-label,
 .projectform form .control-label {
   font-weight: 400; font-size: 140%;
@@ -1017,6 +1032,7 @@ nav .nav-login {
   margin-top: 1rem;
 }
 .userform form > .form-group,
+.eventform form > .form-group,
 .projectpost form > .form-group,
 .projectform form > .form-group {
   margin-top: 1rem;
@@ -1024,6 +1040,7 @@ nav .nav-login {
   text-align: center;
 }
 .userform form .help-inline,
+.eventform form .help-inline,
 .projectpost form .help-inline,
 .projectform form .help-inline {
   color: #555;
@@ -1031,6 +1048,7 @@ nav .nav-login {
   margin-top: 1em;
 }
 .userform form .form-control,
+.eventform form .form-control,
 .projectpost form .form-control,
 .projectform form .form-control {
   font-size: 125%;
@@ -1053,6 +1071,10 @@ nav .nav-login {
   margin-top: 1em;
   font-size: 150%;
   width: 100%;
+}
+.with-event .form-group label.required::after {
+    color: #ff0000;
+    content: " *"
 }
 
 /* Code blocks */
@@ -1282,27 +1304,27 @@ pre { color: #333; background: white; }
   opacity: 1.0;
 }
 
-.profile-header {
-  margin-top: 1em;
-}
 .profile-header img {
-  width: 80px;
+  width: 100px;
   border-radius: 50%;
   -moz-border-radius: 50%;
   -webkit-border-radius: 50%;
-  margin-right: 25px;
+}
+.profile-header span {
+  font-size: 3rem;
+}
+
+.profile-social {
+  margin-left: 60px;
+  line-height: 26px;
 }
 .profile-social img, .profile-social i {
-  width: 50px;
-  font-size: 50px;
-  margin-left: 60px;
+  width: 26px;
+  font-size: 26px;
   display: inline-block;
   float: left;
   color: #333;
-}
-.profile-social span {
-  line-height: 50px;
-  color: #007bff;
+  margin-right: 5px;
 }
 .profile-roles {
   margin: 0; padding: 0;

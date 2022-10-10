@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
-"""Collecting data from third party API repositories
-"""
+"""Collecting data from third party API repositories."""
 
 from .apievents import FetchGithubCommits
 from flask import url_for
-from pyquery import PyQuery as pq
+from pyquery import PyQuery as pq  # noqa: N813
 from base64 import b64decode
 from flask_misaka import markdown
 from bleach.sanitizer import ALLOWED_TAGS, ALLOWED_ATTRIBUTES
@@ -12,7 +11,6 @@ from urllib.parse import quote_plus
 import re
 import requests
 import bleach
-
 from future.standard_library import install_aliases
 install_aliases()
 
@@ -40,6 +38,17 @@ def FetchGitlabProject(project_url):
         'image_url': json['avatar_url'],
         'contact_url': json['web_url'] + '/issues',
     }
+
+
+def FetchGitlabAvatar(email):
+    apiurl = "https://gitlab.com/api/v4/avatar?email=%s&size=80"
+    data = requests.get(apiurl % email)
+    if data.text.find('{') < 0:
+        return None
+    json = data.json()
+    if 'avatar_url' not in json:
+        return None
+    return json['avatar_url']
 
 
 def FetchGithubProject(project_url):

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-
+"""Constants for user functions."""
 from ..utils import load_yaml_presets
 
 # User role
@@ -33,16 +33,18 @@ RESOURCE_TYPES = {
 MAX_EXCERPT_LENGTH = 500
 
 
-# TODO: clean up
 def resourceTypeList(verbose=False):
+    """Get a sorted list of resources by type."""
+    # TODO: clean up
     vb = 1 if verbose else 0
     pl = [(g, RESOURCE_TYPES[g][vb]) for g in RESOURCE_TYPES]
     return sorted(pl, key=lambda x: x[0])
 
 
-# TODO: clean up
 def getResourceType(resource, verbose=False):
+    """Return a resource type."""
     vb = 1 if verbose else 0
+    # TODO: clean up
     if resource is None:
         return ""
     if resource.type_id is None:
@@ -64,6 +66,7 @@ for ps in project_stages:
 
 
 def projectProgressList(All=True, WithEmpty=True):
+    """Return sorted progress list."""
     if not All:
         return [(PR_CHALLENGE, PROJECT_PROGRESS[PR_CHALLENGE])]
     pl = [(g, PROJECT_PROGRESS[g]) for g in PROJECT_PROGRESS]
@@ -73,6 +76,7 @@ def projectProgressList(All=True, WithEmpty=True):
 
 
 def getProjectStages():
+    """Return sorted stages list."""
     pl = []
     for ix, g in enumerate(sorted(PROJECT_PROGRESS)):
         stage = PROJECT_PROGRESS_STAGE[g]
@@ -81,15 +85,8 @@ def getProjectStages():
     return pl
 
 
-def getProjectPhase(project):
-    if project is None or project.progress is None:
-        return ""
-    if project.progress not in PROJECT_PROGRESS_STAGE:
-        return PROJECT_PROGRESS_STAGE[PR_CHALLENGE]['phase']
-    return PROJECT_PROGRESS_STAGE[project.progress]['phase']
-
-
 def getStageByProgress(progress):
+    """Return progress detail for a progress level."""
     if progress is None:
         return None
     if progress not in PROJECT_PROGRESS_STAGE:
@@ -97,13 +94,25 @@ def getStageByProgress(progress):
     return PROJECT_PROGRESS_STAGE[progress]
 
 
+def getProjectPhase(project):
+    """Return progress phase for a project."""
+    if project is None or project.progress is None:
+        return ""
+    stage = getStageByProgress(project.progress)
+    if stage is None:
+        return ""
+    return stage['phase']
+
+
 def isUserActive(user):
+    """Check if a user is active."""
     if not user or 'active' not in user.__dir__():
         return False
     return user.active
 
 
 def validateProjectData(project):
+    """Validate the stage of a project."""
     stage = project.stage
     all_valid = True
     # Collect project data
@@ -128,8 +137,8 @@ def validateProjectData(project):
     return stage, all_valid
 
 
-def getActivityByType(a, only_active=True):
-    """ Returns Activity item representated as a tuple """
+def getActivityByType(a, only_active=True):  # noqa: C901
+    """Return Activity item representated as a tuple."""
     author = title = text = icon = None
     # Obtain author if available
     if a.user:
@@ -138,6 +147,7 @@ def getActivityByType(a, only_active=True):
             return None
     else:
         author = "?"
+
     # Based on action, populate activity fields
     if a.action == 'sync':
         text = "Repository updated"

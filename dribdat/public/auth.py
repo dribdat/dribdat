@@ -3,24 +3,26 @@
 
 from flask import (Blueprint, request, render_template, flash, url_for,
                    redirect, current_app)
-
 from flask_login import login_user, logout_user, login_required, current_user
-
+from flask_dance.contrib.slack import slack
+from flask_dance.contrib.azure import azure  # noqa: I005
+from flask_dance.contrib.github import github
+# Dribdat modules
 from dribdat.user.models import User, Event, Role
-from dribdat.extensions import login_manager
+from dribdat.extensions import login_manager  # noqa: I005
 from dribdat.utils import flash_errors, random_password, sanitize_input
 from dribdat.public.forms import LoginForm, UserForm
-from dribdat.user.forms import RegisterForm
+from dribdat.user.forms import RegisterForm, EmailForm
 from dribdat.database import db
-
-from flask_dance.contrib.slack import slack
-from flask_dance.contrib.azure import azure
-from flask_dance.contrib.github import github
+from dribdat.mailer import user_activation
+from datetime import datetime
+# noqa: I005
 
 blueprint = Blueprint('auth', __name__, static_folder="../static")
 
 
 def current_event():
+    """Return the first featured event."""
     return Event.query.filter_by(is_current=True).first()
 
 
@@ -31,7 +33,7 @@ def load_user(user_id):
 
 
 def oauth_type():
-    """Check if Slack or another OAuth has been configured"""
+    """Check if Slack or another OAuth has been configured."""
     if "OAUTH_TYPE" in current_app.config:
         return current_app.config["OAUTH_TYPE"].lower()
     else:
@@ -40,6 +42,7 @@ def oauth_type():
 
 @blueprint.route("/login/", methods=["GET", "POST"])
 def login():
+    """Handle the login route."""
     # Skip login form on forced SSO
     if request.method == "GET" and current_app.config["OAUTH_SKIP_LOGIN"]:
         if not request.args.get('local') and oauth_type():
@@ -51,17 +54,18 @@ def login():
             login_user(form.user, remember=True)
             if not form.user.active:
                 flash(
-                    'This user account is under review. '
-                    + 'Please update your profile and contact the organizing '
-                    + 'team to access all functions of this platform.',
+                    'Your user account is under review. '
+                    + 'Please update your profile, and contact an organizer '
+                    + 'to be able to access all functions of this platform.',
                     'warning')
-            else:
-                flash("You are logged in! Time to make something awesome ≧◡≦",
-                      'success')
-            redirect_url = request.args.get("next") or url_for("public.home")
-            return redirect(redirect_url)
+                username = current_user.username
+                return redirect(url_for('public.user', username=username))
+            flash("You are logged in! Time to make something awesome. ≧◡≦",
+                  'success')
+            return redirect(url_for("public.home"))
         else:
             flash_errors(form)
+    logout_user()
     return render_template("public/login.html",
                            form=form, oauth_type=oauth_type())
 
@@ -79,36 +83,61 @@ def register():
         form.email.data = request.args.get('email')
     if request.args.get('web') and not form.webpage_url.data:
         form.webpage_url.data = request.args.get('web')
-    if form.validate_on_submit():
-        sane_username = sanitize_input(form.username.data)
-        new_user = User.create(
-                        username=sane_username,
-                        email=form.email.data,
-                        webpage_url=form.webpage_url.data,
-                        password=form.password.data,
-                        active=True)
-        new_user.socialize()
-        if User.query.count() == 1:
-            new_user.is_admin = True
-            new_user.save()
-            flash("Administrative user created - have fun!", 'success')
-        elif current_app.config['DRIBDAT_USER_APPROVE']:
-            new_user.active = False
-            new_user.save()
-            flash("Thank you for registering. New accounts require approval "
-                  + "from the event organizers. Please update your profile "
-                  + "and await activation.",
-                  'warning')
-        else:
-            flash(
-                "Thank you for registering. You can now log in and submit "
-                + "projects.", 'success')
-        login_user(new_user, remember=True)
-        return redirect(url_for('public.home'))
-    else:
+    if not form.validate_on_submit():
         flash_errors(form)
-    return render_template('public/register.html',
-                           form=form, oauth_type=oauth_type())
+        logout_user()
+        return render_template('public/register.html',
+                               form=form, oauth_type=oauth_type())
+    # Continue with user creation
+    sane_username = sanitize_input(form.username.data)
+    new_user = User.create(
+                    username=sane_username,
+                    email=form.email.data,
+                    webpage_url=form.webpage_url.data,
+                    password=form.password.data,
+                    active=True)
+    new_user.socialize()
+    if User.query.count() == 1:
+        # This is the first user account - promote it
+        new_user.is_admin = True
+        new_user.save()
+        flash("Administrative user created - oh joy!", 'success')
+    elif current_app.config['DRIBDAT_USER_APPROVE']:
+        # Approval of new user accounts required
+        new_user.active = False
+        new_user.save()
+        if current_app.config['MAIL_SERVER']:
+            with current_app.app_context():
+                user_activation(new_user)
+            flash("New accounts require activation. "
+                  + "Please click the dribdat link in your e-mail.", 'success')
+        else:
+            flash("New accounts require approval from the event organizers. "
+                  + "Please update your profile and await activation.",
+                  'success')
+    else:
+        flash(
+            "Thank you for registering. You can now log in and submit "
+            + "projects.", 'success')
+    # New user created: start session and go home
+    login_user(new_user, remember=True)
+    return redirect(url_for('public.home'))
+
+
+@blueprint.route("/activate/<userid>/<userhash>", methods=['GET'])
+def activate(userid, userhash):
+    """Activate or reset new user account."""
+    a_user = User.query.filter_by(id=userid).first_or_404()
+    if a_user.check_hashword(userhash):
+        a_user.hashword = None
+        a_user.active = True
+        a_user.save()
+        login_user(a_user, remember=True)
+        flash("Welcome! Your user account has been activated.", 'success')
+        return redirect(url_for('auth.user_profile'))
+    flash("Activation not found. Try again, or ask an organizer.", 'warning')
+    logout_user()
+    return redirect(url_for('public.home'))
 
 
 @blueprint.route('/logout/')
@@ -123,12 +152,45 @@ def logout():
 @blueprint.route('/forgot/')
 def forgot():
     """Forgot password."""
-    return render_template('public/forgot.html', oauth_type=oauth_type())
+    form = EmailForm(request.form)
+    if not form.validate_on_submit():
+        flash_errors(form)
+    return render_template(
+            'public/forgot.html', 
+            form=form,
+            oauth_type=oauth_type())
+
+
+@blueprint.route("/passwordless/", methods=['POST'])
+def passwordless():
+    """Log in a new user via e-mail."""
+    if current_app.config['DRIBDAT_NOT_REGISTER'] or \
+       not current_app.config['MAIL_SERVER']:
+        flash("Passwordless login currently not possible.", 'warning')
+        return redirect(url_for("auth.login", local=1))
+    form = EmailForm(request.form)
+    if not form.validate_on_submit():
+        flash_errors(form)
+        return redirect(url_for('auth.forgot'))
+    # Continue with user activation
+    flash(
+        "If your account exists, you will shortly receive " 
+        + "an activation mail. Check your Spam folder if you do not. "
+        + "Then click the link in that e-mail to log into this application.", 
+        'success')
+    a_user = User.query.filter_by(email=form.email.data).first()
+    if a_user:
+        # Continue with reset
+        with current_app.app_context():
+            user_activation(a_user)
+    # Don't let people spy on your address
+    return redirect(url_for("auth.login"))
 
 
 @blueprint.route('/user/profile', methods=['GET', 'POST'])
 @login_required
 def user_profile():
+    """Display or edit the current user profile."""
     user = current_user
     user_is_valid = True
     if not user.active:
@@ -163,6 +225,7 @@ def user_profile():
             user.set_password(form.password.data)
         else:
             user.password = originalhash
+            user.updated_at = datetime.utcnow()
 
         db.session.add(user)
         db.session.commit()
@@ -179,7 +242,7 @@ def user_profile():
 
 
 def get_or_create_sso_user(sso_id, sso_name, sso_email, sso_webpage=''):
-    """ Matches a user account based on SSO_ID """
+    """Match a user account based on SSO_ID."""
     sso_id = str(sso_id)
     user = User.query.filter_by(sso_id=sso_id).first()
     if not user:
@@ -228,6 +291,7 @@ def get_or_create_sso_user(sso_id, sso_name, sso_email, sso_webpage=''):
 
 @blueprint.route("/slack_login", methods=["GET", "POST"])
 def slack_login():
+    """Handle login via Slack."""
     if not slack.authorized:
         flash('Access denied to Slack', 'danger')
         return redirect(url_for("auth.login", local=1))
@@ -251,6 +315,7 @@ def slack_login():
 
 @blueprint.route("/azure_login", methods=["GET", "POST"])
 def azure_login():
+    """Handle login via Azure."""
     if not azure.authorized:
         flash('Access denied to Azure', 'danger')
         return redirect(url_for("auth.login", local=1))
@@ -273,6 +338,7 @@ def azure_login():
 
 @blueprint.route("/github_login", methods=["GET", "POST"])
 def github_login():
+    """Handle login via GitHub."""
     if not github.authorized:
         flash('Access denied - please try again', 'warning')
         return redirect(url_for("auth.login", local=1))

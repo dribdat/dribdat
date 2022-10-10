@@ -107,6 +107,7 @@ def user(user_id):
             user.set_password(form.password.data)
         else:
             user.password = originalhash
+        user.updated_at = datetime.utcnow()
         db.session.add(user)
         db.session.commit()
 
@@ -130,6 +131,7 @@ def user_profile(user_id):
             id=r).first() for r in form.roles.data]
         del form.roles
         form.populate_obj(user)
+        user.updated_at = datetime.utcnow()
         db.session.add(user)
         db.session.commit()
 

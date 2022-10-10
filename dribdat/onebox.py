@@ -88,3 +88,15 @@ def make_oembedplus(text, oembed_providers, **params):
                 line = full_handler(url, response, **params)
         parsed.append(line)
     return '\n'.join(parsed)
+
+
+def github_onebox(project_repo='dribdat/dribdat'):
+    """Create a OneBox for GitHub repositories with issue list."""
+    project_repo = project_repo.replace('https://github.com/', '')
+    return '<div class="widget widget-github">' + \
+        '<div data-theme="default" data-width="400" data-height="160" ' + \
+        'data-github="' + project_repo + \
+        '" class="github-card"></div><script src="//' + \
+        'cdn.jsdelivr.net/github-cards/latest/widget.js"></script>' + \
+        '<div id="issues-list" data-github="' + project_repo + \
+        '" class="list-group list-data"><i>Loading ...</i></div></div>'

@@ -1,22 +1,33 @@
+{% from "macros/_form.html" import render_form %}
+
 {% extends "layout.html" %}
 
-{% block page_title %}I forgot{% endblock %}
+{% block page_title %}User access{% endblock %}
 {% block body_class %}userform forgot{% endblock %}
 
 {% block content %}
 <div class="container-narrow">
-  <h1>I forgot ...</h1>
-  <br/>
+  <h1>Restore access</h1>
   {% if oauth_type %}
      <p>This site has &#x1f511;
-      <b><a href="{{ url_for('auth.login') }}">Single Sign On</a></b>
-      enabled through {{ oauth_type }}
-      - please try to reset your password with the corresponding provider.</p>
+      <b><a href="{{ url_for('auth.login') }}">Single Sign On</a></b> enabled.
+      Please first try to reset your password using <b>{{ oauth_type }}</b>.</p>
   {% endif %}
-  {% if not config.DRIBDAT_NOT_REGISTER %}
-    <br>
-    <p>This application does not have a reset password function. How very hacky.
+  {% if config.DRIBDAT_NOT_REGISTER %}
+    <p>Registration is currently disabled in this application. How very hacky.
       Please contact the organizers, and ask them to change your password in the Admin.
+    </p>
+  {% elif config.MAIL_SERVER %}
+    <p>Enter an e-mail address you registered with here to receive a login link.</p>
+    <div class="form-passwordless">
+      {{ render_form(url_for('auth.passwordless'), form) }}
+    </div>
+  {% else %}
+    <p>
+      Please contact the organizers, and ask them to change your password in the Admin.
+    </p>
+    <p>
+      Or to enable a <a href="https://docs.dribdat.cc/deploy.html#mail" target="_blank">Mail service</a>, so you could do this yourself.
     </p>
   {% endif %}
 </div>

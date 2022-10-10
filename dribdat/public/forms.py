@@ -1,25 +1,27 @@
 # -*- coding: utf-8 -*-
+"""Public facing forms."""
 from flask_wtf import FlaskForm
 from wtforms import (
     SubmitField, BooleanField,
-    StringField, PasswordField,
-    TextAreaField,
+    StringField, TextAreaField,
+    PasswordField,
     SelectMultipleField,
     SelectField, HiddenField,
-    TimeField, DateField,
 )
 from wtforms.fields.html5 import (
+    TimeField, DateField,
     URLField, EmailField,
 )
+# from wtforms_html5 import AutoAttrMeta
 from wtforms.validators import DataRequired, length
 from ..user.validators import UniqueValidator
 from dribdat.user.models import User, Project, Event
-
 from datetime import time, datetime
 
 
 class LoginForm(FlaskForm):
-    """Login form."""
+    """Display a login form."""
+
     username = StringField('Username', validators=[DataRequired()])
     password = PasswordField('Password', validators=[DataRequired()])
 
@@ -45,6 +47,8 @@ class LoginForm(FlaskForm):
 
 
 class UserForm(FlaskForm):
+    """User profile form."""
+
     id = HiddenField('id')
     roles = SelectMultipleField(
         u'Roles', coerce=int,
@@ -74,6 +78,8 @@ class UserForm(FlaskForm):
 
 
 class ProjectNew(FlaskForm):
+    """Create a project form."""
+
     id = HiddenField('id')
     autotext_url = URLField(
         u'Readme', [length(max=2048)],
@@ -98,13 +104,17 @@ class ProjectNew(FlaskForm):
 
 
 class ProjectForm(FlaskForm):
+    """Edit a project form."""
+
     id = HiddenField('id')
     name = StringField(
         u'Title',
         [length(max=80), UniqueValidator(Project, 'name'), DataRequired()],
-        description="[Required] A short project name, max 80 characters.")
+        render_kw={'maxlength': 80, 'required': 'required'},
+        description="A short project name, max 80 characters.")
     summary = StringField(
         u'Summary', [length(max=140)],
+        render_kw={'maxlength': 140},
         description="The headline of your project, in up to 140 characters.")
     longtext = TextAreaField(
         u'Pitch',
@@ -120,6 +130,8 @@ class ProjectForm(FlaskForm):
 
 
 class ProjectDetailForm(FlaskForm):
+    """Edit a project detail form."""
+
     id = HiddenField('id')
     autotext_url = URLField(
         u'Readme', [length(max=255)],
@@ -150,34 +162,44 @@ class ProjectDetailForm(FlaskForm):
 
 
 class ProjectPost(FlaskForm):
+    """Add a post to a project."""
+
     id = HiddenField('id')
     has_progress = BooleanField(u"Let's go")
     note = TextAreaField(
         u'What are you working on right now?',
         [length(max=280), DataRequired()],
+        render_kw={'maxlength': 280},
         description=u'A short note for your project log.')
     submit = SubmitField(u'Save post')
 
 
 class ProjectComment(FlaskForm):
+    """Add a comment to a project."""
+
     id = HiddenField('id')
     note = TextAreaField(
         u'Comments and reviews',
         [length(max=280), DataRequired()],
+        render_kw={'maxlength': 280},
         description=u'A suggestion or constructive feedback for the team.'
                     + ' Please note the Code of Conduct.')
     submit = SubmitField(u'Save comment')
 
 
 class ProjectBoost(FlaskForm):
+    """Add a boost to a project."""
+
     id = HiddenField('id')
     note = TextAreaField(u'Short praise and comments', [
-                         length(max=140), DataRequired()])
+                         length(max=280), DataRequired()])
     boost_type = SelectField(u'Select booster pack', [DataRequired()])
     submit = SubmitField(u'Energize!')
 
 
 class NewEventForm(FlaskForm):
+    """Add a new Event."""
+
     next = HiddenField()
     id = HiddenField('id')
     name = StringField(

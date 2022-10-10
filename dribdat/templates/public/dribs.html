@@ -47,7 +47,7 @@
           {% endif %}
 
           {% if s.ref_url %}
-            <a href="{{ s.ref_url }}" target="_blank">
+            <a href="{{ s.ref_url }}">
           {% endif %}
             <div class="date" title="{{ s.data.date }}">
               {{s.data.timesince}}
@@ -62,7 +62,9 @@
             </a>
           {% endif %}
 
-          {{ social.share_links(s.share.text, s.share.url) }}
+          {% if config.DRIBDAT_SOCIAL_LINKS %}
+            {{ social.share_links(s.share.text, s.share.url) }}
+          {% endif %} 
         </div>
       </div>
       {% endfor %}

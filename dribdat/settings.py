@@ -26,6 +26,8 @@ class Config(object):
     DRIBDAT_NOT_REGISTER = bool(strtobool(DRIBDAT_NOT_REGISTER))
     DRIBDAT_ALLOW_EVENTS = os_env.get('DRIBDAT_ALLOW_EVENTS', 'False')
     DRIBDAT_ALLOW_EVENTS = bool(strtobool(DRIBDAT_ALLOW_EVENTS))
+    DRIBDAT_SOCIAL_LINKS = os_env.get('DRIBDAT_SOCIAL_LINKS', 'True')
+    DRIBDAT_SOCIAL_LINKS = bool(strtobool(DRIBDAT_SOCIAL_LINKS))
 
     # Single sign-on support
     OAUTH_ID = os_env.get('OAUTH_ID', None)
@@ -33,6 +35,15 @@ class Config(object):
     OAUTH_SECRET = os_env.get('OAUTH_SECRET', None)
     OAUTH_DOMAIN = os_env.get('OAUTH_DOMAIN', None)
     OAUTH_SKIP_LOGIN = bool(strtobool(os_env.get('OAUTH_SKIP_LOGIN', 'False')))
+
+    # Mail service support
+    MAIL_PORT = os_env.get('MAIL_PORT', 25)
+    MAIL_SERVER = os_env.get('MAIL_SERVER', None)
+    MAIL_USERNAME = os_env.get('MAIL_USERNAME', None)
+    MAIL_PASSWORD = os_env.get('MAIL_PASSWORD', None)
+    MAIL_DEFAULT_SENDER = os_env.get('MAIL_DEFAULT_SENDER', None)
+    MAIL_USE_TLS = bool(strtobool(os_env.get('MAIL_USE_TLS', 'False')))
+    MAIL_USE_SSL = bool(strtobool(os_env.get('MAIL_USE_SSL', 'False')))
 
     # Application settings
     APP_DIR = os.path.abspath(os.path.dirname(__file__))  # This directory
@@ -47,7 +58,7 @@ class Config(object):
     # Server settings
     SERVER_NAME = os_env.get('SERVER_URL', os_env.get(
         'SERVER_NAME', 'localhost.localdomain:5000'))
-    SERVER_SSL = os_env.get('SERVER_SSL', None)
+    SERVER_SSL = bool(strtobool(os_env.get('SERVER_SSL', 'False')))
     SERVER_CORS = bool(strtobool(os_env.get('SERVER_CORS', 'True')))
     SERVER_PROXY = bool(strtobool(os_env.get('SERVER_PROXY', 'False')))
     CSP_DIRECTIVES = os_env.get(

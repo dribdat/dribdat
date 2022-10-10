@@ -11,26 +11,32 @@
   <div class="col-sm text-right">
   {% if current_user.id == user.id %}
 
-    <div class="btn-group">
+    <div class="btn-group float-left">
       <a id="project-post"
          href="{{ url_for('public.user_post') }}"
          title="Post an update to your current project" class="btn btn-success btn-lg">
         <i class="fa fa-clipboard" aria-hidden="true"></i>
         Write a Post</a>
 
-      <a id="get-certified"
-        href="{{ url_for('public.user_cert') }}" download
-        title="Download a participation certificate" class="btn btn-info btn-lg">
-        <i class="fa fa-download" aria-hidden="true"></i>
-        Certificate</a>
-
-      <a href="{{ url_for('auth.user_profile') }}" class="btn btn-secondary btn-warning btn-lg">
+      <a href="{{ url_for('auth.user_profile') }}" class="btn btn-warning btn-lg">
         <i class="fa fa-child"></i>
         Edit Profile
       </a>
+    </div>
 
-      <a href="{{ url_for('api.current_user_hackathon_json') }}" download
-        title="Download a snapshot of my contributions" class="btn btn-light btn-lg">
+    <div class="btn-group mt-2">
+      {% if may_certify %}
+        <a id="get-certified" class="btn btn-info btn-lg"
+          href="{{ url_for('public.user_cert') }}"
+          title="Download a participation certificate">
+          <i class="fa fa-download" aria-hidden="true"></i>
+          Get Certificate
+        </a>
+      {% endif %}
+
+      <a id="get-mydata" class="btn btn-secondary btn-lg text-left"
+        href="{{ url_for('api.current_user_hackathon_json') }}" download
+        title="Download a snapshot of my contributions">
         <i class="fa fa-download"></i>
         My Data
       </a>
@@ -38,6 +44,7 @@
       <a href="{{ url_for('auth.logout') }}" class="btn btn-secondary btn-lg"
         title="Sign out of this account">
         <i class="fa fa-sign-out"></i>
+        Logout
       </a>
     </div>
 
@@ -63,34 +70,47 @@
 </div>
 {% endif %}
 
-<div class="row">
+<div class="row mt-2 profile-header">
 
-  <h1 class="profile-header huge">
-    <img src="https://www.gravatar.com/avatar/{{user.carddata}}"/>
+  <div class="col-2 text-center">
+    {% if user.carddata %}
+      <img src="{{user.carddata}}"/>
+    {% endif %}
+  </div>
+
+  <h1 class="col-sm text-left">  
     <span>
       {{ user.username }}
     </span>
   </h1>
 
-</div>
-<div class="row">
-
   {% if user.webpage_url %}
   <div class="col-sm">
     <div class="profile-social">
-      <a href="{{ user.webpage_url }}" target="_blank">
-    {% if user.cardtype == '' %}
-      <i class="fa fa-globe"></i>
-      <span>Website</span>
-    {% else %}
-      <i class="fa fa-{{ user.cardtype }}"></i>
-      <span>Follow</span>
-    {% endif %}
+      <a href="{{ user.webpage_url }}" class="btn btn-lg btn-light" target="_blank" rel="noopener noreferrer">
+      {% if user.cardtype == '' %}
+        <i class="fa fa-globe"></i>
+        Website
+      {% else %}
+        <i class="fa fa-{{ user.cardtype }}"></i>
+        Follow
+      {% endif %}
       </a>
     </div>
   </div>
   {% endif %}
 
+</div>
+<div class="row mb-3 mt-2">
+
+  {% if score %}
+  <div class="col-2 text-center">
+    <h5 title="Total score across all projects">
+      <span class="user-score">{{ score }}</span>
+    </h5>
+  </div>
+  {% endif %}
+  
   <div class="col-sm">
     <ul class="profile-roles">
     {% for role in user.roles %}
@@ -98,15 +118,9 @@
     {% endfor %}
     </ul>
   </div>
-</div>
 
-{% if score %}
-  <div class="row">
-    <h5 class="ml-4 mt-1" title="Total score across all projects">
-    <span class="user-score">{{ score }}</span>
-    </h5>
-  </div>
-{% endif %}
+  
+</div>
 
 {% if user.my_story %}
 <div class="row">
@@ -122,7 +136,7 @@
 
 {% if not projects %}
   {% if current_user and current_user.id == user.id %}
-    <div class="alert alert-warning">
+    <div class="alert alert-success">
     No projects here yet. Time to <b>Join</b> or <b>Start</b> something awesome!
     </div>
   {% endif %}

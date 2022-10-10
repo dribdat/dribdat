@@ -8,7 +8,7 @@
   <meta property="og:type" content="website">
   <meta property="og:url" content="{{ url_for('project.project_view', project_id=project.id, _external=True) }}">
   <meta property="og:title" content="{{project.name}}">
-  <meta property="og:image" content="{{project_image_url}}">
+  <meta property="og:image" content="{{project_image_url|quote_plus}}">
   <meta property="og:description" content="{% if project.summary %}{{project.summary}}{% else %}{{ project.longtext|striptags|truncate(120) }}{% endif %}">
   <meta name="twitter:site" content="@opendatach">
   <meta name="twitter:card" content="summary">
@@ -138,8 +138,8 @@
 
 {% if project.image_url %}
   <div class="project-image-container"
-    style="background-image:url('{{project.image_url}}'); {% if project.logo_color %}background-color:{{project.logo_color}}; opacity:1.0{% endif %}"
-    data-href="{{project.image_url}}">
+    style="background-image:url('{{project.image_url|quote_plus}}'); {% if project.logo_color %}background-color:{{project.logo_color}}; opacity:1.0{% endif %}"
+    data-href="{{project.image_url|quote_plus}}">
   </div>
   {% if allow_edit %}
     <a class="project-edit-cover" href="{{ url_for('project.project_details', project_id=project.id) }}#image_url" title="Edit cover image">
@@ -186,7 +186,7 @@
 
   {% if project.hashtag %}
     <p class="project-hashtag">
-      <a href="{{ project.event.community_url or '#' }}" target="_blank">
+      <a href="{{ project.event.community_url or '#' }}" target="_blank" rel="noopener noreferrer">
         {{project.hashtag}}
       </a>
     </p>
@@ -246,7 +246,7 @@
       {{ project.webembed|safe }}
       <div class="win-size-grip"></div>
     </div>
-    <a href="{{ project.webpage_url }}" class="btn btn-small btn-default" target="_blank">&#x26F6; Full screen</a>
+    <a href="{{ project.webpage_url }}" class="btn btn-small btn-default" target="_blank" rel="noopener noreferrer">&#x26F6; Full screen</a>
   {% endif %}
 
   {% if project.longtext %}
@@ -262,7 +262,7 @@
       <div class="tab-pane fade" id="readme-md" role="tabpanel" aria-labelledby="readme-tab-md">
         <div class="alert alert-secondary text-center">
           This content is a preview from an
-          <a href="{{ project.autotext_url }}" target="_blank" title="Source link">
+          <a href="{{ project.autotext_url }}" target="_blank" rel="noopener noreferrer" title="Source link">
             external site</a>.
         </div>
     {% else %}
@@ -310,7 +310,7 @@
 
           <div class="date">
           {% if s.ref_url %}
-            <a href="{{ s.ref_url }}" target="_blank">
+            <a href="{{ s.ref_url }}">
           {% endif %}
               {{ s.date|format_datetime }}
               {% if s.author %}
@@ -332,15 +332,6 @@
   {% endif %}
 
   </div><!-- /project-content -->
-
-  {% if project.source_url and 'github.com' in project.source_url %}
-    <div class="widget widget-github">
-      <div data-theme="default" data-width="400" data-height="160" data-github="{{ project.source_url|replace('https://github.com/','') }}" class="github-card"></div>
-      <script src="//cdn.jsdelivr.net/github-cards/latest/widget.js"></script>
-
-      <div id="issues-list" data-github="{{ project.source_url|replace('https://github.com/','') }}" class="list-group list-data"><i>Loading ...</i></div>
-    </div>
-  {% endif %}
 
   <a name="team"></a>
   {% if project_team %}
@@ -383,21 +374,21 @@
   <div class="project-buttons" role="group" aria-label="Main navigation">
     {% if project.contact_url %}
       {% if project.contact_url.startswith('http') or project.contact_url.startswith('mailto:') %}
-        <a href="{{ project.contact_url }}" target="_blank" class="btn btn-lg" title="Contact the team"><span>&#x1f44b;</span> Contact</a>
+        <a href="{{ project.contact_url }}" target="_blank" rel="noopener noreferrer" class="btn btn-lg" title="Contact the team"><span>&#x1f44b;</span> Contact</a>
       {% elif '@' in project.contact_url %}
-        <a href="mailto:{{ project.contact_url }}" target="_blank" class="btn btn-lg" title="Contact the team"><span>&#x1f44b;</span> E-mail</a>
+        <a href="mailto:{{ project.contact_url }}" target="_blank" rel="noopener noreferrer" class="btn btn-lg" title="Contact the team"><span>&#x1f44b;</span> E-mail</a>
       {% else %}
         <div class="btn btn-lg" title="Contact the team"><span>&#x1f44b;</span> {{ project.contact_url }}</div>
       {% endif %}
     {% endif %}
     {% if project.webpage_url %}
-      <a href="{{ project.webpage_url }}" class="btn btn-lg" target="_blank" title="Project web link"><span>&#x1f310;</span> Explore</a>
+      <a href="{{ project.webpage_url }}" class="btn btn-lg" target="_blank" rel="noopener noreferrer" title="Project web link"><span>&#x1f310;</span> Explore</a>
     {% endif %}
     {% if project.download_url %}
-      <a href="{{ project.download_url }}" target="_blank" class="btn btn-lg" title="Download link"><span>&#x1f4c2;</span> Download</a>
+      <a href="{{ project.download_url }}" target="_blank" rel="noopener noreferrer" class="btn btn-lg" title="Download link"><span>&#x1f4c2;</span> Download</a>
     {% endif %}
     {% if project.source_url %}
-      <a href="{{ project.source_url }}" class="btn btn-lg" target="_blank" title="Source code"><span>&#x1f4bb;</span> Source</a>
+      <a href="{{ project.source_url }}" class="btn btn-lg" target="_blank" rel="noopener noreferrer" title="Source code"><span>&#x1f4bb;</span> Source</a>
     {% endif %}
   </div>
 
@@ -464,7 +455,7 @@
         </div>
         <div class="modal-body">
           <p class="text-small text-left">
-            Use the <a href="{{ url_for('admin.users')}}" target="_blank">admin</a>
+            Use the <a href="{{ url_for('admin.users')}}">admin</a>
             to look up a user, and place the exact username here to add to the team.
             You can also remove a user with the <b>X</b> button next to their profile.
           </p>
@@ -498,7 +489,9 @@
   </div>
 </div>
 
-{{ social.share_links(share.text, share.url) }}
+{% if config.DRIBDAT_SOCIAL_LINKS %}
+  {{ social.share_links(share.text, share.url) }}
+{% endif %}
 
 {% if not project.event.lock_resources %}
 <center class="mt-5">

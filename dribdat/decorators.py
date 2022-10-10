@@ -5,6 +5,7 @@ from functools import wraps
 from flask import abort, jsonify
 from flask_login import current_user
 
+
 def admin_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
@@ -12,6 +13,7 @@ def admin_required(f):
             abort(403)
         return f(*args, **kwargs)
     return decorated_function
+
 
 def requires_auth(f):
     @wraps(f)

@@ -6,11 +6,11 @@
 {% block body_class %}eventform eventnew{% endblock %}
 
 {% block content %}
-<div class="container admin">
     <h2>New Event</h2>
-
-    <p>Set your start and finish in the <u title="TIME_ZONE environment setting">{{ config.TIME_ZONE }}</u> time zone.</p>
-
+    <p>
+        <b>Tip:</b> Set your start and finish in the
+        <u title="TIME_ZONE environment setting">{{ config.TIME_ZONE }}</u>
+        time zone.
+    </p>
     {{ render_form(url_for('public.event_new'), form) }}
-</div>
 {% endblock %}
