@@ -226,7 +226,11 @@ class NewEventForm(FlaskForm):
         u'Description', description=u'Markdown and HTML supported')
     logo_url = URLField(
         u'Host logo link', [length(max=255)],
-        description=u'Link to a logo file, ideally square, max res 512x512')
+        description=u'Link to a small logo file (max 688x130)')
+    gallery_url = URLField(
+        u'Gallery links',
+        [length(max=2048)],
+        description=u'URL to large background images (comma-delimited)')
     webpage_url = URLField(
         u'Home page link', [length(max=255)],
         description=u'Link to register and get information about the event')

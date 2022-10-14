@@ -52,7 +52,7 @@ class EventForm(FlaskForm):
         [length(max=80), UniqueValidator(Event, 'name'), DataRequired()])
     is_current = BooleanField(
         u'Featured', default=False,
-        description=u'📣 Pin this event (only one at a time) to the homepage.')
+        description=u'📣 Pin this event to the homepage.')
     is_hidden = BooleanField(
         u'Hidden', default=False,
         description=u'🚧 This event is not shown on the homepage.')
@@ -91,7 +91,11 @@ class EventForm(FlaskForm):
     logo_url = URLField(
         u'Host logo link',
         [length(max=255)],
-        description=u'URL to an (ideally) square and max 512x512 pixel image')
+        description=u'URL to a small logo image (max 688x130)')
+    gallery_url = URLField(
+        u'Gallery links',
+        [length(max=2048)],
+        description=u'URL to large background images (comma-delimited)')
     webpage_url = URLField(
         u'Home page link',
         [length(max=255)],
