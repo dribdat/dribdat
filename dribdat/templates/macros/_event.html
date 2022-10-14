@@ -1,3 +1,22 @@
+{% macro render_project_tooltip(project) %}
+	{% if project.summary %}
+			data-toggle="tooltip" data-html="true"
+			title="{{ project.summary }}{#
+
+			> Hashtag if available in tooltip:
+		#}{% if project.hashtag %}<span>{{project.hashtag}}</span>{% endif %}{#
+
+			> Add image in tooltip:
+		#}{% if project.image_url %}<img src=`{{project.image_url|quote_plus}}>{% endif %}{#
+
+			> Status icons in tooltip:
+		#}<div>{% if project.contact_url %}&#x1f44b;{% endif %}{#
+		#}{% if project.webpage_url %}&#x1f310;{% endif %}{#
+		#}{% if project.download_url %}&#x1f4c2;{% endif %}{#
+		#}{% if project.source_url %}&#x1f4bb;{% endif %}</div>"
+	{% endif %}
+{% endmacro %}
+
 <!-- Based on Hexagon Tiles by Graham Pyne http://codepen.io/gpyne/pen/iElhp/ -->
 {% macro render_project_hexagon(project) %}
 	<a href="{{ url_for('project.project_view', project_id=project.id) }}"
@@ -5,22 +24,7 @@
 		 	'challenge' if project.is_challenge else 'project'
 		 }} category-highlight"
 		 category-id="{{ project.category_id }}"
-		 {% if project.summary %}
-				 data-toggle="tooltip" data-html="true"
-				 title="{{ project.summary }}{#
-
-		 		 > Hashtag if available in tooltip:
-	 		 #}{% if project.hashtag %}<span>{{project.hashtag}}</span>{% endif %}{#
-
-				 > Add image in tooltip:
-			 #}{% if project.image_url %}<img src=`{{project.image_url|quote_plus}}>{% endif %}{#
-
-				 > Status icons in tooltip:
-			 #}<div>{% if project.contact_url %}&#x1f44b;{% endif %}{#
-			 #}{% if project.webpage_url %}&#x1f310;{% endif %}{#
-			 #}{% if project.download_url %}&#x1f4c2;{% endif %}{#
-			 #}{% if project.source_url %}&#x1f4bb;{% endif %}</div>"
-		 {% endif %}
+		 {{ render_project_tooltip(project) }}
 		 {% if project.logo_color %}
 		 	 style="border-bottom-color:{{project.logo_color}}"
 		 {% endif %}
@@ -82,11 +86,11 @@
 
 {% macro render_home_event(event) %}
 	<div class="col-lg-4 an-event"><div class="card">
-	    {% if event.logo_url %}
-	    <div class="card-img-top">
-	      <img src="{{ event.logo_url }}" title="{{ event.hostname }}">
-	    </div>
-	    {% endif %}
+			<div class="card-img-top" title="{{ event.hostname }}"
+		    {% if event.logo_url %}
+		     style="background-image: url('{{ event.logo_url }}'); height: 10em"
+		    {% endif %}>
+			</div>
 	    <div class="card-body">
 	      {% if event.lock_resources %}
 	        <i class="fa fa-cubes" style="float:right"></i>
@@ -105,7 +109,7 @@
 	            </p>
 	        {% endif %}
 	        <p class="an-event-description">
-	          {{event.summary or event.description or event.oneliner|markdown|striptags|truncate(500)}}
+	          {{event.summary or event.description|truncate(300) or event.oneliner|markdown|striptags|truncate(300)}}
 	        </p>
 	      </div>
 	      <div class="btn-group an-event-actions" role="group">
@@ -129,4 +133,89 @@
 	      </div>
 	    </div><!-- /.card-body -->
 	</div></div>
+{% endmacro %}
+
+{% macro render_featured_event(event, current=False) %}
+	<div class="carousel-item{% if current %} active{% endif %}">
+		<svg class="bd-placeholder-img" width="100%" height="100%"
+				 xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+			{% if event.background_image %}
+				 <image width="100%" height="100%"
+				 			  xlink:href="{{ event.background_image }}"
+								preserveAspectRatio="xMinYMin slice">
+			{% else %}
+				 <rect width="100%" height="100%" fill="#777"/>
+			{% endif %}
+		</svg>
+
+		<div class="container">
+			<div class="carousel-caption">
+
+				<div class="home-description">
+					{{event.summary or event.description|markdown}}
+				</div>
+				<div class="home-nav">
+					<div class="embed-view">
+						{{ render_embed_event(event, event.projects, False) }}
+					</div>
+					<div class="home-buttons" aria-label="Main navigation">
+						<a href="{{ url_for('public.event', event_id=event.id) }}" class="btn btn-lg btn-warning"><b>
+							{% if event.has_finished %}
+								<i class="fa fa-certificate" aria-hidden="true"></i>
+								Results
+							{% elif event.has_started %}
+								<i class="fa fa-rocket" aria-hidden="true"></i>
+								Projects
+							{% else %}
+								<!-- Event not yet started -->
+								<i class="fa fa-lightbulb-o" aria-hidden="true"></i>
+								Challenges
+							{% endif %}
+						</b></a>
+					</div>
+				</div>
+				{% if current and event.countdown and 'down' in config.DRIBDAT_CLOCK %}
+					<a class="container-countdown"
+						 href="{{ url_for('public.event', event_id=event.id) }}"
+						 title="{{ event.countdown }}">
+						<div id="clockDown" class="event-countdown flipdown"
+								 data-start="{{ event.countdown }}"></div>
+					</a>
+				{% endif %}
+
+			 </div><!-- /.carousel-caption -->
+		 </div>
+	 </div><!-- /.carousel-item -->
+{% endmacro %}
+
+{% macro render_embed_event(event, projects, showNav=False) %}
+<div class="embed-event">
+	{% if showNav %}
+  <div class="btn-group mb-4" role="group" aria-label="Embedded navigation">
+    <a href="{{ url_for('public.event', event_id=event.id) }}" target="_blank" class="btn btn-dark">
+      <i class="fa fa-star" aria-hidden="true"></i>&nbsp;
+      {{ event.name }}
+    </a>
+  </div>
+	{% endif %}
+  <div class="honeycomb">
+    <div class="ibws-fix">
+    {% for project in projects %}
+      <a href="{{ url_for('project.project_view', project_id=project.id) }}" target="_parent"
+        class="hexagon project" category-id="{{project.category_id}}"
+				{{ render_project_tooltip(project) }}
+        style="background-color:{{project.logo_color}}')">
+        <div class="hexagontent">
+          {% if project.logo_icon %}
+          <i class="fa fa-{{project.logo_icon}}"></i>
+          {% endif %}
+        </div>
+      </a>
+      {% if showNav and loop.index % 7 == 0 %}
+        </div><div class="ibws-fix">
+      {% endif %}
+    {% endfor %}
+    </div>
+  </div>
+</div><!-- /.embed-event -->
 {% endmacro %}
