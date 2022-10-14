@@ -261,6 +261,9 @@ def event_load_datapackage():  # noqa: C901
     else:
         url = request.form.get('url')
         import_level = request.form.get('import')
+    # Check link
+    if not url or 'datapackage.json' not in url:
+        return jsonify(status='Error', errors=['Missing datapackage.json url'])
     # Configuration
     dry_run = True
     all_data = False
@@ -274,29 +277,30 @@ def event_load_datapackage():  # noqa: C901
         status = "Complete"
     # File handling
     if filedata and filedata.filename != '':
-        ext = filedata.filename.split('.')[-1].lower()
-        if ext not in ['json']:
-            return 'Invalid format (allowed: JSON)'
-        with tempfile.TemporaryDirectory() as tmpdir:
-            filepath = path.join(tmpdir, secure_filename(filedata.filename))
-            filedata.save(filepath)
-            try:
-                with open(filepath, mode='rb') as file:
-                    data = json.load(file)
-                results = ImportEventPackage(data, dry_run, all_data)
-            except json.decoder.JSONDecodeError:
-                return 'Could not load package due to JSON error'
-        if 'errors' in results:
-            return 'Error: %s' % ','.join(results['errors'])
+        results = prepare_datapackage(filedata, dry_run, all_data)
         event_names = ', '.join([r['name'] for r in results['events']])
-        flash("Events uploaded: %s" % event_names, 'success')
-        return redirect(url_for("admin.events"))
-    elif not url or 'datapackage.json' not in url:
-        return jsonify(status='Error', errors=['Missing datapackage.json url'])
-    else:
         if 'errors' in results:
             return jsonify(status='Error', errors=results['errors'])
-        return jsonify(status=status, results=results)
+        else:
+            flash("Events uploaded: %s" % event_names, 'success')
+            return redirect(url_for("admin.events"))
+    return jsonify(status=status, results=results)
+
+
+def prepare_datapackage(filedata, dry_run, all_data):
+    """Saves a temporary file and provides details."""
+    ext = filedata.filename.split('.')[-1].lower()
+    if ext not in ['json']:
+        return {'errors': ['Invalid format (allowed: JSON)']}
+    with tempfile.TemporaryDirectory() as tmpdir:
+        filepath = path.join(tmpdir, secure_filename(filedata.filename))
+        filedata.save(filepath)
+        try:
+            with open(filepath, mode='rb') as file:
+                data = json.load(file)
+            return ImportEventPackage(data, dry_run, all_data)
+        except json.decoder.JSONDecodeError:
+            return {'errors': ['Could not load package due to JSON error']}
 
 
 @blueprint.route('/event/push/datapackage', methods=["PUT", "POST"])
@@ -313,7 +317,7 @@ def event_push_datapackage():
 
 
 @blueprint.route('/project/push.json', methods=["PUT", "POST"])
-def project_push_json():  # noqa: C901
+def project_push_json():
     """Push data into a project."""
     data = request.get_json(force=True)
     if 'key' not in data or data['key'] != current_app.config['SECRET_API']:
@@ -327,6 +331,15 @@ def project_push_json():  # noqa: C901
         project.event = Event.query.filter_by(is_current=True).first()
     elif project.user_id != 1 or project.is_hidden:
         return jsonify(error='Access denied')
+    set_project_values(project, data)
+    project.update()
+    db.session.add(project)
+    db.session.commit()
+    return jsonify(success='Updated', project=project.data)
+
+
+def set_project_values(project, data):
+    """Convert a data object to model values."""
     project.hashtag = data['hashtag']
     if 'name' in data and len(data['name']) > 0:
         project.name = data['name']
@@ -348,10 +361,8 @@ def project_push_json():  # noqa: C901
     if project.autotext_url is not None and not has_longtext:
         # Now try to autosync
         project = AddProjectData(project)
-    project.update()
-    db.session.add(project)
-    db.session.commit()
-    return jsonify(success='Updated', project=project.data)
+    return project
+
 
 # ------ FRONTEND -------
 
@@ -395,7 +406,7 @@ def project_uploader():
     keepcharacters = ('.', '_')
     safe_filename = img.filename.replace(' ', '_')
     safe_filename = "".join(
-        c for c in safe_filename 
+        c for c in safe_filename
         if c.isalnum() or c in keepcharacters).rstrip()
     if not safe_filename:
         safe_filename = "".join(random_password(8), '.', ext)

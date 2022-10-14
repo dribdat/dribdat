@@ -45,7 +45,7 @@ def PackageEvent(event, author=None, host_url='', full_contents=False):
         contributors=contributors,
         homepage=event.webpage_url or '',
         created=format_date(dt.now(), '%Y-%m-%dT%H:%M'),
-        version="0.1.0",
+        version="0.2.0",
     )
 
     # if False:  # as CSV
@@ -137,7 +137,8 @@ def importUsers(data, DRY_RUN=False):
     updates = []
     for usr in data:
         name = usr['username']
-        if name is None or len(name) < 4: continue
+        if name is None or len(name) < 4:
+            continue
         email = usr['email'] if 'email' in usr else ''
         if User.query.filter_by(username=name).first() or \
            User.query.filter_by(email=email).first():
@@ -228,25 +229,24 @@ def ImportEventPackage(data, DRY_RUN=False, ALL_DATA=False):
     if 'sources' not in data or data['sources'][0]['title'] != 'dribdat':
         return {'errors': ['Invalid source']}
     updates = {}
-    # Initial import
-    for res in data['resources']:
-        # Import events
-        if res['name'] == 'events':
-            updates['events'] = importEvents(res['data'], DRY_RUN)
-        # Import categories
-        elif res['name'] == 'categories' and ALL_DATA:
-            updates['categories'] = importCategories(res['data'], DRY_RUN)
-        # Import user accounts
-        elif res['name'] == 'users' and ALL_DATA:
-            updates['users'] = importUsers(res['data'], DRY_RUN)
-    # Projects follow users
-    for res in data['resources']:
-        if res['name'] == 'projects' and ALL_DATA:
-            updates['projects'] = importProjects(res['data'], DRY_RUN)
-    # Activities always last
-    for res in data['resources']:
-        if res['name'] == 'activities' and ALL_DATA:
-            updates['activities'] = importActivities(res['data'], DRY_RUN)
+    # Import in stages
+    for stg in [1, 2, 3]:
+        for res in data['resources']:
+            # Import events
+            if stg == 1 and res['name'] == 'events':
+                updates['events'] = importEvents(res['data'], DRY_RUN)
+            # Import categories
+            elif stg == 1 and res['name'] == 'categories' and ALL_DATA:
+                updates['categories'] = importCategories(res['data'], DRY_RUN)
+            # Import user accounts
+            elif stg == 1 and res['name'] == 'users' and ALL_DATA:
+                updates['users'] = importUsers(res['data'], DRY_RUN)
+            # Projects follow users
+            if stg == 2 and res['name'] == 'projects' and ALL_DATA:
+                updates['projects'] = importProjects(res['data'], DRY_RUN)
+            # Activities always last
+            if stg == 3 and res['name'] == 'activities' and ALL_DATA:
+                updates['activities'] = importActivities(res['data'], DRY_RUN)
     # Return summary object
     return updates
 
