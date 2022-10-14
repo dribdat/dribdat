@@ -145,10 +145,10 @@
   // Enable tooltips on hexagrid
   $('.honeycomb .hexagon[data-toggle="tooltip"]').tooltip();
 
-  // Roll up categories if there is only one, and no projects
+  /* Roll up categories if there is only one, and no projects
   if ($navCategories.length === 1) {
     $navCategories.click().parent().parent().hide();
-  }
+  }*/
 
   // Show embed code when button clicked
   $('#embed-link').click(function(e) {

@@ -19,15 +19,14 @@
 {% block content %}
 {% cache 300, 'event-%d' % current_event.id %}
 
+{% if current_event.categories_for_event() %}
 <center class="nav-categories">
   <div class="btn-group" data-toggle="buttons" role="group" aria-label="Filter by category">
-    {% if projects %}
-      <label class="btn btn-default active" title="All projects">
-        <input type="radio" name="category" id="" autocomplete="off" checked>
-          <i class="fa fa-cube"></i><br>
-          <span> </span>
-      </label>
-    {% endif %}
+    <label class="btn btn-default active" title="All projects">
+      <input type="radio" name="category" id="" autocomplete="off" checked>
+        <i class="fa fa-cube"></i><br>
+        <span> </span>
+    </label>
     {% for category in current_event.categories_for_event() %}
       <label class="btn btn-default">
         <input type="radio" name="category" id="{{category.id}}" autocomplete="off">
@@ -39,7 +38,7 @@
     {% endfor %}
   </div>
 </center>
-
+{% endif %}
 
 <div class="honeycomb mb-5">
   <a name="projects"></a>
