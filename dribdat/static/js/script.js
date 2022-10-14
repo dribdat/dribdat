@@ -282,6 +282,9 @@
       // Start the clock
       new FlipDown(unixtime, $(this).attr('id')).start();
     });
+
+    // Initialise carousel
+    $('.carousel').carousel();
   }
 
 
