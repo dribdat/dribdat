@@ -19,7 +19,7 @@
 {% block content %}
 {% cache 300, 'event-%d' % current_event.id %}
 
-{% if current_event.categories_for_event() %}
+{% if current_event.has_categories %}
 <center class="nav-categories">
   <div class="btn-group" data-toggle="buttons" role="group" aria-label="Filter by category">
     <label class="btn btn-default active" title="All projects">
