@@ -1622,7 +1622,7 @@ Instruction page
   width: 100%;
   z-index: 1;
   cursor: pointer;
-  font-size: 200%;
+  font-size: 2rem;
 }
 .list-stages .step:hover .title { opacity: 1.0; }
 .list-stages .step.active .title { color: blue; }

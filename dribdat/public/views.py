@@ -88,8 +88,8 @@ def home():
     events_featured = events_next.filter(Event.is_current)
     events_past = timed_events.filter(Event.ends_at < today)
     # Select Resource-type events
-    resource_events = events.filter(
-        Event.lock_resources).order_by(Event.name.asc())
+    resource_events = events.filter(Event.lock_resources)
+    resource_events = resource_events.order_by(Event.name.asc())
     # Select my challenges
     my_projects = None
     if current_user and not current_user.is_anonymous:
@@ -208,22 +208,8 @@ def event_stages(event_id):
 @blueprint.route("/event/<int:event_id>/instruction")
 def event_instruction(event_id):
     """Show instructions of an event."""
-    event = Event.query.filter_by(id=event_id).first_or_404()
-    steps = getProjectStages()
-    for s in steps:
-        s['projects'] = []  # Reset the index
-    resource_events = Event.query.filter_by(lock_resources=True).all()
-    for e in resource_events:
-        projects = Project.query.filter_by(event_id=e.id, is_hidden=False)
-        for s in steps:
-            if 'projects' not in s:
-                s['projects'] = []
-            project_list = [p.data for p in projects.filter_by(
-                progress=s['id']).all()]
-            s['projects'].extend(project_list)
-    return render_template("public/eventinstruction.html",
-                           current_event=event, steps=steps,
-                           active="instruction")
+    # Deprecated (for now)
+    return redirect(url_for("event_stages", event_id=event_id))
 
 
 @blueprint.route("/event/<int:event_id>/categories")

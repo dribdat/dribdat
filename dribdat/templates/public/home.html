@@ -71,7 +71,7 @@
         </a>
       {% endfor %}
     </div>
-    <p class="category-tip mb-0 mt-2" style="margin-left:-1em">
+    <p class="category-tip mb-0 mt-2 text-right">
       <span class="user-score" style="background:white">&#x1F4A1;</span>
       Visit
       <a href="{{ url_for('public.user', username=current_user.username) }}" title="{{ current_user.username }}">My Profile</a>
@@ -79,21 +79,20 @@
   </div>
   {% endif %}
 
-  {% if events_next %}
-  <a name="upcoming"></a>
-  <h2 class="mt-4">Upcoming</h2>
-  <div class="row events-next">
-    {% for event in events_next %}
+  {% if events_tips %}
+  <a name="resources"></a>
+  <div class="row events-tips mt-4">
+    {% for event in events_tips %}
       {{ misc.render_home_event(event) }}
     {% endfor %}
   </div><!-- /.row events-next -->
   {% endif %}
 
-  {% if events_tips %}
-  <a name="resources"></a>
-  <h2 class="mt-4"><!--Resources--></h2>
-  <div class="row events-tips">
-    {% for event in events_tips %}
+  {% if events_next %}
+  <a name="upcoming"></a>
+  <h2 class="mt-4">Upcoming</h2>
+  <div class="row events-next">
+    {% for event in events_next %}
       {{ misc.render_home_event(event) }}
     {% endfor %}
   </div><!-- /.row events-next -->

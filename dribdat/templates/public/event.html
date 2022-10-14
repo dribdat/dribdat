@@ -90,11 +90,6 @@
     {% endif %}
   </a>
   {% endif %}
-  {% if current_event.lock_resources %}
-    <a href="{{ url_for('public.event_instruction', event_id=current_event.id) }}" class="btn btn-lg btn-light">
-      <span>Resources</span>
-    </a>
-  {% endif %}
   {% if current_event.webpage_url %}
   <a href="{{ current_event.webpage_url }}" class="btn btn-lg btn-dark">
     {% if not current_event.has_finished %}
@@ -189,6 +184,6 @@
 
   {% if config.DRIBDAT_SOCIAL_LINKS %}
     {{ social.share_links(current_event.hashtag, url_for('public.event', event_id=current_event.id, _external=True)) }}
-  {% endif %} 
+  {% endif %}
 </center>
 {% endblock %}

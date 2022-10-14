@@ -28,6 +28,11 @@
 
 {% block content %}
 
+{% if project.event.lock_resources %}
+<a href="{{ url_for('public.event_stages', event_id=project.event.id) }}"
+   class="btn btn-lg btn-light">More Resources</a>
+{% endif %}
+
 {% if project_starred and allow_edit and (suggestions or stage) and project.progress < 50 %}
   <div class="alert alert-light resource-list project-tips">
     <button type="button" class="close" data-dismiss="alert" aria-label="Dismiss" title="Hide">

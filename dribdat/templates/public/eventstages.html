@@ -6,15 +6,15 @@
 {% block body_class %}stages-page{% endblock %}
 
 {% block content %}
-<h1 class="huge">Stages</h1>
 
-  <p class="mt-3">
-    This page details the requirements of projects as they progress through stages of development.
-    <br>Use the <b>Post</b> button when your project is ready to advance to the next level! See also:
-    <a href="{{ url_for('public.event_instruction', event_id=current_event.id) }}">
-      <i class="fa fa-arrow-right" aria-hidden="true"></i>
-      Resources</a>
-  </p>
+  {% if not current_event.lock_resources %}
+    <h1 class="huge">Stages</h1>
+    <p class="category-tip mt-3">
+      <span class="user-score" style="background:white">&#x1F4A1;</span>
+      This page details the requirements of projects as they progress through stages of development.
+      <!--<br>Use the <b>Post</b> button when your project is ready to advance to the next level.-->
+    </p>
+  {% endif %}
 
   <a name="steps"></a>
   <div class="list-stages">
@@ -32,6 +32,10 @@
         <h3 class="title">{{ step.phase }}</h3>
       {% endif %}
 
+      {% if step.index > 0 %}
+        <p class="subtitle">{{ step.description }}</p>
+      {% endif %}
+
       {% if step.projects %}
       <div class="profile-projects honeycomb">
           <div class="row ibws-fix">
@@ -42,11 +46,7 @@
       </div><!-- /profile-projects -->
       {% endif %}
 
-      {% if step.index > 0 %}
-        <p class="subtitle"><b>{{ step.description }}</b></p>
-      {% endif %}
-
-      {% if step.conditions %}
+      {% if not current_event.lock_resources and step.conditions %}
       <ul class="agree-list row">
         {% for what in step.conditions.agree %}
           <li>{{ what }}</li>
