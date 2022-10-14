@@ -474,6 +474,11 @@ class Event(PkModel):
             Category.event_id == self.id
         )).order_by('name')
 
+    @property
+    def has_categories(self):
+        """Does the event have categories to show."""
+        return self.categories_for_event().count() > 0
+
     def current():
         """Return currently featured event."""
         # TODO: allow multiple featurettes?
