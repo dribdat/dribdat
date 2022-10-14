@@ -95,7 +95,7 @@ class EventForm(FlaskForm):
     gallery_url = URLField(
         u'Gallery links',
         [length(max=2048)],
-        description=u'URL to large background images (comma-delimited)')
+        description=u'URL to large background image (max 1920x1080)')
     webpage_url = URLField(
         u'Home page link',
         [length(max=255)],
