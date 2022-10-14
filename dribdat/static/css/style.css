@@ -98,7 +98,7 @@ form input[type="checkbox"] {
   margin-right: 1em;
 }
 .admin .form-group .checkbox .help-inline {
-  float: right;
+  /* float: right; */
   /* display: block; */
 }
 .admin .form-group .checkbox label {
@@ -254,6 +254,8 @@ nav.navbar .navbar-brand {
   color: black;
   background: white;
   border-radius: 10px;
+  font-size: 150%;
+  line-height: 0px;
 }
 nav.navbar .navbar-brand:hover i:nth-child(odd) {
   color: steelblue;
@@ -277,9 +279,13 @@ nav .nav-login {
   nav.navbar { padding: 0rem 1rem; }
 }
 
-.home-page h2 {
+/* Home page titles */
+
+.home .body-content h2 {
   text-align: center;
-  font-weight: bold;
+  padding-bottom: 0.3rem;
+  margin-bottom: 1.6rem;
+  border-bottom: 1px solid grey;
 }
 .home-page h1,
 .home-page .home-nav {
@@ -299,10 +305,9 @@ nav .nav-login {
 }
 .home .an-event .card-img-top {
   max-height: 10em;
-  overflow: hidden;
-}
-.home .an-event .card-img-top img {
-  width: 100%;
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: contain;
 }
 .home .an-event-meta {
   font-size: 90%;
@@ -312,9 +317,10 @@ nav .nav-login {
 .home .an-event-meta b {
   display: block;
 }
-.home-buttons .btn-lg {
+.home .home-buttons {
   font-size: 120%;
-  line-height: 2em;
+  z-index: 1;
+  position: relative;
 }
 
 /* Customize the flipclock widget */
@@ -364,6 +370,36 @@ nav .nav-login {
   .community-embed .fa-comment {
     display: none !important;
   }
+}
+
+/* Home page carousel */
+.home-page .carousel {
+  margin-bottom: 4rem;
+}
+.home-page .carousel-caption {
+  z-index: 10;
+}
+.home-page .carousel-caption .home-description {
+  background-color: #777;
+  text-align: left;
+  padding: 0.5em 1em;
+}
+.home-page .carousel-item {
+  height: 32rem;
+}
+.home-page .carousel-item > img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  min-width: 100%;
+  height: 32rem;
+}
+.home-page .carousel-caption .event-countdown {
+  margin-bottom: -50px;
+}
+.home-page .carousel-caption .honeycomb .hexagon {
+  opacity: 1;
+  box-shadow: 5px 5px 1px #777;
 }
 
 .jumbotron.home-page {
@@ -1390,15 +1426,15 @@ pre { color: #333; background: white; }
   overflow-x: auto;
   /*background-image: repeating-linear-gradient(125deg, #fcfcfc, #e9e9e9 5px, #eee 2px, transparent 30px);*/
 }
-.profile-projects .row::-webkit-scrollbar {
+.profile-projects .flex-row::-webkit-scrollbar {
   display: none;
 }
-.profile-projects .row .card.challenge:first-child,
-.profile-projects .row .card.project:first-child {
+.profile-projects .flex-row .card.challenge:first-child,
+.profile-projects .flex-row .card.project:first-child {
   margin-left: 20px;
 }
-.profile-projects .row .card.challenge,
-.profile-projects .row .card.project {
+.profile-projects .flex-row .card.challenge,
+.profile-projects .flex-row .card.project {
   height: 8em;
   width: 20em;
   margin-right: 5px;
@@ -1476,7 +1512,6 @@ pre { color: #333; background: white; }
 .embed-view .honeycomb {
   transform: scale(0.4);
   transform-origin: top center;
-  margin-top: 20px;
 }
 .embed-event .event-countdown {
   bottom: 0px;
@@ -1484,13 +1519,21 @@ pre { color: #333; background: white; }
   transform: scale(0.5);
   display: block;
 }
-.embed-event .honeycomb .project {
-  display: inline-block;
+.embed-view .section-header {
+  display: none;
 }
-.embed-event .hexagon {
-  margin-top: 20px;
+.home-nav .embed-view {
+  width: 100%;
+  height: 10em;
 }
-.embed-view .section-header { display: none; }
+.home-nav .embed-view .ibws-fix {
+  width: 800px;
+}
+@media (max-width: 1000px) {
+  .home-nav .embed-view {
+    display: none;
+  }
+}
 
 
 /* Print view of projects */

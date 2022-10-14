@@ -84,20 +84,22 @@ def home():
     timed_events = events.filter(Event.lock_resources.isnot(
         True)).order_by(Event.starts_at.desc())
     today = datetime.utcnow()
-    events_next = timed_events.filter(Event.ends_at > today).all()
-    events_past = timed_events.filter(Event.ends_at < today).all()
+    events_next = timed_events.filter(Event.ends_at > today)
+    events_featured = events_next.filter(Event.is_current)
+    events_past = timed_events.filter(Event.ends_at < today)
     # Select Resource-type events
     resource_events = events.filter(
-        Event.lock_resources).order_by(Event.name.asc()).all()
+        Event.lock_resources).order_by(Event.name.asc())
     # Select my challenges
     my_projects = None
     if current_user and not current_user.is_anonymous:
         my_projects = current_user.joined_projects(True, 3)
     # Send to template
     return render_template("public/home.html",
-                           events_next=events_next,
-                           events_past=events_past,
-                           events_tips=resource_events,
+                           events_next=events_next.all(),
+                           events_featured=events_featured.all(),
+                           events_past=events_past.all(),
+                           events_tips=resource_events.all(),
                            my_projects=my_projects,
                            current_event=cur_event)
 
