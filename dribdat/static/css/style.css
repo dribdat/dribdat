@@ -637,20 +637,23 @@ nav .nav-login {
   box-shadow: -2px -2px 1px rgb(0 0 0 / 20%);
   border-radius: 1em;
 }
-/*
-.project.hexagon:nth-child(even) { background-color: rgba(230, 200, 160, 0.95); }
-.project.hexagon:nth-child(odd) { background-color: rgba(230, 210, 200, 0.95); }
-*/
 
-/* Hexagon default palette */
-.project.hexagon  { background-color: #f3d0a4; }
-.hexagon.stage-5  { background-color: #fcdcb3; }
-.hexagon.stage-10 { background-color: #eec2a9; }
-.hexagon.stage-20 { background-color: #e1a5a4; }
-.hexagon.stage-30 { background-color: #d58da4; }
-.hexagon.stage-40 { background-color: #c972a7; }
-.hexagon.stage-50 { background-color: #c972a7; }
+/* Adjust brightness of every other hexagon */
+.project.hexagon:nth-child(even) {
+  filter: brightness(105%);
+  /* background-color: rgba(230, 200, 160, 0.95);  */
+}
+/* .project.hexagon:nth-child(odd) { background-color: rgba(230, 210, 200, 0.95); } */
 
+/* --- Hexagon default palette --- */
+.project.hexagon  { background-color: #f5d1e4; } /* primary color */
+.hexagon.stage-5  { background-color: #f5d1e4; }
+.hexagon.stage-10 { background-color: #e3d0e3; }
+.hexagon.stage-20 { background-color: #e0c9ca; }
+.hexagon.stage-30 { background-color: #e8b6a6; }
+.hexagon.stage-40 { background-color: #f1cfad; }
+.hexagon.stage-50 { background-color: #f6e8c0; }
+/* https://colorkit.co/palette/f5d1e4-e3d0e3-e0c9ca-e8b6a6-f1cfad-f6e8c0/ */
 
 /* --- Tooltips used on honeycomb --- */
 
