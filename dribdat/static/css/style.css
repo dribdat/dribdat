@@ -658,7 +658,7 @@ nav .nav-login {
 .tooltip .tooltip-inner div { /* Summary */
   hyphens: auto;
 }
-.tooltip .tooltip-inner tt { /* Hashtag */
+.tooltip .tooltip-inner span { /* Hashtag */
   font-weight: bold;
   font-size: 80%;
   font-family: monospace;

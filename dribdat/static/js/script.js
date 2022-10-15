@@ -147,7 +147,7 @@
     var content = (
         '<div>' + $(this).data('summary') + '</div>' +
         ($(this).data('hashtag') ?
-          '<tt>' + $(this).data('hashtag') + '</tt>' : '') +
+          '<span>' + $(this).data('hashtag') + '</span>' : '') +
         ($(this).data('imageurl') ?
           '<img src="' +
             $(this).data('imageurl') + '">' : '') +
