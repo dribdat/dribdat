@@ -135,7 +135,7 @@ class ProjectDetailForm(FlaskForm):
     id = HiddenField('id')
     autotext_url = URLField(
         u'Readme', [length(max=255)],
-        description="Link to code repository or online document.")
+        description="Code, wiki or an online document to Sync with.")
     source_url = URLField(
         u'Sources', [length(max=255)],
         description="Link to source code repository or project data.")

@@ -1,4 +1,4 @@
-"""empty message
+"""Add gallery to events
 
 Revision ID: f5ee0fa5649b
 Revises: be2e25e12e69
@@ -17,7 +17,9 @@ depends_on = None
 
 
 def upgrade():
-    op.add_column('events', sa.Column('gallery_url', sa.String(length=2048), nullable=True))
+    op.add_column('events', sa.Column(
+        'gallery_url', sa.String(length=2048), nullable=True))
+
 
 def downgrade():
     op.drop_column('events', 'gallery_url')

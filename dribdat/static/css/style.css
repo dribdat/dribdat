@@ -1802,7 +1802,6 @@ SlackIn button
 }
 .account-register a { margin-left: 3.5em; font-size: 125%; }
 .account-register::before,
-.fld-autotext_url::after,
 .sso-login::after {
   content: 'or';
   display: block;
