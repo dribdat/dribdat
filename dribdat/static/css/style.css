@@ -303,6 +303,9 @@ nav .nav-login {
   display: block;
   text-align: center;
 }
+.home-page .home-description p:only-child {
+  margin: 0px;
+}
 .home-page .home-description {
   margin: 1em;
   font-size: 125%;

@@ -184,9 +184,11 @@
 		<div class="container">
 			<div class="carousel-caption">
 
+				{% if event.summary or event.description %}
 				<div class="home-description">
-					{{event.summary or event.description|markdown}}
+					{{ event.summary or event.description|markdown }}
 				</div>
+				{% endif %}
 				<div class="home-nav">
 					<div class="embed-view">
 						{{ render_embed_event(event, event.projects, False) }}

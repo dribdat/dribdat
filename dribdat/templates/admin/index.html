@@ -34,9 +34,9 @@
 
   <div class="mb-4">
   {% for stat in stats %}
-    {% if stat.text == 'events' %}
+    {% if stat.text == 'Events' %}
       <a href="{{ url_for('admin.events') }}"
-    {% elif stat.text == 'users' %}
+    {% elif stat.text == 'Users' %}
       <a href="{{ url_for('admin.users') }}"
     {% else %}
       <a href="{{ url_for('admin.projects') }}"
