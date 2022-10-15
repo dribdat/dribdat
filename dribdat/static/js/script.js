@@ -143,7 +143,21 @@
   // $('.event-finished .nav-categories #challenges').parent().click();
 
   // Enable tooltips on hexagrid
-  $('.honeycomb .hexagon[data-toggle="tooltip"]').tooltip();
+  $('.honeycomb .hexagon[data-toggle="tooltip"]').each(function() {
+    var content = (
+        '<div>' + $(this).data('summary') + '</div>' +
+        ($(this).data('hashtag') ?
+          '<tt>' + $(this).data('hashtag') + '</tt>' : '') +
+        ($(this).data('imageurl') ?
+          '<img src="' +
+            $(this).data('imageurl') + '">' : '') +
+        '<p>' + $(this).data('status') + '</p>'
+      );
+    $(this).tooltip({
+      html: true,
+      title: content
+    });
+  });
 
   /* Roll up categories if there is only one, and no projects
   if ($navCategories.length === 1) {

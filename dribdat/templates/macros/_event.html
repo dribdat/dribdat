@@ -1,20 +1,13 @@
 {% macro render_project_tooltip(project) %}
-	{% if project.summary %}
-			data-toggle="tooltip" data-html="true"
-			title="{{ project.summary }}{#
-
-			> Hashtag if available in tooltip:
-		#}{% if project.hashtag %}<span>{{project.hashtag}}</span>{% endif %}{#
-
-			> Add image in tooltip:
-		#}{% if project.image_url %}<img src=`{{project.image_url|quote_plus}}>{% endif %}{#
-
-			> Status icons in tooltip:
-		#}<div>{% if project.contact_url %}&#x1f44b;{% endif %}{#
-		#}{% if project.webpage_url %}&#x1f310;{% endif %}{#
-		#}{% if project.download_url %}&#x1f4c2;{% endif %}{#
-		#}{% if project.source_url %}&#x1f4bb;{% endif %}</div>"
-	{% endif %}
+	data-toggle="tooltip"
+	data-summary="{{ project.summary or project.name }}"
+	data-hashtag="{{ project.hashtag }}"
+	data-imageurl="{{ project.image_url|quote_plus }}"{#
+		> Status icons in tooltip:
+	#}data-status="{% if project.contact_url %}&#x1f44b;{% endif %}{#
+	#}{% if project.webpage_url %}&#x1f310;{% endif %}{#
+	#}{% if project.download_url %}&#x1f4c2;{% endif %}{#
+	#}{% if project.source_url %}&#x1f4bb;{% endif %}"
 {% endmacro %}
 
 <!-- Based on Hexagon Tiles by Graham Pyne http://codepen.io/gpyne/pen/iElhp/ -->
@@ -22,12 +15,16 @@
 	<a href="{{ url_for('project.project_view', project_id=project.id) }}"
 		 class="hexagon {{
 		 	'challenge' if project.is_challenge else 'project'
+		 }}{{
+		 	' stage-%d' % project.progress if project.progress > 0
 		 }} category-highlight"
-		 category-id="{{ project.category_id }}"
-		 {{ render_project_tooltip(project) }}
-		 {% if project.logo_color %}
-		 	 style="border-bottom-color:{{project.logo_color}}"
+		 {% if project.category_id %}
+		 	 category-id="{{ project.category_id }}"
 		 {% endif %}
+		 {% if project.logo_color %}
+		 	 style="border-bottom-color:{{ project.logo_color }}"
+		 {% endif %}
+		 {{ render_project_tooltip(project) }}
 		>
 		<div class="hexagontent {{
 	        'text-md' if 32 < project.name|length else 'text-sm' if 42 < project.name|length
@@ -35,12 +32,11 @@
 			{% if project.is_challenge and project.team %}
 				<span class="team-count" title="# following">{{ project.team|count }}</span>
 			{% endif %}
-			{% if project.logo_icon %}
-				<i class="fa fa-{{project.logo_icon}}"></i><br>
-			{% endif %}
 			<span class="project-name">{{ project.name|truncate(64, True, '..') }}</span>
 			{% if project.image_url %}
 				<div class="hexaicon" style="background-image:url('{{project.image_url|quote_plus}}')"></div>
+			{% elif project.logo_icon %}
+				<div class="hexaicon"><i class="fa fa-{{project.logo_icon}}"></i></div>
 			{% endif %}
 		</div>
 		{% if project.score and project.score > 0 %}
@@ -50,6 +46,41 @@
 		</div>
 		{% endif %}
 	</a>
+{% endmacro %}
+
+{% macro render_embed_event(event, projects, showNav=False) %}
+<div class="embed-event">
+	{% if showNav %}
+  <div class="btn-group mb-4" role="group" aria-label="Embedded navigation">
+    <a href="{{ url_for('public.event', event_id=event.id) }}" target="_blank" class="btn btn-dark">
+      <i class="fa fa-star" aria-hidden="true"></i>&nbsp;
+      {{ event.name }}
+    </a>
+  </div>
+	{% endif %}
+  <div class="honeycomb">
+    <div class="ibws-fix">
+    {% for project in projects %}
+      <a target="_parent"
+				 class="hexagon {{
+		 		 	'challenge' if project.is_challenge else 'project'
+		 		 }}{{
+		 		 	' stage-%d' % project.progress if project.progress > 0
+		 		 }}"
+		 		 {{ render_project_tooltip(project) }}>
+        <div class="hexagontent">
+          {% if project.logo_icon %}
+          <i class="fa fa-{{project.logo_icon}}"></i>
+          {% endif %}
+        </div>
+      </a>
+      {% if showNav and loop.index % 7 == 0 %}
+        </div><div class="ibws-fix">
+      {% endif %}
+    {% endfor %}
+    </div>
+  </div>
+</div><!-- /.embed-event -->
 {% endmacro %}
 
 {% macro render_empty_hexagon() %}
@@ -188,36 +219,4 @@
 			 </div><!-- /.carousel-caption -->
 		 </div>
 	 </div><!-- /.carousel-item -->
-{% endmacro %}
-
-{% macro render_embed_event(event, projects, showNav=False) %}
-<div class="embed-event">
-	{% if showNav %}
-  <div class="btn-group mb-4" role="group" aria-label="Embedded navigation">
-    <a href="{{ url_for('public.event', event_id=event.id) }}" target="_blank" class="btn btn-dark">
-      <i class="fa fa-star" aria-hidden="true"></i>&nbsp;
-      {{ event.name }}
-    </a>
-  </div>
-	{% endif %}
-  <div class="honeycomb">
-    <div class="ibws-fix">
-    {% for project in projects %}
-      <a href="{{ url_for('project.project_view', project_id=project.id) }}" target="_parent"
-        class="hexagon project" category-id="{{project.category_id}}"
-				{{ render_project_tooltip(project) }}
-        style="background-color:{{project.logo_color}}')">
-        <div class="hexagontent">
-          {% if project.logo_icon %}
-          <i class="fa fa-{{project.logo_icon}}"></i>
-          {% endif %}
-        </div>
-      </a>
-      {% if showNav and loop.index % 7 == 0 %}
-        </div><div class="ibws-fix">
-      {% endif %}
-    {% endfor %}
-    </div>
-  </div>
-</div><!-- /.embed-event -->
 {% endmacro %}

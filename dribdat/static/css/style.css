@@ -92,14 +92,20 @@ form input[type="checkbox"] {
   opacity: 0.8;
 }
 .admin .form-group .control-label {
-  font-size: 125%; font-weight: bold;
+  font-size: 175%;
+  margin-top: 1em;
 }
 .admin .form-group .radio-inline {
   margin-right: 1em;
 }
+.admin .form-group .help-inline {
+  color: #555;
+  margin: 0.5em 0em;
+  display: block;
+}
 .admin .form-group .checkbox .help-inline {
-  /* float: right; */
-  /* display: block; */
+  margin: 0em;
+  display: inline-block;
 }
 .admin .form-group .checkbox label {
   font-weight: bold;
@@ -141,7 +147,12 @@ form input[type="checkbox"] {
   width: 20%;
   display: inline-block;
   vertical-align: bottom;
-  background: #f55; color: #fff;
+  background: #922;
+  color: #fff;
+  text-decoration: none;
+}
+.admin .card.stat:hover {
+  background: #f55;
 }
 
 .btn-group.admin-area {
@@ -380,9 +391,11 @@ nav .nav-login {
   z-index: 10;
 }
 .home-page .carousel-caption .home-description {
-  background-color: #777;
+  background-color: lightyellow;
+  color: black;
   text-align: left;
   padding: 0.5em 1em;
+
 }
 .home-page .carousel-item {
   height: 32rem;
@@ -526,6 +539,7 @@ nav .nav-login {
   box-shadow: none;
 }
 
+/* Hexagon inner content */
 .project .hexagontent {
   overflow: hidden;
   color: black;
@@ -578,6 +592,7 @@ nav .nav-login {
 }
 .honeycomb .hexagontent {
   font-size: 1.0rem;
+  text-shadow: 1px 1px 1px rgb(255,255,255);
 }
 .honeycomb .hexagon.hexalist {
   display: none;
@@ -619,35 +634,47 @@ nav .nav-login {
   box-shadow: -2px -2px 1px rgb(0 0 0 / 20%);
   border-radius: 1em;
 }
+/*
 .project.hexagon:nth-child(even) { background-color: rgba(230, 200, 160, 0.95); }
 .project.hexagon:nth-child(odd) { background-color: rgba(230, 210, 200, 0.95); }
+*/
+
+/* Hexagon default palette */
+.project.hexagon  { background-color: #f3d0a4; }
+.hexagon.stage-5  { background-color: #fcdcb3; }
+.hexagon.stage-10 { background-color: #eec2a9; }
+.hexagon.stage-20 { background-color: #e1a5a4; }
+.hexagon.stage-30 { background-color: #d58da4; }
+.hexagon.stage-40 { background-color: #c972a7; }
+.hexagon.stage-50 { background-color: #c972a7; }
+
 
 /* --- Tooltips used on honeycomb --- */
 
 .tooltip .tooltip-inner {
   border-radius: 10px;
+  text-align: center;
 }
-.tooltip .tooltip-inner span { /* Hashtag */
+.tooltip .tooltip-inner div { /* Summary */
+  hyphens: auto;
+}
+.tooltip .tooltip-inner tt { /* Hashtag */
   font-weight: bold;
   font-size: 80%;
   font-family: monospace;
-  display: block;
   overflow: hidden;
   max-height: 1.5em;
-  width: 100%;
+  display: block;
 }
 .tooltip .tooltip-inner img {
   max-width: 100%;
   max-height: 13em;
   margin: 0.5em 0;
-  display: block;
 }
-.tooltip .tooltip-inner div {
-  display: block;
-  padding: 0.5em;
-  text-align: left;
+.tooltip .tooltip-inner p { /* Status */
   font-size: 150%;
-  letter-spacing: 1em;
+  letter-spacing: 0.8em;
+  margin: 0px 0px 5px 0.7em;
 }
 
 /* --- Progress bars on projects --- */
