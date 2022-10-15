@@ -284,6 +284,15 @@ def event_new():
 #####
 
 
+@blueprint.route('/clear/cache', methods=['GET'])
+@login_required
+def clear_cache():
+    """Clear the site cache."""
+    flash('Show me the cache!', 'success')
+    cache.clear()
+    return redirect(url_for("public.home"))
+
+
 @blueprint.route("/dribs")
 def dribs():
     """Show the latest logged posts."""
