@@ -16,9 +16,9 @@
           <i class="fa fa-download"></i>&nbsp;CSV
         </a>
       </div>
-      <h4><b>{{ event.name }}</b></h4>
-      <a href="{{ url_for('admin.event', event_id=event.id) }}" class="btn btn-warning">
-        <i class="fa fa-pencil" aria-hidden="true"></i>
+      <h4 class="text-center font-weight-bold">{{ event.name }}</h4>
+      <a href="{{ url_for('admin.event', event_id=event.id) }}" class="btn btn-light">
+        <i class="fa fa-arrow-left" aria-hidden="true"></i>
         Event</a>
     {% endif %}
 

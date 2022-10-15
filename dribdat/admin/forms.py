@@ -10,14 +10,13 @@ from wtforms.fields.html5 import (
     URLField, EmailField,
 )
 from wtforms.validators import DataRequired, length
-
+from os import environ
 from datetime import time, datetime
-
 from dribdat.user.models import User, Project, Event, Role, Resource
 from ..user.validators import UniqueValidator
 from ..user import projectProgressList, resourceTypeList
 from wtforms import (
-    SelectMultipleField,
+    SelectMultipleField, ValidationError
 )
 
 
@@ -44,6 +43,29 @@ class UserProfileForm(FlaskForm):
     submit = SubmitField(u'Save')
 
 
+def event_date_check(form, starts_date):
+    ends_date = form.ends_date.data
+    if starts_date.data > ends_date:
+        raise ValidationError('Start date must not be after end date.')
+
+
+def event_time_check(form, starts_time):
+    ends_time = form.ends_time.data
+    starts_date = form.starts_date.data
+    ends_date = form.ends_date.data
+    if starts_date == ends_date and starts_time.data > ends_time:
+        raise ValidationError('Start time must be before end time.')
+
+
+def get_time_note():
+    tz = environ.get('TIME_ZONE', None)
+    aware_time = datetime.now().astimezone()
+    tzinfo = "The current server time is %s." % aware_time.strftime('%H:%M%z')
+    if tz is not None:
+        return "%s Time zone: <u title=TIME_ZONE>%s</u>" % (tzinfo, tz)
+    return tzinfo
+
+
 class EventForm(FlaskForm):
     next = HiddenField()
     id = HiddenField('id')
@@ -65,14 +87,18 @@ class EventForm(FlaskForm):
     lock_resources = BooleanField(
         u'Resource area', default=False,
         description=u'💡 Used as toolbox, ignoring start and finish.')
-    starts_date = DateField(u'Starting date', default=datetime.now())
-    starts_time = TimeField(u'Starting time', default=time(9, 0, 0))
+    starts_date = DateField(
+        u'Starting date', [event_date_check], default=datetime.now())
+    starts_time = TimeField(
+        u'Starting time',
+        [event_time_check], default=time(9, 0, 0),
+        description=get_time_note())
     ends_date = DateField(u'Finish date', default=datetime.now())
     ends_time = TimeField(u'Finish time', default=time(16, 0, 0))
     summary = StringField(
         u'Summary',
         [length(max=140)],
-        description=u'A short overview (140 chars) of the upcoming event')
+        description=u'A short tagline of the event, in max 140 characters')
     hostname = StringField(
         u'Hosted by',
         [length(max=80)],
@@ -91,11 +117,12 @@ class EventForm(FlaskForm):
     logo_url = URLField(
         u'Host logo link',
         [length(max=255)],
-        description=u'URL to a small logo image (max 688x130)')
+        description=u'Image hosted on a hotlinkable website - '
+        + 'such as imgbox.com (max 688x130)')
     gallery_url = URLField(
         u'Gallery links',
         [length(max=2048)],
-        description=u'URL to large background image (max 1920x1080)')
+        description=u'Larger background image (max 1920x1080)')
     webpage_url = URLField(
         u'Home page link',
         [length(max=255)],
@@ -103,12 +130,12 @@ class EventForm(FlaskForm):
     community_url = URLField(
         u'Community link',
         [length(max=255)],
-        description=u'Link to connect to a community forum or hashtag')
+        description=u'To find others on a community forum or social media')
     certificate_path = URLField(
         u'Certificate link',
         [length(max=1024)],
         description='Include {username}, {email} or {sso} identifier '
-        + 'in your participant certificate generator')
+        + 'to generate links to your participant certificate')
     instruction = TextAreaField(
         u'Instructions',
         description=u'Shown to participants on the Resources page - '

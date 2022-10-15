@@ -36,20 +36,24 @@ def index():
     stats = [
         {
             'value': Event.query.count(),
-            'text': 'events',
-            'height': 6
+            'text': 'Events',
+            'icon': 'calendar',
+            'height': 10
         }, {
             'value': User.query.count(),
-            'text': 'users',
-            'height': 7
+            'text': 'Users',
+            'icon': 'user',
+            'height': 11
         }, {
             'value': Project.query.filter(Project.progress < 0).count(),
-            'text': 'challenges',
-            'height': 8
+            'text': 'Challenges',
+            'icon': 'trophy',
+            'height': 13
         }, {
             'value': Project.query.filter(Project.progress >= 0).count(),
-            'text': 'projects',
-            'height': 9
+            'text': 'Projects',
+            'icon': 'star',
+            'height': 16
         },
     ]
     return render_template('admin/index.html',
