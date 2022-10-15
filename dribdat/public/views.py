@@ -209,7 +209,7 @@ def event_stages(event_id):
 def event_instruction(event_id):
     """Show instructions of an event."""
     # Deprecated (for now)
-    return redirect(url_for("event_stages", event_id=event_id))
+    return redirect(url_for("public.event_stages", event_id=event_id))
 
 
 @blueprint.route("/event/<int:event_id>/categories")
