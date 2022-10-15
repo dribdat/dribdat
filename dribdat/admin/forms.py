@@ -62,7 +62,7 @@ def get_time_note():
     aware_time = datetime.now().astimezone()
     tzinfo = "The current server time is %s." % aware_time.strftime('%H:%M%z')
     if tz is not None:
-        return "%s Time zone: <u title=TIME_ZONE>%s</u>" % (tzinfo, tz)
+        return "%s Time zone: %s" % (tzinfo, tz)
     return tzinfo
 
 
