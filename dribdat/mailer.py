@@ -1,8 +1,15 @@
 # -*- coding: utf-8 -*-
 """Helper for sending mail."""
-from flask import url_for
+from flask import url_for, current_app
 from flask_mailman import EmailMessage
 from dribdat.utils import random_password  # noqa: I005
+from threading import Thread
+import logging
+
+
+def send_async_email(app, msg):
+    with app.app_context():
+        msg.send()
 
 
 def user_activation(user):
@@ -12,8 +19,8 @@ def user_activation(user):
     user.save()
     base_url = url_for('public.home', _external=True)
     act_url = url_for(
-        'auth.activate', 
-        userid=user.id, 
+        'auth.activate',
+        userid=user.id,
         userhash=act_hash,
         _external=True)
     msg = EmailMessage()
@@ -22,4 +29,6 @@ def user_activation(user):
         "Thanks for signing up at %s\n\n" % base_url \
         + "Tap here to activate your account:\n\n%s" % act_url
     msg.to = [user.email]
-    msg.send()
+    logging.info('Sending mail to user %d' % user.id)
+    thr = Thread(target=send_async_email, args=[current_app, msg])
+    thr.start()

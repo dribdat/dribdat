@@ -18,6 +18,7 @@ from dribdat.user.forms import RegisterForm, EmailForm
 from dribdat.database import db
 from dribdat.mailer import user_activation
 from datetime import datetime
+import logging
 # noqa: I005
 
 blueprint = Blueprint('auth', __name__, static_folder="../static")
@@ -185,6 +186,8 @@ def passwordless():
         # Continue with reset
         with current_app.app_context():
             user_activation(a_user)
+    else:
+        logging.warn('User not found: %s' % form.email.data)
     # Don't let people spy on your address
     return redirect(url_for("auth.login"))
 
