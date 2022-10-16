@@ -387,18 +387,39 @@ nav .nav-login {
 }
 
 /* Home page carousel */
-.home-page .carousel {
-  margin-bottom: 4rem;
+.home-page .carousel-caption .event-header {
+  top: 0px;
+  left: 0px;
 }
-.home-page .carousel-caption {
-  z-index: 10;
+.home-page .carousel-caption .section-header-logo {
+  float: left;
+  display: inline;
+  position: absolute;
+  left:  0px;
+}
+.home-page .carousel-caption .event-header .section-header-content {
+  text-align: left;
+  text-decoration: none;
+  color: initial;
+  background: white;
+  box-shadow: 3px 3px 3px rgba(0,0,0,0.2);
+  padding: 1em;
+  width: 60%;
+  left:  50%;
+  position: relative;
+  margin-left: -27%;
 }
 .home-page .carousel-caption .home-description {
-  background-color: lightyellow;
-  color: black;
-  text-align: left;
+  max-height: 8.2em;
+  overflow: hidden;
+}
+.home-page .carousel-caption .home-description p {
   padding: 0.5em 1em;
-
+  text-align: left;
+  color: black;
+  display: inline-block;
+  background-color: lightyellow;
+  clear: both;
 }
 .home-page .carousel-item {
   height: 32rem;
@@ -416,6 +437,24 @@ nav .nav-login {
 .home-page .carousel-caption .honeycomb .hexagon {
   opacity: 1;
   box-shadow: 5px 5px 1px #777;
+}
+@media (max-width: 600px) {
+  .home-page .carousel-caption .section-header-logo {
+    position: relative;
+    float: none;
+  }
+  .home-page .carousel-caption .event-header .section-header-content {
+    position: relative;
+    height: 100%;
+    width: 100%;
+    left: 0px;
+    margin: 0px;
+  }
+}
+@media (max-width: 1000px) {
+  .home-page .carousel-caption .event-header .section-header-content {
+    width: 100%;
+  }
 }
 
 .jumbotron.home-page {
@@ -558,9 +597,9 @@ nav .nav-login {
   font-size: 240%;
 }
 
-.hexagon .hexagontent.text-md span {
+.hexagon .hexagontent span {
   display: inline-block;
-  max-height: 6em;
+  max-height: 7em;
   overflow: hidden;
 }
 .hexagon .hexagontent.text-md span {
@@ -1063,7 +1102,7 @@ nav .nav-login {
   min-height: 8em;
   clear: both;
   display: block;
-  margin: 0px 0px 0px 20px;
+  margin: 20px 0px 0px 20px;
 }
 .onebox.honeycomb .hexagon {
   float: left;
@@ -1072,6 +1111,11 @@ nav .nav-login {
   margin-right: 3em;
   opacity: 1;
   transform: scale(0.8);
+}
+.onebox.honeycomb .hexagontent {
+  font-size: 11pt;
+  overflow: hidden;
+  height: 9em;
 }
 .onebox.honeycomb p {
   opacity: 0.8;
@@ -1249,6 +1293,8 @@ pre { color: #333; background: white; }
   float: right;
 }
 .project-edit-buttons * {
+  border-bottom-left-radius: 0px;
+  border-bottom-right-radius: 0px;
   box-shadow: none !important;
   opacity: 0.8;
 }

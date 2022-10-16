@@ -8,3 +8,6 @@ else
 	# Silent upgrade
 	python manage.py db upgrade 2>&1 >/dev/null
 fi
+
+# Compress assets
+python -m whitenoise.compress dribdat/static/

@@ -59,7 +59,7 @@
 {% else %}
   {% include "includes/nav.html" %}
 {% endif %}
-{% if event %}
+{% if event and active != 'home' %}
   {% include "includes/header.html" %}
   {% if event.custom_css %}
     <style id="custom_css" type="text/css">{{ event.custom_css|replace('<','')|safe }}</style>

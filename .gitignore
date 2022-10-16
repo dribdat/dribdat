@@ -6,6 +6,9 @@ yarn.lock
 coverage.xml
 profile/*.prof
 
+# Compressed assets
+*.gz
+
 # C extensions
 *.so
 

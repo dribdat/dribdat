@@ -476,7 +476,7 @@ class Event(PkModel):
 
     @property
     def has_categories(self):
-        """Does the event have categories to show."""
+        """Check if the event has categories to show."""
         return self.categories_for_event().count() > 0
 
     def current():

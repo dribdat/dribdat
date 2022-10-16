@@ -9,7 +9,7 @@ services:
     ports:
       - 5000:5000
     environment: 
-      # - SERVER_URL=hack.opendata.ch
+      - SERVER_URL=localhost.changeme:5000
       - DATABASE_URL=postgres://dribdat_user:changeme@db:5432/dribdat
       - DRIBDAT_ENV=prod
       - DRIBDAT_SECRET=changeme

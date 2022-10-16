@@ -95,7 +95,7 @@ def home():
     if current_user and not current_user.is_anonymous:
         my_projects = current_user.joined_projects(True, 3)
     # Send to template
-    return render_template("public/home.html",
+    return render_template("public/home.html", active="home",
                            events_next=events_next.all(),
                            events_featured=events_featured.all(),
                            events_past=events_past.all(),

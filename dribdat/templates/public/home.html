@@ -56,6 +56,15 @@
 
 <div class="body-content">
 
+  {% if current_event and current_event.countdown and 'down' in config.DRIBDAT_CLOCK %}
+    <a class="container-countdown"
+       href="{{ url_for('public.event', event_id=current_event.id) }}"
+       title="{{ current_event.countdown }}">
+      <div id="clockDown" class="event-countdown flipdown"
+           data-start="{{ current_event.countdown }}"></div>
+    </a>
+  {% endif %}
+
   {% if my_projects %}
   <h2 class="mt-4">My teams</h2>
   <div class="resource-list profile-projects">
