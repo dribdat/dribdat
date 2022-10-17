@@ -123,9 +123,14 @@
     } else {
       $dialog.find("[data-target='cover']").hide();
     }
+    // Log Post note
     var $postnote = $('.fld-note');
     if ($postnote.length > 0) {
-      $('.control-label[for="note"]').parent().prepend($togglebtn.clone().show());
+      if ($dialog.parents('.projectedit')) {
+        // $postnote.prepend($togglebtn.clone().show());
+      } else {
+        $('.control-label[for="note"]').parent().prepend($togglebtn.clone().show());
+      }
     } else {
       $dialog.find("[data-target='post']").hide();
     }

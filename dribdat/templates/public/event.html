@@ -125,6 +125,14 @@
 </div>
 {% endif %}
 
+{% if current_event and current_event.countdown and not 'off' in config.DRIBDAT_CLOCK %}
+<center class="container-countdown-bottom">
+  <a class="container-countdown" href="#top" title="{{ current_event.countdown }}">
+    <div id="clockEvent" class="event-countdown flipdown" data-start="{{ current_event.countdown }}"></div>
+  </a>
+</center>
+{% endif %}
+
 {% if current_event.community_embed %}
 <div class="panel panel-default community-embed">
   <a name="community"></a>
@@ -173,13 +181,6 @@
         Add project</a>
     </div>
   {% endif %}
-
-  {% if current_event and current_event.countdown and not 'off' in config.DRIBDAT_CLOCK %}
-    <a class="container-countdown" href="#top" title="{{ current_event.countdown }}">
-      <div id="clockEvent" class="event-countdown flipdown" data-start="{{ current_event.countdown }}"></div>
-    </a>
-  {% endif %}
-
 
   {% if config.DRIBDAT_SOCIAL_LINKS %}
     {{ social.share_links(current_event.hashtag, url_for('public.event', event_id=current_event.id, _external=True)) }}

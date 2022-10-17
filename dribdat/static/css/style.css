@@ -32,6 +32,9 @@ form input[type="checkbox"] {
 .navbar-form input[type="password"] {
   width: 180px;
 }
+.form-passwordless {
+  max-width: 33em;
+}
 .form-register .form-control {
   position: relative;
   font-size: 16px;
@@ -49,8 +52,12 @@ form input[type="checkbox"] {
   text-align: center;
   font-size: 250%;
 }
+.projectform textarea[id="note"],
 .form-project-post textarea {
   height: 4em;
+}
+.projectform label[for="note"] {
+  display: none; /* Hide label on Project Edit log */
 }
 .form-project-post .checkbox input {
   opacity: 1;
@@ -392,10 +399,15 @@ nav .nav-login {
   left: 0px;
 }
 .home-page .carousel-caption .section-header-logo {
-  float: left;
   display: inline;
   position: absolute;
   left:  0px;
+  /* float: left; */
+  top: -20%;
+}
+.home-page .carousel-caption .section-header-logo img {
+  width: 100%;
+  max-height: 100%;
 }
 .home-page .carousel-caption .event-header .section-header-content {
   text-align: left;
