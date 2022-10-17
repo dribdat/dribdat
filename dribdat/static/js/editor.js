@@ -159,7 +159,7 @@
           $dialog.find(".preview img").attr("src", response);
           $dialog.find(".preview input").val(response);
           $dialog.find(".hidden").show();
-          $('#img-confirm').show().find('button').click(function() {
+          $('#img-confirm').show().find('button').off("click").click(function() {
             if ($(this).data('target') == 'cover') {
               // Replace the cover
               $('#image_url').val(response);
@@ -234,7 +234,7 @@
           var filename = path.split(/(\\|\/)/g).pop();
           $dialog.find(".preview input").val(response);
           $dialog.find(".hidden").show();
-          $('#file-confirm').show().find('button').click(function() {
+          $('#file-confirm').show().find('button').off("click").click(function() {
             if ($(this).data('target') == 'weblink') {
               // Replace the cover
               $('#webpage_url').val(response);
