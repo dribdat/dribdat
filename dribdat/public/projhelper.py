@@ -62,6 +62,9 @@ def project_edit_action(project_id, detail_view=False):
     # Basic view
     if not detail_view:
         form = ProjectForm(obj=project, next=request.args.get('next'))
+    else:
+        # Detail view
+        form = ProjectDetailForm(obj=project, next=request.args.get('next'))
 
         # Populate categories
         form.category_id.choices = [(c.id, c.name)
@@ -70,9 +73,6 @@ def project_edit_action(project_id, detail_view=False):
             form.category_id.choices.insert(0, (-1, ''))
         else:
             del form.category_id
-    else:
-        # Detail view
-        form = ProjectDetailForm(obj=project, next=request.args.get('next'))
 
     # Continue with form validation
     if form.validate_on_submit():
@@ -82,6 +82,13 @@ def project_edit_action(project_id, detail_view=False):
         db.session.add(project)
         db.session.commit()
         cache.clear()
+
+        # Create an optional post update
+        if form.note and form.note.data:
+            project_action(project_id, 'update',
+                           action='post', text=form.note.data)
+
+        # Notify the user
         flash('Project updated.', 'success')
         project_action(project_id, 'update', False)
 
