@@ -402,7 +402,7 @@ nav .nav-login {
   display: inline;
   position: absolute;
   left: -90px;
-  top: -90px;
+  top: 10px;
 }
 .home-page .carousel-caption .section-header-logo img {
   width: 100%;
@@ -454,7 +454,7 @@ nav .nav-login {
     position: relative;
     float: none;
     left: 0px;
-    top: 0px;
+    top: -5px;
   }
   .home-page .carousel-caption .event-header .section-header-content {
     position: relative;
