@@ -1522,11 +1522,13 @@ pre { color: #333; background: white; }
   overflow: hidden;
   display: inline-block;
   padding: 0px;
+  background-color: white;
+  border-left: 1px solid #ccc;
+}
+.profile-projects .card {
   background-size: auto 100%;
   background-repeat: no-repeat;
   background-position: 0 0;
-  background-color: white;
-  border-left: 1px solid #ccc;
 }
 .profile-projects .card:hover {
   box-shadow: 3px 3px 3px lightblue;
@@ -1570,7 +1572,6 @@ pre { color: #333; background: white; }
   .profile-projects .card .project-image
   { display: none; }
   .profile-projects .card {
-    background: none !important;
     padding-left: 0px !important;
   }
 }
