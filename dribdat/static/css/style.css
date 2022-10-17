@@ -395,7 +395,8 @@ nav .nav-login {
   float: left;
   display: inline;
   position: absolute;
-  left:  0px;
+  left: -90px;
+  top: -90px;
 }
 .home-page .carousel-caption .event-header .section-header-content {
   text-align: left;
@@ -442,6 +443,8 @@ nav .nav-login {
   .home-page .carousel-caption .section-header-logo {
     position: relative;
     float: none;
+    left: 0px;
+    top: 0px;
   }
   .home-page .carousel-caption .event-header .section-header-content {
     position: relative;
