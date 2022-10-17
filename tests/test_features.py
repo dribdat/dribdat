@@ -4,7 +4,6 @@
 See: http://webtest.readthedocs.org/
 """
 from flask import url_for
-import pytest  # noqa: F401
 from .factories import ProjectFactory, EventFactory
 from dribdat.onebox import make_onebox
 from dribdat.public.projhelper import resources_by_stage, project_action

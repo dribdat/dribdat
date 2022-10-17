@@ -1,80 +1,21 @@
 # -*- coding: utf-8 -*-
 """Public facing forms."""
+
 from flask_wtf import FlaskForm
 from wtforms import (
     SubmitField, BooleanField,
     StringField, TextAreaField,
-    PasswordField,
-    SelectMultipleField,
     SelectField, HiddenField,
 )
 from wtforms.fields.html5 import (
     TimeField, DateField,
-    URLField, EmailField,
+    URLField,
 )
 # from wtforms_html5 import AutoAttrMeta
 from wtforms.validators import DataRequired, length
 from ..user.validators import UniqueValidator
-from dribdat.user.models import User, Project, Event
+from dribdat.user.models import Project, Event
 from datetime import time, datetime
-
-
-class LoginForm(FlaskForm):
-    """Display a login form."""
-
-    username = StringField('Username', validators=[DataRequired()])
-    password = PasswordField('Password', validators=[DataRequired()])
-
-    def __init__(self, *args, **kwargs):
-        """Create instance."""
-        super(LoginForm, self).__init__(*args, **kwargs)
-        self.user = None
-
-    def validate(self):
-        """Validate the form."""
-        initial_validation = super(LoginForm, self).validate()
-        if not initial_validation:
-            return False
-        self.user = User.query.filter_by(username=self.username.data).first()
-        if not self.user:
-            self.username.errors.append('Unknown username')
-            return False
-        if not self.user.check_password(self.password.data):
-            self.password.errors.append('Invalid password')
-            return False
-        # Inactive users are allowed to log in, but not much else.
-        return True
-
-
-class UserForm(FlaskForm):
-    """User profile form."""
-
-    id = HiddenField('id')
-    roles = SelectMultipleField(
-        u'Roles', coerce=int,
-        description="Choose one or more team roles for yourself.")
-    webpage_url = URLField(
-        u'Online profile', [length(max=128)],
-        description="Link to your website or a social media profile.")
-    my_story = TextAreaField(
-        u'My story',
-        description="A brief bio and outline of the competencies you bring "
-        + "into the mix. The top portion of your profile.")
-    my_goals = TextAreaField(
-        u'My goals',
-        description="What brings you here? Share a few words about your "
-        + "interests. This is the bottom portion of your profile.")
-    username = StringField(
-        u'Username', [length(max=25), UniqueValidator(
-            User, 'username'), DataRequired()],
-        description="Short and sweet.")
-    email = EmailField(
-        u'E-mail address', [length(max=80), DataRequired()],
-        description="For a profile image, link this address at Gravatar.com")
-    password = PasswordField(
-        u'Change password', [length(max=128)],
-        description="Leave blank to keep your password as it is.")
-    submit = SubmitField(u'Save changes')
 
 
 class ProjectNew(FlaskForm):
@@ -125,14 +66,19 @@ class ProjectForm(FlaskForm):
         description="URL to a live demo, presentation, or a link to get "
         + "more information.")
     is_webembed = BooleanField(u'Embed this link directly on project page')
-    category_id = SelectField(u'Challenge category', coerce=int)
     submit = SubmitField(u'Save changes')
+    note = TextAreaField(
+        u'Log entry',
+        [length(max=280)],
+        render_kw={'maxlength': 280, 'rows': 3},
+        description=u'(Optional) A short update for the project log')
 
 
 class ProjectDetailForm(FlaskForm):
     """Edit a project detail form."""
 
     id = HiddenField('id')
+    category_id = SelectField(u'Challenge category', coerce=int)
     autotext_url = URLField(
         u'Readme', [length(max=255)],
         description="Code, wiki or an online document to Sync with.")

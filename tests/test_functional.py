@@ -102,12 +102,12 @@ class TestRegistering:
         # sees error message
         assert 'Passwords must match' in res
 
-    def test_sees_error_message_if_user_already_registered(self, user, testapp):
+    def test_sees_error_message_if_user_already_registered(self, user, tapp):
         """Show error if user already registered."""
         user = UserFactory(active=True)  # A registered user
         user.save()
         # Goes to registration page
-        res = testapp.get(url_for('auth.register'))
+        res = tapp.get(url_for('auth.register'))
         # Fills out form, but username is already registered
         form = res.forms['registerForm']
         form['username'] = user.username

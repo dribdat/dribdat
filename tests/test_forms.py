@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
 """Test forms."""
 
-from dribdat.public.forms import LoginForm
-from dribdat.user.forms import RegisterForm
-import pytest  # noqa: F401
+from dribdat.user.forms import RegisterForm, LoginForm
 
 
 class TestRegisterForm:
