@@ -13,8 +13,7 @@ from dribdat.sso.mattermost import mattermost
 from dribdat.user.models import User, Event, Role
 from dribdat.extensions import login_manager  # noqa: I005
 from dribdat.utils import flash_errors, random_password, sanitize_input
-from dribdat.public.forms import LoginForm, UserForm
-from dribdat.user.forms import RegisterForm, EmailForm
+from dribdat.user.forms import RegisterForm, EmailForm, LoginForm, UserForm
 from dribdat.database import db
 from dribdat.mailer import user_activation
 from datetime import datetime

@@ -72,14 +72,14 @@
     {{ render_form(url_for('project.project_edit', project_id=project.id), form) }}
   {% endif %}
 
-{% if not detail_view %}
-<div class="alert-warning text-center mt-4 p-2">
-  Looking for a way to add more links, contacts, or change the cover image? Edit the
-  <a href="{{ url_for('project.project_details', project_id=project.id) }}" target="_blank">
+  {% if not detail_view %}
+  <div class="alert-warning text-center mt-4 p-2">
+    Looking for a way to add more links, contacts, or change the cover image?
     <i class="fa fa-pencil" aria-hidden="true"></i>
-    Project Details</a>
-</div>
-{% endif %}
+    <a href="{{ url_for('project.project_details', project_id=project.id) }}" target="_blank">
+      Edit Details</a> (new window)
+  </div>
+  {% endif %}
 
 {% include "includes/uploader.html" %}
 

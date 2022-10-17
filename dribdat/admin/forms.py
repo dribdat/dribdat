@@ -4,20 +4,30 @@ from wtforms import (
     HiddenField, SubmitField, BooleanField,
     StringField, PasswordField, SelectField,
     TextAreaField, RadioField, IntegerField,
+    SelectMultipleField
 )
 from wtforms.fields.html5 import (
     DateField, TimeField,
     URLField, EmailField,
 )
 from wtforms.validators import DataRequired, length
+from dribdat.user.models import User, Project, Event, Role, Resource
+from ..user.validators import (
+    UniqueValidator, event_date_check, event_time_check
+)
+from ..user import projectProgressList, resourceTypeList
 from os import environ
 from datetime import time, datetime
-from dribdat.user.models import User, Project, Event, Role, Resource
-from ..user.validators import UniqueValidator
-from ..user import projectProgressList, resourceTypeList
-from wtforms import (
-    SelectMultipleField, ValidationError
-)
+
+
+def get_time_note():
+    """Helper function to construct a time zone message."""
+    tz = environ.get('TIME_ZONE', None)
+    aware_time = datetime.now().astimezone()
+    tzinfo = "The current server time is %s." % aware_time.strftime('%H:%M%z')
+    if tz is not None:
+        return "%s Time zone: %s" % (tzinfo, tz)
+    return tzinfo
 
 
 class UserForm(FlaskForm):
@@ -41,29 +51,6 @@ class UserProfileForm(FlaskForm):
     my_story = TextAreaField(u'My story')
     my_goals = TextAreaField(u'My goals')
     submit = SubmitField(u'Save')
-
-
-def event_date_check(form, starts_date):
-    ends_date = form.ends_date.data
-    if starts_date.data > ends_date:
-        raise ValidationError('Start date must not be after end date.')
-
-
-def event_time_check(form, starts_time):
-    ends_time = form.ends_time.data
-    starts_date = form.starts_date.data
-    ends_date = form.ends_date.data
-    if starts_date == ends_date and starts_time.data > ends_time:
-        raise ValidationError('Start time must be before end time.')
-
-
-def get_time_note():
-    tz = environ.get('TIME_ZONE', None)
-    aware_time = datetime.now().astimezone()
-    tzinfo = "The current server time is %s." % aware_time.strftime('%H:%M%z')
-    if tz is not None:
-        return "%s Time zone: %s" % (tzinfo, tz)
-    return tzinfo
 
 
 class EventForm(FlaskForm):

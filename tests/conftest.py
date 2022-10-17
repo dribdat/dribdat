@@ -8,7 +8,7 @@ from dribdat.app import init_app
 from dribdat.database import db as _db
 from dribdat.settings import TestConfig
 
-from .factories import UserFactory, ProjectFactory
+from .factories import UserFactory, ProjectFactory, EventFactory
 
 from sqlalchemy.orm import configure_mappers
 
@@ -36,7 +36,7 @@ def db(app):
     """A database for the tests."""
     _db.app = app
     with app.app_context():
-        configure_mappers() # explicit for Continuum
+        configure_mappers()  # explicit for Continuum
         _db.create_all()
 
     yield _db
@@ -52,6 +52,15 @@ def user(db):
     user = UserFactory(password='myprecious')
     db.session.commit()
     return user
+
+
+@pytest.fixture
+def event(db):
+    """An event for the tests."""
+    event = EventFactory()
+    db.session.commit()
+    return event
+
 
 @pytest.fixture
 def project(db):
