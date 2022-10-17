@@ -34,16 +34,17 @@ def format_webembed(url):
 
 TEMPLATE_PROJECT = r"""
 <div class="onebox honeycomb">
-    <a class="hexagon
+    <a href="{{link}}"
+       class="hexagon
         {{#is_challenge}}challenge{{/is_challenge}}
-        {{^is_challenge}}project{{/is_challenge}}" href="{{link}}">
-<div class="hexagontent">
-<span>{{name}}</span>
-{{#image_url}}
-<div class="hexaicon" style="background-image:url('{{image_url}}')"></div>
-{{/image_url}}
-</div>
+        {{^is_challenge}}project stage-{{progress}}{{/is_challenge}}">
+        <div class="hexagontent">
+    {{#image_url}}
+    <div class="hexaicon" style="background-image:url('{{image_url}}')"></div>
+    {{/image_url}}
+        </div>
     </a>
+    <a href="{{link}}" class="title">{{name}}</a>
     <div class="phase">{{phase}}</div>
     <p>{{summary}}</p>
 </div>

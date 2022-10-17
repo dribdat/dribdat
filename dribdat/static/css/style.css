@@ -728,6 +728,7 @@ nav .nav-login {
   max-width: 100%;
   max-height: 13em;
   margin: 0.5em 0;
+  background: whitesmoke;
 }
 .tooltip .tooltip-inner p { /* Status */
   font-size: 150%;
@@ -1115,20 +1116,18 @@ nav .nav-login {
   min-height: 8em;
   clear: both;
   display: block;
-  margin: 20px 0px 0px 20px;
+  margin: 20px 0px 0.8em 20px;
 }
 .onebox.honeycomb .hexagon {
   float: left;
-  margin-top: -1em;
+  margin-top: -0.8em;
   margin-left: 0em;
   margin-right: 3em;
   opacity: 1;
   transform: scale(0.8);
 }
-.onebox.honeycomb .hexagontent {
-  font-size: 11pt;
-  overflow: hidden;
-  height: 9em;
+.onebox.honeycomb .title {
+  margin-top: 1em;
 }
 .onebox.honeycomb p {
   opacity: 0.8;
