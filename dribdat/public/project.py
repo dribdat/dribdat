@@ -25,6 +25,7 @@ blueprint = Blueprint('project', __name__,
                       static_folder="../static", url_prefix='/project')
 
 
+@blueprint.route('/<int:project_id>/')
 @blueprint.route('/<int:project_id>')
 def project_view(project_id):
     """Show a project by id."""
@@ -34,7 +35,8 @@ def project_view(project_id):
 @blueprint.route('/<int:project_id>/log')
 def project_view_posted(project_id):
     """Identical to the above."""
-    return project_view(project_id)
+    return redirect(url_for(
+        'project.project_view', project_id=project_id) + '#log')
 
 
 @blueprint.route('/s/<project_name>')
