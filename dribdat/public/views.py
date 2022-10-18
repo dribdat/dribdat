@@ -111,8 +111,8 @@ def user(username):
     if not isUserActive(user):
         # return "User deactivated. Please contact an event organizer."
         flash(
-            'This user account is under review. Please contact the '
-            + 'organizing team if you have any questions.',
+            'Your user account is under review. Please contact the '
+            + 'organizing team for full access.',
             'warning'
         )
     submissions = user.posted_challenges()
@@ -153,6 +153,7 @@ def user_cert():
     return redirect(url_for("public.user", username=current_user.username))
 
 
+@blueprint.route("/event/<int:event_id>/")
 @blueprint.route("/event/<int:event_id>")
 def event(event_id):
     """Show an event."""
@@ -268,11 +269,12 @@ def event_new():
         # Load default event content
         event.boilerplate = EVENT_PRESET['quickstart']
         event.community_embed = EVENT_PRESET['codeofconduct']
-        event.is_hidden = True
         db.session.add(event)
         db.session.commit()
         flash('A new event has been planned!', 'success')
         if not current_user.is_admin:
+            event.is_hidden = True
+            event.save()
             flash(
                 'Please contact an organiser (see About page)'
                 + 'to make changes or promote this event.',
