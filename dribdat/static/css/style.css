@@ -240,7 +240,7 @@ ul.help-block {
   margin-bottom: 2em;
 }
 .section-header .section-header-content div {
-  color: initial;
+  /* color: initial; */
   font-size: 125%;
   display: inline-block;
   margin-right: 1em;
@@ -879,6 +879,14 @@ nav .nav-login {
   color: black;
   padding: 1rem;
 }
+.project-page.jumbotron .btn {
+  color: black;
+}
+.project-page .project-longtext blockquote {
+  border-left: 3px solid lightgrey;
+  padding-left: 1em;
+  color: #555;
+}
 @media (min-width: 576px) {
   .project-home #overlayImage { max-width: 500px; }
   .project-page.jumbotron { padding: 2rem; }
@@ -1498,7 +1506,7 @@ pre { color: #333; background: white; }
 }
 .profile-projects {
   width: 100%;
-  background: #fdf7ee;
+  background: rgba(255,255,255,0.5);
   border-radius: 20px;
 }
 .profile-projects.honeycomb {

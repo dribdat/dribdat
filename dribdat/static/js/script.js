@@ -258,18 +258,19 @@
   function setDarkMode(toggle) {
     dm = Boolean(window.darkmode);
     if (toggle) dm = !dm;
+    $css = $('#css-bootswatch').first();
     if (dm) {
       // Invert page colors
-      $('body').css('-webkit-filter','invert(100%)')
-               .css('-moz-filter','invert(100%)')
-               .css('-o-filter','invert(100%)')
-               .css('-ms-filter','invert(100%)')
-               .css('background', 'black')
-               .css('height', '100%');
+      $('body').addClass('theme-dark');
+      $('nav.navbar').removeClass('navbar-light');
       $('footer .darkmode span').html('Light');
+      $css.attr('org-href', $css.attr('href'));
+      $css.attr('href', $css.attr('alt-href'));
     } else {
-      $('body').attr('style','');
+      $('body').removeClass('theme-dark');
+      $('nav.navbar').addClass('navbar-light');
       $('footer .darkmode span').html('Dark');
+      $css.attr('href', $css.attr('org-href'));
       // Adjust clock theme
       // $('.flipdown').removeClass('flipdown__theme-dark').addClass('flipdown__theme-light');
     }
