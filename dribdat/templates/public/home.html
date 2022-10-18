@@ -83,10 +83,8 @@
       {% endfor %}
     </div>
     <p class="category-tip mb-0 mt-2 text-right">
-      <span class="user-score" style="background:white">&#x1F4A1;</span>
-      Visit
       <a href="{{ url_for('public.user', username=current_user.username) }}" title="{{ current_user.username }}">My Profile</a>
-      to see all projects and dribs.
+      <span class="user-score" style="background:white">&#x1F4A1;</span>
   </div>
   {% endif %}
 
