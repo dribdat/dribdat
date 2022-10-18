@@ -53,18 +53,17 @@
 </head>
 <body class="{% block body_class %}{% endblock %}" data-barba="wrapper">
 {% with form=form, tabs=tabs, event=current_event %}
-{% include "includes/nav.html" %}
-{% if event %}
+{% if request.args.get('clean') %}<!-- layout: clean -->
+{% elif request.args.get('minimal') %}<!-- layout: minimal -->
+  <style type="text/css">body > .event-header, body > footer { display: none !important; }</style>
+{% else %}
+  {% include "includes/nav.html" %}
+{% endif %}
+{% if event and active != 'home' %}
   {% include "includes/header.html" %}
   {% if event.custom_css %}
     <style id="custom_css" type="text/css">{{ event.custom_css|replace('<','')|safe }}</style>
   {% endif %}
-{% endif %}
-{% if request.args.get('clean') %}
-  <style type="text/css">body > nav { display: none !important; }</style>
-{% endif %}
-{% if request.args.get('minimal') %}
-  <style type="text/css">body > nav, body > .event-header { display: none !important; }</style>
 {% endif %}
 {% endwith %}
 

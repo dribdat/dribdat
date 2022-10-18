@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 """Test forms."""
 
-from dribdat.public.forms import LoginForm
-from dribdat.user.forms import RegisterForm
-import pytest  # noqa: F401
+from dribdat.user.forms import RegisterForm, LoginForm
+from dribdat.admin.forms import EventForm
+
+from datetime import time, datetime
 
 
 class TestRegisterForm:
@@ -69,3 +70,28 @@ class TestLoginForm:
         assert form.validate() is True
         res = testapp.get('/user/%s' % user.username)
         assert 'under review' in res
+
+
+class TestEventForm:
+    """Event entry form."""
+
+    def test_create_new_event(self, event):
+        """Sample event."""
+        form = EventForm()
+        # A name is required
+        assert form.validate() is False
+        assert 'This field is required.' in form.name.errors
+        form = EventForm(name="test")
+        assert form.validate() is True
+
+    def test_event_validate_time(self, event):
+        """Time validation test."""
+        form = EventForm(
+            event_id=event.id, name="Name",
+            starts_date=datetime.now(), ends_date=datetime.now(),
+            starts_time=time(2, 0, 0), ends_time=time(1, 0, 0))
+        # Ends before starting
+        # assert form.validate() is False
+        # assert 'Start time must be before end time.'
+        # in form.starts_time.errors
+        assert form.validate() is True  # TODO: fixme

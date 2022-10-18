@@ -4,21 +4,30 @@ from wtforms import (
     HiddenField, SubmitField, BooleanField,
     StringField, PasswordField, SelectField,
     TextAreaField, RadioField, IntegerField,
+    SelectMultipleField
 )
 from wtforms.fields.html5 import (
     DateField, TimeField,
     URLField, EmailField,
 )
 from wtforms.validators import DataRequired, length
-
+from dribdat.user.models import User, Project, Event, Role, Resource
+from ..user.validators import (
+    UniqueValidator, event_date_check, event_time_check
+)
+from ..user import projectProgressList, resourceTypeList
+from os import environ
 from datetime import time, datetime
 
-from dribdat.user.models import User, Project, Event, Role, Resource
-from ..user.validators import UniqueValidator
-from ..user import projectProgressList, resourceTypeList
-from wtforms import (
-    SelectMultipleField,
-)
+
+def get_time_note():
+    """Helper function to construct a time zone message."""
+    tz = environ.get('TIME_ZONE', None)
+    aware_time = datetime.now().astimezone()
+    tzinfo = "The current server time is %s." % aware_time.strftime('%H:%M%z')
+    if tz is not None:
+        return "%s Time zone: %s" % (tzinfo, tz)
+    return tzinfo
 
 
 class UserForm(FlaskForm):
@@ -52,7 +61,7 @@ class EventForm(FlaskForm):
         [length(max=80), UniqueValidator(Event, 'name'), DataRequired()])
     is_current = BooleanField(
         u'Featured', default=False,
-        description=u'📣 Pin this event (only one at a time) to the homepage.')
+        description=u'📣 Pin this event to the homepage.')
     is_hidden = BooleanField(
         u'Hidden', default=False,
         description=u'🚧 This event is not shown on the homepage.')
@@ -65,14 +74,18 @@ class EventForm(FlaskForm):
     lock_resources = BooleanField(
         u'Resource area', default=False,
         description=u'💡 Used as toolbox, ignoring start and finish.')
-    starts_date = DateField(u'Starting date', default=datetime.now())
-    starts_time = TimeField(u'Starting time', default=time(9, 0, 0))
+    starts_date = DateField(
+        u'Starting date', [event_date_check], default=datetime.now())
+    starts_time = TimeField(
+        u'Starting time',
+        [event_time_check], default=time(9, 0, 0),
+        description=get_time_note())
     ends_date = DateField(u'Finish date', default=datetime.now())
     ends_time = TimeField(u'Finish time', default=time(16, 0, 0))
     summary = StringField(
         u'Summary',
         [length(max=140)],
-        description=u'A short overview (140 chars) of the upcoming event')
+        description=u'A short tagline of the event, in max 140 characters')
     hostname = StringField(
         u'Hosted by',
         [length(max=80)],
@@ -91,7 +104,12 @@ class EventForm(FlaskForm):
     logo_url = URLField(
         u'Host logo link',
         [length(max=255)],
-        description=u'URL to an (ideally) square and max 512x512 pixel image')
+        description=u'Image hosted on a hotlinkable website - '
+        + 'such as imgbox.com (max 688x130)')
+    gallery_url = URLField(
+        u'Gallery links',
+        [length(max=2048)],
+        description=u'Larger background image (max 1920x1080)')
     webpage_url = URLField(
         u'Home page link',
         [length(max=255)],
@@ -99,12 +117,12 @@ class EventForm(FlaskForm):
     community_url = URLField(
         u'Community link',
         [length(max=255)],
-        description=u'Link to connect to a community forum or hashtag')
+        description=u'To find others on a community forum or social media')
     certificate_path = URLField(
         u'Certificate link',
         [length(max=1024)],
         description='Include {username}, {email} or {sso} identifier '
-        + 'in your participant certificate generator')
+        + 'to generate links to your participant certificate')
     instruction = TextAreaField(
         u'Instructions',
         description=u'Shown to participants on the Resources page - '
@@ -127,25 +145,25 @@ class ProjectForm(FlaskForm):
     id = HiddenField('id')
     user_name = StringField(u'Started by')
     event_id = SelectField(u'Event', coerce=int)
-    category_id = SelectField(u'Challenge category', coerce=int)
+    category_id = SelectField(u'Category', coerce=int)
     progress = SelectField(u'Progress', coerce=int,
                            choices=projectProgressList())
-    hashtag = StringField(
-        u'Hashtag',
-        [length(max=255)],
-        description="Team channel or social media hashtag")
-    autotext_url = URLField(
-        u'Readme',
-        [length(max=2048)],
-        description="Location from which to Sync content")
     name = StringField(
         u'Title',
         [length(max=80), UniqueValidator(Project, 'name'), DataRequired()])
     summary = StringField(u'Short summary', [length(max=140)])
     longtext = TextAreaField(u'Description')
+    autotext_url = URLField(
+        u'Readme',
+        [length(max=2048)],
+        description="Location from which to Sync content")
     autotext = TextAreaField(u'Readme content')
     webpage_url = URLField(u'Presentation or demo link', [length(max=2048)])
     is_webembed = BooleanField(u'Embed contents of demo link', default=False)
+    hashtag = StringField(
+        u'Hashtags',
+        [length(max=255)],
+        description="Team channel or social media hashtag")
     contact_url = URLField(u'Contact link', [length(max=2048)])
     source_url = URLField(u'Source link', [length(max=2048)])
     download_url = URLField(u'Download link', [length(max=2048)])

@@ -8,6 +8,7 @@ import io
 import csv
 import json
 from datetime import datetime
+from dribdat.utils import format_date
 
 from sys import version_info
 PY3 = version_info[0] == 3
@@ -54,14 +55,21 @@ def get_event_users(event, full_data=False):
     userdata = []
     for u in eventusers:
         if full_data:
-            userdata.append(u.data)
+            usr = u.data
         else:
-            userdata.append({
+            usr = {
                 'id': u.data['id'],
                 'roles': u.data['roles'],
                 'username': u.data['username'],
                 'webpage_url': u.data['webpage_url'],
-            })
+            }
+        if 'created_at' in usr and usr['created_at']:
+            usr['created_at'] = format_date(
+                usr['created_at'], '%Y-%m-%dT%H:%M')
+        if 'updated_at' in usr and usr['updated_at']:
+            usr['updated_at'] = format_date(
+                usr['updated_at'], '%Y-%m-%dT%H:%M')
+        userdata.append(usr)
     return userdata
 
 

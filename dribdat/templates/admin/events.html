@@ -35,9 +35,6 @@
                   <a href="{{ url_for('public.event_print', event_id=event.id) }}" class="dropdown-item">
                     &#9734; Print
                   </a>
-                  <!-- <a href="{{ url_for('public.event_instruction', event_id=event.id) }}" class="dropdown-item">
-                    Instructions
-                  </a> -->
                   <a href="{{ url_for('public.event', event_id=event.id, _external=True) }}?embed=1" class="dropdown-item" id="embed-link">
                     Embed
                   </a>

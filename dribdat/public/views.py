@@ -84,20 +84,22 @@ def home():
     timed_events = events.filter(Event.lock_resources.isnot(
         True)).order_by(Event.starts_at.desc())
     today = datetime.utcnow()
-    events_next = timed_events.filter(Event.ends_at > today).all()
-    events_past = timed_events.filter(Event.ends_at < today).all()
+    events_next = timed_events.filter(Event.ends_at > today)
+    events_featured = events_next.filter(Event.is_current)
+    events_past = timed_events.filter(Event.ends_at < today)
     # Select Resource-type events
-    resource_events = events.filter(
-        Event.lock_resources).order_by(Event.name.asc()).all()
+    resource_events = events.filter(Event.lock_resources)
+    resource_events = resource_events.order_by(Event.name.asc())
     # Select my challenges
     my_projects = None
     if current_user and not current_user.is_anonymous:
         my_projects = current_user.joined_projects(True, 3)
     # Send to template
-    return render_template("public/home.html",
-                           events_next=events_next,
-                           events_past=events_past,
-                           events_tips=resource_events,
+    return render_template("public/home.html", active="home",
+                           events_next=events_next.all(),
+                           events_featured=events_featured.all(),
+                           events_past=events_past.all(),
+                           events_tips=resource_events.all(),
                            my_projects=my_projects,
                            current_event=cur_event)
 
@@ -206,22 +208,8 @@ def event_stages(event_id):
 @blueprint.route("/event/<int:event_id>/instruction")
 def event_instruction(event_id):
     """Show instructions of an event."""
-    event = Event.query.filter_by(id=event_id).first_or_404()
-    steps = getProjectStages()
-    for s in steps:
-        s['projects'] = []  # Reset the index
-    resource_events = Event.query.filter_by(lock_resources=True).all()
-    for e in resource_events:
-        projects = Project.query.filter_by(event_id=e.id, is_hidden=False)
-        for s in steps:
-            if 'projects' not in s:
-                s['projects'] = []
-            project_list = [p.data for p in projects.filter_by(
-                progress=s['id']).all()]
-            s['projects'].extend(project_list)
-    return render_template("public/eventinstruction.html",
-                           current_event=event, steps=steps,
-                           active="instruction")
+    # Deprecated (for now)
+    return redirect(url_for("public.event_stages", event_id=event_id))
 
 
 @blueprint.route("/event/<int:event_id>/categories")
@@ -294,6 +282,15 @@ def event_new():
     return render_template('public/eventnew.html', form=form, active='Event')
 
 #####
+
+
+@blueprint.route('/clear/cache', methods=['GET'])
+@login_required
+def clear_cache():
+    """Clear the site cache."""
+    flash('Show me the cache!', 'success')
+    cache.clear()
+    return redirect(url_for("public.home"))
 
 
 @blueprint.route("/dribs")

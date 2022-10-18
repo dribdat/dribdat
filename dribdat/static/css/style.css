@@ -32,6 +32,9 @@ form input[type="checkbox"] {
 .navbar-form input[type="password"] {
   width: 180px;
 }
+.form-passwordless {
+  max-width: 33em;
+}
 .form-register .form-control {
   position: relative;
   font-size: 16px;
@@ -49,8 +52,12 @@ form input[type="checkbox"] {
   text-align: center;
   font-size: 250%;
 }
+.projectform textarea[id="note"],
 .form-project-post textarea {
   height: 4em;
+}
+.projectform label[for="note"] {
+  display: none; /* Hide label on Project Edit log */
 }
 .form-project-post .checkbox input {
   opacity: 1;
@@ -92,14 +99,20 @@ form input[type="checkbox"] {
   opacity: 0.8;
 }
 .admin .form-group .control-label {
-  font-size: 125%; font-weight: bold;
+  font-size: 175%;
+  margin-top: 1em;
 }
 .admin .form-group .radio-inline {
   margin-right: 1em;
 }
+.admin .form-group .help-inline {
+  color: #555;
+  margin: 0.5em 0em;
+  display: block;
+}
 .admin .form-group .checkbox .help-inline {
-  float: right;
-  /* display: block; */
+  margin: 0em;
+  display: inline-block;
 }
 .admin .form-group .checkbox label {
   font-weight: bold;
@@ -141,7 +154,12 @@ form input[type="checkbox"] {
   width: 20%;
   display: inline-block;
   vertical-align: bottom;
-  background: #f55; color: #fff;
+  background: #922;
+  color: #fff;
+  text-decoration: none;
+}
+.admin .card.stat:hover {
+  background: #f55;
 }
 
 .btn-group.admin-area {
@@ -254,6 +272,8 @@ nav.navbar .navbar-brand {
   color: black;
   background: white;
   border-radius: 10px;
+  font-size: 150%;
+  line-height: 0px;
 }
 nav.navbar .navbar-brand:hover i:nth-child(odd) {
   color: steelblue;
@@ -277,14 +297,21 @@ nav .nav-login {
   nav.navbar { padding: 0rem 1rem; }
 }
 
-.home-page h2 {
+/* Home page titles */
+
+.home .body-content h2 {
   text-align: center;
-  font-weight: bold;
+  padding-bottom: 0.3rem;
+  margin-bottom: 1.6rem;
+  border-bottom: 1px solid grey;
 }
 .home-page h1,
 .home-page .home-nav {
   display: block;
   text-align: center;
+}
+.home-page .home-description p:only-child {
+  margin: 0px;
 }
 .home-page .home-description {
   margin: 1em;
@@ -299,10 +326,9 @@ nav .nav-login {
 }
 .home .an-event .card-img-top {
   max-height: 10em;
-  overflow: hidden;
-}
-.home .an-event .card-img-top img {
-  width: 100%;
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: contain;
 }
 .home .an-event-meta {
   font-size: 90%;
@@ -312,9 +338,10 @@ nav .nav-login {
 .home .an-event-meta b {
   display: block;
 }
-.home-buttons .btn-lg {
+.home .home-buttons {
   font-size: 120%;
-  line-height: 2em;
+  z-index: 1;
+  position: relative;
 }
 
 /* Customize the flipclock widget */
@@ -363,6 +390,83 @@ nav .nav-login {
 @media (max-width: 760px) {
   .community-embed .fa-comment {
     display: none !important;
+  }
+}
+
+/* Home page carousel */
+.home-page .carousel-caption .event-header {
+  top: 0px;
+  left: 0px;
+}
+.home-page .carousel-caption .section-header-logo {
+  display: inline;
+  position: absolute;
+  left: -90px;
+  top: 10px;
+}
+.home-page .carousel-caption .section-header-logo img {
+  width: 100%;
+  max-height: 100%;
+}
+.home-page .carousel-caption .event-header .section-header-content {
+  text-align: left;
+  text-decoration: none;
+  color: initial;
+  background: white;
+  box-shadow: 3px 3px 3px rgba(0,0,0,0.2);
+  padding: 1em;
+  width: 60%;
+  left:  50%;
+  position: relative;
+  margin-left: -27%;
+}
+.home-page .carousel-caption .home-description {
+  max-height: 8.2em;
+  overflow: hidden;
+}
+.home-page .carousel-caption .home-description p {
+  padding: 0.5em 1em;
+  text-align: left;
+  color: black;
+  display: inline-block;
+  background-color: lightyellow;
+  clear: both;
+}
+.home-page .carousel-item {
+  height: 32rem;
+}
+.home-page .carousel-item > img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  min-width: 100%;
+  height: 32rem;
+}
+.home-page .carousel-caption .event-countdown {
+  margin-bottom: -50px;
+}
+.home-page .carousel-caption .honeycomb .hexagon {
+  opacity: 1;
+  box-shadow: 5px 5px 1px #777;
+}
+@media (max-width: 600px) {
+  .home-page .carousel-caption .section-header-logo {
+    position: relative;
+    float: none;
+    left: 0px;
+    top: -5px;
+  }
+  .home-page .carousel-caption .event-header .section-header-content {
+    position: relative;
+    height: 100%;
+    width: 100%;
+    left: 0px;
+    margin: 0px;
+  }
+}
+@media (max-width: 1000px) {
+  .home-page .carousel-caption .event-header .section-header-content {
+    width: 100%;
   }
 }
 
@@ -490,6 +594,7 @@ nav .nav-login {
   box-shadow: none;
 }
 
+/* Hexagon inner content */
 .project .hexagontent {
   overflow: hidden;
   color: black;
@@ -505,9 +610,9 @@ nav .nav-login {
   font-size: 240%;
 }
 
-.hexagon .hexagontent.text-md span {
+.hexagon .hexagontent span {
   display: inline-block;
-  max-height: 6em;
+  max-height: 7em;
   overflow: hidden;
 }
 .hexagon .hexagontent.text-md span {
@@ -542,6 +647,7 @@ nav .nav-login {
 }
 .honeycomb .hexagontent {
   font-size: 1.0rem;
+  text-shadow: 1px 1px 1px rgb(255,255,255);
 }
 .honeycomb .hexagon.hexalist {
   display: none;
@@ -583,35 +689,51 @@ nav .nav-login {
   box-shadow: -2px -2px 1px rgb(0 0 0 / 20%);
   border-radius: 1em;
 }
-.project.hexagon:nth-child(even) { background-color: rgba(230, 200, 160, 0.95); }
-.project.hexagon:nth-child(odd) { background-color: rgba(230, 210, 200, 0.95); }
+
+/* Adjust brightness of every other hexagon */
+.project.hexagon:nth-child(even) {
+  filter: brightness(105%);
+  /* background-color: rgba(230, 200, 160, 0.95);  */
+}
+/* .project.hexagon:nth-child(odd) { background-color: rgba(230, 210, 200, 0.95); } */
+
+/* --- Hexagon default palette --- */
+.project.hexagon  { background-color: #f5d1e4; } /* primary color */
+.hexagon.stage-5  { background-color: #f5d1e4; }
+.hexagon.stage-10 { background-color: #e3d0e3; }
+.hexagon.stage-20 { background-color: #e0c9ca; }
+.hexagon.stage-30 { background-color: #e8b6a6; }
+.hexagon.stage-40 { background-color: #f1cfad; }
+.hexagon.stage-50 { background-color: #f6e8c0; }
+/* https://colorkit.co/palette/f5d1e4-e3d0e3-e0c9ca-e8b6a6-f1cfad-f6e8c0/ */
 
 /* --- Tooltips used on honeycomb --- */
 
 .tooltip .tooltip-inner {
   border-radius: 10px;
+  text-align: center;
+}
+.tooltip .tooltip-inner div { /* Summary */
+  hyphens: auto;
 }
 .tooltip .tooltip-inner span { /* Hashtag */
   font-weight: bold;
   font-size: 80%;
   font-family: monospace;
-  display: block;
   overflow: hidden;
   max-height: 1.5em;
-  width: 100%;
+  display: block;
 }
 .tooltip .tooltip-inner img {
   max-width: 100%;
   max-height: 13em;
   margin: 0.5em 0;
-  display: block;
+  background: whitesmoke;
 }
-.tooltip .tooltip-inner div {
-  display: block;
-  padding: 0.5em;
-  text-align: left;
+.tooltip .tooltip-inner p { /* Status */
   font-size: 150%;
-  letter-spacing: 1em;
+  letter-spacing: 0.8em;
+  margin: 0px 0px 5px 0.7em;
 }
 
 /* --- Progress bars on projects --- */
@@ -994,15 +1116,18 @@ nav .nav-login {
   min-height: 8em;
   clear: both;
   display: block;
-  margin: 0px 0px 0px 20px;
+  margin: 20px 0px 0.8em 20px;
 }
 .onebox.honeycomb .hexagon {
   float: left;
-  margin-top: -1em;
+  margin-top: -0.8em;
   margin-left: 0em;
   margin-right: 3em;
   opacity: 1;
   transform: scale(0.8);
+}
+.onebox.honeycomb .title {
+  margin-top: 1em;
 }
 .onebox.honeycomb p {
   opacity: 0.8;
@@ -1180,6 +1305,8 @@ pre { color: #333; background: white; }
   float: right;
 }
 .project-edit-buttons * {
+  border-bottom-left-radius: 0px;
+  border-bottom-right-radius: 0px;
   box-shadow: none !important;
   opacity: 0.8;
 }
@@ -1390,15 +1517,15 @@ pre { color: #333; background: white; }
   overflow-x: auto;
   /*background-image: repeating-linear-gradient(125deg, #fcfcfc, #e9e9e9 5px, #eee 2px, transparent 30px);*/
 }
-.profile-projects .row::-webkit-scrollbar {
+.profile-projects .flex-row::-webkit-scrollbar {
   display: none;
 }
-.profile-projects .row .card.challenge:first-child,
-.profile-projects .row .card.project:first-child {
+.profile-projects .flex-row .card.challenge:first-child,
+.profile-projects .flex-row .card.project:first-child {
   margin-left: 20px;
 }
-.profile-projects .row .card.challenge,
-.profile-projects .row .card.project {
+.profile-projects .flex-row .card.challenge,
+.profile-projects .flex-row .card.project {
   height: 8em;
   width: 20em;
   margin-right: 5px;
@@ -1407,11 +1534,13 @@ pre { color: #333; background: white; }
   overflow: hidden;
   display: inline-block;
   padding: 0px;
+  background-color: white;
+  border-left: 1px solid #ccc;
+}
+.profile-projects .card {
   background-size: auto 100%;
   background-repeat: no-repeat;
   background-position: 0 0;
-  background-color: white;
-  border-left: 1px solid #ccc;
 }
 .profile-projects .card:hover {
   box-shadow: 3px 3px 3px lightblue;
@@ -1455,7 +1584,6 @@ pre { color: #333; background: white; }
   .profile-projects .card .project-image
   { display: none; }
   .profile-projects .card {
-    background: none !important;
     padding-left: 0px !important;
   }
 }
@@ -1476,7 +1604,6 @@ pre { color: #333; background: white; }
 .embed-view .honeycomb {
   transform: scale(0.4);
   transform-origin: top center;
-  margin-top: 20px;
 }
 .embed-event .event-countdown {
   bottom: 0px;
@@ -1484,13 +1611,21 @@ pre { color: #333; background: white; }
   transform: scale(0.5);
   display: block;
 }
-.embed-event .honeycomb .project {
-  display: inline-block;
+.embed-view .section-header {
+  display: none;
 }
-.embed-event .hexagon {
-  margin-top: 20px;
+.home-nav .embed-view {
+  width: 100%;
+  height: 10em;
 }
-.embed-view .section-header { display: none; }
+.home-nav .embed-view .ibws-fix {
+  width: 800px;
+}
+@media (max-width: 1000px) {
+  .home-nav .embed-view {
+    display: none;
+  }
+}
 
 
 /* Print view of projects */
@@ -1579,7 +1714,7 @@ Instruction page
   width: 100%;
   z-index: 1;
   cursor: pointer;
-  font-size: 200%;
+  font-size: 2rem;
 }
 .list-stages .step:hover .title { opacity: 1.0; }
 .list-stages .step.active .title { color: blue; }
@@ -1732,7 +1867,6 @@ SlackIn button
 }
 .account-register a { margin-left: 3.5em; font-size: 125%; }
 .account-register::before,
-.fld-autotext_url::after,
 .sso-login::after {
   content: 'or';
   display: block;

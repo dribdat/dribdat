@@ -1,29 +1,30 @@
+{% macro render_project_tooltip(project) %}
+	data-toggle="tooltip"
+	data-summary="{{ project.summary or project.name }}"
+	data-hashtag="{{ project.hashtag }}"
+	data-imageurl="{{ project.image_url|quote_plus }}"{#
+		> Status icons in tooltip:
+	#}data-status="{% if project.contact_url %}&#x1f44b;{% endif %}{#
+	#}{% if project.webpage_url %}&#x1f310;{% endif %}{#
+	#}{% if project.download_url %}&#x1f4c2;{% endif %}{#
+	#}{% if project.source_url %}&#x1f4bb;{% endif %}"
+{% endmacro %}
+
 <!-- Based on Hexagon Tiles by Graham Pyne http://codepen.io/gpyne/pen/iElhp/ -->
 {% macro render_project_hexagon(project) %}
 	<a href="{{ url_for('project.project_view', project_id=project.id) }}"
 		 class="hexagon {{
 		 	'challenge' if project.is_challenge else 'project'
+		 }}{{
+		 	' stage-%d' % project.progress if project.progress > 0
 		 }} category-highlight"
-		 category-id="{{ project.category_id }}"
-		 {% if project.summary %}
-				 data-toggle="tooltip" data-html="true"
-				 title="{{ project.summary }}{#
-
-		 		 > Hashtag if available in tooltip:
-	 		 #}{% if project.hashtag %}<span>{{project.hashtag}}</span>{% endif %}{#
-
-				 > Add image in tooltip:
-			 #}{% if project.image_url %}<img src=`{{project.image_url|quote_plus}}>{% endif %}{#
-
-				 > Status icons in tooltip:
-			 #}<div>{% if project.contact_url %}&#x1f44b;{% endif %}{#
-			 #}{% if project.webpage_url %}&#x1f310;{% endif %}{#
-			 #}{% if project.download_url %}&#x1f4c2;{% endif %}{#
-			 #}{% if project.source_url %}&#x1f4bb;{% endif %}</div>"
+		 {% if project.category_id %}
+		 	 category-id="{{ project.category_id }}"
 		 {% endif %}
 		 {% if project.logo_color %}
-		 	 style="border-bottom-color:{{project.logo_color}}"
+		 	 style="border-bottom-color:{{ project.logo_color }}"
 		 {% endif %}
+		 {{ render_project_tooltip(project) }}
 		>
 		<div class="hexagontent {{
 	        'text-md' if 32 < project.name|length else 'text-sm' if 42 < project.name|length
@@ -31,12 +32,11 @@
 			{% if project.is_challenge and project.team %}
 				<span class="team-count" title="# following">{{ project.team|count }}</span>
 			{% endif %}
-			{% if project.logo_icon %}
-				<i class="fa fa-{{project.logo_icon}}"></i><br>
-			{% endif %}
 			<span class="project-name">{{ project.name|truncate(64, True, '..') }}</span>
 			{% if project.image_url %}
 				<div class="hexaicon" style="background-image:url('{{project.image_url|quote_plus}}')"></div>
+			{% elif project.logo_icon %}
+				<div class="hexaicon"><i class="fa fa-{{project.logo_icon}}"></i></div>
 			{% endif %}
 		</div>
 		{% if project.score and project.score > 0 %}
@@ -46,6 +46,42 @@
 		</div>
 		{% endif %}
 	</a>
+{% endmacro %}
+
+{% macro render_embed_event(event, projects, showNav=False) %}
+<div class="embed-event">
+	{% if showNav %}
+  <div class="btn-group mb-4" role="group" aria-label="Embedded navigation">
+    <a href="{{ url_for('public.event', event_id=event.id) }}" target="_blank" class="btn btn-dark">
+      <i class="fa fa-star" aria-hidden="true"></i>&nbsp;
+      {{ event.name }}
+    </a>
+  </div>
+	{% endif %}
+  <div class="honeycomb">
+    <div class="ibws-fix">
+    {% for project in projects %}
+			<a href="{{ url_for('project.project_view', project_id=project.id) }}"
+         target="_parent"
+				 class="hexagon {{
+		 		 	'challenge' if project.is_challenge else 'project'
+		 		 }}{{
+		 		 	' stage-%d' % project.progress if project.progress > 0
+		 		 }}"
+		 		 {{ render_project_tooltip(project) }}>
+        <div class="hexagontent">
+          {% if project.logo_icon %}
+          <i class="fa fa-{{project.logo_icon}}"></i>
+          {% endif %}
+        </div>
+      </a>
+      {% if showNav and loop.index % 7 == 0 %}
+        </div><div class="ibws-fix">
+      {% endif %}
+    {% endfor %}
+    </div>
+  </div>
+</div><!-- /.embed-event -->
 {% endmacro %}
 
 {% macro render_empty_hexagon() %}
@@ -82,21 +118,19 @@
 
 {% macro render_home_event(event) %}
 	<div class="col-lg-4 an-event"><div class="card">
-	    {% if event.logo_url %}
-	    <div class="card-img-top">
-	      <img src="{{ event.logo_url }}" title="{{ event.hostname }}">
-	    </div>
-	    {% endif %}
+			<div class="card-img-top" title="{{ event.hostname }}"
+		    {% if event.logo_url %}
+		     style="background-image: url('{{ event.logo_url }}'); height: 10em"
+		    {% endif %}>
+			</div>
 	    <div class="card-body">
-	      {% if event.lock_resources %}
-	        <i class="fa fa-cubes" style="float:right"></i>
-	      {% else %}
+	      {% if not event.lock_resources %}
 	        <i class="fa fa-code" style="float:right"></i>
-	      {% endif %}
-	      <h3 class="card-title">
-	        <a href="{{ url_for('public.event', event_id=event.id) }}">
-	          {{event.name}}</a>
-	      </h3>
+		      <h3 class="card-title">
+		        <a href="{{ url_for('public.event', event_id=event.id) }}">
+		          {{event.name}}</a>
+		      </h3>
+				{% endif %}
 	      <div class="card-text">
 	        {% if not event.lock_resources %}
 	            <p class="an-event-meta">
@@ -105,28 +139,54 @@
 	            </p>
 	        {% endif %}
 	        <p class="an-event-description">
-	          {{event.summary or event.description or event.oneliner|markdown|striptags|truncate(500)}}
+	          {{event.summary or event.description|truncate(300) or event.oneliner|markdown|striptags|truncate(300)}}
 	        </p>
 	      </div>
 	      <div class="btn-group an-event-actions" role="group">
 	        {% if event.webpage_url %}
 	          <a href="{{ event.webpage_url }}" class="btn btn-info">
-	            Information</a>
+	            Info</a>
 	        {% endif %}
 	        {% if event.lock_resources %}
-	            <a href="{{ url_for('public.event_instruction', event_id=event.id) }}" class="btn btn-info">
-	                Resources
+	            <a href="{{ url_for('public.event_stages', event_id=event.id) }}" class="btn btn-warning">
+								<i class="fa fa-cubes" aria-hidden="true"></i>
+                {{event.name}}
 	            </a>
 	        {% elif event.has_finished %}
 	            <a href="{{ url_for('public.event', event_id=event.id) }}" class="btn btn-warning">
-	                Results
+      					<i class="fa fa-star" aria-hidden="true"></i>
+	              Results
 	            </a>
 	        {% else %}
 	            <a href="{{ url_for('public.event', event_id=event.id) }}" class="btn btn-warning">
-	                Challenges
+      					<i class="fa fa-rocket" aria-hidden="true"></i>
+	              Challenges
 	            </a>
 	        {% endif %}
 	      </div>
 	    </div><!-- /.card-body -->
 	</div></div>
+{% endmacro %}
+
+{% macro render_featured_event(event, current=False) %}
+	<div class="carousel-item{% if current %} active{% endif %}">
+		<svg class="bd-placeholder-img" width="100%" height="100%"
+				 xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+			{% if event.background_image %}
+				 <image width="100%" height="100%"
+				 			  xlink:href="{{ event.background_image }}"
+								preserveAspectRatio="xMinYMin slice">
+			{% else %}
+				 <rect width="100%" height="100%" fill="#777"/>
+			{% endif %}
+		</svg>
+
+		<div class="container">
+			<div class="carousel-caption">
+
+  			{% include "includes/eventhome.html" %}
+
+			 </div><!-- /.carousel-caption -->
+		 </div>
+	 </div><!-- /.carousel-item -->
 {% endmacro %}

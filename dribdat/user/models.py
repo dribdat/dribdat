@@ -291,8 +291,8 @@ class Event(PkModel):
     instruction = Column(db.UnicodeText(), nullable=True)
 
     logo_url = Column(db.String(255), nullable=True)
-    # image_urls = Column(db.String(2048), nullable=True)
     webpage_url = Column(db.String(255), nullable=True)
+    gallery_url = Column(db.String(2048), nullable=True)
     community_url = Column(db.String(255), nullable=True)
 
     starts_at = Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)
@@ -323,6 +323,7 @@ class Event(PkModel):
             'ends_at': self.ends_at,
             'has_finished': self.has_finished,
             'community_url': self.community_url or '',
+            'gallery_url': self.gallery_url or '',
             'webpage_url': self.webpage_url or '',
             'logo_url': self.logo_url or '',
         }
@@ -355,6 +356,7 @@ class Event(PkModel):
         self.description = d['description'] or '' if 'description' in d else ''
         self.boilerplate = d['boilerplate'] or '' if 'boilerplate' in d else ''
         self.instruction = d['instruction'] or '' if 'instruction' in d else ''
+        self.gallery_url = d['gallery_url'] or '' if 'gallery_url' in d else ''
         self.webpage_url = d['webpage_url'] or '' if 'webpage_url' in d else ''
         dcu = d['community_url'] or '' if 'community_url' in d else ''
         self.community_url = dcu
@@ -392,6 +394,11 @@ class Event(PkModel):
     def url(self):
         """Extra property."""
         return "event/%d" % (self.id)
+
+    @property
+    def background_image(self):
+        """Fetch first gallery image if available."""
+        return self.gallery_url.split(',')[0] or ''
 
     @property
     def has_started(self):
@@ -466,6 +473,11 @@ class Event(PkModel):
             Category.event_id == -1,
             Category.event_id == self.id
         )).order_by('name')
+
+    @property
+    def has_categories(self):
+        """Check if the event has categories to show."""
+        return self.categories_for_event().count() > 0
 
     def current():
         """Return currently featured event."""

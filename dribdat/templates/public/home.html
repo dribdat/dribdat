@@ -20,7 +20,7 @@
 {% block content %}
 {% cache 300, 'home-page' %}
 {% if current_event %}
-  <div class="home-page">
+  <main class="home-page">
     {% if current_event.countdown and 'up' in config.DRIBDAT_CLOCK %}
       <a class="container-countdown"
         href="{{ url_for('public.event', event_id=current_event.id) }}"
@@ -28,63 +28,75 @@
         <div id="clockTop" class="event-countdown flipdown" data-start="{{ current_event.countdown }}"></div>
       </a>
     {% endif %}
-    <div class="home-description">
-      {{current_event.summary or current_event.description|markdown}}
-    </div>
-    <div class="home-nav">
-      <div class="home-buttons" aria-label="Main navigation">
-        <a href="{{ url_for('public.event', event_id=current_event.id) }}" class="btn btn-lg btn-warning"><b>
-          {% if current_event.has_finished %}
-          <i class="fa fa-certificate" aria-hidden="true"></i>
-          Show Results
-          {% elif current_event.has_started %}
-          <i class="fa fa-rocket" aria-hidden="true"></i>
-          Get started
-          {% else %}
-          <!-- Event not yet started -->
-          <i class="fa fa-lightbulb-o" aria-hidden="true"></i>
-          See Challenges
-          {% endif %}
-        </b></a>
+
+    {% if current_event %}
+    <div id="homeCarousel" class="carousel slide" data-ride="carousel">
+  		<div class="carousel-inner">
+
+       {{ misc.render_featured_event(current_event, True) }}
+
+       {% for event in events_featured %}
+         {{ misc.render_featured_event(event) }}
+       {% endfor %}
       </div>
-    </div>
-    {% if current_event.countdown and 'down' in config.DRIBDAT_CLOCK %}
-      <a class="container-countdown"
-         href="{{ url_for('public.event', event_id=current_event.id) }}"
-         title="{{ current_event.countdown }}">
-        <div id="clockDown" class="event-countdown flipdown" data-start="{{ current_event.countdown }}"></div>
+    {% if events_featured %}
+      <a class="carousel-control-prev" href="#homeCarousel" role="button" data-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="sr-only">Previous</span>
+      </a>
+      <a class="carousel-control-next" href="#homeCarousel" role="button" data-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="sr-only">Next</span>
       </a>
     {% endif %}
-  </div><!-- /.jumbotron -->
+    </div>
+    {% endif %}
+  </main>
 {% endif %}
 
 <div class="body-content">
 
+  {% if current_event and current_event.countdown and 'down' in config.DRIBDAT_CLOCK %}
+    <a class="container-countdown"
+       href="{{ url_for('public.event', event_id=current_event.id) }}"
+       title="{{ current_event.countdown }}">
+      <div id="clockDown" class="event-countdown flipdown"
+           data-start="{{ current_event.countdown }}"></div>
+    </a>
+  {% endif %}
+
   {% if my_projects %}
   <h2 class="mt-4">My teams</h2>
-  <div class="resource-list">
-    <div class="profile-projects container-fluid">
-      <div class="row flex-row flex-nowrap pr-2">
-        {% for project in my_projects %}
-          <a class="col-md-4 ms-auto card project"
-             {%- if project.image_url %}
-              style="background-image:url('{{project.image_url}}'); padding-left:100px"
-             {%- endif %}
-             href="{{ url_for('project.project_view', project_id=project.id) }}">
-            <div class="card-body">
-              <h5 class="card-title">{{ project.name }}</h5>
-              <p class="card-text">{{ project.summary }}</p>
-            </div>
-          </a>
-        {% endfor %}
-      </div>
-      <p class="category-tip mb-0 mt-2" style="margin-left:-1em">
-        <span class="user-score" style="background:white">&#x1F4A1;</span>
-        Visit
-        <a href="{{ url_for('public.user', username=current_user.username) }}" title="{{ current_user.username }}">My Profile</a>
-        to see all projects and dribs.
+  <div class="resource-list profile-projects">
+    <div class="row">
+      {% for project in my_projects %}
+        <a class="col-md-4 ms-auto card project"
+           {%- if project.image_url %}
+            style="background-image:url('{{project.image_url}}'); padding-left:100px"
+           {%- endif %}
+           href="{{ url_for('project.project_view', project_id=project.id) }}">
+          <div class="card-body">
+            <h5 class="card-title">{{ project.name }}</h5>
+            <p class="card-text">{{ project.summary }}</p>
+          </div>
+        </a>
+      {% endfor %}
     </div>
+    <p class="category-tip mb-0 mt-2 text-right">
+      <span class="user-score" style="background:white">&#x1F4A1;</span>
+      Visit
+      <a href="{{ url_for('public.user', username=current_user.username) }}" title="{{ current_user.username }}">My Profile</a>
+      to see all projects and dribs.
   </div>
+  {% endif %}
+
+  {% if events_tips %}
+  <a name="resources"></a>
+  <div class="row events-tips mt-4">
+    {% for event in events_tips %}
+      {{ misc.render_home_event(event) }}
+    {% endfor %}
+  </div><!-- /.row events-next -->
   {% endif %}
 
   {% if events_next %}
@@ -92,16 +104,6 @@
   <h2 class="mt-4">Upcoming</h2>
   <div class="row events-next">
     {% for event in events_next %}
-      {{ misc.render_home_event(event) }}
-    {% endfor %}
-  </div><!-- /.row events-next -->
-  {% endif %}
-
-  {% if events_tips %}
-  <a name="resources"></a>
-  <h2 class="mt-4"><!--Resources--></h2>
-  <div class="row events-tips">
-    {% for event in events_tips %}
       {{ misc.render_home_event(event) }}
     {% endfor %}
   </div><!-- /.row events-next -->

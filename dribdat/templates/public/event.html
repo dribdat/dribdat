@@ -19,15 +19,14 @@
 {% block content %}
 {% cache 300, 'event-%d' % current_event.id %}
 
+{% if current_event.has_categories %}
 <center class="nav-categories">
   <div class="btn-group" data-toggle="buttons" role="group" aria-label="Filter by category">
-    {% if projects %}
-      <label class="btn btn-default active" title="All projects">
-        <input type="radio" name="category" id="" autocomplete="off" checked>
-          <i class="fa fa-cube"></i><br>
-          <span> </span>
-      </label>
-    {% endif %}
+    <label class="btn btn-default active" title="All projects">
+      <input type="radio" name="category" id="" autocomplete="off" checked>
+        <i class="fa fa-cube"></i><br>
+        <span> </span>
+    </label>
     {% for category in current_event.categories_for_event() %}
       <label class="btn btn-default">
         <input type="radio" name="category" id="{{category.id}}" autocomplete="off">
@@ -39,7 +38,7 @@
     {% endfor %}
   </div>
 </center>
-
+{% endif %}
 
 <div class="honeycomb mb-5">
   <a name="projects"></a>
@@ -67,7 +66,7 @@
       <a href="{{ url_for('admin.category', category_id=category.id) }}"
          class="btn btn-info btn-sm float-right">
         <i class="fa fa-pencil" aria-hidden="true"></i>
-        Edit challenge</a>
+        Edit</a>
     {% endif %}
     <h3>{{ category.name }}</h3>
     {{ category.description|onebox|markdown|safe }}
@@ -89,11 +88,6 @@
       <span>Post a challenge</span>
     {% endif %}
   </a>
-  {% endif %}
-  {% if current_event.lock_resources %}
-    <a href="{{ url_for('public.event_instruction', event_id=current_event.id) }}" class="btn btn-lg btn-light">
-      <span>Resources</span>
-    </a>
   {% endif %}
   {% if current_event.webpage_url %}
   <a href="{{ current_event.webpage_url }}" class="btn btn-lg btn-dark">
@@ -129,6 +123,14 @@
     {{current_event.instruction|markdown}}
   </div>
 </div>
+{% endif %}
+
+{% if current_event and current_event.countdown and not 'off' in config.DRIBDAT_CLOCK %}
+<center class="container-countdown-bottom">
+  <a class="container-countdown" href="#top" title="{{ current_event.countdown }}">
+    <div id="clockEvent" class="event-countdown flipdown" data-start="{{ current_event.countdown }}"></div>
+  </a>
+</center>
 {% endif %}
 
 {% if current_event.community_embed %}
@@ -180,15 +182,8 @@
     </div>
   {% endif %}
 
-  {% if current_event and current_event.countdown and not 'off' in config.DRIBDAT_CLOCK %}
-    <a class="container-countdown" href="#top" title="{{ current_event.countdown }}">
-      <div id="clockEvent" class="event-countdown flipdown" data-start="{{ current_event.countdown }}"></div>
-    </a>
-  {% endif %}
-
-
   {% if config.DRIBDAT_SOCIAL_LINKS %}
     {{ social.share_links(current_event.hashtag, url_for('public.event', event_id=current_event.id, _external=True)) }}
-  {% endif %} 
+  {% endif %}
 </center>
 {% endblock %}
