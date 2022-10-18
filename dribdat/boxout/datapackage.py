@@ -21,7 +21,7 @@ TEMPLATE_PACKAGE = r"""
     {{/resources}}
     </ul>
     <div class="details font-size-small">
-        <div class="sources float-left">Source:
+        <div class="sources float-left">&#128230;
         {{#sources}}
             <a href="{{path}}">{{name}}</a>
         {{/sources}}
