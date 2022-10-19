@@ -84,7 +84,7 @@ def project_edit_action(project_id, detail_view=False):
         cache.clear()
 
         # Create an optional post update
-        if form.note and form.note.data:
+        if 'note' in form and form.note.data:
             project_action(project_id, 'update',
                            action='post', text=form.note.data)
 
