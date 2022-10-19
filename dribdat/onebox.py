@@ -65,8 +65,8 @@ def make_oembedplus(text, oembed_providers, **params):
         if home_url_re.match(line):
             # Parse an internal project
             newline = re.sub(home_url_re, repl_onebox, line)
-        elif (line.endswith('datapackage.json') or
-              line.endswith('datapackage.json)')):
+        elif (line.endswith('datapackage.json')
+              or line.endswith('datapackage.json)')):
             # Try to parse a Data Package link
             newline = box_datapackage(line)
         elif line.startswith('https://github.com/'):

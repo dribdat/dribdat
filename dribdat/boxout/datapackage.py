@@ -1,6 +1,7 @@
 """Boxout module for Data Packages."""
 
 import re
+import logging
 import pystache
 from frictionless import Package
 
@@ -48,5 +49,9 @@ def box_datapackage(line):
     if not m:
         return None
     url = m.group(1)
-    package = Package(url)
+    try:
+        package = Package(url)
+    except Exception:  # noqa: B902
+        logging.info("Data Package not parsed: <%s>" % url)
+        return None
     return pystache.render(TEMPLATE_PACKAGE, package)
