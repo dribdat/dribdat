@@ -422,7 +422,6 @@
         Edit</a>
       <a href="{{ url_for('project.project_details', project_id=project.id) }}" class="btn btn-lg btn-info"
          title="Edit project details" >
-        <i class="fa fa-pencil" aria-hidden="true"></i>
         Details</a>
     {% endif %}
     {% if allow_edit and project.is_autoupdateable %}
