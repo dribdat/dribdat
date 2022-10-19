@@ -46,11 +46,6 @@ class TestImport:
         ImportEventPackage(dp_json)
         assert Event.query.filter_by(name="Test Event").count() == 1
 
-        # TODO: remote test
-        #data = request.get_json(force=True)
-        #ImportEventPackage(self.DP_REMOTE_URL)
-        #assert Event.query.count() == 2
-
     def test_user_schema(self, project, testapp):
         """Test user schema."""
         event = Event(name="Test Event", summary="Just testin")
