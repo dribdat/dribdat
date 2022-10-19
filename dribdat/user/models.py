@@ -970,6 +970,11 @@ class Activity(PkModel):
             if user:
                 self.user = user
 
+    def may_delete(self, user):
+        """Check permission for deleting post."""
+        userok = (self.user and user == self.user and user.active)
+        return userok or user.is_admin
+
     def __init__(self, name, project_id, **kwargs):  # noqa: D107
         if name:
             db.Model.__init__(

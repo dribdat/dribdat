@@ -189,10 +189,14 @@ def project_comment(project_id):
 def post_delete(project_id, activity_id):
     """Delete a Post."""
     project = Project.query.filter_by(id=project_id).first_or_404()
+    purl = url_for('project.project_view_posted', project_id=project.id)
     activity = Activity.query.filter_by(id=activity_id).first_or_404()
-    activity.delete()
-    flash('The post has been deleted.', 'success')
-    return project_view(project.id)
+    if not activity.may_delete(current_user):
+        flash('No permission to delete.', 'warning')
+    else:
+        activity.delete()
+        flash('The post has been deleted.', 'success')
+    return redirect(purl)
 
 
 @blueprint.route('/<int:project_id>/undo/<int:activity_id>', methods=['GET'])
@@ -200,6 +204,11 @@ def post_delete(project_id, activity_id):
 def post_revert(project_id, activity_id):
     """Revert project to a previous version."""
     project = Project.query.filter_by(id=project_id).first_or_404()
+    purl = url_for('project.project_view_posted', project_id=project.id)
+    starred = IsProjectStarred(project, current_user)
+    if not isUserActive(current_user) or not starred:
+        flash('Could not revert: user not allowed.', 'warning')
+        return redirect(purl)
     activity = Activity.query.filter_by(id=activity_id).first_or_404()
     if not activity.project_version:
         flash('Could not revert: data not available.', 'warning')
@@ -210,8 +219,7 @@ def post_revert(project_id, activity_id):
         project.versions[revert_to - 1].revert()
         flash('Project data reverted to version %d.' % revert_to, 'success')
         return project_view(project.id)
-    return redirect(url_for(
-        'project.project_view_posted', project_id=project.id))
+    return redirect(purl)
 
 
 @blueprint.route('/<int:project_id>/star/me', methods=['GET', 'POST'])
