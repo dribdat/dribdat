@@ -72,14 +72,23 @@
     {{ render_form(url_for('project.project_edit', project_id=project.id), form) }}
   {% endif %}
 
-  {% if not detail_view %}
   <div class="alert-warning text-center mt-4 p-2">
-    Looking for a way to add more links, contacts, or change the cover image?
-    <i class="fa fa-pencil" aria-hidden="true"></i>
-    <a href="{{ url_for('project.project_details', project_id=project.id) }}" target="_blank">
-      Edit Details</a> (new window)
-  </div>
+  {% if not detail_view %}
+      Looking for a way to add more links, contacts, or change the cover image?
+      <i class="fa fa-pencil" aria-hidden="true"></i>
+      <a href="{{ url_for('project.project_details', project_id=project.id) }}" target="_blank">
+        Edit Details</a> (new window)
+  {% elif project.is_hidden %}
+    <a href="{{ url_for('project.project_toggle', project_id=project.id) }}"
+       class="btn btn-light">
+      Show project</a>
+  {% else %}
+    <a href="{{ url_for('project.project_toggle', project_id=project.id) }}"
+       class="btn btn-light"
+       onclick="if(!window.confirm('Are you sure you wish to hide this project from view?')) return false">
+      Hide project</a>
   {% endif %}
+  </div>
 
 {% include "includes/uploader.html" %}
 

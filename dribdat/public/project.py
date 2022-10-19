@@ -389,3 +389,23 @@ def project_autoupdate(project_id):
             flash("Could not sync: remote README has no data.", 'warning')
     return redirect(url_for(
         'project.project_view_posted', project_id=project_id))
+
+
+@blueprint.route('/project/<int:project_id>/toggle', methods=['GET', 'POST'])
+@login_required
+def project_toggle(project_id):
+    project = Project.query.filter_by(id=project_id).first_or_404()
+    purl = url_for('project.project_view', project_id=project.id)
+    allow_toggle = IsProjectStarred(project, current_user) \
+        or (not current_user.is_anonymous and current_user.is_admin)
+    if not allow_toggle:
+        flash("You do not have permission to change visibility.", 'warning')
+        return redirect(purl)
+    project.is_hidden = not project.is_hidden
+    project.save()
+    cache.clear()
+    if project.is_hidden:
+        flash('Project "%s" is now hidden.' % project.name, 'success')
+    else:
+        flash('Project "%s" is now visible.' % project.name, 'success')
+    return redirect(purl)
