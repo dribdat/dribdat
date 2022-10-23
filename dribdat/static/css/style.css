@@ -1836,6 +1836,20 @@ Data Packages view
 .list-datapackage .list-infos {
     font-size: 80%; color: #999;
 }
+.datapackage .card-text.description {
+  max-height: 12em;
+  overflow: auto;
+}
+.datapackage .schema-fields {
+  max-width: 9em;
+  overflow: hidden;
+  display: inline-block;
+  max-height: 1.2em;
+}
+.datapackage .schema-fields b[title="date"] { color: green; }
+.datapackage .schema-fields b[title="string"] { color: blue; }
+.datapackage .schema-fields b[title="number"] { color: orange; }
+.datapackage .schema-fields b[title="integer"] { color: yellow; }
 
 /* -----------
 SlackIn button

@@ -18,7 +18,9 @@ TEMPLATE_PACKAGE = r"""
     <ul class="resources list-unstyled">
     {{#resources}}
         <li><a href="{{path}}" download class="card-link">{{name}}</a>
-        <span class="float-right">{{#schema.fields}}&#9632;{{/schema.fields}}</span></li>
+        <span class="schema-fields">{{#schema.fields}}
+            <b title="{{type}}">&#9632;</b>
+        {{/schema.fields}}</span></li>
     {{/resources}}
     </ul>
     <div class="details font-size-small">
@@ -40,7 +42,7 @@ TEMPLATE_PACKAGE = r"""
 </div>
 """
 
-dpkg_url_re = re.compile('.*(http?s:\/\/.+datapackage\.json)\)*')
+dpkg_url_re = re.compile(r'.*(http?s:\/\/.+datapackage\.json)\)*')
 
 
 def box_datapackage(line):
