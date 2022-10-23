@@ -166,11 +166,6 @@ def project_action(project_id, of_type=None, as_view=True, then_redirect=False,
         'url': quote_plus(request.url)
     }
 
-    # Generate a certificate if available
-    cert_path = None
-    if current_user and not current_user.is_anonymous:
-        cert_path = current_user.get_cert_path(event)
-
     # Dump all that data into a template
     return render_template(
         'public/project.html', current_event=event, project=project,
@@ -179,7 +174,7 @@ def project_action(project_id, of_type=None, as_view=True, then_redirect=False,
         project_image_url=project_image_url,
         allow_edit=allow_edit, allow_post=allow_post,
         lock_editing=lock_editing, missing_roles=missing_roles,
-        stage=stage, all_valid=all_valid, cert_path=cert_path,
+        stage=stage, all_valid=all_valid,
         suggestions=suggestions, share=share,
         active="projects"
     )
