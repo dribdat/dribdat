@@ -139,11 +139,15 @@ def project_action(project_id, of_type=None, as_view=True, then_redirect=False,
         missing_roles = project.get_missing_roles()
     else:
         suggestions, stage, all_valid, missing_roles = None, None, None, None
-    # latest_activity = project.latest_activity() # obsolete
 
-    # Collect dribs and badges
-    project_dribs = project.all_dribs()
-    project_badge = [s for s in project_dribs if s['name'] == 'boost']
+    # Check type of project
+    if event.lock_resources:
+        project_team = None
+        project_dribs = project_badge = []
+    else:
+        # Collect dribs and badges
+        project_dribs = project.all_dribs()
+        project_badge = [s for s in project_dribs if s['name'] == 'boost']
 
     # Select available project image
     if project.image_url:
