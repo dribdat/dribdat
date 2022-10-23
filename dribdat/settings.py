@@ -55,7 +55,7 @@ class Config(object):
     ASSETS_DEBUG = False
     DEBUG_TB_ENABLED = False  # Disable Debug toolbar
     DEBUG_TB_INTERCEPT_REDIRECTS = False
-    CACHE_TYPE = 'NullCache'
+    CACHE_TYPE = 'SimpleCache'
     CACHE_NO_NULL_WARNING = True
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
@@ -96,9 +96,13 @@ class ProdConfig(Config):
     PREFERRED_URL_SCHEME = 'https'  # For generating external URLs
     CACHE_TYPE = os_env.get('CACHE_TYPE', 'SimpleCache')
     CACHE_REDIS_URL = os_env.get('CACHE_REDIS_URL', '')
+    if CACHE_REDIS_URL:
+        CACHE_TYPE = 'RedisCache'
     CACHE_MEMCACHED_SERVERS = os_env.get('MEMCACHED_SERVERS', '')
     CACHE_MEMCACHED_USERNAME = os_env.get('MEMCACHED_USERNAME', '')
     CACHE_MEMCACHED_PASSWORD = os_env.get('MEMCACHED_PASSWORD', '')
+    if CACHE_MEMCACHED_SERVERS:
+        CACHE_TYPE = 'MemcachedCache'
     CACHE_DEFAULT_TIMEOUT = int(os_env.get('CACHE_DEFAULT_TIMEOUT', '300'))
     SQLALCHEMY_DATABASE_URI = os_env.get(
         'DATABASE_URL', 'postgresql://localhost/example')

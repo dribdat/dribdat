@@ -8,6 +8,7 @@ from micawber.parsers import standalone_url_re, full_handler
 from .boxout.dribdat import box_project
 from .boxout.datapackage import box_datapackage
 from .boxout.github import box_repo
+from dribdat.extensions import cache
 
 
 def format_webembed(url):
@@ -68,7 +69,7 @@ def make_oembedplus(text, oembed_providers, **params):
         elif (line.endswith('datapackage.json')
               or line.endswith('datapackage.json)')):
             # Try to parse a Data Package link
-            newline = box_datapackage(line)
+            newline = box_datapackage(line, cache)
         elif line.startswith('https://github.com/'):
             # Try to parse a GitHub link
             newline = box_repo(line)

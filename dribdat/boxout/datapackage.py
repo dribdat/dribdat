@@ -45,15 +45,23 @@ TEMPLATE_PACKAGE = r"""
 dpkg_url_re = re.compile(r'.*(http?s:\/\/.+datapackage\.json)\)*')
 
 
-def box_datapackage(line):
+def box_datapackage(line, cache=None):
     """Create a OneBox for local projects."""
     m = dpkg_url_re.match(line)
     if not m:
         return None
     url = m.group(1)
+    if cache and cache.has(url):
+        return cache.get(url)
     try:
+        logging.info("Fetching Data Package: <%s>" % url)
         package = Package(url)
     except Exception:  # noqa: B902
-        logging.info("Data Package not parsed: <%s>" % url)
+        logging.warn("Data Package not parsed: <%s>" % url)
         return None
-    return pystache.render(TEMPLATE_PACKAGE, package)
+    box = pystache.render(TEMPLATE_PACKAGE, package)
+    if cache:
+        cache.set(url, box)
+    if cache and cache.has(url):
+        logging.debug("Cached Data Package: <%s>" % url)
+    return box
