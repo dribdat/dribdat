@@ -7,6 +7,7 @@ from flask import url_for
 from micawber.parsers import standalone_url_re, full_handler
 from .boxout.dribdat import box_project
 from .boxout.datapackage import box_datapackage
+from .boxout.ckan import box_dataset
 from .boxout.github import box_repo
 from dribdat.extensions import cache
 
@@ -70,6 +71,9 @@ def make_oembedplus(text, oembed_providers, **params):
               or line.endswith('datapackage.json)')):
             # Try to parse a Data Package link
             newline = box_datapackage(line, cache)
+        elif '/dataset/' in line: # TODO: sanity check
+            # Try to render a CKAN dataset link
+            newline = box_dataset(line)
         elif line.startswith('https://github.com/'):
             # Try to parse a GitHub link
             newline = box_repo(line)
