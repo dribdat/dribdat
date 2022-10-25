@@ -1,5 +1,5 @@
 # For more information, please refer to https://aka.ms/vscode-docker-python
-FROM python:3.9-slim-buster
+FROM python:3.10-slim
 
 # Install compiler
 RUN apt-get update && apt-get install gcc -y && apt-get clean
@@ -15,6 +15,7 @@ ENV PYTHONUNBUFFERED=1
 # Install pip requirements
 COPY requirements.txt .
 COPY requirements/* requirements/
+RUN python -m pip install --upgrade pip
 RUN python -m pip install -r requirements.txt
 
 # Copy dribdat app
@@ -27,7 +28,7 @@ RUN adduser -u 5678 --disabled-password --gecos "" appuser && chown -R appuser /
 USER appuser
 
 # Run release commands
-RUN release.sh
+RUN ./release.sh
 
 # During debugging, this entry point will be overridden. For more information, please refer to https://aka.ms/vscode-docker-python-debug
 CMD gunicorn --bind 0.0.0.0:5000 dribdat.app:init_app\(\)
