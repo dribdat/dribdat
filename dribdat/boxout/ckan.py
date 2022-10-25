@@ -1,7 +1,6 @@
 """Boxout module for CKAN datasets."""
 
 import pystache
-import logging
 
 TEMPLATE_PACKAGE = r"""
 <div class="boxout ckan card mb-4">
@@ -18,5 +17,5 @@ TEMPLATE_PACKAGE = r"""
 
 def box_dataset(url):
     """Create a OneBox for local projects."""
-    box = pystache.render(TEMPLATE_PACKAGE, { 'url': url })
+    box = pystache.render(TEMPLATE_PACKAGE, {'url': url})
     return box
