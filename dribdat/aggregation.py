@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Utilities for aggregating data
-"""
+"""Utilities for aggregating data."""
 
 from dribdat.user.models import Activity, User, Project
 from dribdat.user import isUserActive
@@ -8,17 +7,18 @@ from dribdat.database import db
 from dribdat.apifetch import (
     FetchGitlabProject,
     FetchGithubProject,
+    FetchGiteaProject,
     FetchBitbucketProject,
     FetchDataProject,
     FetchWebProject,
 )
-
 import json
 import re
 
 
 def GetProjectData(url):
-    """Parses the Readme URL to collect remote data."""
+    """Parse the Readme URL to collect remote data."""
+    # TODO: find a better way to decide the kind of repo
     if url.find('//gitlab.com') > 0:
         apiurl = url
         apiurl = re.sub(r'(?i)-?/blob/[a-z]+/README.*', '', apiurl)
@@ -36,6 +36,16 @@ def GetProjectData(url):
         if apiurl == url:
             return {}
         return FetchGithubProject(apiurl)
+
+    elif url.find('//codeberg.org') > 0:
+        apiurl = url
+        apiurl = re.sub(r'(?i)/src/branch/[a-z]+/README.*', '', apiurl)
+        apiurl = re.sub(r'https?://codeberg\.org/', '', apiurl).strip('/')
+        if apiurl.endswith('.git'):
+            apiurl = apiurl[:-4]
+        if apiurl == url:
+            return {}
+        return FetchGiteaProject(apiurl)
 
     elif url.find('//bitbucket.org') > 0:
         apiurl = url
