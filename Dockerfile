@@ -3,6 +3,7 @@ FROM python:3.10-slim
 
 # Install compiler
 RUN apt-get update && apt-get install gcc -y && apt-get clean
+RUN apt-get install -y nodejs npm
 
 EXPOSE 5000
 
@@ -21,6 +22,9 @@ RUN python -m pip install -r requirements.txt
 # Copy dribdat app
 WORKDIR /app
 COPY . /app
+
+# Install node requirements
+RUN npm install
 
 # Creates a non-root user with an explicit UID and adds permission to access the /app folder
 # For more info, please refer to https://aka.ms/vscode-docker-python-configure-containers
