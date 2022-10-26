@@ -10,4 +10,7 @@ else
 fi
 
 # Compress assets
-python -m whitenoise.compress dribdat/static/
+python -m whitenoise.compress dribdat/static/js
+python -m whitenoise.compress dribdat/static/css
+python -m whitenoise.compress dribdat/static/img
+python -m whitenoise.compress dribdat/static/public
