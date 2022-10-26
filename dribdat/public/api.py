@@ -461,9 +461,11 @@ def generate_event_package(event, format='json'):
         # Generate JSON representation
         return jsonify(package)
     elif format == 'zip':
+        # Build a file reference
+        filename = "datapackage-%s-" % event.name.lower().strip()
         # Generate data package file
         fp_package = tempfile.NamedTemporaryFile(
-            prefix='datapackage-', suffix='.zip')
+            prefix=filename, suffix='.zip')
         package.to_zip(fp_package.name)
         return send_file(fp_package.name, as_attachment=True)
 
