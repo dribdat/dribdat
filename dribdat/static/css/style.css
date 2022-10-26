@@ -923,6 +923,9 @@ nav .nav-login {
   line-height: 1.8em;
   font-size: 150%;
 }
+.project-page .timeline-content {
+  overflow: hidden;
+}
 .timeline-content .content img {
   width: 100%;
 }
