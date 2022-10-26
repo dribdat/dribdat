@@ -46,7 +46,10 @@ def init_app(config_object=ProdConfig):
         app.wsgi_app = ProxyFix(app, x_for=1, x_proto=1, x_host=1)
     else:
         # Internally optimize static file hosting
-        app.wsgi_app = WhiteNoise(app.wsgi_app, prefix='static/')
+        app.wsgi_app = WhiteNoise(
+            app.wsgi_app, prefix='static/',
+            exclude_patterns='static/libs'
+        )
         for static in ('css', 'img', 'js', 'public'):
             app.wsgi_app.add_files('dribdat/static/' + static)
 
