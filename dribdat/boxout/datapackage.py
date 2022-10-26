@@ -45,6 +45,13 @@ TEMPLATE_PACKAGE = r"""
 dpkg_url_re = re.compile(r'.*(http?s:\/\/.+datapackage\.json)\)*')
 
 
+def chk_datapackage(line):
+    """Check the url matching dataset pattern."""
+    return (
+        (line.startswith('http') and line.endswith('datapackage.json'))
+        or line.endswith('datapackage.json)'))
+
+
 def box_datapackage(line, cache=None):
     """Create a OneBox for local projects."""
     m = dpkg_url_re.match(line)

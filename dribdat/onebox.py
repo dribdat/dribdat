@@ -6,8 +6,8 @@ import logging
 from flask import url_for
 from micawber.parsers import standalone_url_re, full_handler
 from .boxout.dribdat import box_project
-from .boxout.datapackage import box_datapackage
-from .boxout.ckan import box_dataset
+from .boxout.datapackage import box_datapackage, chk_datapackage
+from .boxout.ckan import box_dataset, chk_dataset, ini_dataset
 from .boxout.github import box_repo
 from dribdat.extensions import cache
 
@@ -58,6 +58,7 @@ def make_oembedplus(text, oembed_providers, **params):
     """Check for additional onebox lines."""
     lines = text.splitlines()
     parsed = []
+    has_dataset = False
     # Url to projects
     home_url = re.escape(url_for('public.home', _external=True) + 'project/')
     home_url_re = re.compile('(%s.+)' % home_url)
@@ -67,26 +68,36 @@ def make_oembedplus(text, oembed_providers, **params):
         if home_url_re.match(line):
             # Parse an internal project
             newline = re.sub(home_url_re, repl_onebox, line)
-        elif (line.endswith('datapackage.json')
-              or line.endswith('datapackage.json)')):
+        elif chk_datapackage(line):
             # Try to parse a Data Package link
             newline = box_datapackage(line, cache)
-        elif '/dataset/' in line: # TODO: sanity check
+        elif chk_dataset(line):
             # Try to render a CKAN dataset link
             newline = box_dataset(line)
+            has_dataset = has_dataset or newline is not None
         elif line.startswith('https://github.com/'):
             # Try to parse a GitHub link
             newline = box_repo(line)
         elif standalone_url_re.match(line):
             # Check for out of box providers
-            url = line.strip()
-            try:
-                response = oembed_providers.request(url, **params)
-            except Exception:  # noqa: B902
-                logging.info("OEmbed could not parse: <%s>" % url)
-            else:
-                newline = full_handler(url, response, **params)
+            newline = box_default(line, oembed_providers, **params)
+        # Do we have parse?
         if newline is not None:
             line = newline
         parsed.append(line)
+    # Add init code
+    if has_dataset:
+        parsed = [ini_dataset()] + parsed
     return '\n'.join(parsed)
+
+
+def box_default(line, oembed_providers, **params):
+    """Fetch a built-in provider box."""
+    url = line.strip()
+    try:
+        response = oembed_providers.request(url, **params)
+    except Exception:  # noqa: B902
+        logging.info("OEmbed could not parse: <%s>" % url)
+    else:
+        return full_handler(url, response, **params)
+    return None
