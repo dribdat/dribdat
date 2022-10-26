@@ -80,9 +80,9 @@ def home():
     # Skip any hidden events
     events = events.filter(Event.is_hidden.isnot(True))
     # Query upcoming and past events which are not resource-typed
-    today = datetime.utcnow()
     timed_events = events.filter(Event.lock_resources.isnot(
         True)).order_by(Event.starts_at.desc())
+    # Filter out by today's date
     today = datetime.utcnow()
     events_next = timed_events.filter(Event.ends_at > today)
     events_featured = events_next.filter(Event.is_current)
@@ -94,14 +94,35 @@ def home():
     my_projects = None
     if current_user and not current_user.is_anonymous:
         my_projects = current_user.joined_projects(True, 3)
+    # Filter past events
+    MAX_PAST_EVENTS = 6
+    events_past_next = events_past.count() > MAX_PAST_EVENTS
+    events_past = events_past.limit(MAX_PAST_EVENTS).all()
     # Send to template
     return render_template("public/home.html", active="home",
-                           events_next=events_next.all(),
                            events_featured=events_featured.all(),
-                           events_past=events_past.all(),
                            events_tips=resource_events.all(),
+                           events_next=events_next.all(),
+                           events_past=events_past,
+                           events_past_next=events_past_next,
                            my_projects=my_projects,
                            current_event=cur_event)
+
+
+@blueprint.route("/history")
+def events_past():
+    """List all past events."""
+    # Skip any hidden events
+    events = Event.query.filter(Event.is_hidden.isnot(True))
+    # Query past events which are not resource-typed
+    today = datetime.utcnow()
+    timed_events = events.filter(Event.lock_resources.isnot(
+        True)).order_by(Event.starts_at.desc())
+    events_past = timed_events.filter(Event.ends_at < today)
+    # Send to template
+    return render_template("public/history.html", active="history",
+                           events_past=events_past.all(),
+                           current_event=None)
 
 
 @blueprint.route('/user/<username>', methods=['GET'])

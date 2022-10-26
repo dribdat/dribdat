@@ -107,16 +107,6 @@
   </div><!-- /.row events-next -->
   {% endif %}
 
-  {% if events_past %}
-  <a name="past"></a>
-  <h2 class="mt-4">Past events</h2>
-  <div class="row events-past">
-    {% for event in events_past %}
-      {{ misc.render_home_event(event) }}
-    {% endfor %}
-  </div><!-- /.row events-past -->
-  {% endif %}
-
   {% if current_user %}
     <div class="row start-event">
       <div class="col-lg-12">
@@ -137,6 +127,23 @@
         {% endif %}
       </div>
     </div>
+  {% endif %}
+
+  {% if events_past %}
+    <a name="past"></a>
+    <h2 class="mt-4">Past events</h2>
+    <div class="row events-past">
+      {% for event in events_past %}
+        {{ misc.render_home_event(event) }}
+      {% endfor %}
+    </div><!-- /.row events-past -->
+    {% if events_past_next %}
+      <center style="width: 100%">
+        <!-- More events button -->
+        <a href="{{ url_for('public.events_past') }}"
+          class="btn btn-dark btn-lg">Browse all past events</a>
+      </center>
+    {% endif %}
   {% endif %}
 
 </div>
