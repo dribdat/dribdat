@@ -1050,7 +1050,7 @@ testing = ["pytest", "pytest-benchmark"]
 
 [[package]]
 name = "psycopg2-binary"
-version = "2.9.4"
+version = "2.9.5"
 description = "psycopg2 - Python-PostgreSQL Database Adapter"
 category = "main"
 optional = false
