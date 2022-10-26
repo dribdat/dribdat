@@ -256,11 +256,11 @@ def event_load_datapackage():  # noqa: C901
     """Load event data from URL."""
     url = request.args.get('url')
     filedata = request.files['file']
-    if url:
-        import_level = request.args.get('import')
-    else:
-        url = request.form.get('url')
+    if filedata and request.form.get('import'):
+        url = filedata.filename
         import_level = request.form.get('import')
+    else:
+        import_level = request.args.get('import')
     # Check link
     if not url or 'datapackage.json' not in url:
         return jsonify(status='Error', errors=['Missing datapackage.json url'])

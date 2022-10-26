@@ -752,8 +752,8 @@ class Project(PkModel):
         self.name = data['name']
         self.summary = data['summary']
         self.hashtag = data['hashtag']
-        self.score = int(data['score'])
-        self.progress = int(data['progress'])
+        self.score = int(data['score'] or 0)
+        self.progress = int(data['progress'] or 0)
         self.image_url = data['image_url']
         self.source_url = data['source_url']
         self.webpage_url = data['webpage_url']
@@ -762,8 +762,8 @@ class Project(PkModel):
         self.contact_url = data['contact_url']
         self.logo_color = data['logo_color']
         self.logo_icon = data['logo_icon']
-        self.created_at = parse(data['created_at'])
-        self.updated_at = parse(data['updated_at'])
+        self.created_at = parse(data['created_at'] or dt.datetime.utcnow())
+        self.updated_at = parse(data['updated_at'] or dt.datetime.utcnow())
         self.longtext = data['longtext']
         self.autotext = data['autotext']
         if 'is_autoupdate' in data:
