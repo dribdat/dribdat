@@ -1509,8 +1509,15 @@ pre { color: #333; background: white; }
 }
 .profile-projects {
   width: 100%;
-  background: rgba(255,255,255,0.5);
+  padding-top: 1em;
+  border: 1px dotted rgba(0,0,0,0.5);
   border-radius: 20px;
+}
+.theme-dark .profile-projects {
+  border-color: rgba(255,255,255,0.5);
+}
+.theme-dark .bg-white {
+  color: black;
 }
 .profile-projects.honeycomb {
   padding: 0px;
