@@ -80,9 +80,9 @@ def home():
     # Skip any hidden events
     events = events.filter(Event.is_hidden.isnot(True))
     # Query upcoming and past events which are not resource-typed
-    today = datetime.utcnow()
     timed_events = events.filter(Event.lock_resources.isnot(
         True)).order_by(Event.starts_at.desc())
+    # Filter out by today's date
     today = datetime.utcnow()
     events_next = timed_events.filter(Event.ends_at > today)
     events_featured = events_next.filter(Event.is_current)
@@ -94,14 +94,35 @@ def home():
     my_projects = None
     if current_user and not current_user.is_anonymous:
         my_projects = current_user.joined_projects(True, 3)
+    # Filter past events
+    MAX_PAST_EVENTS = 6
+    events_past_next = events_past.count() > MAX_PAST_EVENTS
+    events_past = events_past.limit(MAX_PAST_EVENTS).all()
     # Send to template
     return render_template("public/home.html", active="home",
-                           events_next=events_next.all(),
                            events_featured=events_featured.all(),
-                           events_past=events_past.all(),
                            events_tips=resource_events.all(),
+                           events_next=events_next.all(),
+                           events_past=events_past,
+                           events_past_next=events_past_next,
                            my_projects=my_projects,
                            current_event=cur_event)
+
+
+@blueprint.route("/history")
+def events_past():
+    """List all past events."""
+    # Skip any hidden events
+    events = Event.query.filter(Event.is_hidden.isnot(True))
+    # Query past events which are not resource-typed
+    today = datetime.utcnow()
+    timed_events = events.filter(Event.lock_resources.isnot(
+        True)).order_by(Event.starts_at.desc())
+    events_past = timed_events.filter(Event.ends_at < today)
+    # Send to template
+    return render_template("public/history.html", active="history",
+                           events_past=events_past.all(),
+                           current_event=None)
 
 
 @blueprint.route('/user/<username>', methods=['GET'])
@@ -111,8 +132,8 @@ def user(username):
     if not isUserActive(user):
         # return "User deactivated. Please contact an event organizer."
         flash(
-            'This user account is under review. Please contact the '
-            + 'organizing team if you have any questions.',
+            'Your user account is under review. Please contact the '
+            + 'organizing team for full access.',
             'warning'
         )
     submissions = user.posted_challenges()
@@ -153,6 +174,7 @@ def user_cert():
     return redirect(url_for("public.user", username=current_user.username))
 
 
+@blueprint.route("/event/<int:event_id>/")
 @blueprint.route("/event/<int:event_id>")
 def event(event_id):
     """Show an event."""
@@ -268,11 +290,12 @@ def event_new():
         # Load default event content
         event.boilerplate = EVENT_PRESET['quickstart']
         event.community_embed = EVENT_PRESET['codeofconduct']
-        event.is_hidden = True
         db.session.add(event)
         db.session.commit()
         flash('A new event has been planned!', 'success')
         if not current_user.is_admin:
+            event.is_hidden = True
+            event.save()
             flash(
                 'Please contact an organiser (see About page)'
                 + 'to make changes or promote this event.',

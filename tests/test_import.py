@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-""" Dribdat data import export tests. """
+"""Dribdat data import export tests."""
 
 from dribdat.user.models import Event, Project, Activity, Role
 from dribdat.apipackage import ImportEventPackage, PackageEvent
@@ -11,9 +11,10 @@ from .factories import UserFactory
 class TestImport:
     """Sample import export."""
 
+    DP_REMOTE_URL = 'https://meta.dribdat.cc/api/event/5/datapackage.json'
+
     def test_datapackage(self, project, testapp):
         """Create a data package."""
-
         event = Event(name="Test Event", summary="Just testin")
         event.save()
 
@@ -47,7 +48,6 @@ class TestImport:
 
     def test_user_schema(self, project, testapp):
         """Test user schema."""
-
         event = Event(name="Test Event", summary="Just testin")
         event.save()
         user = UserFactory(username="Test Author")

@@ -1,0 +1,26 @@
+{% extends "layout.html" %}
+{% import "macros/_event.html" as misc %}
+
+{% block page_title %}Past events{% endblock %}
+
+{% block body_class %}history{% endblock %}
+
+{% block content %}
+{% cache 300, 'history-page' %}
+
+<div class="body-content">
+
+  {% if events_past %}
+    <a name="past"></a>
+    <h2 class="mt-4">Past events</h2>
+    <div class="row events-past">
+      {% for event in events_past %}
+        {{ misc.render_home_event(event) }}
+      {% endfor %}
+    </div><!-- /.row events-past -->
+  {% endif %}
+
+</div>
+
+{% endcache %}
+{% endblock %}

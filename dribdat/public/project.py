@@ -25,6 +25,7 @@ blueprint = Blueprint('project', __name__,
                       static_folder="../static", url_prefix='/project')
 
 
+@blueprint.route('/<int:project_id>/')
 @blueprint.route('/<int:project_id>')
 def project_view(project_id):
     """Show a project by id."""
@@ -34,7 +35,8 @@ def project_view(project_id):
 @blueprint.route('/<int:project_id>/log')
 def project_view_posted(project_id):
     """Identical to the above."""
-    return project_view(project_id)
+    return redirect(url_for(
+        'project.project_view', project_id=project_id) + '#log')
 
 
 @blueprint.route('/s/<project_name>')
@@ -187,10 +189,14 @@ def project_comment(project_id):
 def post_delete(project_id, activity_id):
     """Delete a Post."""
     project = Project.query.filter_by(id=project_id).first_or_404()
+    purl = url_for('project.project_view_posted', project_id=project.id)
     activity = Activity.query.filter_by(id=activity_id).first_or_404()
-    activity.delete()
-    flash('The post has been deleted.', 'success')
-    return project_view(project.id)
+    if not activity.may_delete(current_user):
+        flash('No permission to delete.', 'warning')
+    else:
+        activity.delete()
+        flash('The post has been deleted.', 'success')
+    return redirect(purl)
 
 
 @blueprint.route('/<int:project_id>/undo/<int:activity_id>', methods=['GET'])
@@ -198,6 +204,11 @@ def post_delete(project_id, activity_id):
 def post_revert(project_id, activity_id):
     """Revert project to a previous version."""
     project = Project.query.filter_by(id=project_id).first_or_404()
+    purl = url_for('project.project_view_posted', project_id=project.id)
+    starred = IsProjectStarred(project, current_user)
+    if not isUserActive(current_user) or not starred:
+        flash('Could not revert: user not allowed.', 'warning')
+        return redirect(purl)
     activity = Activity.query.filter_by(id=activity_id).first_or_404()
     if not activity.project_version:
         flash('Could not revert: data not available.', 'warning')
@@ -208,8 +219,7 @@ def post_revert(project_id, activity_id):
         project.versions[revert_to - 1].revert()
         flash('Project data reverted to version %d.' % revert_to, 'success')
         return project_view(project.id)
-    return redirect(url_for(
-        'project.project_view_posted', project_id=project.id))
+    return redirect(purl)
 
 
 @blueprint.route('/<int:project_id>/star/me', methods=['GET', 'POST'])
@@ -387,3 +397,23 @@ def project_autoupdate(project_id):
             flash("Could not sync: remote README has no data.", 'warning')
     return redirect(url_for(
         'project.project_view_posted', project_id=project_id))
+
+
+@blueprint.route('/project/<int:project_id>/toggle', methods=['GET', 'POST'])
+@login_required
+def project_toggle(project_id):
+    project = Project.query.filter_by(id=project_id).first_or_404()
+    purl = url_for('project.project_view', project_id=project.id)
+    allow_toggle = IsProjectStarred(project, current_user) \
+        or (not current_user.is_anonymous and current_user.is_admin)
+    if not allow_toggle:
+        flash("You do not have permission to change visibility.", 'warning')
+        return redirect(purl)
+    project.is_hidden = not project.is_hidden
+    project.save()
+    cache.clear()
+    if project.is_hidden:
+        flash('Project "%s" is now hidden.' % project.name, 'success')
+    else:
+        flash('Project "%s" is now visible.' % project.name, 'success')
+    return redirect(purl)

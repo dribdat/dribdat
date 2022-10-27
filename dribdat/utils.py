@@ -72,7 +72,7 @@ def timesince(dt, default="just now", until=False):
     for period, singular, plural in periods:
         if floor(period) > 0:
             return "%d %s %s" % (
-                period, singular if int(period) == 1 
+                period, singular if int(period) == 1
                 else plural, suffix
             )
     return default
@@ -85,7 +85,7 @@ def format_date(value, format='%Y-%m-%d'):
 
 def format_date_range(starts_at, ends_at):
     """Return a formatted date range."""
-    if starts_at.month == ends_at.month:
+    if starts_at.month == ends_at.month and starts_at.year == ends_at.year:
         if starts_at.day == ends_at.day:
             dayrange = starts_at.day
         else:
@@ -99,10 +99,13 @@ def format_date_range(starts_at, ends_at):
             ends_at.year,
         )
     else:
-        return "{0} {1}, {2} - {3} {4}, {5}".format(
+        starts_year = ""
+        if starts_at.year != ends_at.year:
+            starts_year = ", %d" % starts_at.year
+        return "{0} {1}{2} - {3} {4}, {5}".format(
             starts_at.strftime("%B"),
             starts_at.day,
-            starts_at.year,
+            starts_year,
             ends_at.strftime("%B"),
             ends_at.day,
             ends_at.year,

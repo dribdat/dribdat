@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Utilities for aggregating data
-"""
+"""Utilities for aggregating data."""
 
 from dribdat.user.models import Activity, User, Project
 from dribdat.user import isUserActive
@@ -8,16 +7,18 @@ from dribdat.database import db
 from dribdat.apifetch import (
     FetchGitlabProject,
     FetchGithubProject,
+    FetchGiteaProject,
     FetchBitbucketProject,
     FetchDataProject,
     FetchWebProject,
 )
-
 import json
 import re
 
 
 def GetProjectData(url):
+    """Parse the Readme URL to collect remote data."""
+    # TODO: find a better way to decide the kind of repo
     if url.find('//gitlab.com') > 0:
         apiurl = url
         apiurl = re.sub(r'(?i)-?/blob/[a-z]+/README.*', '', apiurl)
@@ -35,6 +36,16 @@ def GetProjectData(url):
         if apiurl == url:
             return {}
         return FetchGithubProject(apiurl)
+
+    elif url.find('//codeberg.org') > 0:
+        apiurl = url
+        apiurl = re.sub(r'(?i)/src/branch/[a-z]+/README.*', '', apiurl)
+        apiurl = re.sub(r'https?://codeberg\.org/', '', apiurl).strip('/')
+        if apiurl.endswith('.git'):
+            apiurl = apiurl[:-4]
+        if apiurl == url:
+            return {}
+        return FetchGiteaProject(apiurl)
 
     elif url.find('//bitbucket.org') > 0:
         apiurl = url
@@ -54,6 +65,7 @@ def GetProjectData(url):
 
 
 def AddProjectData(project):
+    """Map remote fields to project data."""
     data = GetProjectData(project.autotext_url)
     if 'name' not in data:
         return project
@@ -73,27 +85,29 @@ def AddProjectData(project):
 
 
 def SyncProjectData(project, data):
+    """Sync remote project data."""
     # Project name should *not* be updated
     # Always update "autotext" field
     if 'description' in data and data['description']:
         project.autotext = data['description']
     # Update following fields only if blank
-    if 'summary' in data and data['summary']:
-        if not project.summary or not project.summary.strip():
-            project.summary = data['summary'][:140]
-    if 'homepage_url' in data and data['homepage_url']:
-        if not project.webpage_url:
-            project.webpage_url = data['homepage_url'][:2048]
-    if 'contact_url' in data and data['contact_url']:
-        if not project.contact_url:
-            project.contact_url = data['contact_url'][:2048]
-    if 'source_url' in data and data['source_url']:
-        if not project.source_url:
-            project.source_url = data['source_url'][:2048]
-    if 'download_url' in data and data['download_url']:
-        if not project.download_url:
-            project.download_url = data['download_url'][:2048]
-    if 'image_url' in data and data['image_url'] and not project.image_url:
+    if 'summary' in data and data['summary'] and \
+       (not project.summary or not project.summary.strip()):
+        project.summary = data['summary'][:140]
+    if 'homepage_url' in data and data['homepage_url'] and \
+       (not project.webpage_url):
+        project.webpage_url = data['homepage_url'][:2048]
+    if 'contact_url' in data and data['contact_url'] and \
+       (not project.contact_url):
+        project.contact_url = data['contact_url'][:2048]
+    if 'source_url' in data and data['source_url'] and \
+       (not project.source_url):
+        project.source_url = data['source_url'][:2048]
+    if 'download_url' in data and data['download_url'] and \
+       (not project.download_url):
+        project.download_url = data['download_url'][:2048]
+    if 'image_url' in data and data['image_url'] and \
+       (not project.image_url):
         project.image_url = data['image_url'][:2048]
     project.update()
     db.session.add(project)
@@ -102,10 +116,10 @@ def SyncProjectData(project, data):
     if 'commits' in data:
         SyncCommitData(project, data['commits'])
 
+
 # The above, in one step
-
-
 def SyncResourceData(resource):
+    """Collect data from a remote resource."""
     url = resource.source_url
     dpdata = GetProjectData(url)
     resource.sync_content = json.dumps(dpdata)
@@ -114,17 +128,18 @@ def SyncResourceData(resource):
 
 
 def IsProjectStarred(project, current_user):
+    """Check if a project has been starred by the current user."""
     if not isUserActive(current_user):
         return False
     return Activity.query.filter_by(
         name='star',
         project_id=project.id,
         user_id=current_user.id
-    ).count() > 0
+    ).first() is not None
 
 
 def ProjectsByProgress(progress=None, event=None):
-    """ Fetch all projects by progress level """
+    """Fetch all projects by progress level."""
     if event is not None:
         projects = event.projects_for_event()
     else:
@@ -136,6 +151,7 @@ def ProjectsByProgress(progress=None, event=None):
 
 
 def GetEventUsers(event):
+    """Fetch all users that have a project in this event."""
     if not event.projects:
         return None
     users = []
@@ -149,6 +165,7 @@ def GetEventUsers(event):
 
 
 def ProjectActivity(project, of_type, user, action=None, comments=None):
+    """Generate an activity of a certain type in the project."""
     activity = Activity(
         name=of_type,
         project_id=project.id,
@@ -190,7 +207,27 @@ def ProjectActivity(project, of_type, user, action=None, comments=None):
     db.session.commit()
 
 
+def CheckPrevCommits(commit, username, since, until, prevlinks, prevdates):
+    # Check duplicates
+    if 'url' in commit and commit['url'] is not None:
+        if commit['url'] in prevlinks:
+            return None
+    if commit['date'].replace(microsecond=0) in prevdates:
+        return None
+    if commit['date'] < since or commit['date'] > until:
+        return None
+    # Get message and author
+    message = commit['message']
+    if username != commit['author']:
+        username = commit['author']
+        user = User.query.filter_by(username=username).first()
+        if user is None:
+            message += ' (@%s)' % username or "git"
+    return message
+
+
 def SyncCommitData(project, commits):
+    """Collect data for syncing a project from a remote site."""
     if project.event is None or len(commits) == 0:
         return
     prevactivities = Activity.query.filter_by(
@@ -203,21 +240,10 @@ def SyncCommitData(project, commits):
     since = project.event.starts_at_tz
     until = project.event.ends_at_tz
     for commit in commits:
-        # Check duplicates
-        if 'url' in commit and commit['url'] is not None:
-            if commit['url'] in prevlinks:
-                continue
-        if commit['date'].replace(microsecond=0) in prevdates:
+        message = CheckPrevCommits(
+                        commit, username, since, until, prevlinks, prevdates)
+        if message is None:
             continue
-        if commit['date'] < since or commit['date'] > until:
-            continue
-        # Get message and author
-        message = commit['message']
-        if username != commit['author']:
-            username = commit['author']
-            user = User.query.filter_by(username=username).first()
-            if user is None:
-                message += ' (@%s)' % username or "git"
         # Create object
         activity = Activity(
             name='update', action='commit',

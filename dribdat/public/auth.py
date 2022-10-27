@@ -54,14 +54,11 @@ def login():
         if form.validate_on_submit():
             login_user(form.user, remember=True)
             if not form.user.active:
-                flash(
-                    'Your user account is under review. '
-                    + 'Please update your profile, and contact an organizer '
-                    + 'to be able to access all functions of this platform.',
-                    'warning')
+                # Note: continue to profile page, where user is warned
                 username = current_user.username
                 return redirect(url_for('public.user', username=username))
-            flash("You are logged in! Time to make something awesome. ≧◡≦",
+            # Regular user greeting
+            flash("Welcome! Time to make something awesome. ≧◡≦",
                   'success')
             return redirect(url_for("public.home"))
         else:

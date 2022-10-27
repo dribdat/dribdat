@@ -240,7 +240,7 @@ ul.help-block {
   margin-bottom: 2em;
 }
 .section-header .section-header-content div {
-  color: initial;
+  /* color: initial; */
   font-size: 125%;
   display: inline-block;
   margin-right: 1em;
@@ -879,6 +879,14 @@ nav .nav-login {
   color: black;
   padding: 1rem;
 }
+.project-page.jumbotron .btn {
+  color: black;
+}
+.project-page .project-longtext blockquote {
+  border-left: 3px solid lightgrey;
+  padding-left: 1em;
+  color: #555;
+}
 @media (min-width: 576px) {
   .project-home #overlayImage { max-width: 500px; }
   .project-page.jumbotron { padding: 2rem; }
@@ -914,6 +922,9 @@ nav .nav-login {
   text-align: center;
   line-height: 1.8em;
   font-size: 150%;
+}
+.project-page .timeline-content {
+  overflow: hidden;
 }
 .timeline-content .content img {
   width: 100%;
@@ -1032,6 +1043,7 @@ nav .nav-login {
   width: 100%;
   height: 600px;
   box-shadow: 5px 5px 10px #535353;
+  margin-bottom: 1em;
   border: 1px silver;
   border-radius: 4px;
   overflow: hidden;
@@ -1498,8 +1510,15 @@ pre { color: #333; background: white; }
 }
 .profile-projects {
   width: 100%;
-  background: #fdf7ee;
+  padding-top: 1em;
+  border: 1px dotted rgba(0,0,0,0.5);
   border-radius: 20px;
+}
+.theme-dark .profile-projects {
+  border-color: rgba(255,255,255,0.5);
+}
+.theme-dark .bg-white {
+  color: black;
 }
 .profile-projects.honeycomb {
   padding: 0px;
@@ -1828,6 +1847,20 @@ Data Packages view
 .list-datapackage .list-infos {
     font-size: 80%; color: #999;
 }
+.datapackage .card-text.description {
+  max-height: 12em;
+  overflow: auto;
+}
+.datapackage .schema-fields {
+  max-width: 9em;
+  overflow: hidden;
+  display: inline-block;
+  max-height: 1.2em;
+}
+.datapackage .schema-fields b[title="date"] { color: green; }
+.datapackage .schema-fields b[title="string"] { color: blue; }
+.datapackage .schema-fields b[title="number"] { color: orange; }
+.datapackage .schema-fields b[title="integer"] { color: yellow; }
 
 /* -----------
 SlackIn button

@@ -84,7 +84,7 @@ def project_edit_action(project_id, detail_view=False):
         cache.clear()
 
         # Create an optional post update
-        if form.note and form.note.data:
+        if 'note' in form and form.note.data:
             project_action(project_id, 'update',
                            action='post', text=form.note.data)
 
@@ -139,11 +139,15 @@ def project_action(project_id, of_type=None, as_view=True, then_redirect=False,
         missing_roles = project.get_missing_roles()
     else:
         suggestions, stage, all_valid, missing_roles = None, None, None, None
-    # latest_activity = project.latest_activity() # obsolete
 
-    # Collect dribs and badges
-    project_dribs = project.all_dribs()
-    project_badge = [s for s in project_dribs if s['name'] == 'boost']
+    # Check type of project
+    if event.lock_resources:
+        project_team = None
+        project_dribs = project_badge = []
+    else:
+        # Collect dribs and badges
+        project_dribs = project.all_dribs()
+        project_badge = [s for s in project_dribs if s['name'] == 'boost']
 
     # Select available project image
     if project.image_url:
@@ -162,11 +166,6 @@ def project_action(project_id, of_type=None, as_view=True, then_redirect=False,
         'url': quote_plus(request.url)
     }
 
-    # Generate a certificate if available
-    cert_path = None
-    if current_user and not current_user.is_anonymous:
-        cert_path = current_user.get_cert_path(event)
-
     # Dump all that data into a template
     return render_template(
         'public/project.html', current_event=event, project=project,
@@ -175,7 +174,7 @@ def project_action(project_id, of_type=None, as_view=True, then_redirect=False,
         project_image_url=project_image_url,
         allow_edit=allow_edit, allow_post=allow_post,
         lock_editing=lock_editing, missing_roles=missing_roles,
-        stage=stage, all_valid=all_valid, cert_path=cert_path,
+        stage=stage, all_valid=all_valid,
         suggestions=suggestions, share=share,
         active="projects"
     )

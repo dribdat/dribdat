@@ -86,12 +86,6 @@
        <i class="fa fa-paper-plane" aria-hidden="true"></i>
        Write update
      </a>
-     {% if cert_path %}
-        <a id="get-certified" href="{{ cert_path }}" download class="btn btn-lg btn-info">
-          <i class="fa fa-download"></i>
-          Certificate
-        </a>
-     {% endif %}
   {% elif current_user and current_user.active and not project.is_challenge and not project.event.lock_resources %}
      <a id="project-comment" href="{{ url_for('project.project_comment', project_id=project.id) }}" title="Write a public comment" class="btn btn-lg btn-info">
        <i class="fa fa-comment" aria-hidden="true"></i>
@@ -293,12 +287,12 @@
           </div>
           {% endif %}
 
-          {% if s.id and current_user.is_admin %}
+          {% if s.id and (allow_post or current_user.is_admin) %}
             <a class="close delete" title="Delete post" href="{{ url_for('project.post_delete', project_id=project.id, activity_id=s.id) }}"
               onclick="if(!window.confirm('Delete this post?')) return false">&times;</a>
             {% if s.icon == 'paperclip' %}
               <a class="close revert" title="Revert post" href="{{ url_for('project.post_revert', project_id=project.id, activity_id=s.id) }}"
-                onclick="if(!window.confirm('Revert to this version?')) return false">&#9100;</a>
+                onclick="if(!window.confirm('Revert project data to this version?')) return false">&#9100;</a>
             {% endif %}
           {% endif %}
 
@@ -357,12 +351,12 @@
     </div>
   {% endif %}
 
-  {% if not project_team and project.user and not project.event.lock_resources %}
+  {% if not project_team and project.user %}
     <div class="widget widget-team">
       {{ misc.render_user_profile(project.user) }}
       <p class="started-at">
         <small>
-          Launched this at
+          Contributed at
           <a href="{{ url_for('public.event', event_id=project.event.id) }}">
             <b>{{ project.event.name }}</b>
           </a>
@@ -422,7 +416,6 @@
         Edit</a>
       <a href="{{ url_for('project.project_details', project_id=project.id) }}" class="btn btn-lg btn-info"
          title="Edit project details" >
-        <i class="fa fa-pencil" aria-hidden="true"></i>
         Details</a>
     {% endif %}
     {% if allow_edit and project.is_autoupdateable %}
@@ -434,7 +427,7 @@
   </div>
 </div><!-- / .project-controls -->
 
-{% if current_user.is_admin and not project.event.lock_resources %}
+{% if current_user.is_admin %}
 <div role="group" aria-label="Project administration" class="ml-3 btn-group admin-area" title="Admin area">
 
   <a class="btn btn-lg btn-success" data-toggle="modal" data-target="#addUser"

@@ -148,6 +148,25 @@ def getActivityByType(a, only_active=True):  # noqa: C901
     else:
         author = "?"
 
+    # We could use a config data structure like this:
+    # {
+    #     'sync': {
+    #         'text': 'Repository updated',
+    #         'icon': 'code'
+    #     },
+    #     'post': {
+    #         'icon': 'comment'
+    #     },
+    #     'star': {
+    #         'text': 'Joined the team',
+    #         'icon': 'thumbs-up'
+    #     },
+    #     'update': {
+    #         'author': None,
+    #         'icon': 'random'
+    #     }
+    # }
+
     # Based on action, populate activity fields
     if a.action == 'sync':
         text = "Repository updated"
@@ -172,6 +191,11 @@ def getActivityByType(a, only_active=True):  # noqa: C901
         if a.project_version:
             text += " version %d" % a.project_version
         icon = 'paperclip'
+    # elif a.name == 'revert':
+    #     text = "Reverted content"
+    #     if a.project_version:
+    #         text += " version %d" % a.project_version
+    #     icon = 'undo'
     elif a.name == 'create':
         text = "Challenge posted"
         icon = 'flag-checkered'
