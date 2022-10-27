@@ -1043,6 +1043,7 @@ nav .nav-login {
   width: 100%;
   height: 600px;
   box-shadow: 5px 5px 10px #535353;
+  margin-bottom: 1em;
   border: 1px silver;
   border-radius: 4px;
   overflow: hidden;
