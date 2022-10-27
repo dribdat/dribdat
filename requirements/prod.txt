@@ -1,4 +1,4 @@
---i https://pypi.org/simple
+-i https://pypi.org/simple
 alembic==1.8.1; python_version >= "3.7"
 aniso8601==9.0.1
 async-timeout==4.0.2; python_version >= "3.6"
