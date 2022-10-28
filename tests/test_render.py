@@ -2,6 +2,7 @@
 """Dribdat data rendering tests."""
 
 from dribdat.boxout.datapackage import box_datapackage
+from dribdat.boxout.ckan import box_dataset
 
 
 class TestRender:
@@ -13,3 +14,9 @@ class TestRender:
         dpkg_html = box_datapackage(test_url)
         assert "boxout" in dpkg_html
         assert "Airport Codes" in dpkg_html
+
+    def test_ckan(self, testapp):
+        """Render a data package."""
+        test_url = 'https://opendata.swiss/de/dataset/21st-century-swiss-video-games'  # noqa: E501
+        dpkg_html = box_dataset(test_url)
+        assert "boxout" in dpkg_html

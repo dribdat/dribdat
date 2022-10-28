@@ -10,6 +10,7 @@ from dribdat.user.models import Role, User, Event
 from dribdat.utils import timesince
 from dribdat.settings import Config
 from dribdat.aggregation import ProjectActivity
+from dribdat.boxout.dribdat import box_project
 
 from .factories import UserFactory, ProjectFactory
 
@@ -155,6 +156,13 @@ class TestProject:
         user.save()
         ProjectActivity(project, 'star', user)
         assert role2 in project.get_missing_roles()
+
+    def tests_project_box(self, db):
+        """Test boxed (embedded) projects."""
+        project = ProjectFactory()
+        project.save()
+        dpkg_html = box_project(project.url)
+        assert "onebox" in dpkg_html
 
 # @pytest.mark.usefixtures('db')
 # class TestResource:
