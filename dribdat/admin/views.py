@@ -74,6 +74,10 @@ def users(page=1):
         users = User.query.order_by(
             User.is_admin.desc()
         )
+    elif sort_by == 'sso':
+        users = User.query.order_by(
+            User.sso_id.asc()
+        )
     elif sort_by == 'created':
         users = User.query.order_by(
             User.created_at.desc()
@@ -82,9 +86,13 @@ def users(page=1):
         users = User.query.order_by(
             User.email.asc()
         )
-    else:
+    elif sort_by == 'username':
         users = User.query.order_by(
             User.username.asc()
+        )
+    else:  # Default: updated
+        users = User.query.order_by(
+            User.updated_at.desc()
         )
     search_by = request.args.get('search')
     if search_by and len(search_by) > 1:
