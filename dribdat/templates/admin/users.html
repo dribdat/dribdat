@@ -16,14 +16,16 @@
                 <a href="?sort=username">Username</a>
               </th>
               <th>
-                <a href="?sort=id">Dribs</a>
-              </th>
-              <th>SSO</th>
-              <th>
-                <a href="?sort=admin">Admin</a>
-              </th>
-              <th>
                 <a href="?sort=created">Created</a>
+              </th>
+              <th title="Activity count">
+                Dribs
+              </th>
+              <th>
+                <a href="?sort=sso" title="Single Sign-on ?">SSO</a>
+              </th>
+              <th>
+                <a href="?sort=admin" title="Administrator ?">Admin</a>
               </th>
               <th>Actions</th>
             </tr>
@@ -35,10 +37,10 @@
                 {{ user.username }}
               </a>
             </td>
+            <td>{{ user.created_at|format_date }}</td>
             <td>{{ user.activity_count }}</td>
             <td>{% if user.sso_id %}&#10003;{% endif %}</td>
             <td>{% if user.is_admin %}&#10003;{% endif %}</td>
-            <td>{{ user.created_at|format_date }}</td>
             <td><div class="btn-group">
               <a href="{{ url_for('admin.user', user_id=user.id) }}" class="btn btn-primary">
                 Edit
