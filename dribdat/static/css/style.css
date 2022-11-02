@@ -1860,7 +1860,7 @@ Data Packages view
 .datapackage .schema-fields b[title="date"] { color: green; }
 .datapackage .schema-fields b[title="string"] { color: blue; }
 .datapackage .schema-fields b[title="number"] { color: orange; }
-.datapackage .schema-fields b[title="integer"] { color: yellow; }
+.datapackage .schema-fields b[title="integer"] { color: darkred; }
 
 /* -----------
 SlackIn button

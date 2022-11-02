@@ -416,10 +416,12 @@
         Edit</a>
       <a href="{{ url_for('project.project_details', project_id=project.id) }}" class="btn btn-lg btn-info"
          title="Edit project details" >
+        <i class="fa fa-pencil" aria-hidden="true"></i>
         Details</a>
     {% endif %}
     {% if allow_edit and project.is_autoupdateable %}
-      <a href="{{ url_for('project.project_autoupdate', project_id=project.id) }}" title="Sync external data" class="btn btn-lg btn-warning">
+      <a href="{{ url_for('project.project_autoupdate', project_id=project.id) }}"
+         title="Refresh external Readme data" class="btn btn-lg btn-dark">
         <i class="fa fa-refresh" aria-hidden="true"></i>
         Sync</a>
     {% endif %}
@@ -461,7 +463,7 @@
     </div>
   </div><!-- /modal -->
 
-  <a href="{{ url_for('admin.project_view', project_id=project.id) }}" class="btn btn-lg btn-info"
+  <a href="{{ url_for('admin.project_view', project_id=project.id) }}" class="btn btn-lg btn-warning"
      title="Edit full details (admin only)">
     <i class="fa fa-pencil" aria-hidden="true"></i>
     Edit</a>
