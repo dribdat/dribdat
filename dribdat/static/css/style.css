@@ -325,10 +325,14 @@ nav .nav-login {
   margin-bottom: 1em;
 }
 .home .an-event .card-img-top {
-  max-height: 10em;
+  height: 10em;
+  /* max-height: 10em; */
   background-position: center center;
   background-repeat: no-repeat;
   background-size: contain;
+}
+.home .an-event .card-img-top.gallery-img {
+  background-size: cover;
 }
 .home .an-event-meta {
   font-size: 90%;
