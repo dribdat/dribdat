@@ -498,7 +498,6 @@ nav .nav-login {
 .event-home .event-info .event-description {
   font-size: 110%;
   padding: 1em;
-  background: white;
 }
 
 /* ---- Hexagonal hawtness ---- */
@@ -1599,7 +1598,6 @@ pre { color: #333; background: white; }
 .userprofile .profile-text {
   font-size: 125%;
   padding: 1em 1em 0.1em;
-  background: white;
   box-shadow: 5px 5px 5px rgba(0,0,0,0.2);
 }
 @media (max-width: 760px) {
