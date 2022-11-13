@@ -12,7 +12,7 @@ from flask_misaka import markdown
 from bleach.sanitizer import ALLOWED_TAGS, ALLOWED_ATTRIBUTES
 from urllib.parse import quote_plus
 from .apievents import (
-    fetch_commits_github, 
+    fetch_commits_github,
     fetch_commits_gitlab,
     fetch_commits_gitea,
 )
@@ -43,6 +43,7 @@ def FetchGiteaProject(project_url):
             if 'readme' in repo_file['name'].lower():
                 readmeurl = repo_file['download_url']
                 readmedata = requests.get(readmeurl)
+                readme = readmedata.text
                 break
         if readmeurl is None:
             logging.info("Could not find README", url_q)
@@ -63,8 +64,8 @@ def FetchGiteaProject(project_url):
 
 def FetchGitlabProject(project_url):
     """Download data from GitLab."""
-    WEB_BASE = "https://gitlab.com/%s"
-    API_BASE = "https://gitlab.com/api/v4/projects/%s"
+    WEB_BASE = "https://gitlab.com"
+    API_BASE = WEB_BASE + "/api/v4/projects/%s"
     url_q = quote_plus(project_url)
     # Collect basic data
     data = requests.get(API_BASE % url_q)
@@ -75,6 +76,8 @@ def FetchGitlabProject(project_url):
         return {}
     # Collect the README
     readmeurl = json['readme_url'] + '?inline=false'
+    readmeurl = readmeurl.replace('-/blob/', '-/raw/')
+    print('Fetching GitLab:', readmeurl)
     readmedata = requests.get(readmeurl)
     readme = readmedata.text or ""
     return {
@@ -359,10 +362,8 @@ def FetchWebInstructables(text, url):
     """Help extract data from Instructables."""
     doc = pq(text)
     ptitle = doc(".header-title")
-    if len(ptitle) < 1:
-        return {}
     content = doc(".main-content")
-    if len(content) < 1:
+    if len(content) < 1 or len(ptitle) < 1:
         return {}
     html_content = ""
     for step in content.find(".step"):
