@@ -5,12 +5,15 @@ import logging
 import requests
 from dateutil import parser
 
+# In seconds, how long to wait for API response
+REQUEST_TIMEOUT = 10
+
 
 def fetch_commits_gitea(full_name, limit=10):
     """Parse data about Gitea commits."""
     apiurl = "https://codeberg.org/api/v1/repos/%s/commits?limit=%d" % (
         full_name, limit)
-    data = requests.get(apiurl)
+    data = requests.get(apiurl, timeout=REQUEST_TIMEOUT)
     if data.status_code != 200:
         logging.warn("Could not sync Gitea commits on %s" % full_name)
         return []
@@ -47,7 +50,7 @@ def fetch_commits_github(full_name, since=None, until=None):
         apiurl += "&since=%s" % since.replace(microsecond=0).isoformat()
     if until is not None:
         apiurl += "&until=%s" % until.replace(microsecond=0).isoformat()
-    data = requests.get(apiurl)
+    data = requests.get(apiurl, timeout=REQUEST_TIMEOUT)
     if data.status_code != 200:
         logging.warn("Could not sync GitHub commits on %s" % full_name)
         return []
@@ -56,6 +59,11 @@ def fetch_commits_github(full_name, since=None, until=None):
         logging.warn("Could not sync GitHub commits on %s: %s"
                      % (full_name, json['message']))
         return []
+    return parse_github_commits(json, full_name)
+
+
+def parse_github_commits(json, full_name):
+    """Standardize data from a GitHub commit log."""
     commitlog = []
     for entry in json:
         if 'commit' not in entry:
@@ -90,7 +98,7 @@ def fetch_commits_gitlab(project_id: int, since=None, until=None):
     if until is not None:
         apiurl += "&until=%s" % until.replace(microsecond=0).isoformat()
     # Collect basic data
-    data = requests.get(apiurl)
+    data = requests.get(apiurl, timeout=REQUEST_TIMEOUT)
     if data.text.find('{') < 0:
         return []
     json = data.json()

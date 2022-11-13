@@ -517,7 +517,7 @@ class Project(PkModel):
     longtext = Column(db.UnicodeText(), nullable=False, default=u"")
 
     logo_color = Column(db.String(7), nullable=True)
-    logo_icon = Column(db.String(40), nullable=True)  # currently not used
+    logo_icon = Column(db.String(40), nullable=True)
 
     created_at = Column(db.DateTime, nullable=False,
                         default=dt.datetime.utcnow)

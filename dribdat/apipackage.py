@@ -14,6 +14,9 @@ from .apiutils import (
     get_event_categories,
 )
 
+# In seconds, how long to wait for API response
+REQUEST_TIMEOUT = 10
+
 
 def PackageEvent(event, author=None, host_url='', full_contents=False):
     """ Creates a Data Package from the data of an event """
@@ -253,7 +256,7 @@ def ImportEventPackage(data, DRY_RUN=False, ALL_DATA=False):
 
 def ImportEventByURL(url, DRY_RUN=False, ALL_DATA=False):
     try:
-        data = requests.get(url).json()
+        data = requests.get(url, timeout=REQUEST_TIMEOUT).json()
     except requests.exceptions.RequestException:
         logging.error("Could not connect to %s" % url)
         return {}

@@ -5,7 +5,17 @@ from dribdat.aggregation import GetProjectData
 
 
 class TestAggregate:
-    """Here be tests."""
+    """Here be dataragons!"""
+
+    def test_datapackage(self):
+        """Test parsing a Data Package."""
+        test_url = 'https://meta.dribdat.cc/api/event/5/datapackage.json'
+        test_obj = GetProjectData(test_url)
+        assert 'name' in test_obj
+        assert test_obj['name'] == 'dribdat'
+        assert test_obj['type'] == 'Gitea'
+        assert 'commits' in test_obj
+        assert len(test_obj['commits']) > 5
 
     def test_gitea(self):
         """Test parsing a Codeberg readme."""

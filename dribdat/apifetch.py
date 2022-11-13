@@ -5,7 +5,6 @@ import re
 import requests
 import bleach
 import logging
-from flask import url_for
 from pyquery import PyQuery as pq  # noqa: N813
 from base64 import b64decode
 from flask_misaka import markdown
@@ -19,6 +18,9 @@ from .apievents import (
 from future.standard_library import install_aliases
 install_aliases()
 
+# In seconds, how long to wait for API response
+REQUEST_TIMEOUT = 10
+
 
 def FetchGiteaProject(project_url):
     """Download data from Codeberg, a large Gitea site."""
@@ -29,7 +31,7 @@ def FetchGiteaProject(project_url):
     api_content = api_repos + "/contents"
     # Collect basic data
     logging.info("Fetching Gitea", url_q)
-    data = requests.get(api_repos)
+    data = requests.get(api_repos, timeout=REQUEST_TIMEOUT)
     if data.text.find('{') < 0:
         logging.debug("No data", data.text)
         return {}
@@ -38,14 +40,14 @@ def FetchGiteaProject(project_url):
         logging.debug("Invalid data", data.text)
         return {}
     # Collect the README
-    data = requests.get(api_content)
+    data = requests.get(api_content, timeout=REQUEST_TIMEOUT)
     readme = ""
     if not data.text.find('{') < 0:
         readmeurl = None
         for repo_file in data.json():
             if 'readme' in repo_file['name'].lower():
                 readmeurl = repo_file['download_url']
-                readmedata = requests.get(readmeurl)
+                readmedata = requests.get(readmeurl, timeout=REQUEST_TIMEOUT)
                 readme = readmedata.text
                 break
         if readmeurl is None:
@@ -72,7 +74,7 @@ def FetchGitlabProject(project_url):
     url_q = quote_plus(project_url)
     # Collect basic data
     logging.info("Fetching GitLab", url_q)
-    data = requests.get(API_BASE % url_q)
+    data = requests.get(API_BASE % url_q, timeout=REQUEST_TIMEOUT)
     if data.text.find('{') < 0:
         logging.debug("No data", data.text)
         return {}
@@ -84,7 +86,7 @@ def FetchGitlabProject(project_url):
     readmeurl = json['readme_url'] + '?inline=false'
     readmeurl = readmeurl.replace('-/blob/', '-/raw/')
     print('Fetching GitLab:', readmeurl)
-    readmedata = requests.get(readmeurl)
+    readmedata = requests.get(readmeurl, timeout=REQUEST_TIMEOUT)
     readme = readmedata.text or ""
     return {
         'type': 'GitLab',
@@ -101,7 +103,7 @@ def FetchGitlabProject(project_url):
 def FetchGitlabAvatar(email):
     """Download a user avatar from GitLab."""
     apiurl = "https://gitlab.com/api/v4/avatar?email=%s&size=80"
-    data = requests.get(apiurl % email)
+    data = requests.get(apiurl % email, timeout=REQUEST_TIMEOUT)
     if data.text.find('{') < 0:
         logging.debug("No data", data.text)
         return None
@@ -115,7 +117,7 @@ def FetchGithubProject(project_url):
     """Download data from GitHub."""
     API_BASE = "https://api.github.com/repos/%s"
     logging.info("Fetching GitHub", project_url)
-    data = requests.get(API_BASE % project_url)
+    data = requests.get(API_BASE % project_url, timeout=REQUEST_TIMEOUT)
     if data.text.find('{') < 0:
         logging.debug("No data", data.text)
         return {}
@@ -126,7 +128,7 @@ def FetchGithubProject(project_url):
     repo_full_name = json['full_name']
     default_branch = json['default_branch'] or 'main'
     readmeurl = "%s/readme" % (API_BASE % project_url)
-    readmedata = requests.get(readmeurl)
+    readmedata = requests.get(readmeurl, timeout=REQUEST_TIMEOUT)
     readme = ''
     if readmedata.text.find('{') < 0:
         logging.debug("No readme", data.text)
@@ -168,7 +170,7 @@ def FetchBitbucketProject(project_url):
     WEB_BASE = "https://bitbucket.org/%s"
     API_BASE = "https://api.bitbucket.org/2.0/repositories/%s"
     logging.info("Fetching Bitbucket", project_url)
-    data = requests.get(API_BASE % project_url)
+    data = requests.get(API_BASE % project_url, timeout=REQUEST_TIMEOUT)
     if data.text.find('{') < 0:
         logging.debug('No data at', project_url)
         return {}
@@ -179,7 +181,8 @@ def FetchBitbucketProject(project_url):
     readme = ''
     for docext in ['.md', '.rst', '.txt', '']:
         readmedata = requests.get(
-            API_BASE % project_url + '/src/HEAD/README.md')
+            API_BASE % project_url + '/src/HEAD/README.md',
+            timeout=REQUEST_TIMEOUT)
         if readmedata.text.find('{"type":"error"') != 0:
             readme = readmedata.text
             break
@@ -209,7 +212,7 @@ def FetchBitbucketProject(project_url):
 def FetchDataProject(project_url):
     """Try to load a Data Package formatted JSON file."""
     # TODO: use frictionlessdata library!
-    data = requests.get(project_url)
+    data = requests.get(project_url, timeout=REQUEST_TIMEOUT)
     logging.info("Fetching Data Package", project_url)
     if data.text.find('{') < 0:
         logging.debug('No data at', project_url)
@@ -224,7 +227,9 @@ def FetchDataProject(project_url):
     else:
         readme_url = project_url.replace('datapackage.json', 'README.md')
     if readme_url.startswith('http') and readme_url != project_url:
-        text_content = text_content + requests.get(readme_url).text
+        text_content = text_content + requests.get(
+            readme_url,
+            timeout=REQUEST_TIMEOUT).text
     if not text_content and 'description' in json:
         text_content = text_content + json['description']
     contact_url = ''
@@ -238,8 +243,7 @@ def FetchDataProject(project_url):
         'summary': json['title'],
         'description': text_content,
         'source_url': project_url,
-        'image_url': url_for('static', filename='img/datapackage_icon.png',
-                             _external=True),
+        'logo_icon': 'box-open',
         'contact_url': contact_url,
     }
 
@@ -265,7 +269,7 @@ def FetchWebProject(project_url):
     """Parse a remote Document, wiki or website URL."""
     try:
         logging.info("Fetching", project_url)
-        data = requests.get(project_url)
+        data = requests.get(project_url, timeout=REQUEST_TIMEOUT)
     except requests.exceptions.RequestException:
         logging.warn("Could not connect to %s" % project_url)
         return {}
@@ -313,8 +317,7 @@ def FetchWebGoogleDoc(text, url):
     obj['name'] = ptitle.text()
     obj['description'] = html_content
     obj['source_url'] = url
-    obj['image_url'] = url_for(
-        'static', filename='img/document_icon.png', _external=True)
+    obj['logo_icon'] = 'paperclip'
     return obj
 
 
@@ -332,8 +335,7 @@ def FetchWebCodiMD(text, url):
     obj['name'] = ptitle.text()
     obj['description'] = markdown(content)
     obj['source_url'] = url
-    obj['image_url'] = url_for(
-        'static', filename='img/codimd.png', _external=True)
+    obj['logo_icon'] = 'outdent'
     return obj
 
 
@@ -354,8 +356,7 @@ def FetchWebDokuWiki(text, url):
     obj['name'] = ptitle.text().replace('project:', '')
     obj['description'] = html_content
     obj['source_url'] = url
-    obj['image_url'] = url_for(
-        'static', filename='img/dokuwiki_icon.png', _external=True)
+    obj['logo_icon'] = 'list-ul'
     return obj
 
 
@@ -364,14 +365,15 @@ def FetchWebEtherpad(text, url):
     ptitle = url.split('/')[-1]
     if len(ptitle) < 1:
         return {}
-    text_content = requests.get("%s/export/txt" % url).text
+    text_content = requests.get(
+        "%s/export/txt" % url,
+        timeout=REQUEST_TIMEOUT).text
     obj = {}
     obj['type'] = 'Etherpad'
     obj['name'] = ptitle.replace('_', ' ')
     obj['description'] = text_content
     obj['source_url'] = url
-    obj['image_url'] = url_for(
-        'static', filename='img/document_white.png', _external=True)
+    obj['logo_icon'] = 'pen'
     return obj
 
 
@@ -388,8 +390,7 @@ def FetchWebInstructables(text, url):
     obj['name'] = ptitle.text()
     obj['description'] = html_content
     obj['source_url'] = url
-    obj['image_url'] = url_for(
-        'static', filename='img/instructables.png', _external=True)
+    obj['logo_icon'] = 'wrench'
     return obj
 
 
