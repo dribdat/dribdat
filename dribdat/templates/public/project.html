@@ -162,7 +162,9 @@
       {% if project.category.logo_icon %}
         <i class="fa fa-{{project.category.logo_icon}}"></i>
       {% endif %}
-      <a href="#category" title="Category">{{ project.category.name }}</a>
+      <a href="#"
+         data-toggle="modal" data-target="#categoryModal" title="Show Category">
+          {{ project.category.name }}</a>
     </div>
   {% endif %}
 
@@ -386,16 +388,6 @@
     {% endif %}
   </div>
 
-  {% if project.category %}
-  <div class="panel panel-default category-details">
-    <a name="category"></a>
-    <div category-id="{{project.category.id}}" class="category-container" style="border-top:5px solid {{project.category.logo_color}}">
-      <h3>{{ project.category.name }}</h3>
-      {{ project.category.description|markdown }}
-    </div>
-  </div>
-  {% endif %}
-
 </div><!-- /.jumbotron .project-page -->
 
 <center class="project-footer-controls">
@@ -500,6 +492,25 @@
     <i class="fa fa-arrow-left" aria-hidden="true"></i>
     Go back</a>
 </center>
+{% endif %}
+
+{% if project.category %}
+  <div class="modal fade" id="categoryModal" role="dialog" tabindex="-1">
+    <div class="modal-dialog category-details">
+      <div class="modal-content" category-id="{{project.category.id}}" class="category-container">
+        <div class="modal-header text-center">
+          <h5 class="modal-title float-left">Category&nbsp;</h5>
+          <h3>{{ project.category.name }}</h3>
+        </div>
+        <div class="modal-body" style="border-top:5px solid {{project.category.logo_color}}">
+          {{ project.category.description|markdown }}
+        </div>
+        <div class="modal-footer text-center">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">OK</button>
+        </div>
+      </div>
+    </div>
+  </div><!-- /.modal -->
 {% endif %}
 
 {% endblock %}
