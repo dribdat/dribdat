@@ -12,10 +12,11 @@ class TestAggregate:
         test_url = 'https://meta.dribdat.cc/api/event/5/datapackage.json'
         test_obj = GetProjectData(test_url)
         assert 'name' in test_obj
-        assert test_obj['name'] == 'dribdat'
-        assert test_obj['type'] == 'Gitea'
-        assert 'commits' in test_obj
-        assert len(test_obj['commits']) > 5
+        assert test_obj['name'] == 'event-5'
+        assert test_obj['type'] == 'Data Package'
+        tl = 'Event and project details collected with dribdat'
+        assert tl in test_obj['description']
+        assert test_url in test_obj['description']
 
     def test_gitea(self):
         """Test parsing a Codeberg readme."""

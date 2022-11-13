@@ -221,18 +221,10 @@ def FetchDataProject(project_url):
     if 'name' not in json or 'title' not in json:
         logging.debug('Invalid format at', project_url)
         return {}
-    text_content = project_url + '\n\n'
-    if 'homepage' in json:
-        readme_url = json['homepage']
-    else:
-        readme_url = project_url.replace('datapackage.json', 'README.md')
-    if readme_url.startswith('http') and readme_url != project_url:
-        text_content = text_content + requests.get(
-            readme_url,
-            timeout=REQUEST_TIMEOUT).text
-    if not text_content and 'description' in json:
-        text_content = text_content + json['description']
-    contact_url = ''
+    text_content = project_url
+    if 'description' in json:
+        text_content = json['description'] + '\n\n' + text_content
+    contact_url = json['homepage'] or ''
     if 'maintainers' in json and \
             len(json['maintainers']) > 0 and \
             'web' in json['maintainers'][0]:
