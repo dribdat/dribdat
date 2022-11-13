@@ -28,11 +28,14 @@ def FetchGiteaProject(project_url):
     api_repos = site_root + "/api/v1/repos/%s" % url_q
     api_content = api_repos + "/contents"
     # Collect basic data
+    logging.info("Fetching Gitea", url_q)
     data = requests.get(api_repos)
     if data.text.find('{') < 0:
+        logging.debug("No data", data.text)
         return {}
     json = data.json()
     if 'name' not in json:
+        logging.debug("Invalid data", data.text)
         return {}
     # Collect the README
     data = requests.get(api_content)
@@ -68,11 +71,14 @@ def FetchGitlabProject(project_url):
     API_BASE = WEB_BASE + "/api/v4/projects/%s"
     url_q = quote_plus(project_url)
     # Collect basic data
+    logging.info("Fetching GitLab", url_q)
     data = requests.get(API_BASE % url_q)
     if data.text.find('{') < 0:
+        logging.debug("No data", data.text)
         return {}
     json = data.json()
     if 'name' not in json:
+        logging.debug("Invalid data", data.text)
         return {}
     # Collect the README
     readmeurl = json['readme_url'] + '?inline=false'
@@ -97,6 +103,7 @@ def FetchGitlabAvatar(email):
     apiurl = "https://gitlab.com/api/v4/avatar?email=%s&size=80"
     data = requests.get(apiurl % email)
     if data.text.find('{') < 0:
+        logging.debug("No data", data.text)
         return None
     json = data.json()
     if 'avatar_url' not in json:
@@ -107,19 +114,24 @@ def FetchGitlabAvatar(email):
 def FetchGithubProject(project_url):
     """Download data from GitHub."""
     API_BASE = "https://api.github.com/repos/%s"
+    logging.info("Fetching GitHub", project_url)
     data = requests.get(API_BASE % project_url)
     if data.text.find('{') < 0:
+        logging.debug("No data", data.text)
         return {}
     json = data.json()
     if 'name' not in json or 'full_name' not in json:
+        logging.debug("Invalid data", data.text)
         return {}
     repo_full_name = json['full_name']
     default_branch = json['default_branch'] or 'main'
     readmeurl = "%s/readme" % (API_BASE % project_url)
     readmedata = requests.get(readmeurl)
+    readme = ''
     if readmedata.text.find('{') < 0:
-        return {}
-    readme = readmedata.json()
+        logging.debug("No readme", data.text)
+    else:
+        readme = readmedata.json()
     if 'content' not in readme:
         readme = ''
     else:
@@ -155,13 +167,14 @@ def FetchBitbucketProject(project_url):
     """Download data from Bitbucket."""
     WEB_BASE = "https://bitbucket.org/%s"
     API_BASE = "https://api.bitbucket.org/2.0/repositories/%s"
+    logging.info("Fetching Bitbucket", project_url)
     data = requests.get(API_BASE % project_url)
     if data.text.find('{') < 0:
-        print('No data at', project_url)
+        logging.debug('No data at', project_url)
         return {}
     json = data.json()
     if 'name' not in json:
-        print('Invalid format at', project_url)
+        logging.debug('Invalid format at', project_url)
         return {}
     readme = ''
     for docext in ['.md', '.rst', '.txt', '']:
@@ -197,10 +210,13 @@ def FetchDataProject(project_url):
     """Try to load a Data Package formatted JSON file."""
     # TODO: use frictionlessdata library!
     data = requests.get(project_url)
+    logging.info("Fetching Data Package", project_url)
     if data.text.find('{') < 0:
+        logging.debug('No data at', project_url)
         return {}
     json = data.json()
     if 'name' not in json or 'title' not in json:
+        logging.debug('Invalid format at', project_url)
         return {}
     text_content = project_url + '\n\n'
     if 'homepage' in json:
@@ -248,9 +264,10 @@ ALLOWED_HTML_ATTR['font'] = ['color']
 def FetchWebProject(project_url):
     """Parse a remote Document, wiki or website URL."""
     try:
+        logging.info("Fetching", project_url)
         data = requests.get(project_url)
     except requests.exceptions.RequestException:
-        print("Could not connect to %s" % project_url)
+        logging.warn("Could not connect to %s" % project_url)
         return {}
 
     # Google Document
@@ -365,6 +382,19 @@ def FetchWebInstructables(text, url):
     content = doc(".main-content")
     if len(content) < 1 or len(ptitle) < 1:
         return {}
+    html_content = ParseInstructablesPage(content)
+    obj = {}
+    obj['type'] = 'Instructables'
+    obj['name'] = ptitle.text()
+    obj['description'] = html_content
+    obj['source_url'] = url
+    obj['image_url'] = url_for(
+        'static', filename='img/instructables.png', _external=True)
+    return obj
+
+
+def ParseInstructablesPage(content):
+    """Create an HTML summary of content."""
     html_content = ""
     for step in content.find(".step"):
         step_title = pq(step).find('.step-title')
@@ -379,23 +409,24 @@ def FetchWebInstructables(text, url):
         if step_content is None:
             continue
         for elem in pq(step_content).children():
-            if elem.tag == 'pre':
-                if elem.text is None:
-                    continue
-                html_content += '<pre>' + elem.text + '</pre>'
-            else:
-                p = pq(elem).html()
-                if p is None:
-                    continue
-                p = bleach.clean(p.strip(), strip=True,
-                                 tags=ALLOWED_HTML_TAGS,
-                                 attributes=ALLOWED_HTML_ATTR)
-                html_content += '<%s>%s</%s>' % (elem.tag, p, elem.tag)
-    obj = {}
-    obj['type'] = 'Instructables'
-    obj['name'] = ptitle.text()
-    obj['description'] = html_content
-    obj['source_url'] = url
-    obj['image_url'] = url_for(
-        'static', filename='img/instructables.png', _external=True)
-    return obj
+            elem_tag, p = ParseInstructablesElement(elem)
+            if elem_tag is None:
+                continue
+            html_content += '<%s>%s</%s>' % (elem_tag, p, elem_tag)
+    return html_content
+
+
+def ParseInstructablesElement(elem):
+    """Check and return minimal contents."""
+    if elem.tag == 'pre':
+        if elem.text is None:
+            return None, None
+        return 'pre', elem.text
+    else:
+        p = pq(elem).html()
+        if p is None:
+            return None, None
+        p = bleach.clean(p.strip(), strip=True,
+                         tags=ALLOWED_HTML_TAGS,
+                         attributes=ALLOWED_HTML_ATTR)
+        return elem.tag, p
