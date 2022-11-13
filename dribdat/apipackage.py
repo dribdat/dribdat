@@ -37,7 +37,7 @@ def PackageEvent(event, author=None, host_url='', full_contents=False):
     package = Package(
         name='event-%d' % event.id,
         title=event.name,
-        description="Event and project details collected with dribdat",
+        description=event.summary or event.description,
         keywords=["dribdat", "hackathon", "co-creation"],
         sources=[{"title": "dribdat", "path": "https://dribdat.cc"}],
         licenses=[{

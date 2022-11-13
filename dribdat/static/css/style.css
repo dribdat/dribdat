@@ -865,6 +865,9 @@ nav .nav-login {
   border-radius: 0px;
   clear: both;
 }
+.project-page .project-longtext .card {
+  background: none;
+}
 .project-page .project-star i {
   padding-right: 5px;
 }
