@@ -85,7 +85,6 @@ def FetchGitlabProject(project_url):
     # Collect the README
     readmeurl = json['readme_url'] + '?inline=false'
     readmeurl = readmeurl.replace('-/blob/', '-/raw/')
-    print('Fetching GitLab:', readmeurl)
     readmedata = requests.get(readmeurl, timeout=REQUEST_TIMEOUT)
     readme = readmedata.text or ""
     return {
@@ -213,6 +212,7 @@ def FetchDataProject(project_url):
     """Try to load a Data Package formatted JSON file."""
     # TODO: use frictionlessdata library!
     data = requests.get(project_url, timeout=REQUEST_TIMEOUT)
+    # TODO: treat dribdat events as special
     logging.info("Fetching Data Package", project_url)
     if data.text.find('{') < 0:
         logging.debug('No data at', project_url)
@@ -221,9 +221,10 @@ def FetchDataProject(project_url):
     if 'name' not in json or 'title' not in json:
         logging.debug('Invalid format at', project_url)
         return {}
-    text_content = project_url
-    if 'description' in json:
-        text_content = json['description'] + '\n\n' + text_content
+    try:
+        text_content = parse_data_package(json)
+    except KeyError:
+        text_content = '(Could not parse Data Package contents)'
     contact_url = json['homepage'] or ''
     if 'maintainers' in json and \
             len(json['maintainers']) > 0 and \
@@ -238,6 +239,28 @@ def FetchDataProject(project_url):
         'logo_icon': 'box-open',
         'contact_url': contact_url,
     }
+
+
+def parse_data_package(json):
+    """Extract contents of a Data Package."""
+    text_content = ''
+    if 'description' in json:
+        text_content = json['description'] + '\n\n'
+    if 'resources' in json:
+        text_content = text_content + '\n### Resources\n\n'
+        for r in json['resources']:
+            rn = r['name']
+            if 'path' in r:
+                rn = "[%s](%s)" % (rn, r['path'])
+            text_content = text_content + '- ' + rn + '\n'
+    if 'sources' in json:
+        text_content = text_content + '\n### Sources\n\n'
+        for r in json['sources']:
+            rn = r['title']
+            if 'path' in r:
+                rn = "[%s](%s)" % (rn, r['path'])
+            text_content = text_content + '- ' + rn + '\n'
+    return text_content
 
 
 # Basis: https://github.com/mozilla/bleach/blob/master/bleach/sanitizer.py#L16
