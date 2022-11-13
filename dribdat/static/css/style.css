@@ -1120,8 +1120,12 @@ nav .nav-login {
   color: #007bff;
   clear: none;
 }
-.onebox .phase {
-  font-size: 80%; color: #999;
+.onebox .event-detail {
+  font-size: 80%;
+  opacity: 0.7;
+}
+.onebox .phase::before {
+  content: " - ";
 }
 .onebox p {
   font-size: 90%;

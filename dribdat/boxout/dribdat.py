@@ -15,7 +15,10 @@ TEMPLATE_PROJECT = r"""
         </div>
     </a>
     <a href="{{link}}" class="title">{{name}}</a>
-    <div class="phase">{{phase}}</div>
+    <div class="event-detail">
+        <span>{{event_name}}</span>
+        <i class="phase">{{phase}}</i>
+    </div>
     <p>{{summary}}</p>
 </div>
 """
