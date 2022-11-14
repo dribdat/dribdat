@@ -3,25 +3,24 @@
 ![Github Actions build](https://github.com/dribdat/dribdat/workflows/build/badge.svg)
 [![codecov](https://codecov.io/gh/dribdat/dribdat/branch/main/graph/badge.svg?token=Ccd1vTxRXg)](https://codecov.io/gh/dribdat/dribdat)
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Floleg%2Fdribdat.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Floleg%2Fdribdat?ref=badge_shield)
-[![Mattermost](https://img.shields.io/badge/Mattermost-chat-blue.svg)](https://team.opendata.ch/signup_user_complete/?id=74yuxwruaby9fpoukx9bmoxday)
 
-### Tools for time-limited, team-based, data-driven, open collaboration
+### Tools for time-limited, team-based, open-by-default collaboration
 
-`dribdat` is an open source web platform for data-driven team collaboration. Designed for [awesome](https://github.com/dribdat/awesome-hackathon) hackathons, it is a Swiss Army Knife of everything you need for your event: a website, countdown clock and challenge board, project log and progress tracker, integrations with popular chat platforms and code repositories, open data support and APIs.
+`dribdat` is an open source web platform for team collaboration online and offline. Originally designed to promote and support open data expeditions and [awesome hackathons](https://github.com/dribdat/awesome-hackathon), it is a Swiss Army Knife of everything you need for your event: a website, countdown clock and challenge board, project log and progress tracker, integrations with popular chat platforms and code repositories, open data support and APIs.
 
-For more background and references, see the [User Handbook](https://docs.dribdat.cc/usage/). If you need help or advice in setting up your event, or would like to contribute to the project: please get in touch via [GitHub Issues](https://github.com/dribdat/dribdat/issues) or [website](https://dribdat.cc). Follow us on [Twitter](https://twitter.com/dribdat) and get updates on our [OpenCollective](https://opencollective.com/dribdat/updates).
+For more background and references, see the [User Handbook](https://docs.dribdat.cc/usage/). If you need help or advice in setting up your event, or would like to contribute to the project: please get in touch via [GitHub Issues](https://github.com/dribdat/dribdat/issues) or [website](https://dribdat.cc). 
 
 ![Screenshot of dribdat](dribdat/static/img/screenshot_sandbox.png)
+
+Follow and support the project's development on [OpenCollective](https://opencollective.com/dribdat/updates).
 
 <a href="https://opencollective.com/dribdat/donate" target="_blank"><img src="https://opencollective.com/dribdat/donate/button@2x.png?color=blue" width=300 /></a>
 
 # Quickstart
 
-This project can be deployed to any server capable of serving Python applications, and is set up for fast deployment using [Docker](https://github.com/dribdat/dribdat/blob/main/docs/DEPLOY.md#with-docker).
+This project can be deployed to any server capable of serving Python applications, and is set up for fast deployment using [Docker](https://github.com/dribdat/dribdat/blob/main/docs/DEPLOY.md#with-docker). The first user that registers becomes an admin, so don't delay! 
 
-The first user that registers becomes an admin, so don't delay! If you would like to run dribdat on any other cloud or local machine, there are additional instructions in the [Deployment guide](https://docs.dribdat.cc/deploy/).
-
-Information on contributing and extending dribdat, as well as running it on your local machine, can be found in the [Developer guide](https://docs.dribdat.cc/contribute/) which includes API documentation, and more.
+If you would like to run dribdat on any other cloud or local machine, there are additional instructions in the [Deployment guide](https://docs.dribdat.cc/deploy/). Information on contributing and extending dribdat can be found in the [Developer guide](https://docs.dribdat.cc/contribute/), which includes API documentation and more.
 
 See also **[backboard](https://github.com/dribdat/backboard)**, a sample responsive web application, and our **[dridbot](https://github.com/dribdat/dridbot)** chat client, which both demonstrate reuse of the dribdat API.
 
@@ -29,7 +28,7 @@ If you need support with your deployment, please reach out through Issues or the
 
 # Credits
 
-This project is currently mantained by [@loleg](https://github.com/loleg) and [@gonzalocasas](https://github.com/gonzalocasas). You can chat with us on Mattermost, linked to the badge at the top of this README. See [Contributors](https://github.com/dataletsch/dribdat/graphs/contributors) for a full list of people who have helped us with the code, and [Forks](https://github.com/dataletsch/dribdat/network/members) to find other users of this project.
+This project is currently mantained by [@loleg](https://github.com/loleg) and [@gonzalocasas](https://github.com/gonzalocasas). See [Contributors](https://github.com/dataletsch/dribdat/graphs/contributors) for a full list of people who have helped us with the code, and [Forks](https://github.com/dataletsch/dribdat/network/members) to find other users of this project.
 
 Special thanks to the [Open Data](https://opendata.ch), [Open Networking](https://opennetworkinfrastructure.org/) and [Open Source](https://dinacon.ch) communities in Switzerland for the many trials and feedbacks. We are also grateful to F. Wieser and M.-C. Gasser at [Swisscom](http://swisscom.com) for conceptual inputs and financial support at an early stage of this project.
 
