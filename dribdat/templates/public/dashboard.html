@@ -217,6 +217,7 @@ refreshProjects = function() {
     $pp = $('#activities').empty();
     data.activities.forEach(function(a) {
       if (!a.content) return;
+      a.content = a.content.replace(/\!\[.*\)/, '(img)')
       $pp.append('<div>' +
         '<p>'+a.content+'</p>' +
         '<a href="/project/'+a.project_id+'">@'+a.user_name + ' / ' + a.timesince + '</a>' +
