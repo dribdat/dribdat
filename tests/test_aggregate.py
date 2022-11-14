@@ -16,7 +16,7 @@ class TestAggregate:
         assert test_obj['type'] == 'Data Package'
         tl = 'Event and project details collected with dribdat'
         assert tl in test_obj['description']
-        assert test_url in test_obj['description']
+        assert test_url in test_obj['source_url']
 
     def test_gitea(self):
         """Test parsing a Codeberg readme."""
