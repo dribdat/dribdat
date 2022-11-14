@@ -7,10 +7,14 @@
     <h2>Update event</h2>
 
     <div class="float-right">
+
+      <a href="{{ url_for('public.event', event_id=event.id) }}" class="btn btn-warning m-4" target="_blank">
+        &#128065; Public view
+      </a>
       <a href="{{ url_for('admin.event_projects', event_id=event.id) }}" class="btn btn-light"
         onclick="if(!window.confirm('Make sure you have saved any changes.')) return false">
         <i class="fa fa-arrow-right" aria-hidden="true"></i>
-        View Projects</a>
+        Projects</a>
     </div>
 
     {{ render_form(url_for('admin.event', event_id=event.id), form) }}

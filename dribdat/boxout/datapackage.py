@@ -3,40 +3,47 @@
 import re
 import logging
 import pystache
+from datetime import datetime
 from frictionless import Package
 
 TEMPLATE_PACKAGE = r"""
 <div class="boxout datapackage card mb-4" style="max-width:23em">
   <div class="card-body">
-    <a href="{{homepage}}">
-        <h5 class="card-title font-weight-bold">{{title}}</h5>
-    </a>
-    <a href="{{url}}" download>
-        <h6 class="card-subtitle mb-2 text-muted">Data Package</h6>
-    </a>
-    <div class="card-text description">{{description}}</div>
+    <h5 class="card-title font-weight-bold">
+        {{dp.title}}
+    </h5>
+    <h6 class="card-subtitle mb-2 text-muted">
+        Data Package
+        <a href="{{dp.homepage}}" title="Home page">
+            &#127760;&nbsp;www
+        </a>
+        <a href="{{url}}" download title="Get Data Package">
+            &#127760;&nbsp;json
+        </a>
+    </h6>
+    <div class="card-text description">{{dp.description}}</div>
     <ul class="resources list-unstyled">
-    {{#resources}}
+    {{#dp.resources}}
         <li><a href="{{path}}" download class="card-link">{{name}}</a>
         <span class="schema-fields">{{#schema.fields}}
             <b title="{{type}}">&#9632;</b>
         {{/schema.fields}}</span></li>
-    {{/resources}}
+    {{/dp.resources}}
     </ul>
     <div class="details font-size-small">
-        <div class="sources float-left">&#128230;
-        {{#sources}}
-            <a href="{{path}}">{{name}}</a>
-        {{/sources}}
+        <div class="sources float-left">
+        {{#dp.sources}}
+            <a href="{{path}}">&#128230; {{title}}</a>
+        {{/dp.sources}}
         </div>
-        {{#licenses}}
-        <i class="created">{{created}}</i>
+        <small title="Date" class="created">{{date}}</small>
             &nbsp;
-        <i class="version">{{version}}</i>
+        <i title="Version" class="version">{{dp.version}}</i>
             &nbsp;
-        <a class="license" target="_top"
-           href="{{path}}" title="{{title}}">License</a>
-        {{/licenses}}
+        {{#dp.licenses}}
+            <a class="license" target="_top"
+               href="{{path}}" title="{{title}}">License</a>
+        {{/dp.licenses}}
     </div>
   </div>
 </div>
@@ -66,7 +73,9 @@ def box_datapackage(line, cache=None):
     except Exception:  # noqa: B902
         logging.warn("Data Package not parsed: <%s>" % url)
         return None
-    box = pystache.render(TEMPLATE_PACKAGE, package)
+    dt = datetime.fromisoformat(package.created).strftime("%d.%m.%Y")
+    box = pystache.render(
+        TEMPLATE_PACKAGE, {'url': url, 'dp': package, 'date': dt})
     if cache:
         cache.set(url, box)
     if cache and cache.has(url):

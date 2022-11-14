@@ -101,9 +101,10 @@ class ProjectDetailForm(FlaskForm):
     logo_color = StringField(
         u'Color scheme', [length(max=7)],
         description="Customize the color of your project page.")
-    # logo_icon = StringField(u'<a target="_blank" href="
-    # http://fontawesome.io/icons/#search">Custom icon</a>',
-    #     [length(max=20)], description="A FontAwesome icon")
+    logo_icon = StringField(
+        u'Named icon',
+        [length(max=20)], description='Select an icon from FontAwesome'
+        + ': https://fontawesome.com/v5/cheatsheet')
     submit = SubmitField(u'Save changes')
 
 

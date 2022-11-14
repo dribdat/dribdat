@@ -64,7 +64,7 @@
         Edit Profile
       </a>
     </div>
-    
+
   {% endif %}
   </div>
 </div>
@@ -78,7 +78,7 @@
     {% endif %}
   </div>
 
-  <h1 class="col-sm text-left">  
+  <h1 class="col-sm text-left">
     <span>
       {{ user.username }}
     </span>
@@ -110,7 +110,7 @@
     </h5>
   </div>
   {% endif %}
-  
+
   <div class="col-sm">
     <ul class="profile-roles">
     {% for role in user.roles %}
@@ -119,14 +119,14 @@
     </ul>
   </div>
 
-  
+
 </div>
 
 {% if user.my_story %}
 <div class="row">
-  <div class="profile-story col-12">
-  <a name="story"></a>
-  <h2 class="mt-5 text-center">My Story</h2>
+  <div class="profile-story col-12 bg-body">
+    <a name="story"></a>
+    <h2 class="mt-5 text-center">My Story</h2>
     <blockquote class="profile-text">
       {{ user.my_story|markdown }}
     </blockquote>
@@ -176,7 +176,7 @@
 
 {% if user.my_goals %}
 <div class="row">
-  <div class="profile-goals col-12">
+  <div class="profile-goals col-12 bg-body">
     <a name="goals"><h1>&#127919; Goals</h1></a>
     <blockquote class="profile-text">
       {{ user.my_goals|markdown }}

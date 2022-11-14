@@ -498,7 +498,6 @@ nav .nav-login {
 .event-home .event-info .event-description {
   font-size: 110%;
   padding: 1em;
-  background: white;
 }
 
 /* ---- Hexagonal hawtness ---- */
@@ -811,7 +810,7 @@ nav .nav-login {
   color: #999;
 }
 .project-home .project-image-container {
-  margin-top: 10px;
+  margin-top: 0px;
   margin-bottom: -15px;
   height: 200px;
   width: 100%;
@@ -865,6 +864,9 @@ nav .nav-login {
   border-top: none;
   border-radius: 0px;
   clear: both;
+}
+.project-page .project-longtext .card {
+  background: none;
 }
 .project-page .project-star i {
   padding-right: 5px;
@@ -1121,8 +1123,12 @@ nav .nav-login {
   color: #007bff;
   clear: none;
 }
-.onebox .phase {
-  font-size: 80%; color: #999;
+.onebox .event-detail {
+  font-size: 80%;
+  opacity: 0.7;
+}
+.onebox .phase::before {
+  content: " - ";
 }
 .onebox p {
   font-size: 90%;
@@ -1241,12 +1247,29 @@ nav .nav-login {
 /* Code blocks */
 pre { color: #333; background: white; }
 
+/* Inline "README" */
+#readme-md:not(.tab-pane)::before {
+  content: 'README';
+  width: 100%;
+  display: block;
+  text-align: center;
+  font-size: large;
+  font-family: monospace;
+  font-weight: bold;
+  color: white;
+  background: lightblue;
+  padding: 1em;
+  margin: 0.5em 0;
+}
+
 /* Badges */
 .challenge-badge {
-  float: left; display: inline-block;
-  height: 3em; width: 3em;
+  display: block;
+  height: 3em;
+  width: 100%;
   text-indent: -9999px; color: transparent;
   margin-right: 0.3em;
+  background-position: center;
   background-repeat: no-repeat;
   background-size: contain;
 }
@@ -1599,7 +1622,6 @@ pre { color: #333; background: white; }
 .userprofile .profile-text {
   font-size: 125%;
   padding: 1em 1em 0.1em;
-  background: white;
   box-shadow: 5px 5px 5px rgba(0,0,0,0.2);
 }
 @media (max-width: 760px) {

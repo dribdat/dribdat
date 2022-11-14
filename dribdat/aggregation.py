@@ -20,40 +20,17 @@ def GetProjectData(url):
     """Parse the Readme URL to collect remote data."""
     # TODO: find a better way to decide the kind of repo
     if url.find('//gitlab.com') > 0:
-        apiurl = url
-        apiurl = re.sub(r'(?i)-?/blob/[a-z]+/README.*', '', apiurl)
-        apiurl = re.sub(r'https?://gitlab\.com/', '', apiurl).strip('/')
-        if apiurl == url:
-            return {}
-        return FetchGitlabProject(apiurl)
+        return get_gitlab_project(url)
 
     elif url.find('//github.com') > 0:
-        apiurl = url
-        apiurl = re.sub(r'(?i)/blob/[a-z]+/README.*', '', apiurl)
-        apiurl = re.sub(r'https?://github\.com/', '', apiurl).strip('/')
-        if apiurl.endswith('.git'):
-            apiurl = apiurl[:-4]
-        if apiurl == url:
-            return {}
-        return FetchGithubProject(apiurl)
+        return get_github_project(url)
 
     elif url.find('//codeberg.org') > 0:
-        apiurl = url
-        apiurl = re.sub(r'(?i)/src/branch/[a-z]+/README.*', '', apiurl)
-        apiurl = re.sub(r'https?://codeberg\.org/', '', apiurl).strip('/')
-        if apiurl.endswith('.git'):
-            apiurl = apiurl[:-4]
-        if apiurl == url:
-            return {}
-        return FetchGiteaProject(apiurl)
+        # TODO: especially here..
+        return get_gitea_project(url)
 
     elif url.find('//bitbucket.org') > 0:
-        apiurl = url
-        apiurl = re.sub(r'(?i)/src/[a-z]+/(README)?\.?[a-z]*', '', apiurl)
-        apiurl = re.sub(r'https?://bitbucket\.org', '', apiurl).strip('/')
-        if apiurl == url:
-            return {}
-        return FetchBitbucketProject(apiurl)
+        return get_bitbucket_project(url)
 
     # The fun begins
     elif url.find('.json') > 0:  # not /datapackage
@@ -62,6 +39,46 @@ def GetProjectData(url):
     # Now we're really rock'n'rollin'
     else:
         return FetchWebProject(url)
+
+
+def get_gitlab_project(url):
+    apiurl = url
+    apiurl = re.sub(r'(?i)-?/blob/[a-z]+/README.*', '', apiurl)
+    apiurl = re.sub(r'https?://gitlab\.com/', '', apiurl).strip('/')
+    if apiurl == url:
+        return {}
+    return FetchGitlabProject(apiurl)
+
+
+def get_github_project(url):
+    apiurl = url
+    apiurl = re.sub(r'(?i)/blob/[a-z]+/README.*', '', apiurl)
+    apiurl = re.sub(r'https?://github\.com/', '', apiurl).strip('/')
+    if apiurl.endswith('.git'):
+        apiurl = apiurl[:-4]
+    if apiurl == url:
+        return {}
+    return FetchGithubProject(apiurl)
+
+
+def get_gitea_project(url):
+    apiurl = url
+    apiurl = re.sub(r'(?i)/src/branch/[a-z]+/README.*', '', apiurl)
+    apiurl = re.sub(r'https?://codeberg\.org/', '', apiurl).strip('/')
+    if apiurl.endswith('.git'):
+        apiurl = apiurl[:-4]
+    if apiurl == url:
+        return {}
+    return FetchGiteaProject(apiurl)
+
+
+def get_bitbucket_project(url):
+    apiurl = url
+    apiurl = re.sub(r'(?i)/src/[a-z]+/(README)?\.?[a-z]*', '', apiurl)
+    apiurl = re.sub(r'https?://bitbucket\.org', '', apiurl).strip('/')
+    if apiurl == url:
+        return {}
+    return FetchBitbucketProject(apiurl)
 
 
 def AddProjectData(project):
@@ -81,6 +98,8 @@ def AddProjectData(project):
         project.source_url = data['source_url'][0:2048]
     if 'image_url' in data and len(data['image_url']) > 0:
         project.image_url = data['image_url'][0:2048]
+    if 'logo_icon' in data and len(data['logo_icon']) > 0:
+        project.logo_icon = data['logo_icon'][0:40]
     return project
 
 
