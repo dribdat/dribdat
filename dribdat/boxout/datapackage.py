@@ -73,7 +73,10 @@ def box_datapackage(line, cache=None):
     except Exception:  # noqa: B902
         logging.warn("Data Package not parsed: <%s>" % url)
         return None
-    dt = datetime.fromisoformat(package.created).strftime("%d.%m.%Y")
+    if package.created:
+        dt = datetime.fromisoformat(package.created).strftime("%d.%m.%Y")
+    else:
+        dt = ''
     box = pystache.render(
         TEMPLATE_PACKAGE, {'url': url, 'dp': package, 'date': dt})
     if cache:

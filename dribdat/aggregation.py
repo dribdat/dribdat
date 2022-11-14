@@ -105,7 +105,7 @@ def AddProjectData(project):
 
 def SyncProjectData(project, data):
     """Sync remote project data."""
-    # Project name should *not* be updated
+    # Note: project name should *not* be updated
     # Always update "autotext" field
     if 'description' in data and data['description']:
         project.autotext = data['description']
@@ -113,15 +113,19 @@ def SyncProjectData(project, data):
     if 'summary' in data and data['summary'] and \
        (not project.summary or not project.summary.strip()):
         project.summary = data['summary'][:140]
-    if 'homepage_url' in data and data['homepage_url'] and \
-       (not project.webpage_url):
-        project.webpage_url = data['homepage_url'][:2048]
-    if 'contact_url' in data and data['contact_url'] and \
-       (not project.contact_url):
-        project.contact_url = data['contact_url'][:2048]
     if 'source_url' in data and data['source_url'] and \
        (not project.source_url):
         project.source_url = data['source_url'][:2048]
+        if not project.longtext:
+            project.longtext = project.source_url
+    if 'homepage_url' in data and data['homepage_url'] and \
+       (not project.webpage_url):
+        project.webpage_url = data['homepage_url'][:2048]
+        if not project.longtext:
+            project.longtext = project.webpage_url
+    if 'contact_url' in data and data['contact_url'] and \
+       (not project.contact_url):
+        project.contact_url = data['contact_url'][:2048]
     if 'download_url' in data and data['download_url'] and \
        (not project.download_url):
         project.download_url = data['download_url'][:2048]

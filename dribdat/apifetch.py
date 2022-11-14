@@ -260,6 +260,8 @@ def parse_data_package(json):
             if 'path' in r:
                 rn = "[%s](%s)" % (rn, r['path'])
             text_content = text_content + '- ' + rn + '\n'
+    if text_content == '':
+        raise KeyError('No content')
     return text_content
 
 
