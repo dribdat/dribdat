@@ -7,6 +7,7 @@ if [ "$FORCE_MIGRATE" ]; then
 else
 	# Silent upgrade
 	python manage.py db upgrade 2>&1 >/dev/null
+	echo "Warning! Your database may be out of sync due to a forced upgrade."
 fi
 
 # Compress assets

@@ -15,7 +15,10 @@ TEMPLATE_PROJECT = r"""
         </div>
     </a>
     <a href="{{link}}" class="title">{{name}}</a>
-    <div class="phase">{{phase}}</div>
+    <div class="event-detail">
+        <span>{{event_name}}</span>
+        <i class="phase">{{phase}}</i>
+    </div>
     <p>{{summary}}</p>
 </div>
 """
@@ -23,8 +26,8 @@ TEMPLATE_PROJECT = r"""
 
 def box_project(url):
     """Create a OneBox for local projects."""
-    project_id = url.split('/')[-1]
-    if not project_id:
+    project_id = url.split('/')[-1].split('#')[0]
+    if not project_id or not project_id.isnumeric():
         return None
     from ..user.models import Project
     project = Project.query.filter_by(id=int(project_id)).first()

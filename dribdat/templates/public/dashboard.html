@@ -10,6 +10,7 @@
 <script src="https://cdn.jsdelivr.net/npm/flipdown@0/dist/flipdown.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jquery-resizable-dom@0.35.0/dist/jquery-resizable.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/2.1.0/showdown.min.js" integrity="sha512-LhccdVNGe2QMEfI3x4DVV3ckMRe36TfydKss6mJpdHjNFiV07dFpS2xzeZedptKZrwxfICJpez09iNioiSZ3hA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 <!-- Refresh social media wall every ten minutes -->
 {% if with_social_wall %}
@@ -176,6 +177,9 @@
     text-align: right;
     background: white;
   }
+  #activities img, #activities image, #activities iframe, #activities video {
+    width: 100%;
+  }
   #activities div {
     background:rgba(230,230,230,0.8);
     box-shadow: 5px 5px 5px rgba(0,0,0,0.4);
@@ -202,6 +206,8 @@
 </style>
 
 <script>
+var converter = new showdown.Converter();
+
 refreshProjects = function() {
   $.getJSON('/api/event/current/projects.json', function(data) {
     $pp = $('#projects').empty();
@@ -217,8 +223,9 @@ refreshProjects = function() {
     $pp = $('#activities').empty();
     data.activities.forEach(function(a) {
       if (!a.content) return;
-      $pp.append('<div>' +
-        '<p>'+a.content+'</p>' +
+      //a.content = a.content.replace(/\!\[.*\)/, '(img)')
+      let content = converter.makeHtml(a.content);
+      $pp.append('<div>' + content +
         '<a href="/project/'+a.project_id+'">@'+a.user_name + ' / ' + a.timesince + '</a>' +
       '</div>');
     });

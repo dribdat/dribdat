@@ -11,8 +11,6 @@ from .factories import UserFactory
 class TestImport:
     """Sample import export."""
 
-    DP_REMOTE_URL = 'https://meta.dribdat.cc/api/event/5/datapackage.json'
-
     def test_datapackage(self, project, testapp):
         """Create a data package."""
         event = Event(name="Test Event", summary="Just testin")

@@ -118,9 +118,11 @@
 
 {% macro render_home_event(event) %}
 	<div class="col-lg-4 an-event"><div class="card">
-			<div class="card-img-top" title="{{ event.hostname }}"
-		    {% if event.logo_url %}
-		     style="background-image: url('{{ event.logo_url }}'); height: 10em"
+			<div title="{{ event.hostname }}"
+				{% if event.gallery_url %}
+				  class="card-img-top gallery-img" style="background-image: url('{{ event.gallery_url }}')"
+		    {% elif event.logo_url %}
+		      class="card-img-top" style="background-image: url('{{ event.logo_url }}')"
 		    {% endif %}>
 			</div>
 	    <div class="card-body">
