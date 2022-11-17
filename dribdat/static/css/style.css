@@ -997,8 +997,9 @@ nav .nav-login {
 .userprofile .nav,
 .project-page .nav {
   clear: both;
-  padding: 20px 5px 5px;
+  /* padding: 20px 5px 5px; */
   border-bottom: 1px solid lightgrey;
+  margin-bottom: 10px;
 }
 .project-page .nav a {
   text-shadow: 1px 1px 4px white;
@@ -1311,12 +1312,13 @@ pre { color: #333; background: white; }
 }
 .project-score {
   float: right;
-  margin-right: 15px;
-  text-align: right;
 }
 .project-page .project-score {
   text-align: center;
   min-width: 8em;
+  margin-top: -1em;
+  margin-right: -1em;
+  margin-bottom: 1em;
 }
 .project-page .project-category {
   float: right;
@@ -1389,8 +1391,9 @@ pre { color: #333; background: white; }
   .category-info {
     margin-top: 0px;
   }
-  .project-score {
+  .project-page .project-score {
     float: none;
+    margin: 0.5em;
   }
 }
 

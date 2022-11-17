@@ -217,7 +217,6 @@ def user_profile():
 
     if user.sso_id:
         # Do not allow changing password on SSO
-        # TODO: admins need to be able to disable SSO!
         del form.password
 
     # Validation has passed

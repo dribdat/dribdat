@@ -147,14 +147,35 @@
   {% if project.score and project.score > 1 %}
     <div class="project-score">
       <a href="{{ url_for('public.event_stages', event_id=project.event.id) }}" style="text-decoration:none">
-        <span class="label label-info">{{ project.phase }}</span>
-        <div class="progress" title="A score based on profile completeness and voting results">
-          <div class="progress-bar" role="progressbar" aria-valuenow="{{project.score}}" aria-valuemin="0" aria-valuemax="70" style="width:{{project.score}}%">
-            {{project.score}}
+        <div class="progress" 
+          title="{{project.score}}: {{project.phase}}"
+          alt="A score based on profile completeness and voting results">
+          <div class="progress-bar" role="progressbar" 
+               aria-valuenow="{{project.score}}" aria-valuemin="0" aria-valuemax="70" 
+               style="width:{{project.score}}%">
           </div>
         </div>
       </a>
     </div>
+  {% endif %}
+
+  {% if not project.event.lock_resources %}
+  <ul class="nav nav-pills nav-fill md-tabs" id="projectTabs" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link active" id="project-tab-md" data-toggle="tab" href="#project-md" role="tab" aria-controls="project-md"
+        aria-selected="true">Pitch</a>
+    </li>
+    {% if project.autotext %}
+    <li class="nav-item">
+      <a class="nav-link" id="readme-tab-md" data-toggle="tab" href="#readme-md" role="tab" aria-controls="readme-md"
+        aria-selected="false">Readme</a>
+    </li>
+    {% endif %}
+    <li class="nav-item">
+      <a class="nav-link" id="dribs-tab-md" data-toggle="tab" href="#dribs-md" role="tab" aria-controls="dribs-md"
+        aria-selected="false">Log</a>
+    </li>
+  </ul>
   {% endif %}
 
   {% if project.category %}
@@ -198,27 +219,6 @@
         </a>
       {% endfor %}
     </div>
-  {% endif %}
-
-  {% if not project.event.lock_resources and not project.is_challenge %}
-  <ul class="nav nav-pills nav-fill md-tabs" id="projectTabs" role="tablist">
-    <li class="nav-item">
-      <a class="nav-link active" id="project-tab-md" data-toggle="tab" href="#project-md" role="tab" aria-controls="project-md"
-        aria-selected="true">Pitch</a>
-    </li>
-    {% if project.autotext %}
-    <li class="nav-item">
-      <a class="nav-link" id="readme-tab-md" data-toggle="tab" href="#readme-md" role="tab" aria-controls="readme-md"
-        aria-selected="false">Readme</a>
-    </li>
-    {% endif %}
-    {% if not project.is_challenge %}
-    <li class="nav-item">
-      <a class="nav-link" id="dribs-tab-md" data-toggle="tab" href="#dribs-md" role="tab" aria-controls="dribs-md"
-        aria-selected="false">Log</a>
-    </li>
-    {% endif %}
-  </ul>
   {% endif %}
 
 <div class="project-info tab-content" id="log">
@@ -271,7 +271,7 @@
     </div><!-- /readme-md -->
   {% endif %}
 
-  {% if not project.is_challenge and not project.event.lock_resources %}
+  {% if not project.event.lock_resources %}
   <div class="tab-pane fade" id="dribs-md" role="tabpanel" aria-labelledby="dribs-tab-md">
 
     <section class="timeline">
