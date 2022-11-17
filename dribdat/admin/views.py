@@ -124,7 +124,7 @@ def user(user_id):
         db.session.commit()
 
         flash('User updated.', 'success')
-        return users()
+        return redirect(url_for("admin.users"))
 
     return render_template('admin/useredit.html', user=user, form=form)
 
@@ -148,7 +148,7 @@ def user_profile(user_id):
         db.session.commit()
 
         flash('User updated.', 'success')
-        return users()
+        return redirect(url_for("admin.users"))
 
     if not form.roles.choices:
         del form.roles
@@ -174,7 +174,7 @@ def user_new():
         db.session.commit()
 
         flash('User added.', 'success')
-        return users()
+        return redirect(url_for("admin.users"))
 
     return render_template('admin/usernew.html', form=form)
 
@@ -192,7 +192,7 @@ def user_delete(user_id):
     else:
         user.delete()
         flash('User deleted.', 'success')
-    return users()
+    return redirect(url_for("admin.users"))
 
 
 """ Get a reasonably secure password """
@@ -246,7 +246,7 @@ def user_deactivate(user_id, reactivate=False):
         flash('User %s is now active.' % user.username, 'success')
     else:
         flash('User %s deactivated.' % user.username, 'warning')
-    return users()
+    return redirect(url_for("admin.users"))
 
 
 @blueprint.route('/user/<int:user_id>/reactivate/')
@@ -255,6 +255,19 @@ def user_deactivate(user_id, reactivate=False):
 def user_reactivate(user_id):
     """Reactivate user account."""
     return user_deactivate(user_id, True)
+
+
+@blueprint.route('/user/<int:user_id>/clearsso/')
+@login_required
+@admin_required
+def user_clearsso(user_id):
+    """Clear SSO from a user account."""
+    user = User.query.filter_by(id=user_id).first_or_404()
+    user.sso_id = None
+    db.session.add(user)
+    db.session.commit()
+    flash('SSO for %s deactivated.' % user.username, 'warning')
+    return redirect(url_for("admin.users"))
 
 ##############
 ##############

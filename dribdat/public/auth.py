@@ -215,6 +215,11 @@ def user_profile():
             flash('This e-mail address is already registered.', 'error')
             user_is_valid = False
 
+    if user.sso_id:
+        # Do not allow changing password on SSO
+        # TODO: admins need to be able to disable SSO!
+        del form.password
+
     # Validation has passed
     if form.validate_on_submit() and user_is_valid:
         # Assign roles
@@ -229,11 +234,13 @@ def user_profile():
         # Assign password if changed
         originalhash = user.password
         form.populate_obj(user)
-        if form.password.data:
-            user.set_password(form.password.data)
-        else:
-            user.password = originalhash
-            user.updated_at = datetime.utcnow()
+        # Do not allow changing password on SSO
+        if not user.sso_id:
+            if form.password.data:
+                user.set_password(form.password.data)
+            else:
+                user.password = originalhash
+                user.updated_at = datetime.utcnow()
 
         db.session.add(user)
         db.session.commit()

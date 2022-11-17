@@ -14,7 +14,17 @@
     {{ render_form(url_for('admin.user', user_id=user.id), form) }}
 
     <hr>
-    <p>{% if user.sso_id %}&#10003; SSO Enabled{% endif %}</p>
+    {% if user.sso_id %}
+    <p>
+        &#10003; SSO Enabled
+
+        <a href="{{ url_for('admin.user_clearsso', user_id=user.id) }}"
+            onclick="if(!window.confirm('Are you sure you wish to deactivate SSO for this user?')) return false"
+            class="btn btn-sm btn-warning">
+          Deactivate
+        </a>
+    </p>
+    {% endif %}
     <p>Created: {{ user.created_at|format_date }}</p>
     {% if user.updated_at %}
         <p>Last update: {{ user.updated_at|format_date }}</p>
