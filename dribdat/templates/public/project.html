@@ -159,25 +159,6 @@
     </div>
   {% endif %}
 
-  {% if not project.event.lock_resources %}
-  <ul class="nav nav-pills nav-fill md-tabs" id="projectTabs" role="tablist">
-    <li class="nav-item">
-      <a class="nav-link active" id="project-tab-md" data-toggle="tab" href="#project-md" role="tab" aria-controls="project-md"
-        aria-selected="true">Pitch</a>
-    </li>
-    {% if project.autotext %}
-    <li class="nav-item">
-      <a class="nav-link" id="readme-tab-md" data-toggle="tab" href="#readme-md" role="tab" aria-controls="readme-md"
-        aria-selected="false">Readme</a>
-    </li>
-    {% endif %}
-    <li class="nav-item">
-      <a class="nav-link" id="dribs-tab-md" data-toggle="tab" href="#dribs-md" role="tab" aria-controls="dribs-md"
-        aria-selected="false">Log</a>
-    </li>
-  </ul>
-  {% endif %}
-
   {% if project.category %}
     <div class="project-category">
       {% if project.category.logo_icon %}
@@ -221,35 +202,54 @@
     </div>
   {% endif %}
 
+  {% if not project.event.lock_resources %}
+  <ul class="nav nav-pills nav-fill md-tabs" id="projectTabs" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link active" id="project-tab-md" data-toggle="tab" href="#project-md" role="tab" aria-controls="project-md"
+        aria-selected="true">Pitch</a>
+    </li>
+    {% if project.autotext %}
+    <li class="nav-item">
+      <a class="nav-link" id="readme-tab-md" data-toggle="tab" href="#readme-md" role="tab" aria-controls="readme-md"
+        aria-selected="false">Readme</a>
+    </li>
+    {% endif %}
+    <li class="nav-item">
+      <a class="nav-link" id="dribs-tab-md" data-toggle="tab" href="#dribs-md" role="tab" aria-controls="dribs-md"
+        aria-selected="false">Log</a>
+    </li>
+  </ul>
+  {% endif %}
+
 <div class="project-info tab-content" id="log">
 
-<div class="tab-pane fade show active" id="project-md" role="tabpanel" aria-labelledby="project-tab-md">
+  <div class="tab-pane fade show active" id="project-md" role="tabpanel" aria-labelledby="project-tab-md">
 
-  {% if current_user and current_user.active and not project.webpage_url and not project.longtext and not lock_editing %}
-  <div class="alert alert-success" role="alert">
-    <a class="close" title="Close" href="#" data-dismiss="alert">&times;</a>
-    <!-- Helpful comment for new projects -->
-    {% if not project_starred %}
-      Join this project to <b>Post</b> on the Log, <b>Edit</b> the pitch or <b>Sync</b> any external content.
-    {% else %}
-      <b>Edit</b> the pitch to add content, or to <b>Embed</b> your presentation or demo here.
+    {% if current_user and current_user.active and not project.webpage_url and not project.longtext and not lock_editing %}
+    <div class="alert alert-success" role="alert">
+      <a class="close" title="Close" href="#" data-dismiss="alert">&times;</a>
+      <!-- Helpful comment for new projects -->
+      {% if not project_starred %}
+        Join this project to <b>Post</b> on the Log, <b>Edit</b> the pitch or <b>Sync</b> any external content.
+      {% else %}
+        <b>Edit</b> the pitch to add content, or to <b>Embed</b> your presentation or demo here.
+      {% endif %}
+    </div>
     {% endif %}
-  </div>
-  {% endif %}
 
-  {% if project.is_webembed and project.webpage_url %}
-    <div class="project-webembed resizable">
-      {{ project.webembed|safe }}
-      <div class="win-size-grip"></div>
-    </div>
-    <a href="{{ project.webpage_url }}" class="btn btn-small btn-default" target="_blank" rel="noopener noreferrer">&#x26F6; Full screen</a>
-  {% endif %}
+    {% if project.is_webembed and project.webpage_url %}
+      <div class="project-webembed resizable">
+        {{ project.webembed|safe }}
+        <div class="win-size-grip"></div>
+      </div>
+      <a href="{{ project.webpage_url }}" class="btn btn-small btn-default" target="_blank" rel="noopener noreferrer">&#x26F6; Full screen</a>
+    {% endif %}
 
-  {% if project.longtext %}
-    <div class="project-longtext">
-      {{ project.longtext|onebox|markdown|safe }}
-    </div>
-  {% endif %}
+    {% if project.longtext %}
+      <div class="project-longtext">
+        {{ project.longtext|onebox|markdown|safe }}
+      </div>
+    {% endif %}
 
   </div><!-- /project-md -->
 
