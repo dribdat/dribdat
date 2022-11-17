@@ -999,7 +999,7 @@ nav .nav-login {
   clear: both;
   /* padding: 20px 5px 5px; */
   border-bottom: 1px solid lightgrey;
-  margin-bottom: 10px;
+  margin-top: 10px;
 }
 .project-page .nav a {
   text-shadow: 1px 1px 4px white;
@@ -1011,6 +1011,7 @@ nav .nav-login {
 }
 .project-page .nav a.active {
   text-shadow: none;
+  background: rgba(85, 200, 200, 0.8);
   border-bottom: 1px solid white;
 }
 
