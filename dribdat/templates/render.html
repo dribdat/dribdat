@@ -1,0 +1,43 @@
+<!doctype html>
+<head>
+  <meta charset="utf-8">
+  <!--<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">-->
+
+  <title>Render</title>
+  
+{% if config.ENV == 'prod' %}
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+{% else %}
+  <script src="{{ url_for('static', filename='libs/jquery/jquery.js')}}"></script>
+{% endif %}
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.0.279/pdf.min.js" integrity="sha512-QJy1NRNGKQoHmgJ7v+45V2uDbf2me+xFoN9XewaSKkGwlqEHyqLVaLtVm93FzxVCKnYEZLFTI4s6v0oD0FbAlw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.0.279/pdf_viewer.js" integrity="sha512-cTipoNt3ZJb0aCg4YxGXnPemVwETEvAxtil6RSQsSUJDUU3hk/zdf7tsqvefbJDxgaKafadU2v3smQyX91dvaw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.0.279/pdf_viewer.min.css" integrity="sha512-bhJalmRVg29JjmI5PVxobJ3xL71iUqk9yXhGjEtpuBg1tZ9LZZKF7Bdm8u6JifzvnxnsCB/PR9tZzmNEDE/BvQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+</head>
+<body class="render" src="{{ render_src }}">
+
+<div class="btn-group">
+  <button id="prev">&#9664;</button>
+  <button id="go"><span id="page_num"></span> / <span id="page_count"></span></button>
+  <button id="next">&#9654;</button>
+</div>
+<canvas id="canv"></canvas>
+
+</body>
+<script src="{{ url_for('static', filename='js/render.js')}}"></script>
+<style>
+  body {
+    margin: 0; padding: 0; border: 0; overflow: hidden;
+  }
+  canvas {
+    width: 100%; height: 100%; margin: 0; padding: 0;
+    direction: ltr;
+  }
+  .btn-group {
+    position: absolute;
+    right: 1px;
+    top: 1px;
+  }
+</style>
+</html>
