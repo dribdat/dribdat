@@ -25,22 +25,17 @@
     </div>
   </a>
   
-  {% if event.summary %}
+  {% if event.summary|trim %}
     <div class="home-description">
-      {% if event.summary|trim %}
-        <p>{{ event.summary }}</p>
-      {% endif %}
+      <p>{{ event.summary }}</p>
     </div>
-  {% elif event.description %}
-    <div class="home-description">
-      {{ event.description|markdown }}
+  {% else %}
+    <div class="embed-view">
+      {{ render_embed_event(event, event.projects, False) }}
     </div>
   {% endif %}
 
   <div class="home-nav">
-    <div class="embed-view">
-      {{ render_embed_event(event, event.projects, False) }}
-    </div>
     <div class="home-buttons" aria-label="Main navigation">
       <a href="{{ url_for('public.event', event_id=event.id) }}"
          class="btn btn-lg btn-warning p-3">

@@ -570,7 +570,7 @@ class Project(PkModel):
     @property
     def webembed(self):
         """Detect and return supported embed widgets."""
-        return format_webembed(self.webpage_url)
+        return format_webembed(self.id, self.webpage_url)
 
     @property
     def longhtml(self):

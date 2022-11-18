@@ -97,6 +97,16 @@ def project_boost(project_id):
     )
 
 
+@blueprint.route('/<int:project_id>/render', methods=['GET'])
+def render(project_id):
+    """Transform project detail link."""
+    project = Project.query.filter_by(id=project_id).first_or_404()
+    return render_template(
+        'render.html',
+        current_event=project.event, render_src=project.webpage_url
+    )
+
+
 @blueprint.route('/<int:project_id>/post', methods=['GET', 'POST'])
 @login_required
 def project_post(project_id):

@@ -12,13 +12,20 @@ from .boxout.github import box_repo
 from dribdat.extensions import cache
 
 
-def format_webembed(url):
+def format_webembed(project_id, url=None):
     """Create a well-formatted frame for project embeds."""
-    if url.lower().startswith('<iframe '):
+    if not url:
+        return "Please provide a valid demo link."
+    url = url.lower().strip()
+    if url.startswith('<iframe '):
         # Allow IFRAMEs
         # TODO: add a setting
         return url
-    if url.startswith('https://query.wikidata.org/'):
+    elif url.endswith('.pdf'):
+        # Embedded document
+        url = url_for('project.render', project_id=project_id)
+        #url = '/project/%d/render' % project_id
+    elif url.startswith('https://query.wikidata.org/'):
         # Fix WikiData queries
         url = url.replace('https://query.wikidata.org/',
                           'https://query.wikidata.org/embed.html')

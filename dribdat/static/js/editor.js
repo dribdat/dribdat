@@ -204,7 +204,7 @@
     var $webpageurl = $('.fld-webpage_url');
     // Append button to the pitch editor
     $longtext.prepend($togglebtn.clone().show());
-    // $webpageurl.append($togglebtn.clone().show());
+    $webpageurl.prepend($togglebtn.clone().show());
     // Set up the file dialog
     var $inputfd = $dialog.find('input[type="file"]');
     $inputfd.change(function() {
@@ -235,6 +235,7 @@
             if ($(this).data('target') == 'weblink') {
               // Replace the cover
               $('#webpage_url').val(response);
+              $('#is_webembed:not(:checked)').click();
               $dialog.modal('hide');
             } else if ($(this).data('target') == 'pitch') {
               // Append to pitch
