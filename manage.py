@@ -90,7 +90,7 @@ def exports(kind):
     with create_app().app_context():
         if 'people' in kind:
             from dribdat.user.models import User
-            for pp in User.query.all():
+            for pp in User.query.filter_by(active=True).all():
                 print(pp.email)
 
 
