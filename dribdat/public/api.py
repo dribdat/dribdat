@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """API calls for dribdat."""
 import boto3
+import tempfile
 from flask import (
     Blueprint, current_app,
     Response, request, redirect,
@@ -8,7 +9,6 @@ from flask import (
     jsonify, flash, url_for, escape
 )
 from flask_login import login_required, current_user
-from werkzeug.utils import secure_filename
 from sqlalchemy import or_
 from ..extensions import db
 from ..utils import timesince, random_password
@@ -23,9 +23,9 @@ from ..apiutils import (
     expand_project_urls,
     gen_csv,
 )
-import tempfile
-import json
-from os import path
+from ..apipackage import (
+    fetch_datapackage, import_datapackage
+)
 
 blueprint = Blueprint('api', __name__, url_prefix='/api')
 
@@ -277,30 +277,16 @@ def event_load_datapackage():  # noqa: C901
         status = "Complete"
     # File handling
     if filedata and filedata.filename != '':
-        results = prepare_datapackage(filedata, dry_run, all_data)
-        event_names = ', '.join([r['name'] for r in results['events']])
-        if 'errors' in results:
-            return jsonify(status='Error', errors=results['errors'])
-        else:
-            flash("Events uploaded: %s" % event_names, 'success')
-            return redirect(url_for("admin.events"))
+        results = import_datapackage(filedata, dry_run, all_data)
+    else:
+        results = fetch_datapackage(url, dry_run, all_data)
+    event_names = ', '.join([r['name'] for r in results['events']])
+    if 'errors' in results:
+        return jsonify(status='Error', errors=results['errors'])
+    else:
+        flash("Events uploaded: %s" % event_names, 'success')
+        return redirect(url_for("admin.events"))
     return jsonify(status=status, results=results)
-
-
-def prepare_datapackage(filedata, dry_run, all_data):
-    """Saves a temporary file and provides details."""
-    ext = filedata.filename.split('.')[-1].lower()
-    if ext not in ['json']:
-        return {'errors': ['Invalid format (allowed: JSON)']}
-    with tempfile.TemporaryDirectory() as tmpdir:
-        filepath = path.join(tmpdir, secure_filename(filedata.filename))
-        filedata.save(filepath)
-        try:
-            with open(filepath, mode='rb') as file:
-                data = json.load(file)
-            return ImportEventPackage(data, dry_run, all_data)
-        except json.decoder.JSONDecodeError:
-            return {'errors': ['Could not load package due to JSON error']}
 
 
 @blueprint.route('/event/push/datapackage', methods=["PUT", "POST"])

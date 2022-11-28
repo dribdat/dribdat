@@ -3,7 +3,11 @@
 
 import logging
 import requests
-from datetime import datetime as dt
+import json
+import tempfile
+from os import path
+from werkzeug.utils import secure_filename
+from datetime import datetime as dtt
 from frictionless import Package, Resource
 from .user.models import Event, Project, Activity, Category, User, Role
 from .utils import format_date
@@ -47,7 +51,7 @@ def PackageEvent(event, author=None, host_url='', full_contents=False):
         }],
         contributors=contributors,
         homepage=event.webpage_url or '',
-        created=format_date(dt.now(), '%Y-%m-%dT%H:%M'),
+        created=format_date(dtt.now(), '%Y-%m-%dT%H:%M'),
         version="0.2.0",
     )
 
@@ -206,7 +210,7 @@ def importActivities(data, DRY_RUN=False):
     pname = ""
     for act in data:
         aname = act['name']
-        tstamp = dt.utcfromtimestamp(act['time'])
+        tstamp = dtt.utcfromtimestamp(act['time'])
         activity = Activity.query.filter_by(name=aname,
                                             timestamp=tstamp).first()
         if activity:
@@ -254,10 +258,34 @@ def ImportEventPackage(data, DRY_RUN=False, ALL_DATA=False):
     return updates
 
 
-def ImportEventByURL(url, DRY_RUN=False, ALL_DATA=False):
+def fetch_datapackage(url, DRY_RUN=False, ALL_DATA=False):
+    """Get event data from a URL."""
     try:
         data = requests.get(url, timeout=REQUEST_TIMEOUT).json()
+        return ImportEventPackage(data, DRY_RUN, ALL_DATA)
+    except json.decoder.JSONDecodeError:
+        return {'errors': ['Could not load package due to JSON error']}
     except requests.exceptions.RequestException:
         logging.error("Could not connect to %s" % url)
         return {}
-    return ImportEventPackage(data, DRY_RUN, ALL_DATA)
+
+
+def import_datapackage(filedata, dry_run, all_data):
+    """Saves a temporary file and provides details."""
+    ext = filedata.filename.split('.')[-1].lower()
+    if ext not in ['json']:
+        return {'errors': ['Invalid format (allowed: JSON)']}
+    with tempfile.TemporaryDirectory() as tmpdir:
+        filepath = path.join(tmpdir, secure_filename(filedata.filename))
+        filedata.save(filepath)
+        return load_file_datapackage(filepath, dry_run, all_data)
+
+
+def load_file_datapackage(filepath, dry_run, all_data):
+    """Get event data from a file."""
+    try:
+        with open(filepath, mode='rb') as file:
+            data = json.load(file)
+        return ImportEventPackage(data, dry_run, all_data)
+    except json.decoder.JSONDecodeError:
+        return {'errors': ['Could not load package due to JSON error']}
