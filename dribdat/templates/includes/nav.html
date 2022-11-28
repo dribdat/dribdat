@@ -96,25 +96,23 @@
       {% endif %}
 
       <li class="nav-item">
-        <a class="nav-link" id="navSearchButton" href="{{ url_for('public.about') }}">
+        <a class="nav-link" id="navSearchButton" title="Search"
+           href="{{ url_for('public.about') }}">
           <i class="fa fa-search" aria-hidden="true"></i>
         </a>
       </li>
 
     </ul>
 
-    
-
   </div><!-- /.navbar-collapse -->
 
 </nav>
 
 <!-- Popup search results -->
-<div class="fade container nav-search" id="navSearch" 
+<div class="hidden container nav-search" id="navSearch" 
      tabindex="-1" role="dialog" aria-labelledby="searchLabel" aria-hidden="true">
-  <div class="profile-projects container-fluid mt-5">
-    <h5 id="searchLabel">Search dribdat</h5>
-    <div action="/api/project/search.json" id="search">
+  <div class="profile-projects container-fluid mb-3">
+    <div data-action="/api/project/search.json" id="search">
       <div class="content input-group">
         <div class="input-group-prepend">
           <span class="input-group-text">Search</span>
@@ -122,7 +120,7 @@
         <input type="text" class="form-control" name="q" aria-label="Search term" placeholder="Start typing ..."  style="width:20em">
       </div>
     </div>
-    <div class="row flex-row flex-nowrap mt-2 mb-2" id="search-results"></div>
-    <div class="text-center" id="search-matches"><i>Start typing above ...</i></div>
+    <div class="row flex-row flex-nowrap pb-2" id="search-results"></div>
+    <div class="text-center mb-2" id="search-matches"><i>Start typing above ...</i></div>
   </div>
 </div>

@@ -52,13 +52,20 @@
   // About page simple stupid search
   var lastSearch = null;
   var searchForm = $('#search');
-  var searchAction = searchForm.attr('action');
+  var searchHolder = $('#navSearch');
+  var searchAction = searchForm.data('action');
   var searchIgnore = searchForm.find('#id').val();
   searchForm.find('input[name="q"]')
     .keyup(delay(function(e) {
       if (e.keyCode == 13) { e.preventDefault(); return false; }
       runSearch($(this).val());
     }, 500));
+
+  $('#navSearchButton').click(function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    searchHolder.toggleClass('hidden');
+  });
 
   function runSearch(q) {
     if (q.length < 4 || q.trim() == lastSearch) return;
@@ -77,8 +84,8 @@
       if (projects.length > 0) {
         $sm.html(
           '<span class="user-score">' + (projects.length) + '</span> ' +
-          'projects match' +
-          (projects.length > 3 ? '&nbsp;&#9654;&#9654;' : '')
+          'matches' +
+          (projects.length > 3 ? '<i class="float-right">&#9654;&#9654;</i>' : '')
         );
       }
       // Create project cards

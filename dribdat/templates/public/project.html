@@ -36,15 +36,13 @@
 {% endif %}
 
 {% if project_starred and allow_edit and (suggestions or stage) and project.progress < 50 %}
-  <div class="alert alert-light resource-list project-tips">
+  <div class="alert alert-default resource-list project-tips">
     <button type="button" class="close" data-dismiss="alert" aria-label="Dismiss" title="Hide">
       <span aria-hidden="true">&times;</span>
     </button>
     <div class="profile-projects container-fluid">
-      <p class="category-tip pt-2 m-0 clearfix" style="margin-left:-1em"
-         title="This tip is only visible to you and your team">
-        <span class="user-score" style="background:white">&#x1F4A1;</span>&nbsp;
-        {{stage.tip}}
+      <p class="category-tip ml-2 pt-2 m-0 clearfix" title="This tip is only visible to you and your team">
+        <span class="user-score" style="background:white">&#x1F4A1;</span>{{stage.tip}}
       </p>
       <div class="row flex-row flex-nowrap">
       {% for project in suggestions %}
@@ -64,12 +62,12 @@
         {% for item in stage.conditions.validate %}
           {% if item.valid %}
             <span class="mr-2 float-left stage-ok">
-              <i class="fa fa-thumbs-up"></i>
+              <i class="fa fa-thumbs-up"></i>&nbsp;
               {{ item.help }}
             </span>
           {% else %}
             <span class="mr-2 float-left stage-no">
-              <i class="fa fa-paw"></i>
+              <i class="fa fa-paw"></i>&nbsp;
               {{ item.help }}
             </span>
           {% endif %}
