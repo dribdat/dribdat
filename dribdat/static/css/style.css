@@ -1810,9 +1810,6 @@ Instruction page
   cursor: pointer;
   padding: 0 0 0 2em;
 }
-.form-project-confirm:hover {
-  background-color: lightyellow;
-}
 .projectpost alert {
   margin-top: 0.5em;
 }
