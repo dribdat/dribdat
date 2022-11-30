@@ -260,6 +260,9 @@ def ImportEventPackage(data, DRY_RUN=False, ALL_DATA=False):
 
 def fetch_datapackage(url, DRY_RUN=False, ALL_DATA=False):
     """Get event data from a URL."""
+    if not url.endswith('datapackage.json'):
+        logging.error("Invalid URL", url)
+        return {}
     try:
         data = requests.get(url, timeout=REQUEST_TIMEOUT).json()
         return ImportEventPackage(data, DRY_RUN, ALL_DATA)

@@ -5,17 +5,15 @@ from dribdat.aggregation import GetProjectData
 
 
 class TestAggregate:
-    """Here be dataragons!"""
+    """Here be dataragons."""
 
     def test_datapackage(self):
         """Test parsing a Data Package."""
-        test_url = 'https://meta.dribdat.cc/api/event/5/datapackage.json'
+        test_url = 'https://meta.dribdat.cc/api/event/current/datapackage.json'
         test_obj = GetProjectData(test_url)
         assert 'name' in test_obj
-        assert test_obj['name'] == 'event-5'
         assert test_obj['type'] == 'Data Package'
-        tl = 'Event and project details collected with dribdat'
-        assert tl in test_obj['description']
+        assert 'dribdat' in test_obj['description']
         assert test_url in test_obj['source_url']
 
     def test_gitea(self):
