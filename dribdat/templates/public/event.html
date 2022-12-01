@@ -61,7 +61,8 @@
     {% endif %}
   {% endif %}
   {% for category in current_event.categories_for_event() %}
-  <div category-id="{{category.id}}" class="category-container" style="border-top:5px solid {{category.logo_color}}; display:none">
+  <div category-id="{{category.id}}" class="category-container" 
+       style="border-top:5px solid {{category.logo_color}}; display:none">
     {% if current_user and current_user.active and current_user.is_admin %}
       <a href="{{ url_for('admin.category', category_id=category.id) }}"
          class="btn btn-info btn-sm float-right">
@@ -136,7 +137,7 @@
 </div><!-- /.event-info -->
 {% endif %}
 
-{% if current_event.instruction %}
+{% if current_event.instruction and current_user and current_user.active %}
 <div class="jumbotron event-instruction mt-4 mb-2">
   <div class="content">
     {{current_event.instruction|markdown}}

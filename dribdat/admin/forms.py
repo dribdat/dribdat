@@ -21,7 +21,7 @@ from datetime import time, datetime
 
 
 def get_time_note():
-    """Helper function to construct a time zone message."""
+    """Construct a time zone message."""
     tz = environ.get('TIME_ZONE', None)
     aware_time = datetime.now().astimezone()
     tzinfo = "The current server time is %s." % aware_time.strftime('%H:%M%z')
@@ -31,6 +31,8 @@ def get_time_note():
 
 
 class UserForm(FlaskForm):
+    """User editing form."""
+
     next = HiddenField()
     id = HiddenField('id')
     username = StringField(
@@ -44,6 +46,8 @@ class UserForm(FlaskForm):
 
 
 class UserProfileForm(FlaskForm):
+    """User profile editing form."""
+
     next = HiddenField()
     id = HiddenField('id')
     roles = SelectMultipleField(u'Roles', coerce=int)
@@ -54,6 +58,8 @@ class UserProfileForm(FlaskForm):
 
 
 class EventForm(FlaskForm):
+    """Event editing form."""
+
     next = HiddenField()
     id = HiddenField('id')
     name = StringField(
@@ -125,7 +131,7 @@ class EventForm(FlaskForm):
         + 'to generate links to your participant certificate')
     instruction = TextAreaField(
         u'Instructions',
-        description=u'Shown to participants on the Resources page - '
+        description=u'Shown to registered participants only - '
         + 'Markdown and HTML supported')
     boilerplate = TextAreaField(
         u'Getting started guide',
@@ -141,6 +147,8 @@ class EventForm(FlaskForm):
 
 
 class ProjectForm(FlaskForm):
+    """Project editing form."""
+
     next = HiddenField()
     id = HiddenField('id')
     user_name = StringField(u'Started by')
@@ -174,6 +182,8 @@ class ProjectForm(FlaskForm):
 
 
 class CategoryForm(FlaskForm):
+    """Category editing form."""
+
     next = HiddenField()
     name = StringField(u'Name', [length(max=80), DataRequired()])
     description = TextAreaField(u'Description',
@@ -187,6 +197,8 @@ class CategoryForm(FlaskForm):
 
 
 class RoleForm(FlaskForm):
+    """Role (user profile) editing form."""
+
     next = HiddenField()
     id = HiddenField('id')
     name = StringField(
@@ -196,6 +208,8 @@ class RoleForm(FlaskForm):
 
 
 class ResourceForm(FlaskForm):
+    """Resource form (NOT USED)."""
+
     next = HiddenField()
     id = HiddenField('id')
     name = StringField(

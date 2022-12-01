@@ -5,9 +5,9 @@ import re
 import logging
 from flask import url_for
 from micawber.parsers import standalone_url_re, full_handler
+from .boxout.ckan import box_dataset, chk_dataset, ini_dataset
 from .boxout.dribdat import box_project
 from .boxout.datapackage import box_datapackage, chk_datapackage
-from .boxout.ckan import box_dataset, chk_dataset, ini_dataset
 from .boxout.github import box_repo
 from dribdat.extensions import cache
 
@@ -24,7 +24,7 @@ def format_webembed(project_id, url=None):
     elif url.endswith('.pdf'):
         # Embedded document
         url = url_for('project.render', project_id=project_id)
-        #url = '/project/%d/render' % project_id
+        # url = '/project/%d/render' % project_id
     elif url.startswith('https://query.wikidata.org/'):
         # Fix WikiData queries
         url = url.replace('https://query.wikidata.org/',
