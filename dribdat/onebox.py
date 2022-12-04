@@ -33,10 +33,12 @@ def format_webembed(project_id, url=None):
         # Fix YouTube mobile link
         url = url.replace('https://youtu.be/',
                           'https://www.youtube.com/embed/')
+        url = url.replace('?t=', '?start=')
     elif urltest.startswith('https://www.youtube.com/watch?'):
         # Fix YouTube web link
         url = url.replace('https://www.youtube.com/watch?v=',
                           'https://www.youtube.com/embed/')
+        url = url.replace('?t=', '?start=')
     # TODO: add more embeddables here
     return '<iframe src="%s"></iframe>' % url
 
