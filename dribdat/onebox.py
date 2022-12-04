@@ -16,24 +16,24 @@ def format_webembed(project_id, url=None):
     """Create a well-formatted frame for project embeds."""
     if not url:
         return "Please provide a valid demo link."
-    url = url.lower().strip()
-    if url.startswith('<iframe '):
+    urltest = url.lower().strip()
+    if urltest.startswith('<iframe '):
         # Allow IFRAMEs
         # TODO: add a setting
         return url
-    elif url.endswith('.pdf'):
+    elif urltest.endswith('.pdf'):
         # Embedded document
         url = url_for('project.render', project_id=project_id)
         # url = '/project/%d/render' % project_id
-    elif url.startswith('https://query.wikidata.org/'):
+    elif urltest.startswith('https://query.wikidata.org/'):
         # Fix WikiData queries
         url = url.replace('https://query.wikidata.org/',
                           'https://query.wikidata.org/embed.html')
-    elif url.startswith('https://youtu.be/'):
+    elif urltest.startswith('https://youtu.be/'):
         # Fix YouTube mobile link
         url = url.replace('https://youtu.be/',
                           'https://www.youtube.com/embed/')
-    elif url.startswith('https://www.youtube.com/watch?'):
+    elif urltest.startswith('https://www.youtube.com/watch?'):
         # Fix YouTube web link
         url = url.replace('https://www.youtube.com/watch?v=',
                           'https://www.youtube.com/embed/')
