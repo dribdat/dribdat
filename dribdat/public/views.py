@@ -129,10 +129,10 @@ def events_past():
 def user(username):
     """Show a user profile."""
     user = User.query.filter_by(username=username).first_or_404()
-    if not isUserActive(user):
-        # return "User deactivated. Please contact an event organizer."
+    logged_in = current_user and not current_user.is_anonymous
+    if logged_in and not isUserActive(user) and user == current_user:
         flash(
-            'Your user account is under review. Please contact the '
+            'User account is under review. Please contact the '
             + 'organizing team for full access.',
             'warning'
         )
