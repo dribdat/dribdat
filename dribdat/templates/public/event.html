@@ -126,6 +126,23 @@
   </a>
 </div>
 
+{% if current_user and current_user.active and current_user.is_admin %}
+  <div role="group" aria-label="Event administration" class="btn-group admin-area" title="Admin area">
+    <a href="{{ url_for('public.event_print', event_id=current_event.id) }}" class="btn btn-secondary">
+      <i class="fa fa-print" aria-hidden="true"></i>
+      Report</a>
+    <a href="{{ url_for('admin.event', event_id=current_event.id) }}" class="btn btn-warning">
+      <i class="fa fa-pencil" aria-hidden="true"></i>
+      Event</a>
+    <a href="{{ url_for('admin.event_projects', event_id=current_event.id) }}" class="btn btn-info">
+      <i class="fa fa-check" aria-hidden="true"></i>
+      Admin</a>
+    <a href="{{ url_for('admin.project_new', event_id=current_event.id) }}" class="btn btn-success">
+      <i class="fa fa-plus"></i>
+      Project</a>
+  </div>
+{% endif %}
+
 {% if current_event.description %}
 <div class="event-info mt-2 mb-2">
   <div class="content">
@@ -170,20 +187,6 @@
       <a href="{{ url_for('public.dashboard') }}" class="btn btn-default" title="{{ current_event.countdown }}">
         <i class="fa fa-id-card-o" aria-hidden="true"></i>
         {{ current_event.countdown|until_date }}</a>
-    </div>
-  {% endif %}
-
-  {% if current_user and current_user.active and current_user.is_admin %}
-    <div role="group" aria-label="Event administration" class="btn-group admin-area" title="Admin area">
-      <a href="{{ url_for('public.event_print', event_id=current_event.id) }}" class="btn btn-secondary">
-        <i class="fa fa-print" aria-hidden="true"></i>
-        Report</a>
-      <a href="{{ url_for('admin.event', event_id=current_event.id) }}" class="btn btn-warning">
-        <i class="fa fa-pencil" aria-hidden="true"></i>
-        Event</a>
-      <a href="{{ url_for('admin.project_new', event_id=current_event.id) }}" class="btn btn-success">
-        <i class="fa fa-plus"></i>
-        Project</a>
     </div>
   {% endif %}
 

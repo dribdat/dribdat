@@ -77,6 +77,9 @@
   </div>
 {% endif %}
 
+<a class="team-count float-right" title="Drib count" href="#logs" 
+   onclick="$('#dribs-tab-md').click();">{{ project_dribs|length }}</a>
+
 <div class="btn-group project-edit-buttons" role="group" aria-label="Project tools">
 
   {% if allow_post %}
@@ -85,9 +88,9 @@
        Write update
      </a>
   {% elif current_user and current_user.active and not project.is_challenge and not project.event.lock_resources %}
-     <a id="project-comment" href="{{ url_for('project.project_comment', project_id=project.id) }}" title="Write a public comment" class="btn btn-lg btn-info">
-       <i class="fa fa-comment" aria-hidden="true"></i>
-       Comment</a>
+     <a id="project-comment" href="{{ url_for('project.project_comment', project_id=project.id) }}" title="Write a public comment" class="btn btn-lg btn-success">
+       <i class="fa fa-thumbs-up" aria-hidden="true"></i>
+       Drib up</a>
   {% endif %}
   {% if allow_edit %}
     <a href="{{ url_for('project.project_edit', project_id=project.id) }}" title="Edit project" class="btn btn-lg btn-warning">
@@ -219,7 +222,7 @@
   </ul>
   {% endif %}
 
-<div class="project-info tab-content" id="log">
+<div class="project-info tab-content" id="logs">
 
   <div class="tab-pane fade show active" id="project-md" role="tabpanel" aria-labelledby="project-tab-md">
 

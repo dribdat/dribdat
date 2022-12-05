@@ -753,8 +753,6 @@ class Project(PkModel):
         self.name = data['name']
         self.summary = data['summary']
         self.hashtag = data['hashtag']
-        self.score = int(data['score'] or 0)
-        self.progress = int(data['progress'] or 0)
         self.image_url = data['image_url']
         self.source_url = data['source_url']
         self.webpage_url = data['webpage_url']
@@ -765,6 +763,8 @@ class Project(PkModel):
         self.logo_icon = data['logo_icon']
         self.longtext = data['longtext']
         self.autotext = data['autotext']
+        self.score = int(data['score'] or 0)
+        self.progress = int(data['progress'] or 0)
         try:
             self.created_at = parse(data['created_at'])
             self.updated_at = parse(data['updated_at'])

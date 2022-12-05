@@ -412,6 +412,7 @@ def project_autoupdate(project_id):
 @blueprint.route('/project/<int:project_id>/toggle', methods=['GET', 'POST'])
 @login_required
 def project_toggle(project_id):
+    """Hide or unhide a project."""
     project = Project.query.filter_by(id=project_id).first_or_404()
     purl = url_for('project.project_view', project_id=project.id)
     allow_toggle = IsProjectStarred(project, current_user) \
