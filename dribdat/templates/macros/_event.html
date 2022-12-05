@@ -28,9 +28,13 @@
 		>
 		<div class="hexagontent {{
 	        'text-md' if 32 < project.name|length else 'text-sm' if 42 < project.name|length
-		}}{{ ' with-icon' if project.logo_icon }}">
+		}}{{ ' with-icon' if project.logo_icon or project.image_url }}">
 			{% if project.is_challenge and project.team %}
 				<span class="team-count" title="# following">{{ project.team|count }}</span>
+			{% elif project.score > 80 %}
+				<span class="team-count" title="Skyrocketing">🚀</span>
+			{% elif project.score > 69 %}
+				<span class="team-count" title="Trending">🔥</span>
 			{% endif %}
 			<span class="project-name">{{ project.name|truncate(64, True, '..') }}</span>
 			{% if project.image_url %}

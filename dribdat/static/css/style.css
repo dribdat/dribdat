@@ -562,15 +562,20 @@ nav .nav-login {
 .hexagon.blank {
   visibility: hidden;
 }
-.hexagon .team-count {
-  top: -2em;
-  right: -0.8em;
-  min-width: 2em;
+.project.hexagon .hexagontent .team-count {
+  background: white;
+  right: -3em;
+  top: -3em;
+}
+.hexagon .hexagontent .team-count {
+  top: -1em;
+  right: -1em;
+  min-width: 2.5em;
   position: absolute;
   color: black;
   font-size: 80%;
   background: rgba(255, 255, 255, 0.8);
-  border: 1px dashed rgba(0,0,200,0.4);
+  box-shadow: 0 4px 9px rgb(0 0 0 / 2%), 0 9px 15px rgb(0 0 0 / 7%);
 }
 
 .project-page.phase-Challenge .progress,
@@ -602,18 +607,26 @@ nav .nav-login {
 }
 
 /* Hexagon inner content */
-.project .hexagontent {
-  overflow: hidden;
+.hexagon .hexagontent {
   color: black;
   line-height: 1.5;
 }
-.project .hexagontent.with-icon div {
-  font-size: 90%;
+.hexagon .hexagontent.with-icon {
+  line-height: 1.4;
 }
-.project .hexagontent div {
+.hexagon .hexagontent.with-icon .project-name {
+  max-height: 4.5em;
+  position: relative;
+  z-index: 99;
+}
+.hexagon .hexagontent.with-icon i {
+  font-size: 1em;
+  line-height: 2em;
+}
+.hexagon .hexagontent div {
   max-height: 5.4em;
 }
-.project .hexagontent .fa {
+.hexagon .hexagontent .fa {
   font-size: 240%;
 }
 
