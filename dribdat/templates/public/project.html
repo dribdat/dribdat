@@ -77,9 +77,6 @@
   </div>
 {% endif %}
 
-<a class="team-count float-right" title="Drib count" href="#logs" 
-   onclick="$('#dribs-tab-md').click();">{{ project_dribs|length }}</a>
-
 <div class="btn-group project-edit-buttons" role="group" aria-label="Project tools">
 
   {% if allow_post %}
@@ -143,13 +140,17 @@
   {% endif %}
 {% endif %}
 
+<!-- Main project content container -->
 <div class="jumbotron project-page phase-{{ project.phase }}" {% if project.logo_color %} style="border-color:{{project.logo_color}}"{% endif %}>
 
   {% if project.score and project.score > 1 %}
     <div class="project-score">
-      <a href="{{ url_for('public.event_stages', event_id=project.event.id) }}" style="text-decoration:none">
+      <a class="team-count float-left mr-2" title="Drib count" href="#logs"
+         onclick="$('#dribs-tab-md').click();">{{ project_dribs|length }}</a>
+
+      <a href="{{ url_for('public.event_stages', event_id=project.event.id) }}#{{project.phase}}">
         <div class="progress" 
-          title="{{project.score}}: {{project.phase}}"
+          title="({{project.score}}) {{project.phase}}"
           alt="A score based on profile completeness and voting results">
           <div class="progress-bar" role="progressbar" 
                aria-valuenow="{{project.score}}" aria-valuemin="0" aria-valuemax="70" 

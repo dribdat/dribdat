@@ -1540,11 +1540,16 @@ pre { color: #333; background: white; }
   min-width: 2.5em;
   text-align: center;
   display: inline-block;
-  text-decoration: none;
   background: #007bff;
   color: #fff;
   border-radius: 2em;
   padding: 0.5em;
+}
+.project-score .team-count {
+  font-size: 80%;
+  margin-top: -0.5em;
+  text-decoration: none;
+  color: #fff;
 }
 .profile-projects {
   width: 100%;
