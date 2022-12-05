@@ -2,7 +2,7 @@
 """Dribdat data import export tests."""
 
 from dribdat.user.models import Event, Project, Activity, Role
-from dribdat.apipackage import ImportEventPackage, PackageEvent
+from dribdat.apipackage import import_event_package, event_to_data_package
 from dribdat.aggregation import ProjectActivity
 from dribdat.apiutils import get_schema_for_user_projects
 from .factories import UserFactory
@@ -32,7 +32,7 @@ class TestImport:
         acty1.content = "Hello World!"
         acty1.save()
 
-        dp_json = PackageEvent(event, user)
+        dp_json = event_to_data_package(event, user)
         assert dp_json.title == "Test Event"
 
         acty1.delete()
@@ -41,7 +41,7 @@ class TestImport:
 
         assert Event.query.filter_by(name="Test Event").count() == 0
 
-        ImportEventPackage(dp_json)
+        import_event_package(dp_json)
         assert Event.query.filter_by(name="Test Event").count() == 1
 
     def test_user_schema(self, project, testapp):

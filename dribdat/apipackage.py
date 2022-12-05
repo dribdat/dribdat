@@ -22,9 +22,8 @@ from .apiutils import (
 REQUEST_TIMEOUT = 10
 
 
-def PackageEvent(event, author=None, host_url='', full_contents=False):
-    """ Creates a Data Package from the data of an event """
-
+def event_to_data_package(event, author=None, host_url='', full_content=False):
+    """Create a Data Package from the data of an event."""
     # Define the author, if available
     contributors = []
     if author and not author.is_anonymous:
@@ -35,7 +34,7 @@ def PackageEvent(event, author=None, host_url='', full_contents=False):
         })
     else:
         # Disallow anon access to full data
-        full_contents = False
+        full_content = False
 
     # Set up a data package object
     package = Package(
@@ -81,11 +80,11 @@ def PackageEvent(event, author=None, host_url='', full_contents=False):
             name='projects',
             data=get_project_list(event.id, host_url, True),
         ))
-    if full_contents:
+    if full_content:
         # print("Generating in-memory JSON of participants")
         package.add_resource(Resource(
                 name='users',
-                data=get_event_users(event, full_contents),
+                data=get_event_users(event, full_content),
             ))
         # print("Generating in-memory JSON of activities")
         package.add_resource(Resource(
@@ -106,7 +105,7 @@ def PackageEvent(event, author=None, host_url='', full_contents=False):
     return package
 
 
-def importEvents(data, DRY_RUN=False):
+def import_events_data(data, dry_run=False):
     updates = []
     for evt in data:
         name = evt['name']
@@ -117,13 +116,13 @@ def importEvents(data, DRY_RUN=False):
         else:
             logging.info('Updating event: %s' % name)
         event.set_from_data(evt)
-        if not DRY_RUN:
+        if not dry_run:
             event.save()
         updates.append(event.data)
     return updates
 
 
-def importCategories(data, DRY_RUN=False):
+def import_categories_data(data, dry_run=False):
     updates = []
     for ctg in data:
         name = ctg['name']
@@ -134,13 +133,13 @@ def importCategories(data, DRY_RUN=False):
         else:
             logging.info('Updating category: %s' % name)
         category.set_from_data(ctg)
-        if not DRY_RUN:
+        if not dry_run:
             category.save()
         updates.append(category.data)
     return updates
 
 
-def importUsers(data, DRY_RUN=False):
+def import_users_data(data, dry_run=False):
     updates = []
     for usr in data:
         name = usr['username']
@@ -155,14 +154,14 @@ def importUsers(data, DRY_RUN=False):
         logging.info('Creating user: %s' % name)
         user = User()
         user.set_from_data(usr)
-        importUserRoles(user, usr['roles'], DRY_RUN)
-        if not DRY_RUN:
+        import_user_roles(user, usr['roles'], dry_run)
+        if not dry_run:
             user.save()
         updates.append(user.data)
     return updates
 
 
-def importUserRoles(user, new_roles, DRY_RUN=False):
+def import_user_roles(user, new_roles, dry_run=False):
     updates = []
     my_roles = [r.name for r in user.roles]
     for r in new_roles.split(','):
@@ -172,7 +171,7 @@ def importUserRoles(user, new_roles, DRY_RUN=False):
         role = Role.query.filter_by(name=r).first()
         if not role:
             role = Role(r)
-            if DRY_RUN:
+            if dry_run:
                 continue
             role.save()
         user.roles.append(role)
@@ -180,7 +179,7 @@ def importUserRoles(user, new_roles, DRY_RUN=False):
     return updates
 
 
-def importProjects(data, DRY_RUN=False):
+def import_project_data(data, dry_run=False):
     updates = []
     for pjt in data:
         name = pjt['name']
@@ -198,13 +197,13 @@ def importProjects(data, DRY_RUN=False):
             logging.warn('Error - event not found: %s' % event_name)
             continue
         project.event = event
-        if not DRY_RUN:
+        if not dry_run:
             project.save()
         updates.append(project.data)
     return updates
 
 
-def importActivities(data, DRY_RUN=False):
+def import_activities(data, dry_run=False):
     updates = []
     proj = None
     pname = ""
@@ -226,13 +225,13 @@ def importActivities(data, DRY_RUN=False):
             continue
         activity = Activity(aname, proj.id)
         activity.set_from_data(act)
-        if not DRY_RUN:
+        if not dry_run:
             activity.save()
         updates.append(activity.data)
     return updates
 
 
-def ImportEventPackage(data, DRY_RUN=False, ALL_DATA=False):
+def import_event_package(data, dry_run=False, all_data=False):
     if 'sources' not in data or data['sources'][0]['title'] != 'dribdat':
         return {'errors': ['Invalid source']}
     updates = {}
@@ -241,31 +240,31 @@ def ImportEventPackage(data, DRY_RUN=False, ALL_DATA=False):
         for res in data['resources']:
             # Import events
             if stg == 1 and res['name'] == 'events':
-                updates['events'] = importEvents(res['data'], DRY_RUN)
+                updates['events'] = import_categories_data(res['data'], dry_run)
             # Import categories
-            elif stg == 1 and res['name'] == 'categories' and ALL_DATA:
-                updates['categories'] = importCategories(res['data'], DRY_RUN)
+            elif stg == 1 and res['name'] == 'categories' and all_data:
+                updates['categories'] = import_categories_data(res['data'], dry_run)
             # Import user accounts
-            elif stg == 1 and res['name'] == 'users' and ALL_DATA:
-                updates['users'] = importUsers(res['data'], DRY_RUN)
+            elif stg == 1 and res['name'] == 'users' and all_data:
+                updates['users'] = import_users_data(res['data'], dry_run)
             # Projects follow users
-            if stg == 2 and res['name'] == 'projects' and ALL_DATA:
-                updates['projects'] = importProjects(res['data'], DRY_RUN)
+            if stg == 2 and res['name'] == 'projects' and all_data:
+                updates['projects'] = import_project_data(res['data'], dry_run)
             # Activities always last
-            if stg == 3 and res['name'] == 'activities' and ALL_DATA:
-                updates['activities'] = importActivities(res['data'], DRY_RUN)
+            if stg == 3 and res['name'] == 'activities' and all_data:
+                updates['activities'] = import_activities(res['data'], dry_run)
     # Return summary object
     return updates
 
 
-def fetch_datapackage(url, DRY_RUN=False, ALL_DATA=False):
+def fetch_datapackage(url, dry_run=False, all_data=False):
     """Get event data from a URL."""
     if not url.endswith('datapackage.json'):
         logging.error("Invalid URL", url)
         return {}
     try:
         data = requests.get(url, timeout=REQUEST_TIMEOUT).json()
-        return ImportEventPackage(data, DRY_RUN, ALL_DATA)
+        return import_event_package(data, dry_run, all_data)
     except json.decoder.JSONDecodeError:
         return {'errors': ['Could not load package due to JSON error']}
     except requests.exceptions.RequestException:
@@ -274,7 +273,7 @@ def fetch_datapackage(url, DRY_RUN=False, ALL_DATA=False):
 
 
 def import_datapackage(filedata, dry_run, all_data):
-    """Saves a temporary file and provides details."""
+    """Save a temporary file and provide details."""
     ext = filedata.filename.split('.')[-1].lower()
     if ext not in ['json']:
         return {'errors': ['Invalid format (allowed: JSON)']}
@@ -289,6 +288,6 @@ def load_file_datapackage(filepath, dry_run, all_data):
     try:
         with open(filepath, mode='rb') as file:
             data = json.load(file)
-        return ImportEventPackage(data, dry_run, all_data)
+        return import_event_package(data, dry_run, all_data)
     except json.decoder.JSONDecodeError:
         return {'errors': ['Could not load package due to JSON error']}

@@ -15,7 +15,7 @@ from ..utils import timesince, random_password
 from ..decorators import admin_required
 from ..user.models import Event, Project, Activity
 from ..aggregation import GetProjectData, AddProjectData, GetEventUsers
-from ..apipackage import ImportEventPackage, PackageEvent
+from ..apipackage import import_event_package, event_to_data_package
 from ..apiutils import (
     get_project_list,
     get_event_activities,
@@ -296,7 +296,7 @@ def event_push_datapackage():
     if not key or key != current_app.config['SECRET_API']:
         return jsonify(status='Error', errors=['Invalid API key'])
     data = request.get_json(force=True)
-    results = ImportEventPackage(data)
+    results = import_event_package(data)
     if 'errors' in results:
         return jsonify(status='Error', errors=results['errors'])
     return jsonify(status='Complete', results=results)
@@ -442,7 +442,7 @@ def generate_event_package(event, format='json'):
         return "Format not supported"
     full_contents = (format == 'zip')
     host_url = request.host_url
-    package = PackageEvent(event, current_user, host_url, full_contents)
+    package = event_to_data_package(event, current_user, host_url, full_contents)
     if format == 'json':
         # Generate JSON representation
         return jsonify(package)
