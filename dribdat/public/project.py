@@ -97,6 +97,16 @@ def project_boost(project_id):
     )
 
 
+@blueprint.route('/<int:project_id>/render', methods=['GET'])
+def render(project_id):
+    """Transform project detail link."""
+    project = Project.query.filter_by(id=project_id).first_or_404()
+    return render_template(
+        'render.html',
+        current_event=project.event, render_src=project.webpage_url
+    )
+
+
 @blueprint.route('/<int:project_id>/post', methods=['GET', 'POST'])
 @login_required
 def project_post(project_id):
@@ -402,6 +412,7 @@ def project_autoupdate(project_id):
 @blueprint.route('/project/<int:project_id>/toggle', methods=['GET', 'POST'])
 @login_required
 def project_toggle(project_id):
+    """Hide or unhide a project."""
     project = Project.query.filter_by(id=project_id).first_or_404()
     purl = url_for('project.project_view', project_id=project.id)
     allow_toggle = IsProjectStarred(project, current_user) \

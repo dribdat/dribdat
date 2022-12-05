@@ -21,7 +21,7 @@
   {% for step in steps %}
     <div class="row step">
       {% if step.index > 0 %}
-        <a name="{{ step.id }}"></a>
+        <a id="{{ step.id }}" name="{{ step.phase }}"></a>
         <div class="number">{{ step.index }}</div>
       {% else %}
         <a name="any"></a>

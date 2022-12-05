@@ -107,7 +107,7 @@ def project_edit_action(project_id, detail_view=False):
 
 def project_action(project_id, of_type=None, as_view=True, then_redirect=False,
                    action=None, text=None, for_user=current_user):
-    """Mother of all project actions."""
+    """Mother of all projects."""
     project = Project.query.filter_by(id=project_id).first_or_404()
     event = project.event
     if of_type is not None:

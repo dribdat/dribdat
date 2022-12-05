@@ -8,6 +8,8 @@
 
 `dribdat` is an open source web platform for team collaboration online and offline. Originally designed to promote and support open data expeditions and [awesome hackathons](https://github.com/dribdat/awesome-hackathon), it is a Swiss Army Knife of everything you need for your event: a website, countdown clock and challenge board, project log and progress tracker, integrations with popular chat platforms and code repositories, open data support and APIs.
 
+The philosophy of this project, in a nutshell, is: **live and let live** (no tech religion, use whatever design / dev / doc tools you want), **commit sustainably** (aggregate outputs in standard web formats for optimal search and archiving), **create in safe spaces** (code of conduct, works offline, minimal privacy footprint).
+
 For more background and references, see the [User Handbook](https://docs.dribdat.cc/usage/). If you need help or advice in setting up your event, or would like to contribute to the project: please get in touch via [GitHub Issues](https://github.com/dribdat/dribdat/issues) or [website](https://dribdat.cc). 
 
 ![Screenshot of dribdat](dribdat/static/img/screenshot_sandbox.png)

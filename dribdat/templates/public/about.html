@@ -6,23 +6,6 @@
 
 {% block content %}
 
-<div class="container home-search mb-3">
-  <div class="row" id="api-search">
-    <div class="profile-projects container-fluid">
-      <div action="/api/project/search.json" id="search">
-        <div class="content input-group">
-          <div class="input-group-prepend">
-            <span class="input-group-text">Search</span>
-          </div>
-          <input type="text" class="form-control" name="q" aria-label="Search term" placeholder="Start typing ..."  style="width:20em">
-        </div>
-      </div>
-      <div class="row flex-row flex-nowrap ml-0 mt-1 mb-1 pt-2 pb-2" id="search-results"></div>
-      <div class="text-center" id="search-matches"></div>
-    </div>
-  </div>
-</div>
-
 <div class="jumbotron bg-white">
   <div class="container">
     <div class="row">
@@ -33,21 +16,14 @@
 
     <div class="row">
       <p>This site uses an <dfn title="MIT Licensed">open source</dfn> project board for splendid collaboration.
-        Here we collect and showcase all projects from an event openly in one place. 
+        Here we collect and showcase all contributions in one place. 
         On the event page you can learn about topics, datasets, and
         any other information the organisers have provided. 
-      </p>
-      <b>Looking for more help?</b>
-        To form a team, you can
-        <a href="/register/">login</a> and join or start a project.
-        Visit our <b><a href="https://docs.dribdat.cc/usage" target="_blank">User Guide</a></b>, ask your event organiser, or talk to fellow participants!</p>
+        <b>To form a team</b>, you can start a project, or build on a challenge.
+        All content on the site can be edited by organisers in the Admin area.</p>
     </div>
 
     <div class="row">
-      <p>On the <a href="/">front page</a> you can see the upcoming event, as well as any previous events. A short description is followed
-       by a link to the event home page, as well as a countdown of time remaining until the start or finish (if already started) of the event. All of the content on the site can be edited by the organiser in the
-        <b>Admin</b> menu linked in the header: from here you can edit general details under <b>Events</b>,
-        configure <b>Presets</b>, and edit or sync <b>Projects</b> (= Challenges) and <b>Categories</b>.</p>
       <p>If you would like to use this platform for your event,
         see the <a href="https://docs.dribdat.cc/deploy" target="_blank">installation guide</a>, fork the 
         <a href="https://github.com/dribdat" target="_blank">open source project</a>,
@@ -63,7 +39,7 @@
 
     <center>
       <div class="btn-group m-3">
-        <a href="https://docs.dribdat.cc/" class="btn btn-info">Documentation</a>
+        <a href="https://docs.dribdat.cc/usage" class="btn btn-info">User Guide</a>
         <a href="https://github.com/dribdat/dribdat/issues" class="btn btn-warning">Issues</a>
         <a href="https://dribdat.cc" class="btn btn-dark">News &raquo;</a>
       {% if config.DRIBDAT_ALLOW_EVENTS %}
@@ -82,8 +58,7 @@
       <div class="content">
         <h3>Get the data</h3>
         <p>
-          You can use the <b>My Data</b> button on your profile to download a summary of your contributions.<br>
-          There is a simple open API for accessing data from this site in machine-readable form over the Web.
+          You can use the <b>My Data</b> button on your profile to download a summary of your contributions. There is a simple open API for accessing data from this site in machine-readable form over the Web.
         </p>
         <p>Download data on the featured or past (replace <tt>current</tt> by <tt>id</tt>) events</p>
         <ul class="pl-3">

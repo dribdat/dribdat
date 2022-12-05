@@ -62,7 +62,7 @@ class ProjectForm(FlaskForm):
         description="To format, use Markdown or HTML. Links to Speaker Deck"
         + " and many other sites (oembed.com) get a live preview.")
     webpage_url = URLField(
-        u'Project link', [length(max=2048)],
+        u'Demo link', [length(max=2048)],
         description="URL to a live demo, presentation, or a link to get "
         + "more information.")
     is_webembed = BooleanField(u'Embed this link directly on project page')

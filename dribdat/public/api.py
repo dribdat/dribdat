@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """API calls for dribdat."""
 import boto3
+import tempfile
 from flask import (
     Blueprint, current_app,
     Response, request, redirect,
@@ -8,14 +9,13 @@ from flask import (
     jsonify, flash, url_for, escape
 )
 from flask_login import login_required, current_user
-from werkzeug.utils import secure_filename
 from sqlalchemy import or_
 from ..extensions import db
 from ..utils import timesince, random_password
 from ..decorators import admin_required
 from ..user.models import Event, Project, Activity
 from ..aggregation import GetProjectData, AddProjectData, GetEventUsers
-from ..apipackage import ImportEventPackage, PackageEvent
+from ..apipackage import import_event_package, event_to_data_package
 from ..apiutils import (
     get_project_list,
     get_event_activities,
@@ -23,9 +23,9 @@ from ..apiutils import (
     expand_project_urls,
     gen_csv,
 )
-import tempfile
-import json
-from os import path
+from ..apipackage import (
+    fetch_datapackage, import_datapackage
+)
 
 blueprint = Blueprint('api', __name__, url_prefix='/api')
 
@@ -250,20 +250,17 @@ def project_search_json():
 # ------ UPDATE ---------
 
 
-@blueprint.route('/event/load/datapackage', methods=["GET", "POST"])
+@blueprint.route('/event/load/datapackage', methods=["POST"])
 @admin_required
-def event_load_datapackage():  # noqa: C901
-    """Load event data from URL."""
-    url = request.args.get('url')
+def event_upload_datapackage():
+    """Load event data from an uploaded Data Package."""
     filedata = request.files['file']
-    if filedata and request.form.get('import'):
-        url = filedata.filename
-        import_level = request.form.get('import')
-    else:
-        import_level = request.args.get('import')
+    import_level = request.form.get('import')
+    if not filedata or not import_level:
+        return jsonify(status='Error', errors=['Missing import data parameters'])
     # Check link
-    if not url or 'datapackage.json' not in url:
-        return jsonify(status='Error', errors=['Missing datapackage.json url'])
+    if 'datapackage.json' not in filedata.filename:
+        return jsonify(status='Error', errors=['Must be a datapackage.json'])
     # Configuration
     dry_run = True
     all_data = False
@@ -276,31 +273,14 @@ def event_load_datapackage():  # noqa: C901
         all_data = True
         status = "Complete"
     # File handling
-    if filedata and filedata.filename != '':
-        results = prepare_datapackage(filedata, dry_run, all_data)
-        event_names = ', '.join([r['name'] for r in results['events']])
-        if 'errors' in results:
-            return jsonify(status='Error', errors=results['errors'])
-        else:
-            flash("Events uploaded: %s" % event_names, 'success')
-            return redirect(url_for("admin.events"))
+    results = import_datapackage(filedata, dry_run, all_data)
+    event_names = ', '.join([r['name'] for r in results['events']])
+    if 'errors' in results:
+        return jsonify(status='Error', errors=results['errors'])
+    else:
+        flash("Events uploaded: %s" % event_names, 'success')
+        return redirect(url_for("admin.events"))
     return jsonify(status=status, results=results)
-
-
-def prepare_datapackage(filedata, dry_run, all_data):
-    """Saves a temporary file and provides details."""
-    ext = filedata.filename.split('.')[-1].lower()
-    if ext not in ['json']:
-        return {'errors': ['Invalid format (allowed: JSON)']}
-    with tempfile.TemporaryDirectory() as tmpdir:
-        filepath = path.join(tmpdir, secure_filename(filedata.filename))
-        filedata.save(filepath)
-        try:
-            with open(filepath, mode='rb') as file:
-                data = json.load(file)
-            return ImportEventPackage(data, dry_run, all_data)
-        except json.decoder.JSONDecodeError:
-            return {'errors': ['Could not load package due to JSON error']}
 
 
 @blueprint.route('/event/push/datapackage', methods=["PUT", "POST"])
@@ -310,7 +290,7 @@ def event_push_datapackage():
     if not key or key != current_app.config['SECRET_API']:
         return jsonify(status='Error', errors=['Invalid API key'])
     data = request.get_json(force=True)
-    results = ImportEventPackage(data)
+    results = import_event_package(data)
     if 'errors' in results:
         return jsonify(status='Error', errors=results['errors'])
     return jsonify(status='Complete', results=results)
@@ -456,7 +436,7 @@ def generate_event_package(event, format='json'):
         return "Format not supported"
     full_contents = (format == 'zip')
     host_url = request.host_url
-    package = PackageEvent(event, current_user, host_url, full_contents)
+    package = event_to_data_package(event, current_user, host_url, full_contents)
     if format == 'json':
         # Generate JSON representation
         return jsonify(package)

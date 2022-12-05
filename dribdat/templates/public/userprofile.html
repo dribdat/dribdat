@@ -88,7 +88,7 @@
   <div class="col-sm">
     <div class="profile-social">
       <a href="{{ user.webpage_url }}" class="btn btn-lg btn-light" target="_blank" rel="noopener noreferrer">
-      {% if user.cardtype == '' %}
+      {% if not user.cardtype %}
         <i class="fa fa-globe"></i>
         Website
       {% else %}

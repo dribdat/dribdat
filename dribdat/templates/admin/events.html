@@ -100,11 +100,11 @@
 <!-- Upload Event dialog -->
 <div class="modal fade uploader" id="importEvent" tabindex="-1" role="dialog" aria-labelledby="uploadFileLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
-    <form action="{{ url_for('api.event_load_datapackage') }}"
+    <form action="{{ url_for('api.event_upload_datapackage') }}"
           method="post" enctype="multipart/form-data">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="uploadFileLabel">Import Event data</h5>
+        <h5 class="modal-title" id="uploadFileLabel">Import</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -112,36 +112,11 @@
       <div class="modal-body">
         <p class="upload-note mt-0 mb-2">
           Expects a
-          <b><a href="https://frictionlessdata.io/field-guide/" target="_blank">Data Package</a></b>
+          <b><a href="https://frictionlessdata.io/field-guide/" target="_blank">datapackage.json</a></b>
           exported from dribdat.
-          There must not already be an event, category or project having the same name on this server as one in the package.
+          If an event, category or project has the same name on this server as one in the package, it will be skipped.
           To export event data, tap the drop-down button next to an event listing in the admin.
         </p>
-        <!--
-        <p>
-          Max {{ (config.MAX_CONTENT_LENGTH/(1024*1024))|round(1) }} MB.
-          You can enter the URL of a remote instance to get around this limit.
-        </p>
-        <div class="input-group mb-1 hidden">
-          <div class="input-group-prepend">
-            <span class="input-group-text" id="inputFileLabel">Select</span>
-          </div>
-          <div class="custom-file">
-            <input type="file" class="form-control custom-file-input" id="inputFile"
-              name="image" aria-describedby="inputFileLabel" accept="application/json"
-              data-maxsize="{{ config.MAX_CONTENT_LENGTH }}">
-            <label class="custom-file-label" for="inputImageFile">Choose file</label>
-          </div>
-        </div>
-        <center class="mb-1">or</center>
-        -->
-        <div class="input-group mb-4">
-          <div class="input-group-prepend">
-            <span class="input-group-text" id="inputUrlLabel">URL</span>
-          </div>
-          <input type="text" class="form-control" placeholder="https://..."
-            id="inputUrl" name="url" aria-describedby="inputUrlLabel">
-        </div>
         <div class="input-group mb-4">
           <div class="input-group-prepend">
             <span class="input-group-text" id="inputFileLabel">Upload</span>

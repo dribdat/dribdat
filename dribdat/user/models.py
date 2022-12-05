@@ -29,6 +29,7 @@ from flask import current_app
 from flask_login import UserMixin
 from time import mktime
 from dateutil.parser import parse
+from dateutil.parser._parser import ParserError
 import datetime as dt
 import hashlib
 import re
@@ -570,7 +571,7 @@ class Project(PkModel):
     @property
     def webembed(self):
         """Detect and return supported embed widgets."""
-        return format_webembed(self.webpage_url)
+        return format_webembed(self.id, self.webpage_url)
 
     @property
     def longhtml(self):
@@ -752,8 +753,6 @@ class Project(PkModel):
         self.name = data['name']
         self.summary = data['summary']
         self.hashtag = data['hashtag']
-        self.score = int(data['score'] or 0)
-        self.progress = int(data['progress'] or 0)
         self.image_url = data['image_url']
         self.source_url = data['source_url']
         self.webpage_url = data['webpage_url']
@@ -762,10 +761,17 @@ class Project(PkModel):
         self.contact_url = data['contact_url']
         self.logo_color = data['logo_color']
         self.logo_icon = data['logo_icon']
-        self.created_at = parse(data['created_at'] or dt.datetime.utcnow())
-        self.updated_at = parse(data['updated_at'] or dt.datetime.utcnow())
         self.longtext = data['longtext']
         self.autotext = data['autotext']
+        self.score = int(data['score'] or 0)
+        self.progress = int(data['progress'] or 0)
+        try:
+            self.created_at = parse(data['created_at'])
+            self.updated_at = parse(data['updated_at'])
+        except ParserError as ex:
+            self.created_at = dt.datetime.utcnow()
+            self.updated_at = dt.datetime.utcnow()
+            print(ex)
         if 'is_autoupdate' in data:
             self.is_autoupdate = data['is_autoupdate']
         if 'is_webembed' in data:
@@ -821,11 +827,11 @@ class Project(PkModel):
         score = self.progress or 0
         cqu = Activity.query.filter_by(project_id=self.id)
         c_s = cqu.count()
-        # Get a point for every (join, update, ..) activity in dribs
+        # Get a point for every (join, update, comment ..) activity in dribs
         score = score + (1 * c_s)
-        # Triple the score for every boost (upvote)
-        # c_a = cqu.filter_by(name="boost").count()
-        # score = score + (2 * c_a)
+        # Extra point for every boost (upvote)
+        c_a = cqu.filter_by(name="boost").count()
+        score = score + (1 * c_a)
         # Add to the score for every complete documentation field
         score = score + 1 * int(len(self.summary) > 3)
         score = score + 1 * int(len(self.image_url) > 3)
@@ -891,9 +897,12 @@ class Category(PkModel):
     def set_from_data(self, data):
         """Update from a JSON representation."""
         self.name = data['name']
-        self.description = data['description']
-        self.logo_color = data['logo_color']
-        self.logo_icon = data['logo_icon']
+        if 'description' in data:
+            self.description = data['description']
+        if 'logo_color' in data:
+            self.logo_color = data['logo_color']
+        if 'logo_icon' in data:
+            self.logo_icon = data['logo_icon']
         if 'event_name' in data:
             ename = data['event_name']
             evt = Event.query.filter_by(name=ename).first()

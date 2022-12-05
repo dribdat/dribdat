@@ -95,17 +95,32 @@
         </li>
       {% endif %}
 
-      <form class="form-inline nav-item" action="{{ url_for('public.about') }}" method="get">
-        <button class="btn my-2 my-sm-0 {% if active != 'about' %}text-secondary{% endif %}" type="submit">
+      <li class="nav-item">
+        <a class="nav-link" id="navSearchButton" title="Search"
+           href="{{ url_for('public.about') }}">
           <i class="fa fa-search" aria-hidden="true"></i>
-        </button>
-        <!-- <input class="form-control mr-sm-2" type="search" placeholder="" aria-label="Search" name="q" size=7> -->
-      </form>
+        </a>
+      </li>
 
     </ul>
-
-
 
   </div><!-- /.navbar-collapse -->
 
 </nav>
+
+<!-- Popup search results -->
+<div class="hidden container nav-search" id="navSearch" 
+     tabindex="-1" role="dialog" aria-labelledby="searchLabel" aria-hidden="true">
+  <div class="profile-projects container-fluid mb-3">
+    <div data-action="/api/project/search.json" id="search">
+      <div class="content input-group">
+        <div class="input-group-prepend">
+          <span class="input-group-text">Search</span>
+        </div>
+        <input type="text" class="form-control" name="q" aria-label="Search term" placeholder="Start typing ..."  style="width:20em">
+      </div>
+    </div>
+    <div class="row flex-row flex-nowrap pb-2" id="search-results"></div>
+    <div class="text-center mb-2" id="search-matches"><i>Start typing above ...</i></div>
+  </div>
+</div>

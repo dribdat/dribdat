@@ -5,31 +5,40 @@ import re
 import logging
 from flask import url_for
 from micawber.parsers import standalone_url_re, full_handler
+from .boxout.ckan import box_dataset, chk_dataset, ini_dataset
 from .boxout.dribdat import box_project
 from .boxout.datapackage import box_datapackage, chk_datapackage
-from .boxout.ckan import box_dataset, chk_dataset, ini_dataset
 from .boxout.github import box_repo
 from dribdat.extensions import cache
 
 
-def format_webembed(url):
+def format_webembed(project_id, url=None):
     """Create a well-formatted frame for project embeds."""
-    if url.lower().startswith('<iframe '):
+    if not url:
+        return "Please provide a valid demo link."
+    urltest = url.lower().strip()
+    if urltest.startswith('<iframe '):
         # Allow IFRAMEs
         # TODO: add a setting
         return url
-    if url.startswith('https://query.wikidata.org/'):
+    elif urltest.endswith('.pdf'):
+        # Embedded document
+        url = url_for('project.render', project_id=project_id)
+        # url = '/project/%d/render' % project_id
+    elif urltest.startswith('https://query.wikidata.org/'):
         # Fix WikiData queries
         url = url.replace('https://query.wikidata.org/',
                           'https://query.wikidata.org/embed.html')
-    elif url.startswith('https://youtu.be/'):
+    elif urltest.startswith('https://youtu.be/'):
         # Fix YouTube mobile link
         url = url.replace('https://youtu.be/',
                           'https://www.youtube.com/embed/')
-    elif url.startswith('https://www.youtube.com/watch?'):
+        url = url.replace('?t=', '?start=')
+    elif urltest.startswith('https://www.youtube.com/watch?'):
         # Fix YouTube web link
         url = url.replace('https://www.youtube.com/watch?v=',
                           'https://www.youtube.com/embed/')
+        url = url.replace('?t=', '?start=')
     # TODO: add more embeddables here
     return '<iframe src="%s"></iframe>' % url
 

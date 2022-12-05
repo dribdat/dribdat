@@ -16,7 +16,7 @@
 		 class="hexagon {{
 		 	'challenge' if project.is_challenge else 'project'
 		 }}{{
-		 	' stage-%d' % project.progress if project.progress > 0
+		 	' stage-%d' % project.progress if project.progress
 		 }} category-highlight"
 		 {% if project.category_id %}
 		 	 category-id="{{ project.category_id }}"

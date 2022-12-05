@@ -19,6 +19,7 @@ textarea { resize: vertical; }
 sp {
   box-shadow: 2px 2px 0px rgb(0 0 0 / 30%);
   padding: 1px 5px;
+  color: black;
   background: #eee;
   margin: 1px 2px;
   font-family: monospace;
@@ -454,6 +455,9 @@ nav .nav-login {
   box-shadow: 5px 5px 1px #777;
 }
 @media (max-width: 600px) {
+  .home-page .carousel-item {
+    height: 25rem;
+  }
   .home-page .carousel-caption .section-header-logo {
     position: relative;
     float: none;
@@ -997,8 +1001,9 @@ nav .nav-login {
 .userprofile .nav,
 .project-page .nav {
   clear: both;
-  padding: 20px 5px 5px;
+  /* padding: 20px 5px 5px; */
   border-bottom: 1px solid lightgrey;
+  margin-top: 10px;
 }
 .project-page .nav a {
   text-shadow: 1px 1px 4px white;
@@ -1010,7 +1015,10 @@ nav .nav-login {
 }
 .project-page .nav a.active {
   text-shadow: none;
+  background: rgba(85, 200, 200, 0.8);
   border-bottom: 1px solid white;
+  border-bottom-right-radius: 0px;
+  border-bottom-left-radius: 0px;
 }
 
 /* Autotext fader
@@ -1047,7 +1055,7 @@ nav .nav-login {
 /* Project embedded content */
 .project-page .resizable {
   width: 100%;
-  height: 600px;
+  height: 640px;
   box-shadow: 5px 5px 10px #535353;
   margin-bottom: 1em;
   border: 1px silver;
@@ -1061,7 +1069,7 @@ nav .nav-login {
 }
 @media (max-width: 1000px) {
   .project-page .resizable {
-    height: 300px;
+    height: 320px;
   }
   .timeline h2 {
     font-size: 1.3rem;
@@ -1311,12 +1319,13 @@ pre { color: #333; background: white; }
 }
 .project-score {
   float: right;
-  margin-right: 15px;
-  text-align: right;
 }
 .project-page .project-score {
   text-align: center;
   min-width: 8em;
+  margin-top: -1em;
+  margin-right: -1em;
+  margin-bottom: 1em;
 }
 .project-page .project-category {
   float: right;
@@ -1389,8 +1398,9 @@ pre { color: #333; background: white; }
   .category-info {
     margin-top: 0px;
   }
-  .project-score {
+  .project-page .project-score {
     float: none;
+    margin: 0.5em;
   }
 }
 
@@ -1535,6 +1545,12 @@ pre { color: #333; background: white; }
   border-radius: 2em;
   padding: 0.5em;
 }
+.project-score .team-count {
+  font-size: 80%;
+  margin-top: -0.5em;
+  text-decoration: none;
+  color: #fff;
+}
 .profile-projects {
   width: 100%;
   padding-top: 1em;
@@ -1659,19 +1675,13 @@ pre { color: #333; background: white; }
 .embed-view .section-header {
   display: none;
 }
-.home-nav .embed-view {
+.carousel-caption .embed-view {
   width: 100%;
-  height: 10em;
+  height: 13em;
 }
-.home-nav .embed-view .ibws-fix {
+.carousel-caption .embed-view .ibws-fix {
   width: 800px;
 }
-@media (max-width: 1000px) {
-  .home-nav .embed-view {
-    display: none;
-  }
-}
-
 
 /* Print view of projects */
 .print-page .project-meta {
@@ -1805,9 +1815,6 @@ Instruction page
   margin-top: 0.5em;
   cursor: pointer;
   padding: 0 0 0 2em;
-}
-.form-project-confirm:hover {
-  background-color: lightyellow;
 }
 .projectpost alert {
   margin-top: 0.5em;

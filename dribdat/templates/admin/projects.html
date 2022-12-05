@@ -30,7 +30,7 @@
     <table class='table table-hover'>
         <thead>
             <tr>
-              <th>Name <small>(Phase)</small></th>
+              <th>Name <small>(Score, Phase, Hashtag)</small></th>
               <th>Category</th>
               <th>Created</th>
               <th>Updated</th>
@@ -44,8 +44,13 @@
                 {{ project.name }}
               </a>
               <br>
-              <small>({{ project.phase }})</small>
-              <small><b>{{ project.hashtag or '' }}</b></small>
+              <small>{{ project.score or '' }} 
+                <a href="{{ url_for('public.event_stages', event_id=project.event_id) }}">
+                  {{ project.phase }}
+                </a>
+                &nbsp;
+                <b>{{ project.hashtag or '' }}</b>
+              </small>
             </td>
             <td>{{ project.category.name }}</td>
             <td>{{ project.created_at|format_date }}

@@ -199,9 +199,9 @@ def ProjectActivity(project, of_type, user, action=None, comments=None):
     activity.user_id = user.id
     # Regular posts are 1 star
     score = 1
-    # Booster stars to give projects special awards
+    # Booster stars give projects double points
     if of_type == 'boost':
-        score = 10
+        score = 2
     # Post comments are activity contents
     if comments is not None and len(comments) > 3:
         activity.content = comments
