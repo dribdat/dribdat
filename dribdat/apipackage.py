@@ -54,20 +54,6 @@ def event_to_data_package(event, author=None, host_url='', full_content=False):
         version="0.2.0",
     )
 
-    # if False:  # as CSV
-    #     fp_projects = tempfile.NamedTemporaryFile(
-    #         mode='w+t', prefix='projects-', suffix='.csv')
-    #     # print("Writing to temp CSV file", fp_projects.name)
-    #     fp_projects.write(gen_csv(get_project_list(event.id)))
-    #     resource = Resource(fp_projects.name)
-    # if False:
-    #     # print("Generating in-memory rowset")
-    #     project_rows = gen_rows(get_project_list(event.id))
-    #     resource = Resource(
-    #         name='projects',
-    #         data=project_rows,
-    #     )
-
     # Generate resources
 
     # print("Generating in-memory JSON of event")
@@ -106,6 +92,7 @@ def event_to_data_package(event, author=None, host_url='', full_content=False):
 
 
 def import_events_data(data, dry_run=False):
+    """Collect data of a list of events."""
     updates = []
     for evt in data:
         name = evt['name']
@@ -123,6 +110,7 @@ def import_events_data(data, dry_run=False):
 
 
 def import_categories_data(data, dry_run=False):
+    """Collect data of a list of categories."""
     updates = []
     for ctg in data:
         name = ctg['name']
@@ -140,6 +128,7 @@ def import_categories_data(data, dry_run=False):
 
 
 def import_users_data(data, dry_run=False):
+    """Collect data of a list of users."""
     updates = []
     for usr in data:
         name = usr['username']
@@ -162,6 +151,7 @@ def import_users_data(data, dry_run=False):
 
 
 def import_user_roles(user, new_roles, dry_run=False):
+    """Collect data of a list of roles."""
     updates = []
     my_roles = [r.name for r in user.roles]
     for r in new_roles.split(','):
@@ -180,6 +170,7 @@ def import_user_roles(user, new_roles, dry_run=False):
 
 
 def import_project_data(data, dry_run=False):
+    """Collect data of a list of projects."""
     updates = []
     for pjt in data:
         name = pjt['name']
@@ -204,6 +195,7 @@ def import_project_data(data, dry_run=False):
 
 
 def import_activities(data, dry_run=False):
+    """Collect data from unique activities."""
     updates = []
     proj = None
     pname = ""
@@ -232,6 +224,7 @@ def import_activities(data, dry_run=False):
 
 
 def import_event_package(data, dry_run=False, all_data=False):
+    """Import an event from a Data Package."""
     if 'sources' not in data or data['sources'][0]['title'] != 'dribdat':
         return {'errors': ['Invalid source']}
     updates = {}
@@ -240,7 +233,7 @@ def import_event_package(data, dry_run=False, all_data=False):
         for res in data['resources']:
             # Import events
             if stg == 1 and res['name'] == 'events':
-                updates['events'] = import_categories_data(res['data'], dry_run)
+                updates['events'] = import_events_data(res['data'], dry_run)
             # Import categories
             elif stg == 1 and res['name'] == 'categories' and all_data:
                 updates['categories'] = import_categories_data(res['data'], dry_run)
@@ -259,6 +252,8 @@ def import_event_package(data, dry_run=False, all_data=False):
 
 def fetch_datapackage(url, dry_run=False, all_data=False):
     """Get event data from a URL."""
+    # For security, can only be used from CLI.
+    # In the future, we can add a subscription setting on the server side.
     if not url.endswith('datapackage.json'):
         logging.error("Invalid URL", url)
         return {}

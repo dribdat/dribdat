@@ -250,20 +250,17 @@ def project_search_json():
 # ------ UPDATE ---------
 
 
-@blueprint.route('/event/load/datapackage', methods=["GET", "POST"])
+@blueprint.route('/event/load/datapackage', methods=["POST"])
 @admin_required
-def event_load_datapackage():  # noqa: C901
-    """Load event data from URL."""
-    url = request.args.get('url')
+def event_upload_datapackage():
+    """Load event data from an uploaded Data Package."""
     filedata = request.files['file']
-    if filedata and request.form.get('import'):
-        url = filedata.filename
-        import_level = request.form.get('import')
-    else:
-        import_level = request.args.get('import')
+    import_level = request.form.get('import')
+    if not filedata or not import_level:
+        return jsonify(status='Error', errors=['Missing import data parameters'])
     # Check link
-    if not url or 'datapackage.json' not in url:
-        return jsonify(status='Error', errors=['Missing datapackage.json url'])
+    if 'datapackage.json' not in filedata.filename:
+        return jsonify(status='Error', errors=['Must be a datapackage.json'])
     # Configuration
     dry_run = True
     all_data = False
@@ -276,10 +273,7 @@ def event_load_datapackage():  # noqa: C901
         all_data = True
         status = "Complete"
     # File handling
-    if filedata and filedata.filename != '':
-        results = import_datapackage(filedata, dry_run, all_data)
-    else:
-        results = fetch_datapackage(url, dry_run, all_data)
+    results = import_datapackage(filedata, dry_run, all_data)
     event_names = ', '.join([r['name'] for r in results['events']])
     if 'errors' in results:
         return jsonify(status='Error', errors=results['errors'])

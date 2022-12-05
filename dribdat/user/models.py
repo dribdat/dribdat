@@ -29,6 +29,7 @@ from flask import current_app
 from flask_login import UserMixin
 from time import mktime
 from dateutil.parser import parse
+from dateutil.parser._parser import ParserError
 import datetime as dt
 import hashlib
 import re
@@ -762,10 +763,15 @@ class Project(PkModel):
         self.contact_url = data['contact_url']
         self.logo_color = data['logo_color']
         self.logo_icon = data['logo_icon']
-        self.created_at = parse(data['created_at'] or dt.datetime.utcnow())
-        self.updated_at = parse(data['updated_at'] or dt.datetime.utcnow())
         self.longtext = data['longtext']
         self.autotext = data['autotext']
+        try:
+            self.created_at = parse(data['created_at'])
+            self.updated_at = parse(data['updated_at'])
+        except ParserError as ex:
+            self.created_at = dt.datetime.utcnow()
+            self.updated_at = dt.datetime.utcnow()
+            print(ex)
         if 'is_autoupdate' in data:
             self.is_autoupdate = data['is_autoupdate']
         if 'is_webembed' in data:
@@ -891,9 +897,12 @@ class Category(PkModel):
     def set_from_data(self, data):
         """Update from a JSON representation."""
         self.name = data['name']
-        self.description = data['description']
-        self.logo_color = data['logo_color']
-        self.logo_icon = data['logo_icon']
+        if 'description' in data:
+            self.description = data['description']
+        if 'logo_color' in data:
+            self.logo_color = data['logo_color']
+        if 'logo_icon' in data:
+            self.logo_icon = data['logo_icon']
         if 'event_name' in data:
             ename = data['event_name']
             evt = Event.query.filter_by(name=ename).first()
