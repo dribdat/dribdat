@@ -158,7 +158,7 @@ def import_user_roles(user, new_roles, dry_run=False):
         if r in my_roles:
             continue
         # Check that role is a new one
-        role = Role.query.filter_by(name=r).first()
+        role = Role.query.filter(Role.name.ilike(r)).first()
         if not role:
             role = Role(r)
             if dry_run:
@@ -173,6 +173,13 @@ def import_project_data(data, dry_run=False):
     """Collect data of a list of projects."""
     updates = []
     for pjt in data:
+        # Search for event
+        event_name = pjt['event_name']
+        event = Event.query.filter_by(name=event_name).first()
+        if not event:
+            logging.warn('Error: event not found: %s' % event_name)
+            continue
+        # Search for project
         name = pjt['name']
         project = Project.query.filter_by(name=name).first()
         if not project:
@@ -181,12 +188,6 @@ def import_project_data(data, dry_run=False):
         else:
             logging.info('Updating project: %s' % name)
         project.set_from_data(pjt)
-        # Search for event
-        event_name = pjt['event_name']
-        event = Event.query.filter_by(name=event_name).first()
-        if not event:
-            logging.warn('Error - event not found: %s' % event_name)
-            continue
         project.event = event
         if not dry_run:
             project.save()
