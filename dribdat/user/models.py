@@ -827,11 +827,11 @@ class Project(PkModel):
         score = self.progress or 0
         cqu = Activity.query.filter_by(project_id=self.id)
         c_s = cqu.count()
-        # Get a point for every (join, update, ..) activity in dribs
+        # Get a point for every (join, update, comment ..) activity in dribs
         score = score + (1 * c_s)
-        # Triple the score for every boost (upvote)
-        # c_a = cqu.filter_by(name="boost").count()
-        # score = score + (2 * c_a)
+        # Extra point for every boost (upvote)
+        c_a = cqu.filter_by(name="boost").count()
+        score = score + (1 * c_a)
         # Add to the score for every complete documentation field
         score = score + 1 * int(len(self.summary) > 3)
         score = score + 1 * int(len(self.image_url) > 3)
