@@ -129,12 +129,12 @@ def events_past():
 def user(username):
     """Show a user profile."""
     user = User.query.filter_by(username=username).first_or_404()
-    logged_in = current_user and not current_user.is_anonymous
-    if logged_in and not isUserActive(user) and user == current_user:
+    # logged_in = current_user and not current_user.is_anonymous
+    if not isUserActive(user):
         flash(
             'User account is under review. Please contact the '
             + 'organizing team for full access.',
-            'warning'
+            'info'
         )
     submissions = user.posted_challenges()
     projects = user.joined_projects(True)
