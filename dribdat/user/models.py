@@ -598,6 +598,7 @@ class Project(PkModel):
             'score': self.score,
             'phase': self.phase,
             'is_challenge': self.is_challenge,
+            'is_webembed': self.is_webembed,
             'progress': self.progress,
             'summary': self.summary or '',
             'hashtag': self.hashtag or '',

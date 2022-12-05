@@ -132,6 +132,8 @@ def SyncProjectData(project, data):
     if 'image_url' in data and data['image_url'] and \
        (not project.image_url):
         project.image_url = data['image_url'][:2048]
+    if 'is_webembed' in data and data['is_webembed']:
+        project.is_webembed = True
     project.update()
     db.session.add(project)
     db.session.commit()

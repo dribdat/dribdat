@@ -11,7 +11,7 @@ var pdfDoc = null,
     pageNum = 1,
     pageRendering = false,
     pageNumPending = null,
-    scale = 0.8,
+    scale = 1.5,
     canvas = $thecanvas[0],
     ctx = canvas.getContext('2d');
 
@@ -105,6 +105,31 @@ function onGoPage() {
   queueRenderPage(pageNum);
 }
 document.getElementById('go').addEventListener('click', onGoPage);
+
+/**
+ * Displays next page.
+function pdfViewZoomIn(ticks) {
+  let newScale = this.pdfViewer.currentScale;
+  do {
+    newScale = (newScale * DEFAULT_SCALE_DELTA).toFixed(2);
+    newScale = Math.ceil(newScale * 10) / 10;
+    newScale = Math.min(MAX_SCALE, newScale);
+  } while (--ticks && newScale < MAX_SCALE);
+  this.pdfViewer.currentScaleValue = newScale;
+}
+document.getElementById('zoomIn').addEventListener('click', pdfViewZoomIn);
+
+function pdfViewZoomOut(ticks) {
+  let newScale = this.pdfViewer.currentScale;
+  do {
+    newScale = (newScale / DEFAULT_SCALE_DELTA).toFixed(2);
+    newScale = Math.floor(newScale * 10) / 10;
+    newScale = Math.max(MIN_SCALE, newScale);
+  } while (--ticks && newScale > MIN_SCALE);
+  this.pdfViewer.currentScaleValue = newScale;
+}
+document.getElementById('zoomIn').addEventListener('click', pdfViewZoomOut);
+ */
 
 /**
  * Asynchronously downloads PDF.
