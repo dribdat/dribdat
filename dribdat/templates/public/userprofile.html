@@ -8,14 +8,15 @@
 
 {% if current_user and current_user.is_authenticated %}
 <div class="row">
-  <div class="col-sm text-right">
+  <div class="col-sm text-right mt-2">
   {% if current_user.id == user.id %}
 
-    <div class="btn-group float-left">
+    <div class="btn-group">
       <a id="project-post"
          href="{{ url_for('public.user_post') }}"
-         title="Post an update to your current project" class="btn btn-success btn-lg">
-        <i class="fa fa-clipboard" aria-hidden="true"></i>
+         title="Post an update to your current project" 
+         class="btn btn-info btn-lg">
+      <i class="fa fa-paper-plane" aria-hidden="true"></i>
         Write a Post</a>
 
       <a href="{{ url_for('auth.user_profile') }}" class="btn btn-warning btn-lg">
@@ -24,7 +25,7 @@
       </a>
     </div>
 
-    <div class="btn-group mt-2">
+    <div class="btn-group">
       {% if may_certify %}
         <a id="get-certified" class="btn btn-info btn-lg"
           href="{{ url_for('public.user_cert') }}"

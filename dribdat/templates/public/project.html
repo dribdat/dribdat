@@ -80,7 +80,7 @@
 <div class="btn-group project-edit-buttons" role="group" aria-label="Project tools">
 
   {% if allow_post %}
-     <a id="project-post" href="{{ url_for('project.project_post', project_id=project.id) }}" title="Post to this project" class="btn btn-lg btn-success">
+     <a id="project-post" href="{{ url_for('project.project_post', project_id=project.id) }}" title="Post to this project" class="btn btn-lg btn-info">
        <i class="fa fa-paper-plane" aria-hidden="true"></i>
        Write update
      </a>
@@ -400,7 +400,7 @@
   <div class="btn-group">
 
     {% if allow_post %}
-    <a href="{{ url_for('project.project_post', project_id=project.id) }}" class="btn btn-lg btn-success"
+    <a href="{{ url_for('project.project_post', project_id=project.id) }}" class="btn btn-lg btn-info"
        title="Write a progress update">
       <i class="fa fa-paper-plane" aria-hidden="true"></i>
       Post</a>
@@ -410,7 +410,7 @@
          title="Edit basic project data">
         <i class="fa fa-pencil" aria-hidden="true"></i>
         Edit</a>
-      <a href="{{ url_for('project.project_details', project_id=project.id) }}" class="btn btn-lg btn-info"
+      <a href="{{ url_for('project.project_details', project_id=project.id) }}" class="btn btn-lg btn-secondary"
          title="Edit project details" >
         <i class="fa fa-pencil" aria-hidden="true"></i>
         Details</a>
