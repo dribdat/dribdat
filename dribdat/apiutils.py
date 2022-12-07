@@ -75,15 +75,14 @@ def get_event_users(event, full_data=False):
 
 def get_project_summaries(projects, host_url, is_moar=False):
     """Collect data for each project in a list."""
-    if is_moar:
-        summaries = []
-        for project in projects:
-            p = project.data
+    summaries = []
+    for project in projects:
+        p = project.data
+        p['stats'] = project.get_stats()
+        if is_moar:
             p['autotext'] = project.autotext  # Markdown
             p['longtext'] = project.longtext  # Markdown - see longhtml()
-            summaries.append(p)
-    else:
-        summaries = [p.data for p in projects]
+        summaries.append(p)
     summaries = expand_project_urls(summaries, host_url)
     summaries.sort(key=lambda x: x['score'] or 0, reverse=True)
     return summaries
