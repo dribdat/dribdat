@@ -663,10 +663,13 @@ class Project(PkModel):
         s_commits = q.filter_by(
             name='update', action='commit'
         ).count()
-        s_during = q.filter(
-            Activity.timestamp > self.event.starts_at_tz,
-            Activity.timestamp < self.event.ends_at_tz
-        ).count()
+        if self.event:
+            s_during = q.filter(
+                Activity.timestamp > self.event.starts_at_tz,
+                Activity.timestamp < self.event.ends_at_tz
+            ).count()
+        else:
+            s_during = 0
         s_people = len(self.get_team(True))
         # TODO: real wordcount
         s_words = len(self.longtext.split(' '))

@@ -35,6 +35,16 @@ EOF""" % (url, url)
         project.autotext_url = 'https:/...'
         assert 'test' in project.autotext
         assert 'test' in project.data['excerpt']
+        # test stats
+        stats = project.get_stats()
+        assert stats['total'] == 0
+        assert stats['updates'] == 0
+        assert stats['commits'] == 0
+        assert stats['during'] == 0
+        assert stats['people'] == 0
+        assert stats['words'] == 1
+        assert stats['allwords'] == 9
+        
 
     def test_project_stage(self, project, testapp):
         """Check stage progression."""
