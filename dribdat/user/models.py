@@ -678,9 +678,13 @@ class Project(PkModel):
             s_during = 0
         s_people = len(self.get_team(True))
         # TODO: real wordcount
-        s_words = len(self.longtext.split(' '))
-        s_allwords = s_words + len(self.autotext.split(' '))
-        s_allwords = s_allwords + len(self.summary.split(' '))
+        s_words = s_allwords = 0
+        if self.longtext:
+            s_words = len(self.longtext.split(' '))
+        if self.autotext:
+            s_allwords = s_words + len(self.autotext.split(' '))
+        if self.summary:
+            s_allwords = s_allwords + len(self.summary.split(' '))
         return {
             'total':    s_total,
             'updates':  s_updates,
