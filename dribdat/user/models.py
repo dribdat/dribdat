@@ -626,12 +626,18 @@ class Project(PkModel):
                     d['excerpt'] += '...'
         if self.user is not None:
             d['maintainer'] = self.user.username
+        else:
+            d['maintainer'] = ''
         if self.event is not None:
             d['event_url'] = self.event.url
             d['event_name'] = self.event.name
+        else:
+            d['event_url'] = d['event_name'] = ''
         if self.category is not None:
             d['category_id'] = self.category.id
             d['category_name'] = self.category.name
+        else:
+            d['category_id'] = d['category_name'] = ''
         return d
 
     def latest_activity(self, max=5):

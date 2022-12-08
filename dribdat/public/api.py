@@ -84,7 +84,7 @@ def project_list_csv(event_id, event_name):
     """Fetch a CSV file with projects for an event."""
     headers = {
         'Content-Disposition': 'attachment; filename='
-        + event_name + '_dribdat.csv'
+        + event_name + '_projects_dribdat.csv'
     }
     csvlist = gen_csv(request_project_list(event_id))
     return Response(stream_with_context(csvlist),
@@ -105,6 +105,20 @@ def project_list_current_csv():
     event = Event.query.filter_by(is_current=True).first() or \
         Event.query.order_by(Event.id.desc()).first_or_404()
     return project_list_csv(event.id, event.name)
+
+
+@blueprint.route('/events/projects.csv')
+def project_list_all_events_csv():
+    """Output CSV of projects and challenges in all events."""
+    projectlist = []
+    export = Event.query.filter_by(is_hidden=False, lock_resources=False).all()
+    for event in export:
+        projectlist.extend(request_project_list(event.id))
+    headers = {'Content-Disposition': 'attachment; filename=projects.csv'}
+    csvlist = gen_csv(projectlist)
+    return Response(stream_with_context(csvlist),
+                    mimetype='text/csv',
+                    headers=headers)
 
 
 @blueprint.route('/event/current/categories.json')
