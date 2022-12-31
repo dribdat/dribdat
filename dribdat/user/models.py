@@ -687,13 +687,13 @@ class Project(PkModel):
         if self.summary:
             s_allwords += len(self.summary.split(' '))
         return {
-            'total':    s_total,
-            'updates':  s_updates,
-            'commits':  s_commits,
-            'during':   s_during,
-            'people':   s_people,
-            'words':    s_words,
-            'allwords': s_allwords,
+            'total':     s_total,
+            'updates':   s_updates,
+            'commits':   s_commits,
+            'during':    s_during,
+            'people':    s_people,
+            'wordslong': s_words,
+            'wordcount': s_allwords,
         }
 
     def get_missing_roles(self):

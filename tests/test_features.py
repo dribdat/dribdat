@@ -27,6 +27,7 @@ EOF""" % (url, url)
         """Make sure Project APIs respond correctly."""
         project = ProjectFactory()
         project.name = 'example'
+        project.longtext = 'Word.'
         project.autotext = 'some test readme content'
         project.save()
         # print(project.data)
@@ -42,10 +43,9 @@ EOF""" % (url, url)
         assert stats['commits'] == 0
         assert stats['during'] == 0
         assert stats['people'] == 0
-        assert stats['words'] == 1
-        assert stats['allwords'] == 9
+        assert stats['wordslong'] == 1
+        assert stats['wordcount'] == 9
         
-
     def test_project_stage(self, project, testapp):
         """Check stage progression."""
         event = EventFactory()
