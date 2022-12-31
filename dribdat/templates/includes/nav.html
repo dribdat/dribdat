@@ -5,7 +5,7 @@
     <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbar-main-collapse" aria-controls="navbar-main-collapse" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
-    <a class="navbar-brand" href="{{ url_for('public.home') }}" title="Home page">
+    <a class="navbar-brand" href="{{ url_for('public.home') }}" title="GO HOME">
       <i style="-moz-transform: scale(1, 1); -webkit-transform: scale(1, 1); -o-transform: scale(1, 1); -ms-transform: scale(1, 1); transform: scale(1, 1);" class="fa fa-thumbs-up" aria-hidden="true"></i>
       <i style="-moz-transform: scale(1, 1); -webkit-transform: scale(1, 1); -o-transform: scale(1, 1); -ms-transform: scale(1, 1); transform: scale(1, 1);" class="fa fa-lightbulb-o" aria-hidden="true"></i>
       <i style="-moz-transform: scale(-1, 1); -webkit-transform: scale(-1, 1); -o-transform: scale(-1, 1); -ms-transform: scale(-1, 1); transform: scale(-1, 1);" class="fa fa-thumbs-up" aria-hidden="true"></i>
@@ -25,14 +25,18 @@
       {% endif %}
 
       <li class="nav-item">
-        <a class="nav-link {% if active == 'dribs' %}active{% endif %}" href="{{ url_for('public.dribs') }}">
+        <a class="nav-link {% if active == 'dribs' %}active{% endif %}" 
+           title="Latest posts from the teams"
+           href="{{ url_for('public.dribs') }}">
           <i class="fa fa-comment" aria-hidden="true"></i>
           Dribs
         </a>
       </li>
       {% if event and not event.lock_resources %}
         <li class="nav-item">
-          <a class="nav-link {% if active == 'projects' %}active{% endif %}" href="{{ url_for('public.event', event_id=event.id) }}#top">
+          <a class="nav-link {% if active == 'projects' %}active{% endif %}" 
+             title="Show me the projects"
+             href="{{ url_for('public.event', event_id=event.id) }}#top">
             <i class="fa fa-star" aria-hidden="true"></i>
             {% if event.has_finished %}
               Results
@@ -44,7 +48,9 @@
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link {% if active == 'participants' %}active{% endif %}" href="{{ url_for('public.event_participants', event_id=event.id) }}">
+          <a class="nav-link {% if active == 'participants' %}active{% endif %}" 
+             title="Show me the people"
+             href="{{ url_for('public.event_participants', event_id=event.id) }}">
             <i class="fa fa-child" aria-hidden="true"></i>
             People
           </a>
@@ -53,14 +59,18 @@
 
       {% if current_user and current_user.is_authenticated %}
           <li class="nav-item">
-            <a class="nav-link{{ ' active' if active == 'profile' }}" href="{{ url_for('public.user', username=current_user.username) }}" title="{{ current_user.username }}">
+            <a class="nav-link{{ ' active' if active == 'profile' }}" 
+               title="Take me to my profile"
+               href="{{ url_for('public.user', username=current_user.username) }}" title="{{ current_user.username }}">
               <i class="fa fa-key" aria-hidden="true"></i>
               Profile
             </a>
           </li>
           {% if current_user.is_admin %}
             <li class="nav-item admin-area">
-              <a class="nav-link{{ ' active' if active == 'index' }}" href="{{ url_for('admin.index') }}">
+              <a class="nav-link{{ ' active' if active == 'index' }}"
+                 title="The engine room" 
+                 href="{{ url_for('admin.index') }}">
                 <i class="fa fa-gear" aria-hidden="true"></i>
                 Admin
               </a>
@@ -88,7 +98,9 @@
           {% endif %}
       {% else %}
         <li class="nav-item">
-          <a class="nav-link nav-login" href="{{ url_for('auth.login') }}">
+          <a class="nav-link nav-login" 
+             title="Sign in with your account"
+             href="{{ url_for('auth.login') }}">
             <i class="fa fa-sign-in" aria-hidden="true"></i>
             Login
           </a>
@@ -96,7 +108,8 @@
       {% endif %}
 
       <li class="nav-item">
-        <a class="nav-link" id="navSearchButton" title="Search"
+        <a class="nav-link" id="navSearchButton" 
+           title="Search this dribdat site"
            href="{{ url_for('public.about') }}">
           <i class="fa fa-search" aria-hidden="true"></i>
         </a>
@@ -115,12 +128,12 @@
     <div data-action="/api/project/search.json" id="search">
       <div class="content input-group">
         <div class="input-group-prepend">
-          <span class="input-group-text">Search</span>
+          <span class="input-group-text">Search dribdat</span>
         </div>
         <input type="text" class="form-control" name="q" aria-label="Search term" placeholder="Start typing ..."  style="width:20em">
       </div>
     </div>
     <div class="row flex-row flex-nowrap pb-2" id="search-results"></div>
-    <div class="text-center mb-2" id="search-matches"><i>Start typing above ...</i></div>
+    <div class="text-center mb-2" id="search-matches"></div>
   </div>
 </div>

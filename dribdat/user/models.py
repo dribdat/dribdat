@@ -626,12 +626,18 @@ class Project(PkModel):
                     d['excerpt'] += '...'
         if self.user is not None:
             d['maintainer'] = self.user.username
+        else:
+            d['maintainer'] = ''
         if self.event is not None:
             d['event_url'] = self.event.url
             d['event_name'] = self.event.name
+        else:
+            d['event_url'] = d['event_name'] = ''
         if self.category is not None:
             d['category_id'] = self.category.id
             d['category_name'] = self.category.name
+        else:
+            d['category_id'] = d['category_name'] = ''
         return d
 
     def latest_activity(self, max=5):
@@ -640,16 +646,55 @@ class Project(PkModel):
         q = q.order_by(Activity.timestamp.desc())
         return q.limit(max)
 
-    def get_team(self):
+    def get_team(self, with_spectators=False):
         """Return all starring users (A team)."""
-        activities = Activity.query.filter_by(
-            name='star', project_id=self.id
-        ).all()
+        q = Activity.query.filter_by(project_id=self.id)
+        if with_spectators:
+            activities = q.all()
+        else:
+            activities = q.filter_by(name='star').all()
         members = []
         for a in activities:
             if a.user and a.user not in members:
                 members.append(a.user)
         return members
+
+    def get_stats(self):
+        """Collect some activity stats."""
+        q = Activity.query.filter_by(project_id=self.id)
+        s_total = q.count()
+        s_updates = q.filter_by(
+            name='update'
+        ).count()
+        s_commits = q.filter_by(
+            name='update', action='commit'
+        ).count()
+        if self.event:
+            s_during = q.filter(
+                Activity.timestamp > self.event.starts_at_tz,
+                Activity.timestamp < self.event.ends_at_tz
+            ).count()
+        else:
+            s_during = 0
+        s_people = len(self.get_team(True))
+        # TODO: real wordcount
+        s_words = 0
+        if self.longtext:
+            s_words = len(self.longtext.split(' '))
+        s_allwords = s_words
+        if self.autotext:
+            s_allwords += len(self.autotext.split(' '))
+        if self.summary:
+            s_allwords += len(self.summary.split(' '))
+        return {
+            'total':     s_total,
+            'updates':   s_updates,
+            'commits':   s_commits,
+            'during':    s_during,
+            'people':    s_people,
+            'wordslong': s_words,
+            'wordcount': s_allwords,
+        }
 
     def get_missing_roles(self):
         """List all roles which are not yet in team."""
