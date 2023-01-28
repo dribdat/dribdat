@@ -6,7 +6,7 @@ from wtforms import (
     TextAreaField, RadioField, IntegerField,
     SelectMultipleField
 )
-from wtforms.fields.html5 import (
+from wtforms.fields import (
     DateField, TimeField,
     URLField, EmailField,
 )
