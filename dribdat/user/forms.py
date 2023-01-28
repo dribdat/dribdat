@@ -9,7 +9,7 @@ from wtforms import (
     SelectMultipleField,
     HiddenField,
 )
-from wtforms.fields.html5 import (
+from wtforms.fields import (
     URLField, EmailField,
 )
 from wtforms.validators import (

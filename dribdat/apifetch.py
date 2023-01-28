@@ -266,11 +266,11 @@ def parse_data_package(json):
 
 
 # Basis: https://github.com/mozilla/bleach/blob/master/bleach/sanitizer.py#L16
-ALLOWED_HTML_TAGS = ALLOWED_TAGS + [
+ALLOWED_HTML_TAGS = list(ALLOWED_TAGS).extend([
     'img', 'font', 'center', 'sub', 'sup', 'pre',
     'h1', 'h2', 'h3', 'h4', 'h5',
     'p', 'u', 'b', 'em', 'i',
-]
+])
 ALLOWED_HTML_ATTR = ALLOWED_ATTRIBUTES
 ALLOWED_HTML_ATTR['h1'] = ['id']
 ALLOWED_HTML_ATTR['h2'] = ['id']

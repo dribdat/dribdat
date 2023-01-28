@@ -424,6 +424,7 @@ def project_uploader():
             aws_access_key_id=current_app.config['S3_KEY'],
             aws_secret_access_key=current_app.config['S3_SECRET'],
         )
+        #print('Uploading to endpoint %s' % current_app.config['S3_ENDPOINT'])
     else:
         s3_obj = boto3.client(
             service_name='s3',
@@ -431,6 +432,7 @@ def project_uploader():
             aws_access_key_id=current_app.config['S3_KEY'],
             aws_secret_access_key=current_app.config['S3_SECRET'],
         )
+        #print('Uploading to region %s' % current_app.config['S3_REGION'])
     # Commence upload
     s3_obj.upload_fileobj(img,
                           current_app.config['S3_BUCKET'],
