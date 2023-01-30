@@ -29,4 +29,4 @@ def user_activation(app, user):
             + "Tap here to activate your account:\n\n%s" % act_url
         msg.to = [user.email]
         app.logger.info('Sending mail to user %d' % user.id)
-        send_async_email(app, msg)
+        return await send_async_email(app, msg)
