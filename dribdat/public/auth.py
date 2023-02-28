@@ -9,6 +9,7 @@ from flask_dance.contrib.azure import azure  # noqa: I005
 from flask_dance.contrib.github import github
 from dribdat.sso.auth0 import auth0
 from dribdat.sso.mattermost import mattermost
+from dribdat.sso.hitobito import hitobito
 # Dribdat modules
 from dribdat.user.models import User, Event, Role
 from dribdat.extensions import login_manager  # noqa: I005
@@ -435,3 +436,30 @@ def mattermost_login():
         username,
         resp_data['email'],
     )
+
+
+@blueprint.route("/hitobito_login", methods=["GET", "POST"])
+def hitobito_login():
+    """Handle login via hitobito."""
+    if not hitobito.authorized:
+        flash('Access denied to hitobito', 'danger')
+        return redirect(url_for("auth.login", local=1))
+    # Get remote user data
+    resp = hitobito.get("/en/oauth/profile")
+    if not resp.ok:
+        flash('Unable to access hitobito data', 'danger')
+        return redirect(url_for("auth.login", local=1))
+    resp_data = resp.json()
+    #print(resp_data)
+    username = None
+    if 'nickname' in resp_data:
+        username = resp_data['nickname']
+    if username is None:
+        flash('Invalid hitobito data format', 'danger')
+        return redirect(url_for("auth.login", local=1))
+    return get_or_create_sso_user(
+        resp_data['id'],
+        username,
+        resp_data['email'],
+    )
+

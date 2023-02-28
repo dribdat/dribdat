@@ -1946,6 +1946,12 @@ SlackIn button
   background: url('/static/img/sso/Mattermost-Logo-Denim.svg') no-repeat;
   width: 190px; height: 43px;
 }
+.signin-hitobito {
+  border: 1px solid #999;
+  font-size: 0px;
+  background: url('/static/img/sso/hitobito.png') no-repeat;
+  width: 260px; height: 58px;
+}
 .sso-login .btn:hover {
   border: 1px solid blue;
 }
