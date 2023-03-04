@@ -28,13 +28,6 @@
 
 {% block content %}
 
-{% if project.event.lock_resources %}
-<a href="{{ url_for('public.event_stages', event_id=project.event.id) }}"
-   class="btn btn-light ml-4">
-     <i class="fa fa-arrow-left" aria-hidden="true"></i>
-     Resources</a>
-{% endif %}
-
 {% if project_starred and allow_edit and (suggestions or stage) and project.progress < 50 %}
   <div class="alert alert-default resource-list project-tips">
     <button type="button" class="close" data-dismiss="alert" aria-label="Dismiss" title="Hide">
@@ -85,9 +78,9 @@
        Write update
      </a>
   {% elif current_user and current_user.active and not project.is_challenge and not project.event.lock_resources %}
-     <a id="project-comment" href="{{ url_for('project.project_comment', project_id=project.id) }}" title="Write a public comment" class="btn btn-lg btn-success">
+     <a id="project-comment" href="{{ url_for('project.project_comment', project_id=project.id) }}" title="Write a public comment" class="btn btn-lg btn-info">
        <i class="fa fa-thumbs-up" aria-hidden="true"></i>
-       Drib up</a>
+       Comment</a>
   {% endif %}
   {% if allow_edit %}
     <a href="{{ url_for('project.project_edit', project_id=project.id) }}" title="Edit project" class="btn btn-lg btn-warning">
@@ -170,6 +163,13 @@
          data-toggle="modal" data-target="#categoryModal" title="Show Category">
           {{ project.category.name }}</a>
     </div>
+  {% endif %}
+
+  {% if project.event.lock_resources %}
+  <a href="{{ url_for('public.event_stages', event_id=project.event.id) }}"
+     class="btn btn-light mr-4 float-right">
+       <i class="fa fa-cubes" aria-hidden="true"></i>
+       Resource</a>
   {% endif %}
 
   <div class="project-name">

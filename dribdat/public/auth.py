@@ -240,8 +240,8 @@ def user_profile():
                 user.set_password(form.password.data)
             else:
                 user.password = originalhash
-                user.updated_at = datetime.utcnow()
 
+        user.updated_at = datetime.utcnow()
         db.session.add(user)
         db.session.commit()
         user.socialize()

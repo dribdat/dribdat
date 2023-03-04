@@ -308,10 +308,11 @@ nav .nav-login {
 /* Home page titles */
 
 .home .body-content h2 {
+  color: grey;
   text-align: center;
   padding-bottom: 0.3rem;
   margin-bottom: 1.6rem;
-  border-bottom: 1px solid grey;
+  border-bottom: 1px solid lightgrey;
 }
 .home-page h1,
 .home-page .home-nav {
@@ -1559,6 +1560,7 @@ pre { color: #333; background: white; }
 .userprofile h1 {
   text-align: center;
   margin-top: 1em;
+  color: grey;
 }
 .team-count,
 .user-score {
