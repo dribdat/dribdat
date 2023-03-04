@@ -17,6 +17,7 @@ css = Bundle(
 js = Bundle(
     "js/script.js",
     "js/editor.js",
+    "js/notify.js",
     filters='jsmin',
     output="public/js/common.js"
 )
