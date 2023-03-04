@@ -37,7 +37,7 @@
           <a class="nav-link {% if active == 'projects' %}active{% endif %}" 
              title="Show me the projects"
              href="{{ url_for('public.event', event_id=event.id) }}#top">
-            <i class="fa fa-star" aria-hidden="true"></i>
+            <i class="fa fa-certificate" aria-hidden="true"></i>
             {% if event.has_finished %}
               Results
             {% elif event.has_started %}
@@ -63,7 +63,7 @@
                title="Take me to my profile"
                href="{{ url_for('public.user', username=current_user.username) }}" title="{{ current_user.username }}">
               <i class="fa fa-key" aria-hidden="true"></i>
-              Profile
+              Account
             </a>
           </li>
           {% if current_user.is_admin %}

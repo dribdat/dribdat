@@ -401,6 +401,6 @@
   init_editor();
   init_forms();
 
-  console.info('editing ready.');
+  //console.info('editing ready.');
 
 }).call(this, jQuery, window);

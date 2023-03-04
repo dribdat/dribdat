@@ -97,13 +97,13 @@ def home():
     # Filter past events
     MAX_PAST_EVENTS = 6
     events_past_next = events_past.count() > MAX_PAST_EVENTS
-    events_past = events_past.limit(MAX_PAST_EVENTS).all()
+    events_past = events_past.limit(MAX_PAST_EVENTS)
     # Send to template
     return render_template("public/home.html", active="home",
                            events_featured=events_featured.all(),
                            events_tips=resource_events.all(),
                            events_next=events_next.all(),
-                           events_past=events_past,
+                           events_past=events_past.all(),
                            events_past_next=events_past_next,
                            my_projects=my_projects,
                            current_event=cur_event)

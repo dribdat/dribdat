@@ -19,6 +19,7 @@
   <a name="steps"></a>
   <div class="list-stages">
   {% for step in steps %}
+    {% if step.projects or not current_event.lock_resources %}
     <div class="row step">
       {% if step.index > 0 %}
         <a id="{{ step.id }}" name="{{ step.phase }}"></a>
@@ -32,7 +33,7 @@
         <h3 class="title">{{ step.phase }}</h3>
       {% endif %}
 
-      {% if step.index > 0 %}
+      {% if step.index > 0 and not current_event.lock_resources and step.description %}
         <p class="subtitle">{{ step.description }}</p>
       {% endif %}
 
@@ -55,6 +56,7 @@
       {% endif %}
 
     </div>
+    {% endif %}
   {% endfor %}
   </div>
 

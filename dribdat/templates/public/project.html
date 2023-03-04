@@ -30,9 +30,9 @@
 
 {% if project.event.lock_resources %}
 <a href="{{ url_for('public.event_stages', event_id=project.event.id) }}"
-   class="btn btn-lg btn-light">
+   class="btn btn-light ml-4">
      <i class="fa fa-arrow-left" aria-hidden="true"></i>
-     More Resources</a>
+     Resources</a>
 {% endif %}
 
 {% if project_starred and allow_edit and (suggestions or stage) and project.progress < 50 %}

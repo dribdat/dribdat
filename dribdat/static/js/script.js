@@ -314,6 +314,6 @@
   init_clock();
   checkSearchQuery();
 
-  console.info('dribdat ready.');
+  //console.info('dribdat ready.');
 
 }).call(this, jQuery, window);
