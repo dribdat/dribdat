@@ -445,15 +445,19 @@ def hitobito_login():
         flash('Access denied to hitobito', 'danger')
         return redirect(url_for("auth.login", local=1))
     # Get remote user data
-    resp = hitobito.get("/en/oauth/profile")
+    resp = hitobito.get("/en/oauth/profile", headers={'X-Scope': 'name'})
     if not resp.ok:
         flash('Unable to access hitobito data', 'danger')
         return redirect(url_for("auth.login", local=1))
     resp_data = resp.json()
     #print(resp_data)
     username = None
-    if 'nickname' in resp_data:
+    if 'nickname' in resp_data and resp_data['nickname'] is not None:
         username = resp_data['nickname']
+    elif 'first_name' in resp_data and 'last_name' in resp_data:
+        fn = resp_data['first_name'].lower().strip()
+        ln = resp_data['last_name'].lower().strip()
+        username = "%s_%s" % (fn, ln)
     if username is None:
         flash('Invalid hitobito data format', 'danger')
         return redirect(url_for("auth.login", local=1))
