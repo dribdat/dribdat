@@ -135,6 +135,7 @@ form input[type="checkbox"] {
 .alert .close {
   font-size: 1.6rem;
   margin: -0.2em -0.3em;
+  padding-left: 0.5em;
 }
 .alert.project-tips .close {
   margin: 0.2em 0.4em -1em -1em;
@@ -1902,6 +1903,18 @@ Search engine
   float: left;
   background-size: contain;
   margin-right: 8px;
+}
+
+
+/* ------------
+Global alerts
+--------------- */
+
+.global-notifications-alert {
+  position: absolute;
+  right: 1em;
+  margin-top: 1.2em;
+  padding-right: 2em;
 }
 
 /* ------------

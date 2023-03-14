@@ -313,6 +313,17 @@ def event_push_datapackage():
     return jsonify(status='Complete', results=results)
 
 
+@blueprint.route('/event/current/get/status', methods=["GET"])
+@admin_required
+def event_get_status():
+    """Get current event status."""
+    event = Event.query.filter_by(is_current=True).first() or \
+        Event.query.order_by(Event.id.desc()).first()
+    if not event:
+        return jsonify(status='')
+    return jsonify(status=event.status_text)
+
+
 @blueprint.route('/event/<int:event_id>/push/status', methods=["PUT", "POST"])
 @admin_required
 def event_push_status(event_id):

@@ -53,14 +53,25 @@
   $notificationBtn.on('click', askNotificationPermission);
 
   // Create a notification with the given title
+  // TODO: Use Service Workers !!
+  let eventStatus = null;
   function createNotification() {
-    const text = 'Hello, world!'
-    // Create and show the notification
-    const img = '/static/img/logo11.png';
-    const notification = new Notification('Dribdat', { body: text, icon: img });
-    console.log('Sent...')
+    $.get('/api/event/current/get/status', function(result) {
+      console.log('Got status')    
+      if (result.status) {
+        if (eventStatus == result.status) return;
+        if (eventStatus === null) {
+          return eventStatus = result.status;
+        }
+        // Create and show the notification
+        const img = '/static/img/logo11.png';
+        const notification = new Notification('Dribdat', { body: result.status, icon: img });
+        $('#notifications-status-text').html(result.status);
+        eventStatus = result.status;
+      }
+    });
   };
-
-  setInterval(createNotification, 3000);
+  createNotification();
+  setInterval(createNotification, 60 * 1000); // check once a minute
 
 }).call(this, jQuery, window);

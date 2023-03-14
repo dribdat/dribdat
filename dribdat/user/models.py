@@ -469,6 +469,16 @@ class Event(PkModel):
             ess = self.status.split(';')
             if len(ess)>1:
                 status_text = ess[1]
+                status_time = float(ess[0])
+                # Check timeout
+                time_now = dt.datetime.now()
+                # Clear every now and then
+                time_limit = time_now - dt.timedelta(minutes=10)
+                if dt.datetime.fromtimestamp(status_time) < time_limit:
+                    print("Clearing announements")
+                    self.status = None
+                    self.save()
+                    return ''
         return status_text
     
 
