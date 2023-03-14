@@ -119,6 +119,14 @@
 
   </div><!-- /.navbar-collapse -->
 
+  <!-- Popup global alerts -->
+  {% if event and event.status_text %}
+    <div class="alert alert-warning global-alert">
+      <a class="close" title="Close" href="#" data-dismiss="alert">&times;</a>
+      {{ event.status_text }}
+    </div>
+  {% endif %}
+
 </nav>
 
 <!-- Popup search results -->
@@ -136,10 +144,4 @@
     <div class="row flex-row flex-nowrap pb-2" id="search-results"></div>
     <div class="text-center mb-2" id="search-matches"></div>
   </div>
-</div>
-
-<!-- Popup global alerts -->
-<div class="alert alert-warning global-alert">
-  <a class="close" title="Close" href="#" data-dismiss="alert">&times;</a>
-  Attention! This is a Public Service Broadcast. Stay Calm and Keep Hacking, People. 
 </div>

@@ -299,6 +299,7 @@ class Event(PkModel):
     starts_at = Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)
     ends_at = Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)
 
+    status = Column(db.UnicodeText(), nullable=True)
     custom_css = Column(db.UnicodeText(), nullable=True)
     community_embed = Column(db.UnicodeText(), nullable=True)
     certificate_path = Column(db.String(1024), nullable=True)
@@ -459,6 +460,17 @@ class Event(PkModel):
         if len(ol) > 140:
             ol = ol[:140] + '...'
         return ol
+
+    @property
+    def status_text(self):
+        """Returns a short status text."""
+        status_text = ''
+        if self.status:
+            ess = self.status.split(';')
+            if len(ess)>1:
+                status_text = ess[1]
+        return status_text
+    
 
     @property
     def project_count(self):
