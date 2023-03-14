@@ -1282,8 +1282,14 @@ nav .nav-login {
 pre { color: #333; background: white; }
 
 /* Inline "README" */
+#dribs-md:not(.tab-pane)::before {
+  content: 'LOG';
+}
 #readme-md:not(.tab-pane)::before {
   content: 'README';
+}
+#dribs-md:not(.tab-pane)::before,
+#readme-md:not(.tab-pane)::before {
   width: 100%;
   display: block;
   text-align: center;
@@ -1291,9 +1297,17 @@ pre { color: #333; background: white; }
   font-family: monospace;
   font-weight: bold;
   color: white;
-  background: lightblue;
+  background: rgba(150,190,250,0.4);
+  border-radius: 2em;
   padding: 1em;
   margin: 0.5em 0;
+}
+
+a.go-up {
+  display: block;
+  text-align: center;
+  text-decoration: none;
+  margin: 1em;
 }
 
 /* Badges */
