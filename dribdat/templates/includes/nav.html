@@ -119,6 +119,14 @@
 
   </div><!-- /.navbar-collapse -->
 
+  <!-- Popup global alerts -->
+  {% if event and event.status_text %}
+    <div class="alert alert-warning global-notifications-alert">
+      <a class="close" title="Close" href="#" data-dismiss="alert">&times;</a>
+      <span id="notifications-status-text">{{ event.status_text }}</span>
+    </div>
+  {% endif %}
+
 </nav>
 
 <!-- Popup search results -->

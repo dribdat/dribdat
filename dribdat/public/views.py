@@ -43,7 +43,7 @@ def dashboard():
             wall = True
     return render_template(
         "public/dashboard.html",
-        current_event=event, with_social_wall=wall
+        current_event=event, with_social_wall=wall, status_text=event.status_text
     )
 
 

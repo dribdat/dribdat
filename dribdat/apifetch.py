@@ -8,7 +8,7 @@ import logging
 from pyquery import PyQuery as pq  # noqa: N813
 from base64 import b64decode
 from flask_misaka import markdown
-from bleach.sanitizer import ALLOWED_TAGS, ALLOWED_ATTRIBUTES
+from bleach.sanitizer import ALLOWED_ATTRIBUTES
 from urllib.parse import quote_plus
 from .apievents import (
     fetch_commits_github,
@@ -266,11 +266,14 @@ def parse_data_package(json):
 
 
 # Basis: https://github.com/mozilla/bleach/blob/master/bleach/sanitizer.py#L16
-ALLOWED_HTML_TAGS = list(ALLOWED_TAGS).extend([
+ALLOWED_HTML_TAGS = [
+    'acronym', 'a', 'blockquote', 'li', 'abbr', 
+    'strong', 'b', 'i', 'ul', 'ol', 'code', 'em',
     'img', 'font', 'center', 'sub', 'sup', 'pre',
+    'table', 'tr', 'thead', 'tbody', 'td',
     'h1', 'h2', 'h3', 'h4', 'h5',
-    'p', 'u', 'b', 'em', 'i',
-])
+    'p', 'u'
+]
 ALLOWED_HTML_ATTR = ALLOWED_ATTRIBUTES
 ALLOWED_HTML_ATTR['h1'] = ['id']
 ALLOWED_HTML_ATTR['h2'] = ['id']
@@ -318,8 +321,11 @@ def FetchWebGoogleDoc(text, url):
     content = doc("div#contents")
     if len(content) < 1:
         return {}
-    html_content = bleach.clean(content.html().strip(), strip=True,
-                                tags=ALLOWED_HTML_TAGS,
+    content = content.html().strip()
+    if not content or len(content) < 1:
+        return {}
+    html_content = bleach.clean(content, strip=True,
+                                tags=frozenset(ALLOWED_HTML_TAGS),
                                 attributes=ALLOWED_HTML_ATTR)
     obj = {}
     # {
