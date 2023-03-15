@@ -314,7 +314,6 @@ def event_push_datapackage():
 
 
 @blueprint.route('/event/current/get/status', methods=["GET"])
-@admin_required
 def event_get_status():
     """Get current event status."""
     event = Event.query.filter_by(is_current=True).first() or \

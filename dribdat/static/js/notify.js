@@ -72,6 +72,6 @@
     });
   };
   createNotification();
-  setInterval(createNotification, 60 * 1000); // check once a minute
+  setInterval(createNotification, 30 * 1000); // check once a minute
 
 }).call(this, jQuery, window);
