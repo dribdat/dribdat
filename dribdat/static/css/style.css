@@ -1303,6 +1303,11 @@ pre { color: #333; background: white; }
   padding: 1em;
   margin: 0.5em 0;
 }
+#dribs-md .timeline {
+  overflow-y: auto;
+  overflow-x: hidden;
+  max-height: 600px;
+}
 
 a.go-up {
   display: block;
