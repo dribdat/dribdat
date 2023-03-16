@@ -26,6 +26,8 @@
 
   {{ render_form(url_for('auth.user_profile'), form) }}
 
+  <hr>
+
   {% if user.sso_id %}
     <center class="m-4">
       &#x1f511; Single Sign-On&nbsp;<b>enabled</b>
@@ -33,10 +35,9 @@
     </center>
   {% endif %}
 
-  <hr>
   <center class="mt-5">
     <form action="{{ url_for('auth.delete_my_account') }}" method="POST">
-      <input type="submit" class="btn btn-warning" value="Delete my account"
+      <input type="submit" class="btn btn-light" value="Delete my account"
         onclick="if(!window.confirm('Are you sure you wish to DELETE your user account?') || !window.confirm('Last warning: deletion is final, all data will be lost.')) return false">
     </form>
   </center>

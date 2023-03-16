@@ -2,6 +2,8 @@
 """API calls for dribdat."""
 import boto3
 import tempfile
+import datetime as dt
+
 from flask import (
     Blueprint, current_app,
     Response, request, redirect,
@@ -10,6 +12,7 @@ from flask import (
 )
 from flask_login import login_required, current_user
 from sqlalchemy import or_
+
 from ..extensions import db
 from ..utils import timesince, random_password
 from ..decorators import admin_required
@@ -308,6 +311,29 @@ def event_push_datapackage():
     if 'errors' in results:
         return jsonify(status='Error', errors=results['errors'])
     return jsonify(status='Complete', results=results)
+
+
+@blueprint.route('/event/current/get/status', methods=["GET"])
+def event_get_status():
+    """Get current event status."""
+    event = Event.query.filter_by(is_current=True).first() or \
+        Event.query.order_by(Event.id.desc()).first()
+    if not event:
+        return jsonify(status='')
+    return jsonify(status=event.status_text)
+
+
+@blueprint.route('/event/<int:event_id>/push/status', methods=["PUT", "POST"])
+@admin_required
+def event_push_status(event_id):
+    """Update event status."""
+    event = Event.query.filter_by(id=event_id).first_or_404()
+    if not request.form.get('text'): 
+        return jsonify(status='Error')
+    event.status = str(dt.datetime.now().timestamp()) + ';' \
+        + request.form.get('text').replace(';', ':')
+    event.save()
+    return jsonify(status='OK')
 
 
 @blueprint.route('/project/push.json', methods=["PUT", "POST"])

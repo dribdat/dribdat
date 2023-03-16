@@ -309,6 +309,7 @@
   function activate_editor() {
     if (typeof toastui !== 'object') return;
     const $longtext = $('#longtext');
+    if (!$longtext.length) return;
     $longtext.after('<div id="mdeditor" style="text-align:left"></div>');
 
     const toasteditor = window.toasteditor = new toastui.Editor({
@@ -340,6 +341,8 @@
           window.location.reload();
         }
       });
+
+    console.info('editor ready.');
   }
 
   // Characters remaining, thanks to James Bruton
@@ -391,6 +394,11 @@
     $activateEditor.find('[data-do="activate"]')
                    .show().on('click', activate_editor);
 
+    // Enable by default
+    if (localStorage.getItem('markdownhelper') === null) {
+      localStorage.setItem('markdownhelper', '1');
+    }
+
     // Load settings
     if (localStorage.getItem('markdownhelper') == '1') {
       setTimeout(activate_editor, 100);
@@ -400,7 +408,5 @@
   // Bootup
   init_editor();
   init_forms();
-
-  console.info('editing ready.');
 
 }).call(this, jQuery, window);

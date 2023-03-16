@@ -22,9 +22,7 @@
 {% endif %}
 
 <div class="superpowers">
-  <button class="show-announcements"
-    onclick="$('#announcements').show();$(this).hide()">📣</button>
-  <button class="darkmode">☽</button>
+  <button class="show-announcements">📣</button>
 </div>
 
 <div class="container-fluid"
@@ -40,11 +38,6 @@
 
     <main role="main" class="container-countdown col-md-{{ '6' if with_social_wall else '9' }} ml-sm-auto">
       <img id="event-logo" src="{{ current_event.logo_url }}">
-
-      <div class="panel-body">
-        <textarea id="announcements" class="editable hidden">Attention! This is a public service broadcast.</textarea>
-      </div>
-
       {% if current_event.countdown %}
         <div id="clockDashboard" class="event-countdown flipdown" data-start="{{ current_event.countdown }}"></div>
       {% endif %}
@@ -60,6 +53,11 @@
       </div>
     {% endif %}
   </div>
+</div>
+
+<div class="{% if not status_text %}hidden{% endif %}" id="announcements">
+  <textarea class="editable">{{ status_text }}</textarea>
+  <button>📣 Send</button>
 </div>
 
 <style>
@@ -130,8 +128,15 @@
   #schedule > * { display: none; }
 
   #announcements {
-    width: 100%;
-    height: 6em;
+    position: absolute;
+    top: 10%;
+    left: 50%;
+    margin-left: -15em;
+  }
+
+  #announcements textarea {
+    width: 12em;
+    height: 4em;
     font-size: 50px;
     font-weight: bold;
     padding: 0em 0.3em;
@@ -150,6 +155,7 @@
     border: 0px;
     background: none;
     opacity: 0.5;
+    font-size: 200%;
   }
   .show-announcements:hover {
     opacity: 1;
@@ -239,6 +245,34 @@ refreshProjects();
 $('.editable').each(function() {
   this.contentEditable = 'true';
 });
+
+// Enable announcements
+$('.show-announcements').click(function() {
+  if ($('#announcements').is(':visible')) {
+    $('#announcements').hide();
+  } else {
+    $('#announcements').show();
+  }
+});
+$('#announcements button').click(function() {
+  let $self = $(this);
+  let message = $('#announcements textarea').val();
+  console.log(message);
+  $.post('/api/event/{{ current_event.id }}/push/status', {
+    'text': message
+  }, function(resp) {
+    if (resp.status && resp.status == 'OK') {
+      $self.html('✅ Sent');
+      setTimeout(function() {
+        $self.html('📣 Send');
+      }, 5000);
+    } else {
+      console.error(resp);
+    }
+  });
+});
+
+
 </script>
 
 {% endblock %}

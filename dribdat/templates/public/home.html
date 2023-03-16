@@ -29,6 +29,28 @@
       </a>
     {% endif %}
 
+    {% if my_projects %}
+      <div class="resource-list profile-projects mb-3">
+        <div class="row">
+          {% for project in my_projects %}
+            <a class="col-md-4 ms-auto card project"
+               {%- if project.image_url %}
+                style="background-image:url('{{project.image_url}}'); padding-left:100px"
+               {%- endif %}
+               href="{{ url_for('project.project_view', project_id=project.id) }}">
+              <div class="card-body">
+                <h5 class="card-title">{{ project.name }}</h5>
+                <p class="card-text">{{ project.summary }}</p>
+              </div>
+            </a>
+          {% endfor %}
+        </div>
+        <p class="category-tip mb-0 mt-2 text-right">
+          <a href="{{ url_for('public.user', username=current_user.username) }}" title="{{ current_user.username }}">Profile</a>
+          <span class="user-score" style="background:white">&#x1F464;</span>
+      </div>
+    {% endif %}
+
     {% if current_event %}
     <div id="homeCarousel" class="carousel slide" data-ride="carousel">
   		<div class="carousel-inner">
@@ -39,16 +61,17 @@
          {{ misc.render_featured_event(event) }}
        {% endfor %}
       </div>
-    {% if events_featured %}
-      <a class="carousel-control-prev" href="#homeCarousel" role="button" data-slide="prev">
-        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-        <span class="sr-only">Previous</span>
-      </a>
-      <a class="carousel-control-next" href="#homeCarousel" role="button" data-slide="next">
-        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-        <span class="sr-only">Next</span>
-      </a>
-    {% endif %}
+      
+      {% if events_featured %}
+        <a class="carousel-control-prev" href="#homeCarousel" role="button" data-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="sr-only">Previous</span>
+        </a>
+        <a class="carousel-control-next" href="#homeCarousel" role="button" data-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="sr-only">Next</span>
+        </a>
+      {% endif %}
     </div>
     {% endif %}
   </main>
@@ -63,29 +86,6 @@
       <div id="clockDown" class="event-countdown flipdown"
            data-start="{{ current_event.countdown }}"></div>
     </a>
-  {% endif %}
-
-  {% if my_projects %}
-  <h2 class="mt-4">My teams</h2>
-  <div class="resource-list profile-projects">
-    <div class="row">
-      {% for project in my_projects %}
-        <a class="col-md-4 ms-auto card project"
-           {%- if project.image_url %}
-            style="background-image:url('{{project.image_url}}'); padding-left:100px"
-           {%- endif %}
-           href="{{ url_for('project.project_view', project_id=project.id) }}">
-          <div class="card-body">
-            <h5 class="card-title">{{ project.name }}</h5>
-            <p class="card-text">{{ project.summary }}</p>
-          </div>
-        </a>
-      {% endfor %}
-    </div>
-    <p class="category-tip mb-0 mt-2 text-right">
-      <a href="{{ url_for('public.user', username=current_user.username) }}" title="{{ current_user.username }}">My Profile</a>
-      <span class="user-score" style="background:white">&#x1F4A1;</span>
-  </div>
   {% endif %}
 
   {% if events_tips %}
@@ -121,7 +121,7 @@
           <div class="text-center">
             <a href="{{ url_for('public.event_start') }}" class="btn btn-lg btn-success">
               <i class="fa fa-calendar mr-2" aria-hidden="true"></i>
-              Start another Event
+              Start an Event
             </a>
           </div>
         {% endif %}
