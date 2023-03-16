@@ -24,7 +24,7 @@
           let userOptOut = localStorage.getItem('eventstatus-mute');
           if (!userOptOut) {
             userOptOut = !window.confirm(eventStatus + 
-              '\n\n(OK to continue seeing notifications like this?)');
+              '\n\n(OK to see more alerts like this?)');
           }
 
           if (userOptOut) {
