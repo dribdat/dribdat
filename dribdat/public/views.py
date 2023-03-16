@@ -35,7 +35,7 @@ def dashboard():
     event = current_event()
     if not event:
         return 'No current event'
-    wall = None
+    wall_url = wall = None
     social_domains = ['twitter.com']
     host = urlparse(event.community_url).hostname
     if 'twitter.com' in host:
