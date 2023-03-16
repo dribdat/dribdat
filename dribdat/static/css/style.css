@@ -1916,7 +1916,7 @@ Search engine
 Global alerts
 --------------- */
 
-.global-notifications-alert .alert {
+#global-notifications-alert .alert {
   display: inline-block;
   text-align: center;
   font-size: 125%;
@@ -1924,8 +1924,11 @@ Global alerts
   margin: 0 1em;
   z-index: 999;
 }
-.global-notifications-alert span {
-  padding: 0 2em;
+#global-notifications-alert i {
+  font-size: 150%;
+}
+#global-notifications-alert span {
+  padding: 0 1em;
 }
 
 /* ------------
