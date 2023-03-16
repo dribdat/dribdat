@@ -12,7 +12,7 @@
         <a href="{{ url_for('admin.event', event_id=default_event.id) }}" class="btn btn-lg btn-success">
           <i class="fa fa-calendar" aria-hidden="true"></i>
           Current event</a>
-        <a href="{{ url_for('admin.event_projects', event_id=default_event.id) }}" class="btn btn-lg btn-success">
+        <a href="{{ url_for('admin.event_projects', event_id=default_event.id) }}" class="btn btn-lg btn-warning">
           <i class="fa fa-star" aria-hidden="true"></i>
           Projects</a>
     {% else %}
@@ -23,8 +23,10 @@
     </div>
     <div class="btn-group mb-2 text-center">
       <a href="{{ url_for('admin.categories') }}" class="btn btn-lg btn-info">
+        <i class="fa fa-pencil" aria-hidden="true"></i>
         Roles</a>
       <a href="{{ url_for('admin.categories') }}" class="btn btn-lg btn-info">
+        <i class="fa fa-pencil" aria-hidden="true"></i>
         Categories</a>
     </div>
     <div class="container">
