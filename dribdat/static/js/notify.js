@@ -40,15 +40,16 @@
   // Check the location, ignore the Dashboard
   if (location.href.indexOf('/dashboard')<0) {
     createNotification();
-    setInterval(createNotification, 5 * 1000); // check once a minute
+    setInterval(createNotification, 30 * 1000); // check twice a minute
 
-    // To enable the popups, click the alert
+    // To enable the popups, click the button in the footer
     $('#notification-button').show().click(function() {
       //console.log('un-muting...');
       localStorage.removeItem('eventstatus-mute');
       localStorage.removeItem('eventstatus');
       createNotification();
     });
-  }
+
+  } // -no-dashboard
 
 }).call(this, jQuery, window);
