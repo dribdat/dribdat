@@ -52,6 +52,8 @@
   </div>
 </div><!-- /honeycomb -->
 
+{% endcache %}
+
 <div class="category-info clearfix pt-4 mt-4">
   {% if current_event.has_started and not current_event.has_finished %}
     {% if not current_user or not current_user.active %}
@@ -183,8 +185,6 @@
   </div>
 </div>
 {% endif %}
-
-{% endcache %}
 
 <center class="event-footer mt-5">
   {% if current_event.countdown %}

@@ -18,6 +18,31 @@
 {% block body_class %}home{% endblock %}
 
 {% block content %}
+
+{% if my_projects %}
+{% cache 300, 'home-user-%d' % current_user.id %}
+  <div class="resource-list profile-projects mb-3">
+    <div class="row">
+      {% for project in my_projects %}
+        <a class="col-md-4 ms-auto card project"
+           {%- if project.image_url %}
+            style="background-image:url('{{project.image_url}}'); padding-left:100px"
+           {%- endif %}
+           href="{{ url_for('project.project_view', project_id=project.id) }}">
+          <div class="card-body">
+            <h5 class="card-title">{{ project.name }}</h5>
+            <p class="card-text">{{ project.summary }}</p>
+          </div>
+        </a>
+      {% endfor %}
+    </div>
+    <p class="category-tip mb-0 mt-2 text-right">
+      <a href="{{ url_for('public.user', username=current_user.username) }}" title="{{ current_user.username }}">Profile</a>
+      <span class="user-score" style="background:white">&#x1F464;</span>
+  </div>
+{% endcache %}
+{% endif %}
+
 {% cache 300, 'home-page' %}
 {% if current_event %}
   <main class="home-page">
@@ -29,29 +54,6 @@
       </a>
     {% endif %}
 
-    {% if my_projects %}
-      <div class="resource-list profile-projects mb-3">
-        <div class="row">
-          {% for project in my_projects %}
-            <a class="col-md-4 ms-auto card project"
-               {%- if project.image_url %}
-                style="background-image:url('{{project.image_url}}'); padding-left:100px"
-               {%- endif %}
-               href="{{ url_for('project.project_view', project_id=project.id) }}">
-              <div class="card-body">
-                <h5 class="card-title">{{ project.name }}</h5>
-                <p class="card-text">{{ project.summary }}</p>
-              </div>
-            </a>
-          {% endfor %}
-        </div>
-        <p class="category-tip mb-0 mt-2 text-right">
-          <a href="{{ url_for('public.user', username=current_user.username) }}" title="{{ current_user.username }}">Profile</a>
-          <span class="user-score" style="background:white">&#x1F464;</span>
-      </div>
-    {% endif %}
-
-    {% if current_event %}
     <div id="homeCarousel" class="carousel slide" data-ride="carousel">
   		<div class="carousel-inner">
 
@@ -73,7 +75,6 @@
         </a>
       {% endif %}
     </div>
-    {% endif %}
   </main>
 {% endif %}
 
@@ -107,28 +108,6 @@
   </div><!-- /.row events-next -->
   {% endif %}
 
-  {% if current_user %}
-    <div class="row start-event">
-      <div class="col-lg-12">
-        {% if not current_event and not events_next and not events_past and not events_tips %}
-          <h3>Looks like you are new to this - welcome!</h3>
-          <div class="text-center">
-            <a href="{{ url_for('public.event_start') }}" class="btn btn-lg btn-success">
-              Get started
-            </a>
-          </div>
-        {% elif config.DRIBDAT_ALLOW_EVENTS %}
-          <div class="text-center">
-            <a href="{{ url_for('public.event_start') }}" class="btn btn-lg btn-success">
-              <i class="fa fa-calendar mr-2" aria-hidden="true"></i>
-              Start an Event
-            </a>
-          </div>
-        {% endif %}
-      </div>
-    </div>
-  {% endif %}
-
   {% if events_past %}
     <a name="past"></a>
     <h2 class="mt-4">Past events</h2>
@@ -147,6 +126,27 @@
   {% endif %}
 
 </div>
-
 {% endcache %}
+
+{% if current_user and current_user.active %}
+  <div class="row start-event">
+    <div class="col-lg-12">
+      {% if not current_event and not events_next and not events_past and not events_tips %}
+        <h3>Looks like you are new to this - welcome!</h3>
+        <div class="text-center">
+          <a href="{{ url_for('public.event_start') }}" class="btn btn-lg btn-success">
+            Get started
+          </a>
+        </div>
+      {% elif config.DRIBDAT_ALLOW_EVENTS %}
+        <div class="text-center">
+          <a href="{{ url_for('public.event_start') }}" class="btn btn-lg btn-success">
+            <i class="fa fa-calendar mr-2" aria-hidden="true"></i>
+            Start an Event
+          </a>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+{% endif %}
 {% endblock %}
