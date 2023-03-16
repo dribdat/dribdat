@@ -136,6 +136,7 @@ form input[type="checkbox"] {
   font-size: 1.6rem;
   margin: -0.2em -0.3em;
   padding-left: 0.5em;
+  text-decoration: none;
 }
 .alert.project-tips .close {
   margin: 0.2em 0.4em -1em -1em;
