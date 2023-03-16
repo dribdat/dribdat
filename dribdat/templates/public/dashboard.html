@@ -5,7 +5,7 @@
 {% block body_class %}dashboard-page embed-view{% endblock %}
 
 {% block content %}
-
+<!-- With apologies to everyone for this cruddy page .. working on V2!! -->
 <script src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/flipdown@0/dist/flipdown.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.bundle.min.js"></script>
@@ -25,15 +25,11 @@
   <button class="show-announcements">📣</button>
 </div>
 
-<div class="container-fluid"
-     style="background-image: url('{{ current_event.background_image }}'); background-size: cover">
+<div class="container-fluid">
   <div class="row">
 
     <nav class="col-md-2 sidebar">
       <div id="projects"></div>
-      <!-- <div class="sidebar-sticky" id="schedule">
-        {{ current_event.description|safe }}
-      </div> -->
     </nav>
 
     <main role="main" class="container-countdown col-md-{{ '6' if with_social_wall else '9' }} ml-sm-auto">
@@ -43,15 +39,18 @@
       {% endif %}
     </main>
 
-    <div class="col-md-3" style="padding:0px">
-        <div id="activities"></div>
+    <div class="col-md-3">
     </div>
 
-    {% if with_social_wall %}
-      <div class="col-md-3">
-        <a class="twitter-timeline" data-width="340" data-height="900" data-dnt="true" data-theme="dark" data-link-color="#E95F28" href="{{ current_event.community_url }}?ref_src=twsrc%5Etfw">Tweets</a> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
-      </div>
+    <div class="col-md-3" style="padding:0px">
+        <div id="activities"></div>
+
+    {% if with_social_wall == 'twitter' %}
+      <a class="twitter-timeline" data-width="340" data-height="900" data-dnt="true" data-theme="dark" data-link-color="#E95F28" href="{{ current_event.community_url }}">Tweets</a> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+    {% elif with_social_wall == 'mastodon' %}
+      <iframe allowfullscreen sandbox="allow-top-navigation allow-scripts allow-popups allow-popups-to-escape-sandbox" width="100%" height="100%" src="https://www.mastofeed.com/apiv2/feed?userurl={{ wall_url }}&theme=dark&size=100&header=false&replies=false&boosts=true"></iframe>
     {% endif %}
+    </div>
   </div>
 </div>
 
@@ -62,26 +61,31 @@
 
 <style>
   html, body, body > .container-fluid { width: 100%; height: 100%; }
-  body {
+  body.dashboard-page {
     overflow: hidden;
     background-size: cover;
     background-repeat: no-repeat;
+    background-image: url('{{ current_event.gallery_url }}');
   }
   .hidden {
     display: none;
   }
   #projects {
     color: #fff;
-    font: 14pt/29pt sans-serif;
+    font: 15pt sans-serif;
     overflow: hidden;
     list-style-type: none;
     padding: 0px;
   }
   #projects div {
     padding: 5px 0px;
-    margin: 10px 0px;
     cursor: pointer;
-    line-height: 1.4em;
+    line-height: 1.2em;
+  }
+  #projects div a {
+    height: 1.4em;
+    overflow: hidden;
+    display: block;
   }
   #projects a {
     color: inherit;
@@ -111,8 +115,9 @@
   }
 
   #event-logo {
-    width: 40%;
-    margin: 100px 0px;
+    width: 175%;
+    margin-top: 100px;
+    border-radius: 10px;
   }
 
   #metrics {
@@ -122,7 +127,6 @@
   }
 
   .dashboard-page .container.with-event { max-width: none; }
-  .dashboard-page #event-logo { width: 28%; }
   #schedule { color: transparent; margin-top: 1em; }
   #schedule dashboard { color: #eee; display: initial !important; }
   #schedule > * { display: none; }
@@ -130,8 +134,14 @@
   #announcements {
     position: absolute;
     top: 10%;
-    left: 50%;
-    margin-left: -15em;
+    left: 22%;
+    /*left: 50%;
+    margin-left: -15em;*/
+  }
+
+  #announcements button {
+    display: block;
+    opacity: 0.5;
   }
 
   #announcements textarea {
@@ -164,7 +174,8 @@
   .event-countdown {
     position: fixed;
     bottom: 25px;
-    margin-left: -27em;
+    margin-left: -3em;
+    transform: scale(1.7);
   }
 
   #activities {
@@ -225,7 +236,7 @@ refreshProjects = function() {
     });
   });
 
-  $.getJSON('/api/project/posts.json', function(data) {
+  $.getJSON('/api/project/posts.json?limit=3', function(data) {
     $pp = $('#activities').empty();
     data.activities.forEach(function(a) {
       if (!a.content) return;

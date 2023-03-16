@@ -31,19 +31,23 @@ def current_event():
 
 @blueprint.route("/dashboard/")
 def dashboard():
-    """Render a static dashboard."""
+    """Render a static dashboard. This code sucks."""
     event = current_event()
     if not event:
         return 'No current event'
-    wall = False
+    wall = None
     social_domains = ['twitter.com']
     host = urlparse(event.community_url).hostname
-    for d in social_domains:
-        if host == d:
-            wall = True
+    if 'twitter.com' in host:
+        wall = 'twitter'
+        wall_url = event.community_url + '?ref_src=twsrc%5Etfw'
+    elif 'mastodon' in host: # ouch
+        wall = 'mastodon'
+        userpart = event.community_url.split('/@')[-1]
+        wall_url = 'https%3A%2F%2F%40' + userpart + '%40' + host + '%2Fusers%2F' + userpart.lower()
     return render_template(
         "public/dashboard.html",
-        current_event=event, with_social_wall=wall, status_text=event.status_text
+        current_event=event, with_social_wall=wall, wall_url=wall_url, status_text=event.status_text
     )
 
 

@@ -1715,7 +1715,7 @@ a.go-up {
   margin: 0 !important;
   padding: 0 !important;
   width: 100% !important;
-  background: none !important;
+  background: none;
 }
 .embed-view .honeycomb {
   transform: scale(0.4);
