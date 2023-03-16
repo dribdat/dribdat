@@ -328,10 +328,14 @@ def event_get_status():
 def event_push_status(event_id):
     """Update event status."""
     event = Event.query.filter_by(id=event_id).first_or_404()
+    newstatus = request.form.get('text')
     if not request.form.get('text'): 
-        return jsonify(status='Error')
-    event.status = str(dt.datetime.now().timestamp()) + ';' \
-        + request.form.get('text').replace(';', ':')
+        # Clear the status
+        event.status = None
+    else:
+        # Update the status
+        event.status = str(dt.datetime.now().timestamp()) + ';' \
+            + newstatus.replace(';', ':')
     event.save()
     return jsonify(status='OK')
 
