@@ -33,7 +33,7 @@
     </nav>
 
     <main role="main" class="container-countdown col-md-{{ '6' if with_social_wall else '9' }} ml-sm-auto">
-      <img id="event-logo" src="{{ current_event.logo_url }}">
+      <div id="event-logo"><img src="{{ current_event.logo_url }}" width="100%"></div>
       {% if current_event.countdown %}
         <div id="clockDashboard" class="event-countdown flipdown" data-start="{{ current_event.countdown }}"></div>
       {% endif %}
@@ -117,6 +117,8 @@
   #event-logo {
     width: 175%;
     margin-top: 100px;
+  }
+  #event-logo img {
     border-radius: 10px;
   }
 
