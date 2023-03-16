@@ -208,25 +208,22 @@
   <ul class="nav nav-pills nav-fill md-tabs" id="projectTabs" role="tablist">
     {% if project.longtext %}
     <li class="nav-item">
-      <a class="nav-link" id="project-tab-md" href="#project-md" role="tab" aria-controls="project-md"
-        aria-selected="false">Pitch</a>
+      <a class="nav-link" id="project-tab-md" href="#project-md">Pitch</a>
     </li>
     {% endif %}
     {% if project.autotext %}
     <li class="nav-item">
-      <a class="nav-link" id="readme-tab-md" href="#readme-md" role="tab" aria-controls="readme-md"
-        aria-selected="false">Readme</a>
-    </li>
-    {% endif %}
-    {% if project_dribs %}
-    <li class="nav-item">
-      <a class="nav-link" id="dribs-tab-md" href="#dribs-md" role="tab" aria-controls="dribs-md"
-        aria-selected="false">Log</a>
+      <a class="nav-link" id="readme-tab-md" href="#readme-md">Readme</a>
     </li>
     {% endif %}
     {% if project_team %}
     <li class="nav-item">
       <a class="nav-link" id="dribs-tab-md" href="#team">Team</a>
+    </li>
+    {% endif %}
+    {% if project_dribs %}
+    <li class="nav-item">
+      <a class="nav-link" id="dribs-tab-md" href="#dribs-md">Log</a>
     </li>
     {% endif %}
   </ul>
@@ -279,69 +276,11 @@
         {{project.autotext|markdown}}
       </div>
 
-      <a href="#top" class="go-up">▲ 🆙</a>
+      <a href="#top" class="go-up" title="Scroll up">▲ 🆙</a>
     </div>
   {% endif %}
 
-  {% if project_dribs and not project.event.lock_resources %}
-  <div id="dribs-md" aria-labelledby="dribs-tab-md">
-
-    <section class="timeline">
-      {% for s in project_dribs %}
-      <div class="timeline-item timeline-{{ s.name }} timeline-{{ s.icon }}">
-        <div class="timeline-img" title="{{ s.date|format_datetime }} ({{ s.name }})">
-          {% if s.icon %}
-            <i class="fa fa-{{ s.icon }}" aria-hidden="true"></i>
-          {% endif %}
-        </div>
-        <div class="timeline-content timeline-card js--fadeInBottom">
-          {% if s.title %}
-          <div class="timeline-img-header">
-            <h2>{{s.title}}</h2>
-          </div>
-          {% endif %}
-
-          {% if s.id and (allow_post or current_user.is_admin) %}
-            <a class="close delete" title="Delete post" href="{{ url_for('project.post_delete', project_id=project.id, activity_id=s.id) }}"
-              onclick="if(!window.confirm('Delete this post?')) return false">&times;</a>
-            {% if s.icon == 'paperclip' %}
-              <a class="close revert" title="Revert post" href="{{ url_for('project.post_revert', project_id=project.id, activity_id=s.id) }}"
-                onclick="if(!window.confirm('Revert project data to this version?')) return false">&#9100;</a>
-            {% endif %}
-          {% endif %}
-
-          {% if s.text %}
-            <div class="content">
-              {{s.text|markdown|safe}}
-            </div>
-          {% endif %}
-
-          <div class="date">
-          {% if s.ref_url %}
-            <a href="{{ s.ref_url }}">
-          {% endif %}
-              {{ s.date|format_datetime }}
-              {% if s.author %}
-                ~
-                <a class="userlink"
-                  href="{{ url_for('public.user', username=s.author )}}">
-                  {{ s.author }}</a>
-              {% endif %}
-          {% if s.ref_url %}
-            </a>
-          {% endif %}
-          </div>
-        </div>
-      </div>
-      {% endfor %}
-
-    </section>
-
-    <a href="#top" class="go-up">▲ 🆙</a>
-  </div><!-- /dribs-md -->
-  {% endif %}
-
-  </div><!-- /project-content -->
+  </div><!-- /project-info -->
 
   <a name="team"></a>
   {% if project_team %}
@@ -401,6 +340,65 @@
       <a href="{{ project.source_url }}" class="btn btn-lg" target="_blank" rel="noopener noreferrer" title="Source code"><span>&#x1f4bb;</span> Source</a>
     {% endif %}
   </div>
+
+
+  {% if project_dribs and not project.event.lock_resources %}
+  <div id="dribs-md" aria-labelledby="dribs-tab-md">
+
+    <section class="timeline">
+      {% for s in project_dribs %}
+      <div class="timeline-item timeline-{{ s.name }} timeline-{{ s.icon }}">
+        <div class="timeline-img" title="{{ s.date|format_datetime }} ({{ s.name }})">
+          {% if s.icon %}
+            <i class="fa fa-{{ s.icon }}" aria-hidden="true"></i>
+          {% endif %}
+        </div>
+        <div class="timeline-content timeline-card js--fadeInBottom">
+          {% if s.title %}
+          <div class="timeline-img-header">
+            <h2>{{s.title}}</h2>
+          </div>
+          {% endif %}
+
+          {% if s.id and (allow_post or current_user.is_admin) %}
+            <a class="close delete" title="Delete post" href="{{ url_for('project.post_delete', project_id=project.id, activity_id=s.id) }}"
+              onclick="if(!window.confirm('Delete this post?')) return false">&times;</a>
+            {% if s.icon == 'paperclip' %}
+              <a class="close revert" title="Revert post" href="{{ url_for('project.post_revert', project_id=project.id, activity_id=s.id) }}"
+                onclick="if(!window.confirm('Revert project data to this version?')) return false">&#9100;</a>
+            {% endif %}
+          {% endif %}
+
+          {% if s.text %}
+            <div class="content">
+              {{s.text|markdown|safe}}
+            </div>
+          {% endif %}
+
+          <div class="date">
+          {% if s.ref_url %}
+            <a href="{{ s.ref_url }}">
+          {% endif %}
+              {{ s.date|format_datetime }}
+              {% if s.author %}
+                ~
+                <a class="userlink"
+                  href="{{ url_for('public.user', username=s.author )}}">
+                  {{ s.author }}</a>
+              {% endif %}
+          {% if s.ref_url %}
+            </a>
+          {% endif %}
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+
+    </section>
+
+    <a href="#top" class="go-up" title="Scroll up">▲ 🆙</a>
+  </div><!-- /dribs-md -->
+  {% endif %}
 
 </div><!-- /.jumbotron .project-page -->
 

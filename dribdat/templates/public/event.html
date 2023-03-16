@@ -78,6 +78,16 @@
 </div><!-- /category-info -->
 
 <div class="start-project btn-group m-4 pt-4">
+  {% if current_event.webpage_url %}
+  <a href="{{ current_event.webpage_url }}" class="btn btn-lg btn-info">
+    {% if not current_event.has_finished %}
+    <i class="fa fa-ticket" aria-hidden="true"></i>
+    How to join
+    {% else %}
+    About
+    {% endif %}
+    </a>
+  {% endif %}
   {% if current_event.can_start_project %}
   <a href="{{ url_for('project.project_new', event_id=current_event.id) }}" class="btn btn-lg btn-success">
     {% if current_event.lock_resources %}
@@ -92,18 +102,8 @@
     {% endif %}
   </a>
   {% endif %}
-  {% if current_event.webpage_url %}
-  <a href="{{ current_event.webpage_url }}" class="btn btn-lg btn-dark">
-    {% if not current_event.has_finished %}
-    <i class="fa fa-ticket" aria-hidden="true"></i>
-    Register
-    {% else %}
-    About
-    {% endif %}
-    </a>
-  {% endif %}
   {% if current_event.community_url %}
-    <a href="{{ current_event.community_url }}" target="community" class="btn btn-lg btn-info">
+    <a href="{{ current_event.community_url }}" target="community" class="btn btn-lg btn-dark">
       <i class="fa fa-comment"></i>
       Connect</a>
   {% endif %}

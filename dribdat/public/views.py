@@ -342,4 +342,6 @@ def dribs():
             'url': quote_plus(request.host_url + d.project.url)
         }
     return render_template("public/dribs.html",
-                           endpoint='public.dribs', active='dribs', data=dribs)
+                           current_event=current_event(),
+                           endpoint='public.dribs', active='dribs', 
+                           data=dribs)
