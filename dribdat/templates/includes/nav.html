@@ -118,16 +118,16 @@
     </ul>
 
   </div><!-- /.navbar-collapse -->
-
-  <!-- Popup global alerts -->
-  {% if event and event.status_text %}
-    <div class="alert alert-warning global-notifications-alert">
-      <a class="close" title="Close" href="#" data-dismiss="alert">&times;</a>
-      <span id="notifications-status-text">{{ event.status_text }}</span>
-    </div>
-  {% endif %}
-
 </nav>
+
+<!-- Popup global alerts -->
+<div id="global-notifications-alert" class="hidden">
+  <div class="alert alert-info">
+    <a class="close" title="Close" href="#" data-dismiss="alert">&times;</a>
+    <i class="fa fa-info-circle float-left" aria-hidden="true"></i>
+    <span id="notifications-status-text"></span>
+  </div>
+</div>
 
 <!-- Popup search results -->
 <div class="hidden container nav-search" id="navSearch" 

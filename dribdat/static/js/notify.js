@@ -14,6 +14,7 @@
         // Create and show the notification
         window.alert(eventStatus);
         $('#notifications-status-text').html(eventStatus);
+        $('#global-notifications-alert').removeClass('hidden');
       }
     });
   };
@@ -22,5 +23,10 @@
     createNotification();
     setInterval(createNotification, 30 * 1000); // check once a minute
   }
+
+  $('#notification-button').click(function() {
+    let eventNotify = localStorage.getItem('eventstatus-notify');
+    localStorage.setItem('eventstatus-notify', true);
+  });
 
 }).call(this, jQuery, window);
