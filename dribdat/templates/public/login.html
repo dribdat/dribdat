@@ -9,32 +9,38 @@
   <br/>
   {% if oauth_type == 'slack' %}
     <p class="sso-login">
-      <a class="btn signin-slack" href="{{ url_for('slack.login') }}">
+      <a class="btn signin-slack" href="{{ url_for('slack.login') }}" title="Sign in with Slack">
         Sign in with Slack
       </a>
     </p>
   {% elif oauth_type == 'azure' %}
     <p class="sso-login">
-      <a class="btn signin-azure" href="{{ url_for('azure.login') }}">
-        Sign in with Microsoft Teams
+      <a class="btn signin-azure" href="{{ url_for('azure.login') }}" title="Sign in with Teams">
+        Sign in with Teams
       </a>
     </p>
   {% elif oauth_type == 'github' %}
     <p class="sso-login">
-      <a class="btn signin-github" href="{{ url_for('github.login') }}">
+      <a class="btn signin-github" href="{{ url_for('github.login') }}" title="Sign in with GitHub">
         Sign in with GitHub
       </a>
     </p>
   {% elif oauth_type == 'auth0' %}
     <p class="sso-login">
-      <a class="btn signin-auth0" href="{{ url_for('auth0.login') }}">
+      <a class="btn signin-auth0" href="{{ url_for('auth0.login') }}" title="Sign in with Auth0">
         Sign in with Auth0
       </a>
     </p>
   {% elif oauth_type == 'mattermost' %}
     <p class="sso-login">
-      <a class="btn signin-mattermost" href="{{ url_for('mattermost.login') }}">
+      <a class="btn signin-mattermost" href="{{ url_for('mattermost.login') }}" title="Sign in with Mattermost">
         Sign in with Mattermost
+      </a>
+    </p>
+  {% elif oauth_type == 'hitobito' %}
+    <p class="sso-login">
+      <a class="btn signin-hitobito" href="{{ url_for('hitobito.login') }}" title="Sign in with Hitobito">
+        Sign in with Hitobito
       </a>
     </p>
   {% endif %}

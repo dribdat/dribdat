@@ -104,7 +104,7 @@ class ProjectDetailForm(FlaskForm):
     logo_icon = StringField(
         u'Named icon',
         [length(max=20)], description='Select an icon from FontAwesome'
-        + ': https://fontawesome.com/v5/cheatsheet')
+        + ': https://fontawesome.com/v4/cheatsheet')
     submit = SubmitField(u'Save changes')
 
 

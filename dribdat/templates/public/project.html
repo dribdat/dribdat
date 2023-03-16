@@ -28,13 +28,6 @@
 
 {% block content %}
 
-{% if project.event.lock_resources %}
-<a href="{{ url_for('public.event_stages', event_id=project.event.id) }}"
-   class="btn btn-lg btn-light">
-     <i class="fa fa-arrow-left" aria-hidden="true"></i>
-     More Resources</a>
-{% endif %}
-
 {% if project_starred and allow_edit and (suggestions or stage) and project.progress < 50 %}
   <div class="alert alert-default resource-list project-tips">
     <button type="button" class="close" data-dismiss="alert" aria-label="Dismiss" title="Hide">
@@ -85,9 +78,9 @@
        Write update
      </a>
   {% elif current_user and current_user.active and not project.is_challenge and not project.event.lock_resources %}
-     <a id="project-comment" href="{{ url_for('project.project_comment', project_id=project.id) }}" title="Write a public comment" class="btn btn-lg btn-success">
+     <a id="project-comment" href="{{ url_for('project.project_comment', project_id=project.id) }}" title="Write a public comment" class="btn btn-lg btn-info">
        <i class="fa fa-thumbs-up" aria-hidden="true"></i>
-       Drib up</a>
+       Comment</a>
   {% endif %}
   {% if allow_edit %}
     <a href="{{ url_for('project.project_edit', project_id=project.id) }}" title="Edit project" class="btn btn-lg btn-warning">
@@ -172,6 +165,13 @@
     </div>
   {% endif %}
 
+  {% if project.event.lock_resources %}
+  <a href="{{ url_for('public.event_stages', event_id=project.event.id) }}"
+     class="btn btn-light mr-4 float-right">
+       <i class="fa fa-cubes" aria-hidden="true"></i>
+       Resource</a>
+  {% endif %}
+
   <div class="project-name">
   {% if project.logo_icon %}
       <i class="fa fa-{{project.logo_icon}}"></i>
@@ -206,26 +206,32 @@
 
   {% if not project.event.lock_resources %}
   <ul class="nav nav-pills nav-fill md-tabs" id="projectTabs" role="tablist">
+    {% if project.longtext %}
     <li class="nav-item">
-      <a class="nav-link active" id="project-tab-md" data-toggle="tab" href="#project-md" role="tab" aria-controls="project-md"
-        aria-selected="true">Pitch</a>
-    </li>
-    {% if project.autotext %}
-    <li class="nav-item">
-      <a class="nav-link" id="readme-tab-md" data-toggle="tab" href="#readme-md" role="tab" aria-controls="readme-md"
-        aria-selected="false">Readme</a>
+      <a class="nav-link" id="project-tab-md" href="#project-md">Pitch</a>
     </li>
     {% endif %}
+    {% if project.autotext %}
     <li class="nav-item">
-      <a class="nav-link" id="dribs-tab-md" data-toggle="tab" href="#dribs-md" role="tab" aria-controls="dribs-md"
-        aria-selected="false">Log</a>
+      <a class="nav-link" id="readme-tab-md" href="#readme-md">Readme</a>
     </li>
+    {% endif %}
+    {% if project_team %}
+    <li class="nav-item">
+      <a class="nav-link" id="dribs-tab-md" href="#team">Team</a>
+    </li>
+    {% endif %}
+    {% if project_dribs %}
+    <li class="nav-item">
+      <a class="nav-link" id="dribs-tab-md" href="#dribs-md">Log</a>
+    </li>
+    {% endif %}
   </ul>
   {% endif %}
 
 <div class="project-info tab-content" id="logs">
 
-  <div class="tab-pane fade show active" id="project-md" role="tabpanel" aria-labelledby="project-tab-md">
+  <div id="project-md" aria-labelledby="project-tab-md">
 
     {% if current_user and current_user.active and not project.webpage_url and not project.longtext and not lock_editing %}
     <div class="alert alert-success" role="alert">
@@ -254,84 +260,27 @@
         {{ project.longtext|onebox|markdown|safe }}
       </div>
     {% endif %}
-
   </div><!-- /project-md -->
 
   {% if project.autotext %}
-    {% if not project.event.lock_resources %}
-      <div class="tab-pane fade" id="readme-md" role="tabpanel" aria-labelledby="readme-tab-md">
+    <div id="readme-md" aria-labelledby="readme-tab-md">
+      {% if not project.event.lock_resources %}
         <div class="alert alert-secondary text-center">
           This content is a preview from an
           <a href="{{ project.autotext_url }}" target="_blank" rel="noopener noreferrer" title="Source link">
             external site</a>.
         </div>
-    {% else %}
-      <div id="readme-md">
-    {% endif %}
+      {% endif %}
 
       <div class="project-autotext"><div class="cover"></div>
         {{project.autotext|markdown}}
       </div>
-    </div><!-- /readme-md -->
+
+      <a href="#top" class="go-up" title="Scroll up">▲ 🆙</a>
+    </div>
   {% endif %}
 
-  {% if project_dribs and not project.event.lock_resources %}
-  <div class="tab-pane fade" id="dribs-md" role="tabpanel" aria-labelledby="dribs-tab-md">
-
-    <section class="timeline">
-      {% for s in project_dribs %}
-      <div class="timeline-item timeline-{{ s.name }} timeline-{{ s.icon }}">
-        <div class="timeline-img" title="{{ s.date|format_datetime }} ({{ s.name }})">
-          {% if s.icon %}
-            <i class="fa fa-{{ s.icon }}" aria-hidden="true"></i>
-          {% endif %}
-        </div>
-        <div class="timeline-content timeline-card js--fadeInBottom">
-          {% if s.title %}
-          <div class="timeline-img-header">
-            <h2>{{s.title}}</h2>
-          </div>
-          {% endif %}
-
-          {% if s.id and (allow_post or current_user.is_admin) %}
-            <a class="close delete" title="Delete post" href="{{ url_for('project.post_delete', project_id=project.id, activity_id=s.id) }}"
-              onclick="if(!window.confirm('Delete this post?')) return false">&times;</a>
-            {% if s.icon == 'paperclip' %}
-              <a class="close revert" title="Revert post" href="{{ url_for('project.post_revert', project_id=project.id, activity_id=s.id) }}"
-                onclick="if(!window.confirm('Revert project data to this version?')) return false">&#9100;</a>
-            {% endif %}
-          {% endif %}
-
-          {% if s.text %}
-            <div class="content">
-              {{s.text|markdown|safe}}
-            </div>
-          {% endif %}
-
-          <div class="date">
-          {% if s.ref_url %}
-            <a href="{{ s.ref_url }}">
-          {% endif %}
-              {{ s.date|format_datetime }}
-              {% if s.author %}
-                ~
-                <a class="userlink"
-                  href="{{ url_for('public.user', username=s.author )}}">
-                  {{ s.author }}</a>
-              {% endif %}
-          {% if s.ref_url %}
-            </a>
-          {% endif %}
-          </div>
-        </div>
-      </div>
-      {% endfor %}
-
-    </section>
-  </div><!-- /dribs-md -->
-  {% endif %}
-
-  </div><!-- /project-content -->
+  </div><!-- /project-info -->
 
   <a name="team"></a>
   {% if project_team %}
@@ -391,6 +340,65 @@
       <a href="{{ project.source_url }}" class="btn btn-lg" target="_blank" rel="noopener noreferrer" title="Source code"><span>&#x1f4bb;</span> Source</a>
     {% endif %}
   </div>
+
+
+  {% if project_dribs and not project.event.lock_resources %}
+  <div id="dribs-md" aria-labelledby="dribs-tab-md">
+
+    <section class="timeline">
+      {% for s in project_dribs %}
+      <div class="timeline-item timeline-{{ s.name }} timeline-{{ s.icon }}">
+        <div class="timeline-img" title="{{ s.date|format_datetime }} ({{ s.name }})">
+          {% if s.icon %}
+            <i class="fa fa-{{ s.icon }}" aria-hidden="true"></i>
+          {% endif %}
+        </div>
+        <div class="timeline-content timeline-card js--fadeInBottom">
+          {% if s.title %}
+          <div class="timeline-img-header">
+            <h2>{{s.title}}</h2>
+          </div>
+          {% endif %}
+
+          {% if s.id and (allow_post or current_user.is_admin) %}
+            <a class="close delete" title="Delete post" href="{{ url_for('project.post_delete', project_id=project.id, activity_id=s.id) }}"
+              onclick="if(!window.confirm('Delete this post?')) return false">&times;</a>
+            {% if s.icon == 'paperclip' %}
+              <a class="close revert" title="Revert post" href="{{ url_for('project.post_revert', project_id=project.id, activity_id=s.id) }}"
+                onclick="if(!window.confirm('Revert project data to this version?')) return false">&#9100;</a>
+            {% endif %}
+          {% endif %}
+
+          {% if s.text %}
+            <div class="content">
+              {{s.text|markdown|safe}}
+            </div>
+          {% endif %}
+
+          <div class="date">
+          {% if s.ref_url %}
+            <a href="{{ s.ref_url }}">
+          {% endif %}
+              {{ s.date|format_datetime }}
+              {% if s.author %}
+                ~
+                <a class="userlink"
+                  href="{{ url_for('public.user', username=s.author )}}">
+                  {{ s.author }}</a>
+              {% endif %}
+          {% if s.ref_url %}
+            </a>
+          {% endif %}
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+
+    </section>
+
+    <a href="#top" class="go-up" title="Scroll up">▲ 🆙</a>
+  </div><!-- /dribs-md -->
+  {% endif %}
 
 </div><!-- /.jumbotron .project-page -->
 

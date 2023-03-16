@@ -160,7 +160,7 @@ def register_filters(app):
     app.tz = timezone(app.config['TIME_ZONE'])
 
     # Lambda filters for safe image_url's
-    app.jinja_env.filters['quote_plus'] = lambda u: quote_plus(u, ':/?&=')
+    app.jinja_env.filters['quote_plus'] = lambda u: quote_plus(u or '', ':/?&=')
 
     # Custom filters
     @app.template_filter()

@@ -135,6 +135,8 @@ form input[type="checkbox"] {
 .alert .close {
   font-size: 1.6rem;
   margin: -0.2em -0.3em;
+  padding-left: 0.5em;
+  text-decoration: none;
 }
 .alert.project-tips .close {
   margin: 0.2em 0.4em -1em -1em;
@@ -270,19 +272,26 @@ nav.navbar {
   border: 0px;
 }
 nav.navbar .navbar-brand {
-  color: black;
-  background: white;
   border-radius: 10px;
   font-size: 150%;
   line-height: 0px;
 }
-nav.navbar .navbar-brand:hover i:nth-child(odd) {
-  color: steelblue;
-  text-shadow: 1px 1px 2px rgba(0,0,100,0.2);
+nav.navbar .navbar-brand:hover i:nth-child(1) {
+  margin-left: 2px;
+  margin-right: -2px;
+}
+nav.navbar .navbar-brand:hover i:nth-child(3) {
+  margin-left: -2px;
+  margin-right: 2px;
 }
 nav.navbar .navbar-brand:hover i:nth-child(even) {
-  color: grey;
-  text-shadow: 1px 1px 5px orange;
+  text-shadow: 1px 1px 10px yellow;
+  box-shadow: 0px 0px 20px orange;
+  border-radius: 30px;
+  color: blue;
+}
+.theme-dark nav.navbar .navbar-brand:hover i:nth-child(even) {
+  color: white;
 }
 nav .navbar-nav .fa {
   margin-left:  0.2em;
@@ -301,10 +310,11 @@ nav .nav-login {
 /* Home page titles */
 
 .home .body-content h2 {
+  color: grey;
   text-align: center;
   padding-bottom: 0.3rem;
   margin-bottom: 1.6rem;
-  border-bottom: 1px solid grey;
+  border-bottom: 1px solid lightgrey;
 }
 .home-page h1,
 .home-page .home-nav {
@@ -1274,8 +1284,14 @@ nav .nav-login {
 pre { color: #333; background: white; }
 
 /* Inline "README" */
+#dribs-md:not(.tab-pane)::before {
+  content: 'LOG';
+}
 #readme-md:not(.tab-pane)::before {
   content: 'README';
+}
+#dribs-md:not(.tab-pane)::before,
+#readme-md:not(.tab-pane)::before {
   width: 100%;
   display: block;
   text-align: center;
@@ -1283,9 +1299,18 @@ pre { color: #333; background: white; }
   font-family: monospace;
   font-weight: bold;
   color: white;
-  background: lightblue;
+  background: rgba(150,190,250,0.4);
+  border-radius: 2em;
   padding: 1em;
   margin: 0.5em 0;
+}
+
+a.go-up {
+  display: block;
+  text-align: center;
+  text-decoration: none;
+  margin: 1em;
+  font-size: 125%;
 }
 
 /* Badges */
@@ -1552,6 +1577,7 @@ pre { color: #333; background: white; }
 .userprofile h1 {
   text-align: center;
   margin-top: 1em;
+  color: grey;
 }
 .team-count,
 .user-score {
@@ -1572,8 +1598,15 @@ pre { color: #333; background: white; }
 .profile-projects {
   width: 100%;
   padding-top: 1em;
-  border: 1px dotted rgba(0,0,0,0.5);
   border-radius: 20px;
+  border: 1px dotted rgba(0,0,0,0.5);
+}
+.home-page .profile-projects {
+  padding-left: 25px;
+}
+.stages-page .profile-projects {
+  margin-left: 5em;
+  border: none;
 }
 .theme-dark .profile-projects {
   border-color: rgba(255,255,255,0.5);
@@ -1678,7 +1711,7 @@ pre { color: #333; background: white; }
   margin: 0 !important;
   padding: 0 !important;
   width: 100% !important;
-  background: none !important;
+  background: none;
 }
 .embed-view .honeycomb {
   transform: scale(0.4);
@@ -1781,13 +1814,18 @@ Instruction page
 }
 .list-stages .step .title {
   padding: 3px;
-  margin-left: 2rem;
   display: block;
   opacity: 0.7;
   width: 100%;
   z-index: 1;
   cursor: pointer;
   font-size: 2rem;
+}
+.stages-page .list-stages .step .title {
+  font-size: 1rem;
+  position: absolute;
+  margin-left: -3pt;
+  margin-top: 30pt;
 }
 .list-stages .step:hover .title { opacity: 1.0; }
 .list-stages .step.active .title { color: blue; }
@@ -1808,6 +1846,7 @@ Instruction page
   clear: both;
   list-style: disclosure-closed;
   padding-right: 1.5em;
+  font-size: 70%;
 }
 .list-stages .step .card {
   background: white;
@@ -1866,6 +1905,26 @@ Search engine
   float: left;
   background-size: contain;
   margin-right: 8px;
+}
+
+
+/* ------------
+Global alerts
+--------------- */
+
+#global-notifications-alert .alert {
+  display: inline-block;
+  text-align: center;
+  font-size: 125%;
+  position: fixed;
+  margin: 0 1em;
+  z-index: 999;
+}
+#global-notifications-alert i {
+  font-size: 150%;
+}
+#global-notifications-alert span {
+  padding: 0 1em;
 }
 
 /* ------------
@@ -1945,6 +2004,12 @@ SlackIn button
   font-size: 0px;
   background: url('/static/img/sso/Mattermost-Logo-Denim.svg') no-repeat;
   width: 190px; height: 43px;
+}
+.signin-hitobito {
+  border: 1px solid #999;
+  font-size: 0px;
+  background: url('/static/img/sso/hitobito.png') no-repeat;
+  width: 260px; height: 58px;
 }
 .sso-login .btn:hover {
   border: 1px solid blue;

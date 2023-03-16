@@ -190,7 +190,7 @@ class CategoryForm(FlaskForm):
                                 description=u'Markdown and HTML supported')
     logo_color = StringField(u'Custom color', [length(max=7)])
     logo_icon = StringField(u'Custom icon', [length(max=20)],
-                            description=u'fontawesome.com/v5/cheatsheet')
+                            description=u'fontawesome.com/v4/cheatsheet')
     event_id = SelectField(u'Specific to an event, or global if blank',
                            coerce=int)
     submit = SubmitField(u'Save')

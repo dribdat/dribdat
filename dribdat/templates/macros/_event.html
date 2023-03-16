@@ -31,9 +31,9 @@
 		}}{{ ' with-icon' if project.logo_icon or project.image_url }}">
 			{% if project.is_challenge and project.team %}
 				<span class="team-count" title="# following">{{ project.team|count }}</span>
-			{% elif project.score > 80 %}
+			{% elif project.score and project.score > 80 %}
 				<span class="team-count" title="Skyrocketing">🚀</span>
-			{% elif project.score > 69 %}
+			{% elif project.score and project.score > 69 %}
 				<span class="team-count" title="Trending">🔥</span>
 			{% endif %}
 			<span class="project-name">{{ project.name|truncate(64, True, '..') }}</span>
@@ -131,17 +131,13 @@
 			</div>
 	    <div class="card-body">
 	      {% if not event.lock_resources %}
-	        <i class="fa fa-code" style="float:right"></i>
+	        <!--<i class="fa fa-code" style="float:right"></i>-->
 		      <h3 class="card-title">
 		        <a href="{{ url_for('public.event', event_id=event.id) }}">
 		          {{event.name}}</a>
 		      </h3>
 				{% endif %}
 	      <div class="card-text">
-	        {% if event.webpage_url %}
-	          <a href="{{ event.webpage_url }}" class="float-left">
-	            <i class="fa fa-globe" aria-hidden="true"></i> www</a>
-	        {% endif %}
 	        {% if not event.lock_resources %}
 	            <p class="an-event-meta">
 	              <b>{{ event.date }}</b>
@@ -150,6 +146,10 @@
 	        {% endif %}
 	        <p class="an-event-description">
 	          {{event.summary or event.description|truncate(300) or event.oneliner|markdown|striptags|truncate(300)}}
+		        {% if event.webpage_url %}
+		          <a href="{{ event.webpage_url }}">
+		            <i class="fa fa-globe" aria-hidden="true"></i> www</a>
+		        {% endif %}
 	        </p>
 	      </div>
 	      <div class="an-event-actions text-center">
@@ -160,12 +160,12 @@
 	            </a>
 	        {% elif event.has_finished %}
 	            <a href="{{ url_for('public.event', event_id=event.id) }}" class="btn btn-lg btn-secondary">
-      					<i class="fa fa-star" aria-hidden="true"></i>
+      					<i class="fa fa-certificate" aria-hidden="true"></i>
 	              Results
 	            </a>
 	        {% else %}
 	            <a href="{{ url_for('public.event', event_id=event.id) }}" class="btn btn-lg btn-success">
-      					<i class="fa fa-rocket" aria-hidden="true"></i>
+      					<i class="fa fa-code" aria-hidden="true"></i>
 	              Challenges
 	            </a>
 	        {% endif %}

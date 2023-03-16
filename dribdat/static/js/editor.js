@@ -117,6 +117,12 @@
     } else {
       $dialog.find("[data-target='pitch']").hide();
     }
+    var $webpage_url = $('.fld-webpage_url');
+    if ($webpage_url.length > 0) {
+      $webpage_url.prepend($togglebtn.clone().show());
+    } else {
+      $dialog.find("[data-target='weblink']").hide();
+    }
     var $imageurl = $('.fld-image_url,.fld-logo_url');
     if ($imageurl.length > 0) {
       // Image url field
@@ -157,7 +163,12 @@
           $dialog.find(".preview input").val(response);
           $dialog.find(".hidden").show();
           $('#img-confirm').show().find('button').off("click").click(function() {
-            if ($(this).data('target') == 'cover') {
+            if ($(this).data('target') == 'weblink') {
+              // Replace the demo link
+              $('#webpage_url').val(response);
+              $('#is_webembed:not(:checked)').click();
+              $dialog.modal('hide');
+            } else if ($(this).data('target') == 'cover') {
               // Replace the cover
               $('#image_url,#logo_url').val(response);
               $dialog.modal('hide');
@@ -231,6 +242,7 @@
           var filename = path.split(/(\\|\/)/g).pop();
           $dialog.find(".preview input").val(response);
           $dialog.find(".hidden").show();
+          // User confirms the file upload
           $('#file-confirm').show().find('button').off("click").click(function() {
             if ($(this).data('target') == 'weblink') {
               // Replace the cover
@@ -309,6 +321,7 @@
   function activate_editor() {
     if (typeof toastui !== 'object') return;
     const $longtext = $('#longtext');
+    if (!$longtext.length) return;
     $longtext.after('<div id="mdeditor" style="text-align:left"></div>');
 
     const toasteditor = window.toasteditor = new toastui.Editor({
@@ -340,6 +353,8 @@
           window.location.reload();
         }
       });
+
+    console.info('editor ready.');
   }
 
   // Characters remaining, thanks to James Bruton
@@ -391,6 +406,11 @@
     $activateEditor.find('[data-do="activate"]')
                    .show().on('click', activate_editor);
 
+    // Enable by default
+    if (localStorage.getItem('markdownhelper') === null) {
+      localStorage.setItem('markdownhelper', '1');
+    }
+
     // Load settings
     if (localStorage.getItem('markdownhelper') == '1') {
       setTimeout(activate_editor, 100);
@@ -400,7 +420,5 @@
   // Bootup
   init_editor();
   init_forms();
-
-  console.info('editing ready.');
 
 }).call(this, jQuery, window);

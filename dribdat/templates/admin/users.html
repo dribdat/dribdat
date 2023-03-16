@@ -14,6 +14,9 @@
             <tr>
               <th width="100%">
                 <a href="?sort=username">Username</a>
+                <div style="float:right">
+                  <a href="?sort=admin" title="Administrator ?">Admin</a>
+                </div>
               </th>
               <th>
                 <a href="?sort=created">Created</a>
@@ -24,23 +27,24 @@
               <th>
                 <a href="?sort=sso" title="Single Sign-on ?">SSO</a>
               </th>
-              <th>
-                <a href="?sort=admin" title="Administrator ?">Admin</a>
-              </th>
               <th>Actions</th>
             </tr>
         </thead>
         {% for user in data.items %}
         <tr>
             <td {% if not user.active %}style="background:yellow" title="Account inactive"{% endif %}>
+              {% if user.is_admin %}
+              <div style="float:right">
+                &#10003;
+              </div>
+              {% endif %}
               <a href="{{ url_for('public.user', username=user.username) }}">
                 {{ user.username }}
-              </a>
+              </a>   
             </td>
             <td>{{ user.created_at|format_date }}</td>
             <td>{{ user.activity_count }}</td>
             <td>{% if user.sso_id %}&#10003;{% endif %}</td>
-            <td>{% if user.is_admin %}&#10003;{% endif %}</td>
             <td><div class="btn-group">
               <a href="{{ url_for('admin.user', user_id=user.id) }}" class="btn btn-primary">
                 Edit

@@ -31,19 +31,23 @@ def current_event():
 
 @blueprint.route("/dashboard/")
 def dashboard():
-    """Render a static dashboard."""
+    """Render a static dashboard. This code sucks."""
     event = current_event()
     if not event:
         return 'No current event'
-    wall = False
+    wall_url = wall = None
     social_domains = ['twitter.com']
     host = urlparse(event.community_url).hostname
-    for d in social_domains:
-        if host == d:
-            wall = True
+    if host == 'twitter.com' or host == 'mobile.twitter.com':
+        wall = 'twitter'
+        wall_url = event.community_url + '?ref_src=twsrc%5Etfw'
+    elif host == 'mastodon.social': # TODO: configure custom Mastodon provider via ENV-variable
+        wall = 'mastodon'
+        userpart = event.community_url.split('/@')[-1]
+        wall_url = 'https%3A%2F%2F%40' + userpart + '%40' + host + '%2Fusers%2F' + userpart.lower()
     return render_template(
         "public/dashboard.html",
-        current_event=event, with_social_wall=wall
+        current_event=event, with_social_wall=wall, wall_url=wall_url, status_text=event.status_text
     )
 
 
@@ -97,13 +101,13 @@ def home():
     # Filter past events
     MAX_PAST_EVENTS = 6
     events_past_next = events_past.count() > MAX_PAST_EVENTS
-    events_past = events_past.limit(MAX_PAST_EVENTS).all()
+    events_past = events_past.limit(MAX_PAST_EVENTS)
     # Send to template
     return render_template("public/home.html", active="home",
                            events_featured=events_featured.all(),
                            events_tips=resource_events.all(),
                            events_next=events_next.all(),
-                           events_past=events_past,
+                           events_past=events_past.all(),
                            events_past_next=events_past_next,
                            my_projects=my_projects,
                            current_event=cur_event)
@@ -338,4 +342,6 @@ def dribs():
             'url': quote_plus(request.host_url + d.project.url)
         }
     return render_template("public/dribs.html",
-                           endpoint='public.dribs', active='dribs', data=dribs)
+                           current_event=current_event(),
+                           endpoint='public.dribs', active='dribs', 
+                           data=dribs)
