@@ -206,23 +206,29 @@
 
   {% if not project.event.lock_resources %}
   <ul class="nav nav-pills nav-fill md-tabs" id="projectTabs" role="tablist">
+    {% if project.longtext %}
     <li class="nav-item">
       <a class="nav-link" id="project-tab-md" href="#project-md" role="tab" aria-controls="project-md"
         aria-selected="false">Pitch</a>
     </li>
+    {% endif %}
     {% if project.autotext %}
     <li class="nav-item">
       <a class="nav-link" id="readme-tab-md" href="#readme-md" role="tab" aria-controls="readme-md"
         aria-selected="false">Readme</a>
     </li>
     {% endif %}
+    {% if project_dribs %}
     <li class="nav-item">
       <a class="nav-link" id="dribs-tab-md" href="#dribs-md" role="tab" aria-controls="dribs-md"
         aria-selected="false">Log</a>
     </li>
+    {% endif %}
+    {% if project_team %}
     <li class="nav-item">
       <a class="nav-link" id="dribs-tab-md" href="#team">Team</a>
     </li>
+    {% endif %}
   </ul>
   {% endif %}
 
