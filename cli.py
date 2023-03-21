@@ -35,18 +35,21 @@ def socialize(kind):
 
 @click.command()
 @click.argument('event', required=True)
-def numerise(event: int):
-    """Assign numbers to challenges."""
+@click.argument('clear', required=False, default=False)
+def numerise(event: int, clear: bool):
+    """Assign numbers to challenge hashtags for an EVENT ID."""
     # TODO: use a parameter for alphabetic, id-based, etc.
     # Generate some primes, thanks @DhanushNayak
     primes = list(filter(lambda x: not list(filter(lambda y : x%y==0, range(2,x))),range(2,200)))
     with create_app().app_context():
         from dribdat.user.models import Event
-        challenges = Event.query.filter_by(id=event).first_or_404().projects
+        challenges = Event.query.filter_by(id=event) \
+                     .first_or_404().projects
         ix = 0
         for c in challenges:
+            if c.is_hidden: continue
             ch = "" # push existing hashtag aside
-            if len(c.hashtag) > 0:
+            if not clear and len(c.hashtag) > 0:
                 ch = " " + ch
             c.hashtag = str(primes[ix]) + ch
             c.save()
