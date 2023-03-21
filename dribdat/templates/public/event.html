@@ -91,7 +91,7 @@
   {% if current_event.can_start_project %}
   <a href="{{ url_for('project.project_new', event_id=current_event.id) }}" class="btn btn-lg btn-success">
     {% if current_event.lock_resources %}
-      <i class="fa fa-cubes"></i>
+      <i class="fa fa-codepen"></i>
       <span>Share a resource</span>
     {% elif current_event.has_started %}
       <i class="fa fa-rocket"></i>

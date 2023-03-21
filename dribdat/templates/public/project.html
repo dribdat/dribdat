@@ -138,7 +138,7 @@
 
   {% if project.score and project.score > 1 %}
     <div class="project-score">
-      <a class="team-count float-left mr-2" title="Drib count" href="#logs"
+      <a class="drib-count float-left mr-2" title="Drib count" href="#logs"
          onclick="$('#dribs-tab-md').click();">{{ project_dribs|length }}</a>
 
       <a href="{{ url_for('public.event_stages', event_id=project.event.id) }}#{{project.phase}}">
@@ -168,7 +168,7 @@
   {% if project.event.lock_resources %}
   <a href="{{ url_for('public.event_stages', event_id=project.event.id) }}"
      class="btn btn-light mr-4 float-right">
-       <i class="fa fa-cubes" aria-hidden="true"></i>
+       <i class="fa fa-codepen" aria-hidden="true"></i>
        Resource</a>
   {% endif %}
 
@@ -213,12 +213,22 @@
     {% endif %}
     {% if project.autotext %}
     <li class="nav-item">
-      <a class="nav-link" id="readme-tab-md" href="#readme-md">Readme</a>
+      <a class="nav-link" id="readme-tab-md" href="#readme-md">
+        <i class="fa fa-book"></i>
+        Readme</a>
     </li>
     {% endif %}
     {% if project_team %}
     <li class="nav-item">
-      <a class="nav-link" id="dribs-tab-md" href="#team">Team</a>
+      <a class="nav-link" id="dribs-tab-md" href="#team">
+        {% if project.team_count == 1 %}
+          <i class="fa fa-user"></i>
+        {% elif project.team_count == 2 %}
+          <i class="fa fa-user"></i><i class="fa fa-user"></i>
+        {% elif project.team_count > 2 %}
+          <i class="fa fa-users"></i>
+        {% endif %}
+        Team</a>
     </li>
     {% endif %}
     {% if project_dribs %}

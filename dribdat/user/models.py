@@ -616,9 +616,10 @@ class Project(PkModel):
             'id': self.id,
             'url': self.url,
             'name': self.name,
-            'team': self.team,
             'score': self.score,
             'phase': self.phase,
+            'team': self.team,
+            'team_count': self.team_count,
             'is_challenge': self.is_challenge,
             'is_webembed': self.is_webembed,
             'progress': self.progress,
@@ -668,13 +669,22 @@ class Project(PkModel):
         q = q.order_by(Activity.timestamp.desc())
         return q.limit(max)
 
+    @property
+    def team_count(self):
+        """Return follower count."""
+        return Activity.query \
+                .filter_by(project_id=self.id, name='star') \
+                .count()
+
     def get_team(self, with_spectators=False):
         """Return all starring users (A team)."""
-        q = Activity.query.filter_by(project_id=self.id)
+        activities = self.activities
         if with_spectators:
-            activities = q.all()
+            activities = self.activities
         else:
-            activities = q.filter_by(name='star').all()
+            activities = Activity.query \
+                .filter_by(project_id=self.id, name='star') \
+                .all()
         members = []
         for a in activities:
             if a.user and a.user not in members:
