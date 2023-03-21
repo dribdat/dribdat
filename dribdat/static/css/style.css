@@ -599,7 +599,8 @@ nav .nav-login {
 }
 .team-counter {
   font-size: 13pt;
-  color: rgba(0,0,200,0.4);
+  color: whitesmoke;
+  text-shadow: 1px 1px 1px rgba(0,0,200,0.7);
   position: absolute;
   text-align: right;
   width: 94%;

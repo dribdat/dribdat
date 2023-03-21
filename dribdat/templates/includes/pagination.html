@@ -2,13 +2,13 @@
 {% if data.pages > 1 %}
 <div class="nav-pagination">
 	{% if data.has_prev %}
-		<a href="{{ url_for(endpoint, page=data.prev_num) }}" class="btn btn-secondary">&#9664;&nbsp; Previous</a>
+		<a href="{{ url_for(endpoint, page=data.prev_num, sort=sort_by) }}" class="btn btn-secondary">&#9664;&nbsp; Previous</a>
 	{% endif %}
 	<span class="pagination m-3" style="display:inline-block">
 	{%- for page in data.iter_pages() %}
 		{% if page %}
 			{% if page != data.page %}
-				<a href="{{ url_for(endpoint, page=page) }}">{{ page }}</a>
+				<a href="{{ url_for(endpoint, page=page, sort=sort_by) }}">{{ page }}</a>
 			{% else %}
 				<strong>{{ page }}</strong>
 			{% endif %}
@@ -18,7 +18,7 @@
 	{%- endfor %}
 	</span>
 	{% if data.has_next %}
-		<a href="{{ url_for(endpoint, page=data.next_num) }}" class="btn btn-secondary">Next &nbsp;&#9654;</a>
+		<a href="{{ url_for(endpoint, page=data.next_num, sort=sort_by) }}" class="btn btn-secondary">Next &nbsp;&#9654;</a>
 	{% endif %}
 </div>
 {% endif %}
