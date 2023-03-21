@@ -58,6 +58,8 @@ def get_github_project(url):
         apiurl = apiurl[:-4]
     if apiurl == url:
         return {}
+    if apiurl.endswith('.md'):
+        return FetchWebProject(url)
     return FetchGithubProject(apiurl)
 
 
