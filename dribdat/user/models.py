@@ -693,39 +693,43 @@ class Project(PkModel):
 
     def get_stats(self):
         """Collect some activity stats."""
-        q = Activity.query.filter_by(project_id=self.id)
-        s_total = q.count()
-        s_updates = q.filter_by(
-            name='update'
-        ).count()
-        s_commits = q.filter_by(
-            name='update', action='commit'
-        ).count()
-        if self.event:
-            s_during = q.filter(
-                Activity.timestamp > self.event.starts_at_tz,
-                Activity.timestamp < self.event.ends_at_tz
-            ).count()
-        else:
-            s_during = 0
-        s_people = len(self.get_team(True))
-        # TODO: real wordcount
-        s_words = 0
+        q = self.activities
+
+        # Basic statistics
+        s_total = len(q)
+        s_updates = 0
+        s_commits = 0
+        s_during = 0
+        s_people = 0
+        for act in q:
+            if act.name == 'update':
+                s_updates += 1
+                if act.action == 'commit':
+                    s_commits += 1
+            elif act.name == 'star':
+                s_people += 1
+            if self.event:
+                if act.timestamp > self.event.starts_at and \
+                   act.timestamp < self.event.ends_at:
+                    s_during += 1
+        
+        # A byte count of contents
+        s_sizepitch = 0
         if self.longtext:
-            s_words = len(self.longtext.split(' '))
-        s_allwords = s_words
+            s_sizepitch += len(self.longtext.strip())
+        s_sizetotal = s_sizepitch
         if self.autotext:
-            s_allwords += len(self.autotext.split(' '))
+            s_sizetotal += len(self.autotext)
         if self.summary:
-            s_allwords += len(self.summary.split(' '))
+            s_sizetotal += len(self.summary.strip())
         return {
             'total':     s_total,
             'updates':   s_updates,
             'commits':   s_commits,
             'during':    s_during,
             'people':    s_people,
-            'wordslong': s_words,
-            'wordcount': s_allwords,
+            'sizepitch': s_sizepitch,
+            'sizetotal': s_sizetotal,
         }
 
     def get_missing_roles(self):

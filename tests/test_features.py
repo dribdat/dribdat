@@ -43,8 +43,8 @@ EOF""" % (url, url)
         assert stats['commits'] == 0
         assert stats['during'] == 0
         assert stats['people'] == 0
-        assert stats['wordslong'] == 1
-        assert stats['wordcount'] == 9
+        assert stats['sizepitch'] == 5
+        assert stats['sizetotal'] == 48
         
     def test_project_stage(self, project, testapp):
         """Check stage progression."""

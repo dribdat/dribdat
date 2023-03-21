@@ -26,7 +26,7 @@ def event_to_data_package(event, author=None, host_url='', full_content=False):
     """Create a Data Package from the data of an event."""
     # Define the author, if available
     contributors = []
-    if author and not author.is_anonymous:
+    if author and not author.is_anonymous and author.is_admin:
         contributors.append({
             "title": author.username,
             "path": author.webpage_url or '',
@@ -77,7 +77,7 @@ def event_to_data_package(event, author=None, host_url='', full_content=False):
                 name='activities',
                 data=get_event_activities(event.id, 500),
             ))
-        # print("Generating in-memory JSON of activities")
+        # print("Generating in-memory JSON of categories")
         package.add_resource(Resource(
                 name='categories',
                 data=get_event_categories(event.id),
