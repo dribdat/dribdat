@@ -43,10 +43,10 @@ def numerise(event: int, clear: bool):
     primes = list(filter(lambda x: not list(filter(lambda y : x%y==0, range(2,x))),range(2,200)))
     with create_app().app_context():
         from dribdat.user.models import Event
-        challenges = Event.query.filter_by(id=event) \
-                     .first_or_404().projects
+        projects = Event.query.filter_by(id=event) \
+                   .first_or_404().projects
         ix = 0
-        for c in challenges:
+        for c in projects:
             if c.is_hidden: continue
             ch = "" # push existing hashtag aside
             if not clear and len(c.hashtag) > 0:
@@ -54,7 +54,7 @@ def numerise(event: int, clear: bool):
             c.hashtag = str(primes[ix]) + ch
             c.save()
             ix = ix + 1
-        print("Enumerated %d challenges." % len(challenges))
+        print("Enumerated %d projects." % len(projects))
 
 
 @click.command()

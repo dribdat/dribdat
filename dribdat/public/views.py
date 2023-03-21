@@ -256,8 +256,8 @@ def event_print(event_id):
     now = datetime.utcnow().strftime("%d.%m.%Y %H:%M")
     event = Event.query.filter_by(id=event_id).first_or_404()
     eventdata = Project.query.filter_by(event_id=event_id, is_hidden=False)
-    projects = eventdata.filter(Project.progress >= 0).order_by(Project.name)
-    challenges = eventdata.filter(Project.progress < 0).order_by(Project.name)
+    projects = eventdata.filter(Project.progress > 0).order_by(Project.name)
+    challenges = eventdata.filter(Project.progress <= 0).order_by(Project.id)
     return render_template('public/eventprint.html', active='print',
                            projects=projects, challenges=challenges,
                            current_event=event, curdate=now)

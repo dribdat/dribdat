@@ -196,7 +196,7 @@
   {% endif %}
 
   {% if config.DRIBDAT_SOCIAL_LINKS %}
-    {{ social.share_links(current_event.hashtag, url_for('public.event', event_id=current_event.id, _external=True)) }}
+    {{ social.share_links(current_event.hashtags, url_for('public.event', event_id=current_event.id, _external=True)) }}
   {% endif %}
 </center>
 {% endblock %}

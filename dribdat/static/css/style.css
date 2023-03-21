@@ -757,7 +757,7 @@ nav .nav-login {
   display: block;
 }
 .tooltip .tooltip-inner span,
-.project-page .project-hashtag {
+.project-hashtag {
   font-weight: bold;
   font-size: 150%;
   color: red;
@@ -1982,42 +1982,41 @@ SlackIn button
 -------------- */
 
 .signin-slack {
-  font-size: 0px;
   border: 0px !important;
   background: url('/static/img/sso/slack-sign-in.png') no-repeat;
   width: 173px; height: 41px;
 }
 .signin-azure {
   border: 0px !important;
-  padding-left: 50px;
+  padding-left: 50px; font-size: initial !important;
   background: url('/static/img/sso/azure_teams.svg') no-repeat;
   width: auto; height: 41px;
 }
 .signin-github {
-  font-size: 0px; border: 0px !important;
+  border: 0px !important;
   background: url('/static/img/sso/github-sign-in.png') no-repeat;
   width: 372px; height: 64px;
 }
 .signin-auth0 {
-  font-size: 0px;
   border: 1px solid #999;
   background: url('/static/img/sso/auth0_icon.png') no-repeat;
   width: 156px; height: 71px;
 }
 .signin-mattermost {
   border: 1px solid #999;
-  font-size: 0px;
   background: url('/static/img/sso/Mattermost-Logo-Denim.svg') no-repeat;
   width: 190px; height: 43px;
 }
 .signin-hitobito {
   border: 1px solid #999;
-  font-size: 0px;
   background: url('/static/img/sso/hitobito.png') no-repeat;
   width: 260px; height: 58px;
 }
 .sso-login .btn:hover {
   border: 1px solid blue;
+}
+.sso-login .btn {
+  font-size: 0px;
 }
 .account-register a { margin-left: 3.5em; font-size: 125%; }
 .account-register::before,
