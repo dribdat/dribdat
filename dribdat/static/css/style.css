@@ -752,12 +752,17 @@ nav .nav-login {
   hyphens: auto;
 }
 .tooltip .tooltip-inner span { /* Hashtag */
-  font-weight: bold;
-  font-size: 80%;
-  font-family: monospace;
   overflow: hidden;
   max-height: 1.5em;
   display: block;
+}
+.tooltip .tooltip-inner span,
+.project-page .project-hashtag {
+  font-weight: bold;
+  font-size: 150%;
+  color: red;
+  text-shadow: 1px 1px 1px white;
+  font-family: monospace;
 }
 .tooltip .tooltip-inner img {
   max-width: 100%;
@@ -1518,7 +1523,7 @@ a.go-up {
 .widget-team .kick-user {
   position: absolute;
   font-size: 150%;
-  margin-left: -2.2em;
+  margin-top: -1em;
 }
 .widget-team .kick-user:hover {
   font-weight: bold;

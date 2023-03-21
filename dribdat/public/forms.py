@@ -99,7 +99,7 @@ class ProjectDetailForm(FlaskForm):
         u'Cover image', [length(max=255)],
         description="URL of an image to display at the top of the page.")
     logo_color = StringField(
-        u'Color scheme', [length(max=7)],
+        u'Color scheme',
         description="Customize the color of your project page.")
     logo_icon = StringField(
         u'Named icon',
