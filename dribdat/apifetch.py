@@ -425,8 +425,8 @@ def FetchWebGitHub(url):
     if not url.endswith('.md') or not '/blob/' in url:
         return {}
     filename = url.split('/')[-1].replace('.md', '')
-    rawurl = url.replace('/blob/', '/raw/')
-    rawdata = requests.get(rawurl, timeout=REQUEST_TIMEOUT)
+    rawurl = url.replace('/blob/', '/raw/').replace("https://github.com/", '')
+    rawdata = requests.get("https://github.com/" + rawurl, timeout=REQUEST_TIMEOUT)
     text_content = rawdata.text or ""
     return {
         'type': 'Markdown',
