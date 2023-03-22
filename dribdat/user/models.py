@@ -487,7 +487,7 @@ class Event(PkModel):
         """Return number of projects."""
         if not self.projects:
             return 0
-        return len(self.projects)
+        return self.projects.filter(not Project.is_hidden).count()
 
     def categories_for_event(self):
         """Event categories."""
