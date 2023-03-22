@@ -5,7 +5,7 @@ let $thecanvas = $('#canv');
 let url = $thebody.attr('src');
 let pdfjsLib = window["pdfjs-dist/build/pdf"];
 
-pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.0.279/pdf.worker.min.js';
+pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js';
 
 var pdfDoc = null,
     pageNum = 1,
