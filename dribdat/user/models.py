@@ -175,12 +175,13 @@ class User(UserMixin, PkModel):
         if limit < 0:
             activities = activities.all()
         else:
-            activities = activities.limit(limit)
+            activities = activities.limit(limit * 2)
         projects = []
         for a in activities:
             if a.project not in projects and not a.project.is_hidden:
                 if with_challenges or a.project.progress != 0:
-                    projects.append(a.project)
+                    if len(projects) < limit:
+                        projects.append(a.project)
         return projects
 
     def posted_challenges(self):
