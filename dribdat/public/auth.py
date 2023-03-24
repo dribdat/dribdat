@@ -70,7 +70,7 @@ def login():
 
 
 @blueprint.route("/register/", methods=['GET', 'POST'])
-def register():
+async def register():
     """Register new user."""
     if current_app.config['DRIBDAT_NOT_REGISTER']:
         flash("Registration currently not possible.", 'warning')
@@ -106,7 +106,7 @@ def register():
         new_user.active = False
         new_user.save()
         if current_app.config['MAIL_SERVER']:
-            user_activation(current_app, new_user)
+            await user_activation(current_app, new_user)
             flash("New accounts require activation. "
                   + "Please click the dribdat link in your e-mail.", 'success')
         else:

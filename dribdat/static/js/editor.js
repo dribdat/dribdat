@@ -85,7 +85,6 @@
       vparent.show();
       all_checked = $('.form-project-confirm input[type="checkbox"]:not(:checked)').length === 0;
       vinput.checked = all_checked;
-      // $('#next-level-hint').hide();
     });
   });
 

@@ -5,12 +5,7 @@ from flask_mailman import EmailMessage
 from dribdat.utils import random_password  # noqa: I005
 
 
-async def send_async_email(app, msg):
-    with app.app_context():
-        msg.send()
-
-
-def user_activation(app, user):
+async def user_activation(app, user):
     """Send an activation by e-mail."""
     act_hash = random_password(32)
     with app.app_context():
@@ -29,4 +24,6 @@ def user_activation(app, user):
             + "Tap here to activate your account:\n\n%s" % act_url
         msg.to = [user.email]
         app.logger.info('Sending mail to user %d' % user.id)
-        send_async_email(app, msg)
+        await msg.send()
+        return True
+
