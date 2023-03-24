@@ -76,7 +76,7 @@
       <br clear="all">
       <div class="project-page clear-both">
         <div class="project-longtext">
-          {{project.longtext|markdown}}
+          {{project.longtext|markdown|safe}}
         </div>
       </div>
     {% endif %}
@@ -132,9 +132,11 @@
         {{project.summary}}
       </p>
     {% else %}
-      <div class="project-longtext">
-        {{project.longtext|truncate(250)|markdown}}
-      </div>
+      {% if request.args.get('longtext') and project.longtext %}
+        <div class="project-longtext">
+          {{project.longtext|markdown|safe}}
+        </div>
+      {% endif %}
     {% endif %}
   </div>
 

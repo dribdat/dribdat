@@ -12,6 +12,9 @@
     <table class='table table-hover'>
         <thead>
             <tr>
+              <th title="Activity count">
+                Dribs
+              </th>
               <th width="100%">
                 <a href="?sort=username">Username</a>
                 <div style="float:right">
@@ -19,19 +22,17 @@
                 </div>
               </th>
               <th>
-                <a href="?sort=created">Created</a>
-              </th>
-              <th title="Activity count">
-                Dribs
+                <a href="?sort=created">Cre</a>/<a href="?sort=updated">Updated</a>
               </th>
               <th>
                 <a href="?sort=sso" title="Single Sign-on ?">SSO</a>
               </th>
-              <th>Actions</th>
+              <th></th>
             </tr>
         </thead>
         {% for user in data.items %}
         <tr>
+            <td>{{ user.activity_count }}</td>
             <td {% if not user.active %}style="background:yellow" title="Account inactive"{% endif %}>
               {% if user.is_admin %}
               <div style="float:right">
@@ -42,8 +43,7 @@
                 {{ user.username }}
               </a>   
             </td>
-            <td>{{ user.created_at|format_date }}</td>
-            <td>{{ user.activity_count }}</td>
+            <td>{{ user.created_at|format_date }}<br>{{ user.updated_at|format_date }}</td>
             <td>{% if user.sso_id %}&#10003;{% endif %}</td>
             <td><div class="btn-group">
               <a href="{{ url_for('admin.user', user_id=user.id) }}" class="btn btn-primary">
