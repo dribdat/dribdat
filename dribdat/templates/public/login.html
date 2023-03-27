@@ -71,5 +71,10 @@
       <a class="btn btn-warning btn-submit" href="{{ url_for('auth.register') }}">Create an account</a>
     </p>
   {% endif %}
+  {% if config.OAUTH_LINK_REGISTER %}
+    <p class="account-register">
+      <a class="btn btn-warning btn-submit" href="{{ config.OAUTH_LINK_REGISTER }}">Register for an account</a>
+    </p>
+  {% endif %}
 </div>
 {% endblock %}
