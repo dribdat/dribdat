@@ -138,7 +138,7 @@
 
   {% if project.score and project.score > 1 %}
     <div class="project-score">
-      <a class="drib-count float-left mr-2" title="Drib count" href="#logs"
+      <a class="drib-count float-left mr-2" title="Drib count" href="#log"
          onclick="$('#dribs-tab-md').click();">{{ project_dribs|length }}</a>
 
       <a href="{{ url_for('public.event_stages', event_id=project.event.id) }}#{{project.phase}}">
@@ -243,7 +243,7 @@
   </ul>
   {% endif %}
 
-<div class="project-info tab-content" id="logs">
+<div class="project-info tab-content">
 
   <div id="project-md" aria-labelledby="project-tab-md">
 
@@ -359,6 +359,7 @@
 
   {% if project_dribs and not project.event.lock_resources %}
   <div id="dribs-md" aria-labelledby="dribs-tab-md">
+    <a name="log"></a>
 
     <section class="timeline">
       {% for s in project_dribs %}
