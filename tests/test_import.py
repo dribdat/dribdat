@@ -62,6 +62,7 @@ class TestImport:
         proj1 = Project(name="Test Project")
         proj1.event = event
         proj1.user = user
+        proj1.progress = 10
         proj1.save()
         ProjectActivity(proj1, "star", user)
 
