@@ -69,6 +69,7 @@ class TestImport:
         # Now we are a member of one project
         schema = get_schema_for_user_projects(user, hosturl)
         assert len(schema) == 1
+        assert 'message' not in schema
         assert len(schema[0]["workPerformed"]) == 1
 
         # Create another project
