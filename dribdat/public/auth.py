@@ -429,7 +429,8 @@ def mattermost_login():
         flash('Unable to access Mattermost data', 'danger')
         return redirect(url_for("auth.login", local=1))
     resp_data = resp.json()
-    print(resp_data)
+    # print(resp_data)
+    # Parse user data
     username = None
     if 'nickname' in resp_data and resp_data['nickname']:
         username = resp_data['nickname']
@@ -437,7 +438,6 @@ def mattermost_login():
         username = resp_data['username']
     if username is None or not 'email' in resp_data or not 'id' in resp_data:
         flash('Invalid Mattermost data format', 'danger')
-        # print(resp_data)
         return redirect(url_for("auth.login", local=1))
     return get_or_create_sso_user(
         resp_data['id'],
