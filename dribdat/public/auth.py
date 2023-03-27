@@ -429,10 +429,11 @@ def mattermost_login():
         flash('Unable to access Mattermost data', 'danger')
         return redirect(url_for("auth.login", local=1))
     resp_data = resp.json()
+    print(resp_data)
     username = None
-    if 'nickname' in resp_data:
+    if 'nickname' in resp_data and resp_data['nickname']:
         username = resp_data['nickname']
-    elif 'username' in resp_data:
+    elif 'username' in resp_data and resp_data['username']:
         username = resp_data['username']
     if username is None or not 'email' in resp_data or not 'id' in resp_data:
         flash('Invalid Mattermost data format', 'danger')
