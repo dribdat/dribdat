@@ -113,7 +113,7 @@ def users(page=1):
 def user(user_id):
     user = User.query.filter_by(id=user_id).first_or_404()
     form = UserForm(obj=user, next=request.args.get('next'))
-    if form.validate_on_submit():
+    if form.is_submitted() and form.validate():
         originalhash = user.password
         del form.id
         user.username = sanitize_input(form.username.data)
@@ -140,7 +140,7 @@ def user_profile(user_id):
     user = User.query.filter_by(id=user_id).first_or_404()
     form = UserProfileForm(obj=user, next=request.args.get('next'))
     form.roles.choices = [(r.id, r.name) for r in Role.query.order_by('name')]
-    if form.validate_on_submit():
+    if form.is_submitted() and form.validate():
         del form.id
         # Assign roles
         user.roles = [Role.query.filter_by(
@@ -169,7 +169,7 @@ def user_new():
     user.active = True
     form = UserForm(obj=user, next=request.args.get('next'))
     del form.active
-    if form.validate_on_submit():
+    if form.is_submitted() and form.validate():
         del form.id
         user.username = sanitize_input(form.username.data)
         del form.username
@@ -293,7 +293,7 @@ def event(event_id):
     event = Event.query.filter_by(id=event_id).first_or_404()
     form = EventForm(obj=event, next=request.args.get('next'))
 
-    if form.validate_on_submit():
+    if form.is_submitted() and form.validate():
         form.populate_obj(event)
         event.starts_at = datetime.combine(
             form.starts_date.data, form.starts_time.data)
@@ -409,7 +409,7 @@ def project_view(project_id):
     form.category_id.choices = [(c.id, c.name)
                                 for c in project.categories_all()]
     form.category_id.choices.insert(0, (-1, ''))
-    if form.validate_on_submit():
+    if form.is_submitted() and form.validate():
         del form.id
         form.populate_obj(project)
         # Ensure project category remains blank
@@ -470,7 +470,7 @@ def project_new():
     form.category_id.choices = [(c.id, c.name)
                                 for c in project.categories_all()]
     form.category_id.choices.insert(0, (-1, ''))
-    if form.validate_on_submit():
+    if form.is_submitted() and form.validate():
         del form.id
         form.populate_obj(project)
         # Assign owner if selected
@@ -518,7 +518,7 @@ def category(category_id):
                              for e in Event.query.order_by('name')]
     form.event_id.choices.insert(0, (-1, ''))
 
-    if form.validate_on_submit():
+    if form.is_submitted() and form.validate():
         form.populate_obj(category)
         if category.event_id == -1:
             category.event_id = None
@@ -545,7 +545,7 @@ def category_new():
                              for e in Event.query.order_by('name')]
     form.event_id.choices.insert(0, (-1, ''))
 
-    if form.validate_on_submit():
+    if form.is_submitted() and form.validate():
         form.populate_obj(category)
         if category.event_id == -1:
             category.event_id = None
@@ -595,7 +595,7 @@ def role(role_id):
     role = Role.query.filter_by(id=role_id).first_or_404()
     form = RoleForm(obj=role, next=request.args.get('next'))
 
-    if form.validate_on_submit():
+    if form.is_submitted() and form.validate():
         form.populate_obj(role)
 
         db.session.add(role)
@@ -617,7 +617,7 @@ def role_new():
     role = Role()
     form = RoleForm(obj=role, next=request.args.get('next'))
 
-    if form.validate_on_submit():
+    if form.is_submitted() and form.validate():
         del form.id
         form.populate_obj(role)
 
@@ -668,7 +668,7 @@ def resource(resource_id):
     resource = Resource.query.filter_by(id=resource_id).first_or_404()
     form = ResourceForm(obj=resource, next=request.args.get('next'))
 
-    if form.validate_on_submit():
+    if form.is_submitted() and form.validate():
         form.populate_obj(resource)
         db.session.add(resource)
         db.session.commit()
@@ -687,7 +687,7 @@ def resource_new():
     resource = Resource()
     form = ResourceForm(obj=resource, next=request.args.get('next'))
 
-    if form.validate_on_submit():
+    if form.is_submitted() and form.validate():
         del form.id
         form.populate_obj(resource)
         resource.is_visible = True

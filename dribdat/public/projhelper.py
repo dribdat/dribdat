@@ -75,7 +75,7 @@ def project_edit_action(project_id, detail_view=False):
             del form.category_id
 
     # Continue with form validation
-    if form.validate_on_submit():
+    if form.is_submitted() and form.validate():
         del form.id
         form.populate_obj(project)
         project.update()

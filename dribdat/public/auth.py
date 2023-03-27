@@ -52,7 +52,13 @@ def login():
     form = LoginForm(request.form)
     # Handle logging in
     if request.method == 'POST':
-        if form.validate_on_submit():
+        if form.is_submitted() and form.validate():
+            # Allow login with e-mail address
+            if '@' in form.username:
+                user_by_email = User.query.filter_by(email=form.username).first()
+                if user_by_email:
+                    form.username = user_by_email.username
+            # Validate user account
             login_user(form.user, remember=True)
             if not form.user.active:
                 # Note: continue to profile page, where user is warned
@@ -70,7 +76,7 @@ def login():
 
 
 @blueprint.route("/register/", methods=['GET', 'POST'])
-async def register():
+def register():
     """Register new user."""
     if current_app.config['DRIBDAT_NOT_REGISTER']:
         flash("Registration currently not possible.", 'warning')
@@ -82,13 +88,14 @@ async def register():
         form.email.data = request.args.get('email')
     if request.args.get('web') and not form.webpage_url.data:
         form.webpage_url.data = request.args.get('web')
-    if not form.validate_on_submit():
+    if not form.is_submitted() and form.validate():
         flash_errors(form)
         logout_user()
         return render_template('public/register.html',
                                form=form, oauth_type=oauth_type())
-    # Continue with user creation
+    # Double check username
     sane_username = sanitize_input(form.username.data)
+    # Continue with user creation
     new_user = User.create(
                     username=sane_username,
                     email=form.email.data,
@@ -106,7 +113,7 @@ async def register():
         new_user.active = False
         new_user.save()
         if current_app.config['MAIL_SERVER']:
-            await user_activation(current_app, new_user)
+            user_activation(new_user)
             flash("New accounts require activation. "
                   + "Please click the dribdat link in your e-mail.", 'success')
         else:
@@ -151,7 +158,7 @@ def logout():
 def forgot():
     """Forgot password."""
     form = EmailForm(request.form)
-    if not form.validate_on_submit():
+    if not form.is_submitted() and form.validate():
         flash_errors(form)
     return render_template(
             'public/forgot.html',
@@ -167,7 +174,7 @@ def passwordless():
         flash("Passwordless login currently not possible.", 'warning')
         return redirect(url_for("auth.login", local=1))
     form = EmailForm(request.form)
-    if not form.validate_on_submit():
+    if not form.is_submitted() and form.validate():
         flash_errors(form)
         return redirect(url_for('auth.forgot'))
     # Continue with user activation
@@ -179,7 +186,7 @@ def passwordless():
     a_user = User.query.filter_by(email=form.email.data).first()
     if a_user:
         # Continue with reset
-        user_activation(current_app, a_user)
+        user_activation(a_user)
     else:
         current_app.logger.warn('User not found: %s' % form.email.data)
     # Don't let people spy on your address
@@ -221,7 +228,7 @@ def user_profile():
         del form.password
 
     # Validation has passed
-    if form.validate_on_submit() and user_is_valid:
+    if form.is_submitted() and form.validate() and user_is_valid:
         # Assign roles
         user.roles = [Role.query.filter_by(
             id=r).first() for r in form.roles.data]

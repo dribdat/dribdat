@@ -284,7 +284,7 @@ def event_new():
             return redirect(url_for("public.event_start"))
     event = Event()
     form = NewEventForm(obj=event, next=request.args.get('next'))
-    if form.validate_on_submit():
+    if form.is_submitted() and form.validate():
         del form.id
         form.populate_obj(event)
         event.starts_at = datetime.combine(

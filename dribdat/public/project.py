@@ -82,7 +82,7 @@ def project_boost(project_id):
     ]
 
     # Process form
-    if form.validate_on_submit():
+    if form.is_submitted() and form.validate():
         # Update project data
         cache.clear()
         project_action(project_id, 'boost',
@@ -124,7 +124,7 @@ def project_post(project_id):
     form = ProjectPost(obj=project, next=request.args.get('next'))
 
     # Process form
-    if form.validate_on_submit():
+    if form.is_submitted() and form.validate():
         if form.has_progress.data:
             # Check and update progress
             found_next = False
@@ -178,7 +178,7 @@ def project_comment(project_id):
     event = project.event
     form = ProjectComment(obj=project, next=request.args.get('next'))
     # Process form
-    if form.validate_on_submit():
+    if form.is_submitted() and form.validate():
         # Update project data
         project_action(project_id, 'review',
                        action='post', text=form.note.data)
@@ -320,7 +320,7 @@ def create_new_project(event):
     else:
         del form.category_id
 
-    if not form.validate_on_submit():
+    if not form.is_submitted() and form.validate():
         return render_template(
             'public/projectnew.html',
             current_event=event, form=form, suggestions=suggestions,
