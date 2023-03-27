@@ -42,13 +42,13 @@
     <div class="col-md-3">
     </div>
 
-    <div class="col-md-3" style="padding:0px">
+    <div class="col-md-3 socialwall">
         <div id="activities"></div>
 
     {% if with_social_wall == 'twitter' %}
-      <a class="twitter-timeline" data-width="340" data-height="900" data-dnt="true" data-theme="dark" data-link-color="#E95F28" href="{{ current_event.community_url }}">Tweets</a> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+      <a class="twitter-timeline" data-width="340" data-height="900" data-dnt="true" data-theme="light" data-link-color="#E95F28" href="{{ current_event.community_url }}">Tweets</a> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
     {% elif with_social_wall == 'mastodon' %}
-      <iframe allowfullscreen sandbox="allow-top-navigation allow-scripts allow-popups allow-popups-to-escape-sandbox" width="100%" height="100%" src="https://www.mastofeed.com/apiv2/feed?userurl={{ wall_url }}&theme=dark&size=100&header=false&replies=false&boosts=true"></iframe>
+      <iframe allowfullscreen sandbox="allow-top-navigation allow-scripts allow-popups allow-popups-to-escape-sandbox" width="100%" height="67%" src="https://www.mastofeed.com/apiv2/feed?userurl={{ wall_url }}&theme=light&size=100&header=false&replies=false&boosts=true" frameborder="0"></iframe>
     {% endif %}
     </div>
   </div>
@@ -66,13 +66,13 @@
     background-size: cover;
     background-repeat: no-repeat;
     background-image: url('{{ current_event.gallery_url }}');
+    font-family: "Open Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
   }
   .hidden {
     display: none;
   }
   #projects {
-    color: #fff;
-    font: 15pt sans-serif;
+    font-size: 14pt;
     overflow: hidden;
     list-style-type: none;
     padding: 0px;
@@ -110,13 +110,18 @@
   .container-fluid .sidebar {
     height: 100%;
     position: fixed;
-    background-color: black !important;
-    opacity: 0.7;
+    background-color: #ddd;
+  }
+
+  .container-fluid .socialwall {
+    padding: 0px;
+    background: #fff;
   }
 
   #event-logo {
-    width: 175%;
+    width: 50%;
     margin-top: 100px;
+    position: fixed;
   }
   #event-logo img {
     border-radius: 10px;
@@ -134,11 +139,12 @@
   #schedule > * { display: none; }
 
   #announcements {
-    position: absolute;
-    top: 10%;
+    position: fixed;
+    top: 26%;
     left: 22%;
     /*left: 50%;
     margin-left: -15em;*/
+    z-index: 999;
   }
 
   #announcements button {
@@ -147,7 +153,7 @@
   }
 
   #announcements textarea {
-    width: 12em;
+    width: 18em;
     height: 4em;
     font-size: 50px;
     font-weight: bold;
@@ -159,8 +165,8 @@
     border-image: url("data:image/svg+xml;charset=utf-8,%3Csvg width='100' height='100' viewBox='0 0 100 100' fill='none' xmlns='http://www.w3.org/2000/svg'%3E %3Cstyle%3Epath%7Banimation:stroke 5s infinite linear%3B%7D%40keyframes stroke%7Bto%7Bstroke-dashoffset:776%3B%7D%7D%3C/style%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='0%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%232d3561' /%3E%3Cstop offset='25%25' stop-color='%23c05c7e' /%3E%3Cstop offset='50%25' stop-color='%23f3826f' /%3E%3Cstop offset='100%25' stop-color='%23ffb961' /%3E%3C/linearGradient%3E %3Cpath d='M1.5 1.5 l97 0l0 97l-97 0 l0 -97' stroke-linecap='square' stroke='url(%23g)' stroke-width='3' stroke-dasharray='388'/%3E %3C/svg%3E") 1;
   }
   .superpowers {
-    position: absolute;
-    bottom: 0px; right: 0px;
+    position: fixed;
+    bottom: 0px; right: 50%;
     z-index: 999;
   }
   .superpowers button {
@@ -231,6 +237,7 @@ refreshProjects = function() {
   $.getJSON('/api/event/current/projects.json', function(data) {
     $pp = $('#projects').empty();
     data.projects.forEach(function(p) {
+      if (p.is_hidden) return;
       $pp.append('<div>' +
         '<a href="/project/'+p.id+'">'+p.name+'</a>' +
         '<sp style="width:'+p.score+'px"></sp>' +

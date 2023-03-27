@@ -13,7 +13,7 @@ from flask import (
 from flask_login import login_required, current_user
 from sqlalchemy import or_
 
-from ..extensions import db
+from ..extensions import db, cache
 from ..utils import timesince, random_password
 from ..decorators import admin_required
 from ..user.models import Event, Project, Activity
@@ -495,8 +495,8 @@ def generate_event_package(event, format='json'):
         package.to_zip(fp_package.name)
         return send_file(fp_package.name, as_attachment=True)
 
-
 @blueprint.route('/event/current/datapackage.<format>', methods=["GET"])
+@cache.cached()
 def package_current_event(format):
     """Download a Data Package for an event."""
     event = Event.query.filter_by(is_current=True).first() or \
@@ -505,6 +505,7 @@ def package_current_event(format):
 
 
 @blueprint.route('/event/<int:event_id>/datapackage.<format>', methods=["GET"])
+@cache.cached()
 def package_specific_event(event_id, format):
     """Download a Data Package for an event."""
     event = Event.query.filter_by(id=event_id).first_or_404()

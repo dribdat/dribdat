@@ -34,6 +34,37 @@ def socialize(kind):
 
 
 @click.command()
+@click.argument('event', required=True)
+@click.argument('clear', required=False, default=False)
+@click.argument('primes', required=False, default=True)
+@click.argument('challenges', required=False, default=True)
+def numerise(event: int, clear: bool, primes: bool, challenges: bool):
+    """Assign numbers to challenge hashtags for an EVENT ID."""
+    # TODO: use a parameter for sort order alphabetic, id-based, etc.
+    if primes:
+        # Generate some primes, thanks @DhanushNayak
+        nq = list(filter(lambda x: not list(filter(lambda y : x%y==0, range(2,x))),range(2,200)))
+    else:
+        nq = list(range(1,200))
+    with create_app().app_context():
+        from dribdat.user.models import Event
+        projects = Event.query.filter_by(id=event) \
+                   .first_or_404().projects
+        ix = 0
+        for c in projects:
+            if c.is_hidden: continue
+            if challenges and not c.is_challenge: continue
+            if not challenges and c.is_challenge: continue
+            ch = "" # push existing hashtag aside
+            if not clear and len(c.hashtag) > 0:
+                ch = " " + ch
+            c.hashtag = str(nq[ix]) + ch
+            c.save()
+            ix = ix + 1
+        print("Enumerated %d projects." % len(projects))
+
+
+@click.command()
 @click.argument('name', required=True)
 @click.argument('start', required=False)
 @click.argument('finish', required=False)
@@ -104,6 +135,7 @@ def cli():
 
 
 cli.add_command(socialize)
+cli.add_command(numerise)
 cli.add_command(imports)
 cli.add_command(exports)
 

@@ -171,16 +171,15 @@ class User(UserMixin, PkModel):
         """Retrieve all projects user has joined."""
         activities = Activity.query.filter_by(
                 user_id=self.id, name='star'
-            ).order_by(Activity.timestamp.desc())
-        if limit < 0:
-            activities = activities.all()
-        else:
-            activities = activities.limit(limit)
+            ).order_by(Activity.timestamp.desc()).all()
         projects = []
+        project_ids = []
         for a in activities:
-            if a.project not in projects and not a.project.is_hidden:
-                if with_challenges or a.project.progress != 0:
+            if limit > 0 and len(projects) >= limit: continue
+            if a.project_id not in project_ids and not a.project.is_hidden:
+                if with_challenges or a.project.progress > 0:
                     projects.append(a.project)
+                    project_ids.append(a.project_id)
         return projects
 
     def posted_challenges(self):
@@ -481,13 +480,13 @@ class Event(PkModel):
                     return ''
         return status_text
     
-
     @property
     def project_count(self):
-        """Return number of projects."""
+        """Number of active projects in an event."""
         if not self.projects:
             return 0
-        return len(self.projects)
+        return Project.query \
+               .filter_by(event_id=self.id, is_hidden=False).count()
 
     def categories_for_event(self):
         """Event categories."""
@@ -616,9 +615,10 @@ class Project(PkModel):
             'id': self.id,
             'url': self.url,
             'name': self.name,
-            'team': self.team,
             'score': self.score,
             'phase': self.phase,
+            'team': self.team,
+            'team_count': self.team_count,
             'is_challenge': self.is_challenge,
             'is_webembed': self.is_webembed,
             'progress': self.progress,
@@ -668,13 +668,22 @@ class Project(PkModel):
         q = q.order_by(Activity.timestamp.desc())
         return q.limit(max)
 
+    @property
+    def team_count(self):
+        """Return follower count."""
+        return Activity.query \
+                .filter_by(project_id=self.id, name='star') \
+                .count()
+
     def get_team(self, with_spectators=False):
         """Return all starring users (A team)."""
-        q = Activity.query.filter_by(project_id=self.id)
+        activities = self.activities
         if with_spectators:
-            activities = q.all()
+            activities = self.activities
         else:
-            activities = q.filter_by(name='star').all()
+            activities = Activity.query \
+                .filter_by(project_id=self.id, name='star') \
+                .all()
         members = []
         for a in activities:
             if a.user and a.user not in members:
@@ -683,39 +692,43 @@ class Project(PkModel):
 
     def get_stats(self):
         """Collect some activity stats."""
-        q = Activity.query.filter_by(project_id=self.id)
-        s_total = q.count()
-        s_updates = q.filter_by(
-            name='update'
-        ).count()
-        s_commits = q.filter_by(
-            name='update', action='commit'
-        ).count()
-        if self.event:
-            s_during = q.filter(
-                Activity.timestamp > self.event.starts_at_tz,
-                Activity.timestamp < self.event.ends_at_tz
-            ).count()
-        else:
-            s_during = 0
-        s_people = len(self.get_team(True))
-        # TODO: real wordcount
-        s_words = 0
+        q = self.activities
+
+        # Basic statistics
+        s_total = len(q)
+        s_updates = 0
+        s_commits = 0
+        s_during = 0
+        s_people = 0
+        for act in q:
+            if act.name == 'update':
+                s_updates += 1
+                if act.action == 'commit':
+                    s_commits += 1
+            elif act.name == 'star':
+                s_people += 1
+            if self.event:
+                if act.timestamp > self.event.starts_at and \
+                   act.timestamp < self.event.ends_at:
+                    s_during += 1
+        
+        # A byte count of contents
+        s_sizepitch = 0
         if self.longtext:
-            s_words = len(self.longtext.split(' '))
-        s_allwords = s_words
+            s_sizepitch += len(self.longtext.strip())
+        s_sizetotal = s_sizepitch
         if self.autotext:
-            s_allwords += len(self.autotext.split(' '))
+            s_sizetotal += len(self.autotext)
         if self.summary:
-            s_allwords += len(self.summary.split(' '))
+            s_sizetotal += len(self.summary.strip())
         return {
             'total':     s_total,
             'updates':   s_updates,
             'commits':   s_commits,
             'during':    s_during,
             'people':    s_people,
-            'wordslong': s_words,
-            'wordcount': s_allwords,
+            'sizepitch': s_sizepitch,
+            'sizetotal': s_sizetotal,
         }
 
     def get_missing_roles(self):

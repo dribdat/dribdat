@@ -423,9 +423,11 @@ nav .nav-login {
   width: 100%;
   max-height: 100%;
 }
+.home-page .carousel-caption .event-header a {
+  text-decoration: none;
+}
 .home-page .carousel-caption .event-header .section-header-content {
   text-align: left;
-  text-decoration: none;
   color: initial;
   background: white;
   box-shadow: 3px 3px 3px rgba(0,0,0,0.2);
@@ -572,17 +574,17 @@ nav .nav-login {
 .hexagon.blank {
   visibility: hidden;
 }
-.project.hexagon:hover .hexagontent .team-count {
+.project.hexagon:hover .hexagontent .team-boost {
   display: inline-block;
 }
-.project.hexagon .hexagontent .team-count {
+.project.hexagon .hexagontent .team-boost {
   display: none;
   background: white;
   left: -3em; right: auto;
   top: 50%;
   margin-top: -1em;
 }
-.hexagon .hexagontent .team-count {
+.hexagon .hexagontent .team-boost {
   top: -1em;
   right: -1em;
   min-width: 2.5em;
@@ -591,6 +593,19 @@ nav .nav-login {
   font-size: 80%;
   background: rgba(255, 255, 255, 0.8);
   box-shadow: 0 4px 9px rgb(0 0 0 / 2%), 0 9px 15px rgb(0 0 0 / 7%);
+}
+.project.hexagon .team-counter {
+  color: white;
+}
+.team-counter {
+  font-size: 13pt;
+  color: whitesmoke;
+  text-shadow: 1px 1px 1px rgba(0,0,200,0.7);
+  position: absolute;
+  text-align: right;
+  width: 94%;
+  bottom: 0.3em;
+  z-index: 99;
 }
 
 .project-page.phase-Challenge .progress,
@@ -752,12 +767,17 @@ nav .nav-login {
   hyphens: auto;
 }
 .tooltip .tooltip-inner span { /* Hashtag */
-  font-weight: bold;
-  font-size: 80%;
-  font-family: monospace;
   overflow: hidden;
   max-height: 1.5em;
   display: block;
+}
+.tooltip .tooltip-inner span,
+.project-hashtag {
+  font-weight: bold;
+  font-size: 150%;
+  color: red;
+  text-shadow: 1px 1px 1px white;
+  font-family: monospace;
 }
 .tooltip .tooltip-inner img {
   max-width: 100%;
@@ -1518,7 +1538,7 @@ a.go-up {
 .widget-team .kick-user {
   position: absolute;
   font-size: 150%;
-  margin-left: -2.2em;
+  margin-top: -1em;
 }
 .widget-team .kick-user:hover {
   font-weight: bold;
@@ -1579,7 +1599,7 @@ a.go-up {
   margin-top: 1em;
   color: grey;
 }
-.team-count,
+.team-boost,
 .user-score {
   min-width: 2.5em;
   text-align: center;
@@ -1589,7 +1609,7 @@ a.go-up {
   border-radius: 2em;
   padding: 0.5em;
 }
-.project-score .team-count {
+.project-score .drib-count {
   font-size: 80%;
   margin-top: -0.5em;
   text-decoration: none;
@@ -1977,42 +1997,41 @@ SlackIn button
 -------------- */
 
 .signin-slack {
-  font-size: 0px;
   border: 0px !important;
   background: url('/static/img/sso/slack-sign-in.png') no-repeat;
   width: 173px; height: 41px;
 }
 .signin-azure {
   border: 0px !important;
-  padding-left: 50px;
+  padding-left: 50px; font-size: initial !important;
   background: url('/static/img/sso/azure_teams.svg') no-repeat;
   width: auto; height: 41px;
 }
 .signin-github {
-  font-size: 0px; border: 0px !important;
+  border: 0px !important;
   background: url('/static/img/sso/github-sign-in.png') no-repeat;
   width: 372px; height: 64px;
 }
 .signin-auth0 {
-  font-size: 0px;
   border: 1px solid #999;
   background: url('/static/img/sso/auth0_icon.png') no-repeat;
   width: 156px; height: 71px;
 }
 .signin-mattermost {
   border: 1px solid #999;
-  font-size: 0px;
   background: url('/static/img/sso/Mattermost-Logo-Denim.svg') no-repeat;
   width: 190px; height: 43px;
 }
 .signin-hitobito {
   border: 1px solid #999;
-  font-size: 0px;
   background: url('/static/img/sso/hitobito.png') no-repeat;
   width: 260px; height: 58px;
 }
 .sso-login .btn:hover {
   border: 1px solid blue;
+}
+.sso-login .btn {
+  font-size: 0px;
 }
 .account-register a { margin-left: 3.5em; font-size: 125%; }
 .account-register::before,

@@ -138,7 +138,7 @@
 
   {% if project.score and project.score > 1 %}
     <div class="project-score">
-      <a class="team-count float-left mr-2" title="Drib count" href="#logs"
+      <a class="drib-count float-left mr-2" title="Drib count" href="#logs"
          onclick="$('#dribs-tab-md').click();">{{ project_dribs|length }}</a>
 
       <a href="{{ url_for('public.event_stages', event_id=project.event.id) }}#{{project.phase}}">
@@ -168,7 +168,7 @@
   {% if project.event.lock_resources %}
   <a href="{{ url_for('public.event_stages', event_id=project.event.id) }}"
      class="btn btn-light mr-4 float-right">
-       <i class="fa fa-cubes" aria-hidden="true"></i>
+       <i class="fa fa-codepen" aria-hidden="true"></i>
        Resource</a>
   {% endif %}
 
@@ -208,22 +208,36 @@
   <ul class="nav nav-pills nav-fill md-tabs" id="projectTabs" role="tablist">
     {% if project.longtext %}
     <li class="nav-item">
-      <a class="nav-link" id="project-tab-md" href="#project-md">Pitch</a>
+      <a class="nav-link" id="project-tab-md" href="#project-md"
+         title="The description of a challenge or a solution">Pitch</a>
     </li>
     {% endif %}
     {% if project.autotext %}
     <li class="nav-item">
-      <a class="nav-link" id="readme-tab-md" href="#readme-md">Readme</a>
+      <a class="nav-link" id="readme-tab-md" href="#readme-md"
+         title="Content preview from an external site">
+        <i class="fa fa-book"></i>
+        Readme</a>
     </li>
     {% endif %}
     {% if project_team %}
     <li class="nav-item">
-      <a class="nav-link" id="dribs-tab-md" href="#team">Team</a>
+      <a class="nav-link" id="dribs-tab-md" href="#team" 
+         title="Meet the family">
+        {% if project.team_count == 1 %}
+          <i class="fa fa-user"></i>
+        {% elif project.team_count == 2 %}
+          <i class="fa fa-user"></i><i class="fa fa-user"></i>
+        {% elif project.team_count > 2 %}
+          <i class="fa fa-users"></i>
+        {% endif %}
+        Team</a>
     </li>
     {% endif %}
     {% if project_dribs %}
     <li class="nav-item">
-      <a class="nav-link" id="dribs-tab-md" href="#dribs-md">Log</a>
+      <a class="nav-link" id="dribs-tab-md" href="#dribs-md"
+         title="Play by play progress review">Log</a>
     </li>
     {% endif %}
   </ul>
@@ -264,19 +278,20 @@
 
   {% if project.autotext %}
     <div id="readme-md" aria-labelledby="readme-tab-md">
+      
+      <div class="project-autotext"><div class="cover"></div>
+        {{project.autotext|markdown}}
+      </div>
+
       {% if not project.event.lock_resources %}
-        <div class="alert alert-secondary text-center">
+        <div class="alert alert-light text-center">
           This content is a preview from an
           <a href="{{ project.autotext_url }}" target="_blank" rel="noopener noreferrer" title="Source link">
             external site</a>.
         </div>
       {% endif %}
 
-      <div class="project-autotext"><div class="cover"></div>
-        {{project.autotext|markdown}}
-      </div>
-
-      <a href="#top" class="go-up" title="Scroll up">▲ 🆙</a>
+      <a href="#top" class="go-up" title="Scroll up!">▲▲▲</a>
     </div>
   {% endif %}
 
@@ -320,7 +335,7 @@
     </div>
   {% endif %}
 
-  <div class="project-buttons" role="group" aria-label="Main navigation">
+  <div class="project-buttons mb-5" role="group" aria-label="Main navigation">
     {% if project.contact_url %}
       {% if project.contact_url.startswith('http') or project.contact_url.startswith('mailto:') %}
         <a href="{{ project.contact_url }}" target="_blank" rel="noopener noreferrer" class="btn btn-lg" title="Contact the team"><span>&#x1f44b;</span> Contact</a>
@@ -396,7 +411,7 @@
 
     </section>
 
-    <a href="#top" class="go-up" title="Scroll up">▲ 🆙</a>
+    <a href="#top" class="go-up" title="Scroll up!">▲▲▲</a>
   </div><!-- /dribs-md -->
   {% endif %}
 

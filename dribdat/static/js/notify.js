@@ -40,16 +40,23 @@
   // Check the location, ignore the Dashboard
   if (location.href.indexOf('/dashboard')<0) {
     createNotification();
-    setInterval(createNotification, 30 * 1000); // check twice a minute
+    setInterval(createNotification, 60 * 1000); // check once a minute
 
     // To enable the popups, click the button in the footer
     $('#notification-button').show().click(function() {
       //console.log('un-muting...');
+      $('#notifications-status-text').html('You will now receive alerts');
+      $('#global-notifications-alert').removeClass('hidden');
       localStorage.removeItem('eventstatus-mute');
       localStorage.removeItem('eventstatus');
       createNotification();
     });
 
   } // -no-dashboard
+
+  // Close button is just a hider
+  $('#global-notifications-alert .close').click(function() {
+    $('#global-notifications-alert').addClass('hidden');
+  });
 
 }).call(this, jQuery, window);

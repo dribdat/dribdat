@@ -53,6 +53,12 @@ def login():
     # Handle logging in
     if request.method == 'POST':
         if form.validate_on_submit():
+            # Allow login with e-mail address
+            if '@' in form.username.data:
+                user_by_email = User.query.filter_by(email=form.username.data).first()
+                if user_by_email:
+                    form.username.data = user_by_email.username
+            # Validate user account
             login_user(form.user, remember=True)
             if not form.user.active:
                 # Note: continue to profile page, where user is warned
@@ -70,7 +76,7 @@ def login():
 
 
 @blueprint.route("/register/", methods=['GET', 'POST'])
-def register():
+async def register():
     """Register new user."""
     if current_app.config['DRIBDAT_NOT_REGISTER']:
         flash("Registration currently not possible.", 'warning')
@@ -87,8 +93,9 @@ def register():
         logout_user()
         return render_template('public/register.html',
                                form=form, oauth_type=oauth_type())
-    # Continue with user creation
+    # Double check username
     sane_username = sanitize_input(form.username.data)
+    # Continue with user creation
     new_user = User.create(
                     username=sane_username,
                     email=form.email.data,
@@ -106,7 +113,7 @@ def register():
         new_user.active = False
         new_user.save()
         if current_app.config['MAIL_SERVER']:
-            user_activation(current_app, new_user)
+            await user_activation(current_app, new_user)
             flash("New accounts require activation. "
                   + "Please click the dribdat link in your e-mail.", 'success')
         else:
@@ -160,7 +167,7 @@ def forgot():
 
 
 @blueprint.route("/passwordless/", methods=['POST'])
-def passwordless():
+async def passwordless():
     """Log in a new user via e-mail."""
     if current_app.config['DRIBDAT_NOT_REGISTER'] or \
        not current_app.config['MAIL_SERVER']:
@@ -179,7 +186,7 @@ def passwordless():
     a_user = User.query.filter_by(email=form.email.data).first()
     if a_user:
         # Continue with reset
-        user_activation(current_app, a_user)
+        await user_activation(current_app, a_user)
     else:
         current_app.logger.warn('User not found: %s' % form.email.data)
     # Don't let people spy on your address
@@ -423,12 +430,13 @@ def mattermost_login():
         return redirect(url_for("auth.login", local=1))
     resp_data = resp.json()
     # print(resp_data)
+    # Parse user data
     username = None
-    if 'nickname' in resp_data:
+    if 'nickname' in resp_data and resp_data['nickname']:
         username = resp_data['nickname']
-    elif 'username' in resp_data:
+    elif 'username' in resp_data and resp_data['username']:
         username = resp_data['username']
-    if username is None:
+    if username is None or not 'email' in resp_data or not 'id' in resp_data:
         flash('Invalid Mattermost data format', 'danger')
         return redirect(url_for("auth.login", local=1))
     return get_or_create_sso_user(
@@ -450,7 +458,7 @@ def hitobito_login():
         flash('Unable to access hitobito data', 'danger')
         return redirect(url_for("auth.login", local=1))
     resp_data = resp.json()
-    #print(resp_data)
+    # print(resp_data)
     username = None
     if 'nickname' in resp_data and resp_data['nickname'] is not None:
         username = resp_data['nickname']

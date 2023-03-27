@@ -85,7 +85,6 @@
       vparent.show();
       all_checked = $('.form-project-confirm input[type="checkbox"]:not(:checked)').length === 0;
       vinput.checked = all_checked;
-      // $('#next-level-hint').hide();
     });
   });
 
@@ -250,8 +249,13 @@
               $('#is_webembed:not(:checked)').click();
               $dialog.modal('hide');
             } else if ($(this).data('target') == 'pitch') {
+              // Determine file extension
+              //var fileExt = filename.split('.');
+              //fileExt = (fileExt.length > 1) ? fileExt[fileExt.length - 1] : '?';
+                  // ... ' (' + fileExt.toUpperCase() + ')';
+              // Create Markdown link with a paperclip emoji
+              var fileLink = '📎 [' + filename + '](' + response + ')'; 
               // Append to pitch
-              var fileLink = '📦 File: [' + filename + '](' + response + ')';
               if (typeof window.toasteditor !== 'undefined') {
                 window.toasteditor.insertText(fileLink);
               } else {

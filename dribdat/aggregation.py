@@ -14,6 +14,7 @@ from dribdat.apifetch import (
 )
 import json
 import re
+from sqlalchemy import and_
 
 
 def GetProjectData(url):
@@ -58,6 +59,8 @@ def get_github_project(url):
         apiurl = apiurl[:-4]
     if apiurl == url:
         return {}
+    if apiurl.endswith('.md'):
+        return FetchWebProject(url)
     return FetchGithubProject(apiurl)
 
 
@@ -181,11 +184,15 @@ def GetEventUsers(event):
         return None
     users = []
     userlist = []
-    for p in event.projects:
-        for u in p.get_team():
-            if u.id not in userlist:
-                userlist.append(u.id)
-                users.append(u)
+    projects = set([p.id for p in event.projects])
+    activities = Activity.query.filter(and_(
+            Activity.name=='star', 
+            Activity.project_id.in_(projects)
+        )).all()
+    for a in activities:
+        if a.user and a.user_id not in userlist:
+            userlist.append(a.user_id)
+            users.append(a.user)
     return sorted(users, key=lambda x: x.username)
 
 

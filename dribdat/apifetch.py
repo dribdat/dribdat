@@ -297,6 +297,12 @@ def FetchWebProject(project_url):
     # Google Document
     if project_url.startswith('https://docs.google.com/document'):
         return FetchWebGoogleDoc(data.text, project_url)
+    # Instructables
+    elif project_url.startswith('https://www.instructables.com/'):
+        return FetchWebInstructables(data.text, project_url)
+    # GitHub Markdown
+    elif project_url.startswith('https://github.com/'):
+        return FetchWebGitHub(project_url)
     # CodiMD / HackMD
     elif data.text.find('<div id="doc" ') > 0:
         return FetchWebCodiMD(data.text, project_url)
@@ -306,9 +312,6 @@ def FetchWebProject(project_url):
     # Etherpad
     elif data.text.find('pad.importExport.exportetherpad') > 0:
         return FetchWebEtherpad(data.text, project_url)
-    # Instructables
-    elif project_url.startswith('https://www.instructables.com/'):
-        return FetchWebInstructables(data.text, project_url)
 
 
 def FetchWebGoogleDoc(text, url):
@@ -415,6 +418,23 @@ def FetchWebInstructables(text, url):
     obj['source_url'] = url
     obj['logo_icon'] = 'wrench'
     return obj
+
+
+def FetchWebGitHub(url):
+    """Grab a Markdown source from a GitHub link."""
+    if not url.endswith('.md') or not '/blob/' in url:
+        return {}
+    filename = url.split('/')[-1].replace('.md', '')
+    rawurl = url.replace('/blob/', '/raw/').replace("https://github.com/", '')
+    rawdata = requests.get("https://github.com/" + rawurl, timeout=REQUEST_TIMEOUT)
+    text_content = rawdata.text or ""
+    return {
+        'type': 'Markdown',
+        'name': filename,
+        'description': text_content,
+        'source_url': url,
+        'logo_icon': 'outdent',
+    }
 
 
 def ParseInstructablesPage(content):

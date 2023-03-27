@@ -176,7 +176,7 @@ class ProjectForm(FlaskForm):
     source_url = URLField(u'Source link', [length(max=2048)])
     download_url = URLField(u'Download link', [length(max=2048)])
     image_url = URLField(u'Image link', [length(max=255)])
-    logo_color = StringField(u'Custom color', [length(max=7)])
+    logo_color = StringField(u'Custom color')
     logo_icon = StringField(u'Custom icon', [length(max=20)])
     submit = SubmitField(u'Save')
 
@@ -188,7 +188,7 @@ class CategoryForm(FlaskForm):
     name = StringField(u'Name', [length(max=80), DataRequired()])
     description = TextAreaField(u'Description',
                                 description=u'Markdown and HTML supported')
-    logo_color = StringField(u'Custom color', [length(max=7)])
+    logo_color = StringField(u'Custom color')
     logo_icon = StringField(u'Custom icon', [length(max=20)],
                             description=u'fontawesome.com/v4/cheatsheet')
     event_id = SelectField(u'Specific to an event, or global if blank',

@@ -7,6 +7,13 @@
 <div class="container-narrow">
   <h1>Log in</h1>
   <br/>
+
+  {% if oauth_type %}
+    <p>
+      Use the button below to sign in with your {{ oauth_type|capitalize }} account.
+    </p>
+  {% endif %}
+  
   {% if oauth_type == 'slack' %}
     <p class="sso-login">
       <a class="btn signin-slack" href="{{ url_for('slack.login') }}" title="Sign in with Slack">
@@ -44,6 +51,7 @@
       </a>
     </p>
   {% endif %}
+
   <form id="loginForm" method="POST" action="/login/" role="login" class="navbar-form form-inline">
     {{ form.hidden_tag() }}
     <div class="form-group">
@@ -61,6 +69,11 @@
   {% if not config.DRIBDAT_NOT_REGISTER %}
     <p class="account-register">
       <a class="btn btn-warning btn-submit" href="{{ url_for('auth.register') }}">Create an account</a>
+    </p>
+  {% endif %}
+  {% if config.OAUTH_LINK_REGISTER %}
+    <p class="account-register">
+      <a class="btn btn-warning btn-submit" href="{{ config.OAUTH_LINK_REGISTER }}">Register for an account</a>
     </p>
   {% endif %}
 </div>

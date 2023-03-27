@@ -76,11 +76,11 @@ def users(page=1):
         )
     elif sort_by == 'sso':
         users = User.query.order_by(
-            User.sso_id.asc()
+            User.sso_id.desc()
         )
-    elif sort_by == 'created':
+    elif sort_by == 'updated':
         users = User.query.order_by(
-            User.created_at.desc()
+            User.updated_at.desc()
         )
     elif sort_by == 'email':
         users = User.query.order_by(
@@ -90,16 +90,20 @@ def users(page=1):
         users = User.query.order_by(
             User.username.asc()
         )
-    else:  # Default: updated
+    else:  # Default: created
+        sort_by = 'created'
         users = User.query.order_by(
-            User.updated_at.desc()
+            User.created_at.desc()
         )
     search_by = request.args.get('search')
     if search_by and len(search_by) > 1:
         q = "%%%s%%" % search_by.lower()
-        users = users.filter(User.username.ilike(q))
+        if '@' in search_by:
+            users = users.filter(User.email.ilike(q))
+        else:
+            users = users.filter(User.username.ilike(q))
     users = users.paginate(page, per_page=20)
-    return render_template('admin/users.html',
+    return render_template('admin/users.html', sort_by=sort_by,
                            data=users, endpoint='admin.users', active='users')
 
 

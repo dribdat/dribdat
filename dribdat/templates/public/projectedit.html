@@ -7,8 +7,8 @@
 
 {% block js %}
   {% if config.ENV == 'prod' %}
-    <script src="https://uicdn.toast.com/editor/3.0.0/toastui-editor-all.min.js"></script>
-    <link href="https://uicdn.toast.com/editor/3.0.0/toastui-editor.min.css" rel="stylesheet">
+    <script src="https://uicdn.toast.com/editor/3.2.2/toastui-editor-all.min.js"></script>
+    <link href="https://uicdn.toast.com/editor/3.2.2/toastui-editor.min.css" rel="stylesheet">
   {% else %}
     <script src="{{ url_for('static', filename='libs/toastui-all/toastui-editor-all.min.js')}}"></script>
     <link href="{{ url_for('static', filename='libs/toastui-editor/dist/toastui-editor.css')}}" rel="stylesheet">

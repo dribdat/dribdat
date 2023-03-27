@@ -62,16 +62,16 @@
             <td>
               <a href="{{ url_for('admin.event', event_id=event.id) }}" style="float:right">
               {% if event.is_current %}
-                <span class="btn btn-warning btn-sm">Current</span>
+                <span class="btn btn-success btn-sm">Current</span>
               {% endif %}
               {% if event.lock_editing %}
-                <span title="Editing locked" class="btn btn-dark btn-sm">Freeze</span>
+                <span title="Editing locked" class="btn btn-light btn-sm">Freeze</span>
               {% endif %}
               {% if event.lock_starting %}
-                <span title="Creating locked" class="btn btn-dark btn-sm">Lock</span>
+                <span title="Creating locked" class="btn btn-light btn-sm">Lock</span>
               {% endif %}
               {% if event.lock_resources %}
-                <span title="Projects are considered global resources" class="btn btn-dark btn-sm">Resource</span>
+                <span title="Projects are considered global resources" class="btn btn-warning btn-sm">Resource</span>
               {% endif %}
               {% if event.is_hidden %}
                 <span class="btn btn-dark btn-sm">Hidden</span>
