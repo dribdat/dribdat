@@ -59,20 +59,20 @@
 
       {% if current_user and current_user.is_authenticated %}
           <li class="nav-item">
-            <a id="project-post"
-               href="{{ url_for('public.user_post') }}"
-               title="Post an update to your current project" 
-               class="btn btn-light mt-2">
-              <i class="fa fa-paper-plane" aria-hidden="true"></i>
-              Post
-            </a>
-          </li>
-          <li class="nav-item">
             <a class="nav-link{{ ' active' if active == 'profile' }}" 
                title="Take me to my profile"
                href="{{ url_for('public.user', username=current_user.username) }}" title="{{ current_user.username }}">
               <i class="fa fa-user" aria-hidden="true"></i>
               Profile
+            </a>
+          </li>
+          <li class="nav-item">
+            <a id="project-post"
+               class="nav-link btn btn-secondary"
+               href="{{ url_for('public.user_post') }}"
+               title="Post an update to your current project">
+              <i class="fa fa-paper-plane" aria-hidden="true"></i>
+              Post
             </a>
           </li>
           {% if current_user.is_admin %}
@@ -132,7 +132,7 @@
 <!-- Popup global alerts -->
 <div id="global-notifications-alert" class="hidden">
   <div class="alert alert-info">
-    <a class="close" title="Close" href="#" data-dismiss="alert">&times;</a>
+    <a class="close" title="Close" href="#">&times;</a>
     <i class="fa fa-info-circle float-left" aria-hidden="true"></i>
     <span id="notifications-status-text"></span>
   </div>

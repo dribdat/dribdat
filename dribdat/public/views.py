@@ -154,7 +154,7 @@ def user(username):
 @login_required
 def user_post():
     """Redirect to a Post form for my current project."""
-    projects = current_user.joined_projects(False)
+    projects = current_user.joined_projects(True, 1)
     if not len(projects) > 0:
         flash('Please Join a project to be able to Post an update.', 'info')
         return redirect(url_for("public.home"))
