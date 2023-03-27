@@ -173,10 +173,12 @@ def register_filters(app):
 
     @app.template_filter()
     def format_date(value, format='%d.%m.%Y'):
+        if value is None: return ''
         return value.strftime(format)
 
     @app.template_filter()
     def format_datetime(value, format='%d.%m.%Y %H:%M'):
+        if value is None: return ''
         return value.strftime(format)
 
 
