@@ -132,7 +132,7 @@ def upgrade():
     )
     op.create_table('activities',
     sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('name', sa.Enum('create', 'update', 'star', name='activity_type'), nullable=True),
+    sa.Column('name', sa.Enum('create', 'update', 'star', 'boost', 'review', name='activity_type'), nullable=True),
     sa.Column('action', sa.String(length=32), nullable=True),
     sa.Column('timestamp', sa.DateTime(), nullable=False),
     sa.Column('content', sa.UnicodeText(), nullable=True),
