@@ -28,7 +28,7 @@ class TestAggregate:
 
     def test_github(self):
         """Test parsing a GitHub readme."""
-        test_url = 'https://github.com/dribdat/dribdat'
+        test_url = 'https://github.com/dribdat/dribdat/blob/main/README.md'
         test_obj = GetProjectData(test_url)
         assert 'name' in test_obj
         assert test_obj['name'] == 'dribdat'
