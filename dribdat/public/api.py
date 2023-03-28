@@ -14,7 +14,7 @@ from flask_login import login_required, current_user
 from sqlalchemy import or_
 
 from ..extensions import db, cache
-from ..utils import timesince, random_password
+from ..utils import timesince, random_password, sanitize_url
 from ..decorators import admin_required
 from ..user.models import Event, Project, Activity
 from ..aggregation import GetProjectData, AddProjectData, GetEventUsers
@@ -390,12 +390,11 @@ def set_project_values(project, data):
 
 # ------ FRONTEND -------
 
-
 @blueprint.route('/project/autofill', methods=['GET', 'POST'])
 @login_required
 def project_autofill():
     """Routine used to help sync project data."""
-    url = request.args.get('url')
+    url = sanitize_url(request.args.get('url'))
     data = GetProjectData(url)
     return jsonify(data)
 

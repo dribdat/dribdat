@@ -7,9 +7,10 @@ from flask_login import login_user, logout_user, login_required, current_user
 from flask_dance.contrib.slack import slack
 from flask_dance.contrib.azure import azure  # noqa: I005
 from flask_dance.contrib.github import github
+from flask_dance.contrib.gitlab import gitlab
 from dribdat.sso.auth0 import auth0
-from dribdat.sso.mattermost import mattermost
 from dribdat.sso.hitobito import hitobito
+from dribdat.sso.mattermost import mattermost
 # Dribdat modules
 from dribdat.user.models import User, Event, Role
 from dribdat.extensions import login_manager  # noqa: I005
@@ -76,7 +77,7 @@ def login():
 
 
 @blueprint.route("/register/", methods=['GET', 'POST'])
-async def register():
+def register():
     """Register new user."""
     if current_app.config['DRIBDAT_NOT_REGISTER']:
         flash("Registration currently not possible.", 'warning')
@@ -113,7 +114,7 @@ async def register():
         new_user.active = False
         new_user.save()
         if current_app.config['MAIL_SERVER']:
-            await user_activation(current_app, new_user)
+            user_activation(new_user)
             flash("New accounts require activation. "
                   + "Please click the dribdat link in your e-mail.", 'success')
         else:
@@ -167,7 +168,7 @@ def forgot():
 
 
 @blueprint.route("/passwordless/", methods=['POST'])
-async def passwordless():
+def passwordless():
     """Log in a new user via e-mail."""
     if current_app.config['DRIBDAT_NOT_REGISTER'] or \
        not current_app.config['MAIL_SERVER']:
@@ -186,7 +187,7 @@ async def passwordless():
     a_user = User.query.filter_by(email=form.email.data).first()
     if a_user:
         # Continue with reset
-        await user_activation(current_app, a_user)
+        user_activation(a_user)
     else:
         current_app.logger.warn('User not found: %s' % form.email.data)
     # Don't let people spy on your address
@@ -466,7 +467,7 @@ def hitobito_login():
         fn = resp_data['first_name'].lower().strip()
         ln = resp_data['last_name'].lower().strip()
         username = "%s_%s" % (fn, ln)
-    if username is None:
+    if username is None or not 'email' in resp_data or not 'id' in resp_data:
         flash('Invalid hitobito data format', 'danger')
         return redirect(url_for("auth.login", local=1))
     return get_or_create_sso_user(
@@ -475,3 +476,29 @@ def hitobito_login():
         resp_data['email'],
     )
 
+
+@blueprint.route("/gitlab_login", methods=["GET", "POST"])
+def gitlab_login():
+    """Handle login via GitLab."""
+    if not gitlab.authorized:
+        flash('Access denied to gitlab', 'danger')
+        return redirect(url_for("auth.login", local=1))
+    # Get remote user data
+    resp = gitlab.get("/api/v4/user")
+    if not resp.ok:
+        flash('Unable to access gitlab data', 'danger')
+        return redirect(url_for("auth.login", local=1))
+    resp_data = resp.json()
+    username = None
+    if 'username' in resp_data and resp_data['username'] is not None:
+        username = resp_data['username']
+    elif 'name' in resp_data:
+        username = resp_data['name']
+    if username is None or not 'email' in resp_data or not 'id' in resp_data:
+        flash('Invalid gitlab data format', 'danger')
+        return redirect(url_for("auth.login", local=1))
+    return get_or_create_sso_user(
+        resp_data['id'],
+        username,
+        resp_data['email'],
+    )

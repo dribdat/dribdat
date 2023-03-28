@@ -1,3 +1,3 @@
 docker login
-docker build -t loleg/dribdat:stable .
-docker push loleg/dribdat:stable
+docker build -t loleg/dribdat:latest .
+docker push loleg/dribdat:latest

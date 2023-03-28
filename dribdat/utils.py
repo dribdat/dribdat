@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """Helper utilities and decorators."""
 from flask import flash, current_app
+from urllib.parse import quote
 from math import floor
 from os import path
 
@@ -24,6 +25,11 @@ def sanitize_input(text):
     """Remove unsavoury characters."""
     return re.sub(r"[^a-zA-Z0-9_]+", '', text)
 
+
+def sanitize_url(url):
+    """Ensures a URL is just a URL."""
+    return quote(url, safe='/:?&')
+    
 
 def random_password(pwdlen=20):
     """Provide a strongly secure random string."""
