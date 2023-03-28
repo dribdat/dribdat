@@ -2009,8 +2009,16 @@ SlackIn button
 }
 .signin-github {
   border: 0px !important;
-  background: url('/static/img/sso/github-sign-in.png') no-repeat;
+  background: url('/static/img/sso/gitlab-sign-in.png') no-repeat;
   width: 372px; height: 64px;
+}
+.signin-gitlab {
+  border: 0px !important;
+  padding-left: 50px; font-size: initial !important;
+  background: url('/static/img/sso/gitlab-logo.svg') no-repeat;
+  background-size: contain;
+  background-position: left;
+  width: auto; height: 41px;
 }
 .signin-auth0 {
   border: 1px solid #999;

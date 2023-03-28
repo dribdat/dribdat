@@ -7,9 +7,10 @@ from flask_login import login_user, logout_user, login_required, current_user
 from flask_dance.contrib.slack import slack
 from flask_dance.contrib.azure import azure  # noqa: I005
 from flask_dance.contrib.github import github
+from flask_dance.contrib.gitlab import gitlab
 from dribdat.sso.auth0 import auth0
-from dribdat.sso.mattermost import mattermost
 from dribdat.sso.hitobito import hitobito
+from dribdat.sso.mattermost import mattermost
 # Dribdat modules
 from dribdat.user.models import User, Event, Role
 from dribdat.extensions import login_manager  # noqa: I005
@@ -466,7 +467,7 @@ def hitobito_login():
         fn = resp_data['first_name'].lower().strip()
         ln = resp_data['last_name'].lower().strip()
         username = "%s_%s" % (fn, ln)
-    if username is None:
+    if username is None or not 'email' in resp_data or not 'id' in resp_data:
         flash('Invalid hitobito data format', 'danger')
         return redirect(url_for("auth.login", local=1))
     return get_or_create_sso_user(
@@ -475,3 +476,29 @@ def hitobito_login():
         resp_data['email'],
     )
 
+
+@blueprint.route("/gitlab_login", methods=["GET", "POST"])
+def gitlab_login():
+    """Handle login via GitLab."""
+    if not gitlab.authorized:
+        flash('Access denied to gitlab', 'danger')
+        return redirect(url_for("auth.login", local=1))
+    # Get remote user data
+    resp = gitlab.get("/api/v4/user")
+    if not resp.ok:
+        flash('Unable to access gitlab data', 'danger')
+        return redirect(url_for("auth.login", local=1))
+    resp_data = resp.json()
+    username = None
+    if 'username' in resp_data and resp_data['username'] is not None:
+        username = resp_data['username']
+    elif 'name' in resp_data:
+        username = resp_data['name']
+    if username is None or not 'email' in resp_data or not 'id' in resp_data:
+        flash('Invalid gitlab data format', 'danger')
+        return redirect(url_for("auth.login", local=1))
+    return get_or_create_sso_user(
+        resp_data['id'],
+        username,
+        resp_data['email'],
+    )
