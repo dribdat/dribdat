@@ -23,7 +23,8 @@ def user_activation(user):
         "Thanks for signing up at %s\n\n" % base_url \
         + "Tap here to activate your account:\n\n%s" % act_url
     msg.to = [user.email]
-    logging.info('Sending mail to user %d' % user.id)
+    logging.info('Sending activation mail to user %d' % user.id)
+    logging.debug(act_url)
     msg.send(fail_silently=True)
     return True
 
