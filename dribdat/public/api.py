@@ -16,7 +16,7 @@ from sqlalchemy import or_
 from ..extensions import db, cache
 from ..utils import timesince, random_password, sanitize_url
 from ..decorators import admin_required
-from ..user.models import Event, Project, Activity
+from ..user.models import Event, Project, Activity, User
 from ..aggregation import GetProjectData, AddProjectData, GetEventUsers
 from ..apipackage import import_event_package, event_to_data_package
 from ..apiutils import (
@@ -521,3 +521,23 @@ def current_user_hackathon_json():
     host_url = request.host_url
     data = get_schema_for_user_projects(current_user, host_url)
     return jsonify(data)
+
+
+@blueprint.route('/user/current/profile.json')
+def profile_user_current_json():
+    """Output JSON with public data about the current user."""
+    if current_user and not current_user.is_anonymous:
+        return profile_user_json(current_user.id)
+    return jsonify({'message': 'Not logged in', 'status': 'error'})
+
+
+@blueprint.route('/user/<int:user_id>/profile.json')
+def profile_user_json(user_id: int):
+    """Output JSON with public data about a user."""
+    current_user = User.query.filter_by(id=user_id).first_or_404()
+    current_data = current_user.data
+    current_data['score'] = current_user.get_score()
+    del current_data['email']
+    del current_data['sso_id']
+    del current_data['is_admin']
+    return jsonify(current_data)
