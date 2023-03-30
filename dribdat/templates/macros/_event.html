@@ -43,7 +43,7 @@
 		</div>
 		{% if project.team_count > 0 %}
 			<div class="team-counter" 
-					 title="{{ project.team|count }} supporting">
+					 title="{{ project.team_count }} supporting">
 				{% if project.team_count == 1 %}
 					<i class="fa fa-user"></i>
 				{% elif project.team_count == 2 %}

@@ -178,7 +178,8 @@ class User(UserMixin, PkModel):
         for a in activities:
             if limit > 0 and len(projects) >= limit: continue
             if a.project_id not in project_ids and not a.project.is_hidden:
-                if with_challenges or a.project.progress > 0:
+                not_challenge = a.project.progress and a.project.progress > 0
+                if with_challenges or not_challenge:
                     projects.append(a.project)
                     project_ids.append(a.project_id)
         return projects
