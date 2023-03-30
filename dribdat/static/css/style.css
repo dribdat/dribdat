@@ -779,6 +779,10 @@ nav .nav-login {
   text-shadow: 1px 1px 1px white;
   font-family: monospace;
 }
+.hexagon .hexagontent span.project-hashtag {
+  font-size: 90%;
+  padding-top: 0.3em;
+}
 .tooltip .tooltip-inner img {
   max-width: 100%;
   max-height: 13em;
