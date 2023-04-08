@@ -169,20 +169,27 @@ class User(UserMixin, PkModel):
 
     def joined_projects(self, with_challenges=True, limit=-1):
         """Retrieve all projects user has joined."""
+        # TODO: slow code!
         activities = Activity.query.filter_by(
                 user_id=self.id, name='star'
-            ).order_by(Activity.timestamp.desc())
-        if limit < 0:
-            activities = activities.all()
-        else:
-            activities = activities.limit(limit * 2)
+            ).order_by(Activity.timestamp.desc()).all()
         projects = []
+        project_ids = []
         for a in activities:
-            if a.project not in projects and not a.project.is_hidden:
-                if with_challenges or a.project.progress != 0:
-                    if len(projects) < limit:
-                        projects.append(a.project)
+            if limit > 0 and len(projects) >= limit: continue
+            if a.project_id not in project_ids and not a.project.is_hidden:
+                not_challenge = a.project.progress and a.project.progress > 0
+                if with_challenges or not_challenge:
+                    projects.append(a.project)
+                    project_ids.append(a.project_id)
         return projects
+
+
+    def get_score(self):
+        """Calculate the total score across projects."""
+        projects = self.joined_projects(False)
+        return sum([p.score for p in projects])
+
 
     def posted_challenges(self):
         """Retrieve all challenges user has posted."""

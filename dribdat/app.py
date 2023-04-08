@@ -184,7 +184,8 @@ def register_filters(app):
 
 def register_loggers(app):
     """Initialize and configure logging."""
-    import logging
-    stream_handler = logging.StreamHandler()
-    app.logger.addHandler(stream_handler)
-    app.logger.setLevel(logging.INFO)
+    if 'DEBUG' in app.config and not app.config['DEBUG']:
+        import logging
+        stream_handler = logging.StreamHandler()
+        app.logger.addHandler(stream_handler)
+        app.logger.setLevel(logging.INFO)

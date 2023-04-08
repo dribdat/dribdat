@@ -3,7 +3,6 @@
 from flask import url_for
 from flask_mailman import EmailMessage
 from dribdat.utils import random_password  # noqa: I005
-import asyncio
 import logging
 
 
@@ -24,5 +23,8 @@ def user_activation(user):
         "Thanks for signing up at %s\n\n" % base_url \
         + "Tap here to activate your account:\n\n%s" % act_url
     msg.to = [user.email]
-    logging.info('Sending mail to user %d' % user.id)
-    asyncio.run(msg.send())
+    logging.info('Sending activation mail to user %d' % user.id)
+    logging.debug(act_url)
+    msg.send(fail_silently=True)
+    return True
+

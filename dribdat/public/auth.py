@@ -7,9 +7,10 @@ from flask_login import login_user, logout_user, login_required, current_user
 from flask_dance.contrib.slack import slack
 from flask_dance.contrib.azure import azure  # noqa: I005
 from flask_dance.contrib.github import github
+from flask_dance.contrib.gitlab import gitlab
 from dribdat.sso.auth0 import auth0
-from dribdat.sso.mattermost import mattermost
 from dribdat.sso.hitobito import hitobito
+from dribdat.sso.mattermost import mattermost
 # Dribdat modules
 from dribdat.user.models import User, Event, Role
 from dribdat.extensions import login_manager  # noqa: I005
@@ -52,12 +53,12 @@ def login():
     form = LoginForm(request.form)
     # Handle logging in
     if request.method == 'POST':
-        if form.is_submitted() and form.validate():
+        if form.validate_on_submit():
             # Allow login with e-mail address
-            if '@' in form.username:
-                user_by_email = User.query.filter_by(email=form.username).first()
+            if '@' in form.username.data:
+                user_by_email = User.query.filter_by(email=form.username.data).first()
                 if user_by_email:
-                    form.username = user_by_email.username
+                    form.username.data = user_by_email.username
             # Validate user account
             login_user(form.user, remember=True)
             if not form.user.active:
@@ -88,7 +89,7 @@ def register():
         form.email.data = request.args.get('email')
     if request.args.get('web') and not form.webpage_url.data:
         form.webpage_url.data = request.args.get('web')
-    if not form.is_submitted() and form.validate():
+    if not form.validate_on_submit():
         flash_errors(form)
         logout_user()
         return render_template('public/register.html',
@@ -158,7 +159,7 @@ def logout():
 def forgot():
     """Forgot password."""
     form = EmailForm(request.form)
-    if not form.is_submitted() and form.validate():
+    if not form.validate_on_submit():
         flash_errors(form)
     return render_template(
             'public/forgot.html',
@@ -174,7 +175,7 @@ def passwordless():
         flash("Passwordless login currently not possible.", 'warning')
         return redirect(url_for("auth.login", local=1))
     form = EmailForm(request.form)
-    if not form.is_submitted() and form.validate():
+    if not form.validate_on_submit():
         flash_errors(form)
         return redirect(url_for('auth.forgot'))
     # Continue with user activation
@@ -197,6 +198,13 @@ def passwordless():
 @login_required
 def delete_my_account():
     """Delete the current user profile."""
+    # Remove user ownerships
+    for p in current_user.projects:
+        p.user_id = None
+        p.save()
+    # Delete user posts
+    [ a.delete() for a in current_user.activities ]
+    # Delete user account
     current_user.delete()
     logout_user()
     flash('We are sorry to see you go. Your profile has been deleted.', 'info')
@@ -228,7 +236,7 @@ def user_profile():
         del form.password
 
     # Validation has passed
-    if form.is_submitted() and form.validate() and user_is_valid:
+    if form.validate_on_submit() and user_is_valid:
         # Assign roles
         user.roles = [Role.query.filter_by(
             id=r).first() for r in form.roles.data]
@@ -466,7 +474,7 @@ def hitobito_login():
         fn = resp_data['first_name'].lower().strip()
         ln = resp_data['last_name'].lower().strip()
         username = "%s_%s" % (fn, ln)
-    if username is None:
+    if username is None or not 'email' in resp_data or not 'id' in resp_data:
         flash('Invalid hitobito data format', 'danger')
         return redirect(url_for("auth.login", local=1))
     return get_or_create_sso_user(
@@ -475,3 +483,29 @@ def hitobito_login():
         resp_data['email'],
     )
 
+
+@blueprint.route("/gitlab_login", methods=["GET", "POST"])
+def gitlab_login():
+    """Handle login via GitLab."""
+    if not gitlab.authorized:
+        flash('Access denied to gitlab', 'danger')
+        return redirect(url_for("auth.login", local=1))
+    # Get remote user data
+    resp = gitlab.get("/api/v4/user")
+    if not resp.ok:
+        flash('Unable to access gitlab data', 'danger')
+        return redirect(url_for("auth.login", local=1))
+    resp_data = resp.json()
+    username = None
+    if 'username' in resp_data and resp_data['username'] is not None:
+        username = resp_data['username']
+    elif 'name' in resp_data:
+        username = resp_data['name']
+    if username is None or not 'email' in resp_data or not 'id' in resp_data:
+        flash('Invalid gitlab data format', 'danger')
+        return redirect(url_for("auth.login", local=1))
+    return get_or_create_sso_user(
+        resp_data['id'],
+        username,
+        resp_data['email'],
+    )

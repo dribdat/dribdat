@@ -7,8 +7,12 @@
 <div class="jumbotron">
     <div class="text-center" style="font-size: 150%">
         <h1>✋👮‍</h1>
-        <p>Please <a href="{{ url_for('auth.login', local=1)}}">log in</a> or
-            <a href="{{ url_for('auth.register') }}">register</a> to continue.
+        <p>Please <a href="{{ url_for('auth.login', local=1)}}">log in</a> 
+        {% if not config.DRIBDAT_NOT_REGISTER %}
+            or
+            <a href="{{ url_for('auth.register') }}">register</a> 
+        {% endif %}
+            to continue.
         </p>
     </div>
 </div>
