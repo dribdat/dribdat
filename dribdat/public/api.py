@@ -197,31 +197,36 @@ def project_activity_json(project_id):
     return jsonify(project=project.data, activities=activities)
 
 
+@blueprint.route('/project/<int:project_id>')
 @blueprint.route('/project/<int:project_id>/info.json')
 def project_info_json(project_id):
     """Output JSON info for a specific project."""
+    is_full = bool(request.args.get('full')) or False
     project = Project.query.filter_by(id=project_id).first_or_404()
-    activities = []
+    team = []
     for user in project.get_team():
-        activities.append({
+        team.append({
             'id': user.id,
             'name': user.username,
             'link': user.webpage_url
         })
-
     data = {
         'project': project.data,
         'phase': project.phase,
         'pitch': project.webembed,
         'is_webembed': project.is_webembed,
         'event': project.event.data,
-        'creator': {
+        'stats': project.get_stats(),
+        'team': team
+    }
+    if is_full:
+        data['project']['autotext'] = project.autotext  # Markdown
+        data['project']['longtext'] = project.longtext  # Markdown - see longhtml()
+    if project.user:
+        data['creator'] = {
             'id': project.user.id,
             'username': project.user.username
-        },
-        'team': activities
-    }
-
+        }
     return jsonify(data)
 
 # ------ USERS ----------
