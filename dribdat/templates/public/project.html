@@ -28,46 +28,16 @@
 
 {% block content %}
 
-{% if project_starred and allow_edit and (suggestions or stage) and project.progress < 50 %}
-  <div class="alert alert-default resource-list project-tips">
-    <button type="button" class="close" data-dismiss="alert" aria-label="Dismiss" title="Hide">
-      <span aria-hidden="true">&times;</span>
-    </button>
-    <div class="profile-projects container-fluid">
-      <p class="category-tip ml-2 pt-2 m-0 clearfix" title="This tip is only visible to you and your team">
-        <span class="user-score" style="background:white">&#x1F4A1;</span>{{stage.tip}}
-      </p>
-      <div class="row flex-row flex-nowrap">
-      {% for project in suggestions %}
-        <a class="col-md-5 ms-auto card project"
-          {%- if project.image_url %}
-            style="background-image:url('{{project.image_url}}'); padding-left:100px"
-          {%- endif %}
-           href="{{ url_for('project.project_view', project_id=project.id) }}">
-          <div class="card-body">
-            <h5 class="card-title">{{ project.name }}</h5>
-            <p class="card-text">{{ project.summary }}</p>
-          </div>
-        </a>
-      {% endfor %}
-      </div>
-      <p class="stage-conditions clearfix pl-2 pb-3">
-        {% for item in stage.conditions.validate %}
-          {% if item.valid %}
-            <span class="mr-2 float-left stage-ok">
-              <i class="fa fa-thumbs-up"></i>&nbsp;
-              {{ item.help }}
-            </span>
-          {% else %}
-            <span class="mr-2 float-left stage-no">
-              <i class="fa fa-paw"></i>&nbsp;
-              {{ item.help }}
-            </span>
-          {% endif %}
-        {% endfor %}
-      </p>
-    </div><!-- /profile-projects -->
-  </div>
+{% if False and current_user and current_user.active and not project.autotext and not project.longtext and not lock_editing %}
+<!-- (not so?) Helpful comment for new projects -->
+<div class="alert alert-success" role="alert">
+  <a class="close" title="Close" href="#" data-dismiss="alert">&times;</a>
+  {% if not project_starred %}
+    Join this project to <b>Post</b> on the Log, <b>Edit</b> the pitch or <b>Sync</b> any external content.
+  {% else %}
+    <b>Edit</b> the pitch to add content, or to <b>Embed</b> your presentation or demo here.
+  {% endif %}
+</div>
 {% endif %}
 
 <div class="btn-group project-edit-buttons" role="group" aria-label="Project tools">
@@ -75,7 +45,7 @@
   {% if allow_post %}
      <a id="project-post" href="{{ url_for('project.project_post', project_id=project.id) }}" title="Post to this project" class="btn btn-lg btn-info">
        <i class="fa fa-paper-plane" aria-hidden="true"></i>
-       Write update
+       Post update
      </a>
   {% elif current_user and current_user.active and not project.is_challenge and not project.event.lock_resources %}
      <a id="project-comment" href="{{ url_for('project.project_comment', project_id=project.id) }}" title="Write a public comment" class="btn btn-lg btn-info">
@@ -138,9 +108,6 @@
 
   {% if project.score and project.score > 1 %}
     <div class="project-score">
-      <a class="drib-count float-left mr-2" title="Drib count" href="#log"
-         onclick="$('#dribs-tab-md').click();">{{ project_dribs|length }}</a>
-
       <a href="{{ url_for('public.event_stages', event_id=project.event.id) }}#{{project.phase}}">
         <div class="progress" 
           title="({{project.score}}) {{project.phase}}"
@@ -194,71 +161,39 @@
 
   </div><!-- /.project-name -->
 
-  {% if project_badge %}
-    <div class="badges">
+  {% if not project.event.lock_resources %}
+    <div class="badges text-right">
       {% for s in project_badge %}
-        <a class="boost" href="#" onclick="$('#dribs-tab-md').click(); return false" title="{{ s.title }}">
+        <a class="boost float-left" href="#log" title="{{ s.title }}">
           <i class="fa fa-{{ s.icon }}" aria-hidden="true"></i>
         </a>
       {% endfor %}
-    </div>
-  {% endif %}
-
-  {% if not project.event.lock_resources %}
-  <ul class="nav nav-pills nav-fill md-tabs" id="projectTabs" role="tablist">
-    {% if project.longtext %}
-    <li class="nav-item">
-      <a class="nav-link" id="project-tab-md" href="#project-md"
-         title="The description of a challenge or a solution">Pitch</a>
-    </li>
-    {% endif %}
-    {% if project.autotext %}
-    <li class="nav-item">
-      <a class="nav-link" id="readme-tab-md" href="#readme-md"
-         title="Content preview from an external site">
-        <i class="fa fa-book"></i>
-        Readme</a>
-    </li>
-    {% endif %}
-    {% if project_team %}
-    <li class="nav-item">
-      <a class="nav-link" id="dribs-tab-md" href="#team" 
-         title="Meet the family">
-        {% if project.team_count == 1 %}
-          <i class="fa fa-user"></i>
-        {% elif project.team_count == 2 %}
-          <i class="fa fa-user"></i><i class="fa fa-user"></i>
-        {% elif project.team_count > 2 %}
-          <i class="fa fa-users"></i>
+      {% if project.longtext %}
+        {% if project.autotext %}
+          <a class="btn btn-light" id="readme-tab-md" href="#readme-md"
+             title="Content preview">
+            <i class="fa fa-book m-2" aria-hidden="true"></i>
+            Readme</a>
         {% endif %}
-        Team</a>
-    </li>
-    {% endif %}
-    {% if project_dribs %}
-    <li class="nav-item">
-      <a class="nav-link" id="dribs-tab-md" href="#dribs-md"
-         title="Play by play progress review">Log</a>
-    </li>
-    {% endif %}
-  </ul>
-  {% endif %}
-
-<div class="project-info tab-content">
-
-  <div id="project-md" aria-labelledby="project-tab-md">
-
-    {% if current_user and current_user.active and not project.webpage_url and not project.longtext and not lock_editing %}
-    <div class="alert alert-success" role="alert">
-      <a class="close" title="Close" href="#" data-dismiss="alert">&times;</a>
-      <!-- Helpful comment for new projects -->
-      {% if not project_starred %}
-        Join this project to <b>Post</b> on the Log, <b>Edit</b> the pitch or <b>Sync</b> any external content.
-      {% else %}
-        <b>Edit</b> the pitch to add content, or to <b>Embed</b> your presentation or demo here.
+        {% if project_team %}
+          <a class="btn btn-light" id="readme-tab-md" href="#team-md"
+             title="Show team members">
+            <i class="fa fa-user m-2" aria-hidden="true"></i>
+            Team</a>
+        {% endif %}
+      {% endif %}
+      {% if project_dribs %}
+        <a class="btn btn-light" id="dribs-tab-md" href="#dribs-md"
+           title="Play by play progress review">
+          <span class="drib-count mr-2">{{ project_dribs|length }}</span>
+          Log</a>
       {% endif %}
     </div>
-    {% endif %}
+  {% endif %}
 
+<div class="tab-content">
+
+  <div id="project-md" aria-labelledby="project-tab-md">
     {% if project.is_webembed %}
       <div class="project-webembed resizable">
         {{ project.webembed|safe }}
@@ -276,6 +211,36 @@
     {% endif %}
   </div><!-- /project-md -->
 
+
+  {% if project_team %}
+    <div id="team-md" aria-labelledby="team-tab-md">
+      <div class="widget widget-team m-4">
+      {% for user in project_team %}
+        {% if project.user == user %}
+          <i class="fa fa-star project-owner" 
+              title="Started this project" aria-hidden="true"></i>
+        {% endif %}
+        {{ misc.render_user_profile(user) }}
+        {% if current_user.is_admin %}
+          <a href="{{ url_for('project.project_unstar', project_id=project.id, user_id=user.id) }}" class="kick-user"
+            title="Remove this user from team" onclick="if(!window.confirm('Are you sure you wish to remove {{ user.username }} ?')) return false"
+            >&times;</a>
+        {% endif %}
+      {% endfor %}
+      {% if missing_roles %}
+        <div class="missing-roles" title="This role is not yet filled. Try to find another team member!">
+          {% for role in missing_roles %}
+            <div class="role" data-id="{{ role.id }}">
+              <span>{{ role.name }}</span>
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+      </div>
+    </div>
+  {% endif %}
+
+
   {% if project.autotext %}
     <div id="readme-md" aria-labelledby="readme-tab-md">
       
@@ -291,49 +256,12 @@
         </div>
       {% endif %}
 
-      <a href="#top" class="go-up" title="Scroll up!">▲▲▲</a>
+      <a href="#top" class="go-up" title="Scroll up!"><i class="fa fa-thumbs-up" aria-hidden="true"></i>&nbsp;<i class="fa fa-thumbs-up" aria-hidden="true"></i></a>
     </div>
   {% endif %}
 
   </div><!-- /project-info -->
 
-  <a name="team"></a>
-  {% if project_team %}
-    <div class="widget widget-team">
-      <h1 title="Team">&#x1f465;</h1>
-      {% for user in project_team %}
-        {{ misc.render_user_profile(user) }}
-        {% if current_user.is_admin %}
-          <a href="{{ url_for('project.project_unstar', project_id=project.id, user_id=user.id) }}" class="kick-user"
-            title="Remove this user from team" onclick="if(!window.confirm('Are you sure you wish to remove {{ user.username }} ?')) return false"
-            >&times;</a>
-        {% endif %}
-      {% endfor %}
-    </div>
-  {% endif %}
-  {% if missing_roles %}
-    <div class="widget widget-team missing-roles" title="This role is not yet filled. Try to find another team member!">
-      {% for role in missing_roles %}
-        <div class="role" data-id="{{ role.id }}">
-          <span>{{ role.name }}</span>
-        </div>
-      {% endfor %}
-    </div>
-  {% endif %}
-
-  {% if not project_team and project.user %}
-    <div class="widget widget-team">
-      {{ misc.render_user_profile(project.user) }}
-      <p class="started-at">
-        <small>
-          Contributed at
-          <a href="{{ url_for('public.event', event_id=project.event.id) }}">
-            <b>{{ project.event.name }}</b>
-          </a>
-        </small>
-      </p>
-    </div>
-  {% endif %}
 
   <div class="project-buttons mb-5" role="group" aria-label="Main navigation">
     {% if project.contact_url %}
@@ -412,8 +340,24 @@
 
     </section>
 
-    <a href="#top" class="go-up" title="Scroll up!">▲▲▲</a>
+    <a href="#top" class="go-up" title="Scroll up!"><i class="fa fa-thumbs-up" aria-hidden="true"></i>&nbsp;<i class="fa fa-thumbs-up" aria-hidden="true"></i></a>
   </div><!-- /dribs-md -->
+  {% endif %}
+
+
+  {% if project.user %}
+    <div class="widget started-at">
+      Contributed
+      <span title="{{ project.created_at }}">{{ project.created_at|until_date }}</span>
+      by
+      <a href="{{ url_for('public.user', username=project.user) }}">
+        <b>{{ project.user.username }}</b>
+      </a>
+      for
+      <a href="{{ url_for('public.event', event_id=project.event.id) }}">
+        <b>{{ project.event.name }}</b>
+      </a>
+    </div>
   {% endif %}
 
 </div><!-- /.jumbotron .project-page -->

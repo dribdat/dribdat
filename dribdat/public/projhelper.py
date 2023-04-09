@@ -124,30 +124,22 @@ def project_action(project_id, of_type=None, as_view=True, then_redirect=False,
     allow_post = starred and not event.lock_resources
     allow_edit = (starred or allow_edit) and not lock_editing
 
-    # Obtain list of team members (performance!)
-    project_team = project.get_team()
-    if allow_post:
-        # Evaluate project progress
-        stage, all_valid = validateProjectData(project)
-
-        # Collect resource tips
-        suggestions = []
-        if not event.lock_resources:
-            suggestions = resources_by_stage(project.progress)
-
-        # Suggest missing team roles
-        missing_roles = project.get_missing_roles()
-    else:
-        suggestions, stage, all_valid, missing_roles = None, None, None, None
-
     # Check type of project
     if event.lock_resources:
-        project_team = None
         project_dribs = project_badge = []
+        project_team = None
+        missing_roles = None
     else:
         # Collect dribs and badges
         project_dribs = project.all_dribs()
         project_badge = [s for s in project_dribs if s['name'] == 'boost']
+        # Obtain list of team members (performance!)
+        project_team = project.get_team()
+        # Suggest missing team roles
+        if allow_post:
+            missing_roles = project.get_missing_roles()
+        else:
+            missing_roles = None
 
     # Select available project image
     if project.image_url:
@@ -174,7 +166,5 @@ def project_action(project_id, of_type=None, as_view=True, then_redirect=False,
         project_image_url=project_image_url,
         allow_edit=allow_edit, allow_post=allow_post,
         lock_editing=lock_editing, missing_roles=missing_roles,
-        stage=stage, all_valid=all_valid,
-        suggestions=suggestions, share=share,
-        active="projects"
+        share=share, active="projects"
     )
