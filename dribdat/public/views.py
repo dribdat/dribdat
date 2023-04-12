@@ -142,11 +142,11 @@ def user(username):
         )
     submissions = user.posted_challenges()
     projects = user.joined_projects(True)
-    score = sum([p.score for p in projects])
     posts = user.latest_posts(20)
     return render_template("public/userprofile.html", active="profile",
-                           user=user, projects=projects, score=score,
-                           submissions=submissions, posts=posts,
+                           user=user, projects=projects, posts=posts,
+                           score=user.get_score(),
+                           submissions=submissions,
                            may_certify=user.may_certify()[0])
 
 

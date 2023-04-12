@@ -2,13 +2,15 @@
 """Helper functions for the API."""
 # Really just a step towards a full API rebuild
 
-from .aggregation import GetEventUsers
-from dribdat.user.models import Event, Project, Category, Activity
 import io
 import csv
 import json
+
 from datetime import datetime
+
+from dribdat.user.models import Event, Project, Category, Activity
 from dribdat.utils import format_date
+from .aggregation import GetEventUsers
 
 from sys import version_info
 PY3 = version_info[0] == 3
@@ -163,3 +165,4 @@ def gen_csv(csvdata):
     for rk in rowdata[1:]:
         writer.writerow(rk)
     return output.getvalue()
+

@@ -190,7 +190,7 @@ def GetEventUsers(event):
             Activity.project_id.in_(projects)
         )).all()
     for a in activities:
-        if a.user_id not in userlist:
+        if a.user and a.user_id not in userlist:
             userlist.append(a.user_id)
             users.append(a.user)
     return sorted(users, key=lambda x: x.username)

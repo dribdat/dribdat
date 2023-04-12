@@ -15,6 +15,7 @@ from .apievents import (
     fetch_commits_gitlab,
     fetch_commits_gitea,
 )
+from .utils import sanitize_url
 from future.standard_library import install_aliases
 install_aliases()
 
@@ -211,6 +212,8 @@ def FetchBitbucketProject(project_url):
 def FetchDataProject(project_url):
     """Try to load a Data Package formatted JSON file."""
     # TODO: use frictionlessdata library!
+    project_url = project_url.replace('datapackage.json', '')
+    project_url = sanitize_url(project_url) + 'datapackage.json'
     data = requests.get(project_url, timeout=REQUEST_TIMEOUT)
     # TODO: treat dribdat events as special
     logging.info("Fetching Data Package", project_url)
@@ -288,6 +291,10 @@ ALLOWED_HTML_ATTR['font'] = ['color']
 def FetchWebProject(project_url):
     """Parse a remote Document, wiki or website URL."""
     try:
+        # TODO: the admin should be able to whitelist a range of allowed
+        # online resources controlling the domains from which we can 
+        # fetch remote content.
+        project_url = sanitize_url(project_url)
         logging.info("Fetching", project_url)
         data = requests.get(project_url, timeout=REQUEST_TIMEOUT)
     except requests.exceptions.RequestException:
