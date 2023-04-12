@@ -35,15 +35,19 @@
 				<span class="team-boost" title="Trending">🔥</span>
 			{% endif %}
 			<span class="project-name">{{ project.name|truncate(64, True, '..') }}</span>
-			{% if project.image_url %}
-				<div class="hexaicon" style="background-image:url('{{project.image_url|quote_plus}}')"></div>
-			{% elif project.logo_icon %}
-				<div class="hexaicon"><i class="fa fa-{{project.logo_icon}}"></i></div>
+			{% if project.image_url or project.logo_icon or project.hashtag %}
+				<div class="hexaicon"{% if project.image_url %} style="background-image:url('{{project.image_url|quote_plus}}')"{% endif %}>
+					{% if project.hashtag and 3 > project.hashtag|length %}
+						<span class="project-hashtag">{{ project.hashtag }}</span>
+					{% elif project.logo_icon %}
+						<i class="fa fa-{{project.logo_icon}}"></i>
+					{% endif %}					
+				</div>
 			{% endif %}
 		</div>
 		{% if project.team_count > 0 %}
 			<div class="team-counter" 
-					 title="{{ project.team|count }} supporting">
+					 title="{{ project.team_count }} supporting">
 				{% if project.team_count == 1 %}
 					<i class="fa fa-user"></i>
 				{% elif project.team_count == 2 %}

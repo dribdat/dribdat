@@ -779,6 +779,13 @@ nav .nav-login {
   text-shadow: 1px 1px 1px white;
   font-family: monospace;
 }
+.hexagon .hexagontent span.project-hashtag {
+  font-size: 90%;
+  padding-top: 0.3em;
+}
+.hexagon:hover .hexagontent span.project-hashtag {
+  visibility: hidden;
+}
 .tooltip .tooltip-inner img {
   max-width: 100%;
   max-height: 13em;
@@ -1237,6 +1244,9 @@ nav .nav-login {
 }
 .projectform form .autotext-indicator i {
   margin:0px 1em; color:red;
+}
+.projectform #mdeditor {
+  background: white; color: black;
 }
 
 /* General form styles */

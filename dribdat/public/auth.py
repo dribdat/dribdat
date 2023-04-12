@@ -198,6 +198,13 @@ def passwordless():
 @login_required
 def delete_my_account():
     """Delete the current user profile."""
+    # Remove user ownerships
+    for p in current_user.projects:
+        p.user_id = None
+        p.save()
+    # Delete user posts
+    [ a.delete() for a in current_user.activities ]
+    # Delete user account
     current_user.delete()
     logout_user()
     flash('We are sorry to see you go. Your profile has been deleted.', 'info')
