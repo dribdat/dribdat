@@ -89,7 +89,7 @@ def register():
         form.email.data = request.args.get('email')
     if request.args.get('web') and not form.webpage_url.data:
         form.webpage_url.data = request.args.get('web')
-    if not form.is_submitted() and form.validate():
+    if not (form.is_submitted() and form.validate()):
         flash_errors(form)
         logout_user()
         return render_template('public/register.html',
@@ -159,7 +159,7 @@ def logout():
 def forgot():
     """Forgot password."""
     form = EmailForm(request.form)
-    if not form.is_submitted() and form.validate():
+    if not (form.is_submitted() and form.validate()):
         flash_errors(form)
     return render_template(
             'public/forgot.html',
@@ -175,7 +175,7 @@ def passwordless():
         flash("Passwordless login currently not possible.", 'warning')
         return redirect(url_for("auth.login", local=1))
     form = EmailForm(request.form)
-    if not form.is_submitted() and form.validate():
+    if not (form.is_submitted() and form.validate()):
         flash_errors(form)
         return redirect(url_for('auth.forgot'))
     # Continue with user activation

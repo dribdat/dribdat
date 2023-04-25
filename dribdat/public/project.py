@@ -329,7 +329,7 @@ def create_new_project(event):
     else:
         del form.category_id
 
-    if not form.is_submitted() and form.validate():
+    if not (form.is_submitted() and form.validate()):
         return render_template(
             'public/projectnew.html',
             current_event=event, form=form, suggestions=suggestions,
