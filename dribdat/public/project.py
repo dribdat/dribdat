@@ -14,7 +14,7 @@ from dribdat.aggregation import (
     SyncProjectData, GetProjectData, IsProjectStarred
 )
 from dribdat.user import (
-    validateProjectData, projectProgressList, isUserActive,
+    validateProjectData, stageProjectToNext, isUserActive,
 )
 from dribdat.public.projhelper import (
     project_action, project_edit_action, resources_by_stage
@@ -97,6 +97,24 @@ def project_boost(project_id):
     )
 
 
+@blueprint.route('/<int:project_id>/approve', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def project_approve(project_id):
+    """Approve a challenge or promote project to next level."""
+    project = Project.query.filter_by(id=project_id).first_or_404()
+    # Update project
+    if stageProjectToNext(project):
+        project.update()
+        db.session.add(project)
+        db.session.commit()
+        cache.clear()
+        flash("Promoted to stage '%s'" % 
+            project.phase, 'info')
+    return redirect(url_for(
+        'project.project_view', project_id=project.id))
+
+
 @blueprint.route('/<int:project_id>/render', methods=['GET'])
 def render(project_id):
     """Transform project detail link."""
@@ -127,20 +145,11 @@ def project_post(project_id):
     if form.is_submitted() and form.validate():
         if form.has_progress.data:
             # Check and update progress
-            found_next = False
             if all_valid:
-                for a in projectProgressList(True, False):
-                    if found_next:
-                        project.progress = a[0]
-                        flash("Promoted to stage '%s'" %
-                              project.progress, 'info')
-                        break
-                    if a[0] == project.progress or \
-                        not project.progress or \
-                            project.progress < 0:
-                        found_next = True
-            # if not all_valid or not found_next:
-            #    flash('Your project did not meet stage requirements.', 'info')
+                found_next = stageProjectToNext(project)
+            if all_valid and found_next:
+                flash("Level up! You are at stage '%s'" % 
+                    project.phase, 'info')
 
         # Update project data
         del form.id

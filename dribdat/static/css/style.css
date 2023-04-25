@@ -642,7 +642,7 @@ nav .nav-login {
 /* Fade out unapproved hexagons */
 .honeycomb .hexagon.challenge { opacity: 1; }
 .honeycomb .hexagon.challenge.stage--1,
-.honeycomb .hexagon.challenge.stage--100 { opacity: 0.4; }
+.honeycomb .hexagon.challenge.stage--100 { opacity: 0.6; }
 
 /* Hexagon inner content */
 .hexagon .hexagontent {

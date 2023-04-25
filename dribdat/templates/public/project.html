@@ -183,7 +183,7 @@
         {% endif %}
       {% endif %}
       {% if project_dribs %}
-        <a class="btn btn-light" id="dribs-tab-md" href="#dribs-md"
+        <a class="btn btn-light" id="dribs-tab-md" href="#log"
            title="Play by play progress review">
           <span class="drib-count mr-2">{{ project_dribs|length }}</span>
           Log</a>
@@ -286,8 +286,8 @@
 
 
   {% if project_dribs and not project.event.lock_resources %}
+  <a name="log"></a>
   <div id="dribs-md" aria-labelledby="dribs-tab-md">
-    <a name="log"></a>
 
     <section class="timeline">
       {% for s in project_dribs %}
@@ -432,9 +432,14 @@
     <i class="fa fa-pencil" aria-hidden="true"></i>
     Edit</a>
 
-  <a href="{{ url_for('project.project_boost', project_id=project.id) }}" class="btn btn-lg btn-primary project-boost"
-     title="Boost this project (admin only)">
+  <a href="{{ url_for('project.project_approve', project_id=project.id) }}" class="btn btn-lg btn-primary project-approve"
+     title="Promote to next project level">
      <i class="fa fa-rocket" aria-hidden="true"></i>
+     Approve</a>
+
+  <a href="{{ url_for('project.project_boost', project_id=project.id) }}" class="btn btn-lg btn-info project-boost"
+     title="Boost this project (admin only)">
+     <i class="fa fa-trophy" aria-hidden="true"></i>
      Boost</a>
 
 </div><!-- / .admin-area -->

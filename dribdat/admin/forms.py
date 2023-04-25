@@ -177,7 +177,10 @@ class ProjectForm(FlaskForm):
     download_url = URLField(u'Download link', [length(max=2048)])
     image_url = URLField(u'Image link', [length(max=255)])
     logo_color = StringField(u'Custom color')
-    logo_icon = StringField(u'Custom icon', [length(max=20)])
+    logo_icon = StringField(
+        u'Custom icon', 
+        [length(max=20)],
+        description='https://fontawesome.com/v4/cheatsheet')
     submit = SubmitField(u'Save')
 
 
