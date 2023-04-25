@@ -37,9 +37,5 @@ if [ -z "${DRIBDAT_ENTRYPOINT_SKIP:-}" ]; then
     fi
 fi
 
-echo "$@"
-echo "$PATH"
-type gunicorn
-
 # execute the command passed to the container
 exec "$@"
