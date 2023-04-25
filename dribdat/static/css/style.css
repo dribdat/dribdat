@@ -515,6 +515,9 @@ nav .nav-login {
   font-size: 110%;
   padding: 1em;
 }
+.event-home .event-info .event-description img { 
+  max-width: 100%; 
+}
 
 /* ---- Hexagonal hawtness ---- */
 
@@ -635,6 +638,11 @@ nav .nav-login {
 .challenge.hexagon:hover {
   box-shadow: none;
 }
+
+/* Fade out unapproved hexagons */
+.honeycomb .hexagon.challenge { opacity: 1; }
+.honeycomb .hexagon.challenge.stage--1,
+.honeycomb .hexagon.challenge.stage--100 { opacity: 0.4; }
 
 /* Hexagon inner content */
 .hexagon .hexagontent {
