@@ -40,7 +40,6 @@ def socialize(kind):
 @click.argument('challenges', required=False, default=True)
 def numerise(event: int, clear: bool, primes: bool, challenges: bool):
     """Assign numbers to challenge hashtags for an EVENT ID."""
-    print("Applying numbers to event #%d")
     if clear:
         print("- Clearing hashtags")
     if primes:
@@ -58,6 +57,7 @@ def numerise(event: int, clear: bool, primes: bool, challenges: bool):
     with create_app().app_context():
         from dribdat.user.models import Event, Project
         event = Event.query.filter_by(id=event).first_or_404()
+        print("Applying numbers to event: ", event.name)
         projects = Project.query.filter_by(event_id=event.id) \
                     .order_by(Project.progress.desc()) \
                     .order_by(Project.name)
@@ -72,7 +72,7 @@ def numerise(event: int, clear: bool, primes: bool, challenges: bool):
             c.hashtag = str(nq[ix]) + ch
             c.save()
             ix = ix + 1
-        print("Enumerated %d projects." % len(projects))
+        print("Enumerated %d projects." % projects.count())
 
 
 @click.command()
