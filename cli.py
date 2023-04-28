@@ -57,8 +57,10 @@ def numerise(event: int, clear: bool, primes: bool, challenges: bool):
         nq = list(range(1,200))
     with create_app().app_context():
         from dribdat.user.models import Event
-        projects = Event.query.filter_by(id=event).first_or_404().projects
-        projects = projects.order_by(Project.progress.desc()).order_by(Project.name)
+        event = Event.query.filter_by(id=event).first_or_404()
+        projects = Projects.filter_by(event_id=event.id) \
+                    .order_by(Project.progress.desc()) \
+                    .order_by(Project.name)
         ix = 0
         for c in projects:
             if c.is_hidden: continue
