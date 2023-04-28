@@ -8,7 +8,11 @@
   <h1>Log in</h1>
   <br/>
 
-  {% if oauth_type %}
+  {% if config.DRIBDAT_HELP_REGISTER %}
+    <p>
+      {{ config.DRIBDAT_HELP_REGISTER|markdown }}
+    </p>
+  {% elif oauth_type %}
     <p>
       Use this button to continue with your {{ oauth_type|capitalize }} account:
     </p>

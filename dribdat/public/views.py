@@ -284,7 +284,7 @@ def event_new():
             return redirect(url_for("public.event_start"))
     event = Event()
     form = NewEventForm(obj=event, next=request.args.get('next'))
-    if form.validate_on_submit():
+    if form.is_submitted() and form.validate():
         del form.id
         form.populate_obj(event)
         event.starts_at = datetime.combine(
@@ -323,13 +323,13 @@ def clear_cache():
 @blueprint.route("/dribs")
 def dribs():
     """Show the latest logged posts."""
-    page = request.args.get('page') or 1
-    per_page = request.args.get('limit') or 10
+    page = int(request.args.get('page') or 1)
+    per_page = int(request.args.get('limit') or 10)
     dribs = Activity.query.filter(or_(
         Activity.action == "post",
         Activity.name == "boost"))
     dribs = dribs.order_by(Activity.id.desc())
-    dribs = dribs.paginate(int(page), int(per_page))
+    dribs = db.paginate(dribs, page=page, per_page=per_page)
     dribs.items = [
         d for d in dribs.items
         if not d.project.is_hidden and d.content]

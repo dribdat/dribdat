@@ -325,7 +325,7 @@ def event_get_status():
         Event.query.order_by(Event.id.desc()).first()
     if not event:
         return jsonify(status='')
-    return jsonify(status=event.status_text)
+    return jsonify(status=event.status_text or '')
 
 
 @blueprint.route('/event/<int:event_id>/push/status', methods=["PUT", "POST"])

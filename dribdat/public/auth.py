@@ -53,7 +53,7 @@ def login():
     form = LoginForm(request.form)
     # Handle logging in
     if request.method == 'POST':
-        if form.validate_on_submit():
+        if form.is_submitted() and form.validate():
             # Allow login with e-mail address
             if '@' in form.username.data:
                 user_by_email = User.query.filter_by(email=form.username.data).first()
@@ -89,7 +89,7 @@ def register():
         form.email.data = request.args.get('email')
     if request.args.get('web') and not form.webpage_url.data:
         form.webpage_url.data = request.args.get('web')
-    if not form.validate_on_submit():
+    if not (form.is_submitted() and form.validate()):
         flash_errors(form)
         logout_user()
         return render_template('public/register.html',
@@ -159,7 +159,7 @@ def logout():
 def forgot():
     """Forgot password."""
     form = EmailForm(request.form)
-    if not form.validate_on_submit():
+    if not (form.is_submitted() and form.validate()):
         flash_errors(form)
     return render_template(
             'public/forgot.html',
@@ -175,7 +175,7 @@ def passwordless():
         flash("Passwordless login currently not possible.", 'warning')
         return redirect(url_for("auth.login", local=1))
     form = EmailForm(request.form)
-    if not form.validate_on_submit():
+    if not (form.is_submitted() and form.validate()):
         flash_errors(form)
         return redirect(url_for('auth.forgot'))
     # Continue with user activation
@@ -236,7 +236,7 @@ def user_profile():
         del form.password
 
     # Validation has passed
-    if form.validate_on_submit() and user_is_valid:
+    if form.is_submitted() and form.validate() and user_is_valid:
         # Assign roles
         user.roles = [Role.query.filter_by(
             id=r).first() for r in form.roles.data]

@@ -1,7 +1,7 @@
 (function($, window) {
 
-  // Open up the LOG if navigated
-  if (window.location.hash == '#log' || window.location.pathname.endsWith('/log')) {
+  // Open up the logs if navigated with pathname
+  if (window.location.pathname.endsWith('/log')) {
     $('#dribs-tab-md').click();
   }
 

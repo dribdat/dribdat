@@ -6,13 +6,15 @@
 
 ### Tools for time-limited, team-based, open-by-default collaboration
 
-`dribdat` is an open source web platform for team collaboration online and offline. Originally designed to promote and support open data expeditions and [awesome hackathons](https://github.com/dribdat/awesome-hackathon). It is akin to a Swiss Army Knife for event organizers: a website, guidelines, countdown clock, challenge board, project log, progress tracker, integrations with popular chat platforms, code repositories and open data APIs. The philosophy of this project, in a nutshell, is: **live and let live** (no tech religion, use whatever design / dev / doc tools you want as long as they are accessible to your team), **commit sustainably** (aggregate outputs in standard web of data formats for optimal search and archiving), **create in safe spaces** (embedded code of conduct, works offline, minimal privacy footprint).
+`dribdat` is an open source web platform for team collaboration online and offline. Originally designed to promote and support open data expeditions and [awesome hackathons](https://github.com/dribdat/awesome-hackathon). It is akin to a Swiss Army Knife for event organizers: a website, guidelines, countdown clock, challenge board, project log, progress tracker, integrations with popular chat platforms, code repositories and open data APIs. 
 
-For more background and references, see the [User Handbook](https://docs.dribdat.cc/usage/). If you need help or advice in setting up your event, or would like to contribute to the project: please get in touch via [GitHub Issues](https://github.com/dribdat/dribdat/issues) or [website](https://dribdat.cc). 
+The philosophy of this project, in a nutshell, is: **live and let live** (no tech religion, use whatever design / dev / doc tools you want as long as they are accessible to your team), **commit sustainably** (aggregate outputs in standard web of data formats for optimal search and archiving), **create in safe spaces** (embedded code of conduct, works offline, minimal privacy footprint).
 
 ![Screenshot of dribdat](dribdat/static/img/screenshot_sandbox.png)
 
-Follow and support the project's development on [OpenCollective](https://opencollective.com/dribdat/updates).
+For more background and references, see the [User Handbook](https://docs.dribdat.cc/usage/). If you need help or advice in setting up your event, or would like to contribute to the project: please get in touch via [the website](https://dribd.at) or [GitHub Issues](https://github.com/dribdat/dribdat/issues). Follow and support the project's development on [OpenCollective](https://opencollective.com/dribdat/updates).
+
+_If you use dribdat for your event, please add yourself to the [Tour de Hack](https://meta.dribdat.cc/event/5)! It only takes a minute to drop us [a line](https://dribd.at), and knowing that dribdat is helping real events helps keep the 🔥 alive._
 
 <a href="https://opencollective.com/dribdat/donate" target="_blank"><img src="https://opencollective.com/dribdat/donate/button@2x.png?color=blue" width=300 /></a>
 
@@ -32,7 +34,7 @@ This project is currently mantained by [@loleg](https://github.com/loleg). See [
 
 Special thanks to the [Open Data](https://opendata.ch), [Open Networking](https://opennetworkinfrastructure.org/) and [Open Source](https://dinacon.ch) communities in Switzerland for the many trials and feedbacks. We are also grateful to F. Wieser and M.-C. Gasser at [Swisscom](http://swisscom.com) for conceptual inputs and financial support at an early stage of this project.
 
-This code is originally based on Steven Loria's [cookiecutter-flask](https://github.com/sloria/cookiecutter-flask). A more modern version of which is [cookiecutter-flask-restful](https://github.com/karec/cookiecutter-flask-restful).
+This code is originally based on Steven Loria's [cookiecutter-flask](https://github.com/sloria/cookiecutter-flask). A more modern version of which is [cookiecutter-flask-restful](https://github.com/karec/cookiecutter-flask-restful). This project is inspired by the work of many wonderful hackathonistas to the [East](https://meta.dribdat.cc/project/42), [West](https://meta.dribdat.cc/project/7), [North](https://meta.dribdat.cc/project/10), and [South](https://meta.dribdat.cc/project/41) of here.
 
 Additional and :heart:-felt thanks for testing and feedback to:
 
@@ -46,7 +48,7 @@ Additional and :heart:-felt thanks for testing and feedback to:
 - [@khashashin](https://github.com/khashashin)
 - [@philshem](https://github.com/philshem)
 
-.. and all the hackathon contributors!
+.. and all hackathon contributors everywhere! 
 
 ## License
 

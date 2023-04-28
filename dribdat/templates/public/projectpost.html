@@ -8,26 +8,70 @@
 
 {% block content %}
 
-  <h2>
-    Post on
-      <a href="{{ url_for('project.project_view', project_id=project.id) }}"
-        onclick="if(!window.confirm('Your post will not be saved - continue?')) return false"
-        title="Back to project">{{ project.name }}
-      </a>
+  <div class="honeycomb float-right">
+    {{ misc.render_project_hexagon(project) }}
+  </div>
+
+  <h2 class="huge">
+    Post
   </h2>
 
-  {% if all_valid %}
-    <div class="form-project-confirm alert alert-default mb-3" role="alert">
-      <h5 class="mt-0 font-weight-bold" id="next-level-hint">&#128640;&nbsp;
-        Ready for the next level?
-      </h5>
-      <label><input type="checkbox">
-      {% for item in stage.conditions.agree %}
-        <span>&mdash; {{ item }}</span><br>
-      {% endfor %}
-      </label>
-    </div>
-  {% endif %}
+  <div class="alert alert-default resource-list project-tips profile-projects">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Dismiss" title="Hide">
+      <span aria-hidden="true">&times;</span>
+    </button>
+
+    {% if (suggestions or stage) and project.progress < 50 %}
+      <div class="container-fluid p-1">
+        <h5 class="category-tip m-0 clearfix"
+            title="This tip is only visible to you and your team">
+          <span class="user-score" style="background:white">&#x1F4A1;</span>{{stage.tip}}
+        </h5>
+        <div class="row flex-row flex-nowrap">
+        {% for project in suggestions %}
+          <a class="col-md-5 ms-auto card project"
+            {%- if project.image_url %}
+              style="background-image:url('{{project.image_url}}'); padding-left:100px"
+            {%- endif %}
+             href="{{ url_for('project.project_view', project_id=project.id) }}">
+            <div class="card-body">
+              <h5 class="card-title">{{ project.name }}</h5>
+              <p class="card-text">{{ project.summary }}</p>
+            </div>
+          </a>
+        {% endfor %}
+        </div>
+        <p class="stage-conditions clearfix pl-2 pb-3">
+          {% for item in stage.conditions.validate %}
+            {% if item.valid %}
+              <span class="mr-2 float-left stage-ok">
+                <i class="fa fa-thumbs-up"></i>&nbsp;
+                {{ item.help }}
+              </span>
+            {% else %}
+              <span class="mr-2 float-left stage-no">
+                <i class="fa fa-paw"></i>&nbsp;
+                {{ item.help }}
+              </span>
+            {% endif %}
+          {% endfor %}
+        </p>
+      </div><!-- /profile-projects -->
+    {% endif %}
+
+    {% if all_valid %}
+      <div class="form-project-confirm" role="alert">
+        <h5 class="mt-0" id="next-level-hint">
+          Ready for the next level?
+        </h5>
+        <label><input type="checkbox">
+        {% for item in stage.conditions.agree %}
+          <span>&mdash; {{ item }}</span><br>
+        {% endfor %}
+        </label>
+      </div>
+    {% endif %}
+  </div><!-- /alert -->
 
   {% if stage %}
     {% if all_valid and stage['name'] == 'LIVE' %}
