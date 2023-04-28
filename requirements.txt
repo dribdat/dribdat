@@ -3,5 +3,8 @@
 # Explicitly add misaka due to buildpack detection on Heroku (cffi deployment)
 misaka>=2.1.1
 
+# Use PyPi simple repo for automated deployments
+-i https://pypi.org/simple
+
 # Just installs the production requirements.
 -r requirements/prod.txt
