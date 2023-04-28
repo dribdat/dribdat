@@ -102,7 +102,7 @@ def users(page=1):
             users = users.filter(User.email.ilike(q))
         else:
             users = users.filter(User.username.ilike(q))
-    users = users.paginate(page, per_page=20)
+    users = db.paginate(users, page=page, per_page=20)
     return render_template('admin/users.html', sort_by=sort_by,
                            data=users, endpoint='admin.users', active='users')
 
@@ -370,7 +370,7 @@ def projects(page=1):
     if search_by and len(search_by) > 1:
         q = "%%%s%%" % search_by.lower()
         projects = projects.filter(Project.name.ilike(q))
-    projects = projects.paginate(page, per_page=10)
+    projects = db.paginate(projects, page=page, per_page=10)
     return render_template('admin/projects.html',
                            data=projects, endpoint='admin.projects',
                            active='projects')
@@ -656,7 +656,8 @@ def role_delete(role_id):
 def resources(page=1):
     resources = Resource.query.order_by(
         Resource.id.desc()
-    ).paginate(page, per_page=10)
+    )
+    resources = db.paginate(resources, page=page, per_page=10)
     return render_template('admin/resources.html', data=resources,
                            endpoint='admin.resources', active='resources')
 
