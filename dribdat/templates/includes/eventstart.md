@@ -32,5 +32,5 @@ In the interest of creating a safe and inclusive environment, we strongly encour
 <label><input type="checkbox"> Make sure your fellow organisers are aware and ready to enforce it </label><br>
 <label><input type="checkbox"> Verify that all data sources are freely and legally available. </label><br>
 
-_Need more help?_ Contact the developers at [dribdat.cc](https://dribdat.cc/#contact), or raise [an issue](https://github.com/dribdat/dribdat/issues).
+_Need more help?_ Contact the developers at [dribd.at](https://dribd.at/), or raise [an issue](https://github.com/dribdat/dribdat/issues).
 _Disagree with something?_ [Edit this page](https://github.com/dribdat/dribdat/blob/main/dribdat/templates/includes/eventstart.md).

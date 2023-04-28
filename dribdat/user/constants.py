@@ -75,6 +75,20 @@ def projectProgressList(All=True, WithEmpty=True):
     return sorted(pl, key=lambda x: x[0])
 
 
+def stageProjectToNext(project):
+    """Updates project stage to next level."""
+    found_next = False
+    for a in projectProgressList(True, False):
+        if found_next:
+            project.progress = a[0]
+            break
+        if a[0] == project.progress or \
+            not project.progress or \
+                project.progress < 0:
+            found_next = True
+    return found_next
+    
+
 def getProjectStages():
     """Return sorted stages list."""
     pl = []

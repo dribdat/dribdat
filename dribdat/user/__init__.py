@@ -9,4 +9,5 @@ from .constants import (
     validateProjectData,
     resourceTypeList,
     projectProgressList,
+    stageProjectToNext,
 )

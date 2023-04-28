@@ -14,7 +14,7 @@ from dribdat.aggregation import (
     SyncProjectData, GetProjectData, IsProjectStarred
 )
 from dribdat.user import (
-    validateProjectData, projectProgressList, isUserActive,
+    validateProjectData, stageProjectToNext, isUserActive,
 )
 from dribdat.public.projhelper import (
     project_action, project_edit_action, resources_by_stage
@@ -82,7 +82,7 @@ def project_boost(project_id):
     ]
 
     # Process form
-    if form.validate_on_submit():
+    if form.is_submitted() and form.validate():
         # Update project data
         cache.clear()
         project_action(project_id, 'boost',
@@ -95,6 +95,24 @@ def project_boost(project_id):
         current_event=event, project=project, form=form,
         active="dribs"
     )
+
+
+@blueprint.route('/<int:project_id>/approve', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def project_approve(project_id):
+    """Approve a challenge or promote project to next level."""
+    project = Project.query.filter_by(id=project_id).first_or_404()
+    # Update project
+    if stageProjectToNext(project):
+        project.update()
+        db.session.add(project)
+        db.session.commit()
+        cache.clear()
+        flash("Promoted to stage '%s'" % 
+            project.phase, 'info')
+    return redirect(url_for(
+        'project.project_view', project_id=project.id))
 
 
 @blueprint.route('/<int:project_id>/render', methods=['GET'])
@@ -124,23 +142,14 @@ def project_post(project_id):
     form = ProjectPost(obj=project, next=request.args.get('next'))
 
     # Process form
-    if form.validate_on_submit():
+    if form.is_submitted() and form.validate():
         if form.has_progress.data:
             # Check and update progress
-            found_next = False
             if all_valid:
-                for a in projectProgressList(True, False):
-                    if found_next:
-                        project.progress = a[0]
-                        flash("Promoted to stage '%s'" %
-                              project.progress, 'info')
-                        break
-                    if a[0] == project.progress or \
-                        not project.progress or \
-                            project.progress < 0:
-                        found_next = True
-            # if not all_valid or not found_next:
-            #    flash('Your project did not meet stage requirements.', 'info')
+                found_next = stageProjectToNext(project)
+            if all_valid and found_next:
+                flash("Level up! You are at stage '%s'" % 
+                    project.phase, 'info')
 
         # Update project data
         del form.id
@@ -178,7 +187,7 @@ def project_comment(project_id):
     event = project.event
     form = ProjectComment(obj=project, next=request.args.get('next'))
     # Process form
-    if form.validate_on_submit():
+    if form.is_submitted() and form.validate():
         # Update project data
         project_action(project_id, 'review',
                        action='post', text=form.note.data)
@@ -320,7 +329,7 @@ def create_new_project(event):
     else:
         del form.category_id
 
-    if not form.validate_on_submit():
+    if not (form.is_submitted() and form.validate()):
         return render_template(
             'public/projectnew.html',
             current_event=event, form=form, suggestions=suggestions,

@@ -40,6 +40,7 @@ class Config(object):
     # (Optional) Go directly to external login screen
     OAUTH_SKIP_LOGIN = bool(strtobool(os_env.get('OAUTH_SKIP_LOGIN', 'False')))
     OAUTH_LINK_REGISTER = os_env.get('OAUTH_LINK_REGISTER', None)
+    OAUTH_HELP_REGISTER = os_env.get('OAUTH_HELP_REGISTER', None)
 
     # Mail service support
     MAIL_PORT = os_env.get('MAIL_PORT', 25)
