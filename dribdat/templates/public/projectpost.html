@@ -16,13 +16,13 @@
     Post
   </h2>
 
-  <div class="alert alert-default resource-list project-tips profile-projects">
-    <button type="button" class="close" data-dismiss="alert" aria-label="Dismiss" title="Hide">
-      <span aria-hidden="true">&times;</span>
-    </button>
+  {% if (suggestions or stage) and project.progress < 50 %}
+    <div class="alert alert-default resource-list project-tips profile-projects">
+      <button type="button" class="close" data-dismiss="alert" aria-label="Dismiss" title="Hide">
+        <span aria-hidden="true">&times;</span>
+      </button>
 
-    {% if (suggestions or stage) and project.progress < 50 %}
-      <div class="container-fluid p-1">
+      <div class="resource-list-suggestions container-fluid p-1">
         <h5 class="category-tip m-0 clearfix"
             title="This tip is only visible to you and your team">
           <span class="user-score" style="background:white">&#x1F4A1;</span>{{stage.tip}}
@@ -56,22 +56,22 @@
             {% endif %}
           {% endfor %}
         </p>
-      </div><!-- /profile-projects -->
-    {% endif %}
+      </div><!-- /resource-list-suggestions -->
 
-    {% if all_valid %}
-      <div class="form-project-confirm" role="alert">
-        <h5 class="mt-0" id="next-level-hint">
-          Ready for the next level?
-        </h5>
-        <label><input type="checkbox">
-        {% for item in stage.conditions.agree %}
-          <span>&mdash; {{ item }}</span><br>
-        {% endfor %}
-        </label>
-      </div>
-    {% endif %}
-  </div><!-- /alert -->
+      {% if all_valid %}
+        <div class="form-project-confirm" role="alert">
+          <h5 class="mt-0" id="next-level-hint">
+            Ready for the next level?
+          </h5>
+          <label><input type="checkbox">
+          {% for item in stage.conditions.agree %}
+            <span>&mdash; {{ item }}</span><br>
+          {% endfor %}
+          </label>
+        </div>
+      {% endif %}
+    </div><!-- /alert -->
+  {% endif %}
 
   {% if stage %}
     {% if all_valid and stage['name'] == 'LIVE' %}
