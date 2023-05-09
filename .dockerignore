@@ -22,4 +22,16 @@
 **/obj
 **/secrets.dev.yaml
 **/values.dev.yaml
-README.md
+**/.github
+docs
+profile
+tests
+**/LICENSE
+**/README.md
+**/PACKAGE.txt
+**/.pyup.yml
+**/app.json
+**/deploy-stackscript.sh
+**/package.json
+**/Procfile
+**/publish-docker.sh
