@@ -1,11 +1,11 @@
-Planning your next event? Here are some tips from hackathon pros. _Yes, you can [skip this page](/event/new)._
+Planning your next event? Here are some tips for your hackathon guru meditation. _Yes, you can [skip this page](/event/new), if you like._
 
 ## 🏁 Challenges
 
 The starting point of most hackathons: a short description of a problem, some initial ideas of solutions which can be realistically attempted during the time constraints of the event. Once you create your event page, you can attach challenges that the teams should respond to.
 
 <label><input type="checkbox"> Create a series of **Challenges** by starting projects </label><br>
-<label><input type="checkbox"> If you want, you can organize them in **Categories** (Presets)  </label><br>
+<label><input type="checkbox"> You may want to organize them in **Categories** (Presets)  </label><br>
 <label><input type="checkbox"> Use the **Getting started guide** to provide extra directions</label><br>
 
 ## 👪 Teams
@@ -18,19 +18,20 @@ Some people like to hack on their own - for others, hackathons are all about col
 
 ## 📦 Resources
 
-When participants bring their own tools, sharing is encouraged as long as the entire team can use them easily and legally (preference to free, open source, cloud-based tools). Using a separate _Resources_ event, you can create project templates, recommend tools or special offers, provide open datasets, and more!
+When participants bring their own material, sharing is encouraged as long as the entire team can use them easily and legally, with preference to free, open source/open data, web-accessible. Using a Resource area, you can help participants from a wide range experience levels to get started.
 
-<label><input type="checkbox"> Set up a **Resources** event with recommended tools and bootstraps </label><br>
-<label><input type="checkbox"> Provide links in the **Instructions** to collections of open data </label><br>
-<label><input type="checkbox"> Set clear starting points for a range of participant experience levels </label><br>
+<label><input type="checkbox"> Provide links in your event **Instructions**, such as to collections of open data </label><br>
+<label><input type="checkbox"> Set up a **Resources** event with tools and datasets recommended for each stage </label><br>
+<label><input type="checkbox"> Create **Templates** by adding Challenges to the Resource event  </label><br>
 
 ## ☝️ Conduct
 
-In the interest of creating a safe and inclusive environment, we strongly encourage applying a [Hack Code of Conduct](https://hackcodeofconduct.org/) to your event. We have provided a boilerplate text at the bottom of every page, which you may also want to include in your opening presentation or e-mailed instructions.
+In the interest of creating a safe and inclusive environment, we strongly encourage applying a Code of Conduct to your event. We have provided one at the bottom of every page, which you may modify, and also include a reference to in your opening presentation or e-mailed instructions.
 
-<label><input type="checkbox"> Check the **Code of conduct** section in your event settings </label><br>
-<label><input type="checkbox"> Make sure your fellow organisers are aware and ready to enforce it </label><br>
-<label><input type="checkbox"> Verify that all data sources are freely and legally available. </label><br>
+<label><input type="checkbox"> Check the **Community** section in your event settings </label><br>
+<label><input type="checkbox"> Make sure your fellow organisers are **aware** and **ready** to enforce a Code of Conduct </label><br>
+<label><input type="checkbox"> Verify compliance during evaluation rounds, when issuing certificates, or other post-event analysis </label><br>
 
-_Need more help?_ Contact the developers at [dribd.at](https://dribd.at/), or raise [an issue](https://github.com/dribdat/dribdat/issues).
-_Disagree with something?_ [Edit this page](https://github.com/dribdat/dribdat/blob/main/dribdat/templates/includes/eventstart.md).
+_Need more help?_ Contact the maintainers at [dribd.at](https://dribd.at/)
+
+_Disagree with something?_ Please raise [an issue](https://github.com/dribdat/dribdat/issues) or [Edit this page](https://github.com/dribdat/dribdat/blob/main/dribdat/templates/includes/eventstart.md).
