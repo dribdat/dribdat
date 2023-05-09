@@ -415,7 +415,7 @@ def project_autoupdate(project_id):
         else:
             flash("Could not sync: remote README has no data.", 'warning')
     return redirect(url_for(
-        'project.project_view_posted', project_id=project_id))
+        'project.project_view', project_id=project_id))
 
 
 @blueprint.route('/project/<int:project_id>/toggle', methods=['GET', 'POST'])
