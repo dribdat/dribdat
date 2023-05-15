@@ -288,8 +288,7 @@ ALLOWED_HTML_ATTR['img'] = ['src', 'width', 'height', 'alt', 'class']
 ALLOWED_HTML_ATTR['font'] = ['color']
 
 
-def FetchWebProject(project_url):
-    """Parse a remote Document, wiki or website URL."""
+def RequestRemoteContent(project_url):
     try:
         # TODO: the admin should be able to whitelist a range of allowed
         # online resources controlling the domains from which we can 
@@ -297,28 +296,38 @@ def FetchWebProject(project_url):
         project_url = sanitize_url(project_url)
         logging.info("Fetching", project_url)
         data = requests.get(project_url, timeout=REQUEST_TIMEOUT)
+        return data.text or None
     except requests.exceptions.RequestException:
         logging.warn("Could not connect to %s" % project_url)
-        return {}
+        return None
+
+
+def FetchWebProject(project_url):
+    """Parse a remote Document, wiki or website URL."""
+    
+    # GitHub Markdown
+    if project_url.startswith('https://github.com/'):
+        return FetchWebGitHub(project_url)
+   
+    # Fetch standard document
+    datatext = RequestRemoteContent(project_url)
+    if datatext is None: return {}
 
     # Google Document
     if project_url.startswith('https://docs.google.com/document'):
-        return FetchWebGoogleDoc(data.text, project_url)
+        return FetchWebGoogleDoc(datatext, project_url)
     # Instructables
     elif project_url.startswith('https://www.instructables.com/'):
-        return FetchWebInstructables(data.text, project_url)
-    # GitHub Markdown
-    elif project_url.startswith('https://github.com/'):
-        return FetchWebGitHub(project_url)
+        return FetchWebInstructables(datatext, project_url)
     # CodiMD / HackMD
-    elif data.text.find('<div id="doc" ') > 0:
-        return FetchWebCodiMD(data.text, project_url)
+    elif datatext.find('<div id="doc" ') > 0:
+        return FetchWebCodiMD(datatext, project_url)
     # DokuWiki
-    elif data.text.find('<meta name="generator" content="DokuWiki"/>') > 0:
-        return FetchWebDokuWiki(data.text, project_url)
+    elif datatext.find('<meta name="generator" content="DokuWiki"/>') > 0:
+        return FetchWebDokuWiki(datatext, project_url)
     # Etherpad
-    elif data.text.find('pad.importExport.exportetherpad') > 0:
-        return FetchWebEtherpad(data.text, project_url)
+    elif datatext.find('pad.importExport.exportetherpad') > 0:
+        return FetchWebEtherpad(datatext, project_url)
 
 
 def FetchWebGoogleDoc(text, url):

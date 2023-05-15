@@ -398,8 +398,17 @@ def project_autoupdate(project_id):
         flash('You may not sync this project.', 'warning')
         return redirect(url_for('project.project_view', project_id=project_id))
 
-    # Start update process
+    # Check if we already have content
     has_autotext = project.autotext and len(project.autotext) > 1
+
+    # Instruct user about certain links
+    if project.autotext_url.startswith('https://docs.google.com/document') and \
+       (project.autotext_url.endswith('/edit') or \
+        '/edit#' in project.autotext_url):
+        flash('The Publish link should be used for a Google Doc', 'warning')
+        return redirect(url_for('project.project_view', project_id=project_id))
+
+    # Start update process
     data = GetProjectData(project.autotext_url)
     if not data or 'name' not in data:
         flash("To Sync: ensure a README on the remote site.", 'warning')

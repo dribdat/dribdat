@@ -16,7 +16,7 @@ class TestRender:
         assert "Awesome hackathon" in dpkg_html
 
     def test_ckan(self, testapp):
-        """Render a data package."""
+        """Render a dataset from CKAN."""
         test_url = 'https://opendata.swiss/de/dataset/21st-century-swiss-video-games'  # noqa: E501
         dpkg_html = box_dataset(test_url)
         assert "boxout" in dpkg_html
