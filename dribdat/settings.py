@@ -77,7 +77,6 @@ class Config(object):
     ANALYTICS_SIMPLE = os_env.get('ANALYTICS_SIMPLE', None)
     ANALYTICS_GOOGLE = os_env.get('ANALYTICS_GOOGLE', None)
     ANALYTICS_FATHOM = os_env.get('ANALYTICS_FATHOM', None)
-    ANALYTICS_FATHOM_SITE = os_env.get('ANALYTICS_FATHOM_SITE', None)
 
     # S3 uploads support
     S3_KEY = os_env.get('S3_KEY', None)

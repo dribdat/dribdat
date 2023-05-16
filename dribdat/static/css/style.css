@@ -1929,9 +1929,11 @@ Instruction page
   position: absolute;
   opacity: 0.6;
   z-index: -9;
-  left: 50%;
   top: 70px;
-  margin-left: -60px;
+  /*margin-left: -60px;
+  left: 50%;*/
+  right: 60px;
+  text-align: right;
 }
 
 /* ------------

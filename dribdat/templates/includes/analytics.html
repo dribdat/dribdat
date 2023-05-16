@@ -1,11 +1,6 @@
 {% if config.ANALYTICS_FATHOM %}
 <!-- Fathom - beautiful, simple website analytics -->
-    {% if config.ANALYTICS_FATHOM_SITE %}
-    <script src="https://{{ config.ANALYTICS_FATHOM_SITE }}/script.js" site="{{ config.ANALYTICS_FATHOM }}" async defer></script>
-    {% else %}
-    <script src="https://cdn.usefathom.com/script.js" site="{{ config.ANALYTICS_FATHOM }}" async defer></script>
-    {% endif %}
-<!-- / Fathom -->
+<script src="https://cdn.usefathom.com/script.js" site="{{ config.ANALYTICS_FATHOM }}" async defer></script>
 {% endif %}
 
 {% if config.ANALYTICS_SIMPLE %}

@@ -47,7 +47,7 @@
        <i class="fa fa-paper-plane" aria-hidden="true"></i>
        Post update
      </a>
-  {% elif current_user and current_user.active and not project.is_challenge and not project.event.lock_resources %}
+  {% elif current_user and current_user.active and not project.event.lock_resources %}
      <a id="project-comment" href="{{ url_for('project.project_comment', project_id=project.id) }}" title="Write a public comment" class="btn btn-lg btn-info">
        <i class="fa fa-thumbs-up" aria-hidden="true"></i>
        Comment</a>

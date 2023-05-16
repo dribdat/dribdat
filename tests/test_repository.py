@@ -4,7 +4,7 @@
 from dribdat.aggregation import GetProjectData
 
 
-class TestAggregate:
+class TestRepository:
     """Here be dataragons."""
 
     def test_datapackage(self):
