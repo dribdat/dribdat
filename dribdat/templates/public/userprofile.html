@@ -120,7 +120,6 @@
     </ul>
   </div>
 
-
 </div>
 
 {% if user.my_story %}
@@ -140,6 +139,14 @@
     <div class="alert alert-success">
     No projects here yet. Time to <b>Join</b> or <b>Start</b> something awesome!
     </div>
+
+    {% if events_next %}
+    <div class="row events-next mt-4 mb-4">
+      {% for event in events_next %}
+        {{ misc.render_home_event(event) }}
+      {% endfor %}
+    </div><!-- /.row events-next -->
+    {% endif %}
   {% endif %}
 {% else %}
   <a name="projects"><h1>Projects</h1></a>
