@@ -144,7 +144,8 @@ def activate(userid, userhash):
     elif a_user.active:
         flash("Your user account is active.", 'success')
     else:
-        flash("Activation not found. Try again, or ask an organizer.", 'warning')
+        flash("Activation not found, or has expired." \
+            + "Please try again or ask an organizer.", 'warning')
         logout_user()
     return redirect(url_for('public.home'))
 
