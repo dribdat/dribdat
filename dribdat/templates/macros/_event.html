@@ -186,14 +186,14 @@
 	</div></div>
 {% endmacro %}
 
-{% macro render_featured_event(event, current=False) %}
-	<div class="carousel-item{% if current %} active{% endif %}">
+{% macro render_featured_event(event, active=False) %}
+	<div class="carousel-item{% if active %} active{% endif %}">
 		<svg class="bd-placeholder-img" width="100%" height="100%"
 				 xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
 			{% if event.background_image %}
 				 <image width="100%" height="100%"
 				 			  xlink:href="{{ event.background_image }}"
-								preserveAspectRatio="xMinYMin slice">
+								preserveAspectRatio="xMinYMin slice"/>
 			{% else %}
 				 <rect width="100%" height="100%" fill="#777"/>
 			{% endif %}
@@ -204,7 +204,7 @@
 
   			{% include "includes/eventhome.html" %}
 
-			 </div><!-- /.carousel-caption -->
-		 </div>
-	 </div><!-- /.carousel-item -->
+			</div><!-- /.carousel-caption -->
+		</div>
+	</div><!-- /.carousel-item -->
 {% endmacro %}

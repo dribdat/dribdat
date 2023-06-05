@@ -423,8 +423,9 @@ nav .nav-login {
   width: 100%;
   max-height: 100%;
 }
-.home-page .carousel-caption .event-header a {
+.home-page .carousel-caption a {
   text-decoration: none;
+  color: black;
 }
 .home-page .carousel-caption .event-header .section-header-content {
   text-align: left;
@@ -442,11 +443,9 @@ nav .nav-login {
   overflow: hidden;
 }
 .home-page .carousel-caption .home-description p {
-  padding: 0.5em 1em;
   text-align: left;
   color: black;
   display: inline-block;
-  background-color: lightyellow;
   clear: both;
 }
 .home-page .carousel-item {
@@ -464,7 +463,10 @@ nav .nav-login {
 }
 .home-page .carousel-caption .honeycomb .hexagon {
   opacity: 1;
-  box-shadow: 5px 5px 1px #777;
+  box-shadow: none;
+}
+.home-page .carousel-caption .project-count {
+  display: inline;
 }
 @media (max-width: 600px) {
   .home-page .carousel-item {
@@ -1778,6 +1780,9 @@ a.go-up {
 .carousel-caption .embed-view {
   width: 100%;
   height: 13em;
+  overflow: hidden;
+  margin-left: -14% !important;
+  margin-top: 2em !important;
 }
 .carousel-caption .embed-view .ibws-fix {
   width: 800px;
