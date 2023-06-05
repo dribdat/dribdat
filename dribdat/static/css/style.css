@@ -423,8 +423,9 @@ nav .nav-login {
   width: 100%;
   max-height: 100%;
 }
-.home-page .carousel-caption .event-header a {
+.home-page .carousel-caption a {
   text-decoration: none;
+  color: black;
 }
 .home-page .carousel-caption .event-header .section-header-content {
   text-align: left;
@@ -442,11 +443,9 @@ nav .nav-login {
   overflow: hidden;
 }
 .home-page .carousel-caption .home-description p {
-  padding: 0.5em 1em;
   text-align: left;
   color: black;
   display: inline-block;
-  background-color: lightyellow;
   clear: both;
 }
 .home-page .carousel-item {
@@ -464,7 +463,10 @@ nav .nav-login {
 }
 .home-page .carousel-caption .honeycomb .hexagon {
   opacity: 1;
-  box-shadow: 5px 5px 1px #777;
+  box-shadow: none;
+}
+.home-page .carousel-caption .project-count {
+  display: inline;
 }
 @media (max-width: 600px) {
   .home-page .carousel-item {
@@ -517,6 +519,9 @@ nav .nav-login {
 }
 .event-home .event-info .event-description img { 
   max-width: 100%; 
+}
+.event-home .event-nav .btn:hover {
+  border: 1px solid black;
 }
 
 /* ---- Hexagonal hawtness ---- */
@@ -572,7 +577,7 @@ nav .nav-login {
 }
 .hexagon:hover {
   box-shadow: 0 4px 9px rgb(0 0 0 / 5%), 0 9px 15px rgb(0 0 0 / 17%);
-  transform: scale(1.2);
+  transform: scale(1.1);
 }
 .hexagon.blank {
   visibility: hidden;
@@ -1004,11 +1009,11 @@ nav .nav-login {
 }
 
 /* Hides the triangle pointers in the timeline */
-.project-page .timeline-card::after { display: none; }
-.project-page .timeline-start .timeline-card::after,
-.project-page .timeline-finish .timeline-card::after,
-.project-page .timeline-progress .timeline-card::after { display: initial; }
-.project-page .timeline-card .close { margin: 0.4em; }
+.timeline-card::after { display: none; }
+.timeline-start .timeline-card::after,
+.timeline-finish .timeline-card::after,
+.timeline-progress .timeline-card::after { display: initial; }
+.timeline-card .close { margin: 0.4em; }
 /* Other project timeline customizations */
 .project-page .timeline-review .timeline-content { background: #f2fef2; border-top: none; }
 .project-page .timeline-pencil .timeline-content { background: #ffc; border-top: none; }
@@ -1602,7 +1607,7 @@ a.go-up {
 }
 
 .profile-social {
-  margin-left: 60px;
+  margin-top: 1em;
   line-height: 26px;
 }
 .profile-social img, .profile-social i {
@@ -1647,6 +1652,7 @@ a.go-up {
 .profile-projects {
   width: 100%;
   padding-top: 1em;
+  padding-left: 2.3em;
   border-radius: 20px;
   border: 1px dotted rgba(0,0,0,0.5);
 }
@@ -1778,6 +1784,9 @@ a.go-up {
 .carousel-caption .embed-view {
   width: 100%;
   height: 13em;
+  overflow: hidden;
+  margin-left: -14% !important;
+  margin-top: 2em !important;
 }
 .carousel-caption .embed-view .ibws-fix {
   width: 800px;
@@ -1914,7 +1923,7 @@ Instruction page
 .form-project-confirm input {
   transform: scale(1.5);
   position: absolute;
-  left: 20px;
+  left: 24px;
 }
 .form-project-confirm label {
   clear: both;
@@ -1924,16 +1933,6 @@ Instruction page
 }
 .projectpost alert {
   margin-top: 0.5em;
-}
-.projectpost .honeycomb {
-  position: absolute;
-  opacity: 0.6;
-  z-index: -9;
-  top: 70px;
-  /*margin-left: -60px;
-  left: 50%;*/
-  right: 60px;
-  text-align: right;
 }
 
 /* ------------
@@ -1953,7 +1952,6 @@ Search engine
   height: 7em;
   background-repeat: no-repeat;
   display: inline-block;
-  float: left;
   background-size: contain;
   margin-right: 8px;
 }
@@ -1991,16 +1989,16 @@ Data Packages view
     background: transparent;
 }
 @media (min-width: 1000px) {
-.list-datapackage .list-group-item {
-    width: 100%;
-    display: inline-block;
-    min-height: 3em;
-    line-height: 2em;
-    padding-top: 0.4em;
-}
-.list-datapackage a.list-group-item:nth-child(2) {
-    border-top: 1px solid #333;
-}
+  .list-datapackage .list-group-item {
+      width: 100%;
+      display: inline-block;
+      min-height: 3em;
+      line-height: 2em;
+      padding-top: 0.4em;
+  }
+  .list-datapackage a.list-group-item:nth-child(2) {
+      border-top: 1px solid #333;
+  }
 }
 .list-datapackage a.list-group-item:nth-child(1) {
     border-top: 1px solid #333;

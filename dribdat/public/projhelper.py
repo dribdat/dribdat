@@ -51,8 +51,8 @@ def project_edit_action(project_id, detail_view=False):
     project = Project.query.filter_by(id=project_id).first_or_404()
     starred = IsProjectStarred(project, current_user)
 
-    allow_edit = starred or (isUserActive(current_user)
-                             and current_user.is_admin)
+    allow_edit = starred or project.event.lock_resources \
+        or (isUserActive(current_user) and current_user.is_admin)
     if not allow_edit:
         flash('You do not have access to edit this project.', 'warning')
         return project_action(project_id, None)
@@ -122,6 +122,7 @@ def project_action(project_id, of_type=None, as_view=True, then_redirect=False,
     allow_edit = not current_user.is_anonymous and current_user.is_admin
     lock_editing = event.lock_editing
     allow_post = starred and not event.lock_resources
+    allow_edit = allow_edit or event.lock_resources
     allow_edit = (starred or allow_edit) and not lock_editing
 
     # Check type of project

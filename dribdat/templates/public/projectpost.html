@@ -7,13 +7,15 @@
 {% block body_class %}projectpost{% endblock %}
 
 {% block content %}
-
-  <div class="honeycomb float-right">
-    {{ misc.render_project_hexagon(project) }}
-  </div>
-
   <h2 class="huge">
-    Post
+    Post on 
+    <a href="{{ url_for('project.project_view', project_id=project.id) }}" title="Back to project">
+      {%- if project.is_challenge -%}
+      challenge
+      {%- else -%}
+      project
+      {%- endif -%}
+    </a>
   </h2>
 
   {% if (suggestions or stage) and project.progress < 50 %}
@@ -134,12 +136,24 @@
     {% endif %}
   </div>
 
-  <center class="mt-3">
+  <center class="mt-3"
+    onclick="return $('#note').val().length == 0 || window.confirm('Your post will not be saved - continue?')">
     <a href="{{ url_for('project.project_view', project_id=project.id) }}"
-       title="Cancel" class="btn btn-light"
-       onclick="if(!window.confirm('Your post will not be saved - continue?')) return false">
+       title="Cancel" class="btn btn-light">
       <i class="fa fa-arrow-left" aria-hidden="true"></i> Cancel and return to project
     </a>
+    {% if stage %}
+      <div class="btn-group">
+        <a href="{{ url_for('project.project_edit', project_id=project.id) }}" class="btn btn-warning"
+          title="Edit basic project data">
+          <i class="fa fa-pencil" aria-hidden="true"></i>
+          Edit</a>
+        <a href="{{ url_for('project.project_details', project_id=project.id) }}" class="btn btn-warning"
+          title="Edit project details" style="opacity:0.9">
+          <i class="fa fa-magic" aria-hidden="true"></i>
+          Details</a>
+      </div>
+    {% endif %}
   </center>
 
   {% include "includes/uploader.html" %}

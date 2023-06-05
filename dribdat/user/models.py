@@ -275,8 +275,8 @@ class User(UserMixin, PkModel):
     def check_hashword(self, value):
         """Check the hash value."""
         timediff = dt.datetime.utcnow() - self.updated_at
-        if timediff > dt.timedelta(minutes=5):
-            # Time limit exceeded
+        if timediff > dt.timedelta(minutes=30):
+            # Half-hour time limit exceeded
             return False
         return hashing.check_value(self.hashword, value)
 

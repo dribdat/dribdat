@@ -12,7 +12,7 @@ from dribdat.aggregation import GetEventUsers
 from dribdat.user import getProjectStages, isUserActive
 from urllib.parse import quote, quote_plus, urlparse
 from datetime import datetime
-from sqlalchemy import or_
+from sqlalchemy import and_, or_
 import re
 
 blueprint = Blueprint('public', __name__, static_folder="../static")
@@ -143,8 +143,18 @@ def user(username):
     submissions = user.posted_challenges()
     projects = user.joined_projects(True)
     posts = user.latest_posts(20)
+    today = datetime.utcnow()
+    events_next = Event.query.filter(and_(
+        Event.is_hidden.isnot(True),
+        Event.lock_resources.isnot(True),
+        Event.ends_at > today
+    ))
+    events_next = events_next.order_by(Event.starts_at.desc())
+    if events_next.count() == 0: events_next = None
+    # Filter out by today's date
     return render_template("public/userprofile.html", active="profile",
                            user=user, projects=projects, posts=posts,
+                           events_next=events_next,
                            score=user.get_score(),
                            submissions=submissions,
                            may_certify=user.may_certify()[0])

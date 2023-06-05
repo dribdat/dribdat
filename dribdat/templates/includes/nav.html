@@ -32,7 +32,7 @@
           Dribs
         </a>
       </li>
-      {% if event and not event.lock_resources %}
+      {# if event and not event.lock_resources %}
         <li class="nav-item">
           <a class="nav-link {% if active == 'participants' %}active{% endif %}" 
              title="Show me the people"
@@ -55,7 +55,7 @@
             {% endif %}
           </a>
         </li>
-      {% endif %}
+      {% endif #}
 
       {% if current_user and current_user.is_authenticated %}
           <li class="nav-item">

@@ -71,7 +71,7 @@ def box_datapackage(line, cache=None):
         logging.info("Fetching Data Package: <%s>" % url)
         package = Package(url)
     except Exception:  # noqa: B902
-        logging.warn("Data Package not parsed: <%s>" % url)
+        logging.warning("Data Package not parsed: <%s>" % url)
         return None
     if package.created:
         dt = datetime.fromisoformat(package.created).strftime("%d.%m.%Y")

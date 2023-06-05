@@ -6,6 +6,7 @@ See: http://webtest.readthedocs.org/
 from flask import url_for
 
 from dribdat.user.models import User
+from dribdat.mailer import user_activation
 
 from .factories import UserFactory
 
@@ -118,3 +119,46 @@ class TestRegistering:
         res = form.submit()
         # sees error
         assert 'A user with this name already exists' in res
+
+    def test_admin_register(self, user, testapp):
+        """Create a new user as admin."""
+        user = UserFactory(active=True)  # Make an admin user
+        user.set_password('myprecious')
+        user.is_admin = True
+        user.save()
+        # Login the user
+        res = testapp.get('/login/')
+        form = res.forms['loginForm']
+        form['username'] = user.username
+        form['password'] = 'myprecious'
+        # Submits
+        res = form.submit().follow()
+        assert res.status_code == 200
+        # Let's create another account
+        old_count = User.query.count()
+        res = testapp.get(url_for('admin.user_new'))
+        # Fills out the form
+        form = res.forms[0]
+        form['username'] = 'foobar'
+        form['email'] = 'foo@bar.com'
+        form['password'] = 'secret'
+        # Submits
+        res = form.submit().follow()
+        assert res.status_code == 200
+        # A new user was created
+        assert User.query.count() == old_count + 1
+
+class TestActivation:
+    """Activate a user."""
+
+    def test_user_can_activate(self, user, testapp):
+        """Create and activate a user."""
+        # Make a deactivated user
+        user = UserFactory(active=False)
+        user.save()
+        # Let's get an activation mail
+        my_hash = user_activation(user)
+        # And go activate that user
+        res = testapp.get(url_for('auth.activate', userid=user.id, userhash=my_hash))
+        assert res.status_code == 302
+        assert '/user/profile' in res

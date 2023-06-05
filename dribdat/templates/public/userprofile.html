@@ -35,14 +35,14 @@
         </a>
       {% endif %}
 
-      <a id="get-mydata" class="btn btn-secondary btn-lg text-left"
+      <a id="get-mydata" class="btn btn-success btn-lg text-left"
         href="{{ url_for('api.current_user_hackathon_json') }}" download
         title="Download a snapshot of my contributions">
         <i class="fa fa-download"></i>
         My Data
       </a>
 
-      <a href="{{ url_for('auth.logout') }}" class="btn btn-secondary btn-lg"
+      <a href="{{ url_for('auth.logout') }}" class="btn btn-dark btn-lg"
         title="Sign out of this account">
         <i class="fa fa-sign-out"></i>
         Logout
@@ -85,22 +85,6 @@
     </span>
   </h1>
 
-  {% if user.webpage_url %}
-  <div class="col-sm">
-    <div class="profile-social">
-      <a href="{{ user.webpage_url }}" class="btn btn-lg btn-light" target="_blank" rel="noopener noreferrer">
-      {% if not user.cardtype %}
-        <i class="fa fa-globe"></i>
-        Website
-      {% else %}
-        <i class="fa fa-{{ user.cardtype }}"></i>
-        Follow
-      {% endif %}
-      </a>
-    </div>
-  </div>
-  {% endif %}
-
 </div>
 <div class="row mb-3 mt-2">
 
@@ -118,8 +102,22 @@
       <li>{{ role.name }}</li>
     {% endfor %}
     </ul>
-  </div>
 
+
+    {% if user.webpage_url %}
+    <div class="profile-social">
+      <a href="{{ user.webpage_url }}" class="btn btn-lg btn-light" target="_blank" rel="noopener noreferrer">
+      {% if not user.cardtype %}
+        <i class="fa fa-globe"></i>
+        Visit
+      {% else %}
+        <i class="fa fa-{{ user.cardtype }}"></i>
+        Follow
+      {% endif %}
+      </a>
+    </div>
+    {% endif %}
+  </div>
 
 </div>
 
@@ -140,6 +138,14 @@
     <div class="alert alert-success">
     No projects here yet. Time to <b>Join</b> or <b>Start</b> something awesome!
     </div>
+
+    {% if events_next %}
+    <div class="row events-next mt-4 mb-4">
+      {% for event in events_next %}
+        {{ misc.render_home_event(event) }}
+      {% endfor %}
+    </div><!-- /.row events-next -->
+    {% endif %}
   {% endif %}
 {% else %}
   <a name="projects"><h1>Projects</h1></a>

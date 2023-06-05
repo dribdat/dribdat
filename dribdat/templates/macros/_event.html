@@ -167,17 +167,17 @@
 	      <div class="an-event-actions text-center">
 	        {% if event.lock_resources %}
 	            <a href="{{ url_for('public.event_stages', event_id=event.id) }}" class="btn btn-lg btn-warning">
-								<i class="fa fa-codepen" aria-hidden="true"></i>
-                {{event.name}}
+				  <i class="fa fa-life-ring" aria-hidden="true"></i>
+                  {{event.name}}
 	            </a>
 	        {% elif event.has_finished %}
-	            <a href="{{ url_for('public.event', event_id=event.id) }}" class="btn btn-lg btn-secondary">
-      					<i class="fa fa-certificate" aria-hidden="true"></i>
+	            <a href="{{ url_for('public.event', event_id=event.id) }}" class="btn btn-light">
+      			  <i class="fa fa-certificate" aria-hidden="true"></i>
 	              Results
 	            </a>
 	        {% else %}
-	            <a href="{{ url_for('public.event', event_id=event.id) }}" class="btn btn-lg btn-success">
-      					<i class="fa fa-cubes" aria-hidden="true"></i>
+	            <a href="{{ url_for('public.event', event_id=event.id) }}" class="btn btn-light">
+      			  <i class="fa fa-cubes" aria-hidden="true"></i>
 	              Challenges
 	            </a>
 	        {% endif %}
@@ -186,14 +186,14 @@
 	</div></div>
 {% endmacro %}
 
-{% macro render_featured_event(event, current=False) %}
-	<div class="carousel-item{% if current %} active{% endif %}">
+{% macro render_featured_event(event, active=False) %}
+	<div class="carousel-item{% if active %} active{% endif %}">
 		<svg class="bd-placeholder-img" width="100%" height="100%"
 				 xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
 			{% if event.background_image %}
 				 <image width="100%" height="100%"
 				 			  xlink:href="{{ event.background_image }}"
-								preserveAspectRatio="xMinYMin slice">
+								preserveAspectRatio="xMinYMin slice"/>
 			{% else %}
 				 <rect width="100%" height="100%" fill="#777"/>
 			{% endif %}
@@ -204,7 +204,7 @@
 
   			{% include "includes/eventhome.html" %}
 
-			 </div><!-- /.carousel-caption -->
-		 </div>
-	 </div><!-- /.carousel-item -->
+			</div><!-- /.carousel-caption -->
+		</div>
+	</div><!-- /.carousel-item -->
 {% endmacro %}

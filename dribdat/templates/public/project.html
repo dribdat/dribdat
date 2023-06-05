@@ -59,7 +59,7 @@
     </a>
   {% endif %}
 
-  {% if not lock_editing and not project.event.has_finished %}
+  {% if not lock_editing and not project.event.has_finished and not project.event.lock_resources %}
     {% if project_starred %}
       <a href="{{ url_for('project.project_unstar_me', project_id=project.id) }}" class="project-star btn btn-lg btn-secondary"
         title="Click to stop being a member of the project"
@@ -73,12 +73,6 @@
            <i class="fa fa-thumbs-up"></i>
            Join in
         </a>
-      {% elif project.event.lock_resources %}
-          <a href="{{ url_for('project.project_star', project_id=project.id) }}" class="btn btn-lg btn-success project-star"
-            title="Contribute to this resource by becoming an editor">
-             <i class="fa fa-pencil"></i>
-             Contribute
-          </a>
       {% else %}
         <a href="{{ url_for('project.project_star', project_id=project.id) }}" class="btn btn-lg btn-success project-star"
           title="Click to become a member of this project">
@@ -98,7 +92,7 @@
   </div>
   {% if allow_edit %}
     <a class="project-edit-cover" href="{{ url_for('project.project_details', project_id=project.id) }}#image_url" title="Edit cover image">
-      <i class="fa fa-pencil"></i>
+      <i class="fa fa-magic"></i>
     </a>
   {% endif %}
 {% endif %}
@@ -106,7 +100,13 @@
 <!-- Main project content container -->
 <div class="jumbotron project-page phase-{{ project.phase }}" {% if project.logo_color %} style="border-color:{{project.logo_color}}"{% endif %}>
 
-  {% if project.score and project.score > 1 %}
+
+  {% if project.event.lock_resources %}
+  <a href="{{ url_for('public.event_stages', event_id=project.event.id) }}"
+     class="btn btn-light mr-4 float-right">
+       <i class="fa fa-life-ring" aria-hidden="true"></i>
+       Resource</a>
+  {% elif project.score and project.score > 1 %}
     <div class="project-score">
       <a href="{{ url_for('public.event_stages', event_id=project.event.id) }}#{{project.phase}}">
         <div class="progress" 
@@ -130,13 +130,6 @@
          data-toggle="modal" data-target="#categoryModal" title="Show Category">
           {{ project.category.name }}</a>
     </div>
-  {% endif %}
-
-  {% if project.event.lock_resources %}
-  <a href="{{ url_for('public.event_stages', event_id=project.event.id) }}"
-     class="btn btn-light mr-4 float-right">
-       <i class="fa fa-codepen" aria-hidden="true"></i>
-       Resource</a>
   {% endif %}
 
   <div class="project-name">
@@ -169,17 +162,17 @@
         </a>
       {% endfor %}
       {% if project.longtext %}
+        {% if project_team %}
+          <a class="btn btn-light" id="readme-tab-md" href="#team-md"
+            title="Show team members">
+            <i class="fa fa-user m-2" aria-hidden="true"></i>
+            Team</a>
+        {% endif %}
         {% if project.autotext %}
           <a class="btn btn-light" id="readme-tab-md" href="#readme-md"
              title="Content preview">
             <i class="fa fa-book m-2" aria-hidden="true"></i>
             Readme</a>
-        {% endif %}
-        {% if project_team %}
-          <a class="btn btn-light" id="readme-tab-md" href="#team-md"
-             title="Show team members">
-            <i class="fa fa-user m-2" aria-hidden="true"></i>
-            Team</a>
         {% endif %}
       {% endif %}
       {% if project_dribs %}
@@ -240,6 +233,26 @@
     </div>
   {% endif %}
 
+  <div class="project-buttons mb-5" role="group" aria-label="Project links">
+    {% if project.contact_url %}
+      {% if project.contact_url.startswith('http') or project.contact_url.startswith('mailto:') %}
+        <a href="{{ project.contact_url }}" target="_blank" rel="noopener noreferrer" class="btn btn-lg" title="Contact the team"><span>&#x1f44b;</span> Contact</a>
+      {% elif '@' in project.contact_url %}
+        <a href="mailto:{{ project.contact_url }}" target="_blank" rel="noopener noreferrer" class="btn btn-lg" title="Contact the team"><span>&#x1f44b;</span> E-mail</a>
+      {% else %}
+        <div class="btn btn-lg" title="Contact the team"><span>&#x1f44b;</span> {{ project.contact_url }}</div>
+      {% endif %}
+    {% endif %}
+    {% if project.webpage_url %}
+      <a href="{{ project.webpage_url }}" class="btn btn-lg" target="_blank" rel="noopener noreferrer" title="Project web link"><span>&#x1f310;</span> Open</a>
+    {% endif %}
+    {% if project.download_url %}
+      <a href="{{ project.download_url }}" target="_blank" rel="noopener noreferrer" class="btn btn-lg" title="Download link"><span>&#x1f4c2;</span> Get</a>
+    {% endif %}
+    {% if project.source_url %}
+      <a href="{{ project.source_url }}" class="btn btn-lg" target="_blank" rel="noopener noreferrer" title="Source code"><span>&#x1f4bb;</span> Source</a>
+    {% endif %}
+  </div>
 
   {% if project.autotext %}
     <div id="readme-md" aria-labelledby="readme-tab-md">
@@ -261,29 +274,6 @@
   {% endif %}
 
   </div><!-- /project-info -->
-
-
-  <div class="project-buttons mb-5" role="group" aria-label="Main navigation">
-    {% if project.contact_url %}
-      {% if project.contact_url.startswith('http') or project.contact_url.startswith('mailto:') %}
-        <a href="{{ project.contact_url }}" target="_blank" rel="noopener noreferrer" class="btn btn-lg" title="Contact the team"><span>&#x1f44b;</span> Contact</a>
-      {% elif '@' in project.contact_url %}
-        <a href="mailto:{{ project.contact_url }}" target="_blank" rel="noopener noreferrer" class="btn btn-lg" title="Contact the team"><span>&#x1f44b;</span> E-mail</a>
-      {% else %}
-        <div class="btn btn-lg" title="Contact the team"><span>&#x1f44b;</span> {{ project.contact_url }}</div>
-      {% endif %}
-    {% endif %}
-    {% if project.webpage_url %}
-      <a href="{{ project.webpage_url }}" class="btn btn-lg" target="_blank" rel="noopener noreferrer" title="Project web link"><span>&#x1f310;</span> Open</a>
-    {% endif %}
-    {% if project.download_url %}
-      <a href="{{ project.download_url }}" target="_blank" rel="noopener noreferrer" class="btn btn-lg" title="Download link"><span>&#x1f4c2;</span> Download</a>
-    {% endif %}
-    {% if project.source_url %}
-      <a href="{{ project.source_url }}" class="btn btn-lg" target="_blank" rel="noopener noreferrer" title="Source code"><span>&#x1f4bb;</span> Source</a>
-    {% endif %}
-  </div>
-
 
   {% if project_dribs and not project.event.lock_resources %}
   <a name="log"></a>
@@ -334,7 +324,7 @@
             </a>
           {% endif %}
           </div>
-        </div>
+        </div><!-- /content -->
       </div>
       {% endfor %}
 
@@ -378,9 +368,9 @@
          title="Edit basic project data">
         <i class="fa fa-pencil" aria-hidden="true"></i>
         Edit</a>
-      <a href="{{ url_for('project.project_details', project_id=project.id) }}" class="btn btn-lg btn-secondary"
-         title="Edit project details" >
-        <i class="fa fa-pencil" aria-hidden="true"></i>
+      <a href="{{ url_for('project.project_details', project_id=project.id) }}" class="btn btn-lg btn-warning"
+         title="Edit project details" style="opacity:0.9">
+        <i class="fa fa-magic" aria-hidden="true"></i>
         Details</a>
     {% endif %}
     {% if allow_edit and project.is_autoupdateable %}
@@ -448,7 +438,7 @@
 </center><!-- /.project-footer-controls -->
 
 <div class="panel panel-default community-embed mt-4">
-  <div class="panel-body"><i class="fa fa-comment"></i>
+  <div class="panel-body">
     {{project.event.community_embed|safe}}
   </div>
 </div>

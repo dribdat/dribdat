@@ -1,0 +1,108 @@
+{
+    "contributors": [
+      {
+        "path": "https://github.com/loleg",
+        "role": "author",
+        "title": "loleg"
+      }
+    ],
+    "created": "2023-06-05T11:31",
+    "description": "Here you can find some cool tools and alternatives to dribdat, the platform running this website. ",
+    "homepage": "",
+    "keywords": [
+      "dribdat",
+      "hackathon",
+      "co-creation"
+    ],
+    "licenses": [
+      {
+        "name": "ODC-PDDL-1.0",
+        "path": "http://opendatacommons.org/licenses/pddl/",
+        "title": "Open Data Commons Public Domain Dedication & License 1.0"
+      }
+    ],
+    "name": "event-2",
+    "resources": [
+      {
+        "data": [
+          {
+            "boilerplate": "### &#128640; Let's launch your idea!\r\n\r\nWrite a **Title** and short **Summary**, select a **Template** if one is available, or use the **Readme** link to fetch an open source repository on [GitHub](https://github.com), [GitLab](https://gitlab.com) or [Bitbucket](https://bitbucket.org); an online document at [Etherpad](http://etherpad.org), [Instructables](http://instructables.com), [HackMD or CodiMD](https://hackmd.io), [Google Docs](http://docs.google.com) (Published to Web) or [DokuWiki](http://make.opendata.ch/wiki/project:home).\r\n\r\n_Need more help?_ Get in touch with the organising team, or raise [an issue](https://github.com/dribdat/dribdat/issues).\r\n",
+            "certificate_path": "",
+            "community_embed": "<div class=\"codeofconduct\">All attendees, sponsors, partners, volunteers and staff at our hackathon are required to agree with the <a href=\"https://hackcodeofconduct.org/\" target=\"_blank\">Hack Code of Conduct</a>. Organisers will enforce this code throughout the event. We expect cooperation from all participants to ensure a safe environment for everybody.</div>\r\n\r\n<br><p><a rel=\"license\" href=\"http://creativecommons.org/licenses/by/4.0/\" target=\"_blank\"><img align=\"left\" style=\"margin-right:1em\" alt=\"Creative Commons Licence\" style=\"border-width:0\" src=\"https://i.creativecommons.org/l/by/4.0/88x31.png\" /></a>The contents of this website, unless otherwise stated, are licensed under a <a rel=\"license\" href=\"http://creativecommons.org/licenses/by/4.0/\" target=\"_blank\">Creative Commons Attribution 4.0 International License</a>.</p>\r\n",
+            "community_url": "https://github.com/dribdat/awesome-hackathon",
+            "custom_css": "",
+            "description": "### Here you can find some cool open source tools for organizing hackathons, such as dribdat, the platform running this website. \r\n\r\n- See also the [backboard](https://github.com/dribdat/backboard) version of this site at [backboard.vercel.app](https://backboard.vercel.app/)\r\n- Find lots more links at [dribdat/awesome-hackathon](https://github.com/dribdat/awesome-hackathon)\r\n- One of the many [awesome learn](https://github.com/sindresorhus/awesome#learn) lists out there ([Retweet](https://twitter.com/awesome__re/status/1650054808844500992))",
+            "ends_at": "2026-01-01T16:00",
+            "gallery_url": "https://docs.dribdat.cc/images/whitepaper/swisscom_iot.png",
+            "has_finished": false,
+            "has_started": true,
+            "hashtags": "",
+            "hostname": "",
+            "id": 2,
+            "instruction": "",
+            "location": "",
+            "logo_url": "",
+            "name": "Awesome hackathon",
+            "starts_at": "2022-01-01T09:00",
+            "summary": "Here you can find some cool tools and alternatives to dribdat, the platform running this website. ",
+            "webpage_url": ""
+          }
+        ],
+        "name": "events"
+      },
+      {
+        "data": [
+          {
+            "autotext": "# dribdat\r\n\r\n![Github Actions build](https://github.com/dribdat/dribdat/workflows/build/badge.svg)\r\n[![codecov](https://codecov.io/gh/dribdat/dribdat/branch/main/graph/badge.svg?token=Ccd1vTxRXg)](https://codecov.io/gh/dribdat/dribdat)\r\n[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Floleg%2Fdribdat.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Floleg%2Fdribdat?ref=badge_shield)\r\n\r\n### Tools for time-limited, team-based, open-by-default collaboration\r\n\r\n`dribdat` is an open source web platform for team collaboration online and offline. Originally designed to promote and support open data expeditions and [awesome hackathons](https://github.com/dribdat/awesome-hackathon). It is akin to a Swiss Army Knife for event organizers: a website, guidelines, countdown clock, challenge board, project log, progress tracker, integrations with popular chat platforms, code repositories and open data APIs. The philosophy of this project, in a nutshell, is: **live and let live** (no tech religion, use whatever design / dev / doc tools you want as long as they are accessible to your team), **commit sustainably** (aggregate outputs in standard web of data formats for optimal search and archiving), **create in safe spaces** (embedded code of conduct, works offline, minimal privacy footprint).\r\n\r\nFor more background and references, see the [User Handbook](https://docs.dribdat.cc/usage/). If you need help or advice in setting up your event, or would like to contribute to the project: please get in touch via [GitHub Issues](https://github.com/dribdat/dribdat/issues) or [website](https://dribdat.cc). \r\n\r\n![Screenshot of dribdat](https://raw.githubusercontent.com/dribdat/dribdat/main/dribdat/static/img/screenshot_sandbox.png)\r\n\r\nFollow and support the project's development on [OpenCollective](https://opencollective.com/dribdat/updates).\r\n\r\n<a href=\"https://opencollective.com/dribdat/donate\" target=\"_blank\"><img src=\"https://opencollective.com/dribdat/donate/button@2x.png?color=blue\" width=300 /></a>\r\n\r\n# Quickstart\r\n\r\nThis project can be deployed to any server capable of serving Python applications, and is set up for fast deployment using [Docker](https://github.com/dribdat/dribdat/blob/main/docs/DEPLOY.md#with-docker). The first user that registers becomes an admin, so don't delay! \r\n\r\nIf you would like to run dribdat on any other cloud or local machine, there are additional instructions in the [Deployment guide](https://docs.dribdat.cc/deploy/). Information on contributing and extending dribdat can be found in the [Developer guide](https://docs.dribdat.cc/contribute/), which includes API documentation and more.\r\n\r\nSee also **[backboard](https://github.com/dribdat/backboard)**, a sample responsive web application, and our **[dridbot](https://github.com/dribdat/dridbot)** chat client, which both demonstrate reuse of the dribdat API.\r\n\r\nIf you need support with your deployment, please reach out through Issues or the contact form on our website: [dribdat.cc](https://dribdat.cc)\r\n\r\n# Credits\r\n\r\nThis project is currently mantained by [@loleg](https://github.com/loleg). See [Contributors](https://github.com/dataletsch/dribdat/graphs/contributors) for a full list of people who have helped us with the code, and [Forks](https://github.com/dataletsch/dribdat/network/members) to find other users of this project.\r\n\r\nSpecial thanks to the [Open Data](https://opendata.ch), [Open Networking](https://opennetworkinfrastructure.org/) and [Open Source](https://dinacon.ch) communities in Switzerland for the many trials and feedbacks. We are also grateful to F. Wieser and M.-C. Gasser at [Swisscom](http://swisscom.com) for conceptual inputs and financial support at an early stage of this project.\r\n\r\nThis code is originally based on Steven Loria's [cookiecutter-flask](https://github.com/sloria/cookiecutter-flask). A more modern version of which is [cookiecutter-flask-restful](https://github.com/karec/cookiecutter-flask-restful).\r\n\r\nAdditional and :heart:-felt thanks for testing and feedback to:\r\n\r\n- [Alexandre Cotting](https://github.com/Cotting)\r\n- [Anthony Ritz](https://github.com/RitzAnthony)\r\n- [Chris Mutel](https://github.com/cmutel)\r\n- [Fabien Schwob](https://github.com/jibaku)\r\n- [Jonathan Sobel](https://github.com/JonathanSOBEL)\r\n- [Thomas Amberg](https://github.com/tamberg)\r\n- [@jonhesso](https://github.com/jonHESSO)\r\n- [@khashashin](https://github.com/khashashin)\r\n- [@philshem](https://github.com/philshem)\r\n\r\n.. and all the hackathon contributors!\r\n\r\n## License\r\n\r\nThis project is open source under the [MIT License](LICENSE).\r\n\r\nDue to the use of the [boto3](https://github.com/boto/boto3/) library for S3 support, there is a dependency on OpenSSL via awscrt. If you use these features, please note that the product includes cryptographic software written by Eric Young (eay@cryptsoft.com) and Tim Hudson (tjh@cryptsoft.com).\r\n",
+            "autotext_url": "https://github.com/dribdat/dribdat",
+            "category_id": "",
+            "category_name": "",
+            "contact_url": "https://github.com/dribdat/dribdat/issues",
+            "created_at": "2022-12-20T08:26",
+            "download_url": "https://github.com/dribdat/dribdat/releases",
+            "event_name": "Awesome hackathon",
+            "event_url": "https://meta.dribdat.cc/event/2",
+            "excerpt": "`dribdat` is an open source web platform for team collaboration online and offline. Originally designed to promote and support open data expeditions and [awesome hackathons](https://github.com/dribdat/awesome-hackathon). It is akin to a Swiss Army Knife for event organizers: a website, guidelines, countdown clock, challenge board, project log, progress tracker, integrations with popular chat platforms, code repositories and open data APIs. The philosophy of this project, in a nutshell, is: **liv...",
+            "hashtag": "",
+            "id": 4,
+            "image_url": "https://avatars.githubusercontent.com/u/47747740?v=4",
+            "is_challenge": true,
+            "is_webembed": false,
+            "logo_color": "",
+            "logo_icon": "",
+            "longtext": "`dribdat` is an open source web platform for team collaboration online and offline. Originally designed to promote and support open data expeditions and [awesome hackathons](https://github.com/dribdat/awesome-hackathon). It is akin to a Swiss Army Knife for event organizers: a website, guidelines, countdown clock, challenge board, project log, progress tracker, integrations with popular chat platforms, code repositories and open data APIs. The philosophy of this project, in a nutshell, is: **live and let live** (no tech religion, use whatever design / dev / doc tools you want as long as they are accessible to your team), **commit sustainably** (aggregate outputs in standard web of data formats for optimal search and archiving), **create in safe spaces** (embedded code of conduct, works offline, minimal privacy footprint).\r\n\r\nhttps://github.com/dribdat/dribdat\r\n\r\n![](https://docs.dribdat.cc/images/whitepaper/makezurich_2.jpg)\r\n\r\n[MakeZurich](https://now.makezurich.ch) is one of our foremost references, for more see the [Whitepaper](https://docs.dribdat.cc/whitepaper.html#references)",
+            "maintainer": "loleg",
+            "name": "dribdat",
+            "phase": "Ask",
+            "progress": 0,
+            "score": 0,
+            "source_url": "https://github.com/dribdat/dribdat",
+            "stats": {
+              "commits": 50,
+              "during": 53,
+              "people": 1,
+              "sizepitch": 1098,
+              "sizetotal": 6047,
+              "total": 53,
+              "updates": 51
+            },
+            "summary": "Open source hackathons-in-a-box",
+            "team": "loleg",
+            "team_count": 1,
+            "updated_at": "2023-01-31T11:16",
+            "url": "https://meta.dribdat.cc/project/4",
+            "webpage_url": "https://dribdat.cc"
+          }
+        ],
+        "name": "projects"
+      }
+    ],
+    "sources": [
+      {
+        "path": "https://dribdat.cc",
+        "title": "dribdat"
+      }
+    ],
+    "title": "Awesome hackathon",
+    "version": "0.2.0"
+  }

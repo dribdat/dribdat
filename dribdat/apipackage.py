@@ -177,7 +177,7 @@ def import_project_data(data, dry_run=False):
         event_name = pjt['event_name']
         event = Event.query.filter_by(name=event_name).first()
         if not event:
-            logging.warn('Error: event not found: %s' % event_name)
+            logging.warning('Error: event not found: %s' % event_name)
             continue
         # Search for project
         name = pjt['name']
@@ -214,7 +214,7 @@ def import_activities(data, dry_run=False):
             # TODO: unreliable; rather use a map of project_id to new id
             proj = Project.query.filter_by(name=pname).first()
         if not proj:
-            logging.warn('Error! Project not found: %s' % pname)
+            logging.warning('Error! Project not found: %s' % pname)
             continue
         activity = Activity(aname, proj.id)
         activity.set_from_data(act)
@@ -268,7 +268,7 @@ def fetch_datapackage(url, dry_run=False, all_data=False):
         return {}
 
 
-def import_datapackage(filedata, dry_run, all_data):
+def import_datapackage(filedata, dry_run=True, all_data=False):
     """Save a temporary file and provide details."""
     ext = filedata.filename.split('.')[-1].lower()
     if ext not in ['json']:
@@ -279,7 +279,7 @@ def import_datapackage(filedata, dry_run, all_data):
         return load_file_datapackage(filepath, dry_run, all_data)
 
 
-def load_file_datapackage(filepath, dry_run, all_data):
+def load_file_datapackage(filepath, dry_run=True, all_data=False):
     """Get event data from a file."""
     try:
         with open(filepath, mode='rb') as file:

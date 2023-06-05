@@ -298,7 +298,7 @@ def RequestRemoteContent(project_url):
         data = requests.get(project_url, timeout=REQUEST_TIMEOUT)
         return data.text or None
     except requests.exceptions.RequestException:
-        logging.warn("Could not connect to %s" % project_url)
+        logging.warning("Could not connect to %s" % project_url)
         return None
 
 

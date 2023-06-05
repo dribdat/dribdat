@@ -22,8 +22,6 @@ from datetime import datetime
 import random
 import string
 
-# from os import path
-
 
 blueprint = Blueprint('admin', __name__, url_prefix='/admin')
 
@@ -172,13 +170,20 @@ def user_new():
     if form.is_submitted() and form.validate():
         del form.id
         user.username = sanitize_input(form.username.data)
-        del form.username
-        form.populate_obj(user)
-        db.session.add(user)
-        db.session.commit()
+        if User.query.filter_by(email=form.email.data).first():
+            flash('E-mail must be unique.', 'danger')
+        else:
+            del form.username
+            form.populate_obj(user)
+            if form.password.data:
+                user.set_password(form.password.data)
+            else:
+                user.set_password(get_random_alphanumeric_string())
+            db.session.add(user)
+            db.session.commit()
 
-        flash('User added.', 'success')
-        return redirect(url_for("admin.users"))
+            flash('User added.', 'success')
+            return redirect(url_for("admin.users"))
 
     return render_template('admin/usernew.html', form=form)
 
@@ -199,19 +204,15 @@ def user_delete(user_id):
     return redirect(url_for("admin.users"))
 
 
-""" Get a reasonably secure password """
-
-
 def get_random_alphanumeric_string(length=24):
+    """ Get a reasonably secure password """
     return ''.join(
         (random.SystemRandom().choice(string.ascii_letters + string.digits)
          for i in range(length)))
 
 
-""" Retrieves a user by name """
-
-
 def get_user_by_name(username):
+    """ Retrieves a user by name """
     if not username:
         return None
     username = username.strip()

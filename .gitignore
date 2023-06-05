@@ -38,6 +38,7 @@ nosetests.xml
 .cache
 tests/.cache
 .pytest_cache/
+.vscode/
 
 # Translations
 *.mo
