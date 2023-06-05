@@ -7,14 +7,23 @@ from dribdat.aggregation import GetProjectData
 class TestRepository:
     """Here be dataragons."""
 
-    def test_datapackage(self):
-        """Test parsing a Data Package."""
+    def test_datapackage_dribdat(self):
+        """Test parsing a dribdat Data Package."""
         test_url = 'https://meta.dribdat.cc/api/event/current/datapackage.json'
         test_obj = GetProjectData(test_url)
         assert 'name' in test_obj
         assert test_obj['type'] == 'Data Package'
         assert 'dribdat' in test_obj['description']
-        assert test_url in test_obj['source_url']
+        assert test_url == test_obj['source_url']
+
+    def test_datapackage(self):
+        """Test parsing a dribdat Data Package."""
+        test_url = 'https://raw.githubusercontent.com/OpenEnergyData/energy-data-ch/master/datapackage.json'
+        test_obj = GetProjectData(test_url)
+        assert 'name' in test_obj
+        assert test_obj['type'] == 'Data Package'
+        assert 'Datasets' in test_obj['summary']
+        assert test_url == test_obj['source_url']
 
     def test_gitea(self):
         """Test parsing a Codeberg readme."""

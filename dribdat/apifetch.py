@@ -228,8 +228,9 @@ def FetchDataProject(project_url):
         text_content = parse_data_package(json)
     except KeyError:
         text_content = '(Could not parse Data Package contents)'
-    contact_url = json['homepage'] or ''
-    if 'maintainers' in json and \
+    if 'homepage' in json:
+        contact_url = json['homepage'] or ''
+    elif 'maintainers' in json and \
             len(json['maintainers']) > 0 and \
             'web' in json['maintainers'][0]:
         contact_url = json['maintainers'][0]['web']
