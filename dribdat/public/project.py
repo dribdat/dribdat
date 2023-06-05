@@ -135,7 +135,10 @@ def project_post(project_id):
     allow_post = starred
     if not allow_post:
         flash('You do not have access to post to this project.', 'warning')
-        return project_action(project_id, None)
+        return redirect(url_for('project.project_view', project_id=project.id))
+    if event.lock_resources:
+        flash('Comments are not available in the resource area. Please join a project.', 'info')
+        return redirect(url_for('project.project_view', project_id=project.id))
 
     # Evaluate project progress
     stage, all_valid = validateProjectData(project)
@@ -392,7 +395,7 @@ def project_autoupdate(project_id):
 
     # Check user permissions
     starred = IsProjectStarred(project, current_user)
-    allow_edit = starred or (
+    allow_edit = starred or project.event.lock_resources or (
         not current_user.is_anonymous and current_user.is_admin)
     if not allow_edit or project.is_hidden:
         flash('You may not sync this project.', 'warning')

@@ -7,13 +7,15 @@
 {% block body_class %}projectpost{% endblock %}
 
 {% block content %}
-
-  <div class="honeycomb">
-    {{ misc.render_project_hexagon(project) }}
-  </div>
-
   <h2 class="huge">
-    Post
+    Post on 
+    <a href="{{ url_for('project.project_view', project_id=project.id) }}" title="Back to project">
+      {%- if project.is_challenge -%}
+      challenge
+      {%- else -%}
+      project
+      {%- endif -%}
+    </a>
   </h2>
 
   {% if (suggestions or stage) and project.progress < 50 %}
