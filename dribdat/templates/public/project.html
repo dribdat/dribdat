@@ -98,7 +98,7 @@
   </div>
   {% if allow_edit %}
     <a class="project-edit-cover" href="{{ url_for('project.project_details', project_id=project.id) }}#image_url" title="Edit cover image">
-      <i class="fa fa-pencil"></i>
+      <i class="fa fa-magic"></i>
     </a>
   {% endif %}
 {% endif %}
@@ -135,7 +135,7 @@
   {% if project.event.lock_resources %}
   <a href="{{ url_for('public.event_stages', event_id=project.event.id) }}"
      class="btn btn-light mr-4 float-right">
-       <i class="fa fa-codepen" aria-hidden="true"></i>
+       <i class="fa fa-life-ring" aria-hidden="true"></i>
        Resource</a>
   {% endif %}
 
@@ -375,9 +375,9 @@
          title="Edit basic project data">
         <i class="fa fa-pencil" aria-hidden="true"></i>
         Edit</a>
-      <a href="{{ url_for('project.project_details', project_id=project.id) }}" class="btn btn-lg btn-secondary"
-         title="Edit project details" >
-        <i class="fa fa-pencil" aria-hidden="true"></i>
+      <a href="{{ url_for('project.project_details', project_id=project.id) }}" class="btn btn-lg btn-warning"
+         title="Edit project details" style="opacity:0.9">
+        <i class="fa fa-magic" aria-hidden="true"></i>
         Details</a>
     {% endif %}
     {% if allow_edit and project.is_autoupdateable %}
@@ -445,7 +445,7 @@
 </center><!-- /.project-footer-controls -->
 
 <div class="panel panel-default community-embed mt-4">
-  <div class="panel-body"><i class="fa fa-comment"></i>
+  <div class="panel-body">
     {{project.event.community_embed|safe}}
   </div>
 </div>
