@@ -169,17 +169,17 @@
         </a>
       {% endfor %}
       {% if project.longtext %}
+        {% if project_team %}
+          <a class="btn btn-light" id="readme-tab-md" href="#team-md"
+            title="Show team members">
+            <i class="fa fa-user m-2" aria-hidden="true"></i>
+            Team</a>
+        {% endif %}
         {% if project.autotext %}
           <a class="btn btn-light" id="readme-tab-md" href="#readme-md"
              title="Content preview">
             <i class="fa fa-book m-2" aria-hidden="true"></i>
             Readme</a>
-        {% endif %}
-        {% if project_team %}
-          <a class="btn btn-light" id="readme-tab-md" href="#team-md"
-             title="Show team members">
-            <i class="fa fa-user m-2" aria-hidden="true"></i>
-            Team</a>
         {% endif %}
       {% endif %}
       {% if project_dribs %}
@@ -240,6 +240,26 @@
     </div>
   {% endif %}
 
+  <div class="project-buttons mb-5" role="group" aria-label="Project links">
+    {% if project.contact_url %}
+      {% if project.contact_url.startswith('http') or project.contact_url.startswith('mailto:') %}
+        <a href="{{ project.contact_url }}" target="_blank" rel="noopener noreferrer" class="btn btn-lg" title="Contact the team"><span>&#x1f44b;</span> Contact</a>
+      {% elif '@' in project.contact_url %}
+        <a href="mailto:{{ project.contact_url }}" target="_blank" rel="noopener noreferrer" class="btn btn-lg" title="Contact the team"><span>&#x1f44b;</span> E-mail</a>
+      {% else %}
+        <div class="btn btn-lg" title="Contact the team"><span>&#x1f44b;</span> {{ project.contact_url }}</div>
+      {% endif %}
+    {% endif %}
+    {% if project.webpage_url %}
+      <a href="{{ project.webpage_url }}" class="btn btn-lg" target="_blank" rel="noopener noreferrer" title="Project web link"><span>&#x1f310;</span> Open</a>
+    {% endif %}
+    {% if project.download_url %}
+      <a href="{{ project.download_url }}" target="_blank" rel="noopener noreferrer" class="btn btn-lg" title="Download link"><span>&#x1f4c2;</span> Get</a>
+    {% endif %}
+    {% if project.source_url %}
+      <a href="{{ project.source_url }}" class="btn btn-lg" target="_blank" rel="noopener noreferrer" title="Source code"><span>&#x1f4bb;</span> Source</a>
+    {% endif %}
+  </div>
 
   {% if project.autotext %}
     <div id="readme-md" aria-labelledby="readme-tab-md">
@@ -261,29 +281,6 @@
   {% endif %}
 
   </div><!-- /project-info -->
-
-
-  <div class="project-buttons mb-5" role="group" aria-label="Main navigation">
-    {% if project.contact_url %}
-      {% if project.contact_url.startswith('http') or project.contact_url.startswith('mailto:') %}
-        <a href="{{ project.contact_url }}" target="_blank" rel="noopener noreferrer" class="btn btn-lg" title="Contact the team"><span>&#x1f44b;</span> Contact</a>
-      {% elif '@' in project.contact_url %}
-        <a href="mailto:{{ project.contact_url }}" target="_blank" rel="noopener noreferrer" class="btn btn-lg" title="Contact the team"><span>&#x1f44b;</span> E-mail</a>
-      {% else %}
-        <div class="btn btn-lg" title="Contact the team"><span>&#x1f44b;</span> {{ project.contact_url }}</div>
-      {% endif %}
-    {% endif %}
-    {% if project.webpage_url %}
-      <a href="{{ project.webpage_url }}" class="btn btn-lg" target="_blank" rel="noopener noreferrer" title="Project web link"><span>&#x1f310;</span> Open</a>
-    {% endif %}
-    {% if project.download_url %}
-      <a href="{{ project.download_url }}" target="_blank" rel="noopener noreferrer" class="btn btn-lg" title="Download link"><span>&#x1f4c2;</span> Download</a>
-    {% endif %}
-    {% if project.source_url %}
-      <a href="{{ project.source_url }}" class="btn btn-lg" target="_blank" rel="noopener noreferrer" title="Source code"><span>&#x1f4bb;</span> Source</a>
-    {% endif %}
-  </div>
-
 
   {% if project_dribs and not project.event.lock_resources %}
   <a name="log"></a>
@@ -334,7 +331,7 @@
             </a>
           {% endif %}
           </div>
-        </div>
+        </div><!-- /content -->
       </div>
       {% endfor %}
 

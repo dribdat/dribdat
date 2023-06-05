@@ -1004,11 +1004,11 @@ nav .nav-login {
 }
 
 /* Hides the triangle pointers in the timeline */
-.project-page .timeline-card::after { display: none; }
-.project-page .timeline-start .timeline-card::after,
-.project-page .timeline-finish .timeline-card::after,
-.project-page .timeline-progress .timeline-card::after { display: initial; }
-.project-page .timeline-card .close { margin: 0.4em; }
+.timeline-card::after { display: none; }
+.timeline-start .timeline-card::after,
+.timeline-finish .timeline-card::after,
+.timeline-progress .timeline-card::after { display: initial; }
+.timeline-card .close { margin: 0.4em; }
 /* Other project timeline customizations */
 .project-page .timeline-review .timeline-content { background: #f2fef2; border-top: none; }
 .project-page .timeline-pencil .timeline-content { background: #ffc; border-top: none; }
