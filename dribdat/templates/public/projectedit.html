@@ -19,7 +19,9 @@
   <h2 class="huge">
     Edit
     <a href="{{ url_for('project.project_view', project_id=project.id) }}" title="Back to project">
-      {%- if project.is_challenge -%}
+      {%- if project.event.lock_resources -%}
+      resource
+      {%- elif project.is_challenge -%}
       challenge
       {%- else -%}
       project
