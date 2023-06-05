@@ -14,9 +14,11 @@ TEMPLATE_PACKAGE = r"""
     </h5>
     <h6 class="card-subtitle mb-2 text-muted">
         Data Package
+        {{#dp.homepage}}
         <a href="{{dp.homepage}}" title="Home page">
             &#127760;&nbsp;www
         </a>
+        {{/dp.homepage}}
         <a href="{{url}}" download title="Get Data Package">
             &#127760;&nbsp;json
         </a>
@@ -77,6 +79,14 @@ def box_datapackage(line, cache=None):
         dt = datetime.fromisoformat(package.created).strftime("%d.%m.%Y")
     else:
         dt = ''
+    base_url = url.replace('/datapackage.json', '')
+    # Adjust for absolute URLs
+    for r in range(0, len(package.resources)):
+        rp = package.resources[r]['path']
+        print(rp)
+        if rp and not rp.startswith('http'):
+            package.resources[r]['path'] = '/'.join([base_url, rp])
+    # Render to template
     box = pystache.render(
         TEMPLATE_PACKAGE, {'url': url, 'dp': package, 'date': dt})
     if cache:
