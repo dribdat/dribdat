@@ -6,6 +6,7 @@ See: http://webtest.readthedocs.org/
 from flask import url_for
 
 from dribdat.user.models import User
+from dribdat.mailer import user_activation
 
 from .factories import UserFactory
 
@@ -146,3 +147,18 @@ class TestRegistering:
         assert res.status_code == 200
         # A new user was created
         assert User.query.count() == old_count + 1
+
+class TestActivation:
+    """Activate a user."""
+
+    def test_user_can_activate(self, user, testapp):
+        """Create and activate a user."""
+        # Make a deactivated user
+        user = UserFactory(active=False)
+        user.save()
+        # Let's get an activation mail
+        my_hash = user_activation(user)
+        # And go activate that user
+        res = testapp.get(url_for('auth.activate', userid=user.id, userhash=my_hash))
+        assert res.status_code == 302
+        assert '/user/profile' in res
