@@ -138,3 +138,4 @@ class TestConfig(Config):
     # SERVER_NAME = 'localhost.localdomain' #results in 404 errors
     WTF_CSRF_ENABLED = False  # Allows form testing
     PRESERVE_CONTEXT_ON_EXCEPTION = False
+    DRIBDAT_ALLOW_EVENTS = True # Allows anyone to create an event

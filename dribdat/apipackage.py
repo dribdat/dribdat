@@ -268,7 +268,7 @@ def fetch_datapackage(url, dry_run=False, all_data=False):
         return {}
 
 
-def import_datapackage(filedata, dry_run, all_data):
+def import_datapackage(filedata, dry_run=True, all_data=False):
     """Save a temporary file and provide details."""
     ext = filedata.filename.split('.')[-1].lower()
     if ext not in ['json']:
@@ -279,7 +279,7 @@ def import_datapackage(filedata, dry_run, all_data):
         return load_file_datapackage(filepath, dry_run, all_data)
 
 
-def load_file_datapackage(filepath, dry_run, all_data):
+def load_file_datapackage(filepath, dry_run=True, all_data=False):
     """Get event data from a file."""
     try:
         with open(filepath, mode='rb') as file:

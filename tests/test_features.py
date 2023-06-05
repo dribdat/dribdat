@@ -19,7 +19,6 @@ class TestProjects:
         test_markdown = """Some project content
 <p><a href="%s">%s</a></p>
 EOF""" % (url, url)
-
         result = make_onebox(test_markdown)
         assert 'onebox' in result
 
