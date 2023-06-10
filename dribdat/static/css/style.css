@@ -1449,12 +1449,12 @@ a.go-up {
   opacity: 0.8;
 }
 @media only screen and (max-width:460px){
-  .section-header-content { display: none; }
   .project-edit-buttons { margin: 1em; }
   .container .jumbotron { padding: 0.3em; border: none; }
   .jumbotron section { overflow: hidden; }
   .project-home .jumbotron.project-page { border-width: 1px; }
   .timeline .timeline-item .timeline-img { margin-left: 0em; margin-top: -1em; }
+  #homeCarousel .carousel-caption { left: 0%; width: 100%; }
 }
 .category-info {
   padding: 0 1em;
