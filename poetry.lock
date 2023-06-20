@@ -153,17 +153,17 @@ files = [
 
 [[package]]
 name = "boto3"
-version = "1.26.146"
+version = "1.26.156"
 description = "The AWS SDK for Python"
 optional = false
 python-versions = ">= 3.7"
 files = [
-    {file = "boto3-1.26.146-py3-none-any.whl", hash = "sha256:a03e42dfa09c785cd223422d59c06e8babf667983b513a9a172b73c106f3b37e"},
-    {file = "boto3-1.26.146.tar.gz", hash = "sha256:3d7f1b43d2e5a10ee29d4940e714d72a2f6f1a6f6ba856c82ba9328d83062605"},
+    {file = "boto3-1.26.156-py3-none-any.whl", hash = "sha256:455b6e1f12768b21b5f3990cf1fadeed9bf1c6b36e5a7a303352b927f530c434"},
+    {file = "boto3-1.26.156.tar.gz", hash = "sha256:3a60283676399ae94b49b7a170fb0f42ca2ddcde490988fb0af7fd5a64440ab8"},
 ]
 
 [package.dependencies]
-botocore = ">=1.29.146,<1.30.0"
+botocore = ">=1.29.156,<1.30.0"
 jmespath = ">=0.7.1,<2.0.0"
 s3transfer = ">=0.6.0,<0.7.0"
 
@@ -172,13 +172,13 @@ crt = ["botocore[crt] (>=1.21.0,<2.0a0)"]
 
 [[package]]
 name = "botocore"
-version = "1.29.146"
+version = "1.29.156"
 description = "Low-level, data-driven core of boto 3."
 optional = false
 python-versions = ">= 3.7"
 files = [
-    {file = "botocore-1.29.146-py3-none-any.whl", hash = "sha256:ac57003292f18206ee942eafc381ecd9a3420a3844d6b7e1c1b0f4b88b28263b"},
-    {file = "botocore-1.29.146.tar.gz", hash = "sha256:77f7793cb36074eb84d606a23ad6e1d57c20f7a2eeab7d9136d3e63c584e0504"},
+    {file = "botocore-1.29.156-py3-none-any.whl", hash = "sha256:44b26a5468402bb9e5028d8f9ef2eba973cde016979aa72f87db32ef9000dab4"},
+    {file = "botocore-1.29.156.tar.gz", hash = "sha256:21d0c2cb1461f2676e41a896e6e551c7da09e923f416322182520851b179ebda"},
 ]
 
 [package.dependencies]
@@ -929,18 +929,18 @@ misaka = ">=2.0,<3.0"
 
 [[package]]
 name = "flask-sqlalchemy"
-version = "3.0.3"
+version = "3.0.4"
 description = "Add SQLAlchemy support to your Flask application."
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "Flask-SQLAlchemy-3.0.3.tar.gz", hash = "sha256:2764335f3c9d7ebdc9ed6044afaf98aae9fa50d7a074cef55dde307ec95903ec"},
-    {file = "Flask_SQLAlchemy-3.0.3-py3-none-any.whl", hash = "sha256:add5750b2f9cd10512995261ee2aa23fab85bd5626061aa3c564b33bb4aa780a"},
+    {file = "flask_sqlalchemy-3.0.4-py3-none-any.whl", hash = "sha256:23d44ca566b02b0b5ee5b29d81b435079402ad73c116bf9918dbda5b03aa30ba"},
+    {file = "flask_sqlalchemy-3.0.4.tar.gz", hash = "sha256:b812bc7f1bbf5ff3041cbfa0428bb191bed2c342b7bed88c15d7ce01890bfd5d"},
 ]
 
 [package.dependencies]
-Flask = ">=2.2"
-SQLAlchemy = ">=1.4.18"
+flask = ">=2.2.5"
+sqlalchemy = ">=1.4.18"
 
 [[package]]
 name = "flask-talisman"
@@ -1643,13 +1643,13 @@ testing = ["coverage", "pytest", "pytest-cov", "pytest-regressions"]
 
 [[package]]
 name = "marko"
-version = "1.3.0"
+version = "2.0.0"
 description = "A markdown parser with high extensibility."
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "marko-1.3.0-py3-none-any.whl", hash = "sha256:f5b03e68fa2fb76810d5e51a198d343e3b35e028d45e43c543c7c45e82170b66"},
-    {file = "marko-1.3.0.tar.gz", hash = "sha256:8e52155860ebfb0394f92bc1ca7e5a30e4fca5392d71bf2af2b11971e8972667"},
+    {file = "marko-2.0.0-py3-none-any.whl", hash = "sha256:d5a8221e0d4a9369e662c33ccfe33dea7deb2bebcf1ac3d5a4b46d42ab309e8f"},
+    {file = "marko-2.0.0.tar.gz", hash = "sha256:efc26460893250c13751025ae9202ebb1389887036fc0df9009c6ab875467030"},
 ]
 
 [package.extras]
@@ -1739,12 +1739,12 @@ files = [
 
 [[package]]
 name = "micawber"
-version = "0.5.4"
+version = "0.5.5"
 description = "a small library for extracting rich content from urls"
 optional = false
 python-versions = "*"
 files = [
-    {file = "micawber-0.5.4.tar.gz", hash = "sha256:003c5345aafe84f6b60fd289c003e8b1fef04c14e015c2d52d792a6b88135c89"},
+    {file = "micawber-0.5.5.tar.gz", hash = "sha256:0ac5814b65ff2a781fb1394b91a23a8a95f73492b6bb8f705baeead82eadd543"},
 ]
 
 [[package]]
@@ -2091,13 +2091,13 @@ test = ["nose"]
 
 [[package]]
 name = "pytest"
-version = "7.3.1"
+version = "7.3.2"
 description = "pytest: simple powerful testing with Python"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "pytest-7.3.1-py3-none-any.whl", hash = "sha256:3799fa815351fea3a5e96ac7e503a96fa51cc9942c3753cda7651b93c1cfa362"},
-    {file = "pytest-7.3.1.tar.gz", hash = "sha256:434afafd78b1d78ed0addf160ad2b77a30d35d4bdf8af234fe621919d9ed15e3"},
+    {file = "pytest-7.3.2-py3-none-any.whl", hash = "sha256:cdcbd012c9312258922f8cd3f1b62a6580fdced17db6014896053d47cddf9295"},
+    {file = "pytest-7.3.2.tar.gz", hash = "sha256:ee990a3cc55ba808b80795a79944756f315c67c12b56abd3ac993a7b8c17030b"},
 ]
 
 [package.dependencies]
@@ -2110,7 +2110,7 @@ pluggy = ">=0.12,<2.0"
 tomli = {version = ">=1.0.0", markers = "python_version < \"3.11\""}
 
 [package.extras]
-testing = ["argcomplete", "attrs (>=19.2.0)", "hypothesis (>=3.56)", "mock", "nose", "pygments (>=2.7.2)", "requests", "xmlschema"]
+testing = ["argcomplete", "attrs (>=19.2.0)", "hypothesis (>=3.56)", "mock", "nose", "pygments (>=2.7.2)", "requests", "setuptools", "xmlschema"]
 
 [[package]]
 name = "python-dateutil"
@@ -2281,17 +2281,17 @@ idna2008 = ["idna"]
 
 [[package]]
 name = "rich"
-version = "13.4.1"
+version = "13.4.2"
 description = "Render rich text, tables, progress bars, syntax highlighting, markdown and more to the terminal"
 optional = false
 python-versions = ">=3.7.0"
 files = [
-    {file = "rich-13.4.1-py3-none-any.whl", hash = "sha256:d204aadb50b936bf6b1a695385429d192bc1fdaf3e8b907e8e26f4c4e4b5bf75"},
-    {file = "rich-13.4.1.tar.gz", hash = "sha256:76f6b65ea7e5c5d924ba80e322231d7cb5b5981aa60bfc1e694f1bc097fe6fe1"},
+    {file = "rich-13.4.2-py3-none-any.whl", hash = "sha256:8f87bc7ee54675732fa66a05ebfe489e27264caeeff3728c945d25971b6485ec"},
+    {file = "rich-13.4.2.tar.gz", hash = "sha256:d653d6bccede5844304c605d5aac802c7cf9621efd700b46c7ec2b51ea914898"},
 ]
 
 [package.dependencies]
-markdown-it-py = ">=2.2.0,<3.0.0"
+markdown-it-py = ">=2.2.0"
 pygments = ">=2.13.0,<3.0.0"
 typing-extensions = {version = ">=4.0.0,<5.0", markers = "python_version < \"3.9\""}
 
@@ -2317,13 +2317,13 @@ crt = ["botocore[crt] (>=1.20.29,<2.0a.0)"]
 
 [[package]]
 name = "setuptools"
-version = "67.8.0"
+version = "68.0.0"
 description = "Easily download, build, install, upgrade, and uninstall Python packages"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "setuptools-67.8.0-py3-none-any.whl", hash = "sha256:5df61bf30bb10c6f756eb19e7c9f3b473051f48db77fddbe06ff2ca307df9a6f"},
-    {file = "setuptools-67.8.0.tar.gz", hash = "sha256:62642358adc77ffa87233bc4d2354c4b2682d214048f500964dbe760ccedf102"},
+    {file = "setuptools-68.0.0-py3-none-any.whl", hash = "sha256:11e52c67415a381d10d6b462ced9cfb97066179f0e871399e006c4ab101fc85f"},
+    {file = "setuptools-68.0.0.tar.gz", hash = "sha256:baf1fdb41c6da4cd2eae722e135500da913332ab3f2f5c7d33af9b492acb5235"},
 ]
 
 [package.extras]
@@ -2463,16 +2463,17 @@ sqlcipher = ["sqlcipher3-binary"]
 
 [[package]]
 name = "sqlalchemy-continuum"
-version = "1.3.14"
+version = "1.3.15"
 description = "Versioning and auditing extension for SQLAlchemy."
 optional = false
 python-versions = "*"
 files = [
-    {file = "SQLAlchemy-Continuum-1.3.14.tar.gz", hash = "sha256:d7e93f971e91f2d5bd80cdccda4a9a544c299b1f1c3210d77aa0a3c9df0eda13"},
-    {file = "SQLAlchemy_Continuum-1.3.14-py3-none-any.whl", hash = "sha256:ba8748a898e0c9bae0ee6b9dcd2633d89e773f3b5c968bff69737bbb106a6e62"},
+    {file = "SQLAlchemy-Continuum-1.3.15.tar.gz", hash = "sha256:a52689d1580daabc496ca8420fa742d62b371bc43921d6c06374192e52e0c409"},
+    {file = "SQLAlchemy_Continuum-1.3.15-py3-none-any.whl", hash = "sha256:d2ecc798500f5d5195ecd2143f7d1eabb0aa46e0f213e38bfeb4331d25cc08d3"},
 ]
 
 [package.dependencies]
+six = "*"
 SQLAlchemy = ">=1.0.8"
 SQLAlchemy-Utils = ">=0.30.12"
 
