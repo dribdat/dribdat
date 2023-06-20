@@ -519,7 +519,7 @@ def package_specific_event(event_id, format):
 # ------ USER API --------
 
 
-@blueprint.route('/user/current/my-hackathons.json')
+@blueprint.route('/user/current/my-hackathons.json', methods=['GET'])
 def current_user_hackathon_json():
     """Output JSON-LD about a User's Event according to schema."""
     """See https://schema.org/Hackathon."""
@@ -528,7 +528,7 @@ def current_user_hackathon_json():
     return jsonify(data)
 
 
-@blueprint.route('/user/current/profile.json')
+@blueprint.route('/user/current/profile.json', methods=['GET'])
 def profile_user_current_json():
     """Output JSON with public data about the current user."""
     if current_user and not current_user.is_anonymous:
@@ -536,13 +536,25 @@ def profile_user_current_json():
     return jsonify({'message': 'Not logged in', 'status': 'error'})
 
 
-@blueprint.route('/user/<int:user_id>/profile.json')
-def profile_user_json(user_id: int):
-    """Output JSON with public data about a user."""
-    current_user = User.query.filter_by(id=user_id).first_or_404()
+def get_user_data(current_user):
+    """Retrieves public data for a user."""
     current_data = current_user.data
     current_data['score'] = current_user.get_score()
     del current_data['email']
     del current_data['sso_id']
     del current_data['is_admin']
-    return jsonify(current_data)
+    return current_data
+
+
+@blueprint.route('/user/<int:user_id>/profile.json', methods=['GET'])
+def profile_user_json(user_id: int):
+    """Output JSON with public data about a user."""
+    current_user = User.query.filter_by(id=user_id).first_or_404()
+    return jsonify(get_user_data(current_data))
+
+
+@blueprint.route('/user/<username>', methods=['GET'])
+def profile_username_json(username):
+    """Output JSON with public data by username."""
+    a_user = User.query.filter_by(username=username).first_or_404()
+    return jsonify(get_user_data(a_user))

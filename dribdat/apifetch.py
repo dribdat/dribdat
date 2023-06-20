@@ -209,10 +209,10 @@ def FetchBitbucketProject(project_url):
     }
 
 
-def FetchDataProject(project_url):
+def FetchDataProject(datapackage_url):
     """Try to load a Data Package formatted JSON file."""
     # TODO: use frictionlessdata library!
-    project_url = project_url.replace('datapackage.json', '')
+    project_url = datapackage_url.replace('datapackage.json', '')
     project_url = sanitize_url(project_url) + 'datapackage.json'
     data = requests.get(project_url, timeout=REQUEST_TIMEOUT)
     # TODO: treat dribdat events as special
@@ -228,8 +228,9 @@ def FetchDataProject(project_url):
         text_content = parse_data_package(json)
     except KeyError:
         text_content = '(Could not parse Data Package contents)'
-    contact_url = json['homepage'] or ''
-    if 'maintainers' in json and \
+    if 'homepage' in json:
+        contact_url = json['homepage'] or ''
+    elif 'maintainers' in json and \
             len(json['maintainers']) > 0 and \
             'web' in json['maintainers'][0]:
         contact_url = json['maintainers'][0]['web']
