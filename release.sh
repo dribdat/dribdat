@@ -4,12 +4,13 @@
 # set APPDIR if running from a different directory, e.g. in container
 
 if [ "$FORCE_MIGRATE" ]; then
+	# Forced upgrade
 	"${APPDIR:-.}/force-migrate.sh" psql
+	echo "Warning! Your database may be out of sync due to a forced upgrade."
 
 else
-	# Silent upgrade
+	# Standard upgrade
 	python "${APPDIR:-.}/manage.py" db upgrade 2>&1 >/dev/null
-	echo "Warning! Your database may be out of sync due to a forced upgrade."
 fi
 
 # Compress assets
