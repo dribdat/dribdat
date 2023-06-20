@@ -82,8 +82,9 @@ def box_datapackage(line, cache=None):
     base_url = url.replace('/datapackage.json', '')
     # Adjust for absolute URLs
     for r in range(0, len(package.resources)):
+        if not 'path' in package.resources[r]:
+            continue
         rp = package.resources[r]['path']
-        print(rp)
         if rp and not rp.startswith('http'):
             package.resources[r]['path'] = '/'.join([base_url, rp])
     # Render to template
