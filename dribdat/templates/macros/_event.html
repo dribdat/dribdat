@@ -45,15 +45,13 @@
 				</div>
 			{% endif %}
 		</div>
-		{% if False and project.team_count > 0 %}
-		<!-- TODO: this is way too slow at the moment -->
-			<div class="team-counter" 
-					 title="{{ project.team_count }} supporting">
-				{% if project.team_count == 1 %}
+		{% if project.is_challenge %}
+			<div class="team-counter" title="Team size ({{ project.score }})">
+				{% if project.score == 1 %}
 					<i class="fa fa-user"></i>
-				{% elif project.team_count == 2 %}
+				{% elif project.score == 2 %}
 					<i class="fa fa-user"></i><i class="fa fa-user"></i>
-				{% elif project.team_count > 2 %}
+				{% elif project.score > 2 %}
 					<i class="fa fa-users"></i>
 				{% endif %}
 			</div>

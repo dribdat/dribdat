@@ -201,22 +201,15 @@ def ProjectActivity(project, of_type, user, action=None, comments=None):
     """Generate an activity of a certain type in the project."""
     activity = Activity(
         name=of_type,
+        user_id=user.id,
         project_id=project.id,
         project_progress=project.progress,
         project_version=project.versions.count(),
         action=action
     )
-    activity.user_id = user.id
-    # Regular posts are 1 star
-    score = 1
-    # Booster stars give projects double points
-    if of_type == 'boost':
-        score = 2
     # Post comments are activity contents
     if comments is not None and len(comments) > 3:
         activity.content = comments
-    if project.score is None:
-        project.score = 0
     # Check for existing stars
     allstars = Activity.query.filter_by(
         name='star',
@@ -228,15 +221,15 @@ def ProjectActivity(project, of_type, user, action=None, comments=None):
             return  # One star per user
     elif of_type == 'unstar':
         if allstars.count() > 0:
-            allstars[0].delete()
-        project.score = project.score - score
-        project.save()
-        return
+            allstars.first().delete()
+            activity = None
     # Save current project score
-    project.score = project.score + score
-    activity.project_score = project.score
+    project.update()
     project.save()
-    db.session.add(activity)
+    db.session.add(project)
+    if activity is not None:
+        activity.project_score = project.score
+        db.session.add(activity)
     db.session.commit()
 
 

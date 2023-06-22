@@ -122,7 +122,8 @@ class DevConfig(Config):
     # Put the db file in project root
     DB_PATH = os.path.join(Config.PROJECT_ROOT, DB_NAME)
     SQLALCHEMY_DATABASE_URI = 'sqlite:///{0}'.format(DB_PATH)
-    DEBUG_TB_ENABLED = True
+    CACHE_TYPE = 'NullCache' # Do not cache
+    DEBUG_TB_ENABLED = True # Enable the Debug Toolbar
     ASSETS_DEBUG = True  # Don't bundle/minify static assets
     WTF_CSRF_ENABLED = False  # Allows form testing
 

@@ -916,12 +916,13 @@ class Project(PkModel):
 
     def calculate_score(self):  # noqa: C901
         """Calculate score of a project based on base progress."""
-        if self.is_challenge:
-            return 0
         score = self.progress or 0
         cqu = Activity.query.filter_by(project_id=self.id)
-        c_s = cqu.count()
+        # Challenges only get a point per team-member
+        if self.is_challenge:
+            return cqu.filter_by(name='star').count()
         # Get a point for every (join, update, comment ..) activity in dribs
+        c_s = cqu.count()
         score = score + (1 * c_s)
         # Extra point for every boost (upvote)
         c_a = cqu.filter_by(name="boost").count()

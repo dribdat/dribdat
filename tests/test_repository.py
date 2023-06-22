@@ -47,7 +47,7 @@ class TestRepository:
 
     def test_gitlab(self):
         """Test parsing a GitLab readme."""
-        test_url = 'https://gitlab.com/dribdat/dribdat'
+        test_url = 'https://gitlab.com/seismist/dribdat'
         test_obj = GetProjectData(test_url)
         assert 'name' in test_obj
         assert test_obj['name'] == 'dribdat'

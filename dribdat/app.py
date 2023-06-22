@@ -58,6 +58,7 @@ def init_app(config_object=ProdConfig):
     register_loggers(app)
     register_shellcontext(app)
     register_commands(app)
+    register_caching(app)
     return app
 
 
@@ -189,3 +190,14 @@ def register_loggers(app):
         stream_handler = logging.StreamHandler()
         app.logger.addHandler(stream_handler)
         app.logger.setLevel(logging.INFO)
+
+
+def register_caching(app):
+    """Prevent cached responses in debug."""
+    if 'DEBUG' in app.config and app.config['DEBUG']:
+        @app.after_request
+        def after_request(response):
+            response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate, public, max-age=0"
+            response.headers["Expires"] = 0
+            response.headers["Pragma"] = "no-cache"
+            return response

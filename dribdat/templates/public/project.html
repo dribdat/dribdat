@@ -404,8 +404,9 @@
         </div>
         <div class="modal-body">
           <p class="text-small text-left">
-            Use the <a href="{{ url_for('admin.users')}}">admin</a>
-            to look up a user, and place the exact username here to add to the team.
+            Use the <a href="{{ url_for('public.all_participants')}}">participant list</a>
+            or <a href="{{ url_for('admin.users')}}">admin</a>
+            to look up a user. Then place the exact username here to add them to the team.
             You can also remove a user with the <b>X</b> button next to their profile.
           </p>
           <form action="{{ url_for('project.project_star_user', project_id=project.id)}}" method="post">
