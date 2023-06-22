@@ -216,7 +216,7 @@ def event_participants(event_id):
     cert_path = None
     search_by = request.args.get('q')
     # Quick search filter
-    if search_by and len(search_by) > 1:
+    if search_by and len(search_by) > 2:
         #q = "%%%s%%" % search_by.lower()
         usearch = []
         if '@' in search_by:
@@ -235,8 +235,9 @@ def event_participants(event_id):
             qq = search_by.lower()
             usearch = []
             for u in users:
-                if qq in u.my_story or qq in u.my_goals:
-                    usearch.append(u)
+                if (u.my_story and qq in u.my_story) or \
+                    (u.my_goals and qq in u.my_goals):
+                        usearch.append(u)
     else:
         usearch = users
     # Provide certificate if available
