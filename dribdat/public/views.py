@@ -214,12 +214,38 @@ def event_participants(event_id):
     event = Event.query.filter_by(id=event_id).first_or_404()
     users = GetEventUsers(event)
     cert_path = None
+    search_by = request.args.get('q')
+    # Quick search filter
+    if search_by and len(search_by) > 1:
+        #q = "%%%s%%" % search_by.lower()
+        usearch = []
+        if '@' in search_by:
+            #users = users.filter(User.email.ilike(q))
+            #users = users.filter(User.username.ilike(qq))
+            qq = search_by.replace('@', '').lower()
+            # TODO: Fix the Yuck.
+            for u in users:
+                if qq in u.username:
+                    usearch.append(u)
+        else:
+            #users = users.filter(or_(
+            #    User.my_story.ilike(q),
+            #    User.my_goals.ilike(q),
+            #))
+            qq = search_by.lower()
+            usearch = []
+            for u in users:
+                if qq in u.my_story or qq in u.my_goals:
+                    usearch.append(u)
+    else:
+        usearch = users
+    # Provide certificate if available
     if current_user and not current_user.is_anonymous:
         cert_path = current_user.get_cert_path(event)
-    usercount = len(users) if users else 0
+    usercount = len(usearch) if usearch else 0
     return render_template("public/eventusers.html",
                            cert_path=cert_path,
-                           current_event=event, participants=users,
+                           current_event=event, participants=usearch,
                            usercount=usercount, active="participants")
 
 
