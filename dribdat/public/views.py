@@ -215,23 +215,15 @@ def event_participants(event_id):
     users = GetEventUsers(event)
     cert_path = None
     search_by = request.args.get('q')
-    # Quick search filter
+    # Quick (actually, rather slow..) search filter
     if search_by and len(search_by) > 2:
-        #q = "%%%s%%" % search_by.lower()
         usearch = []
         if '@' in search_by:
-            #users = users.filter(User.email.ilike(q))
-            #users = users.filter(User.username.ilike(qq))
             qq = search_by.replace('@', '').lower()
-            # TODO: Fix the Yuck.
             for u in users:
                 if qq in u.username:
                     usearch.append(u)
         else:
-            #users = users.filter(or_(
-            #    User.my_story.ilike(q),
-            #    User.my_goals.ilike(q),
-            #))
             qq = search_by.lower()
             usearch = []
             for u in users:
@@ -240,14 +232,51 @@ def event_participants(event_id):
                         usearch.append(u)
     else:
         usearch = users
+        search_by = ''
     # Provide certificate if available
     if current_user and not current_user.is_anonymous:
         cert_path = current_user.get_cert_path(event)
     usercount = len(usearch) if usearch else 0
     return render_template("public/eventusers.html",
+                           q=search_by,
                            cert_path=cert_path,
                            current_event=event, participants=usearch,
                            usercount=usercount, active="participants")
+
+
+
+@blueprint.route("/participants")
+def all_participants():
+    """Show list of participants of an event."""
+    users = User.query.filter_by(active=True)
+    search_by = request.args.get('q')
+    if search_by and len(search_by) > 2:
+        q = search_by.replace('@', '').lower()
+        q = "%%%s%%" % q
+        if '@' in search_by:
+            users = users.filter(or_(
+                User.email.ilike(q),
+                User.username.ilike(q)
+            ))
+        else:
+            users = users.filter(or_(
+                User.my_story.ilike(q),
+                User.my_goals.ilike(q),
+            ))
+    else:
+        users = users.limit(50).all()
+        search_by = ''
+    # Provide certificate if available
+    if users:
+        users = sorted(users, key=lambda x: x.username)
+        usercount = len(users)
+    else:
+        usercount = 0
+    return render_template("public/eventusers.html",
+                           q=search_by,
+                           participants=users, 
+                           usercount=usercount, 
+                           active="participants")
 
 
 @blueprint.route("/event/<int:event_id>/stages")

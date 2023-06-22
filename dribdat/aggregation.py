@@ -185,6 +185,7 @@ def GetEventUsers(event):
     users = []
     userlist = []
     projects = set([p.id for p in event.projects])
+    # TODO: slow; how about actual membership?
     activities = Activity.query.filter(and_(
             Activity.name=='star', 
             Activity.project_id.in_(projects)
