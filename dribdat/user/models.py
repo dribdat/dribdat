@@ -681,6 +681,7 @@ class Project(PkModel):
     @property
     def team_count(self):
         """Return follower count."""
+        # TODO: this is much too slow
         return Activity.query \
             .filter_by(project_id=self.id, name='star') \
             .count()

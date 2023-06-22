@@ -45,7 +45,8 @@
 				</div>
 			{% endif %}
 		</div>
-		{% if project.team_count > 0 %}
+		{% if False and project.team_count > 0 %}
+		<!-- TODO: this is way too slow at the moment -->
 			<div class="team-counter" 
 					 title="{{ project.team_count }} supporting">
 				{% if project.team_count == 1 %}
