@@ -221,14 +221,13 @@ def event_participants(event_id):
         if '@' in search_by:
             qq = search_by.replace('@', '').lower()
             for u in users:
-                if qq in u.username:
+                if qq in u.username.lower() or qq in u.email.lower():
                     usearch.append(u)
         else:
             qq = search_by.lower()
-            usearch = []
             for u in users:
-                if (u.my_story and qq in u.my_story) or \
-                    (u.my_goals and qq in u.my_goals):
+                if (u.my_story and qq in u.my_story.lower()) or \
+                    (u.my_goals and qq in u.my_goals.lower()):
                         usearch.append(u)
     else:
         usearch = users
