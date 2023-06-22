@@ -162,7 +162,8 @@ class User(UserMixin, PkModel):
             gr_size = 80
             email = self.email.lower().encode('utf-8')
             gravatar_url = "https://www.gravatar.com/avatar/"
-            gravatar_url += hashlib.md5(email).hexdigest() + "?"
+            gravatar_url += hashlib.md5(email).hexdigest() 
+            gravatar_url += "?d=retro&"
             gravatar_url += urlencode({'s': str(gr_size)})
             self.carddata = gravatar_url
         self.save()
