@@ -87,10 +87,20 @@ document.getElementById('next').addEventListener('click', onNextPage);
 
 // Keyboard navigation
 $("body").keydown(function(e) {
+  //console.log(e.keyCode);
   if (e.keyCode == 37) { // left
     onPrevPage();
   }
   else if(e.keyCode == 39) { // right
+    onNextPage();
+  }
+  else if(e.keyCode == 33) { // page up
+    onPrevPage();
+  }
+  else if(e.keyCode == 34) { // page down
+    onNextPage();
+  }
+  else if(e.keyCode == 32) { // spacebar
     onNextPage();
   }
 });
