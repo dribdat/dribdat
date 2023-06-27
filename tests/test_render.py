@@ -16,8 +16,9 @@ import pytest
 class TestRender:
     """Here be render tests."""
 
-    TEST_DPKG = 'https://meta.dribdat.cc/api/event/2/datapackage.json'
+    TEST_DPKG = 'https://hack.opendata.ch/api/event/1/datapackage.json'
     TEST_CKAN = 'https://opendata.swiss/de/dataset/21st-century-swiss-video-games'
+    FILE_MOCK = 'tests/mock/datapackage.json'
 
     def test_localpackage(self, testapp):
         """Create and render a data package."""
@@ -35,12 +36,12 @@ class TestRender:
 
     def test_loadpackage(self, testapp):
         """Load a data package from a file."""
-        updates = load_file_datapackage('tests/mock/datapackage.json')
+        updates = load_file_datapackage(self.FILE_MOCK)
         assert updates != {}
         assert 'events' in updates
         assert len(updates['events']) == 1
         # Dry run will not load projects, since event needs to be created
-        update_all = load_file_datapackage('tests/mock/datapackage.json', False, True)
+        update_all = load_file_datapackage(self.FILE_MOCK, False, True)
         assert 'projects' in update_all
         assert len(update_all['projects']) == 1
 
@@ -50,7 +51,7 @@ class TestRender:
         assert dpkg is not None
         assert 'events' in dpkg
         evt0 = dpkg['events'][0]
-        assert evt0['name'] == "Awesome hackathon"
+        assert evt0['name'] == "Open Energy Data Hackdays"
 
     def test_datapackage(self, testapp):
         """Render a remote data package."""
@@ -58,7 +59,7 @@ class TestRender:
         dpkg_html = box_datapackage(test_url)
         assert dpkg_html is not None
         assert "boxout" in dpkg_html
-        assert "Awesome hackathon" in dpkg_html
+        assert "Open Energy Data Hackdays" in dpkg_html
 
     def test_ckan(self, testapp):
         """Render a dataset from CKAN."""

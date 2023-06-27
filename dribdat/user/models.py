@@ -162,7 +162,8 @@ class User(UserMixin, PkModel):
             gr_size = 80
             email = self.email.lower().encode('utf-8')
             gravatar_url = "https://www.gravatar.com/avatar/"
-            gravatar_url += hashlib.md5(email).hexdigest() + "?"
+            gravatar_url += hashlib.md5(email).hexdigest() 
+            gravatar_url += "?d=retro&"
             gravatar_url += urlencode({'s': str(gr_size)})
             self.carddata = gravatar_url
         self.save()
@@ -680,6 +681,7 @@ class Project(PkModel):
     @property
     def team_count(self):
         """Return follower count."""
+        # TODO: this is much too slow
         return Activity.query \
             .filter_by(project_id=self.id, name='star') \
             .count()
@@ -914,12 +916,13 @@ class Project(PkModel):
 
     def calculate_score(self):  # noqa: C901
         """Calculate score of a project based on base progress."""
-        if self.is_challenge:
-            return 0
         score = self.progress or 0
         cqu = Activity.query.filter_by(project_id=self.id)
-        c_s = cqu.count()
+        # Challenges only get a point per team-member
+        if self.is_challenge:
+            return cqu.filter_by(name='star').count()
         # Get a point for every (join, update, comment ..) activity in dribs
+        c_s = cqu.count()
         score = score + (1 * c_s)
         # Extra point for every boost (upvote)
         c_a = cqu.filter_by(name="boost").count()

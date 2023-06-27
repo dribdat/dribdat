@@ -58,24 +58,22 @@
       <div class="content">
         <h3>Get the data</h3>
         <p>
-          You can use the <b>My Data</b> button on your profile to download a summary of your contributions. There is a simple open API for accessing data from this site in machine-readable form over the Web.
+          You can use the <b>My Data</b> button on your profile to download a summary of your contributions. There is a simple open API for accessing data from this site in machine-readable form over the Web. See details in the <a href="https://dribdat.cc/contribute.html#api-guide">Dribdat API Guide</a>.
         </p>
         <p>Download data on the featured or past (replace <tt>current</tt> by <tt>id</tt>) events</p>
         <ul class="pl-3">
           <li><a href="/hackathon.json">/hackathon.json</a> (JSON <a href="https://schema.org/Hackathon">Schema</a>)</li>
-          <li><a href="/api/event/current/info.json">/api/event/current/info.json</a> (JSON basic info)</li>
-          <li><a href="/api/event/current/datapackage.json">/api/event/current/datapackage.json</a> (Frictionless Data Package)</li>
-          <li><a href="/api/event/current/datapackage.zip">/api/event/current/datapackage.zip</a> (Full data when authenticated)</li>
-        </ul>
-        <p>Retrieve project data from the <tt>current</tt> (or <tt>id</tt>) event</p>
-        <ul class="pl-3">
+          <li><a href="/api/events.json">/api/events.json</a> (JSON list of events)</li>
+          <li><a href="/api/events.csv">/api/events.csv</a> (CSV list of events)</li>
+          <li><a href="/api/event/current/info.json">/api/event/current/info.json</a> (JSON for current event)</li>
+          <li><a href="/api/event/current/datapackage.json">/api/event/current/datapackage.json</a> (<a href="https://frictionlessdata.io">Frictionless Data</a> Package)</li>
           <li><a href="/api/event/current/projects.json">/api/event/current/projects</a> (JSON)</li>
           <li><a href="/api/event/current/projects.csv">/api/event/current/projects</a> (CSV)</li>
         </ul>
-        <p>Search the projects, recent activity, and posts (use <tt>q=...</tt> for query, set <tt>limit=10</tt>)</p>
+        <p>Search projects, recent activity, and posts (use <tt>q=...</tt> for query, set <tt>limit=10</tt>)</p>
         <ul class="pl-3">
-          <li><a href="/api/project/search.json">/api/project/search.json</a> (JSON)</li>
           <li><a href="/api/project/activity.json">/api/project/activity.json</a> (JSON)</li>
+          <li><a href="/api/project/search.json">/api/project/search.json</a> (JSON)</li>
           <li><a href="/api/project/posts.json">/api/project/posts.json</a> (JSON)</li>
         </ul>
       </div>
@@ -86,11 +84,10 @@
       <a href="https://en.wikipedia.org/wiki/MIT_License" target="_blank">MIT license</a>
        -
       source code available on
-        <a href="https://github.com/dribdat/dribdat" target="_blank">GitHub</a>,
-        <a href="https://gitlab.com/dribdat/dribdat" target="_blank">GitLab</a> and
+        <a href="https://github.com/dribdat/dribdat" target="_blank">GitHub</a> and
         <a href="https://codeberg.org/dribdat/dribdat" target="_blank">Codeberg</a>
        -
-      visit <a href="https://app.fossa.com/projects/git%2Bgithub.com%2Floleg%2Fdribdat/refs/branch/main/3296a528a7ac2c09486c7cfae513d64d263cc238/preview">FOSSA</a>
+      visit <a href="https://app.fossa.com/projects/git%2Bgithub.com%2Floleg%2Fdribdat?utm_source=share_link">FOSSA</a>
       for a list of bundled code works.
     </center>
   </div>

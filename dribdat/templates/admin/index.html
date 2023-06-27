@@ -22,12 +22,17 @@
     {% endif %}
     </div>
     <div class="btn-group mb-2 text-center">
-      <a href="{{ url_for('admin.categories') }}" class="btn btn-lg btn-info">
+      <a href="{{ url_for('admin.presets') }}" class="btn btn-lg btn-info">
         <i class="fa fa-pencil" aria-hidden="true"></i>
         Roles</a>
       <a href="{{ url_for('admin.categories') }}" class="btn btn-lg btn-info">
         <i class="fa fa-pencil" aria-hidden="true"></i>
         Categories</a>
+    </div>
+    <div class="btn-group mb-2 text-center">
+      <a href="{{ url_for('public.all_participants') }}" class="btn btn-lg btn-light">
+        <i class="fa fa-child" aria-hidden="true"></i>
+        Users</a>
     </div>
     <div class="container">
       <div id="activities"></div>

@@ -4,9 +4,10 @@
 See: http://webtest.readthedocs.org/
 """
 from flask import url_for
-from .factories import ProjectFactory, EventFactory
+from .factories import ProjectFactory, EventFactory, UserFactory
 from dribdat.onebox import make_onebox
 from dribdat.public.projhelper import resources_by_stage, project_action
+from dribdat.aggregation import ProjectActivity
 
 
 class TestProjects:
@@ -62,3 +63,35 @@ EOF""" % (url, url)
         project.save()
         assert len(resources_by_stage(0)) == 1
         assert project_action(project.id)
+
+    def test_participant_search(self, user, testapp):
+        """Search for participants."""
+        res = testapp.get('/participants')
+        form = res.forms[0]
+        # Search for a user that doesn't exist
+        form['q'] = '@ibraci'
+        res = form.submit()
+        assert res.status_code == 200
+        assert 'No profiles' in res
+        # Create a user and search it
+        user1 = UserFactory()
+        user1.username = 'abracadabra'
+        user1.save()
+        form = res.forms[0]
+        form['q'] = '@abraca'
+        res = form.submit()
+        assert res.status_code == 200
+        assert 'abracadabra' in res
+        # Try the same, with an event
+        event = EventFactory()
+        event.save()
+        res = testapp.get('/event/%d/participants' % event.id)
+        assert res.status_code == 200
+        assert 'No profiles' in res
+        project = ProjectFactory()
+        project.event_id = event.id
+        project.save()
+        ProjectActivity(project, 'star', user1)
+        res = testapp.get('/event/%d/participants' % event.id)
+        assert res.status_code == 200
+        assert 'abracadabra' in res

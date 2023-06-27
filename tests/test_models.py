@@ -164,6 +164,30 @@ class TestProject:
         dpkg_html = box_project(project.url)
         assert "onebox" in dpkg_html
 
+    def test_project_score(self, db):
+        """Test role factory."""
+        project = ProjectFactory()
+        project.save()
+        assert project.is_challenge
+        project.update()
+        assert project.score == 0
+        user1 = UserFactory()
+        user1.save()
+        ProjectActivity(project, 'star', user1)
+        project.update()
+        assert project.score == 1
+        user2 = UserFactory()
+        user2.save()
+        ProjectActivity(project, 'star', user1)
+        project.update()
+        assert project.score == 1
+        ProjectActivity(project, 'star', user2)
+        project.update()
+        assert project.score == 2
+        ProjectActivity(project, 'unstar', user2)
+        project.update()
+        assert project.score == 1
+        
 # @pytest.mark.usefixtures('db')
 # class TestResource:
 #     """Resource (Component) tests."""

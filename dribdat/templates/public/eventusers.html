@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 {% import "macros/_misc.html" as misc %}
 
-{% block page_title %}{{current_event.name}} / Participants{% endblock %}
+{% block page_title %}Participants{% endblock %}
 {% block body_class %}eventusers{% endblock %}
 
 {% block content %}
@@ -16,9 +16,22 @@
 </div>
 {% endif %}
 
-{% cache 300, 'eventusers-%d' % current_event.id %}
 
 <h1 class="huge">Contributors</h1>
+
+<div data-action="/api/user/search.json" id="search-users" style="margin-bottom:1em; width:400px">
+  <form method="get" action="participants">
+    <div class="content input-group">
+      <div class="input-group-prepend">
+        <span class="input-group-text">Search</span>
+      </div>
+      <input type="text" class="form-control" name="q" value="{{ q }}"
+        aria-label="Search users" 
+        placeholder="@user or free text in profile ..." 
+        style="width:20em; max-width:80%" />
+    </div>
+  </form>
+</div>
 
 <div class="event-participants">
 {% if participants %}
@@ -30,24 +43,27 @@
   </div>
 
 {% else %}
-<h4>This event does not yet have any projects or challenges with a team.
-  <!-- Or perhaps nobody has joined any that exist. -->
-  Now is a good time to start some, and encourage your participants to Join one.</h4>
+<blockquote><i><!-- This event does not yet have any projects or challenges with a team.-->
+  <!-- Or perhaps nobody has joined any that exist. 
+  Now is a good time to start some, and -->
+  Encourage your participants to create a profile and Join a team.</i></blockquote>
 {% endif %}
 </div><!-- /event-participants -->
 
 <div category-id="infobox">
-  {% if current_event.has_started and not current_event.has_finished %}
+  {% if current_event and current_event.has_started and not current_event.has_finished %}
     <center><h4><i class="fa fa-lightbulb-o"></i> &nbsp;Join a project or
-      challenge to be listed here!</h4>
+      challenge to be listed here</h4>
     <p>As
       <span class="user-score">{{ usercount }}</span> have done in
       <a href="{{ url_for('public.event', event_id=current_event.id) }}">
-      this event</a> already.</p></center>
+      this event</a> already</p></center>
+  {% elif not usercount %}
+    <center>No profiles matching, please try again.</center>
   {% else %}
     <center>
       <span class="user-score">{{ usercount }}</span>
-      users who have joined a challenge on this platform.</center>
+      users are here</center>
   {% endif %}
 </div>
 
@@ -59,5 +75,4 @@
 </center>
 {% endif %}
 
-{% endcache %}
 {% endblock %}

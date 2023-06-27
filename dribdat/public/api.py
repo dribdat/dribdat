@@ -110,6 +110,23 @@ def project_list_current_csv():
     return project_list_csv(event.id, event.name)
 
 
+@blueprint.route('/events.<as_format>')
+def list_all_events(as_format='json'):
+    """Output basic data of all public events."""
+    eventlist = []
+    for event in Event.query \
+            .filter_by(is_hidden=False, lock_resources=False) \
+            .order_by(Event.starts_at.desc()).all():
+        eventlist.append(event.data)
+    if as_format == 'json':
+        return jsonify(events=eventlist)
+    headers = {'Content-Disposition': 'attachment; filename=events.csv'}
+    csvlist = gen_csv(eventlist)
+    return Response(stream_with_context(csvlist),
+                    mimetype='text/csv',
+                    headers=headers)
+
+
 @blueprint.route('/events/projects.csv')
 def project_list_all_events_csv():
     """Output CSV of projects and challenges in all events."""
