@@ -9,7 +9,7 @@ class TestRepository:
 
     def test_datapackage_dribdat(self):
         """Test parsing a dribdat Data Package."""
-        test_url = 'https://meta.dribdat.cc/api/event/current/datapackage.json'
+        test_url = 'https://raw.githubusercontent.com/dribdat/dribdat/main/tests/mock/datapackage.json'
         test_obj = GetProjectData(test_url)
         assert 'name' in test_obj
         assert test_obj['type'] == 'Data Package'
