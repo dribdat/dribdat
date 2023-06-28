@@ -15,20 +15,18 @@ down_revision = '0884a8accfad'
 branch_labels = None
 depends_on = None
 
-
-def upgrade():
-    with op.batch_alter_table('activities') as batch_op:
-        batch_op.drop_column('resource_id')
-        batch_op.alter_column(
-            'name',
-            sa.Enum(
+new_type = sa.Enum(
                 'review',
                 'boost',
                 'create',
                 'update',
                 'star',
                 name='activity_type')
-        )
+
+def upgrade():
+    with op.batch_alter_table('activities') as batch_op:
+        batch_op.drop_column('resource_id')
+        batch_op.alter_column('name', type_=new_type)
     with op.batch_alter_table('resources') as batch_op:
         batch_op.add_column(
             sa.Column('project_id', sa.Integer(), nullable=True))
