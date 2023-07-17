@@ -7,7 +7,9 @@ from flask import url_for
 
 from dribdat.user.models import User, Project
 
-from .factories import UserFactory
+from dribdat.public.project import revert_project_by_activity
+
+from .factories import UserFactory, ProjectFactory, EventFactory
 
 
 class TestEditing:
@@ -67,3 +69,41 @@ class TestEditing:
         res = form.submit()
         # sees error
         assert 'A user with this name already exists' in res
+
+    def test_edit_and_revert(self, db, testapp):
+        """Test reverting projects."""
+        user = UserFactory(active=True, is_admin=True)
+        user.set_password('myprecious')
+        user.save()
+        # Login with the user
+        res = testapp.get('/login/')
+        form = res.forms['loginForm']
+        form['username'] = user.username
+        form['password'] = 'myprecious'
+        res = form.submit().follow()
+        assert res.status_code == 200
+        event = EventFactory()
+        event.save()
+        project = ProjectFactory()
+        project.event = event
+        project.save()
+        # A new project was created: edit it
+        res1 = testapp.get('/project/%d/edit' % project.id)
+        form1 = res1.forms['projectEdit']
+        form1['longtext'] = "Hello"
+        res1 = form1.submit().follow()
+        assert res1.status_code == 200
+        # Change the content now
+        res2 = testapp.get('/project/%d/edit' % project.id)
+        form2 = res2.forms['projectEdit']
+        form2['longtext'] = "Fixme"
+        res2 = form2.submit().follow()
+        assert res2.status_code == 200
+        # Get previous activity and revert to it
+        activity = project.activities[-2]
+        assert activity.project_version is not None
+        result, status = revert_project_by_activity(project, activity)
+        assert result is not None
+        # Check that we have indeed reverted to original text
+        project = Project.query.first()
+        assert 'Hello' == project.longtext

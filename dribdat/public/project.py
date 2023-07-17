@@ -221,6 +221,18 @@ def post_delete(project_id, activity_id):
     return redirect(purl)
 
 
+def revert_project_by_activity(project, activity):
+    """Revert Project to a previous version based on an Activity."""
+    if not activity.project_version:
+        return None, 'Could not revert: data not available.'
+    elif activity.project_version == 0:
+        return None, 'Could not revert: this is the earliest version.'
+    # Apply revert
+    revert_to = activity.project_version
+    project.versions[revert_to - 1].revert()
+    return revert_to, 'Project data reverted to version %d.' % revert_to
+
+
 @blueprint.route('/<int:project_id>/undo/<int:activity_id>', methods=['GET'])
 @login_required
 def post_revert(project_id, activity_id):
@@ -232,15 +244,12 @@ def post_revert(project_id, activity_id):
         flash('Could not revert: user not allowed.', 'warning')
         return redirect(purl)
     activity = Activity.query.filter_by(id=activity_id).first_or_404()
-    if not activity.project_version:
-        flash('Could not revert: data not available.', 'warning')
-    elif activity.project_version == 0:
-        flash('Could not revert: this is the earliest version.', 'warning')
+    result, status = revert_project_by_activity(project, activity)
+    if not result:
+        flash(status, 'warning')
     else:
-        revert_to = activity.project_version
-        project.versions[revert_to - 1].revert()
-        flash('Project data reverted to version %d.' % revert_to, 'success')
-        return project_view(project.id)
+        flash(status, 'success')
+        return project_action(project_id, 'revert', then_redirect=True)
     return redirect(purl)
 
 

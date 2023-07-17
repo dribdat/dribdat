@@ -6,7 +6,10 @@ secure_scheme_headers = {
     'X-FORWARDED-PROTO': 'https',
     'X-FORWARDED-SSL': 'on'
 }
-bind = '0.0.0.0:%s' % str(os_env.get('PORT', 5000))
+
+port = str(os_env.get('PORT', 5000))
+bind = ['0.0.0.0:%s' % port, '[::1]:%s' % port]
+
 worker_class = 'gevent'
 workers = os_env.get('WORKERS', 2)
 errorlog = '-'
