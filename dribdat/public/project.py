@@ -17,7 +17,7 @@ from dribdat.user import (
     validateProjectData, stageProjectToNext, isUserActive,
 )
 from dribdat.public.projhelper import (
-    project_action, project_edit_action, resources_by_stage
+    project_action, project_edit_action, resources_by_stage, revert_project_by_activity
 )
 from ..decorators import admin_required
 
@@ -221,36 +221,46 @@ def post_delete(project_id, activity_id):
     return redirect(purl)
 
 
-def revert_project_by_activity(project, activity):
-    """Revert Project to a previous version based on an Activity."""
-    if not activity.project_version:
-        return None, 'Could not revert: data not available.'
-    elif activity.project_version == 0:
-        return None, 'Could not revert: this is the earliest version.'
-    # Apply revert
-    revert_to = activity.project_version
-    project.versions[revert_to - 1].revert()
-    return revert_to, 'Project data reverted to version %d.' % revert_to
-
-
 @blueprint.route('/<int:project_id>/undo/<int:activity_id>', methods=['GET'])
 @login_required
 def post_revert(project_id, activity_id):
     """Revert project to a previous version."""
     project = Project.query.filter_by(id=project_id).first_or_404()
-    purl = url_for('project.project_view_posted', project_id=project.id)
     starred = IsProjectStarred(project, current_user)
+    purl = url_for('project.project_view', project_id=project.id)
     if not isUserActive(current_user) or not starred:
         flash('Could not revert: user not allowed.', 'warning')
         return redirect(purl)
     activity = Activity.query.filter_by(id=activity_id).first_or_404()
-    result, status = revert_project_by_activity(project, activity)
-    if not result:
-        flash(status, 'warning')
+    if not activity.project_version:
+        flash('Could not revert: data not available.', 'warning')
+    elif activity.project_version == 0:
+        flash('Could not revert: this is the earliest version.', 'warning')
     else:
-        flash(status, 'success')
-        return project_action(project_id, 'revert', then_redirect=True)
+        revert_to = activity.project_version
+        project.versions[revert_to].revert()
+        project.save()
+        flash('Project data reverted (version %d).' % revert_to, 'success')
     return redirect(purl)
+
+
+@blueprint.route('/<int:project_id>/preview/<int:activity_id>', methods=['GET'])
+@login_required
+def post_preview(project_id, activity_id):
+    """Preview project data at a previous version."""
+    project = Project.query.filter_by(id=project_id).first_or_404()
+    purl = url_for('project.project_view_posted', project_id=project.id)
+    activity = Activity.query.filter_by(id=activity_id).first_or_404()
+    if not activity.project_version or activity.project_version == 0:
+        flash('Could not preview.', 'warning')
+        return redirect(purl)
+    preview_at = activity.project_version
+    project = project.versions[preview_at]
+    flash('This is the archived version (%d) of this page.' % preview_at, 'info')
+    return render_template(
+        'public/project.html', current_event=project.event, project=project,
+        past_version=activity_id, active="projects"
+    )
 
 
 @blueprint.route('/<int:project_id>/star/me', methods=['GET', 'POST'])

@@ -7,7 +7,7 @@ from flask import url_for
 
 from dribdat.user.models import User, Project
 
-from dribdat.public.project import revert_project_by_activity
+from dribdat.public.projhelper import revert_project_by_activity
 
 from .factories import UserFactory, ProjectFactory, EventFactory
 
