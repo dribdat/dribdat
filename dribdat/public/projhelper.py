@@ -175,9 +175,9 @@ def revert_project_by_activity(project, activity):
     """Revert Project to a previous version based on an Activity."""
     if not activity.project_version:
         return None, 'Could not revert: data not available.'
-    elif activity.project_version == 0:
-        return None, 'Could not revert: this is the earliest version.'
-    # Apply revert
     revert_to = activity.project_version
-    project.versions[revert_to - 1].revert()
+    if not revert_to > 0:
+        return None, 'Could not revert: invalid version.'
+    # Apply revert
+    project.versions[revert_to].revert()
     return revert_to, 'Project data reverted to version %d.' % revert_to

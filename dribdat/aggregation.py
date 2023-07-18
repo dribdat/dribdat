@@ -204,7 +204,7 @@ def ProjectActivity(project, of_type, user, action=None, comments=None):
         user_id=user.id,
         project_id=project.id,
         project_progress=project.progress,
-        project_version=project.versions.count(),
+        project_version=project.versions.count() - 1,
         action=action
     )
     # Post comments are activity contents
@@ -223,13 +223,10 @@ def ProjectActivity(project, of_type, user, action=None, comments=None):
         if allstars.count() > 0:
             allstars.first().delete()
             activity = None
-    # Save current project score
-    project.update()
-    project.save()
-    db.session.add(project)
-    if activity is not None:
-        activity.project_score = project.score
-        db.session.add(activity)
+    if activity is None:
+        return
+    activity.project_score = project.score
+    db.session.add(activity)
     db.session.commit()
 
 

@@ -377,7 +377,7 @@ def create_new_project(event):
 
     # Start as challenge
     project.progress = -1
-    project.event = event
+    project.event_id = event.id
     # Unless the event has started
     if event.has_started:
         project.progress = 5
