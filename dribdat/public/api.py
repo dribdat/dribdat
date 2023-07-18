@@ -203,6 +203,23 @@ def projects_posts_json():
     return jsonify(activities=get_event_activities(None, limit, q, "post"))
 
 
+@blueprint.route('/project/top.json')
+def projects_top_json():
+    """Output the top projects."""
+    limit = request.args.get('limit') or 10
+    #sort_by_score = request.args.get('score') or False
+    #sort_by_update = request.args.get('update') or False
+    pp = Project.query \
+            .filter_by(is_hidden=False) \
+            .order_by(Project.progress.desc()) \
+            .limit(limit).all()
+    projects = expand_project_urls(
+        [p.data for p in pp],
+        request.host_url
+    )
+    return jsonify(projects=projects)
+
+
 @blueprint.route('/project/<int:project_id>/activity.json')
 def project_activity_json(project_id):
     """Output JSON of recent activity of a project."""

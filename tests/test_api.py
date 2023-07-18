@@ -74,3 +74,7 @@ class TestEvents:
         # Test project Activities
         jsondata = json.loads(projects_activity_json().get_data())
         assert len(jsondata['activities']) == 1
+
+        # Test Project search
+        ppj = json.loads(projects_top_json().get_data())
+        assert len(ppj['projects']) == 1
