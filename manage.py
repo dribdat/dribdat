@@ -54,7 +54,7 @@ def test(name):
     else:
         feat_test = TEST_PATH
     import subprocess
-    return subprocess.call(['pytest', feat_test])
+    return subprocess.call(['pytest', '-W default', feat_test])
 
 
 @click.group(cls=FlaskGroup, create_app=create_app)

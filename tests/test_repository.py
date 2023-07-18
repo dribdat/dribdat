@@ -3,6 +3,7 @@
 
 from dribdat.aggregation import GetProjectData
 from requests.exceptions import ReadTimeout
+import warnings
 
 class TestRepository:
     """Here be dataragons."""
@@ -12,8 +13,8 @@ class TestRepository:
         test_url = 'https://raw.githubusercontent.com/dribdat/dribdat/main/tests/mock/datapackage.json'
         try:
             test_obj = GetProjectData(test_url)
-        except ReadTimeout
-            return print("Warning: GitHub is not accessible")
+        except ReadTimeout:
+            return warnings.warn("GitHub is not accessible")
         assert 'name' in test_obj
         assert test_obj['type'] == 'Data Package'
         assert 'dribdat' in test_obj['description']
@@ -24,8 +25,8 @@ class TestRepository:
         test_url = 'https://raw.githubusercontent.com/OpenEnergyData/energy-data-ch/master/datapackage.json'
         try:
             test_obj = GetProjectData(test_url)
-        except ReadTimeout
-            return print("Warning: GitHub is not accessible")
+        except ReadTimeout:
+            return warnings.warn("GitHub is not accessible")
         assert 'name' in test_obj
         assert test_obj['type'] == 'Data Package'
         assert 'Datasets' in test_obj['summary']
@@ -36,8 +37,8 @@ class TestRepository:
         test_url = 'https://codeberg.org/dribdat/dribdat'
         try:
             test_obj = GetProjectData(test_url)
-        except ReadTimeout
-            return print("Warning: GitHub is not accessible")
+        except ReadTimeout:
+            return warnings.warn("Codeberg is not accessible")
         assert 'name' in test_obj
         assert test_obj['name'] == 'dribdat'
         assert test_obj['type'] == 'Gitea'
@@ -49,8 +50,8 @@ class TestRepository:
         test_url = 'https://github.com/dribdat/dribdat/blob/main/README.md'
         try:
             test_obj = GetProjectData(test_url)
-        except ReadTimeout
-            return print("Warning: GitHub is not accessible")
+        except ReadTimeout:
+            return warnings.warn("GitHub is not accessible")
         assert 'name' in test_obj
         assert test_obj['name'] == 'dribdat'
         assert test_obj['type'] == 'GitHub'
@@ -62,8 +63,8 @@ class TestRepository:
         test_url = 'https://gitlab.com/seismist/dribdat'
         try:
             test_obj = GetProjectData(test_url)
-        except ReadTimeout
-            return print("Warning: GitHub is not accessible")
+        except ReadTimeout:
+            return warnings.warn("GitLab is not accessible")
         assert 'name' in test_obj
         assert test_obj['name'] == 'dribdat'
         assert test_obj['type'] == 'GitLab'
@@ -75,8 +76,8 @@ class TestRepository:
         test_url = 'https://bitbucket.org/dribdat/dribdat/src/master/'
         try:
             test_obj = GetProjectData(test_url)
-        except ReadTimeout
-            return print("Warning: GitHub is not accessible")
+        except ReadTimeout:
+            return warnings.warn("Bitbucket is not accessible")
         assert 'name' in test_obj
         assert test_obj['name'] == 'dribdat'
         assert test_obj['type'] == 'Bitbucket'
