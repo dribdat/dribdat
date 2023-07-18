@@ -381,7 +381,7 @@ class Event(PkModel):
         desc = self.summary or re.sub('<[^>]*>', '', self.description or '')
         d = {
             "@context": "http://schema.org",
-            "@type": "Event",
+            "@type": "Hackathon",
             "name": self.name,
             "url": host_url + self.url,
             "description": desc,
@@ -395,7 +395,7 @@ class Event(PkModel):
                 "name": self.hostname, "address": self.location
             }
         if self.logo_url:
-            d["logo"] = self.logo_url
+            d["image"] = self.logo_url
         if self.webpage_url:
             d["mainEntityOfPage"] = self.webpage_url
             d["offers"] = {"@type": "Offer", "url": self.webpage_url}
@@ -835,7 +835,7 @@ class Project(PkModel):
             "name": self.name,
             "description": cleansummary,
             "dateCreated": format_date(self.created_at, '%Y-%m-%dT%H:%M'),
-            "dateUpdated": format_date(self.updated_at, '%Y-%m-%dT%H:%M'),
+            "dateModified": format_date(self.updated_at, '%Y-%m-%dT%H:%M'),
             "discussionUrl": self.contact_url,
             "image": self.image_url,
             "license": content_license,
