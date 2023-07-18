@@ -1013,7 +1013,7 @@ nav .nav-login {
 .timeline-start .timeline-card::after,
 .timeline-finish .timeline-card::after,
 .timeline-progress .timeline-card::after { display: initial; }
-.timeline-card .close { margin: 0.4em; }
+.timeline-card .close { margin: 0.4em; color: black; }
 /* Other project timeline customizations */
 .project-page .timeline-review .timeline-content { background: #f2fef2; border-top: none; }
 .project-page .timeline-pencil .timeline-content { background: #ffc; border-top: none; }

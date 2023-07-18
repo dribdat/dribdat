@@ -169,3 +169,15 @@ def project_action(project_id, of_type=None, as_view=True, then_redirect=False,
         lock_editing=lock_editing, missing_roles=missing_roles,
         share=share, active="projects"
     )
+
+
+def revert_project_by_activity(project, activity):
+    """Revert Project to a previous version based on an Activity."""
+    if not activity.project_version:
+        return None, 'Could not revert: data not available.'
+    revert_to = activity.project_version
+    if not revert_to > 0:
+        return None, 'Could not revert: invalid version.'
+    # Apply revert
+    project.versions[revert_to].revert()
+    return revert_to, 'Project data reverted to version %d.' % revert_to

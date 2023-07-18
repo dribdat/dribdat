@@ -17,7 +17,7 @@ from dribdat.user import (
     validateProjectData, stageProjectToNext, isUserActive,
 )
 from dribdat.public.projhelper import (
-    project_action, project_edit_action, resources_by_stage
+    project_action, project_edit_action, resources_by_stage, revert_project_by_activity
 )
 from ..decorators import admin_required
 
@@ -226,8 +226,8 @@ def post_delete(project_id, activity_id):
 def post_revert(project_id, activity_id):
     """Revert project to a previous version."""
     project = Project.query.filter_by(id=project_id).first_or_404()
-    purl = url_for('project.project_view_posted', project_id=project.id)
     starred = IsProjectStarred(project, current_user)
+    purl = url_for('project.project_view', project_id=project.id)
     if not isUserActive(current_user) or not starred:
         flash('Could not revert: user not allowed.', 'warning')
         return redirect(purl)
@@ -238,10 +238,29 @@ def post_revert(project_id, activity_id):
         flash('Could not revert: this is the earliest version.', 'warning')
     else:
         revert_to = activity.project_version
-        project.versions[revert_to - 1].revert()
-        flash('Project data reverted to version %d.' % revert_to, 'success')
-        return project_view(project.id)
+        project.versions[revert_to].revert()
+        project.save()
+        flash('Project data reverted (version %d).' % revert_to, 'success')
     return redirect(purl)
+
+
+@blueprint.route('/<int:project_id>/preview/<int:activity_id>', methods=['GET'])
+@login_required
+def post_preview(project_id, activity_id):
+    """Preview project data at a previous version."""
+    project = Project.query.filter_by(id=project_id).first_or_404()
+    purl = url_for('project.project_view_posted', project_id=project.id)
+    activity = Activity.query.filter_by(id=activity_id).first_or_404()
+    if not activity.project_version or activity.project_version == 0:
+        flash('Could not preview.', 'warning')
+        return redirect(purl)
+    preview_at = activity.project_version
+    project = project.versions[preview_at]
+    flash('This is the archived version (%d) of this page.' % preview_at, 'info')
+    return render_template(
+        'public/project.html', current_event=project.event, project=project,
+        past_version=activity_id, active="projects"
+    )
 
 
 @blueprint.route('/<int:project_id>/star/me', methods=['GET', 'POST'])
@@ -358,7 +377,7 @@ def create_new_project(event):
 
     # Start as challenge
     project.progress = -1
-    project.event = event
+    project.event_id = event.id
     # Unless the event has started
     if event.has_started:
         project.progress = 5

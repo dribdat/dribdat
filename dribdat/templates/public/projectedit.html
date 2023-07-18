@@ -71,9 +71,9 @@
   {% endif %}
 
   {% if detail_view %}
-    {{ render_form(url_for('project.project_details', project_id=project.id), form) }}
+    {{ render_form(url_for('project.project_details', project_id=project.id), form, formid='projectDetails') }}
   {% else %}
-    {{ render_form(url_for('project.project_edit', project_id=project.id), form) }}
+    {{ render_form(url_for('project.project_edit', project_id=project.id), form, formid='projectEdit') }}
   {% endif %}
 
   <div class="alert-warning text-center mt-4 p-2">

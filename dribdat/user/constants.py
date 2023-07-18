@@ -200,6 +200,11 @@ def getActivityByType(a, only_active=True):  # noqa: C901
         text = a.content
         author = None
         icon = 'random'
+    elif a.name == 'revert':
+        text = "Reverted to"
+        if a.project_version:
+            text += " version %d" % a.project_version
+        icon = 'paperclip'
     elif a.name == 'update':
         text = "Edited content"
         if a.project_version:

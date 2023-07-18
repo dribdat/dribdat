@@ -44,17 +44,31 @@ def create_app(script_info=None):
     return app
 
 
-@click.command()
-@click.argument('name', nargs=-1, required=False)
-def test(name):
-    """Run all or just a subset of tests."""
-    """Parameter: which test set to run (features, functional, ..)"""
+def testrunner(name, warnings=None):
+    """Runs the name with warnings"""
     if len(name):
         feat_test = os.path.join(TEST_PATH, "test_%s.py" % name)
     else:
         feat_test = TEST_PATH
     import subprocess
-    return subprocess.call(['pytest', feat_test])
+    if warnings is None:
+        return subprocess.call(['pytest', feat_test])
+    return subprocess.call(['pytest', warnings, feat_test])
+
+
+@click.command()
+@click.argument('name', nargs=-1, required=False)
+def test(name):
+    """Run all or just a subset of tests."""
+    """Parameter: which test set to run (features, functional, ..)"""
+    return testrunner(name)
+
+
+@click.command()
+@click.argument('name', nargs=-1, required=False)
+def testwarn(name):
+    """Run all or just a subset of tests with warnings."""
+    return testrunner(name, "-W default")
 
 
 @click.group(cls=FlaskGroup, create_app=create_app)
