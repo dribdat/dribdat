@@ -165,18 +165,22 @@
         </a>
       {% endfor %}
       {% if project.longtext %}
-        {% if project_team %}
-          <a class="btn btn-light" id="readme-tab-md" href="#team-md"
-            title="Show team members">
-            <i class="fa fa-user m-2" aria-hidden="true"></i>
-            Team</a>
-        {% endif %}
-        {% if project.autotext %}
-          <a class="btn btn-light" id="readme-tab-md" href="#readme-md"
-             title="Content preview">
+          <a class="btn btn-light" id="project-tab-md" href="#project-md"
+             title="Challenge pitch">
             <i class="fa fa-book m-2" aria-hidden="true"></i>
-            Readme</a>
-        {% endif %}
+            Pitch</a>
+      {% endif %}
+      {% if project_team %}
+        <a class="btn btn-light" id="team-tab-md" href="#team-md"
+          title="Show team members">
+          <i class="fa fa-user m-2" aria-hidden="true"></i>
+          Team</a>
+      {% endif %}
+      {% if project.autotext %}
+        <a class="btn btn-light" id="readme-tab-md" href="#readme-md"
+           title="Readme content">
+          <i class="fa fa-book m-2" aria-hidden="true"></i>
+          Readme</a>
       {% endif %}
       {% if project_dribs %}
         <a class="btn btn-light" id="dribs-tab-md" href="#log"
@@ -187,25 +191,45 @@
     </div>
   {% endif %}
 
-<div class="tab-content">
+<div class="tab-content" id="project-content">
 
-  <div id="project-md" aria-labelledby="project-tab-md">
-    {% if project.is_webembed %}
-      <div class="project-webembed resizable">
-        {{ project.webembed|safe }}
-        <div class="win-size-grip"></div>
+  {% if project.is_webembed %}
+    <div class="project-webembed resizable">
+      {{ project.webembed|safe }}
+      <div class="win-size-grip"></div>
+    </div>
+    <a href="{{ project.webpage_url }}" class="btn btn-small btn-default" 
+       target="_blank" rel="noopener noreferrer">
+       &#x26F6;&nbsp;&nbsp;Open&nbsp;fullscreen</a>
+  {% endif %}
+
+
+  {% if project.autotext %}
+    <div id="readme-md" aria-labelledby="readme-tab-md">
+      <div class="project-autotext"><div class="cover"></div>
+        {{project.autotext|markdown}}
       </div>
-      <a href="{{ project.webpage_url }}" class="btn btn-small btn-default" 
-         target="_blank" rel="noopener noreferrer">
-         &#x26F6;&nbsp;&nbsp;Open&nbsp;fullscreen</a>
-    {% endif %}
 
-    {% if project.longtext %}
+      {% if not project.event.lock_resources %}
+        <div class="alert alert-light text-center">
+          This content is a preview from an
+          <a href="{{ project.autotext_url }}" target="_blank" rel="noopener noreferrer" title="Source link">
+            external site</a>.
+        </div>
+      {% endif %}
+
+      <a href="#top" class="go-up" title="Scroll up!"><i class="fa fa-thumbs-up" aria-hidden="true"></i>&nbsp;<i class="fa fa-thumbs-up" aria-hidden="true"></i></a>
+    </div>
+  {% endif %}
+
+
+  {% if project.longtext %}
+    <div id="project-md" aria-labelledby="project-tab-md">
       <div class="project-longtext">
         {{ project.longtext|onebox|markdown|safe }}
       </div>
-    {% endif %}
-  </div><!-- /project-md -->
+    </div><!-- /project-md -->
+  {% endif %}
 
 
   {% if project_team %}
@@ -257,26 +281,8 @@
     {% endif %}
   </div>
 
-  {% if project.autotext %}
-    <div id="readme-md" aria-labelledby="readme-tab-md">
-      
-      <div class="project-autotext"><div class="cover"></div>
-        {{project.autotext|markdown}}
-      </div>
 
-      {% if not project.event.lock_resources %}
-        <div class="alert alert-light text-center">
-          This content is a preview from an
-          <a href="{{ project.autotext_url }}" target="_blank" rel="noopener noreferrer" title="Source link">
-            external site</a>.
-        </div>
-      {% endif %}
-
-      <a href="#top" class="go-up" title="Scroll up!"><i class="fa fa-thumbs-up" aria-hidden="true"></i>&nbsp;<i class="fa fa-thumbs-up" aria-hidden="true"></i></a>
-    </div>
-  {% endif %}
-
-  </div><!-- /project-info -->
+  </div><!-- /project-content -->
 
   {% if project_dribs and not project.event.lock_resources %}
   <a name="log"></a>
