@@ -313,11 +313,11 @@ def project_unstar(project_id, user_id):
     )
 
 
-@blueprint.route('/event/<int:event_id>/project/new', methods=['GET', 'POST'])
-@login_required
+@blueprint.route('/new/<int:event_id>', methods=['GET', 'POST'])
 def project_new(event_id):
     """If allowed to create a new project, do so."""
-    if not isUserActive(current_user):
+    is_anonymous = not current_user or current_user.is_anonymous
+    if not is_anonymous and not isUserActive(current_user):
         flash(
             "Your account needs to be activated - "
             + " please contact an organizer.", 'warning'
@@ -325,16 +325,13 @@ def project_new(event_id):
         return redirect(url_for('public.event', event_id=event_id))
     event = Event.query.filter_by(id=event_id).first_or_404()
     if event.lock_starting:
-        flash('Starting a new project is disabled for this event.', 'error')
-        return redirect(url_for('public.event', event_id=event.id))
-    if not isUserActive(current_user):
-        flash('Your user account is not permitted to start projects.', 'error')
+        flash('Projects may not be started in this event.', 'error')
         return redirect(url_for('public.event', event_id=event.id))
     # Checks passed, continue ...
-    return create_new_project(event)
+    return create_new_project(event, is_anonymous)
 
 
-def create_new_project(event):
+def create_new_project(event, is_anonymous=False):
     """Proceed to create a new project."""
     # Collect resource tips (stage 0 projects)
     suggestions = resources_by_stage(0, event.lock_resources)
@@ -342,7 +339,13 @@ def create_new_project(event):
     # Project form
     form = None
     project = Project()
-    project.user_id = current_user.id
+
+    if not is_anonymous:
+        project.user_id = current_user.id
+    else:
+        project.hashtag = "Guest"
+        project.is_hidden = True
+    
     form = ProjectNew(obj=project, next=request.args.get('next'))
     form.category_id.choices = [(c.id, c.name)
                                 for c in project.categories_all(event)]
@@ -388,12 +391,15 @@ def create_new_project(event):
     db.session.commit()
     cache.clear()
 
-    flash('Now invite your team to Join this page!', 'success')
-    project_action(project.id, 'create', False)
+    if is_anonymous:
+        flash('Thanks for your submission - login and click Join to make changes', 'warning')
+    else:
+        flash('Now invite your team to Join this page and contribute!', 'success')
+        project_action(project.id, 'create', False)
 
-    # Automatically join new projects
-    if event.has_started:
-        project_action(project.id, 'star', False)
+        # Automatically join new projects
+        if event.has_started:
+            project_action(project.id, 'star', False)
 
     # Automatically sync data
     if len(project.autotext_url) > 1:
@@ -449,7 +455,7 @@ def project_autoupdate(project_id):
         'project.project_view', project_id=project_id))
 
 
-@blueprint.route('/project/<int:project_id>/toggle', methods=['GET', 'POST'])
+@blueprint.route('/<int:project_id>/toggle', methods=['GET', 'POST'])
 @login_required
 def project_toggle(project_id):
     """Hide or unhide a project."""

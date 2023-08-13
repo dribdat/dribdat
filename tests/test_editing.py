@@ -32,7 +32,7 @@ class TestEditing:
         res1 = form1.submit().follow()
         assert res1.status_code == 200
         # Fills out the add project form
-        res2 = testapp.get('/project/event/1/project/new')
+        res2 = testapp.get('/project/new/1')
         form2 = res2.forms[0]
         form2['name'] = 'New Project'
         res2 = form2.submit().follow()
@@ -85,6 +85,8 @@ class TestEditing:
         form['password'] = 'myprecious'
         res = form.submit().follow()
         assert res.status_code == 200
+
+        # Create an event and project
         event = EventFactory()
         event.save()
         project = ProjectFactory()
@@ -132,3 +134,21 @@ class TestEditing:
         # Check that we have indeed reverted to original text
         project = Project.query.first()
         assert 'Hello' == project.longtext
+
+    def test_create_project(self, db, testapp):
+        """Test creating projects anonymously."""
+        # Create an event 
+        event = EventFactory()
+        event.save()
+
+        # Add a new project without logging in
+        res1 = testapp.get('/project/new/%d' % event.id)
+        form1 = res1.forms['projectNew']
+        form1['name'] = 'Hello Anon'
+        res1 = form1.submit().follow()
+        assert res1.status_code == 200
+
+        # Check that we have a new project
+        project = Project.query.first()
+        assert 'Hello Anon' == project.name
+        assert project.is_hidden
