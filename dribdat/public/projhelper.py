@@ -116,6 +116,7 @@ def project_action(project_id, of_type=None, as_view=True, then_redirect=False,
         return True
     if then_redirect:
         return redirect(url_for('project.project_view', project_id=project.id))
+
     # The next line seems rather inefficient
     starred = IsProjectStarred(project, for_user)
     # Figure out permissions (hackybehack!)
@@ -158,6 +159,10 @@ def project_action(project_id, of_type=None, as_view=True, then_redirect=False,
             event.hashtags or '#dribdat']).strip()),
         'url': quote_plus(request.url)
     }
+
+    # Send a warning for hidden projects
+    if project.is_hidden:
+        flash('This project is currently hidden, and needs admin approval.', 'warning')
 
     # Dump all that data into a template
     return render_template(
