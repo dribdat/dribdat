@@ -9,7 +9,7 @@ from dribdat.user.models import User, Project
 
 from dribdat.aggregation import ProjectActivity
 from dribdat.public.project import post_preview
-from dribdat.public.projhelper import revert_project_by_activity
+from dribdat.public.projhelper import revert_project_by_activity, templates_from_event
 
 from .factories import UserFactory, ProjectFactory, EventFactory
 
@@ -152,3 +152,17 @@ class TestEditing:
         project = Project.query.first()
         assert 'Hello Anon' == project.name
         assert project.is_hidden
+
+    def test_project_suggestions(self, db, testapp):
+        """Test project templates."""
+        event = EventFactory()
+        event.lock_templates = True
+        event.save()
+        project1 = ProjectFactory()
+        project1.event = event
+        project1.save()
+        project2 = ProjectFactory()
+        project2.event = event
+        project2.save()
+        projects = templates_from_event()
+        assert len(projects) == 2

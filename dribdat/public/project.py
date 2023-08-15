@@ -17,7 +17,7 @@ from dribdat.user import (
     validateProjectData, stageProjectToNext, isUserActive,
 )
 from dribdat.public.projhelper import (
-    project_action, project_edit_action, resources_by_stage, revert_project_by_activity
+    project_action, project_edit_action, templates_from_event, revert_project_by_activity
 )
 from ..decorators import admin_required
 
@@ -338,8 +338,8 @@ def project_new(event_id):
 
 def create_new_project(event, is_anonymous=False):
     """Proceed to create a new project."""
-    # Collect resource tips (stage 0 projects)
-    suggestions = resources_by_stage(0, event.lock_resources)
+    # Collect resource tips (from projects in a Template Event)
+    suggestions = templates_from_event(event.lock_resources)
 
     # Project form
     form = None
