@@ -337,6 +337,8 @@ class Event(PkModel):
             'summary': self.summary or '',
             'hostname': self.hostname or '',
             'location': self.location or '',
+            'location_lat': float(self.location_lat or 0),
+            'location_lon': float(self.location_lon or 0),
             'hashtags': self.hashtags or '',
             'starts_at': self.starts_at,
             'has_started': self.has_started,
