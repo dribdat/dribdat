@@ -292,6 +292,10 @@ def events():
 @admin_required
 def event(event_id):
     event = Event.query.filter_by(id=event_id).first_or_404()
+
+    if event.location_lat is None or event.location_lon is None:
+        event.location_lat = event.location_lon = 0
+
     form = EventForm(obj=event, next=request.args.get('next'))
 
     if form.is_submitted() and form.validate():

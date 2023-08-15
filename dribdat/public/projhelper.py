@@ -46,6 +46,21 @@ def resources_by_stage(progress, resource_event=False):
     return project_list
 
 
+def templates_from_event(resource_event=False):
+    """Get all projects which are published in a resource-type event."""
+    if resource_event:
+        # No need to make suggestions in a Resource event
+        return []
+    project_list = []
+    template_events = [e.id for e in Event.query.filter_by(
+        lock_templates=True).all()]
+    for eid in template_events:
+        projects = Project.query.filter_by(
+            event_id=eid, is_hidden=False)
+        project_list.extend([p.data for p in projects.all()])
+    return project_list
+
+
 def project_edit_action(project_id, detail_view=False):
     """Project editing handler."""
     project = Project.query.filter_by(id=project_id).first_or_404()
@@ -116,6 +131,7 @@ def project_action(project_id, of_type=None, as_view=True, then_redirect=False,
         return True
     if then_redirect:
         return redirect(url_for('project.project_view', project_id=project.id))
+
     # The next line seems rather inefficient
     starred = IsProjectStarred(project, for_user)
     # Figure out permissions (hackybehack!)
@@ -158,6 +174,10 @@ def project_action(project_id, of_type=None, as_view=True, then_redirect=False,
             event.hashtags or '#dribdat']).strip()),
         'url': quote_plus(request.url)
     }
+
+    # Send a warning for hidden projects
+    if project.is_hidden:
+        flash('This project is currently hidden, and needs admin approval.', 'warning')
 
     # Dump all that data into a template
     return render_template(

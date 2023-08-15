@@ -2,7 +2,6 @@
 
 {% block content %}
 <div class="container">
-<h2> Administer dribdat </h2>
 
 <div class="jumbotron admin-stats text-center" style="background:none; min-width: 600px;">
 
@@ -14,7 +13,7 @@
           Current event</a>
         <a href="{{ url_for('admin.event_projects', event_id=default_event.id) }}" class="btn btn-lg btn-success">
           <i class="fa fa-star" aria-hidden="true"></i>
-          Challenges</a>
+          Projects</a>
     {% else %}
         <a href="{{ url_for('public.event_start') }}" class="btn btn-lg btn-success">
           <i class="fa fa-calendar" aria-hidden="true"></i>
@@ -24,15 +23,12 @@
     <div class="btn-group mb-2 text-center">
       <a href="{{ url_for('admin.presets') }}" class="btn btn-lg btn-info">
         <i class="fa fa-pencil" aria-hidden="true"></i>
-        Roles</a>
-      <a href="{{ url_for('admin.categories') }}" class="btn btn-lg btn-info">
-        <i class="fa fa-pencil" aria-hidden="true"></i>
-        Categories</a>
+        Roles & Categories</a>
     </div>
     <div class="btn-group mb-2 text-center">
       <a href="{{ url_for('public.all_participants') }}" class="btn btn-lg btn-light">
         <i class="fa fa-child" aria-hidden="true"></i>
-        Users</a>
+        Contributors</a>
     </div>
     <div class="container">
       <div id="activities"></div>
@@ -62,7 +58,7 @@
   </div>
 
   <div class="mt-4">
-    <a href="https://dribdat.cc" target="_blank"><img src="{{ url_for('static', filename='img/logo12.png') }}" height="128" alt="dribdat logo"></a>
+    <a href="https://dribdat.cc" target="_blank"><img src="{{ url_for('static', filename='img/logo12.png') }}" height="200" alt="dribdat logo"></a>
     <br><br>
     <b><a href="{{ url_for('public.dashboard') }}">Dashboard</a></b> |
     <a href="{{ url_for('public.clear_cache') }}">Refresh</a> |

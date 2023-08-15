@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 """Constants for user functions."""
+from os import environ as os_env
 from ..utils import load_yaml_presets
+from ..apifetch import FetchStageConfig
 
 # User role
 USER = 0
@@ -32,6 +34,9 @@ RESOURCE_TYPES = {
 # Content length
 MAX_EXCERPT_LENGTH = 500
 
+PR_CHALLENGE = 0
+PR_STAGES = { 'PROGRESS': {}, 'STAGE': {} }
+
 
 def resourceTypeList(verbose=False):
     """Get a sorted list of resources by type."""
@@ -54,22 +59,25 @@ def getResourceType(resource, verbose=False):
     return RESOURCE_TYPES[resource.type_id][vb]
 
 
-# Project progress stages
-project_stages = load_yaml_presets('stages', 'name')
-PR_CHALLENGE = int(project_stages['CHALLENGE']['id'])
-PROJECT_PROGRESS = {}
-PROJECT_PROGRESS_STAGE = {}
-for ps in project_stages:
-    pid = int(project_stages[ps]['id'])
-    PROJECT_PROGRESS[pid] = project_stages[ps]['description']
-    PROJECT_PROGRESS_STAGE[pid] = project_stages[ps]
+def load_project_stages():
+    """Initialize progress stages from file."""
+    if not PR_STAGES['PROGRESS'] == {}: return
+    DRIBDAT_STAGE = os_env.get('DRIBDAT_STAGE', None)
+    if DRIBDAT_STAGE:
+        project_stages = FetchStageConfig(DRIBDAT_STAGE)
+    else:
+        project_stages = load_yaml_presets('stages', 'name')
+    for ps in project_stages:
+        pid = int(project_stages[ps]['id'])
+        PR_STAGES['PROGRESS'][pid] = project_stages[ps]['description']
+        PR_STAGES['STAGE'][pid] = project_stages[ps]
 
 
 def projectProgressList(All=True, WithEmpty=True):
     """Return sorted progress list."""
     if not All:
-        return [(PR_CHALLENGE, PROJECT_PROGRESS[PR_CHALLENGE])]
-    pl = [(g, PROJECT_PROGRESS[g]) for g in PROJECT_PROGRESS]
+        return [(PR_CHALLENGE, PR_STAGES['PROGRESS'][PR_CHALLENGE])]
+    pl = [(g, PR_STAGES['PROGRESS'][g]) for g in PR_STAGES['PROGRESS']]
     if WithEmpty:
         pl.append((-100, ''))
     return sorted(pl, key=lambda x: x[0])
@@ -92,8 +100,8 @@ def stageProjectToNext(project):
 def getProjectStages():
     """Return sorted stages list."""
     pl = []
-    for ix, g in enumerate(sorted(PROJECT_PROGRESS)):
-        stage = PROJECT_PROGRESS_STAGE[g]
+    for ix, g in enumerate(sorted(PR_STAGES['PROGRESS'])):
+        stage = PR_STAGES['STAGE'][g]
         stage['index'] = ix + 1
         pl.append(stage)
     return pl
@@ -103,9 +111,12 @@ def getStageByProgress(progress):
     """Return progress detail for a progress level."""
     if progress is None:
         return None
-    if progress not in PROJECT_PROGRESS_STAGE:
-        return PROJECT_PROGRESS_STAGE[PR_CHALLENGE]
-    return PROJECT_PROGRESS_STAGE[progress]
+    if progress not in PR_STAGES['STAGE']:
+        if PR_CHALLENGE in PR_STAGES['STAGE']:
+            return PR_STAGES['STAGE'][PR_CHALLENGE]
+        else:
+            return None
+    return PR_STAGES['STAGE'][progress]
 
 
 def getProjectPhase(project):
@@ -225,3 +236,7 @@ def getActivityByType(a, only_active=True):  # noqa: C901
     else:
         return None
     return (author, title, text, icon)
+
+
+# TODO: make this happen in app.py
+load_project_stages()

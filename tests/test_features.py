@@ -8,6 +8,12 @@ from .factories import ProjectFactory, EventFactory, UserFactory
 from dribdat.onebox import make_onebox
 from dribdat.public.projhelper import resources_by_stage, project_action
 from dribdat.aggregation import ProjectActivity
+from dribdat.utils import load_yaml_presets
+from dribdat.apifetch import FetchStageConfig
+from dribdat.user.constants import PR_CHALLENGE
+
+
+STAGES_URL = 'https://raw.githubusercontent.com/dribdat/dribdat/main/dribdat/templates/includes/stages.yaml'
 
 
 class TestProjects:
@@ -45,7 +51,18 @@ EOF""" % (url, url)
         assert stats['people'] == 0
         assert stats['sizepitch'] == 5
         assert stats['sizetotal'] == 48
-        
+
+    def test_custom_stages(self):
+        """Load custom event stages."""
+        stages_local = load_yaml_presets('stages')
+        assert len(stages_local) == 7
+        assert 'CHALLENGE' in stages_local
+        assert int(stages_local['CHALLENGE']['id']) == PR_CHALLENGE
+        stages_remote = FetchStageConfig(STAGES_URL)
+        assert len(stages_remote) == 7
+        assert 'CHALLENGE' in stages_remote
+        assert int(stages_remote['CHALLENGE']['id']) == PR_CHALLENGE
+
     def test_project_stage(self, project, testapp):
         """Check stage progression."""
         event = EventFactory()
@@ -91,7 +108,10 @@ EOF""" % (url, url)
         project = ProjectFactory()
         project.event_id = event.id
         project.save()
-        ProjectActivity(project, 'star', user1)
+        assert ProjectActivity(project, 'star', user1)
+        assert not ProjectActivity(project, 'star', user1)
         res = testapp.get('/event/%d/participants' % event.id)
         assert res.status_code == 200
         assert 'abracadabra' in res
+        assert ProjectActivity(project, 'unstar', user1)
+        assert not ProjectActivity(project, 'unstar', user1)

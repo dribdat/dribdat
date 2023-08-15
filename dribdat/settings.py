@@ -18,6 +18,7 @@ class Config(object):
     DRIBDAT_CLOCK = os_env.get('DRIBDAT_CLOCK', 'down')
     DRIBDAT_STYLE = os_env.get('DRIBDAT_STYLE', '')
     DRIBDAT_THEME = os_env.get('DRIBDAT_THEME', 'simplex')
+    DRIBDAT_STAGE = os_env.get('DRIBDAT_STAGE', '')
 
     # Application options
     DRIBDAT_USER_APPROVE = os_env.get('DRIBDAT_USER_APPROVE', 'False')

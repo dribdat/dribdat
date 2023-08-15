@@ -30,6 +30,7 @@
     <table class='table table-hover'>
         <thead>
             <tr>
+              <th></th>
               <th>Name <small>(Score, Phase, Hashtag)</small></th>
               <th>Category</th>
               <th>Created</th>
@@ -39,12 +40,22 @@
         </thead>
         {% for project in projects or data.items %}
         <tr>
+            <td style="text-align:right">
+              <a href="{{ url_for('project.project_view', project_id=project.id) }}" title="Open">
+                <div class="btn btn-lg btn-light">
+                  {% if project.logo_icon %}
+                    <i class="fa fa-{{project.logo_icon}}"></i>
+                  {% else %}
+                    <i class="fa fa-eye"></i>
+                  {% endif %}
+                </div>
+            </td>
             <td width="50%">
               <a href="{{ url_for('project.project_view', project_id=project.id) }}">
                 {{ project.name }}
               </a>
               <br>
-              <small>{{ project.score or '' }} 
+              <small>
                 <a href="{{ url_for('public.event_stages', event_id=project.event_id) }}">
                   {{ project.phase }}
                 </a>
@@ -61,19 +72,22 @@
                 Edit
               </a>
               {% if project.is_hidden %}
-                <a href="{{ url_for('admin.project_toggle', project_id=project.id) }}" class="btn btn-success">
-                  Enable
+                <a href="{{ url_for('admin.project_toggle', project_id=project.id) }}" class="btn btn-danger"
+                   onclick="if(!window.confirm('Are you sure you wish to make this project visible?')) return false"
+                   title="Click to enable this project">
+                  <i class="fa fa-lock"></i>
                 </a>
               {% else %}
+                <a href="{{ url_for('admin.project_toggle', project_id=project.id) }}" 
+                   title="Hide this project" class="btn btn-light"
+                   onclick="if(!window.confirm('Are you sure you wish to hide this project?')) return false">
+                  <i class="fa fa-unlock"></i>
+                </a>
                 {% if project.is_autoupdate %}
                 <a href="{{ url_for('project.project_autoupdate', project_id=project.id) }}" class="btn btn-dark">
                   Sync
                 </a>
                 {% endif %}
-                <a href="{{ url_for('admin.project_toggle', project_id=project.id) }}" title="Hide" class="btn btn-danger"
-                   onclick="if(!window.confirm('Are you sure you wish to hide this project?')) return false">
-                  <i class="fa fa-eye"></i>
-                </a>
               {% endif %}
             </div></td>
         </tr>

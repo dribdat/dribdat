@@ -361,16 +361,20 @@ def event_new():
         event.community_embed = EVENT_PRESET['codeofconduct']
         db.session.add(event)
         db.session.commit()
-        flash('A new event has been planned!', 'success')
         if not current_user.is_admin:
             event.is_hidden = True
             event.save()
             flash(
-                'Please contact an organiser (see About page)'
-                + 'to make changes or promote this event.',
+                'Please contact an administrator (see About page)'
+                + 'to make changes or to promote this event.',
                 'warning')
+        else:
+            flash('A new event has been planned!', 'success')
         cache.clear()
         return redirect(url_for("public.event", event_id=event.id))
+    if not current_user.is_admin:
+        flash('An administrator can make your new event visible on the home page.',
+                'info')
     return render_template('public/eventnew.html', form=form, active='Event')
 
 #####

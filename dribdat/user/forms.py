@@ -103,6 +103,9 @@ class UserForm(FlaskForm):
     roles = SelectMultipleField(
         u'Roles', coerce=int,
         description="Choose one or more team roles for yourself.")
+    fullname = StringField(
+        u'Display name', [Length(max=200)],
+        description="Your full name, if you want it shown on your profile and certificate.")
     webpage_url = URLField(
         u'Online profile', [Length(max=128)],
         description="Link to your website or a social media profile.")

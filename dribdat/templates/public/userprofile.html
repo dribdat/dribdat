@@ -79,11 +79,18 @@
     {% endif %}
   </div>
 
-  <h1 class="col-sm text-left">
-    <span>
-      {{ user.username }}
-    </span>
-  </h1>
+  {% if user.fullname %}
+    <h1 class="col-sm text-left">
+      <span style="color:initial;">
+        {{ user.fullname }}
+      </span>
+      <br><tt>{{ user.username }}</tt>
+    </h1>
+  {% else %}
+    <h1 class="col-sm text-left">
+      <tt>{{ user.username }}</tt>
+    </h1>
+  {% endif %}
 
 </div>
 <div class="row mb-3 mt-2">

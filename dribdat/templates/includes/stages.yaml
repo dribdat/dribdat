@@ -1,13 +1,4 @@
 ---
-# configuration defaults for a dribdat installation
-
-defaults:
-  roles:
-    - 🖍️ Designer
-    - ⚙️ Developer 
-    - 💡 Ideator
-    - 🛡️ Coach
-
 # definition of rulesets for advancing through the stages of a dribdat project
 
 stages:
