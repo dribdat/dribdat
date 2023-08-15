@@ -218,16 +218,16 @@ def ProjectActivity(project, of_type, user, action=None, comments=None):
     )
     if of_type == 'star':
         if allstars.count() > 0:
-            return  # One star per user
+            return False # One star per user
     elif of_type == 'unstar':
         if allstars.count() > 0:
             allstars.first().delete()
-            activity = None
-    if activity is None:
-        return
+            return True
+        return False
     activity.project_score = project.score
     db.session.add(activity)
     db.session.commit()
+    return True
 
 
 def CheckPrevCommits(commit, username, since, until, prevlinks, prevdates):

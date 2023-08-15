@@ -108,7 +108,10 @@ EOF""" % (url, url)
         project = ProjectFactory()
         project.event_id = event.id
         project.save()
-        ProjectActivity(project, 'star', user1)
+        assert ProjectActivity(project, 'star', user1)
+        assert not ProjectActivity(project, 'star', user1)
         res = testapp.get('/event/%d/participants' % event.id)
         assert res.status_code == 200
         assert 'abracadabra' in res
+        assert ProjectActivity(project, 'unstar', user1)
+        assert not ProjectActivity(project, 'unstar', user1)

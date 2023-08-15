@@ -307,6 +307,9 @@ def project_unstar(project_id, user_id):
     """Kick a user from a project."""
     user = User.query.filter_by(id=user_id).first_or_404()
     project = Project.query.filter_by(id=project_id).first_or_404()
+    if project.user == user:
+        project.user = None
+        project.save()
     flash('User %s has left the project' % user.username, 'success')
     return project_action(
         project.id, 'unstar', then_redirect=True, for_user=user
