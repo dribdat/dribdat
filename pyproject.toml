@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "dribdat"
 version = "0.6"
-description = "Open source platform for collaborative events"
+description = "Online platform for time-limited collaborative events"
 authors = ["Oleg Lavrovsky <dribdat@datalets.ch>"]
 
 [tool.poetry.dependencies]
