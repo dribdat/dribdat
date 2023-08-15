@@ -7,5 +7,5 @@ echo Pushing to $VER ...
 docker login
 docker build -t loleg/dribdat:$VER .
 docker push loleg/dribdat:$VER
-docker tag loleg/dribdat:$VER loleg/dribdat:latest
+docker push loleg/dribdat:latest
 echo Done!
