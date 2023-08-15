@@ -15,12 +15,26 @@ from .apievents import (
     fetch_commits_gitlab,
     fetch_commits_gitea,
 )
-from .utils import sanitize_url
+from .utils import sanitize_url, load_presets, load_yaml_presets
 from future.standard_library import install_aliases
 install_aliases()
 
 # In seconds, how long to wait for API response
 REQUEST_TIMEOUT = 10
+
+
+def FetchStageConfig(url, top_element='stages', by_col='name'):
+    """Download a remote YAML stages configuration."""
+    if not url.startswith('http:') and not url.startswith('https:'):
+        logging.info("Loading stages from file")
+        return load_yaml_presets(top_element, by_col, url)
+    logging.info("Loading stages from URL")
+    data = requests.get(url, timeout=REQUEST_TIMEOUT)
+    if data.text.find('stages:') < 0:
+        logging.debug("No stage data", data.text)
+        return {}
+    blob = data.text
+    return load_presets(blob, top_element, by_col)
 
 
 def FetchGiteaProject(project_url):

@@ -7,7 +7,7 @@ from wtforms import (
     SelectMultipleField
 )
 from wtforms.fields import (
-    DateField, TimeField,
+    DateField, TimeField, DecimalField,
     URLField, EmailField,
 )
 from wtforms.validators import DataRequired, length
@@ -80,6 +80,9 @@ class EventForm(FlaskForm):
     lock_resources = BooleanField(
         u'Resource area', default=False,
         description=u'💡 Used as toolbox, ignoring start and finish.')
+    lock_templates = BooleanField(
+        u'Templates', default=False,
+        description=u'💡 Contains templates, which can be used for new projects.')
     starts_date = DateField(
         u'Starting date', [event_date_check], default=datetime.now())
     starts_time = TimeField(
@@ -100,6 +103,12 @@ class EventForm(FlaskForm):
         u'Located at',
         [length(max=255)],
         description=u'The event locale or virtual space')
+    location_lat = DecimalField(
+        u'Latitude', places=None,
+        description=u'The geo-coordinates (WGS84) of your event')
+    location_lon = DecimalField(
+        u'Longitude', places=None,
+        description=u'Tip: use map.geo.admin.ch or gps-coordinates.org')
     hashtags = StringField(
         u'Hashtags',
         [length(max=255)],
@@ -134,14 +143,14 @@ class EventForm(FlaskForm):
         description=u'Shown to registered participants only - '
         + 'Markdown and HTML supported')
     boilerplate = TextAreaField(
-        u'Getting started guide',
-        description=u'Top of new project page, markdown and HTML supported')
+        u'Quickstart guide',
+        description=u'Shown when starting a new project: Markdown and HTML supported')
     community_embed = TextAreaField(
         u'Code of conduct and community links',
         description=u'Bottom of event and project page: Markdown, HTML and '
         + 'embedded scripts are supported')
     custom_css = TextAreaField(
-        u'Custom stylesheet',
+        u'Custom stylesheet (CSS)',
         description=u'For external CSS: @import url(https://...);')
     submit = SubmitField(u'Save')
 

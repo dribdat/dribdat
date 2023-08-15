@@ -4,7 +4,6 @@
 
 {% block content %}
 <div class="container">
-    <h2>Update event</h2>
 
     <div class="float-right">
 
@@ -17,9 +16,11 @@
         Projects</a>
     </div>
 
+    <h1>Edit event</h1>
+
     {{ render_form(url_for('admin.event', event_id=event.id), form) }}
 
-    <a href="{{ url_for('admin.event_delete', event_id=event.id) }}" class="btn btn-sm btn-danger"
+    <a href="{{ url_for('admin.event_delete', event_id=event.id) }}" class="btn btn-danger"
       onclick="if(!window.confirm('Are you sure you wish to delete this event?')) return false">
       Delete
     </a>

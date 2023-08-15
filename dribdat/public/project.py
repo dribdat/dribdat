@@ -323,6 +323,11 @@ def project_new(event_id):
             + " please contact an organizer.", 'warning'
         )
         return redirect(url_for('public.event', event_id=event_id))
+    elif is_anonymous:
+        flash(
+            'You are not logged in, so your new project'
+            + ' will be invisible until it is approved.', 'warning'
+        )
     event = Event.query.filter_by(id=event_id).first_or_404()
     if event.lock_starting:
         flash('Projects may not be started in this event.', 'error')

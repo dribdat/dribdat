@@ -130,21 +130,19 @@
 
 {% if current_user and current_user.active %}
   <div class="row start-event">
-    <div class="col-lg-12">
+    <div class="col-lg-12 text-center">
       {% if not current_event and not events_next and not events_past and not events_tips %}
-        <h3>Looks like you are new to this - welcome!</h3>
-        <div class="text-center">
-          <a href="{{ url_for('public.event_start') }}" class="btn btn-lg btn-success">
-            Get started
-          </a>
-        </div>
-      {% elif config.DRIBDAT_ALLOW_EVENTS %}
-        <div class="text-center">
-          <a href="{{ url_for('public.event_start') }}" class="btn btn-lg btn-light">
-            <i class="fa fa-calendar mr-2" aria-hidden="true"></i>
-            Start an Event
-          </a>
-        </div>
+        <p class="m-5">Thank you for using Dribdat <tt>&lt;3 &lt;3 &lt;3</tt>
+          <br>Read <a href="https://docs.dribdat.cc/organiser" target="_blank">the docs</a> or 
+          <a href="https://dribd.at/#contact" target="_blank">contact us</a> if you need help.
+          <h5>Click here to start your first event 🎉 </h5>
+        </p>
+      {% endif %}
+      {% if config.DRIBDAT_ALLOW_EVENTS or current_user.is_admin %}
+        <a href="{{ url_for('public.event_start') }}" class="btn btn-lg btn-light">
+          <i class="fa fa-calendar mr-2" aria-hidden="true"></i>
+          Plan another Event
+        </a>
       {% endif %}
     </div>
   </div>

@@ -955,6 +955,9 @@ nav .nav-login {
   margin-top: -2em;
   margin-left: 1em;
 }
+.jumbotron.projectnew-boilerplate {
+  border: 10px solid lightseagreen;
+}
 .project-page img {
   max-width: 100%;
 }

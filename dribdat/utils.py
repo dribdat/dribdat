@@ -136,6 +136,7 @@ def load_event_presets():
 
 def load_csv_presets(filename, by_col='name'):
     """Load structured settings from a CSV file."""
+    # Expects filename to *not* have a .csv extension
     fn = path.join(path.join(path.join(
         path.dirname(__file__), 'templates'), 'includes'), filename + '.csv')
     settings_dict = {}
@@ -146,15 +147,22 @@ def load_csv_presets(filename, by_col='name'):
     return settings_dict
 
 
-def load_yaml_presets(filename, by_col='name'):
-    """Load structured settings from a YAML file."""
-    # Expects filename to not have an extension
-    # and be equivalent to the top level element
-    fn = path.join(path.join(path.join(
-        path.dirname(__file__), 'templates'), 'includes'), filename + '.yaml')
+def load_presets(stagedata, top_element='stages', by_col='name'):
+    """Load presets as a dictionary."""
     settings_dict = {}
-    with open(fn, mode='r') as file:
-        stages = yaml.safe_load(file)
-        for row in stages[filename]:
-            settings_dict[row[by_col]] = row
+    stages = yaml.safe_load(stagedata)
+    for row in stages[top_element]:
+        settings_dict[row[by_col]] = row
     return settings_dict
+
+
+def load_yaml_presets(filename, by_col='name', filepath=None):
+    """Load structured settings from a YAML file."""
+    # Expects filename to *not* have a .yaml extension
+    # and be equivalent to the top level element -
+    # unless the filepath argument is used.
+    fn = filepath or path.join(path.join(path.join(
+        path.dirname(__file__), 'templates'), 'includes'), filename + '.yaml')
+    with open(fn, mode='r') as file:
+        config = load_presets(file, filename, by_col)
+    return config

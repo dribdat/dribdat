@@ -4,9 +4,9 @@ Planning your next event? Here are some tips for your hackathon guru meditation.
 
 The starting point of most hackathons: a short description of a problem, some initial ideas of solutions which can be realistically attempted during the time constraints of the event. Once you create your event page, you can attach challenges that the teams should respond to.
 
-<label><input type="checkbox"> Create a series of **Challenges** by starting projects </label><br>
-<label><input type="checkbox"> You may want to organize them in **Categories** (Presets)  </label><br>
-<label><input type="checkbox"> Use the **Getting started guide** to provide extra directions</label><br>
+<label><input type="checkbox"> Create a series of **Challenges**, which you may want to organize in **Categories**</label><br>
+<label><input type="checkbox"> Use the **Quickstart guide** to share tips with challenge owners</label><br>
+<label><input type="checkbox"> Create a **Template** event if you would like to speed this part up</label><br>
 
 ## 👪 Teams
 
@@ -22,14 +22,14 @@ When participants bring their own material, sharing is encouraged as long as the
 
 <label><input type="checkbox"> Provide links in your event **Instructions**, such as to collections of open data </label><br>
 <label><input type="checkbox"> Set up a **Resources** event with tools and datasets recommended for each stage </label><br>
-<label><input type="checkbox"> Create **Templates** by adding Challenges to the Resource event  </label><br>
+<label><input type="checkbox"> Customize the event **Stages** with your own hints and progression rules </label><br>
 
 ## ☝️ Conduct
 
 In the interest of creating a safe and inclusive environment, we strongly encourage applying a Code of Conduct and open license to your event. We have provided an example at the bottom of every page, which you may modify, and also include a reference to in your opening presentation or e-mailed instructions.
 
 <label><input type="checkbox"> Check the **Community** section in your event settings </label><br>
-<label><input type="checkbox"> Make sure your fellow organisers are **aware** and **ready** to enforce a Code of Conduct </label><br>
+<label><input type="checkbox"> Make sure your fellow organisers are <u>aware and ready</u> to enforce a Code of Conduct </label><br>
 <label><input type="checkbox"> Verify compliance during evaluation rounds, when issuing certificates, or other post-event analysis </label><br>
 
 _Need more help?_ Contact the maintainers at [dribd.at](https://dribd.at/)
