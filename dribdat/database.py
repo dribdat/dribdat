@@ -3,6 +3,7 @@
 from .compat import basestring
 from .extensions import db
 from sqlalchemy.types import Integer, TypeDecorator
+from decimal import Decimal
 
 # Alias common SQLAlchemy names
 Column = db.Column

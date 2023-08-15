@@ -105,10 +105,10 @@ class EventForm(FlaskForm):
         [length(max=255)],
         description=u'The event locale or virtual space')
     location_lat = DecimalField(
-        u'Latitude', places=None,
+        u'Latitude', places=5, default=0,
         description=u'The geo-coordinates (WGS84) of your event')
     location_lon = DecimalField(
-        u'Longitude', places=None,
+        u'Longitude', places=5, default=0,
         description=u'Tip: use map.geo.admin.ch or gps-coordinates.org')
     hashtags = StringField(
         u'Hashtags',
