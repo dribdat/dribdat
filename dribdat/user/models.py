@@ -22,6 +22,7 @@ from dribdat.database import (
     PkModel,
     relationship,
     reference_col,
+    SqliteDecimal,
 )
 from dribdat.extensions import hashing
 from dribdat.apifetch import FetchGitlabAvatar
@@ -79,6 +80,10 @@ class User(UserMixin, PkModel):
     __tablename__ = 'users'
     username = Column(db.String(80), unique=True, nullable=False)
     email = Column(db.String(80), unique=True, nullable=False)
+
+    # My full name, for use in profile or certificate
+    fullname = Column(db.String(255), nullable=True)
+    # Link to my web page
     webpage_url = Column(db.String(128), nullable=True)
 
     # Identification for Single Sign On
@@ -287,37 +292,41 @@ class User(UserMixin, PkModel):
 
 
 class Event(PkModel):
-    """Tell me what is a-happening here."""
+    """What's the buzz? Tell me what's a-happening."""
 
     __tablename__ = 'events'
     name = Column(db.String(80), unique=True, nullable=False)
-    summary = Column(db.String(140), nullable=True)
-    hostname = Column(db.String(80), nullable=True)
-    location = Column(db.String(255), nullable=True)
-    hashtags = Column(db.String(255), nullable=True)
-
-    description = Column(db.UnicodeText(), nullable=True)
-    boilerplate = Column(db.UnicodeText(), nullable=True)
-    instruction = Column(db.UnicodeText(), nullable=True)
-
-    logo_url = Column(db.String(255), nullable=True)
-    webpage_url = Column(db.String(255), nullable=True)
-    gallery_url = Column(db.String(2048), nullable=True)
-    community_url = Column(db.String(255), nullable=True)
+    summary = Column(db.String(140), nullable=True)       # a short description
+    hostname = Column(db.String(80), nullable=True)       # institution hosting the event
+    hashtags = Column(db.String(255), nullable=True)      # default hashtags for social media
+    location = Column(db.String(255), nullable=True)      # where is the event being held?
+    location_lat = Column(SqliteDecimal(5), nullable=True)    # coordinates (Latitude)
+    location_lon = Column(SqliteDecimal(5), nullable=True)    # coordinates (Longitude)
 
     starts_at = Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)
     ends_at = Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)
 
-    status = Column(db.UnicodeText(), nullable=True)
-    custom_css = Column(db.UnicodeText(), nullable=True)
-    community_embed = Column(db.UnicodeText(), nullable=True)
-    certificate_path = Column(db.String(1024), nullable=True)
+    description = Column(db.UnicodeText(), nullable=True) # a longer text about the event
+    boilerplate = Column(db.UnicodeText(), nullable=True) # tips to show on starting a new project
+    instruction = Column(db.UnicodeText(), nullable=True) # tips for logged-in event participants
 
-    is_hidden = Column(db.Boolean(), default=False)
-    is_current = Column(db.Boolean(), default=False)
-    lock_editing = Column(db.Boolean(), default=False)
-    lock_starting = Column(db.Boolean(), default=False)
-    lock_resources = Column(db.Boolean(), default=False)
+    logo_url = Column(db.String(255), nullable=True)      # icon of the event
+    webpage_url = Column(db.String(255), nullable=True)   # location of "about page"
+    gallery_url = Column(db.String(2048), nullable=True)  # large image for home page
+    community_url = Column(db.String(255), nullable=True) # user forum or social media link
+
+    custom_css = Column(db.UnicodeText(), nullable=True)  # styles to customize frontend with CSS
+
+    status = Column(db.UnicodeText(), nullable=True)          # used for org announcements
+    community_embed = Column(db.UnicodeText(), nullable=True) # code of conduct in footer
+    certificate_path = Column(db.String(1024), nullable=True) # URL to certificate download
+
+    is_hidden = Column(db.Boolean(), default=False)       # hide from home page
+    is_current = Column(db.Boolean(), default=False)      # make it featured on home page
+    lock_editing = Column(db.Boolean(), default=False)    # prevent editing projects
+    lock_starting = Column(db.Boolean(), default=False)   # prevent starting new projects
+    lock_resources = Column(db.Boolean(), default=False)  # this event contains Resources
+    lock_templates = Column(db.Boolean(), default=False)  # this event contains Templates
 
     @property
     def data(self):
@@ -1092,7 +1101,7 @@ class Activity(PkModel):
 
 
 class Resource(PkModel):
-    """Somewhat graph-like in principle."""
+    """Allows building a graph of project resources - currently not used."""
 
     __tablename__ = 'resources'
     name = Column(db.String(80), nullable=False)

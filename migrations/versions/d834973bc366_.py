@@ -1,4 +1,4 @@
-"""empty message
+"""Event status, longer autotext_url, nullables
 
 Revision ID: d834973bc366
 Revises: f5ee0fa5649b
