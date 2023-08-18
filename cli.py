@@ -67,7 +67,7 @@ def numerise(event: int, clear: bool, primes: bool, challenges: bool):
             if challenges and not c.is_challenge: continue
             if not challenges and c.is_challenge: continue
             ch = "" # push existing hashtag aside
-            if not clear and len(c.hashtag) > 0:
+            if not clear and c.hashtag and len(c.hashtag) > 0:
                 ch = " " + ch
             c.hashtag = str(nq[ix]) + ch
             c.save()
