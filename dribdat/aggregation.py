@@ -166,6 +166,25 @@ def IsProjectStarred(project, current_user):
     ).first() is not None
 
 
+def AllowProjectEdit(project, current_user):
+    """Check if the project is editable by the user."""
+    if not current_user \
+        or current_user.is_anonymous \
+        or not isUserActive(current_user):
+            return False
+    if not project or project.is_hidden:
+        # Hidden projects are not editable
+        return False
+    if project.event.lock_resources:
+        # In a Resource area, everyone can edit
+        return True
+    if current_user.is_admin:
+        # Admins rule the world
+        return True
+    # Must be a member of the team in good standing
+    return IsProjectStarred(project, current_user)
+
+
 def ProjectsByProgress(progress=None, event=None):
     """Fetch all projects by progress level."""
     if event is not None:

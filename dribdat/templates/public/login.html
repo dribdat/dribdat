@@ -20,49 +20,49 @@
   
   {% if oauth_type == 'slack' %}
     <p class="sso-login">
-      <a class="btn signin-slack" href="{{ url_for('slack.login') }}" title="Click to sign in - Slack">
+      <a class="btn signin-slack" href="{{ url_for('slack.login', next=request.args.get('next')) }}" title="Click to sign in - Slack">
         <span>&#x1f512; Sign in with Slack</span>
       </a>
     </p>
   {% elif oauth_type == 'azure' %}
     <p class="sso-login">
-      <a class="btn signin-azure" href="{{ url_for('azure.login') }}" title="Click to sign in - Teams">
+      <a class="btn signin-azure" href="{{ url_for('azure.login', next=request.args.get('next')) }}" title="Click to sign in - Teams">
         <span>&#x1f512; Sign in with Teams</span>
       </a>
     </p>
   {% elif oauth_type == 'github' %}
     <p class="sso-login">
-      <a class="btn signin-github" href="{{ url_for('github.login') }}" title="Click to sign in - GitHub">
+      <a class="btn signin-github" href="{{ url_for('github.login', next=request.args.get('next')) }}" title="Click to sign in - GitHub">
         <span>&#x1f512; Sign in with GitHub</span>
       </a>
     </p>
   {% elif oauth_type == 'gitlab' %}
     <p class="sso-login">
-      <a class="btn btn-lg btn-default signin-gitlab" href="{{ url_for('gitlab.login') }}" title="Click to sign in - GitLab">
+      <a class="btn btn-lg btn-default signin-gitlab" href="{{ url_for('gitlab.login', next=request.args.get('next')) }}" title="Click to sign in - GitLab">
         <span>&#x1f512; Sign in with GitLab</span>
       </a>
     </p>
   {% elif oauth_type == 'auth0' %}
     <p class="sso-login">
-      <a class="btn signin-auth0" href="{{ url_for('auth0.login') }}" title="Click to sign in - Auth0">
+      <a class="btn signin-auth0" href="{{ url_for('auth0.login', next=request.args.get('next')) }}" title="Click to sign in - Auth0">
         <span>&#x1f512; Sign in with Auth0</span>
       </a>
     </p>
   {% elif oauth_type == 'mattermost' %}
     <p class="sso-login">
-      <a class="btn signin-mattermost" href="{{ url_for('mattermost.login') }}" title="Click to sign in - Mattermost">
+      <a class="btn signin-mattermost" href="{{ url_for('mattermost.login', next=request.args.get('next')) }}" title="Click to sign in - Mattermost">
         <span>&#x1f512; Sign in with Mattermost</span>
       </a>
     </p>
   {% elif oauth_type == 'hitobito' %}
     <p class="sso-login">
-      <a class="btn signin-hitobito" href="{{ url_for('hitobito.login') }}" title="Click to sign in - Hitobito">
+      <a class="btn signin-hitobito" href="{{ url_for('hitobito.login', next=request.args.get('next')) }}" title="Click to sign in - Hitobito">
         <span>&#x1f512; Sign in with Hitobito</span>
       </a>
     </p>
   {% endif %}
 
-  <form id="loginForm" method="POST" action="/login/" role="login" class="navbar-form form-inline">
+  <form id="loginForm" method="POST" action="{{ url_for('auth.login', next=request.args.get('next')) }}" role="login" class="navbar-form form-inline">
     {{ form.hidden_tag() }}
     <div class="form-group">
       {{ form.username(placeholder="Username", class_="form-control") }}
@@ -78,7 +78,7 @@
   {% endif %}
   {% if not config.DRIBDAT_NOT_REGISTER %}
     <p class="account-register">
-      <a class="btn btn-warning btn-submit" href="{{ url_for('auth.register') }}">Create an account</a>
+      <a class="btn btn-warning btn-submit" href="{{ url_for('auth.register', next=request.args.get('next')) }}">Create an account</a>
     </p>
   {% endif %}
   {% if config.OAUTH_LINK_REGISTER %}

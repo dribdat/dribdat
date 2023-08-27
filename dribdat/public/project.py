@@ -11,7 +11,7 @@ from dribdat.public.forms import (
     ProjectNew, ProjectPost, ProjectBoost, ProjectComment
 )
 from dribdat.aggregation import (
-    SyncProjectData, GetProjectData, IsProjectStarred
+    SyncProjectData, GetProjectData, AllowProjectEdit
 )
 from dribdat.user import (
     validateProjectData, stageProjectToNext, isUserActive,
@@ -20,6 +20,7 @@ from dribdat.public.projhelper import (
     project_action, project_edit_action, templates_from_event, revert_project_by_activity
 )
 from ..decorators import admin_required
+from ..mailer import user_invitation
 
 blueprint = Blueprint('project', __name__,
                       static_folder="../static", url_prefix='/project')
@@ -131,8 +132,7 @@ def project_post(project_id):
     """Add a Post to a project."""
     project = Project.query.filter_by(id=project_id).first_or_404()
     event = project.event
-    starred = IsProjectStarred(project, current_user)
-    allow_post = starred
+    allow_post = AllowProjectEdit(project, current_user)
     if not allow_post:
         flash('You do not have access to post to this project.', 'warning')
         return redirect(url_for('project.project_view', project_id=project.id))
@@ -226,9 +226,8 @@ def post_delete(project_id, activity_id):
 def post_revert(project_id, activity_id):
     """Revert project to a previous version."""
     project = Project.query.filter_by(id=project_id).first_or_404()
-    starred = IsProjectStarred(project, current_user)
     purl = url_for('project.project_view', project_id=project.id)
-    if not isUserActive(current_user) or not starred:
+    if not AllowProjectEdit(project, current_user):
         flash('Could not revert: user not allowed.', 'warning')
         return redirect(purl)
     activity = Activity.query.filter_by(id=activity_id).first_or_404()
@@ -279,17 +278,37 @@ def project_star(project_id):
 
 @blueprint.route('/<int:project_id>/star', methods=['POST'])
 @login_required
-@admin_required
 def project_star_user(project_id):
     """Join a project by username (via form)."""
     username = request.form['username'].strip()
-    user = User.query.filter(User.username.ilike(username)).first()
-    if user is None:
-        flash("User [%s] not found. Please try again." % username, 'warning')
+    if not username:
+        flash("No data provided. Please try again.", 'warning')
         return redirect(url_for('project.project_view', project_id=project_id))
-    flash('Added %s to the team!' % username, 'success')
-    return project_action(
-        project_id, 'star', then_redirect=True, for_user=user)
+    # Check permission first
+    project = Project.query.filter_by(id=project_id).first_or_404()
+    purl = url_for('project.project_view', project_id=project.id)
+    if not AllowProjectEdit(project, current_user):
+        flash('Could not invite: user not allowed.', 'warning')
+        return redirect(purl)
+    if not '@' in username:
+        # Search for a username
+        user = User.query.filter(User.username.ilike(username)).first()
+        if user is None:
+            flash("User [%s] not found. Please try again." % username, 'warning')
+            return redirect(url_for('project.project_view', project_id=project_id))
+        flash('Added %s to the team!' % username, 'success')
+        return project_action(
+            project_id, 'star', then_redirect=True, for_user=user)
+    else:
+        # Send an invite mail
+        if user_invitation(username, project):
+            flash('Invite has been sent!', 'success')
+            # Continue to project view
+            return redirect(url_for('project.project_view', project_id=project.id))
+        else:
+            join_url = url_for('project.project_star', project_id=project.id, _external=True)
+            return redirect('mailto:%s?subject=Invitation&body=%s' % (username, join_url))
+
 
 
 @blueprint.route('/<int:project_id>/unstar/me', methods=['GET', 'POST'])
@@ -427,10 +446,7 @@ def project_autoupdate(project_id):
         return project_action(project_id)
 
     # Check user permissions
-    starred = IsProjectStarred(project, current_user)
-    allow_edit = starred or project.event.lock_resources or (
-        not current_user.is_anonymous and current_user.is_admin)
-    if not allow_edit or project.is_hidden:
+    if not AllowProjectEdit(project, current_user):
         flash('You may not sync this project.', 'warning')
         return redirect(url_for('project.project_view', project_id=project_id))
 
@@ -469,8 +485,7 @@ def project_toggle(project_id):
     """Hide or unhide a project."""
     project = Project.query.filter_by(id=project_id).first_or_404()
     purl = url_for('project.project_view', project_id=project.id)
-    allow_toggle = IsProjectStarred(project, current_user) \
-        or (not current_user.is_anonymous and current_user.is_admin)
+    allow_toggle = AllowProjectEdit(project, current_user)
     if not allow_toggle:
         flash("You do not have permission to change visibility.", 'warning')
         return redirect(purl)
