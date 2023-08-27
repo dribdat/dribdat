@@ -257,6 +257,14 @@
         </div>
       {% endif %}
       </div>
+      {% if allow_edit %}
+        <center>
+          <a class="btn btn-lg btn-light" data-toggle="modal" data-target="#addUser"
+            title="Add users to this project">
+            <i class="fa fa-child" aria-hidden="true"></i>
+            Invite</a>
+        </center>
+      {% endif %}
     </div>
   {% endif %}
 
@@ -387,6 +395,58 @@
         <i class="fa fa-refresh" aria-hidden="true"></i>
         Sync</a>
     {% endif %}
+    {% if allow_edit %}
+      <!-- Invite a user to the team -->
+      <a class="btn btn-lg btn-success" data-toggle="modal" data-target="#addUser"
+        title="Add users to this project">
+        <i class="fa fa-child" aria-hidden="true"></i>
+        Invite</a>
+      <div class="modal fade widget-team-add" id="addUser" tabindex="-1"
+          role="dialog" aria-labelledby="addUserLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="addUserLabel">Invite to team</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <div id="qrcode"></div>
+              <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" integrity="sha512-CNgIRecGo7nphbeZ04Sc13ka07paqdeTu0WR1IM4kNcpmBAUSHSQX0FslNhTDadL4O5SAGapGt4FodqL8My0mA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+              <script type="text/javascript">
+               new QRCode(document.getElementById("qrcode"), {
+                  text: "{{ url_for('project.project_star', project_id=project.id,  _external=True) }}",
+                  width: 128, height: 128,
+               });
+              </script>
+              <div class="input-group mb-3 mt-3">
+                <span class="input-group-text" title="Copy invite link" id="basic-addon1">📋</span>
+                <input class="form-control" aria-label="Invite link" type="text" 
+                  value="{{ url_for('project.project_star', project_id=project.id,  _external=True) }}" 
+                  id="invite-link" disabled />
+              </div>
+              <p class="text-small text-left">
+                Use the <a href="{{ url_for('public.all_participants')}}">participant list</a>
+                to look up a username, or enter an e-mail address to send out an invite:
+              {% if current_user.is_admin %}
+                You can kick a user with the <b>X</b> button next to their profile, 
+                or unjoin them in the <a href="{{ url_for('admin.users')}}">user admin</a>.
+              {% endif %}        
+              </p>
+              <form action="{{ url_for('project.project_star_user', project_id=project.id)}}" 
+                    method="post" onsubmit="$('#addUser').modal('hide')">
+                <div class="input-group mb-3">
+                  <span class="input-group-text" id="basic-addon1">@</span>
+                  <input class="form-control" aria-label="User name" type="text" name="username" placeholder="username" size="12" />
+                  <input class="form-control" type="submit" value="Invite" />
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div><!-- /modal -->
+    {% endif %}
 
   </div>
 </div><!-- / .project-controls -->
@@ -394,43 +454,10 @@
 {% if current_user.is_admin %}
 <div role="group" aria-label="Project administration" class="ml-3 btn-group admin-area" title="Admin area">
 
-  <a class="btn btn-lg btn-success" data-toggle="modal" data-target="#addUser"
-     title="Add a user to this project (admin only)">
-    <i class="fa fa-child" aria-hidden="true"></i>
-    Add</a>
-
-  <!-- Add arbitrary user to the team -->
-  <div class="modal fade widget-team-add" id="addUser" tabindex="-1"
-      role="dialog" aria-labelledby="addUserLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="addUserLabel">Add user to team</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-          <p class="text-small text-left">
-            Use the <a href="{{ url_for('public.all_participants')}}">participant list</a>
-            or <a href="{{ url_for('admin.users')}}">admin</a>
-            to look up a user. Then place the exact username here to add them to the team.
-            You can also remove a user with the <b>X</b> button next to their profile.
-          </p>
-          <form action="{{ url_for('project.project_star_user', project_id=project.id)}}" method="post">
-            <input type="text" name="username" placeholder="username" size="12" />
-            <input type="submit" value="Invite" />
-          </form>
-        </div>
-      </div>
-    </div>
-  </div><!-- /modal -->
-
   <a href="{{ url_for('admin.project_view', project_id=project.id) }}" class="btn btn-lg btn-warning"
      title="Edit full details (admin only)">
     <i class="fa fa-pencil" aria-hidden="true"></i>
     Edit</a>
-
 
   {% if project.is_hidden %}
     <a href="{{ url_for('admin.project_toggle', project_id=project.id) }}" 
