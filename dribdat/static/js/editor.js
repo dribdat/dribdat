@@ -324,13 +324,16 @@
   // Initialize rich editor for Markdown
   function activate_editor() {
     if (typeof toastui !== 'object') return;
+    const Editor = toastui.Editor;
     const $longtext = $('#longtext');
     if (!$longtext.length) return;
     $longtext.after('<div id="mdeditor" style="text-align:left"></div>');
 
-    const toasteditor = window.toasteditor = new toastui.Editor({
+    const toasteditor = window.toasteditor = new Editor({
       el: document.querySelector('#mdeditor'),
-      previewStyle: 'tab', height: '500px',
+      height: '500px',
+      previewStyle: 'tab',
+      initialEditType: 'wysiwyg',
       initialValue: $longtext.hide().text(),
       usageStatistics: false,
       toolbarItems: [
