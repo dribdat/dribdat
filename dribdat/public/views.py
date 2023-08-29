@@ -394,11 +394,10 @@ def dribs():
     """Show the latest logged posts."""
     page = int(request.args.get('page') or 1)
     per_page = int(request.args.get('limit') or 10)
-    dribs = Activity.query.filter(or_(
+    latest_dribs = Activity.query.filter(or_(
         Activity.action == "post",
-        Activity.name == "boost"))
-    dribs = dribs.order_by(Activity.id.desc())
-    dribs = db.paginate(dribs, page=page, per_page=per_page)
+        Activity.name == "boost")).order_by(Activity.id.desc())
+    dribs = latest_dribs.paginate(page=page, per_page=per_page)
     dribs.items = [
         d for d in dribs.items
         if not d.project.is_hidden and d.content]

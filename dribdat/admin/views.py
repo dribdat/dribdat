@@ -100,9 +100,9 @@ def users(page=1):
             users = users.filter(User.email.ilike(q))
         else:
             users = users.filter(User.username.ilike(q))
-    users = db.paginate(users, page=page, per_page=20)
+    userpages = users.paginate(page=page, per_page=20)
     return render_template('admin/users.html', sort_by=sort_by,
-                           data=users, endpoint='admin.users', active='users')
+                           data=userpages, endpoint='admin.users', active='users')
 
 
 @blueprint.route('/user/<int:user_id>', methods=['GET', 'POST'])
@@ -375,9 +375,9 @@ def projects(page=1):
     if search_by and len(search_by) > 1:
         q = "%%%s%%" % search_by.lower()
         projects = projects.filter(Project.name.ilike(q))
-    projects = db.paginate(projects, page=page, per_page=10)
+    projectpages = projects.paginate(page=page, per_page=10)
     return render_template('admin/projects.html',
-                           data=projects, endpoint='admin.projects',
+                           data=projectpages, endpoint='admin.projects',
                            active='projects')
 
 
@@ -662,8 +662,8 @@ def resources(page=1):
     resources = Resource.query.order_by(
         Resource.id.desc()
     )
-    resources = db.paginate(resources, page=page, per_page=10)
-    return render_template('admin/resources.html', data=resources,
+    resourcepages = resources.paginate(page=page, per_page=10)
+    return render_template('admin/resources.html', data=resourcepages,
                            endpoint='admin.resources', active='resources')
 
 
