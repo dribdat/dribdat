@@ -113,14 +113,24 @@ def user(user_id):
     form = UserForm(obj=user, next=request.args.get('next'))
     if form.is_submitted() and form.validate():
         originalhash = user.password
-        del form.id
         user.username = sanitize_input(form.username.data)
+
+        # Check unique email (why does this pass validation?)
+        if form.email.data != user.email:
+            if User.query.filter_by(email=form.email.data).count() > 0:
+                flash('A user with this e-mail already exists.', 'warning')
+                return render_template('admin/useredit.html', user=user, form=form)
+
+        del form.id
         del form.username
         form.populate_obj(user)
+
+        # Update password if changed
         if form.password.data:
             user.set_password(form.password.data)
         else:
             user.password = originalhash
+
         user.updated_at = datetime.utcnow()
         db.session.add(user)
         db.session.commit()
