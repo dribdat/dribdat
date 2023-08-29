@@ -234,6 +234,14 @@
   });
   $('.details .history').hide();
 
+  // Invite to teams with a QR code
+  $('#qrcode').each(function() {
+    new QRCode(this, {
+      text: $(this).data('href'),
+      width: 192, height: 192,
+    });
+  });
+
   // Show GitHub issues
   $('#issues-list').each(function() {
     var per_page = 5;
