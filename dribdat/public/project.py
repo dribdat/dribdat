@@ -465,6 +465,8 @@ def project_autoupdate(project_id):
     if not data or 'name' not in data:
         flash("To Sync: ensure a README on the remote site.", 'warning')
         return redirect(url_for('project.project_view', project_id=project_id))
+    
+    # Transfer the project fields
     SyncProjectData(project, data)
 
     # Confirmation messages
@@ -472,9 +474,9 @@ def project_autoupdate(project_id):
         if project.autotext and len(project.autotext) > 1:
             project_action(project.id, 'update', action='sync',
                            text=str(len(project.autotext)) + ' bytes')
-            flash("Thanks for contributing on %s" % data['type'], 'success')
+            flash("Thanks for contributing: %s synced." % data['type'], 'success')
         else:
-            flash("Could not sync: remote README has no data.", 'warning')
+            flash("Could not sync: remote README is empty.", 'warning')
     return redirect(url_for(
         'project.project_view', project_id=project_id))
 

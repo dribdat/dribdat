@@ -9,6 +9,7 @@ from dribdat.apifetch import (
     FetchGithubProject,
     FetchGiteaProject,
     FetchBitbucketProject,
+    FetchDribdatProject,
     FetchDataProject,
     FetchWebProject,
 )
@@ -23,9 +24,11 @@ def GetProjectData(url):
     if url.find('//gitlab.com') > 0:
         return get_gitlab_project(url)
 
+    # TODO: add support for gist
     elif url.find('//github.com') > 0:
         return get_github_project(url)
 
+    # TODO: there's a lot more Gitea out there!
     elif url.find('//codeberg.org') > 0:
         # TODO: especially here..
         return get_gitea_project(url)
@@ -36,6 +39,10 @@ def GetProjectData(url):
     # The fun begins
     elif url.find('.json') > 0:  # not /datapackage
         return FetchDataProject(url)
+
+    # TODO: replace with <meta generator dribdat>
+    elif url.find('/project/') > 0:
+        return FetchDribdatProject(url)
 
     # Now we're really rock'n'rollin'
     else:
@@ -95,8 +102,8 @@ def AddProjectData(project):
         project.summary = data['summary'][0:140]
     if 'description' in data and len(data['description']) > 0:
         project.longtext = data['description']
-    if 'homepage_url' in data and len(data['homepage_url']) > 0:
-        project.webpage_url = data['homepage_url'][0:2048]
+    if 'webpage_url' in data and len(data['webpage_url']) > 0:
+        project.webpage_url = data['webpage_url'][0:2048]
     if 'source_url' in data and len(data['source_url']) > 0:
         project.source_url = data['source_url'][0:2048]
     if 'image_url' in data and len(data['image_url']) > 0:
@@ -108,22 +115,30 @@ def AddProjectData(project):
 
 def SyncProjectData(project, data):
     """Sync remote project data."""
-    # Note: project name should *not* be updated
     # Always update "autotext" field
-    if 'description' in data and data['description']:
+    if 'description' in data and data['description'] and \
+       (not project.autotext or not project.autotext.strip()):
         project.autotext = data['description']
     # Update following fields only if blank
+    if 'name' in data and data['name'] and \
+       (not project.name or not project.name.strip()):
+        project.name = data['name'][:80]
     if 'summary' in data and data['summary'] and \
        (not project.summary or not project.summary.strip()):
         project.summary = data['summary'][:140]
+    if 'image_url' in data and data['image_url'] and \
+       (not project.image_url):
+        project.image_url = data['image_url'][:2048]
     if 'source_url' in data and data['source_url'] and \
        (not project.source_url):
         project.source_url = data['source_url'][:2048]
+        # Add link to the Pitch
         if not project.longtext:
             project.longtext = project.source_url
-    if 'homepage_url' in data and data['homepage_url'] and \
+    if 'webpage_url' in data and data['webpage_url'] and \
        (not project.webpage_url):
-        project.webpage_url = data['homepage_url'][:2048]
+        project.webpage_url = data['webpage_url'][:2048]
+        # Add link to the Pitch
         if not project.longtext:
             project.longtext = project.webpage_url
     if 'contact_url' in data and data['contact_url'] and \
@@ -132,9 +147,6 @@ def SyncProjectData(project, data):
     if 'download_url' in data and data['download_url'] and \
        (not project.download_url):
         project.download_url = data['download_url'][:2048]
-    if 'image_url' in data and data['image_url'] and \
-       (not project.image_url):
-        project.image_url = data['image_url'][:2048]
     if 'is_webembed' in data and data['is_webembed']:
         project.is_webembed = True
     project.update()

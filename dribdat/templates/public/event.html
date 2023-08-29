@@ -5,13 +5,14 @@
 {% block page_title %}{{current_event.name}} / {% if current_event.has_finished %} Results {% elif current_event.has_started %} Project Board {% else %} Challenges {% endif %}{% endblock %}
 
 {% block page_meta %}
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="{{ url_for('public.event', event_id=current_event.id, _external=True) }}">
-  <meta property="og:title" content="{{current_event.name}}">
-  <meta property="og:image" content="{{current_event.logo_url}}">
-  <meta property="og:description" content="{{current_event.oneliner}}">
-  <meta name="description" content="{{current_event.oneliner}}">
+  <meta property="og:type" content="website"/>
+  <meta property="og:url" content="{{ url_for('public.event', event_id=current_event.id, _external=True) }}"/>
+  <meta property="og:title" content="{{current_event.name}}"/>
+  <meta property="og:image" content="{{current_event.logo_url}}"/>
+  <meta property="og:description" content="{{current_event.oneliner}}"/>
+  <meta name="description" content="{{current_event.oneliner}}"/>
   <script type="application/ld+json">{{ current_event.get_schema(request.host_url)|safe }}</script>
+  <meta name="dribdat:event:id" content="{{current_event.id}}"/>
 {% endblock %}
 
 {% block body_class %}event-home event-{{ current_event.id }} event-{% if current_event.has_finished %}finished{% elif current_event.has_started %}started{% else %}prep{% endif %}{% endblock %}

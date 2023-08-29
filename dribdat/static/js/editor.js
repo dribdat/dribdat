@@ -49,7 +49,7 @@
       // Call updater API
       $.getJSON('/api/project/autofill?url=' + url, function(data) {
         $button.removeAttr('disabled').html('Refresh');
-        if (typeof data.name === 'undefined' || data.name === '') {
+        if (!data || typeof data.name === 'undefined' || data.name === '') {
           window.alert('Enter a valid link to sync from a supported site.');
           $('#is_autoupdate').prop('checked', false);
           $indicator.find('i').css('color', 'red');
@@ -62,7 +62,7 @@
         if (!$('input#summary').val())
           $('input#summary').val(data.summary);
         if (!$('input#webpage_url').val())
-          $('input#webpage_url').val(data.homepage_url);
+          $('input#webpage_url').val(data.webpage_url);
         if (!$('input#source_url').val())
           $('input#source_url').val(data.source_url);
         if (!$('input#contact_url').val())

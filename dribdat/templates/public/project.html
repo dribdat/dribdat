@@ -5,16 +5,17 @@
 {% block page_title %}{{project.name}} - {{project.event.name}}{% endblock %}
 
 {% block page_meta %}
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="{{ url_for('project.project_view', project_id=project.id, _external=True) }}">
-  <meta property="og:title" content="{{project.name}}">
-  <meta property="og:image" content="{{project_image_url|quote_plus}}">
-  <meta property="og:description" content="{% if project.summary %}{{project.summary}}{% else %}{{ project.longtext|striptags|truncate(120) }}{% endif %}">
-  <meta name="twitter:site" content="@opendatach">
-  <meta name="twitter:card" content="summary">
-  {% if project.user.cardtype == 'twitter' %}<meta name="twitter:creator" content="@{{ project.user.carddata }}">{% endif %}
-  <meta name="description" content="{{project.summary}}">
-  <meta name="author" content="{{project.user.username}}">
+  <meta property="og:type" content="website"/>
+  <meta property="og:url" content="{{ url_for('project.project_view', project_id=project.id, _external=True) }}"/>
+  <meta property="og:title" content="{{project.name}}"/>
+  <meta property="og:image" content="{{project_image_url|quote_plus}}"/>
+  <meta property="og:description" content="{% if project.summary %}{{project.summary}}{% else %}{{ project.longtext|striptags|truncate(120) }}{% endif %}"/>
+  <meta name="twitter:site" content="@opendatach"/>
+  <meta name="twitter:card" content="summary"/>
+  {% if project.user.cardtype == 'twitter' %}<meta name="twitter:creator" content="@{{ project.user.carddata }}"/>{% endif %}
+  <meta name="description" content="{{project.summary}}"/>
+  <meta name="author" content="{{project.user.username}}"/>
+  <meta name="dribdat:project:id" content="{{project.id}}"/>
 {% endblock %}
 
 {% block css %}
