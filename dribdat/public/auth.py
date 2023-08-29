@@ -54,7 +54,7 @@ def redirect_dest(fallback):
     """Redirects to the next URL if provided, else fallback."""
     dest = request.args.get('next')
     try:
-        if '/' in dest:
+        if dest.startswith('/') or dest.startswith(request.host_url):
             return redirect(dest)
         dest_url = url_for(dest)
     except:
