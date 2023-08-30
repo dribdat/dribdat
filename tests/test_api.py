@@ -12,7 +12,7 @@ from .factories import EventFactory, ProjectFactory, UserFactory
 
 
 @pytest.mark.usefixtures('db')
-class TestEvents:
+class TestApi:
     """Login."""
 
     def test_api_events(self):

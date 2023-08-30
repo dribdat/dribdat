@@ -8,6 +8,19 @@ import warnings
 class TestRepository:
     """Here be dataragons."""
 
+    def test_dribdat(self):
+        """Test parsing a remote dribdat project."""
+        test_url = 'https://meta.dribdat.cc/project/4'
+        try:
+            test_obj = GetProjectData(test_url)
+        except ReadTimeout:
+            return warnings.warn("meta.dribdat.cc is not accessible")
+        assert 'name' in test_obj
+        assert test_obj['type'] == 'Dribdat'
+        assert 'dribdat' in test_obj['description']
+        assert 'dribdat/dribdat' in test_obj['source_url']
+
+
     def test_datapackage_dribdat(self):
         """Test parsing a dribdat Data Package."""
         test_url = 'https://raw.githubusercontent.com/dribdat/dribdat/main/tests/mock/datapackage.json'
@@ -21,7 +34,7 @@ class TestRepository:
         assert test_url == test_obj['source_url']
 
     def test_datapackage(self):
-        """Test parsing a dribdat Data Package."""
+        """Test parsing a standard Data Package."""
         test_url = 'https://raw.githubusercontent.com/OpenEnergyData/energy-data-ch/master/datapackage.json'
         try:
             test_obj = GetProjectData(test_url)

@@ -6,9 +6,9 @@ See: http://webtest.readthedocs.org/
 from flask import url_for
 
 from dribdat.user.models import User
-from dribdat.mailer import user_activation
+from dribdat.mailer import user_activation, user_invitation
 
-from .factories import UserFactory
+from .factories import UserFactory, ProjectFactory
 
 
 class TestLoggingIn:
@@ -149,16 +149,26 @@ class TestRegistering:
         assert User.query.count() == old_count + 1
 
 class TestActivation:
-    """Activate a user."""
+    """Activate a user to interact with projects."""
 
     def test_user_can_activate(self, user, testapp):
         """Create and activate a user."""
         # Make a deactivated user
         user = UserFactory(active=False)
         user.save()
+        
         # Let's get an activation mail
         my_hash = user_activation(user)
         # And go activate that user
         res = testapp.get(url_for('auth.activate', userid=user.id, userhash=my_hash))
         assert res.status_code == 302
         assert '/user/profile' in res
+
+        # Check if the user can be invited by e-mail
+        user.email = 'test@dribdat.cc'
+        project = ProjectFactory()
+        project.user = user
+        project.save()
+        # Mail is not configured in the test environment
+        assert user_invitation(user.email, project) is False
+

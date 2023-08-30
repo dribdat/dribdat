@@ -298,7 +298,7 @@ def FetchDribdatProject(dribdat_url):
         logging.debug('Invalid format at', project_url)
         return {}
     projectdata = json['project']
-    projectdata['type'] = 'dribdat'
+    projectdata['type'] = 'Dribdat'
     projectdata['description'] = projectdata['longtext']
     return projectdata
 
