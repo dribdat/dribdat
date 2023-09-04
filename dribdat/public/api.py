@@ -443,10 +443,10 @@ def project_autofill():
 
 
 ACCEPTED_TYPES = [
-    'png', 'jpg', 'jpeg', 'gif',  # ʕ·͡ᴥ·ʔ
-    'json', 'geojson',            # ( ͡° ͜ʖ ͡°)
-    'csv', 'tsv',                 # ¯\_(ツ)_/¯
-    'ods', 'pdf',                # (ノಠ ∩ಠ)ノ彡
+    'png', 'jpg', 'jpeg', 'gif', 'webp',  # ʕ·͡ᴥ·ʔ
+    'json', 'geojson',                    # ( ͡° ͜ʖ ͡°)
+    'csv', 'tsv',                         # ¯\_(ツ)_/¯
+    'ods', 'pdf', 'svg'                   # (ノಠ ∩ಠ)ノ彡
 ]
 
 
