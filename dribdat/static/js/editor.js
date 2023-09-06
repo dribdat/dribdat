@@ -178,12 +178,10 @@
               $dialog.modal('hide');
             } else if ($(this).data('target') == 'pitch') {
               // Append to pitch
-              filename = response.split('/');
-              filename = filename[filename.length-1];
+              var filename = response.split(/(\\|\/)/g).pop();
               if (typeof window.toasteditor !== 'undefined') {
-                //window.toasteditor.insertText(imglink);
                 window.toasteditor.exec('addLink', { 
-                  linkUrl: filename, linkText: response
+                  linkUrl: response, linkText: filename
                 });
               } else {
                 var imglink = '![' + filename + '](' + response + ')';
@@ -260,9 +258,8 @@
                   // ... ' (' + fileExt.toUpperCase() + ')'; 
               // Append to pitch
               if (typeof window.toasteditor !== 'undefined') {
-                //window.toasteditor.insertText(fileLink);
                 window.toasteditor.exec('addLink', { 
-                  linkUrl: filename, linkText: response
+                  linkUrl: response, linkText: filename
                 });
               } else {
                 // Create Markdown link with a paperclip emoji
