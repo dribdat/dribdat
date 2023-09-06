@@ -966,9 +966,6 @@ nav .nav-login {
   color: black;
   padding: 1rem;
 }
-.project-page.jumbotron .btn {
-  color: black;
-}
 .project-page .project-longtext blockquote {
   border-left: 3px solid lightgrey;
   padding-left: 1em;

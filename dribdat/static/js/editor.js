@@ -173,15 +173,20 @@
               $dialog.modal('hide');
             } else if ($(this).data('target') == 'post') {
               // Append to post
-              var imglink = '![](' + response + ')';
+              var imglink = '![Image caption](' + response + ')';
               $('#note').val(imglink + ' ' + $('#note').val());
               $dialog.modal('hide');
             } else if ($(this).data('target') == 'pitch') {
               // Append to pitch
-              var imglink = '![ Title ](' + response + ')';
+              filename = response.split('/');
+              filename = filename[filename.length-1];
               if (typeof window.toasteditor !== 'undefined') {
-                window.toasteditor.insertText(imglink);
+                //window.toasteditor.insertText(imglink);
+                window.toasteditor.exec('addLink', { 
+                  linkUrl: filename, linkText: response
+                });
               } else {
+                var imglink = '![' + filename + '](' + response + ')';
                 $('#longtext').val($('#longtext').val() +
                   '\n\n' + imglink);
               }
@@ -252,13 +257,16 @@
               // Determine file extension
               //var fileExt = filename.split('.');
               //fileExt = (fileExt.length > 1) ? fileExt[fileExt.length - 1] : '?';
-                  // ... ' (' + fileExt.toUpperCase() + ')';
-              // Create Markdown link with a paperclip emoji
-              var fileLink = '📎 [' + filename + '](' + response + ')'; 
+                  // ... ' (' + fileExt.toUpperCase() + ')'; 
               // Append to pitch
               if (typeof window.toasteditor !== 'undefined') {
-                window.toasteditor.insertText(fileLink);
+                //window.toasteditor.insertText(fileLink);
+                window.toasteditor.exec('addLink', { 
+                  linkUrl: filename, linkText: response
+                });
               } else {
+                // Create Markdown link with a paperclip emoji
+                var fileLink = '📎 [' + filename + '](' + response + ')';
                 $('#longtext').val($('#longtext').val() +
                   '\n\n' + fileLink);
               }
