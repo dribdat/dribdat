@@ -504,10 +504,16 @@ class Event(PkModel):
     @property
     def project_count(self):
         """Number of active projects in an event."""
+        projects = self.current_projects()
+        if not projects: return 0
+        return projects.count()
+
+    def current_projects(self):
+        """Returns active projects in an event."""
         if not self.projects:
-            return 0
+            return None
         return Project.query \
-               .filter_by(event_id=self.id, is_hidden=False).count()
+               .filter_by(event_id=self.id, is_hidden=False)
 
     def categories_for_event(self):
         """Event categories."""
