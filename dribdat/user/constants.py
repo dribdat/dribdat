@@ -77,7 +77,8 @@ def projectProgressList(All=True, WithEmpty=True):
     """Return sorted progress list."""
     if not All:
         return [(PR_CHALLENGE, PR_STAGES['PROGRESS'][PR_CHALLENGE])]
-    pl = [(g, PR_STAGES['PROGRESS'][g]) for g in PR_STAGES['PROGRESS']]
+    all_stages = PR_STAGES['PROGRESS']
+    pl = [(g, PR_STAGES['STAGE'][g]['name'] + all_stages[g]) for g in all_stages]
     if WithEmpty:
         pl.append((-100, ''))
     return sorted(pl, key=lambda x: x[0])
