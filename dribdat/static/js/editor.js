@@ -178,10 +178,11 @@
               $dialog.modal('hide');
             } else if ($(this).data('target') == 'pitch') {
               // Append to pitch
-              var filename = response.split(/(\\|\/)/g).pop();
+              var filename = response.split(/(\\|\/)/g).pop().replaceAll('_', ' ');
               if (typeof window.toasteditor !== 'undefined') {
-                window.toasteditor.exec('addLink', { 
-                  linkUrl: response, linkText: filename
+                // As an image
+                window.toasteditor.exec('addImage', {
+                  imageUrl: response, altText: filename
                 });
               } else {
                 var imglink = '![' + filename + '](' + response + ')';
@@ -241,7 +242,7 @@
              return alert('File could not be uploaded :(\n' + response);
           }
           var path = $inputfd.val();
-          var filename = path.split(/(\\|\/)/g).pop();
+          var filename = path.split(/(\\|\/)/g).pop().replaceAll('_', ' ');
           $dialog.find(".preview input").val(response);
           $dialog.find(".hidden").show();
           // User confirms the file upload
