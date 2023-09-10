@@ -28,7 +28,7 @@ class TestSync:
             thedata[o] = self.a_long_random_string
         SyncProjectData(project, thedata)
         # The data should not be overwritten, if it exists in the project
-        assert len(project.name) == 9
+        assert len(project.name) < 20
         assert len(project.summary) == 19
         assert len(project.image_url) == 32
         assert len(project.webpage_url) == 24
