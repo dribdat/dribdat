@@ -432,7 +432,7 @@ def project_view(project_id):
             project.category_id = None
         # Assign owner if selected
         project.user = get_user_by_name(form.user_name.data)
-        project.update()
+        project.update_now()
         db.session.add(project)
         db.session.commit()
         flash('Project updated.', 'success')
@@ -490,7 +490,7 @@ def project_new():
         form.populate_obj(project)
         # Assign owner if selected
         project.user = get_user_by_name(form.user_name.data)
-        project.update()
+        project.update_now()
         db.session.add(project)
         db.session.commit()
         cache.clear()

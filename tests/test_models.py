@@ -186,23 +186,23 @@ class TestProject:
         project = ProjectFactory()
         project.save()
         assert project.is_challenge
-        project.update()
+        project.update_now()
         assert project.score == 0
         user1 = UserFactory()
         user1.save()
         ProjectActivity(project, 'star', user1)
-        project.update()
+        project.update_now()
         assert project.score == 1
         user2 = UserFactory()
         user2.save()
         ProjectActivity(project, 'star', user1)
-        project.update()
+        project.update_now()
         assert project.score == 1
         ProjectActivity(project, 'star', user2)
-        project.update()
+        project.update_now()
         assert project.score == 2
         ProjectActivity(project, 'unstar', user2)
-        project.update()
+        project.update_now()
         assert project.score == 1
         
 # @pytest.mark.usefixtures('db')

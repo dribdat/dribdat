@@ -91,11 +91,8 @@ def get_bitbucket_project(url):
     return FetchBitbucketProject(apiurl)
 
 
-def AddProjectData(project):
+def TrimProjectData(project, data):
     """Map remote fields to project data."""
-    data = GetProjectData(project.autotext_url)
-    if 'name' not in data:
-        return project
     if len(data['name']) > 0:
         project.name = data['name'][0:80]
     if 'summary' in data and len(data['summary']) > 0:
@@ -110,11 +107,13 @@ def AddProjectData(project):
         project.image_url = data['image_url'][0:2048]
     if 'logo_icon' in data and len(data['logo_icon']) > 0:
         project.logo_icon = data['logo_icon'][0:40]
-    return project
 
 
 def SyncProjectData(project, data):
     """Sync remote project data."""
+    # Yes, the function above looks very similar to this one.
+    # However, here we only overwrite the fields that are new.
+    # DRY improvements are possible though..
     # Always update "autotext" field
     if 'description' in data and data['description'] and \
        (not project.autotext or not project.autotext.strip()):
@@ -149,13 +148,11 @@ def SyncProjectData(project, data):
         project.download_url = data['download_url'][:2048]
     if 'is_webembed' in data and data['is_webembed']:
         project.is_webembed = True
-    project.update()
-    db.session.add(project)
-    db.session.commit()
+    # Save the project state
+    project.save()
     # Additional logs, if available
     if 'commits' in data:
         SyncCommitData(project, data['commits'])
-
 
 # The above, in one step
 def SyncResourceData(resource):
@@ -163,9 +160,14 @@ def SyncResourceData(resource):
     url = resource.source_url
     dpdata = GetProjectData(url)
     resource.sync_content = json.dumps(dpdata)
-    db.session.add(resource)
-    db.session.commit()
+    resource.save()
 
+
+def AddProjectDataFromAutotext(project):
+    """Fills the project from the configured remote URL."""
+    data = GetProjectData(project.autotext_url)
+    TrimProjectData(project, data)
+    
 
 def IsProjectStarred(project, current_user):
     """Check if a project has been starred by the current user."""
@@ -259,8 +261,7 @@ def ProjectActivity(project, of_type, user, action=None, comments=None):
             return True
         return False
     activity.project_score = project.score
-    db.session.add(activity)
-    db.session.commit()
+    activity.save()
     return True
 
 
@@ -313,4 +314,3 @@ def SyncCommitData(project, commits):
         if user is not None:
             activity.user_id = user.id
         activity.save()
-    db.session.commit()

@@ -898,7 +898,7 @@ class Project(PkModel):
             if category:
                 self.category = category
 
-    def update(self):
+    def update_now(self):
         """Process data submission."""
         # Correct fields
         if self.category_id == -1:

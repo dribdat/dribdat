@@ -106,7 +106,7 @@ def project_approve(project_id):
     project = Project.query.filter_by(id=project_id).first_or_404()
     # Update project
     if stageProjectToNext(project):
-        project.update()
+        project.update_now()
         db.session.add(project)
         db.session.commit()
         cache.clear()
@@ -158,7 +158,7 @@ def project_post(project_id):
         del form.id
         del form.has_progress
         form.populate_obj(project)
-        project.update()
+        project.update_now()
         db.session.add(project)
         db.session.commit()
         cache.clear()
@@ -413,7 +413,7 @@ def create_new_project(event, is_anonymous=False):
         project.progress = 5
 
     # Update the project
-    project.update()
+    project.update_now()
     db.session.add(project)
     db.session.commit()
     cache.clear()
