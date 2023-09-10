@@ -7,9 +7,9 @@ from flask import url_for
 
 from dribdat.user.models import User, Project
 
-from dribdat.aggregation import ProjectActivity
+from dribdat.aggregation import ProjectActivity, AllowProjectEdit
 from dribdat.public.project import post_preview
-from dribdat.public.projhelper import revert_project_by_activity, templates_from_event
+from dribdat.public.projhelper import revert_project_by_activity, templates_from_event, project_action
 
 from .factories import UserFactory, ProjectFactory, EventFactory
 
@@ -152,6 +152,34 @@ class TestEditing:
         project = Project.query.first()
         assert 'Hello Anon' == project.name
         assert project.is_hidden
+
+
+    def test_project_auth(self, db, testapp):
+        """Test editing project permission."""
+        event = EventFactory()
+        event.save()
+        project = ProjectFactory()
+        project.event = event
+        project.save()
+        user = UserFactory(active=True)
+        user.save()
+        # Test the users access rights
+        assert AllowProjectEdit(project, user) is False
+        # Join the project
+        project_action(project.id, 'star', for_user=user)
+        assert AllowProjectEdit(project, user) is True
+        # Leave the project
+        project_action(project.id, 'unstar', for_user=user)
+        assert AllowProjectEdit(project, user) is False
+        # Become author of project
+        project.user = user
+        project.save()
+        assert project.user_id == user.id
+        assert AllowProjectEdit(project, user) is True
+        useradmin = UserFactory(active=True, is_admin=True)
+        useradmin.save()
+        assert AllowProjectEdit(project, useradmin) is True
+
 
     def test_project_suggestions(self, db, testapp):
         """Test project templates."""

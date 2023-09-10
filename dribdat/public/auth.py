@@ -43,6 +43,25 @@ def oauth_type():
         return None
 
 
+@login_manager.unauthorized_handler
+def handle_needs_login():
+    """Override default handler with next parameter."""
+    flash("You must be logged in to access this page.")
+    return redirect(url_for('auth.login', next=request.path))
+
+
+def redirect_dest(fallback):
+    """Redirects to the next URL if provided, else fallback."""
+    dest = request.args.get('next')
+    try:
+        if dest.startswith('/') or dest.startswith(request.host_url):
+            return redirect(dest)
+        dest_url = url_for(dest)
+    except:
+        return redirect(fallback)
+    return redirect(dest_url)
+
+
 @blueprint.route("/login/", methods=["GET", "POST"])
 def login():
     """Handle the login route."""
@@ -66,9 +85,8 @@ def login():
                 username = current_user.username
                 return redirect(url_for('public.user', username=username))
             # Regular user greeting
-            flash("Welcome! Time to make something awesome. ≧◡≦",
-                  'success')
-            return redirect(url_for("public.home"))
+            flash("Time to make something awesome. ≧◡≦", 'info')
+            return redirect_dest(fallback=url_for('public.home'))
         else:
             flash_errors(form)
     logout_user()
@@ -120,14 +138,13 @@ def register():
         else:
             flash("New accounts require approval from the event organizers. "
                   + "Please update your profile and await activation.",
-                  'success')
+                  'warning')
     else:
         flash(
-            "Thank you for registering. You can now log in and submit "
-            + "projects.", 'success')
-    # New user created: start session and go home
+            "You can now log in and submit projects.", 'info')
+    # New user created: start session and continue
     login_user(new_user, remember=True)
-    return redirect(url_for('public.home'))
+    return redirect_dest(fallback=url_for('public.home'))
 
 
 @blueprint.route("/activate/<userid>/<userhash>", methods=['GET'])

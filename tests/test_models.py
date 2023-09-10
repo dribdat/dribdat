@@ -12,7 +12,7 @@ from dribdat.settings import Config
 from dribdat.aggregation import ProjectActivity
 from dribdat.boxout.dribdat import box_project
 
-from .factories import UserFactory, ProjectFactory
+from .factories import UserFactory, ProjectFactory, EventFactory
 
 
 @pytest.mark.usefixtures('db')
@@ -119,6 +119,23 @@ class TestEvent:
         assert timesince(
             event.countdown, until=True) == "%d hours to go" % timediff_hours
 
+    def test_event_projects(self, db):
+        event = EventFactory()
+        event.save()
+        p1 = ProjectFactory()
+        p1.event = event
+        p1.save()
+        p2 = ProjectFactory()
+        p2.event = event
+        p2.save()
+        p3 = ProjectFactory()
+        p3.event = event
+        p3.is_hidden = True
+        p3.save()
+        assert event.project_count == 2
+        assert p1 in event.current_projects()
+        assert p3 not in event.current_projects()
+
 
 @pytest.mark.usefixtures('db')
 class TestProject:
@@ -169,23 +186,23 @@ class TestProject:
         project = ProjectFactory()
         project.save()
         assert project.is_challenge
-        project.update()
+        project.update_now()
         assert project.score == 0
         user1 = UserFactory()
         user1.save()
         ProjectActivity(project, 'star', user1)
-        project.update()
+        project.update_now()
         assert project.score == 1
         user2 = UserFactory()
         user2.save()
         ProjectActivity(project, 'star', user1)
-        project.update()
+        project.update_now()
         assert project.score == 1
         ProjectActivity(project, 'star', user2)
-        project.update()
+        project.update_now()
         assert project.score == 2
         ProjectActivity(project, 'unstar', user2)
-        project.update()
+        project.update_now()
         assert project.score == 1
         
 # @pytest.mark.usefixtures('db')

@@ -93,7 +93,7 @@ def project_edit_action(project_id, detail_view=False):
     if form.is_submitted() and form.validate():
         del form.id
         form.populate_obj(project)
-        project.update()
+        project.update_now()
         db.session.add(project)
         db.session.commit()
         cache.clear()

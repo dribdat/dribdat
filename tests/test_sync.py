@@ -1,11 +1,63 @@
 # -*- coding: utf-8 -*-
 """Dribdat data aggregation tests."""
 
-from dribdat.aggregation import FetchWebProject
+from dribdat.aggregation import (
+    AddProjectDataFromAutotext,
+    SyncProjectData,
+    TrimProjectData, 
+    FetchWebProject,
+    ProjectActivity,
+)
+from .factories import ProjectFactory
 
+from .mock.project_data import project_data
+
+import random
+from string import ascii_uppercase
 
 class TestSync:
-    """Here be moar dataragons."""
+    """Testing sync and aggregation features."""
+    
+    a_long_random_string = ''.join(random.choices(ascii_uppercase, k=5000))
+
+    def test_data_sync(self, user, testapp):
+        """Test sync from Data Package."""
+        project = ProjectFactory()
+        thedata = project_data
+        for o in ['name', 'summary', 'image_url', 'source_url', 'webpage_url', 'contact_url', 'download_url']:
+            thedata[o] = self.a_long_random_string
+        SyncProjectData(project, thedata)
+        # The data should not be overwritten, if it exists in the project
+        assert len(project.name) < 20
+        assert len(project.summary) == 19
+        assert len(project.image_url) == 32
+        assert len(project.webpage_url) == 24
+        # These fields are new
+        assert len(project.source_url) == 2048
+        assert len(project.contact_url) == 2048
+        assert len(project.download_url) == 2048
+
+
+    def test_data_mapping(self, user, testapp):
+        """Test mapping from Data Package."""
+        project = ProjectFactory()
+        project.autotext_url = 'https://raw.githubusercontent.com/dribdat/dribdat/main/tests/mock/datapackage.json'
+        project.save()
+        # Fetch from project configuration
+        AddProjectDataFromAutotext(project)
+        assert 'Awesome' in project.summary
+        thedata = project.data
+        for o in ['name', 'summary', 'image_url', 'source_url', 'webpage_url', 'contact_url', 'download_url', 'logo_icon']:
+            thedata[o] = self.a_long_random_string
+        TrimProjectData(project, thedata)
+        assert len(project.name) == 80
+        assert len(project.summary) == 140
+        assert len(project.image_url) == 2048
+        assert len(project.source_url) == 2048
+        assert len(project.webpage_url) == 2048
+        assert len(project.contact_url) == 2048
+        assert len(project.download_url) == 2048
+        assert len(project.logo_icon) == 40 # not part of Sync
 
 
     def test_dokuwiki(self):

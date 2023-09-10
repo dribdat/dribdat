@@ -144,11 +144,11 @@
     </a>
     {% if stage %}
       <div class="btn-group">
-        <a href="{{ url_for('project.project_edit', project_id=project.id) }}" class="btn btn-warning"
+        <a href="{{ url_for('project.project_edit', project_id=project.id) }}" class="btn btn-light"
           title="Edit basic project data">
           <i class="fa fa-pencil" aria-hidden="true"></i>
           Edit</a>
-        <a href="{{ url_for('project.project_details', project_id=project.id) }}" class="btn btn-warning"
+        <a href="{{ url_for('project.project_details', project_id=project.id) }}" class="btn btn-light"
           title="Edit project details" style="opacity:0.9">
           <i class="fa fa-magic" aria-hidden="true"></i>
           Details</a>

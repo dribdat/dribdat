@@ -1,7 +1,7 @@
 {% macro render_project_tooltip(project) %}
 	data-toggle="tooltip"
 	data-summary="{{ project.summary or project.name }}"
-	data-hashtag="{{ project.hashtag }}"
+	data-hashtag="{{ project.hashtag or '' }}"
 	data-imageurl="{{ project.image_url|quote_plus }}"{#
 		> Status icons in tooltip:
 	#}data-status="{% if project.contact_url %}&#x1f44b;{% endif %}{#

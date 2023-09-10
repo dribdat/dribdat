@@ -16,7 +16,7 @@ from dribdat.user.constants import PR_CHALLENGE
 STAGES_URL = 'https://raw.githubusercontent.com/dribdat/dribdat/main/dribdat/templates/includes/stages.yaml'
 
 
-class TestProjects:
+class TestFeatures:
     """Project features."""
 
     def test_onebox(self, project, testapp):

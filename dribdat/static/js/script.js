@@ -179,6 +179,20 @@
     window.prompt('Share the event link in social media, or copy and paste this HTML code to embed on your site. For even better embedding, visit github.com/dribdat/backboard', code);
   });
 
+  // Helper to copy links
+  $('#invite-link').each(function() {
+    var urlContent = $(this).val();
+    $(this).parent().click(function(e) {
+      e.preventDefault(); e.stopPropagation();
+      $(this).tooltip({'title':'Copied'}).show();
+      if ('clipboard' in navigator) {
+        return navigator.clipboard.writeText(urlContent);
+      } else {
+        return document.execCommand('copy', true, urlContent);
+      }
+    });
+  });
+
   // Horizontal desktop dragging of project pages
   $('.profile-projects .row').each(function() {
     const ele = $(this)[0];
@@ -219,6 +233,14 @@
     $('.details .history').slideDown();
   });
   $('.details .history').hide();
+
+  // Invite to teams with a QR code
+  $('#qrcode').each(function() {
+    new QRCode(this, {
+      text: $(this).data('href'),
+      width: 192, height: 192,
+    });
+  });
 
   // Show GitHub issues
   $('#issues-list').each(function() {

@@ -6,12 +6,12 @@
 {% block body_class %}projectform projectedit{% endblock %}
 
 {% block js %}
-  {% if config.ENV == 'prod' %}
-    <script src="https://uicdn.toast.com/editor/3.2.2/toastui-editor-all.min.js"></script>
-    <link href="https://uicdn.toast.com/editor/3.2.2/toastui-editor.min.css" rel="stylesheet">
+  {% if config.ENV == 'prod_DISABLED' %}
+    <script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
+    <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css" />
   {% else %}
     <script src="{{ url_for('static', filename='libs/toastui-all/toastui-editor-all.min.js')}}"></script>
-    <link href="{{ url_for('static', filename='libs/toastui-editor/dist/toastui-editor.css')}}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='libs/toastui-all/toastui-editor.min.css')}}" rel="stylesheet">
   {% endif %}
 {% endblock %}
 
@@ -45,13 +45,17 @@
 
   {% if not detail_view %}
   <span id="activateEditor">
-    <button data-do="activate" type="button" class="btn btn-light hidden mt-2 mb-1" aria-pressed="false">
+    <button data-do="activate" type="button" 
+      class="btn btn-light hidden mt-2 mb-1" aria-pressed="false"
+      title="Click to activate a WYSIWYG editor">
       <i class="fa fa-pencil text-info" area-hidden="true"></i>
-      Markdown editor
+      Editor: <b>off</b>
     </button>
-    <button data-do="reset" type="button" class="btn btn-light hidden mt-2 mb-1" aria-pressed="false">
-      <i class="fa fa-pencil text-info" area-hidden="true"></i>
-      Plain text
+    <button data-do="reset" type="button" 
+      class="btn btn-light hidden mt-2 mb-1" aria-pressed="false"
+      title="Click to use a plain text editor">
+        <i class="fa fa-pencil text-info" area-hidden="true"></i>
+        Editor: <b>on</b>
     </button>
   </span>
   {% endif %}

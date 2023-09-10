@@ -170,7 +170,7 @@ def FetchGithubProject(project_url):
         'name': json['name'],
         'summary': json['description'],
         'description': readme,
-        'homepage_url': json['homepage'],
+        'webpage_url': json['homepage'],
         'source_url': json['html_url'],
         'image_url': json['owner']['avatar_url'],
         'contact_url': json['html_url'] + '/issues',
@@ -216,7 +216,7 @@ def FetchBitbucketProject(project_url):
         'name': json['name'],
         'summary': json['description'],
         'description': readme,
-        'homepage_url': json['website'],
+        'webpage_url': json['website'],
         'source_url': web_url,
         'image_url': image_url,
         'contact_url': contact_url,
@@ -283,6 +283,27 @@ def parse_data_package(json):
     return text_content
 
 
+def FetchDribdatProject(dribdat_url):
+    """Try to load a Dribdat project from a remote page."""
+    project_url = dribdat_url.replace('/project/', '/api/project/') 
+    project_url = sanitize_url(project_url) + '?full=1'
+    data = requests.get(project_url, timeout=REQUEST_TIMEOUT)
+    # TODO: treat dribdat events as special
+    logging.info("Fetching Dribdat site", project_url)
+    if data.text.find('{') < 0:
+        logging.debug('No data at', project_url)
+        return {}
+    json = data.json()
+    if 'project' not in json or 'event' not in json:
+        logging.debug('Invalid format at', project_url)
+        return {}
+    projectdata = json['project']
+    projectdata['type'] = 'Dribdat'
+    projectdata['description'] = projectdata['longtext']
+    return projectdata
+
+
+
 # Basis: https://github.com/mozilla/bleach/blob/master/bleach/sanitizer.py#L16
 ALLOWED_HTML_TAGS = [
     'acronym', 'a', 'blockquote', 'li', 'abbr', 
@@ -320,11 +341,6 @@ def RequestRemoteContent(project_url):
 def FetchWebProject(project_url):
     """Parse a remote Document, wiki or website URL."""
     
-    # GitHub Markdown
-    if project_url.startswith('https://github.com/'):
-        return FetchWebGitHub(project_url)
-   
-    # Fetch standard document
     datatext = RequestRemoteContent(project_url)
     if datatext is None: return {}
 

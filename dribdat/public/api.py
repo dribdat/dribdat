@@ -17,8 +17,12 @@ from ..extensions import db, cache
 from ..utils import timesince, random_password, sanitize_url
 from ..decorators import admin_required
 from ..user.models import Event, Project, Activity, User
-from ..aggregation import GetProjectData, AddProjectData, GetEventUsers
 from ..apipackage import import_event_package, event_to_data_package
+from ..aggregation import (
+    AddProjectDataFromAutotext,
+    GetProjectData, 
+    GetEventUsers,
+)
 from ..apiutils import (
     get_project_list,
     get_event_activities,
@@ -395,8 +399,8 @@ def project_push_json():
     elif project.user_id != 1 or project.is_hidden:
         return jsonify(error='Access denied')
     set_project_values(project, data)
-    project.update()
-    db.session.add(project)
+    project.update_now()
+    project.save()
     db.session.commit()
     return jsonify(success='Updated', project=project.data)
 
@@ -423,7 +427,7 @@ def set_project_values(project, data):
     # return jsonify(data=data)
     if project.autotext_url is not None and not has_longtext:
         # Now try to autosync
-        project = AddProjectData(project)
+        AddProjectDataFromAutotext(project)
     return project
 
 
@@ -443,10 +447,10 @@ def project_autofill():
 
 
 ACCEPTED_TYPES = [
-    'png', 'jpg', 'jpeg', 'gif',  # ʕ·͡ᴥ·ʔ
-    'json', 'geojson',            # ( ͡° ͜ʖ ͡°)
-    'csv', 'tsv',                 # ¯\_(ツ)_/¯
-    'ods', 'pdf',                # (ノಠ ∩ಠ)ノ彡
+    'png', 'jpg', 'jpeg', 'gif', 'webp',  # ʕ·͡ᴥ·ʔ
+    'json', 'geojson',                    # ( ͡° ͜ʖ ͡°)
+    'csv', 'tsv',                         # ¯\_(ツ)_/¯
+    'ods', 'pdf', 'svg'                   # (ノಠ ∩ಠ)ノ彡
 ]
 
 

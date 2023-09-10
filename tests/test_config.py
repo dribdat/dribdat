@@ -4,7 +4,7 @@
 from dribdat.app import init_app
 from dribdat.settings import DevConfig, ProdConfig
 from dribdat.utils import strtobool
-
+from dribdat.user.constants import projectProgressList
 
 def test_production_config():
     """Production config."""
@@ -24,6 +24,15 @@ def test_dev_config():
 
 
 def test_truthy_config():
-    """ Test conversion of truthy variables. """
+    """Test conversion of truthy variables."""
     assert strtobool(' tRuE') is True
     assert strtobool('0') is False
+
+
+def test_stage_config():
+    """Test stage customization."""
+    plist = projectProgressList()
+    # [(-100, ''), (0, 'CHALLENGE🚧 Define questions..'), (5, 'NEW👪 Collecting..') ...
+    assert len(plist) == 8
+    assert (-100, '') in plist
+    assert 'CHALLENGE' in plist[1][1]

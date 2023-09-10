@@ -8,7 +8,7 @@
   "private": false,
   "dependencies": {
     "@barba/core": "^2.9.7",
-    "@toast-ui/editor": "^3",
+    "@toast-ui/editor": "^3.2.2",
     "bootstrap": "^4",
     "bootswatch": "^4",
     "flipdown": "^0.3.2",

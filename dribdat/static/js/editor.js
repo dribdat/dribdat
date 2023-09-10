@@ -49,7 +49,7 @@
       // Call updater API
       $.getJSON('/api/project/autofill?url=' + url, function(data) {
         $button.removeAttr('disabled').html('Refresh');
-        if (typeof data.name === 'undefined' || data.name === '') {
+        if (!data || typeof data.name === 'undefined' || data.name === '') {
           window.alert('Enter a valid link to sync from a supported site.');
           $('#is_autoupdate').prop('checked', false);
           $indicator.find('i').css('color', 'red');
@@ -62,7 +62,7 @@
         if (!$('input#summary').val())
           $('input#summary').val(data.summary);
         if (!$('input#webpage_url').val())
-          $('input#webpage_url').val(data.homepage_url);
+          $('input#webpage_url').val(data.webpage_url);
         if (!$('input#source_url').val())
           $('input#source_url').val(data.source_url);
         if (!$('input#contact_url').val())
@@ -173,15 +173,19 @@
               $dialog.modal('hide');
             } else if ($(this).data('target') == 'post') {
               // Append to post
-              var imglink = '![](' + response + ')';
+              var imglink = '![Image caption](' + response + ')';
               $('#note').val(imglink + ' ' + $('#note').val());
               $dialog.modal('hide');
             } else if ($(this).data('target') == 'pitch') {
               // Append to pitch
-              var imglink = '![ Title ](' + response + ')';
+              var filename = response.split(/(\\|\/)/g).pop().replaceAll('_', ' ');
               if (typeof window.toasteditor !== 'undefined') {
-                window.toasteditor.insertText(imglink);
+                // As an image
+                window.toasteditor.exec('addImage', {
+                  imageUrl: response, altText: filename
+                });
               } else {
+                var imglink = '![' + filename + '](' + response + ')';
                 $('#longtext').val($('#longtext').val() +
                   '\n\n' + imglink);
               }
@@ -238,7 +242,7 @@
              return alert('File could not be uploaded :(\n' + response);
           }
           var path = $inputfd.val();
-          var filename = path.split(/(\\|\/)/g).pop();
+          var filename = path.split(/(\\|\/)/g).pop().replaceAll('_', ' ');
           $dialog.find(".preview input").val(response);
           $dialog.find(".hidden").show();
           // User confirms the file upload
@@ -252,13 +256,15 @@
               // Determine file extension
               //var fileExt = filename.split('.');
               //fileExt = (fileExt.length > 1) ? fileExt[fileExt.length - 1] : '?';
-                  // ... ' (' + fileExt.toUpperCase() + ')';
-              // Create Markdown link with a paperclip emoji
-              var fileLink = '📎 [' + filename + '](' + response + ')'; 
+                  // ... ' (' + fileExt.toUpperCase() + ')'; 
               // Append to pitch
               if (typeof window.toasteditor !== 'undefined') {
-                window.toasteditor.insertText(fileLink);
+                window.toasteditor.exec('addLink', { 
+                  linkUrl: response, linkText: filename
+                });
               } else {
+                // Create Markdown link with a paperclip emoji
+                var fileLink = '📎 [' + filename + '](' + response + ')';
                 $('#longtext').val($('#longtext').val() +
                   '\n\n' + fileLink);
               }
@@ -324,13 +330,16 @@
   // Initialize rich editor for Markdown
   function activate_editor() {
     if (typeof toastui !== 'object') return;
+    const Editor = toastui.Editor;
     const $longtext = $('#longtext');
     if (!$longtext.length) return;
     $longtext.after('<div id="mdeditor" style="text-align:left"></div>');
 
-    const toasteditor = window.toasteditor = new toastui.Editor({
+    const toasteditor = window.toasteditor = new Editor({
       el: document.querySelector('#mdeditor'),
-      previewStyle: 'tab', height: '500px',
+      height: '500px',
+      previewStyle: 'tab',
+      initialEditType: 'wysiwyg',
       initialValue: $longtext.hide().text(),
       usageStatistics: false,
       toolbarItems: [

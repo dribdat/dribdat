@@ -6,17 +6,17 @@
 {% block content %}
 <div class="container-narrow">
     <h1>Register</h1>
-    <p>Already registered? <a href="{{ url_for('auth.login') }}">Log in here</a>.</p>
+    <p>Already registered? <a href="{{ url_for('auth.login', next=request.args.get('next')) }}">Log in here</a>.</p>
     <br/>
 
   {% if oauth_type %}
     <p>You can also use &#x1f511;
-      <b><a href="{{ url_for('auth.login') }}">Single Sign On</a></b>
+      <b><a href="{{ url_for('auth.login', next=request.args.get('next')) }}">Single Sign On</a></b>
       through {{ oauth_type }}
       in this application.</p>
   {% endif %}
 
-    <form id="registerForm" class="form form-register" method="POST" action="" role="form">
+    <form id="registerForm" class="form form-register" method="POST" action="{{ url_for('auth.register', next=request.args.get('next')) }}" role="form">
         {{ form.hidden_tag() }}
         <div class="form-group">
             {{form.username.label}}
