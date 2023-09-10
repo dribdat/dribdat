@@ -136,6 +136,7 @@ class TestConfig(Config):
     DEBUG = True
     SQLALCHEMY_DATABASE_URI = 'sqlite://'
     SERVER_NAME = 'localhost'
+    MAIL_DEFAULT_SENDER = 'test@dribdat.cc'
     # Pytest complains, but not sure how to fully change server name
     # SERVER_NAME = 'localhost.localdomain' #results in 404 errors
     WTF_CSRF_ENABLED = False  # Allows form testing

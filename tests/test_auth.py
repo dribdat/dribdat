@@ -6,7 +6,12 @@ See: http://webtest.readthedocs.org/
 from flask import url_for
 
 from dribdat.user.models import User
-from dribdat.mailer import user_activation, user_invitation
+from dribdat.mailer import (
+    user_activation, 
+    user_activation_message, 
+    user_invitation,
+    user_invitation_message,
+)
 
 from .factories import UserFactory, ProjectFactory
 
@@ -163,6 +168,9 @@ class TestActivation:
         res = testapp.get(url_for('auth.activate', userid=user.id, userhash=my_hash))
         assert res.status_code == 302
         assert '/user/profile' in res
+        # Test the message now
+        msg = user_activation_message(user, 'abracadabra')
+        assert 'activate' in msg.body
 
         # Check if the user can be invited by e-mail
         user.email = 'test@dribdat.cc'
@@ -171,4 +179,7 @@ class TestActivation:
         project.save()
         # Mail is not configured in the test environment
         assert user_invitation(user.email, project) is False
+        # We can still test the message now
+        msg = user_invitation_message(project)
+        assert 'invited' in msg.body
 

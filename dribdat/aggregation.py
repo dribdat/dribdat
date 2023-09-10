@@ -99,10 +99,14 @@ def TrimProjectData(project, data):
         project.summary = data['summary'][0:140]
     if 'description' in data and len(data['description']) > 0:
         project.longtext = data['description']
-    if 'webpage_url' in data and len(data['webpage_url']) > 0:
-        project.webpage_url = data['webpage_url'][0:2048]
     if 'source_url' in data and len(data['source_url']) > 0:
         project.source_url = data['source_url'][0:2048]
+    if 'webpage_url' in data and len(data['webpage_url']) > 0:
+        project.webpage_url = data['webpage_url'][0:2048]
+    if 'contact_url' in data and len(data['contact_url']) > 0:
+        project.contact_url = data['contact_url'][0:2048]
+    if 'download_url' in data and len(data['download_url']) > 0:
+        project.download_url = data['download_url'][0:2048]
     if 'image_url' in data and len(data['image_url']) > 0:
         project.image_url = data['image_url'][0:2048]
     if 'logo_icon' in data and len(data['logo_icon']) > 0:
