@@ -2081,18 +2081,13 @@ SlackIn button
 
 .account-register a { margin-left: 3.5em; font-size: 125%; }
 
-.account-register::before,
-.sso-login::after {
+.account-register::before {
   content: 'or';
   display: block;
   margin: 0.5em 5em;
   font-size: 200%;
   font-family: cursive;
   font-style: italic;
-}
-.sso-login::after {
-  margin-top: 1em;
-  margin-bottom: -0.5em;
 }
 
 .__slackin { margin-bottom: 10px; display: block; }

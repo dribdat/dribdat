@@ -138,6 +138,11 @@
           <input type="radio" name="import" value="full" checked class="form-check-input" id="importCheck3">
           <label class="form-check-label" for="importCheck3">Include event, projects, users</label>
         </div>
+      </div>
+      <div class="modal-footer">
+        <p class="message-loading hidden alert alert-warning">
+          Please wait, loading your data.
+        </p>
         <p class="message-error hidden alert alert-warning">
           There was an error. Please check your window log for details.
         </p>
@@ -145,10 +150,10 @@
           Import complete.
           <a href="javascript:location.reload()">Refresh the page</a>, or continue importing events.
         </p>
-      </div>
-      <div class="modal-footer">
-        <input type="submit" value="Import" class="btn btn-primary">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+        <div class="buttons">
+          <input type="submit" value="Import" class="btn btn-primary">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+        </div>
       </div>
     </div>
   </form>
