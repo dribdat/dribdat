@@ -24,7 +24,14 @@
       {% if event.location %}
         <div class="event-location">
           <i class="fa fa-map"></i>
-          {{ event.location }}</div>
+          {% if event.location_lat and event.location_lon %}
+          <a title="OpenStreetMap" href="https://www.openstreetmap.org/directions?from=&to={{ event.location_lat }}%2C{{ event.location_lon }}" target="_blank">
+            {{ event.location }}
+          </a>
+          {% else %}
+            {{ event.location }}
+          {% endif %}
+        </div>
       {% endif %}
     </div>
   </div>
