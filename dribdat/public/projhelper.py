@@ -158,7 +158,7 @@ def project_action(project_id, of_type=None, as_view=True, then_redirect=False,
         else:
             missing_roles = None
 
-    # Select available project image
+    # Select an image for the META tags
     if project.image_url:
         project_image_url = project.image_url
     elif event.logo_url:

@@ -87,6 +87,8 @@
           'matches' +
           (projects.length > 3 ? '<i class="float-right">&#9654;&#9654;</i>' : '')
         );
+      } else {
+        $sm.html('Zero, zilch, zip, nada.')
       }
       // Create project cards
       projects.forEach(function(p) {
