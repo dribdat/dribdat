@@ -99,6 +99,7 @@ def register_blueprints(app):
     app.register_blueprint(public.project.blueprint)
     app.register_blueprint(public.auth.blueprint)
     app.register_blueprint(public.api.blueprint)
+    app.register_blueprint(public.feeds.blueprint)
     app.register_blueprint(admin.views.blueprint)
     return None
 

@@ -8,12 +8,36 @@ from dribdat.aggregation import ProjectActivity
 from dribdat.user.models import Event
 from dribdat.public.api import *
 
-from .factories import EventFactory, ProjectFactory, UserFactory
+from .factories import (
+    EventFactory, ProjectFactory, 
+    UserFactory, ActivityFactory
+)
 
 
 @pytest.mark.usefixtures('db')
 class TestApi:
     """API and data import/export tests."""
+
+
+    def test_feed_activitypub(self, testapp):
+        """ActivityPub support."""
+        event = EventFactory(name="hello")
+        user = UserFactory()
+        project = ProjectFactory()
+        ProjectActivity(project, 'star', user)
+        ProjectActivity(project, 'update', user, 'post', "Test note")
+        assert len(user.latest_posts(10)) == 1
+
+        res1 = testapp.get('/feed/u/%s' % user.username)
+        assert res1.status_code == 200
+        assert 'activity+json' in res1.headers['Content-Type']
+        assert res1.json['name'] == user.username
+
+        res2 = testapp.get(res1.json['outbox'])
+        assert res2.status_code == 200
+        assert res2.json['totalItems'] == 1
+        assert res2.json['orderedItems'][0]['object']['content'] == "Test note"
+
 
     def test_api_events(self):
         """Test event API functions."""

@@ -90,6 +90,11 @@ class User(UserMixin, PkModel):
     sso_id = Column(db.String(128), nullable=True)
     # A temporary hash for logins
     hashword = Column(db.String(128), nullable=True)
+    
+    # TODO: a private key for secure feeds
+    # TODO: a public key for secure feeds
+
+    # User timestamp
     updated_at = Column(db.DateTime, nullable=True,
                         default=dt.datetime.utcnow)
     # The hashed password
@@ -206,16 +211,17 @@ class User(UserMixin, PkModel):
             ).order_by(Project.id.desc()).all()
         return projects
 
-    def latest_posts(self, max=None):
+    def latest_posts(self, max=None, only_posts=True):
         """Retrieve the latest content from the user."""
-        activities = Activity.query.filter_by(
-                user_id=self.id, action='post'
-            ).order_by(Activity.timestamp.desc())
+        activities = Activity.query.filter_by(user_id=self.id)
+        if only_posts:
+            activities = activities.filter_by(action='post')
+        activities = activities.order_by(Activity.timestamp.desc())
         if max is not None:
             activities = activities.limit(max)
         posts = []
         for a in activities.all():
-            if not a.project.is_hidden:
+            if a.project and not a.project.is_hidden:
                 posts.append(a.data)
         return posts
 
