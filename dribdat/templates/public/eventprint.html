@@ -43,7 +43,7 @@
       <li>Updated: <span>{{ project.updated_at|format_date }}</span> ({{project.score}}% complete)</li>
       <li>Created: <span>{{ project.created_at|format_date }}</span>
         {% if project.user %}
-        by <a href="{{project.user.webpage_url}}">{{ project.user.username }}</a>
+        by <a href="{{project.user.webpage_url}}">{{ project.user.name }}</a>
         {% endif %}</li>
       {% if project.category_id %}
       <li>Category: <b>{{ project.category.name }}</b></li>
@@ -108,7 +108,7 @@
       <li>Updated: <span>{{ project.updated_at|format_date }}</span></li>
       <li>Created: <span>{{ project.created_at|format_date }}</span>
         {% if project.user %}
-        by <a href="{{project.user.webpage_url}}">{{ project.user.username }}</a>
+        by <a href="{{project.user.webpage_url}}">{{ project.user.name }}</a>
         {% endif %}</li>
       {% if project.category_id %}
       <li>Category: <b>{{ project.category.name }}</b></li>

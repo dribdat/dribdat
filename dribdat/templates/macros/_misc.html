@@ -4,7 +4,7 @@
         {% if user.carddata %}
             <img src="{{user.carddata}}"/>
         {% endif %}
-        <span>{{ user.username }}</span>
+        <span>{{ user.name }}</span>
         <div class="team-roles">
         {% for role in user.roles %}
           {% if role.name %}

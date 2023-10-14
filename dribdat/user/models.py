@@ -115,11 +115,13 @@ class User(UserMixin, PkModel):
         """Get JSON representation."""
         return {
             'id': self.id,
+            'name': self.name,
             'email': self.email,
             'sso_id': self.sso_id,
             'active': self.active,
             'is_admin': self.is_admin,
             'username': self.username,
+            'fullname': self.fullname,
             'webpage_url': self.webpage_url,
             'roles': ",".join([r.name for r in self.roles]),
             'cardtype': self.cardtype,
@@ -216,6 +218,10 @@ class User(UserMixin, PkModel):
             if not a.project.is_hidden:
                 posts.append(a.data)
         return posts
+
+    @property
+    def name(self):
+        return self.fullname or self.username
 
     @property
     def last_active(self):

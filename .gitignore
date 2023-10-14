@@ -1,10 +1,11 @@
 node_modules/
 package-lock.json
 yarn.lock
-*.py[cod]
 .flaskenv
 coverage.xml
 profile/*.prof
+*.py[cod]
+*.pem
 
 # Compressed assets
 *.gz
@@ -58,7 +59,6 @@ common.js
 
 # Sphinx
 docs/_build
-
 .webassets-cache
 
 # Virtualenvs and utility scripts

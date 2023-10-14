@@ -17,7 +17,7 @@ def user_activation_message(user, act_hash):
     msg = EmailMessage(from_email=from_email)
     msg.subject = 'Your dribdat account'
     msg.body = \
-        "Hello %s,\n" % user.username \
+        "Hello %s,\n" % user.name \
         + "Thanks for signing up at %s\n\n" % base_url \
         + "Tap here to activate your account:\n\n%s" % act_url
     logging.debug(act_url)

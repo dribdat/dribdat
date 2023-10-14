@@ -32,7 +32,7 @@
         Or contact one of the organisers on this site:</p>
       <p class="organisers font-weight-bold">
       {% for user in orgs %}
-        &nbsp;🕴️<a href="{{ url_for('public.user', username=user.username) }}">{{ user.username }}</a>
+        &nbsp;🕴️<a href="{{ url_for('public.user', username=user.username) }}">{{ user.name }}</a>
       {% endfor %}
       </p>
     </div><!-- /organiser -->

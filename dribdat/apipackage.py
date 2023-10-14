@@ -28,7 +28,7 @@ def event_to_data_package(event, author=None, host_url='', full_content=False):
     contributors = []
     if author and not author.is_anonymous and author.is_admin:
         contributors.append({
-            "title": author.username,
+            "title": author.name,
             "path": author.webpage_url or '',
             "role": "author"
         })

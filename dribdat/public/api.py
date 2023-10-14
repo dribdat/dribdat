@@ -152,7 +152,7 @@ def categories_list_current_json():
     categories = [c.data for c in event.categories_for_event()]
     return jsonify(categories=categories, event=event.data)
 
-# ------ ACTIVITY FEEDS ---------
+# ------ ACTIVITIES ---------
 
 
 @blueprint.route('/event/<int:event_id>/activity.json')
@@ -596,3 +596,72 @@ def profile_username_json(username):
     """Output JSON with public data by username."""
     a_user = User.query.filter_by(username=username).first_or_404()
     return jsonify(get_user_data(a_user))
+
+
+# ------ FEEDS ---------
+
+# TODO: 600+ lines of API bootstrap deserve a refactor.
+
+@blueprint.route('/feed/<username>', methods=['GET'])
+def feed_user(username):
+    """Output ActivityPub with public data by username."""
+    a_user = User.query.filter_by(username=username).first_or_404()
+    url_user = url_for("public.user", username=a_user.username, _external=True)
+    url_here = url_for("api.feed_user", username=a_user.username, _external=True)
+    apub = {
+        "@context": "https://www.w3.org/ns/activitystreams",
+        "id": url_user,
+        "inbox": url_here + '/inbox'
+        "outbox": url_here + '/activities',
+        "type": "Person",
+        "name": a_user.name,
+        "preferredUsername": a_user.username,
+        "publicKey": {
+            "id": url_user + "#main-key",
+            "publicKeyPem": public_key
+        }
+    }
+    resp = Response(jsonify(apub))
+    resp.headers['Content-Type'] = 'application/activity+json'
+    return resp
+
+
+@blueprint.route('/feed/<username>/inbox', methods=['POST'])
+def feed_user_inbox(username):
+    current_app.logger.info(request.headers)
+    current_app.logger.info(request.data)
+    return Response("", status=202)
+
+
+@blueprint.route('/feed/<username>/activities', methods=['GET'])
+def feed_user_activities(username):
+    activities = []
+    url_user = url_for("public.user", username=a_user.username, _external=True)
+    for a in User.query.find_by(username=username).limit(10):
+        activities.push(
+            {
+              "@context": "https://www.w3.org/ns/activitystreams",
+              "type": "Create",
+              "id": a.id,
+              "actor": url_user,
+              "object": {
+                "id": a.url,
+                "type": "Note",
+                "attributedTo": url_user,
+                "content": a.text,
+              },
+              "published": a.date,
+              "to": [url_user],
+            }
+        )
+    apub = {
+      "@context": "https://www.w3.org/ns/activitystreams",
+      "summary": username + ' - dribs',
+      "type": "OrderedCollection",
+      "orderedItems": activities,
+      "totalItems": len(activities),
+    }
+    resp = Response(jsonify(apub))
+    resp.headers['Content-Type'] = 'application/activity+json'
+    return resp
+    
