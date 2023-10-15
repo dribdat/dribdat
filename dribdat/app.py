@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """The app module, containing the app factory function."""
 
-from flask import Flask, render_template
+from flask import Flask, render_template, request, make_response, url_for
 from flask_cors import CORS
 from flask_misaka import Misaka
 from flask_mailman import Mail
@@ -72,6 +72,7 @@ def register_extensions(app):
     migrate.init_app(app, db)
     init_mailman(app)
     init_talisman(app)
+    init_webfinger(app)
     return None
 
 
@@ -91,6 +92,30 @@ def init_talisman(app):
         Talisman(app,
                  content_security_policy=app.config['CSP_DIRECTIVES'],
                  frame_options_allow_from='*')
+
+
+def init_webfinger(app):
+    """Initialize Webfinger support."""
+    # TODO: move to separate lib
+    @app.route('/.well-known/webfinger')
+    def webfinger():
+        """Discover information on entities by URI."""
+        resource = request.args.get('resource')
+        if not resource.startswith('acct:'):
+            return
+        username = resource.split('@')[0][5:]
+        response = make_response({
+            "subject": resource,
+            "links": [
+                {
+                    "rel": "self",
+                    "type": "application/activity+json",
+                    "href": url_for("feed.get_user", username=username, _external=True)
+                }
+            ]
+        })
+        response.headers['Content-Type'] = 'application/jrd+json'
+        return response
 
 
 def register_blueprints(app):
