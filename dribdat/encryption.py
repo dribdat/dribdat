@@ -6,7 +6,7 @@ from cryptography.hazmat.primitives.asymmetric import rsa
 from cryptography.hazmat.backends import default_backend as crypto_default_backend
 
 def genrsa():
-    """Generates RSA keys."""
+    """Generates RSA keys, returns Bytes (private, public)."""
     key = rsa.generate_private_key(
         backend=crypto_default_backend(),
         public_exponent=65537,

@@ -32,11 +32,15 @@ class TestApi:
         assert res1.status_code == 200
         assert 'activity+json' in res1.headers['Content-Type']
         assert res1.json['name'] == user.username
+        assert 'publicKeyPem' in res1.json['publicKey']
 
         res2 = testapp.get(res1.json['outbox'])
         assert res2.status_code == 200
         assert res2.json['totalItems'] == 1
         assert res2.json['orderedItems'][0]['object']['content'] == "Test note"
+
+        res3 = testapp.post(res1.json['inbox'])
+        assert res3.status_code == 202
 
 
     def test_api_events(self):

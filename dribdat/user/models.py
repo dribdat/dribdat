@@ -91,8 +91,9 @@ class User(UserMixin, PkModel):
     # A temporary hash for logins
     hashword = Column(db.String(128), nullable=True)
     
-    # TODO: a private key for secure feeds
-    # TODO: a public key for secure feeds
+    # A set of public and private keys for feeds
+    public_key = Column(db.String(2048), nullable=True)
+    private_key = Column(db.String(2048), nullable=True)
 
     # User timestamp
     updated_at = Column(db.DateTime, nullable=True,
@@ -269,12 +270,23 @@ class User(UserMixin, PkModel):
                 path = path.replace('{%s}' % m, userdata[m])
         return path
 
+    def get_keys(self):
+        """Return a private, public key pair - generating if needed."""
+        if self.private_key is None or self.public_key is None:
+            from dribdat.encryption import genrsa
+            priv, pubk = genrsa()
+            self.private_key = str(priv)
+            self.public_key = str(pubk)
+            self.save()
+        return self.private_key, self.public_key
+
     def __init__(self, username=None, email=None, password=None, **kwargs):
         """Create instance."""
         if username and email:
             db.Model.__init__(self, username=username, email=email, **kwargs)
         if password:
             self.set_password(password)
+        self.get_keys()
 
     def set_password(self, password):
         """Set password."""
