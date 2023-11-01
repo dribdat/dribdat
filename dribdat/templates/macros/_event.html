@@ -82,7 +82,7 @@
 				 class="hexagon {{
 		 		 	'challenge' if project.is_challenge else 'project'
 		 		 }}{{
-		 		 	' stage-%d' % project.progress if project.progress > 0
+		 		 	' stage-%d' % project.progress if project.progress
 		 		 }}"
 		 		 {{ render_project_tooltip(project) }}>
         <div class="hexagontent">
