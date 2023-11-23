@@ -14,7 +14,7 @@ The philosophy of this project, in a nutshell, is: **live and let live** (no tec
 
 > Look at [Screenshots and examples](https://dribdat.cc/about#screenshots) in the User Guide.
 
-For more background and references, see the [User Handbook](https://docs.dribdat.cc/usage/). If you need help or advice in setting up your event, or would like to contribute to the project: please get in touch via [the website](https://dribd.at) or [GitHub Issues](https://github.com/dribdat/dribdat/issues). Follow and support the project's development on [OpenCollective](https://opencollective.com/dribdat/updates)
+For more background and references, see the [User Handbook](https://docs.dribdat.cc/usage/). If you need help or advice in setting up your event, or would like to contribute to the project: please get in touch via [Discussions](https://github.com/orgs/dribdat/discussions) or [GitHub Issues](https://github.com/dribdat/dribdat/issues). Follow and support the project's development on [OpenCollective](https://opencollective.com/dribdat/updates)
 
 <a href="https://opencollective.com/dribdat/donate" target="_blank"><img src="https://opencollective.com/dribdat/donate/button@2x.png?color=blue" width=300 /></a>
 
@@ -28,7 +28,7 @@ If you would like to run dribdat on any other cloud or local machine, there are 
 
 See also **[backboard](https://github.com/dribdat/backboard)**, a sample responsive web application, and our **[dridbot](https://github.com/dribdat/dridbot)** chat client, which both demonstrate reuse of the dribdat API.
 
-If you need support with your deployment, please reach out through the Issues board, or use the contact form on our website: [dribd.at](https://dribd.at)
+If you need support with your deployment, please reach out through [Discussions](https://github.com/orgs/dribdat/discussions).
 
 # Credits
 
