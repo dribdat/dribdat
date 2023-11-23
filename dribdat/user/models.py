@@ -175,14 +175,17 @@ class User(UserMixin, PkModel):
 
     def joined_projects(self, with_challenges=True, limit=-1):
         """Retrieve all projects user has joined."""
-        # TODO: slow code!
         activities = Activity.query.filter_by(
                 user_id=self.id, name='star'
-            ).order_by(Activity.timestamp.desc()).all()
+            ).order_by(Activity.timestamp.desc())
+        if limit > 0:
+            activities = activities.limit(limit)
+        else:
+            activities = activities.all()
         projects = []
         project_ids = []
         for a in activities:
-            if limit > 0 and len(projects) >= limit: continue
+            if limit > 0 and len(projects) >= limit: break
             if a.project_id not in project_ids and not a.project.is_hidden:
                 not_challenge = a.project.progress and a.project.progress > 0
                 if with_challenges or not_challenge:
