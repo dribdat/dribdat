@@ -2,9 +2,17 @@
 """Dribdat data import export tests."""
 
 from dribdat.user.models import Event, Project, Activity, Role
-from dribdat.apipackage import import_event_package, event_to_data_package
 from dribdat.aggregation import ProjectActivity
-from dribdat.apiutils import get_schema_for_user_projects
+from dribdat.apiutils import (
+    get_schema_for_user_projects, 
+    get_project_list,
+    gen_csv,
+)
+from dribdat.apipackage import (
+    event_to_data_package,
+    import_event_package, 
+    import_project_data, 
+)
 from .factories import UserFactory
 
 
@@ -88,3 +96,24 @@ class TestImport:
         proj2.delete()
         event.delete()
         user.delete()
+
+    def test_import_export(self, project, testapp):
+        """Create an export sample."""
+        event = Event(name="Test Event", summary="Just testin")
+        event.save()
+        user = UserFactory(username="Test Author")
+        user.save()
+        for p in range(1, 6):
+            proj = Project(name="Test Project %d" % p)
+            proj.event = event
+            proj.user = user
+            proj.progress = p * 10
+            proj.save()
+        testlist = get_project_list(event.id, 'testhost', True)
+        assert len(testlist) == 5
+        testcsv = gen_csv(testlist)
+        assert testcsv.startswith('"id",')
+        testimport = import_project_data(testlist, True, event)
+        assert len(testimport) == 5
+        assert 'Test Project' in testimport[0]['name']
+

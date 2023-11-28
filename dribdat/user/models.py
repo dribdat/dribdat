@@ -645,6 +645,8 @@ class Project(PkModel):
             'id': self.id,
             'url': self.url,
             'name': self.name,
+            'event_url': self.event.url,
+            'event_name': self.event.name,
             'score': self.score,
             'phase': self.phase,
             'team': self.team,
@@ -680,11 +682,6 @@ class Project(PkModel):
             d['maintainer'] = self.user.username
         else:
             d['maintainer'] = ''
-        if self.event is not None:
-            d['event_url'] = self.event.url
-            d['event_name'] = self.event.name
-        else:
-            d['event_url'] = d['event_name'] = ''
         if self.category is not None:
             d['category_id'] = self.category.id
             d['category_name'] = self.category.name
@@ -864,32 +861,50 @@ class Project(PkModel):
 
     def set_from_data(self, data):
         """Update from JSON representation."""
+        if not 'name' in data:
+            raise Exception("Missing project name!")
         self.name = data['name']
-        self.summary = data['summary']
-        self.hashtag = data['hashtag']
-        self.image_url = data['image_url']
-        self.source_url = data['source_url']
-        self.webpage_url = data['webpage_url']
-        self.autotext_url = data['autotext_url']
-        self.download_url = data['download_url']
-        self.contact_url = data['contact_url']
-        self.logo_color = data['logo_color']
-        self.logo_icon = data['logo_icon']
-        self.longtext = data['longtext']
-        self.autotext = data['autotext']
-        self.score = int(data['score'] or 0)
-        self.progress = int(data['progress'] or 0)
+        if 'summary' in data:
+            self.summary = data['summary']
+        if 'hashtag' in data:
+            self.hashtag = data['hashtag']
+        if 'image_url' in data:
+            self.image_url = data['image_url']
+        if 'source_url' in data:
+            self.source_url = data['source_url']
+        if 'webpage_url' in data:
+            self.webpage_url = data['webpage_url']
+        if 'autotext_url' in data:
+            self.autotext_url = data['autotext_url']
+        if 'download_url' in data:
+            self.download_url = data['download_url']
+        if 'contact_url' in data:
+            self.contact_url = data['contact_url']
+        if 'logo_color' in data:
+            self.logo_color = data['logo_color']
+        if 'logo_icon' in data:
+            self.logo_icon = data['logo_icon']
+        if 'longtext' in data:
+            self.longtext = data['longtext']
+        if 'autotext' in data:
+            self.autotext = data['autotext']
+        if 'score' in data:
+            self.score = int(data['score'] or 0)
+        if 'progress' in data:
+            self.progress = int(data['progress'] or 0)
         try:
+            if not 'created_at' in data or not 'updated_at' in data:
+                raise ParserError("Date values missing")
             self.created_at = parse(data['created_at'])
             self.updated_at = parse(data['updated_at'])
         except ParserError as ex:
+            # Resetting dates to current time
             self.created_at = dt.datetime.utcnow()
             self.updated_at = dt.datetime.utcnow()
-            print(ex)
         if 'is_autoupdate' in data:
-            self.is_autoupdate = data['is_autoupdate']
+            self.is_autoupdate = bool(data['is_autoupdate'])
         if 'is_webembed' in data:
-            self.is_webembed = data['is_webembed']
+            self.is_webembed = bool(data['is_webembed'])
         if 'maintainer' in data:
             uname = data['maintainer']
             user = User.query.filter_by(username=uname).first()
