@@ -13,7 +13,6 @@ class BaseFactory(SQLAlchemyModelFactory):
 
     class Meta:
         """Factory configuration."""
-
         abstract = True
         sqlalchemy_session = db.session
 
