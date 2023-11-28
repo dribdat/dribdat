@@ -281,7 +281,6 @@ class User(UserMixin, PkModel):
             priv, pubk = genrsa()
             self.private_key = str(priv)
             self.public_key = str(pubk)
-            self.save()
         return self.private_key, self.public_key
 
     def __init__(self, username=None, email=None, password=None, **kwargs):

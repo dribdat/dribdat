@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
 """The app module, containing the app factory function."""
 
-from flask import Flask, render_template, request, make_response, url_for
+from flask import Flask
+from flask import (
+    render_template, request, make_response, escape, url_for
+)
 from flask_cors import CORS
 from flask_misaka import Misaka
 from flask_mailman import Mail
@@ -103,7 +106,7 @@ def init_webfinger(app):
         resource = request.args.get('resource')
         if not resource.startswith('acct:'):
             return
-        username = resource.split('@')[0][5:]
+        username = escape(resource.split('@')[0][5:])
         response = make_response({
             "subject": resource,
             "links": [
