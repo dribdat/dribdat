@@ -72,9 +72,7 @@ def get_user(username):
 
 @blueprint.route('/pub/<username>/inbox', methods=['POST'])
 def post_user_inbox(username):
-    current_app.logger.info(request.headers)
-    current_app.logger.info(request.data)
-    return Response("", status=202)
+    return pubonify({'ok': True})
 
 
 @blueprint.route('/pub/<username>/activities', methods=['GET'])
@@ -92,14 +90,14 @@ def get_user_activities(username, limit=10):
               "@context": "https://www.w3.org/ns/activitystreams",
               
               "id": url_activity + '#create-' + str(a['id']),
-              "type": "Add",
+              "type": "Create",
               "actor": url_user,
 
               "object": {
                 "to": "https://www.w3.org/ns/activitystreams#Public",
 
                 "id": url_activity + '#' + str(a['id']),
-                "type": "Drib",
+                "type": "Note",
                 "published": a['date'] + ':00Z',
                 "attributedTo": url_user,
                 "content": a['content'] + '\n' + url_project,
