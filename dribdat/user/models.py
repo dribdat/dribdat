@@ -116,11 +116,13 @@ class User(UserMixin, PkModel):
         """Get JSON representation."""
         return {
             'id': self.id,
+            'name': self.name,
             'email': self.email,
             'sso_id': self.sso_id,
             'active': self.active,
             'is_admin': self.is_admin,
             'username': self.username,
+            'fullname': self.fullname,
             'webpage_url': self.webpage_url,
             'roles': ",".join([r.name for r in self.roles]),
             'cardtype': self.cardtype,
@@ -208,18 +210,23 @@ class User(UserMixin, PkModel):
             ).order_by(Project.id.desc()).all()
         return projects
 
-    def latest_posts(self, max=None):
+    def latest_posts(self, max=None, only_posts=True):
         """Retrieve the latest content from the user."""
-        activities = Activity.query.filter_by(
-                user_id=self.id, action='post'
-            ).order_by(Activity.timestamp.desc())
+        activities = Activity.query.filter_by(user_id=self.id)
+        if only_posts:
+            activities = activities.filter_by(action='post')
+        activities = activities.order_by(Activity.timestamp.desc())
         if max is not None:
             activities = activities.limit(max)
         posts = []
         for a in activities.all():
-            if not a.project.is_hidden:
+            if a.project and not a.project.is_hidden:
                 posts.append(a.data)
         return posts
+
+    @property
+    def name(self):
+        return self.fullname or self.username
 
     @property
     def last_active(self):

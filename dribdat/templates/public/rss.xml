@@ -1,0 +1,26 @@
+<?xml version='1.0'?>
+<rss version='2.0'
+	xmlns:atom='http://www.w3.org/2005/Atom'
+	xmlns:content='http://purl.org/rss/1.0/modules/content/'>
+  <channel>
+    <pubDate>{{ now }}</pubDate>
+    <title>{{ title }}</title>
+    <link>{{ fqdn }}</link>
+    <description>{{ description }}</description>
+	  <atom:link href='{{ atomlink }}' rel='self' type='application/rss+xml' />
+	  {% for s in activities %}
+    <item>
+      <title>{{ s.project_name }}</title>
+    {% if s.ref_url %}
+      <link>{{ s.ref_url }}</link>
+    {% endif %}
+      <description>{{ s.name }}</description>
+      <pubDate>{{ s.rssdate }}</pubDate>
+      <guid>{{ atomlink }}/{{ s.id }}</guid>
+    {% if s.content %}
+      <content:encoded><![CDATA[{{ s.content|markdown|safe }}]]></content:encoded>
+    {% endif %}
+    </item>
+	{% endfor %}
+  </channel>
+</rss>
