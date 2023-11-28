@@ -5,8 +5,8 @@ See: http://webtest.readthedocs.org/
 """
 from .factories import ProjectFactory, EventFactory, UserFactory
 from dribdat.public import views
+from dribdat.aggregation import ProjectActivity
 from datetime import datetime
-
 
 class TestViews:
     """Home views."""
@@ -45,3 +45,21 @@ class TestViews:
         view_html = testapp.get('/dribs')
         assert 'in small amounts' in view_html
         
+    def test_feeds_rss(self, event, testapp):
+        """Check RSS feeds."""
+        event = EventFactory()
+        event.save()
+        user = UserFactory()
+        project = ProjectFactory()
+        project.event = event
+        project.user = user
+        project.save()
+        ProjectActivity(project, 'review', user, 'post', 'Hello, world')
+        
+        # Check dribs
+        view_rss = testapp.get('/feeds/dribs.xml')
+        assert 'content:encoded' in view_rss
+
+        # Test personal view
+        user_rss = testapp.get('/feeds/user/' + user.username)
+        assert 'Hello, world' in user_rss
