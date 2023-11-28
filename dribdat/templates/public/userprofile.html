@@ -4,6 +4,10 @@
 {% block page_title %}{{ user.username }}{% endblock %}
 {% block body_class %}userprofile{% endblock %}
 
+{% block page_meta %}
+  <link rel="alternate" type="application/rss+xml" title="RSS: Dribs by {{ user.name }}" href="/feeds/user/{{ user.username }}">
+{% endblock %}
+
 {% block content %}
 
 {% if current_user and current_user.is_authenticated %}

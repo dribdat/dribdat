@@ -27,7 +27,7 @@ def rssheader(resp):
     return resp
 
 
-@blueprint.route("/dribs")
+@blueprint.route("/dribs.xml")
 def get_dribs():
     """Show the latest logged posts."""
     dribs = Activity \
@@ -40,26 +40,28 @@ def get_dribs():
     activities = [
         d for d in dribs
         if not d.project.is_hidden and d.content]
-    if len(activities) > 0:
-        event = activities[0].project.event
-    else:
-        event = current_event()
-    now = datetime.utcnow().strftime(RSS_DATE_FORMAT)
-    fqdn = url_for("public.event", event_id=event.id, _external=True)
     atomlink = url_for("feeds.get_dribs", _external=True)
-    return render_template("public/rss.xml",
-                           now=now,
-                           title=event.name,
-                           fqdn=fqdn,
-                           description=event.summary,
-                           atomlink=atomlink,
-                           activities=activities)
+    fqdn = url_for("public.dribs", _external=True)
+    return format_rss_feed("Latest dribs", fqdn, atomlink, activities)
 
 
 @blueprint.route('/user/<username>', methods=['GET'])
 def get_user(username):
     """Output feed by username."""
     a_user = User.query.filter_by(username=username).first_or_404()
-    url_profile = url_for("public.user", username=un, _external=True)
+    atomlink = url_for("feeds.get_user", username=username, _external=True)
+    fqdn = url_for("public.user", username=username, _external=True)
     activities = a_user.latest_posts(MAX_ITEMS)
-    return 'Not implemented'
+    return format_rss_feed("Dribs by " + a_user.name, fqdn, atomlink, activities)
+
+
+def format_rss_feed(title, fqdn, atomlink, activities):
+    """Return an RSS formatted feed."""
+    now = datetime.utcnow().strftime(RSS_DATE_FORMAT)
+    return render_template("public/rss.xml",
+                           now=now,
+                           fqdn=fqdn,
+                           atomlink=atomlink,
+                           title=title,
+                           description='Latest updates from Dribdat',
+                           activities=activities)

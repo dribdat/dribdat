@@ -10,12 +10,12 @@
 	  <atom:link href='{{ atomlink }}' rel='self' type='application/rss+xml' />
 	  {% for s in activities %}
     <item>
-      <title>{{ s.project.name }}</title>
+      <title>{{ s.project_name or s.project.name }}</title>
     {% if s.ref_url %}
       <link>{{ s.ref_url }}</link>
     {% endif %}
       <description>{{ s.name }}</description>
-      <pubDate>{{ s.data.date }}</pubDate>
+      <pubDate>{{ s.date or s.data.date }}</pubDate>
       <guid>{{ atomlink }}/{{ s.id }}</guid>
     {% if s.content %}
       <content:encoded><![CDATA[{{ s.content|markdown|safe }}]]></content:encoded>
