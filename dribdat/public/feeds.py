@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 """Feeds for dribdat."""
 import boto3
-import datetime as dt
 
 from flask import (
     Blueprint, current_app, render_template,
@@ -10,6 +9,8 @@ from flask import (
 from flask_login import current_user
 from sqlalchemy import or_
 from datetime import datetime
+from dateutil import parser
+
 from ..user.models import Event, Project, Activity, User
 from ..apiutils import (
     get_event_activities,
@@ -18,13 +19,9 @@ from ..apiutils import (
 blueprint = Blueprint('feeds', __name__, url_prefix='/feeds')
 
 MAX_ITEMS = 20
-RSS_DATE_FORMAT = '%a %d %b %Y %H:%M %Z'
+RSS_DATE_FORMAT = '%a, %d %b %Y %H:%M:%S UTC'
 
 # ------ FEEDS ---------
-
-def rssheader(resp):    
-    resp.headers['Content-Type'] = 'application/rss+xml'
-    return resp
 
 
 @blueprint.route("/dribs.xml")
@@ -38,7 +35,7 @@ def get_dribs():
             .order_by(Activity.id.desc()) \
             .limit(MAX_ITEMS)
     activities = [
-        d for d in dribs
+        d.data for d in dribs
         if not d.project.is_hidden and d.content]
     atomlink = url_for("feeds.get_dribs", _external=True)
     fqdn = url_for("public.dribs", _external=True)
@@ -58,10 +55,15 @@ def get_user(username):
 def format_rss_feed(title, fqdn, atomlink, activities):
     """Return an RSS formatted feed."""
     now = datetime.utcnow().strftime(RSS_DATE_FORMAT)
-    return render_template("public/rss.xml",
+    for a in activities:
+        a['rssdate'] = parser.parse(a['date']).strftime(RSS_DATE_FORMAT)
+    html = render_template("public/rss.xml",
                            now=now,
                            fqdn=fqdn,
                            atomlink=atomlink,
                            title=title,
                            description='Latest updates from Dribdat',
                            activities=activities)
+    resp = Response(html)
+    resp.headers['Content-Type'] = 'application/rss+xml'
+    return resp
