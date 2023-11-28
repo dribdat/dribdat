@@ -4,6 +4,7 @@
 from dribdat.user.models import Event, Project, Activity, Role
 from dribdat.aggregation import ProjectActivity
 from dribdat.apiutils import (
+    event_upload_configuration,
     get_schema_for_user_projects, 
     get_project_list,
     gen_csv,
@@ -117,3 +118,14 @@ class TestImport:
         assert len(testimport) == 5
         assert 'Test Project' in testimport[0]['name']
 
+    def test_configuration(self):
+        d,a,s = event_upload_configuration()
+        assert d
+        assert not a
+        assert s == 'Preview'
+        d,a,s = event_upload_configuration('basic')
+        assert not d
+        assert not a
+        d,a,s = event_upload_configuration('full')
+        assert not d
+        assert a

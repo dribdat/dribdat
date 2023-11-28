@@ -200,7 +200,7 @@ def import_project_data(data, dry_run=False, event=None):
         else:
             logging.info('Updating project: %s' % name)
         project.set_from_data(pjt)
-        project.event = event
+        project.event_id = event.id
         if not dry_run:
             project.save()
         updates.append(project.data)

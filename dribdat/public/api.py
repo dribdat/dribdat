@@ -27,6 +27,7 @@ from ..apiutils import (
     get_project_list,
     get_event_activities,
     get_schema_for_user_projects,
+    event_upload_configuration,
     expand_project_urls,
     gen_csv,
 )
@@ -308,21 +309,6 @@ def project_search_json():
     return jsonify(projects=projects)
 
 # ------ UPDATE ---------
-
-def event_upload_configuration(import_level):
-    """Configure the upload."""
-    dry_run = True
-    all_data = False
-    status = "Preview"
-    if import_level == 'basic':
-        dry_run = False
-        status = "Basic"
-    if import_level == 'full':
-        dry_run = False
-        all_data = True
-        status = "Complete"
-    return dry_run, all_data, status
-
 
 @blueprint.route('/event/load/datapackage', methods=["POST"])
 @admin_required

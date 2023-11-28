@@ -920,6 +920,12 @@ class Project(PkModel):
             category = Category.query.filter_by(name=cname).first()
             if category:
                 self.category = category
+        if 'event_id' in data:
+            event = Event.query.filter_by(id=data['event_id']).first()
+            if event: self.event_id = event.id
+        elif 'event_name' in data:
+            event = Event.query.filter_by(name=data['event_name']).first()
+            if event: self.event_id = event.id
 
     def update_now(self):
         """Process data submission."""
@@ -1042,7 +1048,7 @@ class Category(PkModel):
             ename = data['event_name']
             evt = Event.query.filter_by(name=ename).first()
             if evt:
-                self.event = evt
+                self.event_id = evt.id
 
     def __init__(self, name=None, **kwargs):  # noqa: D107
         if name:
