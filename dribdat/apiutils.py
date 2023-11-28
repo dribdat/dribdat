@@ -166,3 +166,18 @@ def gen_csv(csvdata):
         writer.writerow(rk)
     return output.getvalue()
 
+
+def event_upload_configuration(import_level='test'):
+    """Configure the upload."""
+    dry_run = True
+    all_data = False
+    if import_level == 'basic':
+        dry_run = False
+        status = "Basic"
+    elif import_level == 'full':
+        dry_run = False
+        all_data = True
+        status = "Complete"
+    else:
+        status = "Preview"
+    return dry_run, all_data, status

@@ -304,7 +304,8 @@
     e.preventDefault();
     var url = $form.attr('action');
     $form.find('input[type="submit"]').addClass('disabled');
-    $form.find('.message-ok,.message-error').hide();
+    $form.find('.message-ok,.message-error,.buttons').hide();
+    $form.find('.message-loading').show();
     $.ajax({
       type: "POST",
       url: url,
@@ -312,6 +313,8 @@
       success: function(data) {
         // Handle response
         console.log(data);
+        $form.find('.buttons').show();
+        $form.find('.message-loading').hide();
         if (data.status == 'Error') {
           $form.find('.message-error').html(data.errors.join('\n')).show();
         } else {
@@ -322,6 +325,7 @@
       error: function(err) {
         $form.find('input[type="submit"]').removeClass('disabled');
         console.error(err.statusText);
+        $form.find('.buttons').show();
         $form.find('.message-error').show();
       }
     });

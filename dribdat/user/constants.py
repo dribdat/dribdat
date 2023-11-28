@@ -19,6 +19,7 @@ USER_STATUS = {
     INACTIVE: 'inactive',
     ACTIVE: 'active',
 }
+CLEAR_STATUS_AFTER = 10 # minutes
 
 # Resource types
 RESOURCE_TYPES = {

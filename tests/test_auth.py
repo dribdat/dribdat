@@ -152,6 +152,9 @@ class TestRegistering:
         assert res.status_code == 200
         # A new user was created
         assert User.query.count() == old_count + 1
+        # Check user can create an event
+        view_html = testapp.get('/event/start')
+        assert 'Get started' in view_html
 
 class TestActivation:
     """Activate a user to interact with projects."""
