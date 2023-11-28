@@ -3,9 +3,10 @@
 
 import logging
 import requests
-import json
+import json, csv
 import tempfile
 from os import path
+from copy import deepcopy
 from werkzeug.utils import secure_filename
 from datetime import datetime as dtt
 from frictionless import Package, Resource
@@ -169,18 +170,29 @@ def import_user_roles(user, new_roles, dry_run=False):
     return updates
 
 
-def import_project_data(data, dry_run=False):
+def import_project_data(data, dry_run=False, event=None):
     """Collect data of a list of projects."""
     updates = []
     for pjt in data:
+        # Skip empty rows
+        if not 'name' in pjt: 
+            logging.warning('Skipping empty row')
+            logging.debug(pjt)
+            continue
+        # Get project name and content
+        name = pjt['name']
+        if not 'longtext' in pjt and 'excerpt' in pjt:
+            pjt['longtext'] = pjt.pop('excerpt')
         # Search for event
-        event_name = pjt['event_name']
-        event = Event.query.filter_by(name=event_name).first()
+        event_name = None
+        if 'event_name' in pjt:
+            event_name = pjt['event_name']
+        if event_name and (not event or event.name != event_name):
+            event = Event.query.filter_by(name=event_name).first()
         if not event:
-            logging.warning('Error: event not found: %s' % event_name)
+            logging.warning('Skip [%s], event not found: %s' % (name, event_name))
             continue
         # Search for project
-        name = pjt['name']
         project = Project.query.filter_by(name=name).first()
         if not project:
             logging.info('Creating project: %s' % name)
@@ -188,7 +200,7 @@ def import_project_data(data, dry_run=False):
         else:
             logging.info('Updating project: %s' % name)
         project.set_from_data(pjt)
-        project.event = event
+        project.event_id = event.id
         if not dry_run:
             project.save()
         updates.append(project.data)
@@ -287,3 +299,17 @@ def load_file_datapackage(filepath, dry_run=True, all_data=False):
         return import_event_package(data, dry_run, all_data)
     except json.decoder.JSONDecodeError:
         return {'errors': ['Could not load package due to JSON error']}
+
+
+def import_projects_csv(filedata, event=None, dry_run=True):
+    """Save a temporary CSV file and import project data to event."""
+    ext = filedata.filename.split('.')[-1].lower()
+    if ext not in ['csv']:
+        return {'errors': ['Invalid format (allowed: CSV)']}
+    with tempfile.TemporaryDirectory() as tmpdir:
+        filepath = path.join(tmpdir, secure_filename(filedata.filename))
+        filedata.save(filepath)
+        with open(filepath, mode='r') as csvfile:
+            csvreader = csv.DictReader(csvfile)
+            projdata = [ deepcopy(row) for row in csvreader ]
+            return { 'projects': import_project_data(projdata, dry_run, event) }

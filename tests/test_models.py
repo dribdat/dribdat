@@ -204,6 +204,19 @@ class TestProject:
         ProjectActivity(project, 'unstar', user2)
         project.update_now()
         assert project.score == 1
+
+    def test_project_from_data(self):
+        project = ProjectFactory()
+        event = EventFactory()
+        project.event = event
+        project.save()
+        testdata = project.data
+        testdata['name'] = 'Testme'
+        project2 = ProjectFactory()
+        project2.set_from_data(testdata)
+        project2.save()
+        assert project2.name == 'Testme'
+        assert project2.event == project.event
         
 # @pytest.mark.usefixtures('db')
 # class TestResource:

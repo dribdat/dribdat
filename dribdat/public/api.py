@@ -27,11 +27,12 @@ from ..apiutils import (
     get_project_list,
     get_event_activities,
     get_schema_for_user_projects,
+    event_upload_configuration,
     expand_project_urls,
     gen_csv,
 )
 from ..apipackage import (
-    fetch_datapackage, import_datapackage
+    fetch_datapackage, import_datapackage, import_projects_csv
 )
 
 blueprint = Blueprint('api', __name__, url_prefix='/api')
@@ -309,7 +310,6 @@ def project_search_json():
 
 # ------ UPDATE ---------
 
-
 @blueprint.route('/event/load/datapackage', methods=["POST"])
 @admin_required
 def event_upload_datapackage():
@@ -318,20 +318,13 @@ def event_upload_datapackage():
     import_level = request.form.get('import')
     if not filedata or not import_level:
         return jsonify(status='Error', errors=['Missing import data parameters'])
+    # Configuration
+    dry_run, all_data, status = event_upload_configuration(import_level)
     # Check link
+    if filedata.filename.endswith('.csv'):
+        return event_push_csv(filedata, dry_run)
     if 'datapackage.json' not in filedata.filename:
         return jsonify(status='Error', errors=['Must be a datapackage.json'])
-    # Configuration
-    dry_run = True
-    all_data = False
-    status = "Preview"
-    if import_level == 'basic':
-        dry_run = False
-        status = "Basic"
-    if import_level == 'full':
-        dry_run = False
-        all_data = True
-        status = "Complete"
     # File handling
     results = import_datapackage(filedata, dry_run, all_data)
     event_names = ', '.join([r['name'] for r in results['events']])
@@ -345,7 +338,7 @@ def event_upload_datapackage():
 
 @blueprint.route('/event/push/datapackage', methods=["PUT", "POST"])
 def event_push_datapackage():
-    """Upload event data from a Data Package."""
+    """Upload event data from a Data Package (auth by key)."""
     key = request.headers.get('key')
     if not key or key != current_app.config['SECRET_API']:
         return jsonify(status='Error', errors=['Invalid API key'])
@@ -354,6 +347,28 @@ def event_push_datapackage():
     if 'errors' in results:
         return jsonify(status='Error', errors=results['errors'])
     return jsonify(status='Complete', results=results)
+
+
+def event_push_csv(filedata, dry_run=False):
+    """Upload event data from a CSV file."""
+    if not filedata or not filedata.filename:
+        return jsonify(status='Error', errors=['Missing import data parameters'])
+    if not filedata.filename.endswith('.csv'):
+        return jsonify(status='Error', errors=['You must provide a CSV file'])
+    # Find the event
+    event_id = request.form.get('event')
+    if event_id:
+        event = Event.query.filter_by(id=event_id).first_or_404()
+    else:
+        event = Event.query.order_by(Event.id.desc()).first_or_404()
+    # File handling
+    results = import_projects_csv(filedata, event, dry_run)
+    if 'errors' in results:
+        return jsonify(status='Error', errors=results['errors'])
+    else:
+        flash("Event projects uploaded: %s (%d)" % (event.name, len(results)), 'success')
+        return redirect(url_for("admin.events"))
+    return jsonify(status=status, results=results)
 
 
 @blueprint.route('/event/current/get/status', methods=["GET"])

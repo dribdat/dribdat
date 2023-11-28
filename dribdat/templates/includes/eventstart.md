@@ -32,6 +32,4 @@ In the interest of creating a safe and inclusive environment, we strongly encour
 <label><input type="checkbox"> Make sure your fellow organisers are <u>aware and ready</u> to enforce a Code of Conduct </label><br>
 <label><input type="checkbox"> Verify compliance during evaluation rounds, when issuing certificates, or other post-event analysis </label><br>
 
-_Need more help?_ Contact the maintainers at [dribd.at](https://dribd.at/)
-
 _Disagree with something?_ Please raise [an issue](https://github.com/dribdat/dribdat/issues) or [Edit this page](https://github.com/dribdat/dribdat/blob/main/dribdat/templates/includes/eventstart.md).
