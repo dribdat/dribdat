@@ -19,7 +19,7 @@ from ..apiutils import (
 blueprint = Blueprint('feeds', __name__, url_prefix='/feeds')
 
 MAX_ITEMS = 20
-RSS_DATE_FORMAT = '%a, %d %b %Y %H:%M:%S UTC'
+RSS_DATE_FORMAT = '%a, %d %b %Y %H:%M:%S GMT'
 
 # ------ FEEDS ---------
 
