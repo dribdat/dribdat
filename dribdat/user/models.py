@@ -5,6 +5,7 @@ from sqlalchemy import Table, or_
 from sqlalchemy_continuum import make_versioned
 from sqlalchemy_continuum.plugins import FlaskPlugin
 from dribdat.user.constants import (
+    CLEAR_STATUS_AFTER,
     MAX_EXCERPT_LENGTH,
     PR_CHALLENGE,
     getProjectPhase,
@@ -496,7 +497,7 @@ class Event(PkModel):
                 # Check timeout
                 time_now = dt.datetime.now()
                 # Clear every now and then
-                time_limit = time_now - dt.timedelta(minutes=10)
+                time_limit = time_now - dt.timedelta(minutes=CLEAR_STATUS_AFTER)
                 if dt.datetime.fromtimestamp(status_time) < time_limit:
                     print("Clearing announements")
                     self.status = None
@@ -645,8 +646,6 @@ class Project(PkModel):
             'id': self.id,
             'url': self.url,
             'name': self.name,
-            'event_url': self.event.url,
-            'event_name': self.event.name,
             'score': self.score,
             'phase': self.phase,
             'team': self.team,
@@ -678,10 +677,16 @@ class Project(PkModel):
                 d['excerpt'] = self.autotext[:MAX_EXCERPT_LENGTH]
                 if len(self.autotext) > MAX_EXCERPT_LENGTH:
                     d['excerpt'] += '...'
+        # Get author
         if self.user is not None:
             d['maintainer'] = self.user.username
         else:
             d['maintainer'] = ''
+        # Can be empty when embedding
+        if self.event is not None:
+            d['event_url'] = self.event.url
+            d['event_name'] = self.event.name
+        # Get categories
         if self.category is not None:
             d['category_id'] = self.category.id
             d['category_name'] = self.category.name

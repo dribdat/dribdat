@@ -19,7 +19,7 @@ from .factories import UserFactory
 class TestImport:
     """Sample import export."""
 
-    def test_datapackage(self, project, testapp):
+    def test_datapackage(self):
         """Create a data package."""
         event = Event(name="Test Event", summary="Just testin")
         event.save()
@@ -52,7 +52,7 @@ class TestImport:
         import_event_package(dp_json)
         assert Event.query.filter_by(name="Test Event").count() == 1
 
-    def test_user_schema(self, project, testapp):
+    def test_user_schema(self):
         """Test user schema."""
         event = Event(name="Test Event", summary="Just testin")
         event.save()
@@ -97,7 +97,7 @@ class TestImport:
         event.delete()
         user.delete()
 
-    def test_import_export(self, project, testapp):
+    def test_import_export(self):
         """Create an export sample."""
         event = Event(name="Test Event", summary="Just testin")
         event.save()
