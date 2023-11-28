@@ -92,15 +92,15 @@ def get_user_activities(username, limit=10):
               "@context": "https://www.w3.org/ns/activitystreams",
               
               "id": url_activity + '#create-' + str(a['id']),
-              "type": "Create",
+              "type": "Add",
               "actor": url_user,
 
               "object": {
                 "to": "https://www.w3.org/ns/activitystreams#Public",
 
                 "id": url_activity + '#' + str(a['id']),
-                "type": "Note",
-                "published": a['date'],
+                "type": "Drib",
+                "published": a['date'] + ':00Z',
                 "attributedTo": url_user,
                 "content": a['content'] + '\n' + url_project,
               }
