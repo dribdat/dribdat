@@ -217,6 +217,12 @@ class TestProject:
         project2.save()
         assert project2.name == 'Testme'
         assert project2.event == project.event
+
+    def test_project_formatting(self):
+        project = ProjectFactory()
+        project.webpage_url = '<iframe src="https://12345"></iframe>'
+        project.update_now()
+        assert project.webpage_url == "https://12345"
         
 # @pytest.mark.usefixtures('db')
 # class TestResource:
