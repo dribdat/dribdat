@@ -119,8 +119,7 @@ def SyncProjectData(project, data):
     # However, here we only overwrite the fields that are new.
     # DRY improvements are possible though..
     # Always update "autotext" field
-    if 'description' in data and data['description'] and \
-       (not project.autotext or not project.autotext.strip()):
+    if 'description' in data and data['description']:
         project.autotext = data['description']
     # Update following fields only if blank
     if 'name' in data and data['name'] and \
