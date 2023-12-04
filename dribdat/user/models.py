@@ -943,6 +943,8 @@ class Project(PkModel):
             self.logo_icon = self.logo_icon.replace('fa-', '')
         if self.logo_color == '#000000':
             self.logo_color = ''
+        if self.webpage_url and self.webpage_url.find('<iframe ') >= 0:
+            self.webpage_url = re.sub(r'.* src="(.+)".*', r'\1', self.webpage_url)
         # Set the timestamp
         self.updated_at = dt.datetime.utcnow()
         self.update_null_fields()

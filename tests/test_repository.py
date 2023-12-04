@@ -71,6 +71,32 @@ class TestRepository:
         assert 'commits' in test_obj
         assert len(test_obj['commits']) > 5
 
+    def test_github_other(self):
+        """Test parsing a GitHub Markdown file."""
+        test_url = 'https://github.com/dribdat/docs/blob/main/docs/sync.md'
+        try:
+            test_obj = GetProjectData(test_url)
+        except ReadTimeout:
+            return warnings.warn("GitHub is not accessible")
+        print(test_obj)
+        assert 'name' in test_obj
+        assert test_obj['name'] == 'sync'
+        assert test_obj['type'] == 'Markdown'
+        assert len(test_obj['description']) > 50
+
+    def test_github_gist(self):
+        """Test parsing a GitHub Gist."""
+        test_url = 'https://gist.github.com/loleg/ebe8c96be5a8ef2465e5c573216f13b5'
+        try:
+            test_gist = GetProjectData(test_url)
+        except ReadTimeout:
+            return warnings.warn("GitHub Gist is not accessible")
+        assert 'name' in test_gist
+        assert test_gist['name'] == 'Gist'
+        assert test_gist['type'] == 'Markdown'
+        assert 'description' in test_gist
+        assert len(test_gist['description']) > 50
+
     def test_gitlab(self):
         """Test parsing a GitLab readme."""
         test_url = 'https://gitlab.com/seismist/dribdat'

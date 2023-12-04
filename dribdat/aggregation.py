@@ -5,8 +5,10 @@ from dribdat.user.models import Activity, User, Project
 from dribdat.user import isUserActive
 from dribdat.database import db
 from dribdat.apifetch import (
-    FetchGitlabProject,
+    FetchWebGitHub,
+    FetchWebGitHubGist,
     FetchGithubProject,
+    FetchGitlabProject,
     FetchGiteaProject,
     FetchBitbucketProject,
     FetchDribdatProject,
@@ -21,19 +23,19 @@ from sqlalchemy import and_
 def GetProjectData(url):
     """Parse the Readme URL to collect remote data."""
     # TODO: find a better way to decide the kind of repo
-    if url.find('//gitlab.com') > 0:
+    if url.find('//gitlab.com/') > 0:
         return get_gitlab_project(url)
 
-    # TODO: add support for gist
-    elif url.find('//github.com') > 0:
+    # TODO: add support for projects
+    elif url.find('//github.com/') > 0 or url.find('//gist.github.com/') > 0:
         return get_github_project(url)
 
     # TODO: there's a lot more Gitea out there!
-    elif url.find('//codeberg.org') > 0:
+    elif url.find('//codeberg.org/') > 0:
         # TODO: especially here..
         return get_gitea_project(url)
 
-    elif url.find('//bitbucket.org') > 0:
+    elif url.find('//bitbucket.org/') > 0:
         return get_bitbucket_project(url)
 
     # The fun begins
@@ -60,6 +62,9 @@ def get_gitlab_project(url):
 
 def get_github_project(url):
     apiurl = url
+    if apiurl.startswith('https://gist.github.com/'):
+        # GitHub Gist
+        return FetchWebGitHubGist(url)
     apiurl = re.sub(r'(?i)/blob/[a-z]+/README.*', '', apiurl)
     apiurl = re.sub(r'https?://github\.com/', '', apiurl).strip('/')
     if apiurl.endswith('.git'):
@@ -67,7 +72,8 @@ def get_github_project(url):
     if apiurl == url:
         return {}
     if apiurl.endswith('.md'):
-        return FetchWebProject(url)
+        # GitHub Markdown
+        return FetchWebGitHub(url)
     return FetchGithubProject(apiurl)
 
 
@@ -119,8 +125,7 @@ def SyncProjectData(project, data):
     # However, here we only overwrite the fields that are new.
     # DRY improvements are possible though..
     # Always update "autotext" field
-    if 'description' in data and data['description'] and \
-       (not project.autotext or not project.autotext.strip()):
+    if 'description' in data and data['description']:
         project.autotext = data['description']
     # Update following fields only if blank
     if 'name' in data and data['name'] and \

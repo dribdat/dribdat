@@ -484,6 +484,20 @@ def FetchWebGitHub(url):
     }
 
 
+def FetchWebGitHubGist(url):
+    """Grab a Markdown source from a GitHub Gist link."""
+    rawurl = url.replace("https://gist.github.com/", '') + '/raw'
+    rawdata = requests.get("https://gist.githubusercontent.com/" + rawurl, timeout=REQUEST_TIMEOUT)
+    text_content = rawdata.text or ""
+    return {
+        'type': 'Markdown',
+        'name': 'Gist',
+        'description': text_content,
+        'source_url': url,
+        'logo_icon': 'outdent',
+    }
+
+
 def ParseInstructablesPage(content):
     """Create an HTML summary of content."""
     html_content = ""

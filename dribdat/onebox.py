@@ -84,9 +84,9 @@ def make_oembedplus(text, oembed_providers, **params):
             # Try to render a CKAN dataset link
             newline = box_dataset(line)
             has_dataset = has_dataset or newline is not None
-        elif line.startswith('https://github.com/'):
+        #elif line.startswith('https://github.com/'):
             # Try to parse a GitHub link
-            newline = box_repo(line)
+        #    newline = box_repo(line)
         elif standalone_url_re.match(line):
             # Check for out of box providers
             newline = box_default(line, oembed_providers, **params)
