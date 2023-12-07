@@ -19,6 +19,7 @@ from dribdat.user import (
 from dribdat.public.projhelper import (
     project_action, project_edit_action, templates_from_event, revert_project_by_activity
 )
+from dribdat.apigenerate import gen_project_pitch
 from ..decorators import admin_required
 from ..mailer import user_invitation
 
@@ -411,6 +412,10 @@ def create_new_project(event, is_anonymous=False):
     # Unless the event has started
     if event.has_started:
         project.progress = 5
+
+    # Magically populate description
+    if form.generate_pitch:
+        project.longtext = gen_project_pitch(project)
 
     # Update the project
     project.update_now()

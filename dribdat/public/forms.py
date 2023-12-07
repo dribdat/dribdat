@@ -23,8 +23,8 @@ class ProjectNew(FlaskForm):
 
     id = HiddenField('id')
     autotext_url = URLField(
-        u'Readme', [length(max=2048)],
-        description="[Optional] URL to a repository or online documentation "
+        u'Sync from (Readme)', [length(max=2048)],
+        description="[Optional] Link to a repository or documentation "
         + "of your project.")
     name = StringField(
         u'Title',
@@ -34,6 +34,7 @@ class ProjectNew(FlaskForm):
     summary = StringField(
         u'Summary', [length(max=140)],
         description="The headline of your project, in up to 140 characters.")
+    generate_pitch = BooleanField(u"Use AI to auto-generate a pitch")
     category_id = SelectField(
         u'Category', coerce=int, description=u"Select the category that your "
         + " challenge addresses.")

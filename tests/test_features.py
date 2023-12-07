@@ -10,6 +10,7 @@ from dribdat.public.projhelper import resources_by_stage, project_action
 from dribdat.aggregation import ProjectActivity
 from dribdat.utils import load_yaml_presets
 from dribdat.apifetch import FetchStageConfig
+from dribdat.apigenerate import gen_project_pitch
 from dribdat.user.constants import PR_CHALLENGE
 
 
@@ -18,6 +19,16 @@ STAGES_URL = 'https://raw.githubusercontent.com/dribdat/dribdat/main/dribdat/tem
 
 class TestFeatures:
     """Project features."""
+
+    def test_generative(self, project, testapp):
+        """Generate a challenge"""
+        project = ProjectFactory()
+        project.name = "Toy Cars and Planes"
+        project.summary = "Using open data, we map the industry of toys"
+        project.longtext = gen_project_pitch(project)
+        project.save()
+        if project.longtext:
+            assert 'toy cars' in project.longtext.lower()
 
     def test_onebox(self, project, testapp):
         """Generate one box."""
