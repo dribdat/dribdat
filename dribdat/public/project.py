@@ -414,7 +414,7 @@ def create_new_project(event, is_anonymous=False):
         project.progress = 5
 
     # Magically populate description
-    if form.generate_pitch:
+    if form.generate_pitch.data:
         project.longtext = gen_project_pitch(project)
 
     # Update the project
