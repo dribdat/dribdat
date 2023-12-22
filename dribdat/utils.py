@@ -166,3 +166,19 @@ def load_yaml_presets(filename, by_col='name', filepath=None):
     with open(fn, mode='r') as file:
         config = load_presets(file, filename, by_col)
     return config
+
+
+def fix_relative_links(readme, imgroot, repo_full_name, default_branch):
+    """Ensures that images in Markdown are absolute."""
+    readme = re.sub(
+        r" src=\"(?!http)",
+        " src=\"%s/%s/%s/" % (imgroot, repo_full_name, default_branch),
+        readme
+    )
+    readme = re.sub(
+        r"\!\[(.*)\]\((?!http)",
+        # Pass named group to include full path in the image URL
+        "![\g<1>](%s/%s/%s/" % (imgroot, repo_full_name, default_branch),
+        readme
+    )
+    return readme

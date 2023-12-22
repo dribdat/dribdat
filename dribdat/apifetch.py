@@ -15,7 +15,9 @@ from .apievents import (
     fetch_commits_gitlab,
     fetch_commits_gitea,
 )
-from .utils import sanitize_url, load_presets, load_yaml_presets
+from .utils import (
+    sanitize_url, load_presets, load_yaml_presets, fix_relative_links
+)
 from future.standard_library import install_aliases
 install_aliases()
 
@@ -154,17 +156,7 @@ def FetchGithubProject(project_url):
         readme = b64decode(readme['content']).decode('utf-8')
         # Fix relative links in text
         imgroot = "https://raw.githubusercontent.com"
-        readme = re.sub(
-            r"<img src=\"(?!http)",
-            "<img src=\"%s/%s/%s/" % (imgroot, repo_full_name, default_branch),
-            readme
-        )
-        readme = re.sub(
-            r"\!\[(.*)\]\((?!http)",
-            # TODO check why we are using \g escape here?
-            r"![\g<1>](%s/%s/%s/" % (imgroot, repo_full_name, default_branch),
-            readme
-        )
+        readme = fix_relative_links(readme, imgroot, repo_full_name, default_branch)
     return {
         'type': 'GitHub',
         'name': json['name'],
