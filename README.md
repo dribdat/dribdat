@@ -22,7 +22,7 @@ _If you use dribdat for your event, please add yourself to the [Tour de Hack](ht
 
 # Quickstart
 
-This project can be deployed to any server capable of serving Python applications, and is set up for fast deployment using [Ansible or Docker](https://dribdat.cc/deploy). The first user that registers becomes an admin, so don't delay! 
+This project can be deployed to any server capable of serving [Python](https://python.org) applications, and is set up for fast deployment using [Ansible or Docker](https://dribdat.cc/deploy). The first user that registers becomes an admin, so don't delay! 
 
 If you would like to run dribdat on any other cloud or local machine, there are additional instructions in the [Deployment guide](https://docs.dribdat.cc/deploy). Information on contributing and extending dribdat can be found in the [Contributors guide](https://docs.dribdat.cc/contribute), which includes API documentation, and other details.
 
