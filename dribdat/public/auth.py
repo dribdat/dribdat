@@ -123,7 +123,7 @@ def register():
                     active=True)
     new_user.socialize()
     if User.query.count() == 1:
-        # This is the first user account - promote it
+        # This is the first user account - promote me!
         new_user.is_admin = True
         new_user.save()
         flash("Administrative user created - oh joy!", 'success')
@@ -325,6 +325,11 @@ def get_or_create_sso_user(sso_id, sso_name, sso_email, sso_webpage=''):
                     webpage_url=sso_webpage,
                     password=random_password(),
                     active=True)
+                if User.query.count() < 2:
+                    # This is the first user account - promote me!
+                    user.is_admin = True
+                    user.save()
+                    flash("Administrative user created - oh joy!", 'success')
             user.socialize()
             login_user(user, remember=True)
             flash("Welcome! Please complete your user account.", 'info')
