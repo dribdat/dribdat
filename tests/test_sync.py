@@ -8,7 +8,7 @@ from dribdat.aggregation import (
     FetchWebProject,
     ProjectActivity,
 )
-from .utils import fix_relative_links
+from dribdat.utils import fix_relative_links
 from .factories import ProjectFactory
 
 from .mock.project_data import project_data
