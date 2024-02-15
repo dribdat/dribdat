@@ -8,6 +8,7 @@ from dribdat.aggregation import (
     FetchWebProject,
     ProjectActivity,
 )
+from dribdat.utils import fix_relative_links
 from .factories import ProjectFactory
 
 from .mock.project_data import project_data
@@ -68,6 +69,7 @@ class TestSync:
         assert test_obj['source_url'] == test_url
         assert 'Guidelines' in test_obj['description']
 
+
     def test_googledoc(self):
         """Test parsing a Google Document."""
         # Handbook to Hackathons with Dribdat
@@ -76,3 +78,13 @@ class TestSync:
         assert 'description' in test_obj
         assert 'Handbook' in test_obj['description']
 
+
+    def test_fix_relative_links(self):
+        imgroot = "https://raw.githubusercontent.com"
+        repo_full_name = "dribdat/dribdat"
+        default_branch = "main"
+        readme = '![hello there](world.png) <img title="hello" src="again.jpg">'
+        readme = fix_relative_links(readme, imgroot, repo_full_name, default_branch)
+        assert imgroot in readme
+        assert not '(world.png)' in readme
+        assert not '"again.jpg"' in readme
