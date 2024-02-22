@@ -189,7 +189,7 @@ class User(UserMixin, PkModel):
         project_ids = []
         for a in activities:
             if limit > 0 and len(projects) >= limit: break
-            if a.project_id not in project_ids and not a.project.is_hidden:
+            if a.project_id not in project_ids and (a.project and not a.project.is_hidden):
                 not_challenge = a.project.progress and a.project.progress > 0
                 if with_challenges or not_challenge:
                     projects.append(a.project)
@@ -877,25 +877,25 @@ class Project(PkModel):
             raise Exception("Missing project name!")
         self.name = data['name']
         if 'summary' in data:
-            self.summary = data['summary']
+            self.summary = data['summary'][:140]
         if 'hashtag' in data:
-            self.hashtag = data['hashtag']
+            self.hashtag = data['hashtag'][:40]
         if 'image_url' in data:
-            self.image_url = data['image_url']
+            self.image_url = data['image_url'][:2048]
         if 'source_url' in data:
-            self.source_url = data['source_url']
+            self.source_url = data['source_url'][:2048]
         if 'webpage_url' in data:
-            self.webpage_url = data['webpage_url']
+            self.webpage_url = data['webpage_url'][:2048]
         if 'autotext_url' in data:
-            self.autotext_url = data['autotext_url']
+            self.autotext_url = data['autotext_url'][:2048]
         if 'download_url' in data:
-            self.download_url = data['download_url']
+            self.download_url = data['download_url'][:2048]
         if 'contact_url' in data:
-            self.contact_url = data['contact_url']
+            self.contact_url = data['contact_url'][:2048]
         if 'logo_color' in data:
-            self.logo_color = data['logo_color']
+            self.logo_color = data['logo_color'][:7]
         if 'logo_icon' in data:
-            self.logo_icon = data['logo_icon']
+            self.logo_icon = data['logo_icon'][:40]
         if 'longtext' in data:
             self.longtext = data['longtext']
         if 'autotext' in data:
