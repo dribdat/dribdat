@@ -227,7 +227,8 @@ def event_participants(event_id):
             qq = search_by.lower()
             for u in users:
                 if (u.my_story and qq in u.my_story.lower()) or \
-                    (u.my_goals and qq in u.my_goals.lower()):
+                   (u.my_goals and qq in u.my_goals.lower()) or \
+                   (u.my_wishes and qq in u.my_wishes.lower()):
                         usearch.append(u)
     else:
         usearch = users
@@ -273,8 +274,8 @@ def all_participants():
         usercount = 0
     return render_template("public/eventusers.html",
                            q=search_by,
-                           participants=users, 
-                           usercount=usercount, 
+                           participants=users,
+                           usercount=usercount,
                            active="participants")
 
 
@@ -411,5 +412,5 @@ def dribs():
         }
     return render_template("public/dribs.html",
                            current_event=current_event(),
-                           endpoint='public.dribs', active='dribs', 
+                           endpoint='public.dribs', active='dribs',
                            data=dribs)

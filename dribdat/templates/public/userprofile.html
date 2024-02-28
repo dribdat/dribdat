@@ -203,6 +203,17 @@
 </div>
 {% endif %}
 
+{% if user.my_wishes %}
+<div class="row">
+  <div class="profile-goals col-12 bg-body">
+    <a name="goals"><h1>&#127919; Wishes</h1></a>
+    <blockquote class="profile-text">
+      {{ user.my_wishes|markdown }}
+    </blockquote>
+  </div>
+</div>
+{% endif %}
+
 {% if not posts %}
   {% if current_user and current_user.id == user.id %}
     <div class="alert alert-info">

@@ -55,6 +55,7 @@ class UserProfileForm(FlaskForm):
     webpage_url = URLField(u'Online profile', [length(max=128)])
     my_story = TextAreaField(u'My story')
     my_goals = TextAreaField(u'My goals')
+    my_wishes = TextAreaField(u'My wishes')
     submit = SubmitField(u'Save')
 
 
@@ -188,7 +189,7 @@ class ProjectForm(FlaskForm):
     image_url = URLField(u'Image link', [length(max=255)])
     logo_color = StringField(u'Custom color')
     logo_icon = StringField(
-        u'Custom icon', 
+        u'Custom icon',
         [length(max=20)],
         description='https://fontawesome.com/v4/cheatsheet')
     submit = SubmitField(u'Save')

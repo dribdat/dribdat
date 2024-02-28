@@ -110,6 +110,7 @@ class User(UserMixin, PkModel):
     roles = relationship('Role', secondary=users_roles, backref='users')
     my_story = Column(db.UnicodeText(), nullable=True)
     my_goals = Column(db.UnicodeText(), nullable=True)
+    my_wishes = Column(db.UnicodeText(), nullable=True)
 
     @property
     def data(self):
@@ -129,6 +130,7 @@ class User(UserMixin, PkModel):
             'carddata': self.carddata,
             'my_story': self.my_story,
             'my_goals': self.my_goals,
+            'my_wishes': self.my_wishes,
             'created_at': self.created_at,
             'updated_at': self.updated_at,
         }
@@ -170,7 +172,7 @@ class User(UserMixin, PkModel):
             gr_size = 80
             email = self.email.lower().encode('utf-8')
             gravatar_url = "https://www.gravatar.com/avatar/"
-            gravatar_url += hashlib.md5(email).hexdigest() 
+            gravatar_url += hashlib.md5(email).hexdigest()
             gravatar_url += "?d=retro&"
             gravatar_url += urlencode({'s': str(gr_size)})
             self.carddata = gravatar_url
@@ -511,7 +513,7 @@ class Event(PkModel):
                     self.save()
                     return ''
         return status_text
-    
+
     @property
     def project_count(self):
         """Number of active projects in an event."""
@@ -753,7 +755,7 @@ class Project(PkModel):
                 if act.timestamp > self.event.starts_at and \
                    act.timestamp < self.event.ends_at:
                     s_during += 1
-        
+
         # A byte count of contents
         s_sizepitch = 0
         if self.longtext:

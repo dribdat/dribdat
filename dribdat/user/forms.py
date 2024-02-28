@@ -115,12 +115,18 @@ class UserForm(FlaskForm):
         + "into the mix. The top portion of your profile.")
     my_goals = TextAreaField(
         u'My goals',
-        description="What brings you here? Share a few words about your "
-        + "interests. This is the bottom portion of your profile.")
+        description=(
+            "What would you like to get out of this experience? "
+            "What ideas do you have for the programme? What activities would you like to see?"
+        )
+    )
+    my_wishes = TextAreaField(
+        u'Skills wanted',
+        description="List some skills you wished you had or would like to improve")
     username = StringField(
         u'Username', [Length(max=25), UniqueValidator(
             User, 'username'), DataRequired()],
-        description="Short and sweet.")
+        description="Nickname you would like to go by.")
     email = EmailField(
         u'E-mail address', [Length(max=80), DataRequired()],
         description="For a profile image, link this address at Gravatar.com")
