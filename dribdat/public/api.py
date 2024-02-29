@@ -8,10 +8,11 @@ from flask import (
     Blueprint, current_app,
     Response, request, redirect,
     stream_with_context, send_file,
-    jsonify, flash, url_for, escape
+    jsonify, flash, url_for
 )
 from flask_login import login_required, current_user
 from sqlalchemy import or_
+from markupsafe import escape
 
 from ..extensions import db, cache
 from ..utils import timesince, random_password, sanitize_url
