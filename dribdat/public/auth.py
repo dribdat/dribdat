@@ -114,14 +114,26 @@ def register():
                                form=form, oauth_type=oauth_type())
     # Double check username
     sane_username = sanitize_input(form.username.data)
+
     # Continue with user creation
     new_user = User.create(
-                    username=sane_username,
-                    email=form.email.data,
-                    webpage_url=form.webpage_url.data,
-                    password=form.password.data,
-                    active=True)
+        username=sane_username,
+        email=form.email.data,
+        webpage_url=form.webpage_url.data,
+        password=form.password.data,
+        active=True
+    )
+
+    # parse webpage
     new_user.socialize()
+
+    new_user.my_bio = form.my_bio.data
+    skillslist = [s.strip() for s in str(form.my_skills.data).split(",")]
+    new_user.my_skills = skillslist
+    new_user.my_goals = form.my_goals.data
+    new_user.my_wishes = form.my_wishes.data
+    new_user.save()
+
     if User.query.count() == 1:
         # This is the first user account - promote me!
         new_user.is_admin = True

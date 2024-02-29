@@ -226,7 +226,7 @@ def event_participants(event_id):
         else:
             qq = search_by.lower()
             for u in users:
-                if (u.my_story and qq in u.my_story.lower()) or \
+                if (u.my_bio and qq in u.my_bio.lower()) or \
                    (u.my_goals and qq in u.my_goals.lower()) or \
                    (u.my_wishes and qq in u.my_wishes.lower()):
                         usearch.append(u)
@@ -260,7 +260,7 @@ def all_participants():
             ))
         else:
             users = users.filter(or_(
-                User.my_story.ilike(q),
+                User.my_bio.ilike(q),
                 User.my_goals.ilike(q),
             ))
     else:

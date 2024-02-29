@@ -8,6 +8,7 @@ from wtforms import (
     StringField, TextAreaField,
     SelectMultipleField,
     HiddenField,
+    ValidationError
 )
 from wtforms.fields import (
     URLField, EmailField,
@@ -48,22 +49,55 @@ class LoginForm(FlaskForm):
         return True
 
 
+def validate_skillslist(maxchars=100):
+    message = f"Individual skills shouldn't be very long (less than {maxchars} chars), maybe, you forgot that this is a comma-separated list? Maybe, split one large skill into a few?"
+
+    def _do(form, field):
+        skills = [s.strip() for s in ",".split(field)]
+        for s in skills:
+            if len(s) > maxchars:
+                raise ValidationError(message)
+
+    return _do
+
+
 class RegisterForm(FlaskForm):
     """Ye olde user registration form."""
 
-    username = StringField('Username',
-                           validators=[DataRequired(), Length(min=3, max=25)])
-    email = EmailField('Email',
-                       validators=[
-                          DataRequired(), Email(), Length(min=6, max=40)])
-    password = PasswordField('Password',
-                             validators=[
-                                DataRequired(), Length(min=6, max=40)])
-    confirm = PasswordField('Verify password',
-                            [DataRequired(), EqualTo(
-                                'password',
-                                message='Passwords must match')])
+    username = StringField(
+        'Username',
+        validators=[DataRequired(), Length(min=3, max=25)]
+    )
+    email = EmailField(
+        'Email',
+        validators=[DataRequired(), Email(), Length(min=6, max=40)]
+    )
+    password = PasswordField(
+        'Password',
+        validators=[DataRequired(), Length(min=6, max=40)]
+    )
+    confirm = PasswordField(
+        'Verify password',
+        [DataRequired(), EqualTo('password', message='Passwords must match')]
+    )
     webpage_url = URLField(u'Online profile')
+    my_bio = TextAreaField(
+        u'Bio',
+        description="Tell more about yourself: who you are, what is your background, what you are working on.")
+    my_skills = TextAreaField(
+        u'My skills',
+        validators=[Length(max=512), validate_skillslist(maxchars=100)],
+        description="A comma-separated list of things you have experience with.")
+    my_goals = TextAreaField(
+        u'My goals',
+        description=(
+            "What would you like to get out of this experience? "
+            "What ideas do you have for the programme? What activities would you like to see?"
+        )
+    )
+    my_wishes = TextAreaField(
+        u'Skills wanted',
+        description="List some skills you wished you had or would like to improve")
 
     def __init__(self, *args, **kwargs):
         """Create instance."""
@@ -84,6 +118,7 @@ class RegisterForm(FlaskForm):
         if user:
             self.email.errors.append('Email already registered')
             return False
+
         return True
 
 
@@ -108,11 +143,13 @@ class UserForm(FlaskForm):
         description="Your full name, if you want it shown on your profile and certificate.")
     webpage_url = URLField(
         u'Online profile', [Length(max=128)],
-        description="Link to your website or a social media profile.")
-    my_story = TextAreaField(
+        description="Link to your website, GitHub or a social media profile.")
+    my_bio = TextAreaField(
         u'My story',
-        description="A brief bio and outline of the competencies you bring "
-        + "into the mix. The top portion of your profile.")
+        description="A brief bio: who you are, what is your background, what you are working on.")
+    my_skills = TextAreaField(
+        u'My story',
+        description="A comma-seperated list of things you have experience with.")
     my_goals = TextAreaField(
         u'My goals',
         description=(

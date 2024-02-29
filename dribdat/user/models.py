@@ -108,9 +108,18 @@ class User(UserMixin, PkModel):
 
     # Internal profile
     roles = relationship('Role', secondary=users_roles, backref='users')
-    my_story = Column(db.UnicodeText(), nullable=True)
+    my_bio = Column(db.UnicodeText(), nullable=True)
+    _my_skills = Column(db.UnicodeText(512), nullable=True)
     my_goals = Column(db.UnicodeText(), nullable=True)
     my_wishes = Column(db.UnicodeText(), nullable=True)
+
+    @property
+    def my_skills(self):
+        return self._my_skills.split(",")
+
+    @my_skills.setter
+    def my_skills(self, value):
+        self._my_skills = ",".join()
 
     @property
     def data(self):
@@ -128,7 +137,8 @@ class User(UserMixin, PkModel):
             'roles': ",".join([r.name for r in self.roles]),
             'cardtype': self.cardtype,
             'carddata': self.carddata,
-            'my_story': self.my_story,
+            'my_bio': self.my_bio,
+            'my_skills': ",".join([r.name for r in self.my_skills]),
             'my_goals': self.my_goals,
             'my_wishes': self.my_wishes,
             'created_at': self.created_at,
@@ -272,6 +282,11 @@ class User(UserMixin, PkModel):
 
     def __init__(self, username=None, email=None, password=None, **kwargs):
         """Create instance."""
+        # if 'skills' in kwargs:
+        #     skills_string = ",".join(kwargs.get('skills'))
+        # else:
+        #     skills_string = None
+
         if username and email:
             db.Model.__init__(self, username=username, email=email, **kwargs)
         if password:

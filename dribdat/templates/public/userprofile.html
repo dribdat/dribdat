@@ -132,13 +132,13 @@
 
 </div>
 
-{% if user.my_story %}
+{% if user.my_bio %}
 <div class="row">
   <div class="profile-story col-12 bg-body">
     <a name="story"></a>
-    <h2 class="mt-5 text-center">My Story</h2>
+    <h2 class="mt-5 text-center">Bio</h2>
     <blockquote class="profile-text">
-      {{ user.my_story|markdown }}
+      {{ user.my_bio|markdown }}
     </blockquote>
   </div>
 </div>
