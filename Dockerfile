@@ -27,8 +27,6 @@ RUN : \
     && python -m pip install --upgrade pip \
     && EMBED=0 pip install gevent \
     && python -m pip install -r requirements.txt \
-    
-    # Clean up after build
     && apt-get purge --auto-remove -y
 
 
