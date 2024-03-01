@@ -19,6 +19,7 @@ from wtforms.validators import (
 )
 from ..user.validators import UniqueValidator
 from dribdat.utils import sanitize_input  # noqa: I005
+from dribdat.utils import unpack_csvlist, pack_csvlist
 from .models import User
 
 
@@ -48,21 +49,41 @@ class LoginForm(FlaskForm):
         # Inactive users are allowed to log in, but not much else.
         return True
 
+def validate_skillslist(field, maxchars=100):
+    message = f"Individual skills shouldn't be empty or very long (more than {maxchars} chars), maybe, you forgot that this is a comma-separated list? Maybe, split one large skill into a few?"
+    skills = unpack_csvlist(field.data)
+    for s in skills:
+        if len(s) > maxchars or len(s) == 0:
+            field.errors = list(field.errors)
+            field.errors.append(message)
+            return False
+    return True
 
-def validate_skillslist(maxchars=100):
-    message = f"Individual skills shouldn't be very long (less than {maxchars} chars), maybe, you forgot that this is a comma-separated list? Maybe, split one large skill into a few?"
 
-    def _do(form, field):
-        skills = [s.strip() for s in ",".split(field)]
-        for s in skills:
-            if len(s) > maxchars:
-                raise ValidationError(message)
 
-    return _do
+common_user_related_fields = dict(
+    skills = TextAreaField(
+        u'My skills',
+        validators=[Length(max=512)],
+        description="A comma-separated list of things you have experience with."),
+    wishes = TextAreaField(
+        u'Skills wanted',
+        validators=[Length(max=512)],
+        description="A comma-separated list of skills you wished you had or would like to improve"),
+    goals = TextAreaField(
+        u'My goals',
+        description=(
+            "What would you like to get out of this experience? "
+            "What ideas do you have for the programme? "
+            "What activities would you like to see? "
+            "(Essentially, anything that does not fit into a comma-separated list.)"
+        )
+    )
+)
 
 
 class RegisterForm(FlaskForm):
-    """Ye olde user registration form."""
+    """What the users see when they register."""
 
     username = StringField(
         'Username',
@@ -83,21 +104,10 @@ class RegisterForm(FlaskForm):
     webpage_url = URLField(u'Online profile')
     my_bio = TextAreaField(
         u'Bio',
-        description="Tell more about yourself: who you are, what is your background, what you are working on.")
-    my_skills = TextAreaField(
-        u'My skills',
-        validators=[Length(max=512), validate_skillslist(maxchars=100)],
-        description="A comma-separated list of things you have experience with.")
-    my_goals = TextAreaField(
-        u'My goals',
-        description=(
-            "What would you like to get out of this experience? "
-            "What ideas do you have for the programme? What activities would you like to see?"
-        )
-    )
-    my_wishes = TextAreaField(
-        u'Skills wanted',
-        description="List some skills you wished you had or would like to improve")
+        description="Tell us more about yourself: who you are, what is your background, what are you working on.")
+    my_skills = common_user_related_fields["skills"]
+    my_wishes = common_user_related_fields["wishes"]
+    my_goals  = common_user_related_fields["goals"]
 
     def __init__(self, *args, **kwargs):
         """Create instance."""
@@ -110,6 +120,10 @@ class RegisterForm(FlaskForm):
         if not initial_validation:
             return False
         sane_username = sanitize_input(self.username.data)
+        if len(sane_username) == 0:
+            self.username.errors.append('Please choose something different. Think what python could accept as a variable name?')
+            return False
+
         user = User.query.filter_by(username=sane_username).first()
         if user:
             self.username.errors.append('A user with this name already exists')
@@ -119,20 +133,26 @@ class RegisterForm(FlaskForm):
             self.email.errors.append('Email already registered')
             return False
 
+        if not validate_skillslist(self.my_skills):
+            return False
+        if not validate_skillslist(self.my_wishes):
+            return False
+
         return True
 
 
 class EmailForm(FlaskForm):
     """Just the e-mail, please."""
 
-    email = EmailField('Email',
-                       validators=[
-                            DataRequired(), Email(), Length(min=6, max=40)])
+    email = EmailField(
+        'Email',
+        validators=[ DataRequired(), Email(), Length(min=6, max=40)]
+    )
     submit = SubmitField(u'Continue')
 
 
 class UserForm(FlaskForm):
-    """User profile form."""
+    """What the users see when they click 'Edit profile'."""
 
     id = HiddenField('id')
     roles = SelectMultipleField(
@@ -143,27 +163,20 @@ class UserForm(FlaskForm):
         description="Your full name, if you want it shown on your profile and certificate.")
     webpage_url = URLField(
         u'Online profile', [Length(max=128)],
-        description="Link to your website, GitHub or a social media profile.")
+        description="Link to your website, GitHub or social media profile.")
     my_bio = TextAreaField(
-        u'My story',
-        description="A brief bio: who you are, what is your background, what you are working on.")
-    my_skills = TextAreaField(
-        u'My story',
-        description="A comma-seperated list of things you have experience with.")
-    my_goals = TextAreaField(
-        u'My goals',
-        description=(
-            "What would you like to get out of this experience? "
-            "What ideas do you have for the programme? What activities would you like to see?"
-        )
-    )
-    my_wishes = TextAreaField(
-        u'Skills wanted',
-        description="List some skills you wished you had or would like to improve")
-    username = StringField(
-        u'Username', [Length(max=25), UniqueValidator(
-            User, 'username'), DataRequired()],
-        description="Nickname you would like to go by.")
+        u'Bio',
+        description="Who you are, what is your background, what are you working on.")
+   
+    my_skills = common_user_related_fields["skills"]
+    my_wishes = common_user_related_fields["wishes"]
+    my_goals  = common_user_related_fields["goals"]
+    
+    #username = StringField(
+    #    u'Username', [Length(max=25), UniqueValidator(
+    #        User, 'username'), DataRequired()],
+    #    description="Nickname you would like to go by.")
+    
     email = EmailField(
         u'E-mail address', [Length(max=80), DataRequired()],
         description="For a profile image, link this address at Gravatar.com")
@@ -171,3 +184,13 @@ class UserForm(FlaskForm):
         u'Change password', [Length(max=128)],
         description="Leave blank to keep your password as it is.")
     submit = SubmitField(u'Save changes')
+    
+    def validate(self):
+        """Validate the form."""
+        
+        if not validate_skillslist(self.my_skills):
+            return False
+        if not validate_skillslist(self.my_wishes):
+            return False
+
+        return True

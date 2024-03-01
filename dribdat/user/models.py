@@ -15,7 +15,8 @@ from dribdat.user.constants import (
 )
 from dribdat.onebox import format_webembed  # noqa: I005
 from dribdat.utils import (
-    format_date_range, format_date, timesince
+    format_date_range, format_date, timesince,
+    unpack_csvlist, pack_csvlist
 )
 from dribdat.database import (
     db,
@@ -109,17 +110,25 @@ class User(UserMixin, PkModel):
     # Internal profile
     roles = relationship('Role', secondary=users_roles, backref='users')
     my_bio = Column(db.UnicodeText(), nullable=True)
-    _my_skills = Column(db.UnicodeText(512), nullable=True)
     my_goals = Column(db.UnicodeText(), nullable=True)
-    my_wishes = Column(db.UnicodeText(), nullable=True)
-
+    
+    _my_skills = Column(db.UnicodeText(512), nullable=True)
     @property
     def my_skills(self):
-        return self._my_skills.split(",")
+        return unpack_csvlist(self._my_skills)
 
     @my_skills.setter
     def my_skills(self, value):
-        self._my_skills = ",".join()
+        self._my_skills = pack_csvlist(value)
+
+    _my_wishes = Column(db.UnicodeText(512), nullable=True)
+    @property
+    def my_wishes(self):
+        return unpack_csvlist(self._my_wishes)
+
+    @my_wishes.setter
+    def my_wishes(self, value):
+        self._my_wishes = pack_csvlist(value)
 
     @property
     def data(self):
@@ -138,9 +147,9 @@ class User(UserMixin, PkModel):
             'cardtype': self.cardtype,
             'carddata': self.carddata,
             'my_bio': self.my_bio,
-            'my_skills': ",".join([r.name for r in self.my_skills]),
+            'my_skills': pack_csvlist(self.my_skills),
+            'my_wishes': pack_csvlist(self.my_wishes),
             'my_goals': self.my_goals,
-            'my_wishes': self.my_wishes,
             'created_at': self.created_at,
             'updated_at': self.updated_at,
         }
@@ -154,6 +163,8 @@ class User(UserMixin, PkModel):
             data['email'] = "%s@%d.localdomain" % (self.username, data['id'])
         self.email = data['email']
         self.updated_at = dt.datetime.utcnow()
+        self.my_skills = [s.strip() for s in data["my_skills"].split(",")]
+        self.my_wishes = [s.strip() for s in data["my_wishes"].split(",")]
 
     def socialize(self):
         """Parse the user's web profile."""
@@ -281,12 +292,6 @@ class User(UserMixin, PkModel):
         return path
 
     def __init__(self, username=None, email=None, password=None, **kwargs):
-        """Create instance."""
-        # if 'skills' in kwargs:
-        #     skills_string = ",".join(kwargs.get('skills'))
-        # else:
-        #     skills_string = None
-
         if username and email:
             db.Model.__init__(self, username=username, email=email, **kwargs)
         if password:

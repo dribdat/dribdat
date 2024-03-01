@@ -144,6 +144,30 @@
 </div>
 {% endif %}
 
+{% if user.my_skills %}
+<div class="row">
+  <div class="profile-skills col-12 bg-body">
+    <a name="skills"><h2 class="mt-5 text-center">💪 Skills</h2></a>
+      {% for s in user.my_skills %}
+      	<span class="skill">{{s}}</span>
+      {% endfor %}
+  </div>
+</div>
+{% endif %}
+
+{% if user.my_wishes %}
+<div class="row">
+  <div class="profile-wishes col-12 bg-body">
+    <a name="wishes"><h2 class="mt-5 text-center">🎋 Desired skills</h2></a>
+      {% for w in user.my_wishes %}
+      	<span class="wish">{{w}}</span>
+      {% endfor %}
+  </div>
+</div>
+{% endif %}
+
+<hr/> 
+
 {% if not projects %}
   {% if current_user and current_user.id == user.id %}
     <div class="alert alert-success">
@@ -195,7 +219,7 @@
 {% if user.my_goals %}
 <div class="row">
   <div class="profile-goals col-12 bg-body">
-    <a name="goals"><h1>&#127919; Goals</h1></a>
+    <a name="goals"><h2 class="mt-5 text-center">&#127919; Goals</h2></a>
     <blockquote class="profile-text">
       {{ user.my_goals|markdown }}
     </blockquote>
@@ -203,16 +227,6 @@
 </div>
 {% endif %}
 
-{% if user.my_wishes %}
-<div class="row">
-  <div class="profile-goals col-12 bg-body">
-    <a name="goals"><h1>&#127919; Wishes</h1></a>
-    <blockquote class="profile-text">
-      {{ user.my_wishes|markdown }}
-    </blockquote>
-  </div>
-</div>
-{% endif %}
 
 {% if not posts %}
   {% if current_user and current_user.id == user.id %}

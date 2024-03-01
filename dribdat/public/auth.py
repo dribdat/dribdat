@@ -17,6 +17,7 @@ from dribdat.extensions import login_manager  # noqa: I005
 from dribdat.utils import flash_errors, random_password, sanitize_input
 from dribdat.user.forms import RegisterForm, EmailForm, LoginForm, UserForm
 from dribdat.database import db
+from dribdat.utils import unpack_csvlist, pack_csvlist
 from dribdat.mailer import user_activation
 from datetime import datetime
 # noqa: I005
@@ -128,10 +129,9 @@ def register():
     new_user.socialize()
 
     new_user.my_bio = form.my_bio.data
-    skillslist = [s.strip() for s in str(form.my_skills.data).split(",")]
-    new_user.my_skills = skillslist
+    new_user.my_skills = unpack_csvlist(form.my_skills.data)
+    new_user.my_wishes = unpack_csvlist(form.my_wishes.data)
     new_user.my_goals = form.my_goals.data
-    new_user.my_wishes = form.my_wishes.data
     new_user.save()
 
     if User.query.count() == 1:
@@ -276,12 +276,20 @@ def user_profile():
         del form.roles
 
         # Sanitize username
-        user.username = sanitize_input(form.username.data)
-        del form.username
+        #user.username = sanitize_input(form.username.data)
+        #del form.username
+
+        # fix skills manually
+        user.my_skills = unpack_csvlist(form.my_skills.data)
+        del form.my_skills # avoid setting it again
+
+        user.my_wishes = unpack_csvlist(form.my_wishes.data)
+        del form.my_wishes # avoid setting it again
 
         # Assign password if changed
         originalhash = user.password
         form.populate_obj(user)
+        
         # Do not allow changing password on SSO
         if not user.sso_id:
             if form.password.data:
@@ -300,6 +308,9 @@ def user_profile():
         del form.roles
     else:
         form.roles.data = [(r.id) for r in user.roles]
+
+    form.my_skills.data = pack_csvlist(user.my_skills, ", ")
+    form.my_wishes.data = pack_csvlist(user.my_wishes, ", ")
     return render_template('public/useredit.html',
                            oauth_type=oauth_type(),
                            user=user, form=form,

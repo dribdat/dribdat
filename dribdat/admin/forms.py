@@ -56,7 +56,7 @@ class UserProfileForm(FlaskForm):
     my_bio = TextAreaField(u'Bio')
     my_skills = TextAreaField(u'Skills')
     my_goals = TextAreaField(u'My goals')
-    my_wishes = TextAreaField(u'My wishes')
+    my_wishes = TextAreaField(u'Wishes')
     submit = SubmitField(u'Save')
 
 
