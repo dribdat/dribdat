@@ -7,6 +7,7 @@ from flask_login import login_required, current_user
 from dribdat.user.models import Event, Project, Activity, User
 from dribdat.database import db
 from dribdat.extensions import cache
+from dribdat.utils import timesince
 from dribdat.public.forms import (
     ProjectNew, ProjectPost, ProjectBoost, ProjectComment
 )
@@ -262,23 +263,25 @@ def post_preview(project_id, activity_id):
     )
 
 
-@blueprint.route('/<int:project_id>/stage/<int:stage>', methods=['GET'])
-def preview_by_stage(project_id, stage):
-    """Preview project data at a previous version."""
+@blueprint.route('/<int:project_id>/challenge', methods=['GET'])
+def get_challenge(project_id):
+    """Preview project data at the previous version."""
     project = Project.query.filter_by(id=project_id).first_or_404()
+    project_version = preview_at = None
+    at_stage = 0
     for v in project.versions:
-        if v.stage == stage:
-            activity = v.activity
+        if v.progress <= at_stage:
+            preview_at = v.id
+            project_version = v
+            p_date = timesince(v.updated_at)
     purl = url_for('project.project_view_posted', project_id=project.id)
-    if not activity or not activity.project_version or activity.project_version == 0:
-        flash('Could not preview.', 'warning')
+    if not project_version or not preview_at:
+        flash('Could not find challenge data.', 'warning')
         return redirect(purl)
-    preview_at = activity.project_version
-    project = project.versions[preview_at]
-    flash('This is the archived version (%d) of this page.' % preview_at, 'info')
+    flash('Showing the Challenge version of this project (posted %s)' % p_date, 'info')
     return render_template(
-        'public/project.html', current_event=project.event, project=project,
-        past_version=activity_id, active="projects"
+        'public/project.html', current_event=project.event, project=project_version,
+        past_version=preview_at, active="projects"
     )
 
 

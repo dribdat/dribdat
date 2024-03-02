@@ -43,43 +43,43 @@
 
 <div class="btn-group project-edit-buttons" role="group" aria-label="Project tools">
 
+  {% if past_version and allow_revert %}
+    <a class="btn btn-lg btn-dark" title="Restore this version" 
+       href="{{ url_for('project.post_revert', project_id=project.id, activity_id=past_version) }}"
+      onclick="if(!window.confirm('Are you sure you wish to restore this version of the project data?')) return false">&#9100; Restore</a>
+  {% endif %}
+
   {% if allow_post %}
-     <a id="project-post" href="{{ url_for('project.project_post', project_id=project.id) }}" title="Post to this project" class="btn btn-lg btn-info">
+     <a id="project-post" href="{{ url_for('project.project_post', project_id=project.id) }}" 
+        title="Post to this project" class="btn btn-lg btn-info">
        <i class="fa fa-paper-plane" aria-hidden="true"></i>
        Post
      </a>
   {% elif current_user and current_user.active and not project.event.lock_resources %}
-     <a id="project-comment" href="{{ url_for('project.project_comment', project_id=project.id) }}" title="Write a public comment" class="btn btn-lg btn-info">
-       <i class="fa fa-thumbs-up" aria-hidden="true"></i>
+     <a id="project-comment" href="{{ url_for('project.project_comment', project_id=project.id) }}" 
+        title="Write a public comment" class="btn btn-lg btn-info">
+       <i class="fa fa-paper-plane" aria-hidden="true"></i>
        Comment</a>
   {% endif %}
   {% if allow_edit %}
-    <a href="{{ url_for('project.project_edit', project_id=project.id) }}" title="Edit project" class="btn btn-lg btn-warning">
+    <a href="{{ url_for('project.project_edit', project_id=project.id) }}" 
+       title="Edit project" class="btn btn-lg btn-warning">
       <i class="fa fa-pencil" aria-hidden="true"></i>
       Edit
     </a>
   {% endif %}
-  {% if past_version and allow_revert %}
-    <a class="btn btn-lg btn-dark" title="Go back to this version" href="{{ url_for('project.post_revert', project_id=project.id, activity_id=past_version) }}"
-      onclick="if(!window.confirm('Are you sure you wish to revert project to this version?')) return false">&#9100; Restore</a>
-  {% endif %}
 
-  {% if not lock_editing and not project.event.has_finished and not project.event.lock_resources %}
+  {% if not lock_editing and not project.event.has_finished and not project.event.lock_resources and not past_version %}
     {% if project_starred %}
       <a class="btn btn-lg btn-success" data-toggle="modal" data-target="#addUser"
         title="Invite someone to this project">
         <i class="fa fa-child" aria-hidden="true"></i>
       </a>
-      <a href="{{ url_for('project.project_unstar_me', project_id=project.id) }}" class="project-star btn btn-lg btn-secondary"
-        title="Click to stop being a member of the project"
-        onclick="return confirm('Are you sure you wish to leave this team?')">
-        <i class="fa fa-thumbs-up"></i>
-      </a>
     {% else %}
       <a href="{{ url_for('project.project_star', project_id=project.id) }}" class="btn btn-lg btn-success project-star"
         title="{% if project.is_challenge %}Follow this challenge{% else %}Join the project{% endif %}">
          <i class="fa fa-thumbs-up"></i>
-         Join in
+         Join team
       </a>
     {% endif %}
   {% endif %}
@@ -118,11 +118,21 @@
           </div>
         </div>
       </a>
-
-      <a class="preview-challenge" title="Show challenge" 
-         href="{{ url_for('project.preview_by_stage', project_id=project.id, stage=0) }}">&#9100; Challenge</a>
+      <br />
+      <a class="preview-challenge text-dark" title="Show this project at Challenge stage" 
+         href="{{ url_for('project.get_challenge', project_id=project.id) }}">
+           <i class="fa fa-map-o" aria-hidden="true"></i>
+           Challenge</a>
+    </div>
+  {% elif past_version %}
+    <div class="project-score">
+      <a class="preview-challenge text-dark" title="Go back to the current version of this project" 
+         href="{{ url_for('project.project_view', project_id=project.id) }}">
+         <i class="fa fa-map-o" aria-hidden="true"></i>
+         Project</a>
     </div>
   {% endif %}
+
 
   {% if project.category %}
     <div class="project-category">
@@ -164,26 +174,26 @@
           <i class="fa fa-{{ s.icon }}" aria-hidden="true"></i>
         </a>
       {% endfor %}
-      {% if project.longtext %}
-          <a class="btn btn-light" id="project-tab-md" href="#project-md"
+      {% if project.autotext and project.longtext %}
+          <a class="btn" id="project-tab-md" href="#project-md"
              title="Challenge pitch">
             <i class="fa fa-book m-2" aria-hidden="true"></i>
             Pitch</a>
       {% endif %}
       {% if project_team %}
-        <a class="btn btn-light" id="team-tab-md" href="#team-md"
+        <a class="btn" id="team-tab-md" href="#team-md"
           title="Show team members">
           <i class="fa fa-user m-2" aria-hidden="true"></i>
           Team</a>
       {% endif %}
       {% if project.autotext %}
-        <a class="btn btn-light" id="readme-tab-md" href="#readme-md"
+        <a class="btn" id="readme-tab-md" href="#readme-md"
            title="Readme content">
           <i class="fa fa-book m-2" aria-hidden="true"></i>
           Readme</a>
       {% endif %}
       {% if project_dribs %}
-        <a class="btn btn-light" id="dribs-tab-md" href="#log"
+        <a class="btn" id="dribs-tab-md" href="#log"
            title="Play by play progress review">
           <span class="drib-count mr-2">{{ project_dribs|length }}</span>
           Log</a>
@@ -259,10 +269,16 @@
       </div>
       {% if allow_edit %}
         <center>
-          <a class="btn btn-lg btn-light" data-toggle="modal" data-target="#addUser"
+          <a class="btn btn-lg btn-success" data-toggle="modal" data-target="#addUser"
             title="Share an invite link to this team">
             <i class="fa fa-child" aria-hidden="true"></i>
             Invite</a>
+          <a href="{{ url_for('project.project_unstar_me', project_id=project.id) }}" 
+             class="project-star btn btn-lg btn-light"
+            title="Click to stop being a member of the project"
+            onclick="return confirm('Are you sure you wish to leave this team?')">
+            Leave
+          </a>
         </center>
       {% endif %}
     </div>
@@ -395,13 +411,6 @@
         <i class="fa fa-refresh" aria-hidden="true"></i>
         Sync</a>
     {% endif %}
-    {% if allow_edit %}
-      <!-- Invite a user to the team -->
-      <a class="btn btn-lg btn-success" data-toggle="modal" data-target="#addUser"
-        title="Add users to this project">
-        <i class="fa fa-child" aria-hidden="true"></i>
-        Invite</a>
-    {% endif %}
 
   </div>
 </div><!-- / .project-controls -->
@@ -412,29 +421,30 @@
   <a href="{{ url_for('admin.project_view', project_id=project.id) }}" class="btn btn-lg btn-warning"
      title="Edit full details (admin only)">
     <i class="fa fa-pencil" aria-hidden="true"></i>
-    Edit</a>
+    <!--Edit--></a>
 
   {% if project.is_hidden %}
     <a href="{{ url_for('admin.project_toggle', project_id=project.id) }}" 
-       title="Un-hide this project" class="btn btn-lg btn-dark">
+       title="Make this project visible" class="btn btn-lg btn-dark">
       <i class="fa fa-eye" aria-hidden="true"></i>
-      Make visible</a>
+      <!--Show--></a>
 
   {% else %}
     <a href="{{ url_for('project.project_approve', project_id=project.id) }}" class="btn btn-lg btn-primary project-approve"
       title="Promote to next project level">
       <i class="fa fa-rocket" aria-hidden="true"></i>
-      Approve</a>
+    <!--  Approve
+    </a>
 
     <a href="{{ url_for('project.project_boost', project_id=project.id) }}" class="btn btn-lg btn-info project-boost"
       title="Boost this project (admin only)">
       <i class="fa fa-trophy" aria-hidden="true"></i>
-      Boost</a>
+    <!--  Boost--></a>
 
     <a href="{{ url_for('admin.project_toggle', project_id=project.id) }}" 
        title="Deactivate this project" class="btn btn-lg btn-dark">
       <i class="fa fa-eye" aria-hidden="true"></i>
-      Hide</a>
+    <!--  Hide--></a>
   {% endif %}
 
 </div><!-- / .admin-area -->

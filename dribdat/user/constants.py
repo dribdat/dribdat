@@ -219,9 +219,9 @@ def getActivityByType(a, only_active=True):  # noqa: C901
             text += " version %d" % a.project_version
         icon = 'paperclip'
     elif a.name == 'update':
-        text = "Edited content"
+        text = "Edited"
         if a.project_version:
-            text += " version %d" % a.project_version
+            text += " (version %d)" % a.project_version
         icon = 'paperclip'
     # elif a.name == 'revert':
     #     text = "Reverted content"

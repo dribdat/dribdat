@@ -81,23 +81,24 @@ class ProjectDetailForm(FlaskForm):
     category_id = SelectField(u'Challenge category', coerce=int)
     autotext_url = URLField(
         u'Readme', [length(max=255)],
-        description="Code, wiki or an online document to Sync with.")
+        description="Code repository, wiki, or online document to Sync with.")
     source_url = URLField(
-        u'Sources', [length(max=255)],
-        description="Link to source code repository or project data.")
+        u'Source', [length(max=255)],
+        description="Link to the original source code of your project.")
     download_url = URLField(
         u'Download', [length(max=255)],
-        description="Link to a release page to get a copy of your project.")
+        description="Link to a release page to get a copy of your data.")
+    # Note: contact_url could be an e-mail or room number -> StringField
     contact_url = StringField(
         u'Contact us', [length(max=255)],
-        description="Link to an issues page, contact form, forum thread, etc.")
+        description="How to reach you: location, website or e-mail.")
     hashtag = StringField(
         u'Hashtag', [length(max=255)],
-        description="Team channel or social media hashtag.")
+        description="Your team channel, or social media hashtags.")
     # Note: relative links allowed in image_url -> StringField
     image_url = StringField(
         u'Cover image', [length(max=255)],
-        description="URL of an image to display at the top of the page.")
+        description="Link to an image showing at the top of the page.")
     logo_color = StringField(
         u'Color scheme',
         description="Customize the color of your project page.")

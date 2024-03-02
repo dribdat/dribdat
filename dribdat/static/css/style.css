@@ -1258,8 +1258,9 @@ nav .nav-login {
   margin-right: 0.4em;
 }
 .projectform form .autotext-indicator {
-  margin-top: 2em;
   display: block;
+  margin-top:-4em; 
+  height: 0px;
 }
 .projectform form .autotext-indicator i {
   margin:0px 1em; color:red;
