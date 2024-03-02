@@ -87,14 +87,18 @@ def projectProgressList(All=True, WithEmpty=True):
 
 def stageProjectToNext(project):
     """Updates project stage to next level."""
+    if project.progress < 0:
+        # Approve a challenge
+        project.progress = projectProgressList(False, False)[0][0]
+        return True
     found_next = False
+    # Promote to next stage in progress list
     for a in projectProgressList(True, False):
         if found_next:
             project.progress = a[0]
             break
         if a[0] == project.progress or \
-            not project.progress or \
-                project.progress < 0:
+            not project.progress:
             found_next = True
     return found_next
     
