@@ -216,7 +216,7 @@ class TestProject:
         stageProjectToNext(project)
         project.update_now()
         assert project.versions.count() == 2
-        challenge = project.as_challenge()
+        challenge = project.as_challenge().revert()
         assert challenge.name != TEST_NAME
         challenge.update_now()
         challenge.save()

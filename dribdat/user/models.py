@@ -856,9 +856,8 @@ class Project(PkModel):
                 if top_v is None or top_v.id > v.id:
                     top_v = v
         if not top_v: 
-            self.progress = 0
             return self
-        return top_v.revert()
+        return top_v
 
     def get_schema(self, host_url=''):
         """Schema.org compatible metadata."""
