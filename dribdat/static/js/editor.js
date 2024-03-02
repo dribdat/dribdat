@@ -21,10 +21,9 @@
     // Toggle status indicator
     var $inputfield = $(this);
     var $indicator = $inputfield.parent()
-      .append('<span class="autotext-indicator d-none btn-group">' +
-        '<a title="Status" class="btn btn-lg btn-light btn-disabled"><i class="fa fa-circle-o"></i></a>' +
-        '<button class="btn btn-lg btn-warning" type="button">' +
-        'Sync content</button>' +
+      .prepend('<span class="autotext-indicator d-none float-right" style="margin-top:-4em; height:0px">' +
+        '<a title="Status" class="btn-disabled"><i class="fa fa-circle-o"></i></a>' +
+        '<button class="btn btn-lg btn-light" type="button">Sync</button>' +
       '</span>')
       .find('.autotext-indicator');
 

@@ -16,6 +16,21 @@
 {% endblock %}
 
 {% block content %}
+  <div class="float-right" style="z-index: 9999; position: relative">
+    <div class="switch-editor">
+      <a href="{{ url_for('project.project_edit', project_id=project.id) }}" 
+         title="Switch to editing of project basic information" 
+         class="btn btn-lg btn-light {% if not detail_view %}disabled hidden{% endif %}">
+        <i class="fa fa-pencil" aria-hidden="true"></i>
+        Basics</a>
+      <a href="{{ url_for('project.project_details', project_id=project.id) }}" 
+         title="Switch to editing of project details" 
+         class="btn btn-lg btn-light {% if detail_view %}disabled hidden{% endif %}">
+        <i class="fa fa-pencil" aria-hidden="true"></i>
+        Details</a>
+    </div>
+  </div>
+
   <h2 class="huge">
     Edit
     <a href="{{ url_for('project.project_view', project_id=project.id) }}" title="Back to project">
@@ -29,19 +44,6 @@
     </a>
     {% if detail_view %}details{% else %}basics{% endif %}
   </h2>
-
-  <div class="text-center">
-    <div class="btn-group switch-editor">
-      <a href="{{ url_for('project.project_edit', project_id=project.id) }}" title="Edit project" 
-         class="btn btn-lg {% if not detail_view %}btn-light disabled{% else %}btn-warning{% endif %}">
-        <i class="fa fa-pencil" aria-hidden="true"></i>
-        Basics</a>
-      <a href="{{ url_for('project.project_details', project_id=project.id) }}" title="Edit project details" 
-         class="btn btn-lg {% if detail_view %}btn-light disabled{% else %}btn-warning{% endif %}">
-        <i class="fa fa-magic" aria-hidden="true"></i>
-        Details</a>
-    </div>
-  </div>
 
   {% if not detail_view %}
   <span id="activateEditor">

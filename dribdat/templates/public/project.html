@@ -120,7 +120,7 @@
       </a>
 
       <a class="preview-challenge" title="Show challenge" 
-         href="{{ url_for('project.project_preview_by_stage', project_id=project.id) }}">&#9100; Challenge</a>
+         href="{{ url_for('project.preview_by_stage', project_id=project.id, stage=0) }}">&#9100; Challenge</a>
     </div>
   {% endif %}
 

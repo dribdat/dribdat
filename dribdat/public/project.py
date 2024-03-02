@@ -263,7 +263,7 @@ def post_preview(project_id, activity_id):
 
 
 @blueprint.route('/<int:project_id>/stage/<int:stage>', methods=['GET'])
-def project_preview_by_stage(project_id, stage=0):
+def preview_by_stage(project_id, stage):
     """Preview project data at a previous version."""
     project = Project.query.filter_by(id=project_id).first_or_404()
     for v in project.versions:
