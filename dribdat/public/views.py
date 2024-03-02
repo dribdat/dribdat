@@ -322,7 +322,7 @@ def event_challenges(event_id):
     projects = Project.query.filter_by(event_id=event.id, is_hidden=False)
     if not current_user or current_user.is_anonymous or not current_user.is_admin:
         projects = projects.filter(Project.progress >= 0)
-    challenges = [ p.get_challenge().revert() for p in projects ]
+    challenges = [ p.as_challenge() for p in projects ]
     return render_template("public/event.html", current_event=event, projects=challenges, 
                            project_count=projects.count(),
                            active="challenges")

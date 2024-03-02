@@ -7,6 +7,7 @@ import pytest
 import pytz
 
 from dribdat.user.models import Role, User, Event
+from dribdat.user.constants import stageProjectToNext
 from dribdat.utils import timesince
 from dribdat.settings import Config
 from dribdat.aggregation import ProjectActivity
@@ -204,6 +205,22 @@ class TestProject:
         ProjectActivity(project, 'unstar', user2)
         project.update_now()
         assert project.score == 1
+
+    def test_project_promote(self, db):
+        project = ProjectFactory()
+        db.session.add(project)
+        db.session.commit()
+        assert project.is_challenge
+        TEST_NAME = u'Updated name'
+        project.name = TEST_NAME
+        stageProjectToNext(project)
+        project.update_now()
+        assert project.versions.count() == 2
+        challenge = project.as_challenge()
+        assert challenge.name != TEST_NAME
+        challenge.update_now()
+        challenge.save()
+        assert challenge.versions.count() == 2
 
     def test_project_from_data(self):
         project = ProjectFactory()

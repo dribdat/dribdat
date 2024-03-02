@@ -268,7 +268,7 @@ def get_challenge(project_id):
     """Preview project data at the previous version."""
     project = Project.query.filter_by(id=project_id).first_or_404()
     purl = url_for('project.project_view_posted', project_id=project.id)
-    challenge = project.get_challenge()
+    challenge = project.as_challenge()
     if not challenge:
         flash('Could not find challenge data.', 'warning')
         return redirect(purl)

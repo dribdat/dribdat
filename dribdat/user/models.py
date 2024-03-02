@@ -847,7 +847,7 @@ class Project(PkModel):
             return event.categories_for_event()
         return Category.query.order_by('name')
 
-    def get_challenge(self):
+    def as_challenge(self):
         """Find the last challenge version of this project."""
         if not self.versions: return None
         top_v = None
@@ -855,7 +855,7 @@ class Project(PkModel):
             if v.progress <= 0:
                 if top_v is None or top_v.id > v.id:
                     top_v = v
-        return top_v
+        return top_v.revert()
 
     def get_schema(self, host_url=''):
         """Schema.org compatible metadata."""
