@@ -177,7 +177,10 @@ def project_action(project_id, of_type=None, as_view=True, then_redirect=False,
 
     # Send a warning for hidden projects
     if project.is_hidden:
-        flash('This project is currently hidden, and needs admin approval.', 'warning')
+        flash('This project is hidden, and needs moderation from an organizer.', 'warning')
+    # Send a warning for unapproved challenges
+    if project.progress < 0:
+        flash('This challenge is awaiting approval from an organizer.', 'warning')
 
     # Dump all that data into a template
     return render_template(
