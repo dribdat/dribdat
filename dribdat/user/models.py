@@ -847,6 +847,16 @@ class Project(PkModel):
             return event.categories_for_event()
         return Category.query.order_by('name')
 
+    def get_challenge(self):
+        """Find the last challenge version of this project."""
+        if not self.versions: return None
+        top_v = None
+        for v in self.versions:
+            if v.progress <= 0:
+                if top_v is None or top_v.id > v.id:
+                    top_v = v
+        return top_v
+
     def get_schema(self, host_url=''):
         """Schema.org compatible metadata."""
         # TODO: accurately detect project license based on component etc.

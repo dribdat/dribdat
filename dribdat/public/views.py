@@ -315,6 +315,17 @@ def event_categories(event_id):
                            active="categories")
 
 
+@blueprint.route("/event/<int:event_id>/challenges")
+def event_challenges(event_id):
+    """Show all the challenges of an event."""
+    event = Event.query.filter_by(id=event_id).first_or_404()
+    projects = Project.query.filter_by(event_id=event.id, is_hidden=False)
+    challenges = [ p.get_challenge().revert() for p in projects ]
+    return render_template("public/event.html", current_event=event, projects=challenges, 
+                           project_count=projects.count(),
+                           active="challenges")
+
+
 @blueprint.route('/event/<int:event_id>/print')
 def event_print(event_id):
     """Print the results of an event."""

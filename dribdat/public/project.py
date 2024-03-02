@@ -267,20 +267,16 @@ def post_preview(project_id, activity_id):
 def get_challenge(project_id):
     """Preview project data at the previous version."""
     project = Project.query.filter_by(id=project_id).first_or_404()
-    project_version = preview_at = None
-    at_stage = 0
-    for v in project.versions:
-        if v.progress <= at_stage:
-            preview_at = v.id
-            project_version = v
-            p_date = timesince(v.updated_at)
     purl = url_for('project.project_view_posted', project_id=project.id)
-    if not project_version or not preview_at:
+    challenge = project.get_challenge()
+    if not challenge:
         flash('Could not find challenge data.', 'warning')
         return redirect(purl)
+    preview_at = challenge.id
+    p_date = timesince(challenge.updated_at)
     flash('Showing the Challenge version of this project (posted %s)' % p_date, 'info')
     return render_template(
-        'public/project.html', current_event=project.event, project=project_version,
+        'public/project.html', current_event=challenge.event, project=challenge,
         past_version=preview_at, active="projects"
     )
 
