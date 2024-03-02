@@ -258,6 +258,26 @@ def post_preview(project_id, activity_id):
     flash('This is the archived version (%d) of this page.' % preview_at, 'info')
     return render_template(
         'public/project.html', current_event=project.event, project=project,
+        past_version=activity_id, allow_revert=True, active="projects"
+    )
+
+
+@blueprint.route('/<int:project_id>/stage/<int:stage>', methods=['GET'])
+def project_preview_by_stage(project_id, stage=0):
+    """Preview project data at a previous version."""
+    project = Project.query.filter_by(id=project_id).first_or_404()
+    for v in project.versions:
+        if v.stage == stage:
+            activity = v.activity
+    purl = url_for('project.project_view_posted', project_id=project.id)
+    if not activity or not activity.project_version or activity.project_version == 0:
+        flash('Could not preview.', 'warning')
+        return redirect(purl)
+    preview_at = activity.project_version
+    project = project.versions[preview_at]
+    flash('This is the archived version (%d) of this page.' % preview_at, 'info')
+    return render_template(
+        'public/project.html', current_event=project.event, project=project,
         past_version=activity_id, active="projects"
     )
 

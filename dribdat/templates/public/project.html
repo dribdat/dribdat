@@ -59,7 +59,7 @@
       Edit
     </a>
   {% endif %}
-  {% if past_version %}
+  {% if past_version and allow_revert %}
     <a class="btn btn-lg btn-dark" title="Go back to this version" href="{{ url_for('project.post_revert', project_id=project.id, activity_id=past_version) }}"
       onclick="if(!window.confirm('Are you sure you wish to revert project to this version?')) return false">&#9100; Restore</a>
   {% endif %}
@@ -118,6 +118,9 @@
           </div>
         </div>
       </a>
+
+      <a class="preview-challenge" title="Show challenge" 
+         href="{{ url_for('project.project_preview_by_stage', project_id=project.id) }}">&#9100; Challenge</a>
     </div>
   {% endif %}
 
