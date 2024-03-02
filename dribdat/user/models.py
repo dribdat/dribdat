@@ -855,7 +855,9 @@ class Project(PkModel):
             if v.progress <= 0:
                 if top_v is None or top_v.id > v.id:
                     top_v = v
-        if not top_v: return self
+        if not top_v: 
+            self.progress = 0
+            return self
         return top_v.revert()
 
     def get_schema(self, host_url=''):
