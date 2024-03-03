@@ -988,6 +988,9 @@ nav .nav-login {
   }
   .project-page .project-longtext { margin: 2em; }
   .project-page .project-autotext { margin: 2em; }
+
+  .nav-projects-abs-next,
+  .nav-projects-abs-prev { visibility: visible !important; }
 }
 @media (min-width: 1000px) {
   .project-home #overlayImage { max-width: 800px; }
@@ -1000,6 +1003,13 @@ nav .nav-login {
 .project-page .project-autotext { margin: 0em; }
 
 .project-page .latest-drib { padding: 1em; }
+
+.nav-projects-abs-prev { visibility: hidden;
+  position: absolute; top: 16em; left: -0.3em; height: 6em;
+}
+.nav-projects-abs-next { visibility: hidden;
+  position: absolute; top: 16em; right: -0.3em; height: 6em;
+}
 
 /* -- Timeline (dribs) -- */
 

@@ -119,17 +119,17 @@
         </div>
       </a>
       <br />
-      <a class="preview-challenge text-dark" title="Show this project at Challenge stage" 
+      <a class="preview-challenge text-dark" title="Click to show the Challenge from which this project started" 
          href="{{ url_for('project.get_challenge', project_id=project.id) }}">
            <i class="fa fa-map-o" aria-hidden="true"></i>
-           Challenge</a>
+           Project</a>
     </div>
   {% elif past_version %}
-    <div class="project-score">
+    <div class="project-score mt-1">
       <a class="preview-challenge text-dark" title="Go back to the current version of this project" 
          href="{{ url_for('project.project_view', project_id=project.id) }}">
          <i class="fa fa-map-o" aria-hidden="true"></i>
-         Project</a>
+         Challenge</a>
     </div>
   {% endif %}
 
@@ -452,7 +452,7 @@
 
 </center><!-- /.project-footer-controls -->
 
-<div class="panel panel-default community-embed mt-4">
+<div class="panel panel-default community-embed mt-5">
   <div class="panel-body">
     {{project.event.community_embed|safe}}
   </div>
@@ -462,19 +462,34 @@
   {{ social.share_links(share.text, share.url) }}
 {% endif %}
 
-{% if not project.event.lock_resources %}
-<center class="mt-5">
-  <a class="btn btn-light btn-lg" href="{{ url_for('public.event', event_id=project.event.id) }}">
+<center class="mt-5 nav-project-helper">
+{% if go_nav.prev %}
+  <a class="nav-projects btn btn-dark btn-lg" href="{{go_nav.prev.url}}" title="Previous project in queue">
     <i class="fa fa-arrow-left" aria-hidden="true"></i>
-    {{ project.event.name }}</a>
-</center>
-{% else %}
-<center class="mt-5">
-  <a class="btn btn-light btn-lg" href="javascript:history.back()">
-    <i class="fa fa-arrow-left" aria-hidden="true"></i>
-    Go back</a>
-</center>
+    {{go_nav.prev.name}}</a>
+
+  <a class="nav-projects-abs-prev btn btn-secondary" href="{{go_nav.prev.url}}" title="Previous project in queue">
+    <i class="fa fa-arrow-left" aria-hidden="true"></i></a>
 {% endif %}
+{% if not project.event.lock_resources %}
+  <a class="btn btn-dark btn-lg" href="{{ url_for('public.event', event_id=project.event.id) }}"
+     title="Return to the event page">
+    <i class="fa fa-arrow-up" aria-hidden="true"></i>
+    {{ project.event.name }}</a>
+{% else %}
+  <a class="btn btn-dark btn-lg" href="javascript:history.back()" title="Return to previous page">
+    <i class="fa fa-arrow-up" aria-hidden="true"></i>
+    Go back</a>
+{% endif %}
+{% if go_nav.next %}
+  <a class="nav-projects btn btn-dark btn-lg" href="{{go_nav.next.url}}" title="Next project in queue">
+    <i class="fa fa-arrow-right" aria-hidden="true"></i>
+    {{go_nav.next.name}}</a>
+
+  <a class="nav-projects-abs-next btn btn-secondary" href="{{go_nav.next.url}}" title="Next project in queue">
+    <i class="fa fa-arrow-right" aria-hidden="true"></i></a>
+{% endif %}
+</center>
 
 {% if project.category %}
   <div class="modal fade" id="categoryModal" role="dialog" tabindex="-1">

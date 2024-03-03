@@ -198,6 +198,7 @@ def event(event_id):
         return render_template("public/embed.html",
                                current_event=event, projects=projects)
     summaries = [p.data for p in projects]
+    # TODO: would not a order_by be more efficient?
     # Sort projects by reverse score, then name
     summaries.sort(key=lambda x: (
         -x['score'] if isinstance(x['score'], int) else 0,

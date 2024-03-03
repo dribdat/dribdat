@@ -18,7 +18,8 @@ from dribdat.user import (
     validateProjectData, stageProjectToNext, isUserActive,
 )
 from dribdat.public.projhelper import (
-    project_action, project_edit_action, templates_from_event, revert_project_by_activity
+    project_action, project_edit_action, templates_from_event, 
+    revert_project_by_activity, navigate_around_project,
 )
 from ..decorators import admin_required
 from ..mailer import user_invitation
@@ -275,9 +276,10 @@ def get_challenge(project_id):
     preview_at = challenge.id
     p_date = timesince(challenge.updated_at)
     flash('Showing the Challenge version of this project (posted %s)' % p_date, 'info')
+    go_nav = navigate_around_project(project, True)
     return render_template(
         'public/project.html', current_event=challenge.event, project=challenge,
-        past_version=preview_at, active="projects"
+        past_version=preview_at, active="projects", go_nav=go_nav,
     )
 
 
