@@ -529,8 +529,7 @@ class Event(PkModel):
     def categories_for_event(self):
         """Event categories."""
         return Category.query.filter(or_(
-            Category.event_id is None,
-            Category.event_id == -1,
+            Category.event_id == None,
             Category.event_id == self.id
         )).order_by('name')
 
@@ -849,15 +848,12 @@ class Project(PkModel):
 
     def as_challenge(self):
         """Find the last challenge version of this project."""
-        if not self.versions: return None
-        top_v = None
-        for v in self.versions:
-            if v.progress <= 0:
-                if top_v is None or top_v.id > v.id:
-                    top_v = v
-        if not top_v: 
+        if not self.versions: 
             return self
-        return top_v
+        for v in self.versions[::-1]:
+            if v.progress <= 0: 
+                return v.revert()
+        return self
 
     def get_schema(self, host_url=''):
         """Schema.org compatible metadata."""
@@ -1039,6 +1035,10 @@ class Category(PkModel):
         if not self.projects:
             return 0
         return len(self.projects)
+
+    def event_projects(self, event_id):
+        """Get projects in this event."""
+        return Project.query.filter_by(category_id=self.id).filter_by(event_id=event_id).all()
 
     @property
     def data(self):

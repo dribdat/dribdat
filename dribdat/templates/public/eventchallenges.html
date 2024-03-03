@@ -1,0 +1,30 @@
+{% extends "layout.html" %}
+{% import "macros/_event.html" as misc %}
+
+{% block page_title %}Challenges{% endblock %}
+
+{% block body_class %}eventchallenges-page{% endblock %}
+
+{% block content %}
+<h1 class="huge">Challenges</h1>
+
+  {% if projects %}
+    <div class="row category-container">
+
+      <div class="honeycomb mb-5 pb-5">
+          <div class="row ibws-fix">
+          {% for project in projects %}
+              {{ misc.render_project_hexagon(project) }}
+          {% endfor %}
+          </div>
+      </div><!-- /honeycomb -->
+    </div>
+  {% endif %}
+
+  <center class="mt-5">
+    <a class="btn btn-light btn-lg" href="{{ url_for('public.event', event_id=current_event.id) }}">
+      <i class="fa fa-arrow-left" aria-hidden="true"></i>
+      {{ current_event.name }}</a>
+  </center>
+
+{% endblock %}

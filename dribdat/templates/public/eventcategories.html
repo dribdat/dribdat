@@ -18,34 +18,34 @@
       <p class="subtitle">
         {{ category.description|onebox|markdown|safe }}
       </p>
-      <hr>
+      <br clear="all" />
 
-      {% if category.projects %}
-      <div class="profile-projects honeycomb">
+      {% if category.event_projects(current_event.id) %}
+      <div class="honeycomb mb-5 pb-5">
           <div class="row ibws-fix">
-          {% for project in category.projects %}
+          {% for project in category.event_projects(current_event.id) %}
               {{ misc.render_project_hexagon(project) }}
           {% endfor %}
           </div>
-      </div><!-- /profile-projects -->
+      </div><!-- /honeycomb -->
       {% endif %}
 
     </div>
   {% endfor %}
   {% if projects %}
     <div class="row step category-container"
-         style="border-top:5px dotted grey">
+         style="border-top:5px dotted #eee">
 
-      <h3 class="title">/etc</h3>
-      <hr>
+      <h3 class="title">*</h3>
+      <br clear="all" />
 
-      <div class="profile-projects honeycomb">
+      <div class="honeycomb mb-5 pb-5">
           <div class="row ibws-fix">
           {% for project in projects %}
               {{ misc.render_project_hexagon(project) }}
           {% endfor %}
           </div>
-      </div><!-- /profile-projects -->
+      </div><!-- /honeycomb -->
     </div>
   {% endif %}
   </div>

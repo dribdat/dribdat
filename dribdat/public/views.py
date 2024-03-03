@@ -323,7 +323,8 @@ def event_challenges(event_id):
     if not current_user or current_user.is_anonymous or not current_user.is_admin:
         projects = projects.filter(Project.progress >= 0)
     challenges = [ p.as_challenge() for p in projects ]
-    return render_template("public/event.html", current_event=event, projects=challenges, 
+    return render_template("public/eventchallenges.html", 
+                           current_event=event, projects=challenges, 
                            project_count=projects.count(),
                            active="challenges")
 

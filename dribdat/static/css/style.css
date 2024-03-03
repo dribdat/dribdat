@@ -654,7 +654,7 @@ nav .nav-login {
 .honeycomb .hexagon.challenge { opacity: 1; }
 .honeycomb .hexagon.challenge.stage--1,
 .honeycomb .hexagon.challenge.stage--100 { 
-  opacity: 0.6; 
+  opacity: 0.8; 
   border-bottom: 3px solid red;
 }
 
