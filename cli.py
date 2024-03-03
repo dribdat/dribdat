@@ -5,8 +5,9 @@ import os
 import click
 import datetime as dt
 from dribdat.app import init_app
+from dribdat.user.models import User, Event
 from dribdat.settings import DevConfig, ProdConfig
-from dribdat.apipackage import fetch_datapackage, load_file_datapackage
+from dribdat.apipackage import fetch_datapackage, load_file_datapackage, import_users_csv
 
 HERE = os.path.abspath(os.path.dirname(__file__))
 TEST_PATH = os.path.join(HERE, 'tests')
@@ -127,17 +128,25 @@ def imports(url, level='full'):
 @click.command()
 @click.argument('kind', nargs=-1, required=False)
 def exports(kind):
-    """Export some data."""
+    """Export system data to TSV."""
     with create_app().app_context():
         if 'people' in kind:
-            from dribdat.user.models import User
             for pp in User.query.filter_by(active=True).all():
                 print(pp.email)
         elif 'events' in kind:
-            from dribdat.user.models import Event
             for pp in Event.query.filter_by(is_hidden=False).all():
                 print('\t'.join([pp.name, str(pp.starts_at), str(pp.ends_at)]))
 
+
+@click.command()
+@click.argument('filename', required=True)
+@click.argument('testonly', required=False)
+def register(filename, testonly=False):
+    """Import user data from a CSV file."""
+    with create_app().app_context():
+        created, updated = import_users_csv(filename, testonly)
+        print('%d users imported, %d were updated')
+        
 
 @click.group(name='j')
 def cli():
@@ -147,6 +156,7 @@ def cli():
 
 cli.add_command(socialize)
 cli.add_command(numerise)
+cli.add_command(register)
 cli.add_command(imports)
 cli.add_command(exports)
 

@@ -313,3 +313,8 @@ def import_projects_csv(filedata, event=None, dry_run=True):
             csvreader = csv.DictReader(csvfile)
             projdata = [ deepcopy(row) for row in csvreader ]
             return { 'projects': import_project_data(projdata, dry_run, event) }
+
+
+def import_users_csv(filedata, dry_run=True):
+    """Import the user database from a file."""
+    raise Exception("Not implemented")
