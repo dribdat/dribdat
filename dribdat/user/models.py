@@ -853,6 +853,7 @@ class Project(PkModel):
         for v in self.versions[::-1]:
             if v.progress <= 0: 
                 return v.revert()
+        self.progress = 0
         return self
 
     def get_schema(self, host_url=''):
