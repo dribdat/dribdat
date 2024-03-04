@@ -110,7 +110,7 @@ def project_approve(project_id):
         db.session.add(project)
         db.session.commit()
         cache.clear()
-        flash("Promoted to stage '%s'" % 
+        flash("Promoted to stage '%s'" %
             project.phase, 'info')
     return redirect(url_for(
         'project.project_view', project_id=project.id))
@@ -151,7 +151,7 @@ def project_post(project_id):
             if all_valid:
                 found_next = stageProjectToNext(project)
             if all_valid and found_next:
-                flash("Level up! You are at stage '%s'" % 
+                flash("Level up! You are at stage '%s'" %
                     project.phase, 'info')
 
         # Update project data
@@ -372,7 +372,7 @@ def create_new_project(event, is_anonymous=False):
     else:
         project.hashtag = "Guest"
         project.is_hidden = True
-    
+
     form = ProjectNew(obj=project, next=request.args.get('next'))
     form.category_id.choices = [(c.id, c.name)
                                 for c in project.categories_all(event)]
@@ -465,7 +465,7 @@ def project_autoupdate(project_id):
     if not data or 'name' not in data:
         flash("To Sync: ensure a README on the remote site.", 'warning')
         return redirect(url_for('project.project_view', project_id=project_id))
-    
+
     # Transfer the project fields
     SyncProjectData(project, data)
 
