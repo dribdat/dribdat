@@ -213,14 +213,17 @@ class TestProject:
         assert project.is_challenge
         TEST_NAME = u'Updated name'
         project.name = TEST_NAME
+        project.progress = 0
         stageProjectToNext(project)
         project.update_now()
+        project.save()
         assert project.versions.count() == 2
-        challenge = project.as_challenge().revert()
+        assert not project.is_challenge
+        challenge = project.as_challenge()
         assert challenge.name != TEST_NAME
         challenge.update_now()
         challenge.save()
-        assert challenge.versions.count() == 2
+        assert challenge.versions.count() == 3
 
     def test_project_from_data(self):
         project = ProjectFactory()

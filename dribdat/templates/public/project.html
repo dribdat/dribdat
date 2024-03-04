@@ -463,7 +463,7 @@
 {% endif %}
 
 <center class="mt-5 nav-project-helper">
-{% if go_nav.prev %}
+{% if go_nav and go_nav.prev %}
   <a class="nav-projects btn btn-dark" href="{{go_nav.prev.url}}" title="Previous project in queue">
     <i class="fa fa-arrow-left" aria-hidden="true"></i>
     {{go_nav.prev.name}}</a>
@@ -481,7 +481,7 @@
     <i class="fa fa-arrow-up" aria-hidden="true"></i>
     Go back</a>
 {% endif %}
-{% if go_nav.next %}
+{% if go_nav and go_nav.next %}
   <a class="nav-projects btn btn-dark" href="{{go_nav.next.url}}" title="Next project in queue">
     <i class="fa fa-arrow-right" aria-hidden="true"></i>
     {{go_nav.next.name}}</a>
