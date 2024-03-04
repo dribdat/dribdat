@@ -43,6 +43,7 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='libs/font-awesome/css/font-awesome.css')}}"/>
   {% endif %}
 
+  <link rel="shortcut icon" href="{{ url_for('static', filename='img/branding/favicon.png')}}" media="(prefers-color-scheme: light)"/>
   {% assets "css_all" %}
     <link rel="stylesheet" href="{{ ASSET_URL }}"/>
   {% endassets %}
