@@ -146,6 +146,9 @@ class EventForm(FlaskForm):
     boilerplate = TextAreaField(
         u'Quickstart guide',
         description=u'Shown when starting a new project: Markdown and HTML supported')
+    aftersubmit = TextAreaField(
+        u'Submissions guide',
+        description=u'Shown to the team on projects at challenge stage: Markdown and HTML supported')
     community_embed = TextAreaField(
         u'Code of conduct and community links',
         description=u'Bottom of event and project page: Markdown, HTML and '

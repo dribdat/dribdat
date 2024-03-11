@@ -41,6 +41,15 @@
 </div>
 {% endif %}
 
+{% if project.score and project.score < 1 and allow_edit and current_event.aftersubmit %}
+  <div class="jumbotron projectnew-boilerplate">
+    <a class="close" title="Close" href="#" data-dismiss="alert">&times;</a>
+    <div class="container scroll-after-500">
+      {{ current_event.aftersubmit|markdown }}
+    </div>
+  </div>
+{% endif %}
+
 <div class="btn-group project-edit-buttons" role="group" aria-label="Project tools">
 
   {% if past_version and allow_revert %}

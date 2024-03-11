@@ -318,8 +318,9 @@ class Event(PkModel):
     ends_at = Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)
 
     description = Column(db.UnicodeText(), nullable=True) # a longer text about the event
-    boilerplate = Column(db.UnicodeText(), nullable=True) # tips to show on starting a new project
     instruction = Column(db.UnicodeText(), nullable=True) # tips for logged-in event participants
+    boilerplate = Column(db.UnicodeText(), nullable=True) # tips to show on starting a new project
+    aftersubmit = Column(db.UnicodeText(), nullable=True) # additional content to show new projects
 
     logo_url = Column(db.String(255), nullable=True)      # icon of the event
     webpage_url = Column(db.String(255), nullable=True)   # location of "about page"
@@ -368,6 +369,7 @@ class Event(PkModel):
         d['ends_at'] = format_date(self.ends_at, '%Y-%m-%dT%H:%M')
         d['description'] = self.description or ''
         d['boilerplate'] = self.boilerplate or ''
+        d['aftersubmit'] = self.aftersubmit or ''
         d['instruction'] = self.instruction or ''
         # And by full, we mean really full!
         d['custom_css'] = self.custom_css or ''
@@ -388,6 +390,7 @@ class Event(PkModel):
         self.custom_css = d['custom_css'] or '' if 'custom_css' in d else ''
         self.description = d['description'] or '' if 'description' in d else ''
         self.boilerplate = d['boilerplate'] or '' if 'boilerplate' in d else ''
+        self.aftersubmit = d['aftersubmit'] or '' if 'aftersubmit' in d else ''
         self.instruction = d['instruction'] or '' if 'instruction' in d else ''
         self.gallery_url = d['gallery_url'] or '' if 'gallery_url' in d else ''
         self.webpage_url = d['webpage_url'] or '' if 'webpage_url' in d else ''
