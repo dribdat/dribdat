@@ -24,12 +24,12 @@ class ProjectNew(FlaskForm):
     id = HiddenField('id')
     autotext_url = URLField(
         u'Readme', [length(max=2048)],
-        description="[Optional] URL to a repository or online documentation "
-        + "of your project.")
+        description="[Optional] Link to a code repository or online document. "
+        + "The content will be automatically synced here. Tips: dribdat.cc/handbook")
     name = StringField(
         u'Title',
         [length(max=80), UniqueValidator(Project, 'name'), DataRequired()],
-        description=u"A short project title or team name - you may change "
+        description=u"A short team or project name - you may change "
         + "this later.")
     summary = TextAreaField(
         u'Summary', [length(max=2048)],
@@ -52,20 +52,23 @@ class ProjectForm(FlaskForm):
         u'Title',
         [length(max=80), UniqueValidator(Project, 'name'), DataRequired()],
         render_kw={'maxlength': 80, 'required': 'required'},
-        description="A short project name, max 80 characters.")
+        description="A short name for your project or challenge.")
     summary = TextAreaField(
         u'Summary', [length(max=2048)],
         render_kw={'maxlength': 2048},
-        description="A short, plain-text description of your project.")
+        description="A short, plain-text description of your topic.")
     longtext = TextAreaField(
         u'Pitch',
-        description="To format, use Markdown or HTML. Links to Speaker Deck"
-        + " and many other sites (oembed.com) get a live preview.")
+        description="You can use Markdown or HTML. Links on their own line"
+        + " to OEmbed sites get a live preview.")
     webpage_url = URLField(
-        u'Demo link', [length(max=2048)],
-        description="URL to a live demo, presentation, or a link to get "
-        + "more information.")
-    is_webembed = BooleanField(u'Embed this link directly on project page')
+        u'Presentation link', [length(max=2048)],
+        description="A URL to where we can see a live demo, presentation, or a link to get "
+        + "more information. Tips: dribdat.cc/usage")
+    is_webembed = BooleanField(u'Embed the Presentation directly on project page')
+    autotext_url = URLField(
+        u'Readme', [length(max=255)],
+        description="Code repository, wiki, or online document to Sync with.")
     submit = SubmitField(u'Save changes')
     note = TextAreaField(
         u'Log entry',
@@ -79,29 +82,26 @@ class ProjectDetailForm(FlaskForm):
 
     id = HiddenField('id')
     category_id = SelectField(u'Challenge category', coerce=int)
-    autotext_url = URLField(
-        u'Readme', [length(max=255)],
-        description="Code repository, wiki, or online document to Sync with.")
     source_url = URLField(
         u'Source', [length(max=255)],
         description="Link to the original source code of your project.")
     download_url = URLField(
         u'Download', [length(max=255)],
-        description="Link to a release page to get a copy of your data.")
+        description="Link to a downloadable version of your work.")
     # Note: contact_url could be an e-mail or room number -> StringField
     contact_url = StringField(
-        u'Contact us', [length(max=255)],
-        description="How to reach you: location, website or e-mail.")
+        u'Contact', [length(max=255)],
+        description="How to reach you via website or e-mail.")
     hashtag = StringField(
-        u'Hashtag', [length(max=140)],
-        description="Your team channel, or social media hashtags.")
+        u'Hashtag/Affiliation', [length(max=140)],
+        description="Your organization, team channel, or social media hashtags.")
     # Note: relative links allowed in image_url -> StringField
     image_url = StringField(
         u'Cover image', [length(max=255)],
-        description="Link to an image showing at the top of the page.")
+        description="Link to an image showing in the project overview and at the top of the page.")
     logo_color = StringField(
         u'Color scheme',
-        description="Customize the color of your project page.")
+        description="Customize the outline color of your project page.")
     logo_icon = StringField(
         u'Named icon',
         [length(max=20)], description='Select an icon from FontAwesome'
