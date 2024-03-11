@@ -31,9 +31,9 @@ class ProjectNew(FlaskForm):
         [length(max=80), UniqueValidator(Project, 'name'), DataRequired()],
         description=u"A short project title or team name - you may change "
         + "this later.")
-    summary = StringField(
-        u'Summary', [length(max=140)],
-        description="The headline of your project, in up to 140 characters.")
+    summary = TextAreaField(
+        u'Summary', [length(max=2048)],
+        description="A short, plain-text description of your project or challenge.")
     category_id = SelectField(
         u'Category', coerce=int, description=u"Select the category that your "
         + " challenge addresses.")
@@ -53,10 +53,10 @@ class ProjectForm(FlaskForm):
         [length(max=80), UniqueValidator(Project, 'name'), DataRequired()],
         render_kw={'maxlength': 80, 'required': 'required'},
         description="A short project name, max 80 characters.")
-    summary = StringField(
-        u'Summary', [length(max=140)],
-        render_kw={'maxlength': 140},
-        description="The headline of your project, in up to 140 characters.")
+    summary = TextAreaField(
+        u'Summary', [length(max=2048)],
+        render_kw={'maxlength': 2048},
+        description="A short, plain-text description of your project.")
     longtext = TextAreaField(
         u'Pitch',
         description="To format, use Markdown or HTML. Links to Speaker Deck"
@@ -93,7 +93,7 @@ class ProjectDetailForm(FlaskForm):
         u'Contact us', [length(max=255)],
         description="How to reach you: location, website or e-mail.")
     hashtag = StringField(
-        u'Hashtag', [length(max=255)],
+        u'Hashtag', [length(max=140)],
         description="Your team channel, or social media hashtags.")
     # Note: relative links allowed in image_url -> StringField
     image_url = StringField(

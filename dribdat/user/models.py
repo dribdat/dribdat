@@ -307,7 +307,7 @@ class Event(PkModel):
 
     __tablename__ = 'events'
     name = Column(db.String(80), unique=True, nullable=False)
-    summary = Column(db.String(140), nullable=True)       # a short description
+    summary = Column(db.String(140), nullable=True)       # a short description of the event
     hostname = Column(db.String(80), nullable=True)       # institution hosting the event
     hashtags = Column(db.String(255), nullable=True)      # default hashtags for social media
     location = Column(db.String(255), nullable=True)      # where is the event being held?
@@ -557,8 +557,8 @@ class Project(PkModel):
     __versioned__ = {}
     __tablename__ = 'projects'
     name = Column(db.String(80), unique=True, nullable=False)
-    summary = Column(db.String(140), nullable=True)
-    hashtag = Column(db.String(40), nullable=True)
+    hashtag = Column(db.String(140), nullable=True)
+    summary = Column(db.String(2048), nullable=True)
 
     image_url = Column(db.String(2048), nullable=True)
     source_url = Column(db.String(2048), nullable=True)

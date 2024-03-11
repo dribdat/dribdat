@@ -101,8 +101,10 @@ def TrimProjectData(project, data):
     """Map remote fields to project data."""
     if len(data['name']) > 0:
         project.name = data['name'][0:80]
+    if 'hashtag' in data and len(data['hashtag']) > 0:
+        project.hashtag = data['hashtag'][0:140]
     if 'summary' in data and len(data['summary']) > 0:
-        project.summary = data['summary'][0:140]
+        project.summary = data['summary'][0:2048]
     if 'description' in data and len(data['description']) > 0:
         project.longtext = data['description']
     if 'source_url' in data and len(data['source_url']) > 0:
@@ -131,9 +133,12 @@ def SyncProjectData(project, data):
     if 'name' in data and data['name'] and \
        (not project.name or not project.name.strip()):
         project.name = data['name'][:80]
+    if 'hashtag' in data and data['hashtag'] and \
+       (not project.hashtag or not project.hashtag.strip()):
+        project.hashtag = data['hashtag'][:140]
     if 'summary' in data and data['summary'] and \
        (not project.summary or not project.summary.strip()):
-        project.summary = data['summary'][:140]
+        project.summary = data['summary'][:2048]
     if 'image_url' in data and data['image_url'] and \
        (not project.image_url):
         project.image_url = data['image_url'][:2048]
