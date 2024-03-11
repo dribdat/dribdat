@@ -101,6 +101,10 @@
 <!-- Main project content container -->
 <div class="jumbotron project-page phase-{{ project.phase }}" {% if project.logo_color %} style="border-color:{{project.logo_color}}"{% endif %}>
 
+  {% if project.ident %}
+    <div class="project-ident float-right">{{ project.ident }}</div>
+  {% endif %}
+
   {% if project.event.lock_resources %}
   <a href="{{ url_for('public.event_stages', event_id=project.event.id) }}"
      class="btn btn-light mr-4 float-right">
@@ -119,17 +123,17 @@
         </div>
       </a>
       <br />
+      <i class="fa fa-map-o" aria-hidden="true"></i> Project |
       <a class="preview-challenge text-dark" title="Click to show the Challenge from which this project started" 
          href="{{ url_for('project.get_challenge', project_id=project.id) }}">
-           <i class="fa fa-map-o" aria-hidden="true"></i>
-           Project</a>
+           Challenge</a>
     </div>
   {% elif past_version %}
     <div class="project-score mt-1">
       <a class="preview-challenge text-dark" title="Go back to the current version of this project" 
          href="{{ url_for('project.project_view', project_id=project.id) }}">
-         <i class="fa fa-map-o" aria-hidden="true"></i>
-         Challenge</a>
+         Project</a> | 
+         <i class="fa fa-map-o" aria-hidden="true"></i> Challenge
     </div>
   {% endif %}
 

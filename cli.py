@@ -37,12 +37,12 @@ def socialize(kind):
 @click.command()
 @click.argument('event', required=True)
 @click.argument('clear', required=False, default=False)
-@click.argument('primes', required=False, default=True)
-@click.argument('challenges', required=False, default=True)
+@click.argument('primes', required=False, default=False)
+@click.argument('challenges', required=False, default=False)
 def numerise(event: int, clear: bool, primes: bool, challenges: bool):
-    """Assign numbers to challenge hashtags for an EVENT ID."""
+    """Assign numbers to project or challenge identifiers for a given EVENT ID."""
     if clear:
-        print("- Clearing hashtags")
+        print("- Clear idents rather than set them")
     if primes:
         print("- Using prime numbers")
     if challenges:
@@ -67,10 +67,15 @@ def numerise(event: int, clear: bool, primes: bool, challenges: bool):
             if c.is_hidden: continue
             if challenges and not c.is_challenge: continue
             if not challenges and c.is_challenge: continue
-            ch = "" # push existing hashtag aside
-            if not clear and c.hashtag and len(c.hashtag) > 0:
-                ch = " " + ch
-            c.hashtag = str(nq[ix]) + ch
+            if clear:
+                c.ident = ''
+            else:
+                prefix = ''
+                if len(projects) > 99 and nq[ix] < 100:
+                    prefix = prefix + '0'
+                if len(projects) > 9 and nq[ix] < 10:
+                    prefix = prefix + '0'
+                c.ident = prefix + str(nq[ix])
             c.save()
             ix = ix + 1
         print("Enumerated %d projects." % projects.count())

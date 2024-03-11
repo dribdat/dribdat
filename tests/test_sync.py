@@ -48,10 +48,11 @@ class TestSync:
         AddProjectDataFromAutotext(project)
         assert 'Awesome' in project.summary
         thedata = project.data
-        for o in ['name', 'summary', 'hashtag', 'image_url', 'source_url', 'webpage_url', 'contact_url', 'download_url', 'logo_icon']:
+        for o in ['name', 'ident', 'summary', 'hashtag', 'image_url', 'source_url', 'webpage_url', 'contact_url', 'download_url', 'logo_icon']:
             thedata[o] = self.a_long_random_string
         TrimProjectData(project, thedata)
         assert len(project.name) == 80
+        assert len(project.ident) == 10
         assert len(project.hashtag) == 140
         assert len(project.summary) == 2048
         assert len(project.image_url) == 2048

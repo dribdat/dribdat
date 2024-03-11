@@ -1,7 +1,7 @@
 {% macro render_project_tooltip(project) %}
 	data-toggle="tooltip"
+	data-ident="{{ project.ident or '' }}"
 	data-summary="{{ project.summary|truncate(140, True, '..') or project.name }}"
-	data-hashtag="{{ project.hashtag or '' }}"
 	data-imageurl="{{ project.image_url|quote_plus }}"{#
 		> Status icons in tooltip:
 	#}data-status="{% if project.contact_url %}&#x1f44b;{% endif %}{#
@@ -35,10 +35,10 @@
 				<span class="team-boost" title="Trending">🔥</span>
 			{% endif %}
 			<span class="project-name">{{ project.name|truncate(64, True, '..') }}</span>
-			{% if project.image_url or project.logo_icon or project.hashtag %}
+			{% if project.image_url or project.logo_icon or project.ident %}
 				<div class="hexaicon"{% if project.image_url %} style="background-image:url('{{project.image_url|quote_plus}}')"{% endif %}>
-					{% if project.hashtag and 3 > project.hashtag|length %}
-						<span class="project-hashtag">{{ project.hashtag }}</span>
+					{% if project.ident %}
+						<span class="project-ident">{{ project.ident }}</span>
 					{% elif project.logo_icon %}
 						<i class="fa fa-{{project.logo_icon}}"></i>
 					{% endif %}					

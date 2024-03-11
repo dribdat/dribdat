@@ -557,6 +557,7 @@ class Project(PkModel):
     __versioned__ = {}
     __tablename__ = 'projects'
     name = Column(db.String(80), unique=True, nullable=False)
+    ident = Column(db.String(10), nullable=True)
     hashtag = Column(db.String(140), nullable=True)
     summary = Column(db.String(2048), nullable=True)
 
@@ -650,6 +651,7 @@ class Project(PkModel):
         """Get JSON representation."""
         d = {
             'id': self.id,
+            'ident': self.ident,
             'url': self.url,
             'name': self.name,
             'score': self.score,
@@ -885,6 +887,8 @@ class Project(PkModel):
         if not 'name' in data:
             raise Exception("Missing project name!")
         self.name = data['name']
+        if 'ident' in data:
+            self.ident = data['ident']
         if 'summary' in data:
             self.summary = data['summary']
         if 'hashtag' in data:

@@ -169,6 +169,9 @@ class ProjectForm(FlaskForm):
     name = StringField(
         u'Title',
         [length(max=80), UniqueValidator(Project, 'name'), DataRequired()])
+    ident = StringField(
+        u'Identifier', [length(max=10)],
+        description="Typically used for numbering the projects")
     summary = StringField(u'Short summary', [length(max=2048)])
     longtext = TextAreaField(u'Description')
     autotext_url = URLField(
@@ -179,7 +182,7 @@ class ProjectForm(FlaskForm):
     is_webembed = BooleanField(u'Embed contents of demo link', default=False)
     hashtag = StringField(
         u'Hashtags', [length(max=140)],
-        description="Team channel or social media hashtag")
+        description="Team channel, social media hashtag, organization name")
     contact_url = URLField(u'Contact link', [length(max=2048)])
     source_url = URLField(u'Source link', [length(max=2048)])
     download_url = URLField(u'Download link', [length(max=2048)])

@@ -196,7 +196,7 @@ def event(event_id):
     # Sort visible projects by reverse score, then name
     projects = Project.query \
         .filter_by(event_id=event_id, is_hidden=False) \
-        .order_by(Project.score.desc(), Project.name.asc())
+        .order_by(Project.ident, Project.score.desc(), Project.name)
     # Embedding view
     if request.args.get('embed'):
         return render_template("public/embed.html",
@@ -285,7 +285,8 @@ def event_stages(event_id):
     steps = getProjectStages()
     for s in steps:
         s['projects'] = []  # Reset the index
-    projects = Project.query.filter_by(event_id=event.id, is_hidden=False)
+    projects = Project.query.filter_by(event_id=event.id, is_hidden=False) \
+                            .order_by(Project.ident, Project.name)
     for s in steps:
         if 'projects' not in s:
             s['projects'] = []
@@ -319,7 +320,8 @@ def event_categories(event_id):
 def event_challenges(event_id):
     """Show all the challenges of an event."""
     event = Event.query.filter_by(id=event_id).first_or_404()
-    projects = Project.query.filter_by(event_id=event.id, is_hidden=False)
+    projects = Project.query.filter_by(event_id=event.id, is_hidden=False) \
+                            .order_by(Project.ident, Project.name)
     if not current_user or current_user.is_anonymous or not current_user.is_admin:
         projects = projects.filter(Project.progress >= 0)
     challenges = [ p.as_challenge() for p in projects ]
@@ -335,8 +337,8 @@ def event_print(event_id):
     now = datetime.utcnow().strftime("%d.%m.%Y %H:%M")
     event = Event.query.filter_by(id=event_id).first_or_404()
     eventdata = Project.query.filter_by(event_id=event_id, is_hidden=False)
-    projects = eventdata.filter(Project.progress > 0).order_by(Project.name)
-    challenges = eventdata.filter(Project.progress == 0).order_by(Project.hashtag, Project.name)
+    projects = eventdata.filter(Project.progress > 0).order_by(Project.ident, Project.name)
+    challenges = eventdata.filter(Project.progress == 0).order_by(Project.ident, Project.name)
     return render_template('public/eventprint.html', active='print',
                            projects=projects, challenges=challenges,
                            current_event=event, curdate=now)
