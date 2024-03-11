@@ -890,6 +890,10 @@ nav .nav-login {
 .project-tips.alert-light {
   color: black;
 }
+.project-page .project-ident {
+  font-size: 250%;
+  opacity: 0.8;
+}
 .project-page .project-team {
   font-weight: normal;
   color: #999;

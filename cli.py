@@ -63,6 +63,7 @@ def numerise(event: int, clear: bool, primes: bool, challenges: bool):
                     .order_by(Project.progress.desc()) \
                     .order_by(Project.name)
         ix = 0
+        count = projects.count()
         for c in projects:
             if c.is_hidden: continue
             if challenges and not c.is_challenge: continue
@@ -71,14 +72,14 @@ def numerise(event: int, clear: bool, primes: bool, challenges: bool):
                 c.ident = ''
             else:
                 prefix = ''
-                if len(projects) > 99 and nq[ix] < 100:
+                if count > 99 and nq[ix] < 100:
                     prefix = prefix + '0'
-                if len(projects) > 9 and nq[ix] < 10:
+                if count > 9 and nq[ix] < 10:
                     prefix = prefix + '0'
                 c.ident = prefix + str(nq[ix])
             c.save()
             ix = ix + 1
-        print("Enumerated %d projects." % projects.count())
+        print("Enumerated %d projects." % count)
 
 
 @click.command()

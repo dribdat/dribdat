@@ -214,7 +214,7 @@ def navigate_around_project(project, as_challenge=False):
     go_nav = {}
     projects = Project.query \
         .filter_by(event_id=project.event_id, is_hidden=False) \
-        .order_by(Project.score.desc(), Project.name.asc())
+        .order_by(Project.ident, Project.score.desc(), Project.name)
     p_prev = p_next = p_found = None
     for p in projects:
         if p_found:
