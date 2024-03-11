@@ -874,14 +874,18 @@ nav .nav-login {
 
 /* --- Project page --- */
 
-.project-page .project-name {
-  font-weight: bold;
+.project-page .project-headline {
   margin-top: 0.5em;
 }
-.project-page .project-name h2 {
+.project-page .project-name {
   text-shadow: 1px 1px 1px white;
   font-weight: bold;
   font-size: 3rem;
+}
+.project-page .project-summary {
+  font-size: 125%;
+  hyphens: auto;
+  width: 85%;
 }
 .project-tips.alert-light {
   color: black;

@@ -44,7 +44,7 @@
 <div class="honeycomb mb-5">
   <a name="projects"></a>
   <div class="ibws-fix">
-  {% for project in projects %}
+  {% for project in summaries %}
     {{ misc.render_project_hexagon(project) }}
   {% endfor %}
   {% if project_count % 2 != 0 %}

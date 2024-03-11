@@ -145,11 +145,11 @@
     </div>
   {% endif %}
 
-  <div class="project-name">
+  <div class="project-headline">
   {% if project.logo_icon %}
       <i class="fa fa-{{project.logo_icon}}"></i>
   {% endif %}
-    <h2>{{project.name}}</h2>
+    <h2 class="project-name">{{project.name}}</h2>
 
   {% if project.summary %}
     <p class="project-summary">

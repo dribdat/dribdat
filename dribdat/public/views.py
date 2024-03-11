@@ -193,19 +193,18 @@ def user_cert():
 def event(event_id):
     """Show an event."""
     event = Event.query.filter_by(id=event_id).first_or_404()
-    projects = Project.query.filter_by(event_id=event_id, is_hidden=False)
+    # Sort visible projects by reverse score, then name
+    projects = Project.query \
+        .filter_by(event_id=event_id, is_hidden=False) \
+        .order_by(Project.score.desc(), Project.name.asc())
+    # Embedding view
     if request.args.get('embed'):
         return render_template("public/embed.html",
                                current_event=event, projects=projects)
-    summaries = [p.data for p in projects]
-    # TODO: would not a order_by be more efficient?
-    # Sort projects by reverse score, then name
-    summaries.sort(key=lambda x: (
-        -x['score'] if isinstance(x['score'], int) else 0,
-        x['name'].lower()))
-    project_count = projects.count()
+    # TODO: seems inefficient? We only need a subset of the data here:
+    summaries = [ p.data for p in projects ]
     return render_template("public/event.html", current_event=event,
-                           projects=summaries, project_count=project_count,
+                           summaries=summaries, project_count=len(summaries),
                            active="projects")
 
 
