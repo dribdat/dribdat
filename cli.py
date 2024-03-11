@@ -146,7 +146,28 @@ def register(filename, testonly=False):
     with create_app().app_context():
         created, updated = import_users_csv(filename, testonly)
         print('%d users imported, %d were updated')
-        
+
+
+@click.command()
+@click.argument('deleteusers', required=False)
+def cleanup(deleteusers=True):
+    """Cull inactive accounts on the system."""
+    with create_app().app_context():
+        all_inactive = [ u for u in User.query.filter_by(active=False).all() ]
+        print('%d inactive user accounts found' % len(all_inactive))
+        delcount = 0
+        if deleteusers:
+            print('The following inactive users with no content are being deleted:')
+            print('---------------------------------------------------------------')
+            print('username,fullname,email,webpage_url')
+            for u in all_inactive:
+                if not u.get_score() and not u.posted_challenges():
+                    u.delete()
+                    print(','.join([u.username, u.fullname or '', u.email, u.webpage_url or '']))
+                    delcount = delcount + 1
+            print('---------------------------------------------------------------')
+        print('%d user accounts cleaned up' % delcount)
+
 
 @click.group(name='j')
 def cli():
@@ -159,6 +180,7 @@ cli.add_command(numerise)
 cli.add_command(register)
 cli.add_command(imports)
 cli.add_command(exports)
+cli.add_command(cleanup)
 
 if __name__ == '__main__':
     cli()
