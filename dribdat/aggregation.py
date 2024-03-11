@@ -145,15 +145,9 @@ def SyncProjectData(project, data):
     if 'source_url' in data and data['source_url'] and \
        (not project.source_url):
         project.source_url = data['source_url'][:2048]
-        # Add link to the Pitch
-        if not project.longtext:
-            project.longtext = project.source_url
     if 'webpage_url' in data and data['webpage_url'] and \
        (not project.webpage_url):
         project.webpage_url = data['webpage_url'][:2048]
-        # Add link to the Pitch
-        if not project.longtext:
-            project.longtext = project.webpage_url
     if 'contact_url' in data and data['contact_url'] and \
        (not project.contact_url):
         project.contact_url = data['contact_url'][:2048]
