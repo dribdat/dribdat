@@ -1012,12 +1012,14 @@ nav .nav-login {
 
 .project-page .latest-drib { padding: 1em; }
 
-.nav-projects-abs-prev { visibility: hidden;
-  position: absolute; top: 16em; left: -0.3em; height: 6em;
+.nav-projects-abs-prev, .nav-projects-abs-next { 
+  visibility: hidden;
+  position: absolute; 
+  height: 6em;
+  top: 16em; 
 }
-.nav-projects-abs-next { visibility: hidden;
-  position: absolute; top: 16em; right: -0.3em; height: 6em;
-}
+.nav-projects-abs-prev { left: -0.3em; }
+.nav-projects-abs-next { right: -0.3em; }
 
 /* -- Timeline (dribs) -- */
 
@@ -1164,9 +1166,23 @@ nav .nav-login {
   overflow: hidden;
   position: sticky;
 }
+.project-home .modal-body iframe,
 .project-page .resizable iframe {
   width: 100% !important; height: 100% !important;
   border: none !important;
+}
+.modal-fullscreen .modal-body {
+  padding: 0px;
+}
+.modal-fullscreen .modal-dialog {
+    max-width: 100%;
+    margin: 0;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 100vh;
+    display: flex;
 }
 @media (max-width: 1000px) {
   .project-page .resizable {

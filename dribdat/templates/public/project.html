@@ -221,9 +221,13 @@
       {{ project.webembed|safe }}
       <div class="win-size-grip"></div>
     </div>
+    <a href="#top" class="btn btn-small btn-default" 
+       data-toggle="modal" data-target="#webembedModal" 
+       aria-label="Full screen view" title="Press Esc to close">
+       &#x26F6;&nbsp;&nbsp;Fullscreen</a>
     <a href="{{ project.webpage_url }}" class="btn btn-small btn-default" 
-       target="_blank" rel="noopener noreferrer">
-       &#x26F6;&nbsp;&nbsp;Open&nbsp;fullscreen</a>
+       target="_blank" rel="noopener noreferrer" title="Open source file">
+       &#x2193;&nbsp;&nbsp;Download</a>
   {% endif %}
 
 
@@ -481,7 +485,7 @@
     <i class="fa fa-arrow-left" aria-hidden="true"></i>
     {{go_nav.prev.name}}</a>
 
-  <a class="nav-projects-abs-prev btn btn-secondary" href="{{go_nav.prev.url}}" title="Previous project in queue">
+  <a class="nav-projects-abs-prev btn btn-secondary border-primary" href="{{go_nav.prev.url}}" title="Previous project in queue">
     <i class="fa fa-arrow-left" aria-hidden="true"></i></a>
 {% endif %}
 {% if not project.event.lock_resources %}
@@ -499,7 +503,7 @@
     <i class="fa fa-arrow-right" aria-hidden="true"></i>
     {{go_nav.next.name}}</a>
 
-  <a class="nav-projects-abs-next btn btn-secondary" href="{{go_nav.next.url}}" title="Next project in queue">
+  <a class="nav-projects-abs-next btn btn-secondary border-primary" href="{{go_nav.next.url}}" title="Next project in queue">
     <i class="fa fa-arrow-right" aria-hidden="true"></i></a>
 {% endif %}
 </center>
@@ -517,6 +521,24 @@
         </div>
         <div class="modal-footer text-center">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">OK</button>
+        </div>
+      </div>
+    </div>
+  </div><!-- /.modal -->
+{% endif %}
+
+{% if project.is_webembed %}
+  <div class="modal fade modal-fullscreen" id="webembedModal" role="dialog" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header collapse">
+          <h5 class="modal-title">{{ project.name }} - {{ current_event.name }}</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body" style="width:100%;height:100%">
+          {{ project.webembed|safe }}
         </div>
       </div>
     </div>
