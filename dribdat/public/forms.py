@@ -113,7 +113,7 @@ class ProjectPost(FlaskForm):
     """Add a post to a project."""
 
     id = HiddenField('id')
-    has_progress = BooleanField(u"Let's go!")
+    has_progress = BooleanField(u"Level up")
     note = TextAreaField(
         u'What are you working on right now?',
         [length(max=280), DataRequired()],

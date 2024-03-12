@@ -1158,7 +1158,7 @@ nav .nav-login {
 /* Project embedded content */
 .project-page .resizable {
   width: 100%;
-  height: 640px;
+  height: 584px;
   box-shadow: 5px 5px 10px #535353;
   margin-bottom: 1em;
   border: 1px silver;
@@ -1704,7 +1704,6 @@ a.go-up {
   color: #fff;
 }
 .profile-projects {
-  width: 100%;
   padding-top: 1em;
   padding-left: 2.3em;
   border-radius: 20px;
@@ -1981,9 +1980,10 @@ Instruction page
 }
 .form-project-confirm label {
   clear: both;
+  /*
   margin-top: 0.5em;
   cursor: pointer;
-  padding: 0 0 0 2em;
+  padding: 0 0 0 2em;*/
 }
 .projectpost alert {
   margin-top: 0.5em;

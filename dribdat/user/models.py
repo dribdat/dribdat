@@ -793,8 +793,8 @@ class Project(PkModel):
                         project_id=self.id
                     ).order_by(Activity.timestamp.desc())
         dribs = []
-        prev = None
         only_active = False  # show dribs from inactive users
+        prev = { 'progress': None, 'title': None, 'text': None }
         for a in activities:
             a_parsed = getActivityByType(a, only_active)
             if a_parsed is None:
@@ -805,17 +805,7 @@ class Project(PkModel):
                 if prev['title'] == title and prev['text'] == text:
                     # if prev['date']-a.timestamp).total_seconds() < 120:
                     continue
-                # Show changes in progress
-                if prev['progress'] != a.project_progress:
-                    proj_stage = getStageByProgress(a.project_progress)
-                    if proj_stage is not None:
-                        dribs.append({
-                            'title': proj_stage['phase'],
-                            'date': a.timestamp,
-                            'icon': 'arrow-up',
-                            'name': 'progress',
-                        })
-            prev = {
+            cur = {
                 'icon': icon,
                 'title': title,
                 'text': text,
@@ -826,7 +816,28 @@ class Project(PkModel):
                 'progress': a.project_progress,
                 'id': a.id,
             }
-            dribs.append(prev)
+            dribs.append(cur)
+            # Show changes in progress
+            if prev['progress'] != a.project_progress and a.project_progress > 0:
+                proj_stage = getStageByProgress(a.project_progress)
+                if proj_stage is not None:
+                    dribs.append({
+                        'title': proj_stage['phase'],
+                        'date': a.timestamp,
+                        'icon': 'arrow-up',
+                        'name': 'progress',
+                    })
+            prev = cur
+
+        # Start all logs at stage 0
+        if activities.count() > 0:
+            dribs.append({
+                'title': getStageByProgress(0)['phase'],
+                'date': activities[-1].timestamp,
+                'icon': 'arrow-up',
+                'name': 'progress',
+            })
+        # Add event start and finish to log
         if self.event.has_started or self.event.has_finished:
             dribs.append({
                 'title': "Event started",

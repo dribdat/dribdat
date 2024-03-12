@@ -5,9 +5,9 @@ stages:
   -
     id: 0
     name: CHALLENGE
-    phase: Ask
+    phase: Challenge
     description: 🚧 Define questions to answer with data about issues that matter.
-    tip: Advance to the next stage by posting an Update.
+    tip: Advance to the next stage by posting an update.
     conditions:
       validate:
         -
@@ -23,10 +23,10 @@ stages:
         - Acquiring data to meet the challenge is realistic within our time limits.
   -
     id: 5
-    name: NEW
-    phase: Find
+    name: PROJECT
+    phase: Project
     description: 👪 Collecting resources together in a shared space.
-    tip: Find tips, examples and resources to inspire your team.
+    tip: Find examples and resources to inspire your team.
     conditions:
       validate:
         -
@@ -39,8 +39,8 @@ stages:
         - We are obtaining data, and sharing it in a space accessible to everyone.
   -
     id: 10
-    name: RESEARCHED
-    phase: Get
+    name: RESEARCH
+    phase: Research
     description: ⚗️ Scoping of data collection and prototyping strategy.
     tip: Write down what you are doing regularly to help stay on track.
     conditions:
@@ -54,8 +54,8 @@ stages:
         - A shared repository has been set up, your work on code and data is backed up.
   -
     id: 20
-    name: SKETCHED
-    phase: Verify
+    name: SKETCH
+    phase: Sketching
     description: 🎨 Evaluating and explaining to fellow humans.
     tip: The more you share, the more feedback you will get.
     conditions:
@@ -69,10 +69,10 @@ stages:
         - Make wireframes or sketches of your idea, attaching it here as an image.
   -
     id: 30
-    name: PROTOTYPED
-    phase: Clean
+    name: PROTOTYPE
+    phase: Prototype
     description: 🐣 Efforts to improve the quality of the output.
-    tip: Give credit to everyone involved and all sources used.
+    tip: There is no such thing as a stupid question. Just ask if you are stuck.
     conditions:
       validate:
         -
@@ -84,10 +84,10 @@ stages:
         - Link any third-party resources, data schema or code frameworks in your documentation.
   -
     id: 40
-    name: LAUNCHED
-    phase: Analyse
+    name: LAUNCH
+    phase: Launch
     description: 🎈 Gaining insights on the problem defined in the beginning.
-    tip: There is no such thing as a stupid question. Just ask.
+    tip: Make sure to give credit to everyone involved and document all sources used.
     conditions:
       validate:
         -
@@ -103,7 +103,7 @@ stages:
     name: LIVE
     phase: Share
     description: 🚀 Thinking about audience and making the results public.
-    tip: There are many ways your explorations may continue.
+    tip: Think of next steps and action points (take-aways) from your work.
     conditions:
       validate:
         -
