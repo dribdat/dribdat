@@ -275,7 +275,7 @@ def get_challenge(project_id):
         return redirect(purl)
     preview_at = challenge.id
     p_date = timesince(challenge.updated_at)
-    flash('Showing the Challenge version of this project (posted %s)' % p_date, 'info')
+    flash('This Challenge was posted %s' % p_date, 'info')
     go_nav = navigate_around_project(project, True)
     return render_template(
         'public/project.html', current_event=challenge.event, project=challenge,

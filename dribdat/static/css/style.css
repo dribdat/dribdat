@@ -892,7 +892,11 @@ nav .nav-login {
 }
 .project-page .project-ident {
   font-size: 250%;
-  opacity: 0.8;
+  opacity: 0.6;
+  width: 0px;
+  line-height: 0px;
+  margin-left: -3em;
+  text-align: right;
 }
 .project-page .project-team {
   font-weight: normal;

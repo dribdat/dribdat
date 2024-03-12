@@ -12,7 +12,11 @@
 
 <!-- Based on Hexagon Tiles by Graham Pyne http://codepen.io/gpyne/pen/iElhp/ -->
 {% macro render_project_hexagon(project) %}
+	{% if project.is_challenge %}
+	<a href="{{ url_for('project.get_challenge', project_id=project.id) }}"
+	{% else %}
 	<a href="{{ url_for('project.project_view', project_id=project.id) }}"
+	{% endif %}
 		 class="hexagon {{
 		 	'challenge' if project.is_challenge else 'project'
 		 }}{{
