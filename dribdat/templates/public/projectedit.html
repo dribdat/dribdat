@@ -59,6 +59,14 @@
         <i class="fa fa-pencil text-info" area-hidden="true"></i>
         Editor: <b>on</b>
     </button>
+    {%- if not project.is_challenge -%}
+      <button data-do="clear" type="button" 
+        class="btn btn-light hidden mt-2 mb-1" aria-pressed="false"
+        title="You can still view the previous version later">
+          <i class="fa fa-circle-o text-info" area-hidden="true"></i>
+          Reset
+      </button>
+    {%- endif -%}
   </span>
   {% endif %}
 

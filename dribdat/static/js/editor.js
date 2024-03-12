@@ -289,9 +289,6 @@
     }); // -change
   }); // -#uploadImage Files
 
-
-
-
   // Admin button tips
   $('.admin-defaults button').click(function() {
     $('input#name').val($(this).text());
@@ -423,6 +420,12 @@
     // Handle activation button
     $activateEditor.find('[data-do="activate"]')
                    .show().on('click', activate_editor);
+
+    // Clear button
+    $activateEditor.find('[data-do="clear"]').show().click(function() {
+      $longtext.val('');
+      if (window.toasteditor) { window.toasteditor.reset(); }
+    });
 
     // Enable by default
     if (localStorage.getItem('markdownhelper') === null) {
