@@ -76,9 +76,13 @@
   }); // -autotext_url each
 
   // Allow project progress on acknowledge
-  $('.form-project-post label[for="has_progress"] input').click();
-  /*
-  $('.form-project-post label[for="has_progress"]').each(function() {
+  if ($('.projectpost .stage-conditions .stage-no').length == 0) {
+    $('.form-project-post label[for="has_progress"] input').click();
+  } else {
+    $('.form-project-post label[for="has_progress"]').parent().hide();
+  }
+  /*each(function() {
+    /*
     var vparent = $(this).parent().parent().hide();
     var vinput = $(this).parent().find('input')[0];
     vinput.checked = false;
@@ -174,7 +178,7 @@
               $dialog.modal('hide');
             } else if ($(this).data('target') == 'post') {
               // Append to post
-              var imglink = '![Image caption](' + response + ')';
+              var imglink = '![  ](' + response + ')';
               $('#note').val(imglink + ' ' + $('#note').val());
               $dialog.modal('hide');
             } else if ($(this).data('target') == 'pitch') {

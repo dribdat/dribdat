@@ -818,9 +818,9 @@ class Project(PkModel):
             }
             dribs.append(cur)
             # Show changes in progress
-            if prev['progress'] != a.project_progress and a.project_progress > 0:
+            if a.project_progress and prev['progress'] != a.project_progress:
                 proj_stage = getStageByProgress(a.project_progress)
-                if proj_stage is not None:
+                if a.project_progress > 0 and proj_stage is not None:
                     dribs.append({
                         'title': proj_stage['phase'],
                         'date': a.timestamp,

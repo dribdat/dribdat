@@ -15,9 +15,9 @@
       </button>
 
       <div class="resource-list-suggestions container-fluid p-1">
-        <h5 class="category-tip m-0 clearfix"
+        <h5 class="category-tip m-0 mb-2 clearfix"
             title="This tip is only visible to you and your team">
-          <span class="user-score" style="background:white">&#x1F4A1;</span>{{stage.tip}}
+          {{stage.tip}}
         </h5>
         <div class="row flex-row flex-nowrap">
           {% for project in suggestions %}
@@ -74,26 +74,6 @@
     {% else %}
       {% if not all_valid %}
       <div class="form-project-stage">
-        <h5 class="mb-3">
-          Your project is at stage <a href="{{ url_for('public.event_stages', event_id=current_event.id) }}#{{ stage.id }}" target="_blank">
-            <b>&#128161; {{stage.phase}}</b>
-          </a>
-          &mdash; to reach the next one:
-        </h5>
-        {% for item in stage.conditions.validate %}
-          {% if item.valid %}
-            <div class="alert alert-success" role="alert">
-              <i class="fa fa-thumbs-up"></i>
-              {{ item.help }}
-            </div>
-          {% else %}
-            <div class="alert alert-warning" role="alert">
-              <i class="fa fa-paw"></i>
-              {{ item.help }}
-            </div>
-          {% endif %}
-        {% endfor %}
-
         <p class="text-center mt-3 mb-0 hidden"><small>
           &#x1F3AF;
           To Post on another project, <b>Join</b> it or visit
@@ -129,7 +109,7 @@
     </button>
   {% endif %}
 
-  <div class="form-project-post" id="search" action="/api/project/search.json">
+  <div class="form-project-post">
     {% if stage %}
       {{ render_form(url_for('project.project_post', project_id=project.id), form) }}
     {% else %}

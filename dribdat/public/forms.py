@@ -116,7 +116,7 @@ class ProjectPost(FlaskForm):
     id = HiddenField('id')
     has_progress = BooleanField(u"Level up")
     note = TextAreaField(
-        u'What are you working on right now?',
+        u'What was the last thing you did?',
         [length(max=280), DataRequired()],
         render_kw={'maxlength': 280},
         description=u'A short note for your project log.')

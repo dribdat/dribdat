@@ -770,14 +770,14 @@ nav .nav-login {
 /* .project.hexagon:nth-child(odd) { background-color: rgba(230, 210, 200, 0.95); } */
 
 /* --- Hexagon default palette --- */
-.project.hexagon  { background-color: #f5d1e4; } /* primary color */
-.hexagon.stage-5  { background-color: #f5d1e4; }
-.hexagon.stage-10 { background-color: #e3d0e3; }
-.hexagon.stage-20 { background-color: #e0c9ca; }
-.hexagon.stage-30 { background-color: #e8b6a6; }
-.hexagon.stage-40 { background-color: #f1cfad; }
-.hexagon.stage-50 { background-color: #f6e8c0; }
-/* https://colorkit.co/palette/f5d1e4-e3d0e3-e0c9ca-e8b6a6-f1cfad-f6e8c0/ */
+.project.hexagon  { background-color: #ebd8c3; } /* primary color */
+.hexagon.stage-5  { background-color: #ebd8c3; }
+.hexagon.stage-10 { background-color: #ffeeba; }
+.hexagon.stage-20 { background-color: #ffd9ba; }
+.hexagon.stage-30 { background-color: #ffe7ba; }
+.hexagon.stage-40 { background-color: #fff5ba; }
+.hexagon.stage-50 { background-color: #fbffba; }
+/* hhttps://colorkit.co/palette/ffeeba-ffd9ba-ffe7ba-fff5ba-fbffba/ */
 
 /* --- Tooltips used on honeycomb --- */
 
@@ -801,13 +801,18 @@ nav .nav-login {
   text-shadow: 1px 1px 1px white;
   font-family: monospace;
 }
-.hexagon .hexagontent span.project-hashtag {
+.hexagon .hexagontent span.project-ident {
   font-size: 90%;
+  opacity: 0.5;
+  text-shadow: 1px 1px 1px white;
+  font-family: monospace;
   padding-top: 0.3em;
 }
-.hexagon:hover .hexagontent span.project-hashtag {
+/*
+.hexagon:hover .hexagontent span.project-ident {
   visibility: hidden;
 }
+*/
 .tooltip .tooltip-inner img {
   max-width: 100%;
   max-height: 13em;
@@ -891,12 +896,11 @@ nav .nav-login {
   color: black;
 }
 .project-page .project-ident {
+  display: inline-block;
+  margin-bottom: 0.5em;
+  line-height: 0px;
   font-size: 250%;
   opacity: 0.6;
-  width: 0px;
-  line-height: 0px;
-  margin-left: -3em;
-  text-align: right;
 }
 .project-page .project-team {
   font-weight: normal;
@@ -1707,11 +1711,15 @@ a.go-up {
   text-decoration: none;
   color: #fff;
 }
+.project-tips {
+  margin-top: -4em;
+}
+.project-tips,
 .profile-projects {
-  padding-top: 1em;
-  padding-left: 2.3em;
-  border-radius: 20px;
-  border: 1px dotted rgba(0,0,0,0.5);
+  margin-top: 1em;
+  padding: 1em 1.4em;
+  border-radius: 0px;
+  border-left: 1px dotted rgba(0,0,0,0.5);
 }
 .home-page .profile-projects {
   padding-left: 25px;

@@ -159,7 +159,7 @@
     {% endif %}
   {% endif %}
 {% else %}
-  <a name="projects"><h1>Projects</h1></a>
+  <a name="projects"><h1>Teams</h1></a>
   <div class="profile-projects honeycomb">
     <div class="row ibws-fix">
     {% for project in projects %}
@@ -170,23 +170,11 @@
 {% endif %}
 
 {% if submissions %}
-  <a name="challenges"></a>
-  <h2 class="mt-5 text-center">Challenges</h2>
-  <div class="profile-projects container-fluid">
-    <div class="row flex-row flex-nowrap">
+  <a name="challenges"><h1>Challenges</h1></a>
+  <div class="profile-projects profile-challenges honeycomb">
+    <div class="row ibws-fix">
     {% for project in submissions %}
-      <a class="col-md-5 ms-auto card project"
-        {%- if project.image_url %}
-          style="background-image:url('{{project.image_url}}'); padding-left:100px"
-        {%- endif %}
-        href="{{ url_for('project.project_view', project_id=project.id) }}">
-
-        <div class="card-body">
-          <h5 class="card-title">{{ project.name }}</h5>
-          <p class="card-text">{{ project.summary }}</p>
-        </div>
-
-      </a>
+      {{ misc.render_project_hexagon(project) }}
     {% endfor %}
     </div>
   </div><!-- /profile-challenges -->
@@ -210,7 +198,7 @@
     </div>
   {% endif %}
 {% else %}
-<a name="timeline"><h1>Personal log</h1></a>
+<a name="timeline"><h1 onclick="this.innerHTML='Captain\'s Log, supplemental';console.log('To boldly go...')">Dribs</h1></a>
 <div class="jumbotron">
 
   <section class="timeline">

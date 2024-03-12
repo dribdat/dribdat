@@ -155,8 +155,8 @@
   $('.honeycomb .hexagon[data-toggle="tooltip"]').each(function() {
     var content = (
         '<div>' + $(this).data('summary') + '</div>' +
-        ($(this).data('ident') ?
-          '<span>' + $(this).data('ident') + '</span>' : '') +
+        //($(this).data('ident') ?
+        //  '<span>' + $(this).data('ident') + '</span>' : '') +
         ($(this).data('imageurl') ?
           '<img src="' +
             $(this).data('imageurl') + '">' : '') +
