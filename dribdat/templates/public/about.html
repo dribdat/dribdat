@@ -14,7 +14,7 @@
     </div>
     <div class="row">
       <h1 style="font-weight:bold; font-family:monospace">
-        ? About dribdat_
+        ? help dribdat
       </h1>
     </div>
 
@@ -42,13 +42,15 @@
     </div><!-- /organiser -->
 
     <center>
-      <a href="https://docs.dribdat.cc/usage" class="btn btn-light">📖 User handbook</a>
+      <a href="https://docs.dribdat.cc/usage" class="btn btn-success">📖 User handbook</a>
       <div class="btn-group m-3">
-        <a href="https://github.com/dribdat/dribdat/issues" class="btn btn-warning">Issues</a>
-        <a href="https://opencollective.com/dribdat/updates" class="btn btn-dark">News &raquo;</a>
+        <a href="https://github.com/dribdat/dribdat/issues" class="btn btn-secondary">Issues &raquo;</a>
+        <a href="https://opencollective.com/dribdat/updates" class="btn btn-secondary">News &raquo;</a>
       </div>
       {% if config.DRIBDAT_ALLOW_EVENTS %}
-        <a href="{{ url_for('public.event_start') }}" class="btn btn-success"> 📅 Start an event</a>
+        <a href="{{ url_for('public.event_start') }}" class="btn btn-info"> 
+          <i class="fa fa-calendar mr-2" aria-hidden="true"></i>
+          Start an event</a>
       {% endif %}
     </center>
 
