@@ -196,7 +196,7 @@ def event(event_id):
     # Sort visible projects by reverse score, then name
     projects = Project.query \
         .filter_by(event_id=event_id, is_hidden=False) \
-        .order_by(Project.ident, Project.score.desc(), Project.name)
+        .order_by(Project.score.desc(), Project.ident, Project.name)
     # Embedding view
     if request.args.get('embed'):
         return render_template("public/embed.html",

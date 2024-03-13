@@ -231,25 +231,6 @@
   {% endif %}
 
 
-  {% if project.autotext %}
-    <div id="readme-md" aria-labelledby="readme-tab-md">
-      <div class="project-autotext"><div class="cover"></div>
-        {{project.autotext|markdown}}
-      </div>
-
-      {% if not project.event.lock_resources %}
-        <div class="alert alert-light text-center">
-          This content is a preview from an
-          <a href="{{ project.autotext_url }}" target="_blank" rel="noopener noreferrer" title="Source link">
-            external site</a>.
-        </div>
-      {% endif %}
-
-      <a href="#top" class="go-up" title="Scroll up!"><i class="fa fa-thumbs-up" aria-hidden="true"></i>&nbsp;<i class="fa fa-thumbs-up" aria-hidden="true"></i></a>
-    </div>
-  {% endif %}
-
-
   {% if project.longtext %}
     <div id="project-md" aria-labelledby="project-tab-md">
       <div class="project-longtext">
@@ -284,20 +265,24 @@
         </div>
       {% endif %}
       </div>
-      {% if allow_edit %}
-        <center>
-          <a class="btn btn-lg btn-success" data-toggle="modal" data-target="#addUser"
-            title="Share an invite link to this team">
-            <i class="fa fa-child" aria-hidden="true"></i>
-            Invite</a>
-          <a href="{{ url_for('project.project_unstar_me', project_id=project.id) }}" 
-             class="project-star btn btn-lg btn-light"
-            title="Click to stop being a member of the project"
-            onclick="return confirm('Are you sure you wish to leave this team?')">
-            Leave
-          </a>
-        </center>
+    </div>
+  {% endif %}
+
+  {% if project.autotext %}
+    <div id="readme-md" aria-labelledby="readme-tab-md">
+      <div class="project-autotext scroll-after-500"><div class="cover"></div>
+        {{project.autotext|markdown}}
+      </div>
+
+      {% if not project.event.lock_resources %}
+        <div class="alert alert-light text-center">
+          This content is a preview from an
+          <a href="{{ project.autotext_url }}" target="_blank" rel="noopener noreferrer" title="Source link">
+            external site</a>.
+        </div>
       {% endif %}
+
+      <a href="#top" class="go-up" title="Scroll up!"><i class="fa fa-thumbs-up" aria-hidden="true"></i>&nbsp;<i class="fa fa-thumbs-up" aria-hidden="true"></i></a>
     </div>
   {% endif %}
 
@@ -404,33 +389,44 @@
 <center class="project-footer-controls">
 
 <div role="group" aria-label="Project controls" class="btn-group project-controls">
-  <div class="btn-group">
-
-    {% if allow_post %}
-    <a href="{{ url_for('project.project_post', project_id=project.id) }}" class="btn btn-lg btn-info"
-       title="Write a progress update">
-      <i class="fa fa-paper-plane" aria-hidden="true"></i>
-      Post</a>
-    {% endif %}
-    {% if allow_edit %}
-      <a href="{{ url_for('project.project_edit', project_id=project.id) }}" class="btn btn-lg btn-warning"
-         title="Edit basic project data">
-        <i class="fa fa-pencil" aria-hidden="true"></i>
-        Edit</a>
-      <a href="{{ url_for('project.project_details', project_id=project.id) }}" class="btn btn-lg btn-warning"
-         title="Edit project details" style="opacity:0.9">
-        <i class="fa fa-magic" aria-hidden="true"></i>
-        Details</a>
-    {% endif %}
-    {% if allow_edit and project.is_autoupdateable %}
-      <a href="{{ url_for('project.project_autoupdate', project_id=project.id) }}"
-         title="Refresh external Readme data" class="btn btn-lg btn-dark">
-        <i class="fa fa-refresh" aria-hidden="true"></i>
-        Sync</a>
-    {% endif %}
-
-  </div>
+  {% if allow_post %}
+  <a href="{{ url_for('project.project_post', project_id=project.id) }}" class="btn btn-lg btn-info"
+     title="Write a progress update">
+    <i class="fa fa-paper-plane" aria-hidden="true"></i>
+    Post</a>
+  {% endif %}
+  {% if allow_edit %}
+    <a href="{{ url_for('project.project_edit', project_id=project.id) }}" class="btn btn-lg btn-warning"
+       title="Edit basic project data">
+      <i class="fa fa-pencil" aria-hidden="true"></i>
+      Edit</a>
+    <a href="{{ url_for('project.project_details', project_id=project.id) }}" class="btn btn-lg btn-warning"
+       title="Edit project details" style="opacity:0.9">
+      <i class="fa fa-magic" aria-hidden="true"></i>
+      Details</a>
+  {% endif %}
+  {% if allow_edit and project.is_autoupdateable %}
+    <a href="{{ url_for('project.project_autoupdate', project_id=project.id) }}"
+       title="Refresh external Readme data" class="btn btn-lg btn-success">
+      <i class="fa fa-refresh" aria-hidden="true"></i>
+      Sync</a>
+  {% endif %}
 </div><!-- / .project-controls -->
+
+{% if allow_edit %}
+  <div role="group" aria-label="Team controls" class="ml-3 btn-group project-controls">
+    <a class="btn btn-lg btn-light" data-toggle="modal" data-target="#addUser"
+      title="Share an invite link to this team">
+      <i class="fa fa-child" aria-hidden="true"></i>
+      Invite</a>
+    <a href="{{ url_for('project.project_unstar_me', project_id=project.id) }}" 
+       class="project-star btn-lg btn-light"
+      title="Click to stop being a member of the project"
+      onclick="return confirm('Are you sure you wish to leave this team?')">
+      Exit
+    </a>
+  </div>
+{% endif %}
 
 {% if current_user.is_admin %}
 <div role="group" aria-label="Project administration" class="ml-3 btn-group admin-area" title="Admin area">

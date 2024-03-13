@@ -9,16 +9,13 @@
 <h1 class="huge">Challenges</h1>
 
   {% if projects %}
-    <div class="row category-container">
-
-      <div class="honeycomb mb-5 pb-5">
-          <div class="row ibws-fix">
-          {% for project in projects %}
-              {{ misc.render_project_hexagon(project) }}
-          {% endfor %}
-          </div>
-      </div><!-- /honeycomb -->
-    </div>
+    <div class="honeycomb mb-5 pb-5">
+        <div class="ibws-fix">
+        {% for project in projects %}
+            {{ misc.render_project_hexagon(project) }}
+        {% endfor %}
+        </div>
+    </div><!-- /honeycomb -->
   {% endif %}
 
   <center class="mt-5">

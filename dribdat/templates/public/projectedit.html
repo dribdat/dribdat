@@ -21,7 +21,7 @@
       <a href="{{ url_for('project.project_edit', project_id=project.id) }}" 
          title="Switch to editing of project basic information" 
          class="btn btn-lg btn-light {% if not detail_view %}disabled hidden{% endif %}">
-        <i class="fa fa-pencil" aria-hidden="true"></i>
+        <i class="fa fa-arrow-left" aria-hidden="true"></i>
         Basics</a>
       <a href="{{ url_for('project.project_details', project_id=project.id) }}" 
          title="Switch to editing of project details" 
@@ -34,7 +34,9 @@
   <h2 class="huge">
     Edit
     <a href="{{ url_for('project.project_view', project_id=project.id) }}" title="Back to project">
-      {%- if project.event.lock_resources -%}
+      {%- if detail_view -%}
+      details
+      {%- elif project.event.lock_resources -%}
       resource
       {%- elif project.is_challenge -%}
       challenge
@@ -42,7 +44,6 @@
       project
       {%- endif -%}
     </a>
-    {% if detail_view %}details{% else %}basics{% endif %}
   </h2>
 
   {% if not detail_view %}
