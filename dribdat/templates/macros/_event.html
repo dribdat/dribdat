@@ -12,11 +12,7 @@
 
 <!-- Based on Hexagon Tiles by Graham Pyne http://codepen.io/gpyne/pen/iElhp/ -->
 {% macro render_project_hexagon(project) %}
-	{% if project.is_challenge %}
-	<a href="{{ url_for('project.get_challenge', project_id=project.id) }}"
-	{% else %}
 	<a href="{{ url_for('project.project_view', project_id=project.id) }}"
-	{% endif %}
 		 class="hexagon {{
 		 	'challenge' if project.is_challenge else 'project'
 		 }}{{
@@ -30,25 +26,7 @@
 		 {% endif %}
 		 {{ render_project_tooltip(project) }}
 		>
-		<div class="hexagontent {{
-	        'text-md' if 32 < project.name|length else 'text-sm' if 42 < project.name|length
-		}}{{ ' with-icon' if project.logo_icon or project.image_url }}">
-			{% if project.score and project.score > 90 %}
-				<span class="team-boost" title="Skyrocketing">🚀</span>
-			{% elif project.score and project.score > 69 %}
-				<span class="team-boost" title="Trending">🔥</span>
-			{% endif %}
-			<span class="project-name">{{ project.name|truncate(64, True, '..') }}</span>
-			{% if project.image_url or project.logo_icon or project.ident %}
-				<div class="hexaicon"{% if project.image_url %} style="background-image:url('{{project.image_url|quote_plus}}')"{% endif %}>
-					{% if project.ident %}
-						<span class="project-ident">{{ project.ident }}</span>
-					{% elif project.logo_icon %}
-						<i class="fa fa-{{project.logo_icon}}"></i>
-					{% endif %}					
-				</div>
-			{% endif %}
-		</div>
+		 {{ render_hexagontent(project) }}
 		{% if project.is_challenge %}
 			<div class="team-counter" title="Team size ({{ project.score }})">
 				{% if project.score == 1 %}
@@ -66,6 +44,40 @@
 			</div>
 		{% endif %}
 	</a>
+{% endmacro %}
+
+{% macro render_challenge_hexagon(project) %}
+	<a href="{{ url_for('project.get_challenge', project_id=project.id) }}"
+		 class="hexagon challenge category-highlight"
+		 {% if project.category_id %}
+		 	 category-id="{{ project.category_id }}"
+		 {% endif %}
+		 {{ render_project_tooltip(project) }}
+		>
+		 {{ render_hexagontent(project) }}
+	</a>
+{% endmacro %}
+
+{% macro render_hexagontent(project) %}
+	<div class="hexagontent {{
+        'text-md' if 32 < project.name|length else 'text-sm' if 42 < project.name|length
+	}}{{ ' with-icon' if project.logo_icon or project.image_url }}">
+		{% if project.score and project.score > 90 %}
+			<span class="team-boost" title="Skyrocketing">🚀</span>
+		{% elif project.score and project.score > 69 %}
+			<span class="team-boost" title="Trending">🔥</span>
+		{% endif %}
+		<span class="project-name">{{ project.name|truncate(64, True, '..') }}</span>
+		{% if project.image_url or project.logo_icon or project.ident %}
+			<div class="hexaicon"{% if project.image_url %} style="background-image:url('{{project.image_url|quote_plus}}')"{% endif %}>
+				{% if project.ident %}
+					<span class="project-ident">{{ project.ident }}</span>
+				{% elif project.logo_icon %}
+					<i class="fa fa-{{project.logo_icon}}"></i>
+				{% endif %}					
+			</div>
+		{% endif %}
+	</div>
 {% endmacro %}
 
 {% macro render_embed_event(event, projects, showNav=False) %}

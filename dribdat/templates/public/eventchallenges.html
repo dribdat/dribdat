@@ -8,20 +8,21 @@
 {% block content %}
 <h1 class="huge">Challenges</h1>
 
+<div class="event-challenges">
   {% if projects %}
     <div class="honeycomb mb-5 pb-5">
         <div class="ibws-fix">
         {% for project in projects %}
-            {{ misc.render_project_hexagon(project) }}
+            {{ misc.render_challenge_hexagon(project) }}
         {% endfor %}
         </div>
     </div><!-- /honeycomb -->
   {% endif %}
+</div>
 
-  <center class="mt-5">
-    <a class="btn btn-light btn-lg" href="{{ url_for('public.event', event_id=current_event.id) }}">
-      <i class="fa fa-arrow-left" aria-hidden="true"></i>
-      {{ current_event.name }}</a>
-  </center>
-
+<center class="mt-5">
+  <a class="btn btn-light btn-lg" href="{{ url_for('public.event', event_id=current_event.id) }}">
+    <i class="fa fa-arrow-left" aria-hidden="true"></i>
+    {{ current_event.name }}</a>
+</center>
 {% endblock %}

@@ -8,6 +8,7 @@
 {% block content %}
 <h1 class="huge">Categories</h1>
 
+<div class="event-categories">
   <a name="steps"></a>
   <div class="list-stages">
   {% for category in steps %}
@@ -50,11 +51,12 @@
     </div>
   {% endif %}
   </div>
+</div>
 
-  <center class="mt-5">
-    <a class="btn btn-light btn-lg" href="{{ url_for('public.event', event_id=current_event.id) }}">
-      <i class="fa fa-arrow-left" aria-hidden="true"></i>
-      {{ current_event.name }}</a>
-  </center>
+<center class="mt-5">
+  <a class="btn btn-light btn-lg" href="{{ url_for('public.event', event_id=current_event.id) }}">
+    <i class="fa fa-arrow-left" aria-hidden="true"></i>
+    {{ current_event.name }}</a>
+</center>
 
 {% endblock %}

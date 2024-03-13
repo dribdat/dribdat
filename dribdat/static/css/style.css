@@ -532,26 +532,26 @@ nav .nav-login {
 
 /* ---- Hexagonal hawtness ---- */
 
-.event-home .honeycomb {
+.with-event .honeycomb {
   width: 760px;
   margin-top: 30px;
 }
 .hexagon.blank { display: none; }
 @media (max-width: 900px) {
-  .event-home .honeycomb {
+  .with-event .honeycomb {
     margin-top: 0px;
     width: 600px;
   }
   .hexagon.blank { display: inline-block; }
 }
 @media (max-width: 560px) {
-  .event-home .honeycomb {
+  .with-event .honeycomb {
     margin-top: 0px;
     width: 300px;
   }
 }
 @media (max-width: 480px) {
-  .event-home .honeycomb {
+  .with-event .honeycomb {
     text-align: center;
   }
 }
