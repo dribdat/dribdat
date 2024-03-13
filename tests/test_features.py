@@ -6,7 +6,7 @@ See: http://webtest.readthedocs.org/
 from flask import url_for
 from .factories import ProjectFactory, EventFactory, UserFactory
 from dribdat.onebox import make_onebox
-from dribdat.public.projhelper import resources_by_stage, project_action
+from dribdat.public.projhelper import resources_by_stage, project_action, navigate_around_project
 from dribdat.aggregation import ProjectActivity
 from dribdat.utils import load_yaml_presets
 from dribdat.apifetch import FetchStageConfig
@@ -62,6 +62,17 @@ EOF""" % (url, url)
         assert len(stages_remote) == 7
         assert 'CHALLENGE' in stages_remote
         assert int(stages_remote['CHALLENGE']['id']) == PR_CHALLENGE
+
+    def test_project_navigation(self, project, testapp):
+        """Check next/previous and sort ordering."""
+        event = EventFactory()
+        event.save()
+        project1 = ProjectFactory()
+        project2 = ProjectFactory()
+        project3 = ProjectFactory()
+        getnav = navigate_around_project(project2)
+        assert getnav['prev']['id'] == project1.id
+        assert getnav['next']['id'] == project3.id
 
     def test_project_stage(self, project, testapp):
         """Check stage progression."""

@@ -37,6 +37,14 @@ class TestViews:
         view_html = testapp.get('/event/%d/stages' % event.id)
         assert 'Stages' in view_html
 
+        # Test the categories view
+        view_html = testapp.get('/event/%d/categories' % event.id)
+        assert 'Categories' in view_html
+
+        # Test the challenges view
+        view_html = testapp.get('/event/%d/challenges' % event.id)
+        assert 'Challenges' in view_html
+
         # Test the print view
         view_html = testapp.get('/event/%d/print' % event.id)
         assert 'All projects' in view_html
