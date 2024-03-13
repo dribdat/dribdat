@@ -804,11 +804,12 @@ nav .nav-login {
   font-family: monospace;
   padding-top: 0.3em;
 }
-/*
-.hexagon:hover .hexagontent span.project-ident {
-  visibility: hidden;
+.event-home .hexagon .hexagontent span.project-ident {
+  text-shadow: 2px 1px 1px white;
+  color: black;
+  font-weight: bold;
+  margin-left: -5em;
 }
-*/
 .tooltip .tooltip-inner img {
   max-width: 100%;
   max-height: 13em;
@@ -900,6 +901,11 @@ nav .nav-login {
 .project-page .project-team {
   font-weight: normal;
   color: #999;
+}
+.project-home .project-headline i.fa {
+  font-size: 3rem;
+  padding-right: 0.2em;
+  float: left;
 }
 .project-home .project-image-container {
   margin-top: 0px;
