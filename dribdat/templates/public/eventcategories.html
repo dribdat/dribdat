@@ -22,7 +22,7 @@
 
       {% if category.event_projects(current_event.id) %}
       <div class="honeycomb mb-5 pb-5">
-          <div class="row ibws-fix">
+          <div class="ibws-fix">
           {% for project in category.event_projects(current_event.id) %}
               {{ misc.render_project_hexagon(project) }}
           {% endfor %}
@@ -32,6 +32,7 @@
 
     </div>
   {% endfor %}
+
   {% if projects %}
     <div class="row step category-container"
          style="border-top:5px dotted #eee">
@@ -40,7 +41,7 @@
       <br clear="all" />
 
       <div class="honeycomb mb-5 pb-5">
-          <div class="row ibws-fix">
+          <div class="ibws-fix">
           {% for project in projects %}
               {{ misc.render_project_hexagon(project) }}
           {% endfor %}
