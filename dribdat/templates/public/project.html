@@ -139,7 +139,7 @@
         Project
       </div>
     </div>
-  {% elif past_version %}
+  {% elif project.is_challenge %}
     <div class="project-score mt-1">
       <div class="preview-challenge">
         Challenge
@@ -574,8 +574,8 @@
             Use the <a href="{{ url_for('public.all_participants')}}">participant list</a>
             to look up a username, or enter an e-mail address to send out an invite:
           {% if current_user.is_admin %}
-            You can kick a user with the <b>X</b> button next to their profile, 
-            or unjoin them in the <a href="{{ url_for('admin.users')}}">user admin</a>.
+            (Admins: you can kick a user with the <b>X</b> button next to their profile, 
+            or unjoin them in the <a href="{{ url_for('admin.users')}}">user admin</a>.)
           {% endif %}        
           </p>
           <form action="{{ url_for('project.project_star_user', project_id=project.id)}}" 
@@ -586,6 +586,17 @@
               <input class="form-control" type="submit" value="Invite" />
             </div>
           </form>
+        </div>
+        <div class="modal-footer">
+          <a href="{{ url_for('project.project_unstar_me', project_id=project.id) }}" 
+             class="project-star btn-lg btn-light"
+            title="Click to stop being a member of the project"
+            onclick="return confirm('Are you sure you wish to leave this team?')">
+            Leave the team
+          </a>
+          <button class="btn btn-lg btn-dark" type="button" class="close" data-dismiss="modal" aria-label="Close">
+            Cancel
+          </button>
         </div>
       </div>
     </div>

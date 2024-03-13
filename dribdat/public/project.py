@@ -278,8 +278,9 @@ def get_challenge(project_id):
     flash('This Challenge was posted %s' % p_date, 'info')
     go_nav = navigate_around_project(project, True)
     return render_template(
-        'public/project.html', current_event=challenge.event, project=challenge,
-        past_version=preview_at, active="projects", go_nav=go_nav,
+        'public/project.html', 
+        project=challenge, go_nav=go_nav, 
+        current_event=challenge.event, active="projects"
     )
 
 
