@@ -89,7 +89,7 @@ EOF""" % (url, url)
         form['q'] = '@ibraci'
         res = form.submit()
         assert res.status_code == 200
-        assert 'No profiles' in res
+        assert 'No matches' in res
         # Create a user and search it
         user1 = UserFactory()
         user1.username = 'abracadabra'
@@ -104,7 +104,7 @@ EOF""" % (url, url)
         event.save()
         res = testapp.get('/event/%d/participants' % event.id)
         assert res.status_code == 200
-        assert 'No profiles' in res
+        assert 'No matches' in res
         project = ProjectFactory()
         project.event_id = event.id
         project.save()
