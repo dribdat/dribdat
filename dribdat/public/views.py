@@ -193,10 +193,10 @@ def user_cert():
 def event(event_id):
     """Show an event."""
     event = Event.query.filter_by(id=event_id).first_or_404()
-    # Sort visible projects by reverse score, then name
+    # Sort visible projects by identity (if used), or alphabetically
     projects = Project.query \
         .filter_by(event_id=event_id, is_hidden=False) \
-        .order_by(Project.score.desc(), Project.ident, Project.name)
+        .order_by(Project.ident, Project.name)
         # The above must match projhelper->navigate_around_project
     # Embedding view
     if request.args.get('embed'):

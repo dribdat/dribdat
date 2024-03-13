@@ -212,9 +212,10 @@ def revert_project_by_activity(project, activity):
 def navigate_around_project(project, as_challenge=False):
     """Returns previous and next projects in the default order."""
     go_nav = {}
+    # Sort visible projects by identity (if used), or alphabetically
     projects = Project.query \
         .filter_by(event_id=project.event_id, is_hidden=False) \
-        .order_by(Project.score.desc(), Project.ident, Project.name)
+        .order_by(Project.ident, Project.name)
         # The above must match views->event
     p_prev = p_next = p_found = None
     for p in projects:
