@@ -10,15 +10,9 @@
 			</div>
 			<div class="modal-body">
 				<p class="upload-note">
-					Open web formats (PNG, GIF, JPEG, SVG, WebP) are accepted.
+					Open web formats (<tt>PNG</tt>, GIF, JPEG, SVG, WebP) are accepted.
 					<b>Max {{ (config.MAX_CONTENT_LENGTH/(1024*1024))|round(1) }} MB.</b>
-					
-					<b>Tip:</b> for slides, embed your online presentation, or upload a PDF file as your "Demo link" by editing your project.
 				</p>
-				<center class="preview hidden" id="img-preview">
-					<img src="" height="100">
-					<input name="url" disabled style="display:block;margin-top:1em">
-				</center>
 				<div class="input-group" style="margin-top:1em">
 					<div class="input-group-prepend">
 						<span class="input-group-text" id="inputImageLabel">Select</span>
@@ -30,25 +24,32 @@
 						<label class="custom-file-label" for="inputImageFile">Choose file</label>
 					</div>
 				</div>
+				<hr>
+				<center class="preview hidden" id="img-preview">
+					<img src="" height="128">
+					<input name="url" disabled style="display:block;margin-top:1em">
+				</center>
 				<center class="col hidden" style="margin-top:1em" id="img-confirm">
-					<div class="btn-group">
-						<button class="btn btn-warning" data-target="cover">
-							Use as cover image
-						</button>
-						<button class="btn btn-warning" data-target="weblink">
-							Use as demo link
-						</button>
-						<button class="btn btn-info" data-target="pitch">
-							Add to the pitch
-						</button>
-						<button class="btn btn-info" data-target="post">
-							Add to post
-						</button>
-						<button class="btn btn-primary" data-target="xclip">
-							&#128203;
-							Copy to clipboard
-						</button>
-					</div>
+					<button class="btn btn-warning btn-lg" data-target="weblink">
+						<i class="fa fa-desktop"></i><br>
+						Presentation
+					</button>
+					<button class="btn btn-info btn-lg" data-target="pitch">
+						<i class="fa fa-plus-square-o"></i><br>
+						Insert into Pitch
+					</button>
+					<button class="btn btn-info btn-lg" data-target="post">
+						<i class="fa fa-check-square"></i><br>
+						Add to Post
+					</button>
+					<button class="btn btn-warning btn-lg" data-target="cover">
+						<i class="fa fa-image"></i><br>
+						Use as Cover
+					</button>
+					<button class="btn btn-light btn-lg" data-target="xclip">
+						<i class="fa fa-clipboard"></i><br>
+						Copy
+					</button>
 				</center>
 			</div>
 			<div class="modal-footer">
@@ -95,18 +96,18 @@
 					</div>
 				</div>
 				<center class="col hidden" style="margin-top:1em" id="file-confirm">
-					<div class="btn-group">
-						<button class="btn btn-warning" data-target="weblink">
-							Use as demo link
-						</button>
-						<button class="btn btn-info" data-target="pitch">
-							Add to pitch content
-						</button>
-						<button class="btn btn-primary" data-target="xclip">
-							&#128203;
-							Copy to clipboard
-						</button>
-					</div>
+					<button class="btn btn-warning btn-lg" data-target="weblink">
+						<i class="fa fa-desktop"></i><br>
+						Presentation
+					</button>
+					<button class="btn btn-info btn-lg" data-target="pitch">
+						<i class="fa fa-plus-square-o"></i><br>
+						Insert into Pitch
+					</button>
+					<button class="btn btn-light btn-lg" data-target="xclip">
+						<i class="fa fa-clipboard"></i><br>
+						Copy
+					</button>
 				</center>
 			</div>
 			<div class="modal-footer">

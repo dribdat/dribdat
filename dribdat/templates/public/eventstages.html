@@ -37,22 +37,22 @@
         <p class="subtitle">{{ step.description }}</p>
       {% endif %}
 
+      {% if not current_event.lock_resources and step.conditions %}
+      <ul class="agree-list" style="width:100%;">
+        {% for what in step.conditions.agree %}
+          <li>{{ what }}</li>
+        {% endfor %}
+      </ul>
+      {% endif %}
+
       {% if step.projects %}
-      <div class="profile-projects honeycomb">
+      <div class="profile-projects honeycomb mt-5">
           <div class="row ibws-fix">
           {% for project in step.projects %}
               {{ misc.render_project_hexagon(project) }}
           {% endfor %}
           </div>
       </div><!-- /profile-projects -->
-      {% endif %}
-
-      {% if not current_event.lock_resources and step.conditions %}
-      <ul class="agree-list row">
-        {% for what in step.conditions.agree %}
-          <li>{{ what }}</li>
-        {% endfor %}
-      </ul>
       {% endif %}
 
     </div>

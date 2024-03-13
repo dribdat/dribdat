@@ -10,15 +10,15 @@ class TestRepository:
 
     def test_dribdat(self):
         """Test parsing a remote dribdat project."""
-        test_url = 'https://meta.dribdat.cc/project/4'
+        test_url = 'https://hack.opendata.ch/project/2'
         try:
             test_obj = GetProjectData(test_url)
         except ReadTimeout:
-            return warnings.warn("meta.dribdat.cc is not accessible")
+            return warnings.warn("Remote dribdat (hackopendata) is not accessible")
         assert 'name' in test_obj
         assert test_obj['type'] == 'Dribdat'
-        assert 'dribdat' in test_obj['description']
-        assert 'dribdat/dribdat' in test_obj['source_url']
+        assert 'electricity' in test_obj['description']
+        assert 'metaodi/open' in test_obj['source_url']
 
     def test_datapackage_dribdat(self):
         """Test parsing a dribdat Data Package."""

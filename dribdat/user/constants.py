@@ -87,14 +87,18 @@ def projectProgressList(All=True, WithEmpty=True):
 
 def stageProjectToNext(project):
     """Updates project stage to next level."""
+    if project.progress is not None and project.progress < 0:
+        # Approve a challenge
+        project.progress = projectProgressList(False, False)[0][0]
+        return True
     found_next = False
+    # Promote to next stage in progress list
     for a in projectProgressList(True, False):
         if found_next:
             project.progress = a[0]
             break
         if a[0] == project.progress or \
-            not project.progress or \
-                project.progress < 0:
+            not project.progress:
             found_next = True
     return found_next
     
@@ -198,7 +202,7 @@ def getActivityByType(a, only_active=True):  # noqa: C901
     if a.action == 'sync':
         text = "Repository updated"
         icon = 'code'
-    elif a.action == 'post' and a.name == 'review':
+    elif a.action == 'post' and a.name == 'review' and a.content is not None:
         text = a.content
         icon = 'comment'
     elif a.action == 'post' and a.content is not None:
@@ -219,9 +223,9 @@ def getActivityByType(a, only_active=True):  # noqa: C901
             text += " version %d" % a.project_version
         icon = 'paperclip'
     elif a.name == 'update':
-        text = "Edited content"
+        text = "Edited"
         if a.project_version:
-            text += " version %d" % a.project_version
+            text += " (version %d)" % a.project_version
         icon = 'paperclip'
     # elif a.name == 'revert':
     #     text = "Reverted content"
@@ -229,7 +233,7 @@ def getActivityByType(a, only_active=True):  # noqa: C901
     #         text += " version %d" % a.project_version
     #     icon = 'undo'
     elif a.name == 'create':
-        text = "Challenge posted"
+        text = "First post <a class='btn btn-light float-right' href='/%s/challenge'>View challenge</a>" % a.project.url
         icon = 'flag-checkered'
     elif a.name == 'boost':
         title = a.action

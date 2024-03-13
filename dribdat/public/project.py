@@ -7,6 +7,7 @@ from flask_login import login_required, current_user
 from dribdat.user.models import Event, Project, Activity, User
 from dribdat.database import db
 from dribdat.extensions import cache
+from dribdat.utils import timesince
 from dribdat.public.forms import (
     ProjectNew, ProjectPost, ProjectBoost, ProjectComment
 )
@@ -17,7 +18,8 @@ from dribdat.user import (
     validateProjectData, stageProjectToNext, isUserActive,
 )
 from dribdat.public.projhelper import (
-    project_action, project_edit_action, templates_from_event, revert_project_by_activity
+    project_action, project_edit_action, templates_from_event, 
+    revert_project_by_activity, navigate_around_project,
 )
 from ..decorators import admin_required
 from ..mailer import user_invitation
@@ -255,10 +257,30 @@ def post_preview(project_id, activity_id):
         return redirect(purl)
     preview_at = activity.project_version
     project = project.versions[preview_at]
-    flash('This is the archived version (%d) of this page.' % preview_at, 'info')
+    flash('This is an archived version (%d) of this project.' % preview_at, 'info')
     return render_template(
         'public/project.html', current_event=project.event, project=project,
-        past_version=activity_id, active="projects"
+        past_version=activity_id, allow_revert=True, active="projects"
+    )
+
+
+@blueprint.route('/<int:project_id>/challenge', methods=['GET'])
+def get_challenge(project_id):
+    """Preview project data at the previous version."""
+    project = Project.query.filter_by(id=project_id).first_or_404()
+    purl = url_for('project.project_view_posted', project_id=project.id)
+    challenge = project.as_challenge()
+    if not challenge:
+        flash('Could not find challenge data.', 'warning')
+        return redirect(purl)
+    preview_at = challenge.id
+    p_date = timesince(challenge.updated_at)
+    flash('This Challenge was posted %s' % p_date, 'info')
+    go_nav = navigate_around_project(project, True)
+    return render_template(
+        'public/project.html', 
+        project=challenge, go_nav=go_nav, challenge_when=p_date,
+        current_event=challenge.event, active="projects"
     )
 
 
