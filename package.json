@@ -1,6 +1,6 @@
 {
   "name": "dribdat",
-  "version": "0.8",
+  "version": "0.8.0",
   "description": "Open source hackathon platform",
   "repository": "https://codeberg.org/dribdat/dribdat",
   "author": "Oleg Lavrovsky <oleg@datalets.ch>",
