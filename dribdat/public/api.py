@@ -440,6 +440,8 @@ def set_project_values(project, data):
         if not project.source_url or project.source_url == '':
             project.source_url = data['autotext_url']
     # MAX progress
+    if project.progress is None:
+        project.progress = -1
     if 'levelup' in data and 0 < project.progress + data['levelup'] * 10 < 50:
         project.progress = project.progress + data['levelup'] * 10
     # return jsonify(data=data)

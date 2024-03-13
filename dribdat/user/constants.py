@@ -87,7 +87,7 @@ def projectProgressList(All=True, WithEmpty=True):
 
 def stageProjectToNext(project):
     """Updates project stage to next level."""
-    if project.progress < 0:
+    if project.progress is not None and project.progress < 0:
         # Approve a challenge
         project.progress = projectProgressList(False, False)[0][0]
         return True
