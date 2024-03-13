@@ -48,11 +48,6 @@ class ProjectForm(FlaskForm):
     """Edit a project form."""
 
     id = HiddenField('id')
-    name = StringField(
-        u'Title',
-        [length(max=80), UniqueValidator(Project, 'name'), DataRequired()],
-        render_kw={'maxlength': 80, 'required': 'required'},
-        description="A short name for your project or challenge.")
     summary = StringField(
         u'Summary', [length(max=2048)],
         render_kw={'maxlength': 2048},
@@ -64,23 +59,28 @@ class ProjectForm(FlaskForm):
     webpage_url = URLField(
         u'Presentation link', [length(max=2048)],
         description="URL to a live demo, presentation, or a link to get "
-        + "more information. Tips: dribdat.cc/usage")
-    is_webembed = BooleanField(u'Embed the Presentation directly on project page')
+        + "more information.")
+    is_webembed = BooleanField(u'Embed the Presentation on the project page')
     autotext_url = URLField(
         u'Readme link', [length(max=255)],
-        description="URL to a code repository, online document, or wiki page to Sync with.")
-    submit = SubmitField(u'Save changes')
+        description="URL to a code repository, online document, or wiki to Sync with. Tips: dribdat.cc/usage")
     note = TextAreaField(
         u'Log entry',
         [length(max=280)],
         render_kw={'maxlength': 280, 'rows': 3},
         description=u'(Optional) A short update for the project log')
+    submit = SubmitField(u'Save changes')
 
 
 class ProjectDetailForm(FlaskForm):
     """Edit a project detail form."""
 
     id = HiddenField('id')
+    name = StringField(
+        u'Title',
+        [length(max=80), UniqueValidator(Project, 'name'), DataRequired()],
+        render_kw={'maxlength': 80, 'required': 'required'},
+        description="A short name for your project or challenge.")
     category_id = SelectField(u'Challenge category', coerce=int,
         description="If available, which category does your project belong to.")
     source_url = URLField(

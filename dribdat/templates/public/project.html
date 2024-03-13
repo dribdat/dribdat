@@ -119,7 +119,7 @@
      class="btn btn-light mr-4 float-right">
        <i class="fa fa-life-ring" aria-hidden="true"></i>
        Resource</a>
-  {% elif project.score and project.score > 1 %}
+  {% elif project.score and not project.is_challenge %}
     <div class="project-score">
       <a href="{{ url_for('public.event_stages', event_id=project.event.id) }}#{{project.phase}}">
         <div class="progress" 
@@ -131,7 +131,7 @@
           </div>
         </div>
       </a>
-      <div class="preview-challenge">
+      <div class="preview-challenge mt-2">
         <a title="Click to show the Challenge from which this project started" 
            href="{{ url_for('project.get_challenge', project_id=project.id) }}">
              Challenge</a>
@@ -139,8 +139,8 @@
         Project
       </div>
     </div>
-  {% elif project.is_challenge %}
-    <div class="project-score mt-1">
+  {% elif challenge_when %}
+    <div class="project-score">
       <div class="preview-challenge">
         Challenge
         <i class="fa fa-map" aria-hidden="true"></i> 
@@ -438,7 +438,7 @@
 <div role="group" aria-label="Project administration" class="ml-3 btn-group admin-area" title="Admin area">
 
   <a href="{{ url_for('admin.project_view', project_id=project.id) }}" class="btn btn-lg btn-warning"
-     title="Edit full details (admin only)">
+     title="Edit full details (admin)">
     <i class="fa fa-pencil" aria-hidden="true"></i>
     <!--Edit--></a>
 
@@ -456,12 +456,12 @@
     </a>
 
     <a href="{{ url_for('project.project_boost', project_id=project.id) }}" class="btn btn-lg btn-info project-boost"
-      title="Boost this project (admin only)">
+      title="Boost this project">
       <i class="fa fa-trophy" aria-hidden="true"></i>
     <!--  Boost--></a>
 
     <a href="{{ url_for('admin.project_toggle', project_id=project.id) }}" 
-       title="Deactivate this project" class="btn btn-lg btn-dark">
+       title="Toggle visibility of this project" class="btn btn-lg btn-dark">
       <i class="fa fa-eye" aria-hidden="true"></i>
     <!--  Hide--></a>
   {% endif %}

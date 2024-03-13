@@ -91,7 +91,8 @@
 
   <h2 class="huge">
     Post on 
-    <a href="{{ url_for('project.project_view', project_id=project.id) }}" title="Back to project">
+    <a href="{{ url_for('project.project_view', project_id=project.id) }}" 
+       title="Back to project" target="_blank">
       {%- if project.is_challenge -%}
       challenge
       {%- else -%}
@@ -121,7 +122,7 @@
     onclick="return $('#note').val().length == 0 || window.confirm('Your post will not be saved - continue?')">
     <a href="{{ url_for('project.project_view', project_id=project.id) }}"
        title="Cancel" class="btn btn-light">
-      <i class="fa fa-arrow-left" aria-hidden="true"></i> Cancel and return to project
+      <i class="fa fa-arrow-left" aria-hidden="true"></i> Project
     </a>
     {% if stage %}
       <div class="btn-group">

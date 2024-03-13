@@ -257,7 +257,7 @@ def post_preview(project_id, activity_id):
         return redirect(purl)
     preview_at = activity.project_version
     project = project.versions[preview_at]
-    flash('This is the archived version (%d) of this page.' % preview_at, 'info')
+    flash('This is an archived version (%d) of this project.' % preview_at, 'info')
     return render_template(
         'public/project.html', current_event=project.event, project=project,
         past_version=activity_id, allow_revert=True, active="projects"
@@ -279,7 +279,7 @@ def get_challenge(project_id):
     go_nav = navigate_around_project(project, True)
     return render_template(
         'public/project.html', 
-        project=challenge, go_nav=go_nav, 
+        project=challenge, go_nav=go_nav, challenge_when=p_date,
         current_event=challenge.event, active="projects"
     )
 
