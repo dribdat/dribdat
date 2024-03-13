@@ -56,7 +56,7 @@ stages:
     id: 20
     name: SKETCH
     phase: Sketching
-    description: 🎨 Evaluating and explaining to fellow humans.
+    description: 🎨 Evaluating and explaining to humans and machines.
     tip: The more you share, the more feedback you will get.
     conditions:
       validate:
@@ -65,8 +65,8 @@ stages:
           test: validurl
           help: Upload or link to an image in your project Details.
       agree:
-        - Annotate key datasets to explain your understanding of the structure and content.
-        - Make wireframes or sketches of your idea, attaching it here as an image.
+        - Annotate key datasets to reflect your understanding of the structure and content.
+        - Make wireframes or sketches of your idea, attaching it as an image to your documentation.
   -
     id: 30
     name: PROTOTYPE
@@ -78,10 +78,10 @@ stages:
         -
           field: webpage_url
           test: validurl
-          help: Online access to browse your data or demo in the Project Link.
+          help: Online access to see your presentation, dataset or demo in the Project Link.
       agree:
-        - We have checked the rights / licenses / permissions to use all assets, data, and code.
-        - Link any third-party resources, data schema or code frameworks in your documentation.
+        - Gain more depth by exploring the data with visualisations and interactive interfaces.
+        - We have checked permissions to use all assets, data, or code, and linked the sources.
   -
     id: 40
     name: LAUNCH
@@ -95,7 +95,6 @@ stages:
           test: validurl
           help: Provide a contact link in your project Details.
       agree:
-        - Gain more depth by exploring data with visualisations and interfaces.
         - While correlating and linking data fields, we are critical of causality.
         - Contact with the maintainers is possible to ask questions or send feedback.
   -
@@ -112,5 +111,4 @@ stages:
           help: Provide a download link in your project Details.
       agree:
         - The full results of this work have been showcased and published under an open license.
-        - The necessary infrastructure for hosting is available, and can be maintained.
         - We have correctly attributed all sources, and thanked all contributors.
