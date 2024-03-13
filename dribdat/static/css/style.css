@@ -898,7 +898,6 @@ nav .nav-login {
 .project-page .project-ident {
   display: inline-block;
   margin-bottom: 0.5em;
-  line-height: 0px;
   font-size: 250%;
   opacity: 0.6;
 }
@@ -1004,6 +1003,7 @@ nav .nav-login {
   }
   .project-page .project-longtext { margin: 2em; }
   .project-page .project-autotext { margin: 2em; }
+  .project-page .project-ident { line-height: 0px; }
 
   .nav-projects-abs-next,
   .nav-projects-abs-prev { visibility: visible !important; }
