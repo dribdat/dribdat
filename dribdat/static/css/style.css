@@ -1028,6 +1028,7 @@ nav .nav-login {
 }
 .nav-projects-abs-prev { left: 0px; border-left: none !important; border-bottom-left-radius: 0px; border-top-left-radius: 0px; }
 .nav-projects-abs-next { right: 0px; border-right: none !important; border-bottom-right-radius: 0px; border-top-right-radius: 0px; }
+.nav-project-helper .btn { max-width: 20em; vertical-align: top; height: 4em; line-height: 1.5em; overflow: hidden; text-align: left; }
 
 /* -- Timeline (dribs) -- */
 
@@ -1396,6 +1397,9 @@ pre { color: #333; background: white; }
 }
 #project-md:not(.tab-pane)::before {
   content: 'Pitch';
+}
+.phase-Challenge #project-md:not(.tab-pane)::before {
+  content: 'Challenge';
 }
 #team-md:not(.tab-pane)::before,
 #dribs-md:not(.tab-pane)::before,

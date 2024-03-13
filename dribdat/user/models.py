@@ -510,7 +510,7 @@ class Event(PkModel):
                 # Clear every now and then
                 time_limit = time_now - dt.timedelta(minutes=CLEAR_STATUS_AFTER)
                 if dt.datetime.fromtimestamp(status_time) < time_limit:
-                    print("Clearing announements")
+                    # Clearing announcements
                     self.status = None
                     self.save()
                     return ''

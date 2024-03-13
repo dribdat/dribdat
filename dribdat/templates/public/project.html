@@ -131,18 +131,23 @@
           </div>
         </div>
       </a>
-      <br />
-      <a class="preview-challenge text-dark" title="Click to show the Challenge from which this project started" 
-         href="{{ url_for('project.get_challenge', project_id=project.id) }}">
-           Challenge</a> |
-      <i class="fa fa-trophy" aria-hidden="true"></i> Project
+      <div class="preview-challenge">
+        <a title="Click to show the Challenge from which this project started" 
+           href="{{ url_for('project.get_challenge', project_id=project.id) }}">
+             Challenge</a>
+        <i class="fa fa-trophy" aria-hidden="true"></i> 
+        Project
+      </div>
     </div>
   {% elif past_version %}
     <div class="project-score mt-1">
-      <i class="fa fa-map" aria-hidden="true"></i> Challenge |
-      <a class="preview-challenge text-dark" title="Go back to the current version of this project" 
-         href="{{ url_for('project.project_view', project_id=project.id) }}">
-         Project</a>
+      <div class="preview-challenge">
+        Challenge
+        <i class="fa fa-map" aria-hidden="true"></i> 
+        <a title="Go back to the current version of this Project" 
+           href="{{ url_for('project.project_view', project_id=project.id) }}">
+           Project</a>
+      </div>
     </div>
   {% endif %}
 
@@ -478,7 +483,7 @@
 
 <center class="mt-5 nav-project-helper">
 {% if go_nav and go_nav.prev %}
-  <a class="nav-projects btn btn-dark" href="{{go_nav.prev.url}}" title="Previous project in queue">
+  <a class="nav-projects btn btn-light" href="{{go_nav.prev.url}}" title="Previous project in queue">
     <i class="fa fa-arrow-left" aria-hidden="true"></i>
     {{go_nav.prev.name}}</a>
 
@@ -496,7 +501,7 @@
     Go back</a>
 {% endif %}
 {% if go_nav and go_nav.next %}
-  <a class="nav-projects btn btn-dark" href="{{go_nav.next.url}}" title="Next project in queue">
+  <a class="nav-projects btn btn-light" href="{{go_nav.next.url}}" title="Next project in queue">
     <i class="fa fa-arrow-right" aria-hidden="true"></i>
     {{go_nav.next.name}}</a>
 
