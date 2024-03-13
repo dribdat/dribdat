@@ -202,7 +202,7 @@ def getActivityByType(a, only_active=True):  # noqa: C901
     if a.action == 'sync':
         text = "Repository updated"
         icon = 'code'
-    elif a.action == 'post' and a.name == 'review':
+    elif a.action == 'post' and a.name == 'review' and a.content is not None:
         text = a.content
         icon = 'comment'
     elif a.action == 'post' and a.content is not None:

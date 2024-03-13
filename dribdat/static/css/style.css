@@ -1026,8 +1026,8 @@ nav .nav-login {
   height: 6em;
   top: 16em; 
 }
-.nav-projects-abs-prev { left: -0.3em; }
-.nav-projects-abs-next { right: -0.3em; }
+.nav-projects-abs-prev { left: 0px; border-left: none !important; border-bottom-left-radius: 0px; border-top-left-radius: 0px; }
+.nav-projects-abs-next { right: 0px; border-right: none !important; border-bottom-right-radius: 0px; border-top-right-radius: 0px; }
 
 /* -- Timeline (dribs) -- */
 
