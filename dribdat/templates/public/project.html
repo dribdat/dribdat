@@ -258,9 +258,10 @@
       {% if missing_roles %}
         <div class="missing-roles" title="This role is not yet filled. Try to find another team member!">
           {% for role in missing_roles %}
-            <div class="role" data-id="{{ role.id }}">
+            <a class="role" data-id="{{ role.id }}"
+               href="{{ url_for('public.event_participants', event_id=current_event.id) }}?r={{ role.name }}">
               <span>{{ role.name }}</span>
-            </div>
+            </a>
           {% endfor %}
         </div>
       {% endif %}

@@ -215,21 +215,26 @@ def event_participants(event_id):
     event = Event.query.filter_by(id=event_id).first_or_404()
     users = GetEventUsers(event)
     cert_path = None
-    search_by = request.args.get('q')
+    search_by = request.args.get('q') or ''
+    role_call = request.args.get('r') or ''
     # Quick (actually, rather slow..) search filter
-    if search_by and len(search_by) > 2:
+    if role_call and len(role_call) > 2:
         usearch = []
-        if '@' in search_by:
-            qq = search_by.replace('@', '').lower()
-            for u in users:
-                if qq in u.username.lower() or qq in u.email.lower():
+        for u in users:
+            for r in u.roles:
+                if role_call in str(r):
                     usearch.append(u)
-        else:
-            qq = search_by.lower()
-            for u in users:
-                if (u.my_story and qq in u.my_story.lower()) or \
-                    (u.my_goals and qq in u.my_goals.lower()):
-                        usearch.append(u)
+                    search_by = role_call
+                    break
+    elif search_by and len(search_by) > 2:
+        usearch = []
+        qq = search_by.replace('@', '').lower()
+        for u in users:
+            if qq in u.username.lower() or qq in u.email.lower():
+                usearch.append(u)
+            elif (u.my_story and qq in u.my_story.lower()) or \
+                 (u.my_goals and qq in u.my_goals.lower()):
+                usearch.append(u)
     else:
         usearch = users
         search_by = ''
