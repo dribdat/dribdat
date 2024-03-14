@@ -249,8 +249,8 @@
           var path = $inputfd.val();
           var filename = path.split(/(\\|\/)/g).pop().replaceAll('_', ' ');
           var fileext = filename.split('.').pop().toLowerCase();
-          var filesize = thefile.size / 1024;
-          filesize = (filesize>1000) ? (filesize/1024) + ' MB' : filesize + ' KB';
+          var filesize = Math.round(thefile.size/102.4)/10;
+          filesize = (filesize>1000) ? (Math.round(filesize/102.4)/10) + ' MB' : filesize + ' KB';
           // Preview values
           $dialog.find('.file-preview').removeClass('hidden');
           $dialog.find('.file-preview .filename').html(filename);
