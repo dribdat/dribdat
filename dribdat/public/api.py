@@ -543,6 +543,7 @@ def generate_event_package(event, format='json'):
         return "Format not supported"
     full_contents = (format == 'zip')
     host_url = request.host_url
+    # current_user can be empty or anonymous
     package = event_to_data_package(event, current_user, host_url, full_contents)
     if format == 'json':
         # Generate JSON representation
@@ -557,7 +558,6 @@ def generate_event_package(event, format='json'):
         return send_file(fp_package.name, as_attachment=True)
 
 @blueprint.route('/event/current/datapackage.<format>', methods=["GET"])
-@login_required
 @cache.cached()
 def package_current_event(format):
     """Download a Data Package for an event."""
@@ -567,7 +567,6 @@ def package_current_event(format):
 
 
 @blueprint.route('/event/<int:event_id>/datapackage.<format>', methods=["GET"])
-@login_required
 @cache.cached()
 def package_specific_event(event_id, format):
     """Download a Data Package for an event."""
