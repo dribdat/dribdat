@@ -246,8 +246,8 @@
           if (response.indexOf('http') !== 0) {
              return alert('File could not be uploaded :(\n' + response);
           }
-          var path = $inputfd.val();
-          var filename = path.split(/(\\|\/)/g).pop().replaceAll('_', ' ');
+          // Parse the file name and size
+          var filename = response.split(/(\\|\/)/g).pop().replaceAll('_', ' ');
           var fileext = filename.split('.').pop().toLowerCase();
           var filesize = Math.round(thefile.size/102.4)/10;
           filesize = (filesize>1000) ? (Math.round(filesize/102.4)/10) + ' MB' : filesize + ' KB';
