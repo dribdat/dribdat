@@ -29,18 +29,6 @@
 
 {% block content %}
 
-{% if False and current_user and current_user.active and not project.autotext and not project.longtext and not lock_editing %}
-<!-- (not so?) Helpful comment for new projects -->
-<div class="alert alert-success" role="alert">
-  <a class="close" title="Close" href="#" data-dismiss="alert">&times;</a>
-  {% if not project_starred %}
-    Join this project to <b>Post</b> on the Log, <b>Edit</b> the pitch or <b>Sync</b> any external content.
-  {% else %}
-    <b>Edit</b> the pitch to add content, or to <b>Embed</b> your presentation or demo here.
-  {% endif %}
-</div>
-{% endif %}
-
 {% if project.score and project.score < 1 and allow_edit and current_event.aftersubmit %}
   <div class="jumbotron projectnew-boilerplate">
     <a class="close" title="Close" href="#" data-dismiss="alert">&times;</a>
@@ -238,18 +226,18 @@
 
   {% if project.longtext %}
     <div id="project-md" aria-labelledby="project-tab-md">
-      <div class="project-longtext">
-        {{ project.longtext|onebox|markdown|safe }}
-      </div>
-
       {% if allow_edit %}
       <center class="project-edit-pitch">
         <a href="{{ url_for('project.project_edit', project_id=project.id) }}#is_webembed" 
-           class="btn btn-sm btn-warning" title="Edit project pitch">
+           class="btn btn-sm btn-light" title="Edit project pitch">
           <i class="fa fa-pencil" aria-hidden="true"></i>
-          Edit pitch</a>
+          Edit</a>
       </center>
       {% endif %}
+
+      <div class="project-longtext">
+        {{ project.longtext|onebox|markdown|safe }}
+      </div>
     </div><!-- /project-md -->
   {% endif %}
 
@@ -280,6 +268,24 @@
         </div>
       {% endif %}
       </div>
+
+      {% if not lock_editing and not project.event.has_finished and not project.event.lock_resources and not past_version %}
+        <center class="team-invite-button">
+          {% if project_starred %}
+            <a class="btn btn-sm btn-light" data-toggle="modal" data-target="#addUser"
+              title="Invite someone to this project">
+              <i class="fa fa-child" aria-hidden="true"></i>
+              Invite others
+            </a>
+          {% else %}
+            <a href="{{ url_for('project.project_star', project_id=project.id) }}" class="btn btn-sm btn-light project-star"
+              title="{% if project.is_challenge %}Follow this challenge{% else %}Join the project{% endif %}">
+               <i class="fa fa-thumbs-up"></i>
+               Join the team
+            </a>
+          {% endif %}
+        </center>
+      {% endif %}
     </div>
   {% endif %}
 
@@ -290,10 +296,19 @@
       </div>
 
       {% if not project.event.lock_resources %}
-        <div class="alert alert-light text-center">
+        <div class="alert alert-light text-center mb-1">
           This content is a preview from an
           <a href="{{ project.autotext_url }}" target="_blank" rel="noopener noreferrer" title="Source link">
             external site</a>.
+        </div>
+      {% endif %}
+
+      {% if allow_edit and project.is_autoupdateable %}
+        <div class="text-center m-0">
+          <a href="{{ url_for('project.project_autoupdate', project_id=project.id) }}"
+             title="Sync external Readme data" class="btn btn-sm btn-light">
+            <i class="fa fa-refresh" aria-hidden="true"></i>
+            Refresh</a>
         </div>
       {% endif %}
 

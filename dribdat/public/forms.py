@@ -53,7 +53,7 @@ class ProjectForm(FlaskForm):
         render_kw={'maxlength': 2048},
         description="A short, plain-text description of your topic.")
     webpage_url = URLField(
-        u'Presentation link', [length(max=2048)],
+        u'Presentation', [length(max=2048)],
         description="URL to a live demo, presentation, or a link to get "
         + "more information.")
     is_webembed = BooleanField(u'Embed the Presentation on the project page')
