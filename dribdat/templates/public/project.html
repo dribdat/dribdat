@@ -444,17 +444,11 @@
 </div><!-- / .project-controls -->
 
 {% if allow_edit %}
-  <div role="group" aria-label="Team controls" class="ml-3 btn-group project-controls">
+  <div role="group" aria-label="Team controls" class="ml-3 project-controls">
     <a class="btn btn-lg btn-light" data-toggle="modal" data-target="#addUser"
       title="Share an invite link to this team">
       <i class="fa fa-child" aria-hidden="true"></i>
       Invite</a>
-    <a href="{{ url_for('project.project_unstar_me', project_id=project.id) }}" 
-       class="project-star btn-lg btn-light"
-      title="Click to stop being a member of the project"
-      onclick="return confirm('Are you sure you wish to leave this team?')">
-      Exit
-    </a>
   </div>
 {% endif %}
 
