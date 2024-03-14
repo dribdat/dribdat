@@ -248,6 +248,17 @@
           }
           var path = $inputfd.val();
           var filename = path.split(/(\\|\/)/g).pop().replaceAll('_', ' ');
+          var fileext = filename.split('.').pop().toLowerCase();
+          // Preview values
+          $dialog.find('.file-preview').show();
+          $dialog.find('.file-preview .filename').html(filename);
+          $dialog.find('.file-preview .filesize').html(thefile.size / 1024);
+          if (filename.indexOf('datapackage.json')>0) {
+            $dialog.find('.file-preview .filetype-frictionless').show();
+          } else {
+            $dialog.find('.file-preview .filetype-' + fileext).show();
+          }
+          // Update the form
           $dialog.find(".preview input").val(response);
           $dialog.find(".hidden").show();
           // User confirms the file upload
