@@ -241,6 +241,15 @@
       <div class="project-longtext">
         {{ project.longtext|onebox|markdown|safe }}
       </div>
+
+      {% if allow_edit %}
+      <center class="project-edit-pitch">
+        <a href="{{ url_for('project.project_edit', project_id=project.id) }}#is_webembed" 
+           class="btn btn-sm btn-warning" title="Edit project pitch">
+          <i class="fa fa-pencil" aria-hidden="true"></i>
+          Edit pitch</a>
+      </center>
+      {% endif %}
     </div><!-- /project-md -->
   {% endif %}
 

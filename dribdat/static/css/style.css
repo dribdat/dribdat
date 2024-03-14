@@ -1323,6 +1323,9 @@ nav .nav-login {
 .projectform #mdeditor {
   background: white; color: black;
 }
+.projectform .fld-longtext .help-inline .form-text {
+  display: none;
+}
 
 /* General form styles */
 .userform form label,
