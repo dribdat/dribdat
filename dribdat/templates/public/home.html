@@ -133,9 +133,9 @@
         </p>
       {% endif %}
       {% if config.DRIBDAT_ALLOW_EVENTS or current_user.is_admin %}
-        <a href="{{ url_for('public.event_start') }}" class="btn btn-lg btn-info">
+        <a href="{{ url_for('public.event_start') }}" class="btn btn-lg btn-light">
           <i class="fa fa-calendar mr-2" aria-hidden="true"></i>
-          Plan another Event
+          Share upcoming event
         </a>
       {% endif %}
     </div>

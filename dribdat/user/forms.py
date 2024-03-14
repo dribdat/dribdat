@@ -16,10 +16,10 @@ from wtforms.validators import (
     DataRequired, Email,
     EqualTo, Length,
 )
+from sqlalchemy import func
 from ..user.validators import UniqueValidator
 from dribdat.utils import sanitize_input  # noqa: I005
 from .models import User
-
 
 class LoginForm(FlaskForm):
     """Display a login form."""
@@ -37,9 +37,15 @@ class LoginForm(FlaskForm):
         initial_validation = super(LoginForm, self).validate()
         if not initial_validation:
             return False
-        self.user = User.query.filter_by(username=self.username.data).first()
+        # Allow login with e-mail address
+        if '@' in self.username.data:
+            self.user = User.query.filter_by(email=self.username.data).first()
+        else:
+            self.user = User.query.filter( \
+                    func.lower(User.username) == func.lower(self.username.data) \
+                ).first()
         if not self.user:
-            self.username.errors.append('Unknown username')
+            self.username.errors.append('Could not find your user account')
             return False
         if not self.user.check_password(self.password.data):
             self.password.errors.append('Invalid password')

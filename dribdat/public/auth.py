@@ -73,11 +73,6 @@ def login():
     # Handle logging in
     if request.method == 'POST':
         if form.is_submitted() and form.validate():
-            # Allow login with e-mail address
-            if '@' in form.username.data:
-                user_by_email = User.query.filter_by(email=form.username.data).first()
-                if user_by_email:
-                    form.username.data = user_by_email.username
             # Validate user account
             login_user(form.user, remember=True)
             if not form.user.active:
