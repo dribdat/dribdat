@@ -214,19 +214,21 @@
     width: 100%;
   }
   #activities div {
-    background:rgba(230,230,230,0.8);
-    box-shadow: 5px 5px 5px rgba(0,0,0,0.4);
+    background:rgba(255,255,255,0.8);
+    box-shadow: 3px 0px 7px rgba(0,0,0,0.2);
+    border-radius: 3px;
     font-size: 80%;
     padding: 0 0.3em;
     margin: 1em;
     text-align: right;
+    color: #999;
   }
   #activities p {
     padding-top: 0.5em;
     margin: 0px 0.5em;
     line-height: 1.2em;
     color: #000;
-    font-size: 120%;
+    font-size: 110%;
     text-align: left;
   }
 
@@ -259,8 +261,9 @@ refreshProjects = function() {
       if (!a.content) return;
       //a.content = a.content.replace(/\!\[.*\)/, '(img)')
       let content = converter.makeHtml(a.content);
+      let shortname = a.project_name.substr(0,16);
       $pp.append('<div>' + content +
-        '<a href="/project/'+a.project_id+'">@'+a.user_name + ' / ' + a.timesince + '</a>' +
+        '<a href="/project/'+a.project_id+'">'+shortname+' / @'+a.user_name + ' / ' + a.timesince + '</a>' +
       '</div>');
     });
   });
