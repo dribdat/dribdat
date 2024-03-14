@@ -78,7 +78,7 @@
     padding: 0px;
   }
   #projects div {
-    padding: 5px 0px;
+    padding: 5px 10px;
     cursor: pointer;
     line-height: 1.2em;
   }
@@ -86,6 +86,7 @@
     height: 1.4em;
     overflow: hidden;
     display: block;
+    font-family: monospace;
   }
   #projects a {
     color: inherit;
@@ -94,6 +95,9 @@
   }
   #projects sp {
     display: block;
+    font-size: 60%;
+    min-width: 2em;
+    max-width: 100%;
     border-bottom: 2px solid white;
   }
 
@@ -109,8 +113,10 @@
 
   .container-fluid .sidebar {
     height: 100%;
+    padding: 0px;
     position: fixed;
-    background-color: #ddd;
+    background-color: #000;
+    color: white;
   }
 
   .container-fluid .socialwall {
@@ -172,8 +178,10 @@
   .superpowers button {
     border: 0px;
     background: none;
-    opacity: 0.5;
     font-size: 200%;
+  }
+  .superpowers button:hover {
+    font-size: 300%;
   }
   .show-announcements:hover {
     opacity: 1;
@@ -238,14 +246,14 @@ refreshProjects = function() {
     $pp = $('#projects').empty();
     data.projects.forEach(function(p) {
       if (p.is_hidden) return;
-      $pp.append('<div>' +
-        '<a href="/project/'+p.id+'">'+p.name+'</a>' +
-        '<sp style="width:'+p.score+'px"></sp>' +
+      $pp.append('<div'+(p.logo_color?' style="background:'+p.logo_color+'"':'')+'>' +
+        '<a href="/project/'+p.id+'" title="'+p.name+'">'+p.name+'</a>' +
+        '<sp style="width:'+p.score+'px">'+p.score+'</sp>' +
       '</div>');
     });
   });
 
-  $.getJSON('/api/project/posts.json?limit=3', function(data) {
+  $.getJSON('/api/project/posts.json?limit=12', function(data) {
     $pp = $('#activities').empty();
     data.activities.forEach(function(a) {
       if (!a.content) return;
