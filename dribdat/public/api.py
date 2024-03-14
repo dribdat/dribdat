@@ -537,7 +537,6 @@ def project_uploader():
 
 # ------ DATA PACKAGE API --------
 
-
 def generate_event_package(event, format='json'):
     """Create a Data Package from the data of an event."""
     if format not in ['zip', 'json']:
@@ -558,6 +557,7 @@ def generate_event_package(event, format='json'):
         return send_file(fp_package.name, as_attachment=True)
 
 @blueprint.route('/event/current/datapackage.<format>', methods=["GET"])
+@login_required
 @cache.cached()
 def package_current_event(format):
     """Download a Data Package for an event."""
@@ -567,6 +567,7 @@ def package_current_event(format):
 
 
 @blueprint.route('/event/<int:event_id>/datapackage.<format>', methods=["GET"])
+@login_required
 @cache.cached()
 def package_specific_event(event_id, format):
     """Download a Data Package for an event."""
@@ -578,6 +579,7 @@ def package_specific_event(event_id, format):
 
 
 @blueprint.route('/user/current/my-hackathons.json', methods=['GET'])
+@login_required
 def current_user_hackathon_json():
     """Output JSON-LD about a User's Event according to schema."""
     """See https://schema.org/Hackathon."""
@@ -587,6 +589,7 @@ def current_user_hackathon_json():
 
 
 @blueprint.route('/user/current/profile.json', methods=['GET'])
+@login_required
 def profile_user_current_json():
     """Output JSON with public data about the current user."""
     if current_user and not current_user.is_anonymous:
@@ -596,12 +599,18 @@ def profile_user_current_json():
 
 def get_user_data(current_user):
     """Retrieves public data for a user."""
-    current_data = current_user.data
-    current_data['score'] = current_user.get_score()
-    del current_data['email']
-    del current_data['sso_id']
-    del current_data['is_admin']
-    return current_data
+    cdata = current_user.data
+    return {
+        'username':     cdata['username'],
+        'fullname':     cdata['fullname'],
+        'webpage_url':  cdata['webpage_url'],
+        'roles':        cdata['roles'],
+        'my_story':     cdata['my_story'],
+        'my_goals':     cdata['my_goals'],
+        'created_at':   cdata['created_at'],
+        'updated_at':   cdata['updated_at'],
+        'score':        current_user.get_score()
+    }
 
 
 @blueprint.route('/user/<int:user_id>/profile.json', methods=['GET'])

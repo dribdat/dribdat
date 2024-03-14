@@ -788,15 +788,19 @@ class Project(PkModel):
                     rollcall.append(r)
         return [r for r in get_roles if r not in rollcall and r.name]
 
-    def all_dribs(self):
+    def all_dribs(self, limit=50):
         """Query which formats the project's timeline."""
         activities = Activity.query.filter_by(
                         project_id=self.id
                     ).order_by(Activity.timestamp.desc())
+        if limit is not None:
+            activities = activities.limit(limit)
+        activities_array = activities.all()
         dribs = []
         only_active = False  # show dribs from inactive users
         prev = { 'progress': None, 'title': None, 'text': None }
-        for a in activities:
+        # Iterate through the dribs
+        for a in activities_array:
             a_parsed = getActivityByType(a, only_active)
             if a_parsed is None:
                 continue
@@ -831,10 +835,10 @@ class Project(PkModel):
             prev = cur
 
         # Start all logs at stage 0
-        if activities.count() > 0:
+        if len(activities_array) > 0:
             dribs.append({
                 'title': getStageByProgress(0)['phase'],
-                'date': activities[-1].timestamp,
+                'date': activities_array.pop().timestamp,
                 'icon': 'arrow-up',
                 'name': 'progress',
             })

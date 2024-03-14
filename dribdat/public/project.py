@@ -77,11 +77,14 @@ def project_boost(project_id):
     # TODO: load from a YAML file or from the Presets config
     form.boost_type.choices = [
         '---',
-        'Awesome sauce',
-        'Data wizards',
-        'Glorious purpose',
+        'Award',
+        'Qualified',
         'Top tutorial',
+        'Data wizardry',
+        'Awesome sauce',
+        "People's choice",
         'Super committers',
+        'Glorious purpose',
     ]
 
     # Process form
