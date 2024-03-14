@@ -81,7 +81,7 @@
   {% if config.S3_KEY %}
   <button type="button" class="btn btn-light btn-lg mt-2 m-1" style="display:none" data-toggle="modal" data-target="#uploadFile">
     <i class="fa fa-paperclip text-info" area-hidden="true"></i>
-    Attach data
+    Attach file
   </button>
   {% endif %}
 
@@ -90,9 +90,6 @@
     {{ render_form(url_for('project.project_details', project_id=project.id), form, formid='projectDetails') }}
   {% else %}
    <div class="project-headline">
-    {% if project.logo_icon %}
-        <i class="fa fa-{{project.logo_icon}}"></i>
-    {% endif %}
       <h2 class="project-name">
         {{project.name}}
         <a class="btn btn-sm mb-4 btn-light" 

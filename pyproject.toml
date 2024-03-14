@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "dribdat"
-version = "0.8"
+version = "0.8.0"
 description = "Online platform for time-limited collaborative events"
 authors = ["Oleg Lavrovsky <dribdat@datalets.ch>"]
 
