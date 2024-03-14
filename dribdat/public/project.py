@@ -154,10 +154,9 @@ def project_post(project_id):
         if form.has_progress.data:
             # Check and update progress
             if all_valid:
-                found_next = stageProjectToNext(project)
-            if all_valid and found_next:
-                flash("Level up! You are at stage '%s'" % 
-                    project.phase, 'info')
+                if stageProjectToNext(project):
+                    flash("Level up! You are at stage '%s'" % 
+                        project.phase, 'info')
 
         # Update project data
         del form.id

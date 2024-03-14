@@ -92,6 +92,9 @@ def stageProjectToNext(project):
         project.progress = projectProgressList(False, False)[0][0]
         return True
     found_next = False
+    # TODO: Check that we have not auto-promoted in the past hour
+    #for act in project.activities.order_by(Activity.id.desc()):
+    #    if act.type == ''
     # Promote to next stage in progress list
     for a in projectProgressList(True, False):
         if found_next:
@@ -209,11 +212,9 @@ def getActivityByType(a, only_active=True):  # noqa: C901
         text = a.content
         icon = 'pencil'
     elif a.name == 'star':
-        # title = "Team forming"
         text = "Joined the team"
         icon = 'thumbs-up'
     elif a.name == 'update' and a.action == 'commit':
-        # title = "Code commit"
         text = a.content
         author = None
         icon = 'random'

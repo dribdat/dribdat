@@ -1075,7 +1075,7 @@ nav .nav-login {
 .project-page .timeline-start .timeline-content { background: #aaa; }
 .project-page .timeline-finish .date,
 .project-page .timeline-start .date { color: white; }
-.project-page .timeline-progress .timeline-img-header { background: lightblue; border: 5px solid #aaa; }
+.project-page .timeline-progress .timeline-img-header { border: 5px solid #aaa; }
 .project-page .timeline-progress .timeline-content .date { display: none; }
 .project-page .timeline-item { margin-bottom: 20px; }
 .timeline-boost .timeline-img-header {
