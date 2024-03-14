@@ -249,14 +249,17 @@
           var path = $inputfd.val();
           var filename = path.split(/(\\|\/)/g).pop().replaceAll('_', ' ');
           var fileext = filename.split('.').pop().toLowerCase();
+          var filesize = thefile.size / 1024;
+          filesize = (filesize>1000) ? (filesize/1024) + ' MB' : filesize + ' KB';
           // Preview values
-          $dialog.find('.file-preview').show();
+          $dialog.find('.file-preview').removeClass('hidden');
           $dialog.find('.file-preview .filename').html(filename);
-          $dialog.find('.file-preview .filesize').html(thefile.size / 1024);
+          $dialog.find('.file-preview .filesize').html(filesize);
+          $dialog.find('.file-preview .filetype *').addClass('hidden');
           if (filename.indexOf('datapackage.json')>0) {
-            $dialog.find('.file-preview .filetype-frictionless').show();
+            $dialog.find('.file-preview .filetype-frictionless').removeClass('hidden');
           } else {
-            $dialog.find('.file-preview .filetype-' + fileext).show();
+            $dialog.find('.file-preview .filetype-' + fileext).removeClass('hidden');
           }
           // Update the form
           $dialog.find(".preview input").val(response);
