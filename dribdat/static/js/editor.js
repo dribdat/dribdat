@@ -251,19 +251,24 @@
           var fileext = filename.split('.').pop().toLowerCase();
           var filesize = Math.round(thefile.size/102.4)/10;
           filesize = (filesize>1000) ? (Math.round(filesize/102.4)/10) + ' MB' : filesize + ' KB';
+
+          // Get the form ready
+          $dialog.find(".preview input").val(response);
+          $dialog.find(".hidden").removeClass('hidden');
+
           // Preview values
           $dialog.find('.file-preview').removeClass('hidden');
           $dialog.find('.file-preview .filename').html(filename);
           $dialog.find('.file-preview .filesize').html(filesize);
           $dialog.find('.file-preview .filetype *').addClass('hidden');
+
+          // Special file types
           if (filename.indexOf('datapackage.json')>0) {
             $dialog.find('.file-preview .filetype-frictionless').removeClass('hidden');
           } else {
             $dialog.find('.file-preview .filetype-' + fileext).removeClass('hidden');
           }
-          // Update the form
-          $dialog.find(".preview input").val(response);
-          $dialog.find(".hidden").show();
+
           // User confirms the file upload
           $('#file-confirm').show().find('button').off("click").click(function() {
             if ($(this).data('target') == 'weblink') {
