@@ -68,7 +68,7 @@ class TestLoggingIn:
         # Submits
         res = form.submit()
         # sees error
-        assert 'Unknown user' in res
+        assert 'Could not find your user account' in res
 
 
 class TestRegistering:

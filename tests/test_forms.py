@@ -48,7 +48,7 @@ class TestLoginForm:
         """Unknown username."""
         form = LoginForm(username='unknown', password='example')
         assert form.validate() is False
-        assert 'Unknown username' in form.username.errors
+        assert 'Could not find' in form.username.errors[0]
         assert form.user is None
 
     def test_validate_invalid_password(self, user):

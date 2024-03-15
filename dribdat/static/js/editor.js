@@ -121,7 +121,7 @@
     } else {
       $dialog.find("[data-target='pitch']").hide();
     }
-    var $webpage_url = $('.fld-webpage_url');
+    var $webpage_url = $('.projectedit .fld-webpage_url');
     if ($webpage_url.length > 0) {
       $webpage_url.prepend($togglebtn.clone().show());
     } else {

@@ -373,21 +373,23 @@
             </div>
           {% endif %}
 
-          <div class="date">
-          {% if s.ref_url %}
-            <a href="{{ s.ref_url }}">
+          {% if not s.title %}
+            <div class="date">
+            {% if s.ref_url %}
+              <a href="{{ s.ref_url }}">
+            {% endif %}
+                {{ s.date|format_datetime }}
+                {% if s.author %}
+                  ~
+                  <a class="userlink"
+                    href="{{ url_for('public.user', username=s.author )}}">
+                    {{ s.author }}</a>
+                {% endif %}
+            {% if s.ref_url %}
+              </a>
+            {% endif %}
+            </div>
           {% endif %}
-              {{ s.date|format_datetime }}
-              {% if s.author %}
-                ~
-                <a class="userlink"
-                  href="{{ url_for('public.user', username=s.author )}}">
-                  {{ s.author }}</a>
-              {% endif %}
-          {% if s.ref_url %}
-            </a>
-          {% endif %}
-          </div>
         </div><!-- /content -->
       </div>
       {% endfor %}

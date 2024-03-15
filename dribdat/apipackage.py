@@ -27,7 +27,7 @@ def event_to_data_package(event, author=None, host_url='', full_content=False):
     """Create a Data Package from the data of an event."""
     # Define the author, if available
     contributors = []
-    if author and not author.is_anonymous and author.is_admin:
+    if author and not author.is_anonymous:
         contributors.append({
             "title": author.name,
             "path": author.webpage_url or '',
