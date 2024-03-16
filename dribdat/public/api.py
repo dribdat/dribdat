@@ -277,7 +277,9 @@ def project_info_json(project_id):
 def event_participants_csv(event_id):
     """Download a CSV of event participants."""
     event = Event.query.filter_by(id=event_id).first_or_404()
-    userlist = [u.data for u in GetEventUsers(event)]
+    userlist = []
+    for u in GetEventUsers(event):
+        u['teams'] = u.joined_projects(True, -1, event):
     headers = {
         'Content-Disposition': 'attachment; '
         + 'filename=user_list_%d.csv' % event.id

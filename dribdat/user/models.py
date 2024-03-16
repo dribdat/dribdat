@@ -118,9 +118,6 @@ class User(UserMixin, PkModel):
             'id': self.id,
             'name': self.name,
             'email': self.email,
-            'sso_id': self.sso_id,
-            'active': self.active,
-            'is_admin': self.is_admin,
             'username': self.username,
             'fullname': self.fullname,
             'webpage_url': self.webpage_url,
@@ -176,7 +173,7 @@ class User(UserMixin, PkModel):
             self.carddata = gravatar_url
         self.save()
 
-    def joined_projects(self, with_challenges=True, limit=-1):
+    def joined_projects(self, with_challenges=True, limit=-1, event=None):
         """Retrieve all projects user has joined."""
         activities = Activity.query.filter_by(
                 user_id=self.id, name='star'
@@ -189,12 +186,13 @@ class User(UserMixin, PkModel):
         project_ids = []
         for a in activities:
             if limit > 0 and len(projects) >= limit: break
-            if a.project_id not in project_ids and not a.project.is_hidden:
-                a_prog = a.project.progress
-                not_challenge = a_prog is not None and a_prog > 0
-                if with_challenges or not_challenge:
-                    projects.append(a.project)
-                    project_ids.append(a.project_id)
+            if a.project_id in project_ids or a.project.is_hidden:
+                continue
+            if event is not None and a.project.event != event:
+                continue
+            if with_challenges or not project.is_challenge:
+                projects.append(a.project)
+                project_ids.append(a.project_id)
         return projects
 
 
