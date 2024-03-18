@@ -190,7 +190,7 @@ class User(UserMixin, PkModel):
                 continue
             if event is not None and a.project.event != event:
                 continue
-            if with_challenges or not project.is_challenge:
+            if with_challenges or not a.project.is_challenge:
                 projects.append(a.project)
                 project_ids.append(a.project_id)
         return projects

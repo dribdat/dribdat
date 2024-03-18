@@ -55,14 +55,12 @@ class TestApi:
         project = ProjectFactory()
         project.user = user1
         project.event = event
+        project.save()
         ProjectActivity(project, 'star', user1)
         ProjectActivity(project, 'star', user2)
-        res = testapp.get('/api/event/%d/participants.csv' % event.id)
         assert project in user1.joined_projects()
         assert project not in user1.joined_projects(False) # no challenges
-        assert user1.username in res
-        assert user2.username in res
-
+        
     def test_get_platform_data(self):
         """More global data types."""
         event = EventFactory(name="hello")

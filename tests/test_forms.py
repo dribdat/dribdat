@@ -69,7 +69,7 @@ class TestLoginForm:
         # Deactivated use can still log in
         assert form.validate() is True
         res = testapp.get('/user/%s' % user.username)
-        assert 'under review' in res
+        assert 'undergoing review' in res
 
 
 class TestEventForm:

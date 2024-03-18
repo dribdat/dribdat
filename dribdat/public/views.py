@@ -12,7 +12,7 @@ from dribdat.aggregation import GetEventUsers
 from dribdat.user import getProjectStages, isUserActive
 from urllib.parse import quote, quote_plus, urlparse
 from datetime import datetime
-from sqlalchemy import and_, or_
+from sqlalchemy import and_, or_, func
 import re
 
 blueprint = Blueprint('public', __name__, static_folder="../static")
@@ -132,11 +132,13 @@ def events_past():
 @blueprint.route('/user/<username>', methods=['GET'])
 def user(username):
     """Show a user profile."""
-    user = User.query.filter_by(username=username).first_or_404()
+    user = User.query.filter(
+                func.lower(User.username) == func.lower(username)
+            ).first_or_404()
     # logged_in = current_user and not current_user.is_anonymous
     if not isUserActive(user):
         flash(
-            'User account is under review. Please contact the '
+            'Account undergoing review. Please contact the '
             + 'organizing team for full access.',
             'info'
         )

@@ -279,7 +279,8 @@ def event_participants_csv(event_id):
     event = Event.query.filter_by(id=event_id).first_or_404()
     userlist = []
     for u in GetEventUsers(event):
-        u['teams'] = u.joined_projects(True, -1, event):
+        u['teams'] = u.joined_projects(True, -1, event)
+        userlist.append(u)
     headers = {
         'Content-Disposition': 'attachment; '
         + 'filename=user_list_%d.csv' % event.id
