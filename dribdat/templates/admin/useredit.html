@@ -4,50 +4,52 @@
 
 {% block content %}
 <div class="container">
-    <h4>Edit account</h4>
+    <h4 class="huge">Edit account</h4>
 
     <p>
         <a href="{{ url_for('public.user', username=user.username )}}" class="btn btn-success" target="_blank">View profile</a>
-        <a href="{{ url_for('admin.user_profile', user_id=user.id )}}" class="btn btn-warning" target="_blank">Edit profile</a>
-    </p>
+        <a href="{{ url_for('admin.user_profile', user_id=user.id )}}" class="btn btn-warning">Edit profile</a>
 
-    {{ render_form(url_for('admin.user', user_id=user.id), form) }}
-
-    <hr>
-    {% if user.sso_id %}
-    <p>
-        &#10003; SSO Enabled
-
-        <a href="{{ url_for('admin.user_clearsso', user_id=user.id) }}"
-            onclick="if(!window.confirm('Are you sure you wish to deactivate SSO for this user?')) return false"
-            class="btn btn-sm btn-warning">
-          Deactivate
-        </a>
-    </p>
-    {% endif %}
-    <p>Created: {{ user.created_at|format_date }}</p>
-    {% if user.updated_at %}
-        <p>Last update: {{ user.updated_at|format_date }}</p>
-    {% endif %}
-    <p>Last active: {{ user.last_active }}</p>
-
-    <div class="btn-group">
         {% if not user.active %}
             <a href="{{ url_for('admin.user_reactivate', user_id=user.id) }}"
-                class="btn btn-sm btn-success">
+                class="btn btn-success">
               Reactivate account
             </a>
-            <a href="{{ url_for('admin.user_delete', user_id=user.id) }}" class="btn btn-sm btn-danger"
+            <a href="{{ url_for('admin.user_delete', user_id=user.id) }}" class="btn btn-danger"
               onclick="if(!window.confirm('Are you sure you wish to delete this user?')) return false">
               Delete user
             </a>
         {% else %}
-        <a href="{{ url_for('admin.user_deactivate', user_id=user.id) }}"
-            title="Prevent user from making any changes to content except their own profile, which is hidden"
-            class="btn btn-sm btn-warning">
-          Deactivate account
-        </a>
+            <a href="{{ url_for('admin.user_deactivate', user_id=user.id) }}"
+                title="Prevent user from making any changes to content except their own profile, which is hidden"
+                class="btn btn-dark">
+              Deactivate account
+            </a>
         {% endif %}
-    </div>
+    </p>
+
+    <table width="100%"><tr>
+    {% if user.sso_id %}
+    <td>
+        &#10003; SSO Enabled
+
+        <a href="{{ url_for('admin.user_clearsso', user_id=user.id) }}"
+            onclick="if(!window.confirm('Are you sure you wish to clear SSO data for this user?')) return false"
+            class="btn btn-sm btn-warning">
+          Deactivate
+        </a>
+    </td>
+    {% endif %}
+        <td>Created: {{ user.created_at|format_date }}</td>
+    {% if user.updated_at %}
+        <td>Last update: {{ user.updated_at|format_date }}</td>
+    {% endif %}
+        <td>Last active: {{ user.last_active|format_date('%d.%m.%Y %H:%M') }}</td>
+    </tr></table>
+
+    <hr>
+
+    {{ render_form(url_for('admin.user', user_id=user.id), form) }}
+
 </div>
 {% endblock %}

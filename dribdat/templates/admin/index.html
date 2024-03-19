@@ -14,6 +14,9 @@
         <a href="{{ url_for('admin.event_projects', event_id=default_event.id) }}" class="btn btn-lg btn-success">
           <i class="fa fa-star" aria-hidden="true"></i>
           Projects</a>
+        <a href="{{ url_for('public.all_participants') }}" class="btn btn-lg btn-danger">
+          <i class="fa fa-child" aria-hidden="true"></i>
+          People</a>
     {% else %}
         <a href="{{ url_for('public.event_start') }}" class="btn btn-lg btn-success">
           <i class="fa fa-calendar" aria-hidden="true"></i>
@@ -21,21 +24,19 @@
     {% endif %}
     </div>
     <div class="btn-group mb-2 text-center">
+      <a href="{{ url_for('public.dashboard') }}" class="btn btn-lg btn-danger">
+        <i class="fa fa-recycle" aria-hidden="true"></i>
+        Dashboard</a>
       <a href="{{ url_for('admin.presets') }}" class="btn btn-lg btn-info">
         <i class="fa fa-pencil" aria-hidden="true"></i>
         Roles & Categories</a>
-    </div>
-    <div class="btn-group mb-2 text-center">
-      <a href="{{ url_for('public.all_participants') }}" class="btn btn-lg btn-light">
-        <i class="fa fa-child" aria-hidden="true"></i>
-        Contributors</a>
     </div>
     <div class="container">
       <div id="activities"></div>
     </div>
   </div>
 
-  <div class="mb-4">
+  <div class="mb-4 mt-5">
   {% for stat in stats %}
     {% if stat.text == 'Events' %}
       <a href="{{ url_for('admin.events') }}"
@@ -60,7 +61,6 @@
   <div class="mt-4">
     <a href="https://dribdat.cc" target="_blank"><img src="{{ url_for('static', filename='img/logo12.png') }}" height="200" alt="dribdat logo"></a>
     <br><br>
-    <b><a href="{{ url_for('public.dashboard') }}">Dashboard</a></b> |
     <a href="{{ url_for('public.clear_cache') }}">Refresh</a> |
     <b><a href="{{ url_for('public.about') }}">Documentation</a></b> |
     <a href="mailto:dribdat@datalets.ch">Get support</a>
@@ -71,7 +71,7 @@
 </div>
 {% endblock %}
 
-{% block js %}
+{% block notjs %}
 <script src="https://cdn.jsdelivr.net/npm/vega@5/build/vega.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/vega-lite@5/build/vega-lite.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/vega-embed@6/build/vega-embed.min.js"></script>

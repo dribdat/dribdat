@@ -1885,6 +1885,17 @@ a.go-up {
   border-left: 1px solid #999;
   padding-left: 15px;
 }
+.print-page .full-content {
+  padding: 2em;
+  margin: 0 1em;
+  background: white;
+  border: 1px solid #ccc;
+  box-shadow: 5px 5px 0px #ccc;
+}
+.print-page .full-content > tt {
+  display: block;
+  text-align: center;
+}
 @media only print {
   .no-print,
   footer { display: none; }

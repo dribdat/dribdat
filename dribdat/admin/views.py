@@ -159,9 +159,10 @@ def user_profile(user_id):
         user.updated_at = datetime.utcnow()
         db.session.add(user)
         db.session.commit()
+        user.socialize()
 
         flash('User updated.', 'success')
-        return redirect(url_for("admin.users"))
+        return redirect(url_for("admin.user", user_id=user_id))
 
     if not form.roles.choices:
         del form.roles
@@ -457,7 +458,7 @@ def project_toggle(project_id):
         flash('Project "%s" is now hidden.' % project.name, 'success')
     else:
         flash('Project "%s" is now visible.' % project.name, 'success')
-    return redirect(url_for("admin.event_projects", event_id=project.event.id))
+    return redirect(url_for("admin.project_view", project_id=project.id))
 
 
 @blueprint.route('/project/<int:project_id>/delete', methods=['GET', 'POST'])

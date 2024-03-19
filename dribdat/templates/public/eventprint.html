@@ -9,18 +9,19 @@
   <p>
     All projects and <a href="#challenges">challenges</a> as of <b>{{ curdate }}</b>.
   </p>
-  <p class="no-print">
-    Download as
-    <a href="{{ url_for('api.project_list_event_csv', event_id=current_event.id, moar=1)}}" download>
-      CSV file</a>
-     or
-    <a href="{{ url_for('api.package_specific_event', event_id=current_event.id, format='json')}}" download>
-      Data Package</a>.
-  </p>
 
-  {% if not request.args.get('longtext') %}
-    <a href="?longtext=1" class="no-print btn btn-light">Show full text</a>
-  {% endif %}
+  <p class="no-print">
+    <a href="{{ url_for('api.project_list_event_csv', event_id=current_event.id, moar=1)}}" class="btn btn-light" download>
+      Download as CSV </a>
+    <a href="{{ url_for('api.package_specific_event', event_id=current_event.id, format='json')}}" class="btn btn-light" download>
+      Download Data Package</a>
+
+    {% if not request.args.get('longtext') %}
+      <a href="?longtext=1" class="btn btn-light">Show full text</a>
+    {% else %}
+      <a href="?" class="btn btn-light">Hide full text</a>
+    {% endif %}
+  </p>
 
   {% for project in projects %}
   <hr>
@@ -75,15 +76,6 @@
       </p>
     {% endif %}
 
-    {% if request.args.get('longtext') and project.longtext %}
-      <br clear="all">
-      <div class="project-page clear-both">
-        <div class="project-longtext">
-          {{project.longtext|markdown|safe}}
-        </div>
-      </div>
-    {% endif %}
-
     {% if project.team %}
       <ul class="project-team" title="team">
       {% for user in project.team %}
@@ -92,6 +84,28 @@
         </a></li>
       {% endfor %}
       </ul>
+    {% endif %}
+
+    {% if request.args.get('longtext') and project.longtext %}
+      <br clear="all"><div class="full-content">
+        <tt>~ PITCH ~</tt>
+        <div class="project-page clear-both">
+          <div class="project-longtext">
+            {{project.longtext|markdown|safe}}
+          </div>
+        </div>
+      </div>
+    {% endif %}
+
+    {% if request.args.get('longtext') and project.autotext %}
+      <br clear="all"><div class="full-content">
+        <tt>~ README ~</tt>
+        <div class="project-page clear-both">
+          <div class="project-autotext">
+            {{project.autotext|markdown|safe}}
+          </div>
+        </div>
+      </div>
     {% endif %}
   </div>
 
