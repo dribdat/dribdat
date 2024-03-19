@@ -47,7 +47,7 @@ class TestViews:
 
         # Test the print view
         view_html = testapp.get('/event/%d/print' % event.id)
-        assert 'All projects' in view_html
+        assert 'Active projects' in view_html
 
         # Test the dribs view
         view_html = testapp.get('/dribs')
