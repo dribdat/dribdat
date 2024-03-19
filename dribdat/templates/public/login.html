@@ -62,7 +62,7 @@
     </p>
   {% endif %}
 
-  {% if not config.DRIBDAT_NOT_REGISTER %}
+  {% if config.DRIBDAT_ALLOW_LOGINS %}
     <form id="loginForm" method="POST" action="{{ url_for('auth.login', next=request.args.get('next')) }}" role="login" class="navbar-form form-inline">
       {{ form.hidden_tag() }}
       <div class="form-group">
@@ -76,6 +76,8 @@
       <i class="fa fa-arrow-right" aria-hidden="true"></i>
       <a href="{{ url_for('auth.forgot') }}">Recover my login</a>
     </p>
+  {% endif %}
+  {% if not config.DRIBDAT_NOT_REGISTER %}
     <p class="account-register">
       <a class="btn btn-warning btn-submit" href="{{ url_for('auth.register', next=request.args.get('next')) }}">Create an account</a>
     </p>
