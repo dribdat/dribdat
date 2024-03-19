@@ -11,9 +11,9 @@
   <script src="{{ url_for('static', filename='libs/jquery/jquery.js')}}"></script>
 {% endif %}
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js" integrity="sha512-ml/QKfG3+Yes6TwOzQb7aCNtJF4PUyha6R3w8pSTo/VJSywl7ZreYvvtUso7fKevpsI+pYVVwnu82YO0q3V6eg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf_viewer.min.js" integrity="sha512-OYwwL8rCrNapravkfWZCOWW0e/pC21Xnr9RmSVFIT/VAk0RZ3k4y4JAHUnsship8j3/9fKLB+CNizi4u7T5I9A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf_viewer.min.css" integrity="sha512-D0AR/C3senawQDjjZ7zvDnl3cTn8xe1m41gnJ6f4qmZrZpNA4kYR0OoVXFc/hQBXBd308Ho6wi9PG8IrmmshDg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js" integrity="sha512-q+4liFwdPC/bNdhUpZx6aXDx/h77yEQtn4I1slHydcbZK34nLaR3cAeYSJshoxIOq3mjEf7xJE8YWIUHMn+oCQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf_viewer.min.js" integrity="sha512-r/1hgDCXmxicFJ66QCjMCFl0dEhTBu7kYqoef3OrdHbqrnyhp1V/GhyWQg8Gto8412MUqU8AbMSpc5TLbRURhQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf_viewer.min.css" integrity="sha512-tze+o/xG0w3yxxE8xe32piisVvI/LfcEuf6LW7lFLUxhio2SfFQ9mQ0TqB0avvonmxUXT7/l8+fnWkR03u85fQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
 </head>
 <body class="render" src="{{ render_src }}">
@@ -22,17 +22,6 @@
   <button title="Previous" id="prev">&#9664;</button>
   <button id="go"><span id="page_num"></span> / <span id="page_count"></span></button>
   <button title="Next" id="next">&#9654;</button>
-<!--
-  <button title="Zoom Out" id="zoomOut"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-zoom-out" viewBox="0 0 16 16">
-  <path fill-rule="evenodd" d="M6.5 12a5.5 5.5 0 1 0 0-11 5.5 5.5 0 0 0 0 11zM13 6.5a6.5 6.5 0 1 1-13 0 6.5 6.5 0 0 1 13 0z"/>
-  <path d="M10.344 11.742c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1 6.538 6.538 0 0 1-1.398 1.4z"/>
-  <path fill-rule="evenodd" d="M3 6.5a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 0 1h-6a.5.5 0 0 1-.5-.5z"/>
-</svg></button>
-  <button title="Zoom In" id="zoomIn"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-zoom-in" viewBox="0 0 16 16">
-  <path fill-rule="evenodd" d="M6.5 12a5.5 5.5 0 1 0 0-11 5.5 5.5 0 0 0 0 11zM13 6.5a6.5 6.5 0 1 1-13 0 6.5 6.5 0 0 1 13 0z"/>
-  <path d="M10.344 11.742c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1 6.538 6.538 0 0 1-1.398 1.4z"/>
-  <path fill-rule="evenodd" d="M6.5 3a.5.5 0 0 1 .5.5V6h2.5a.5.5 0 0 1 0 1H7v2.5a.5.5 0 0 1-1 0V7H3.5a.5.5 0 0 1 0-1H6V3.5a.5.5 0 0 1 .5-.5z"/>
-</svg></button>-->
 </div>
 <canvas id="canv"></canvas>
 

@@ -5,7 +5,7 @@ let $thecanvas = $('#canv');
 let url = $thebody.attr('src');
 let pdfjsLib = window["pdfjs-dist/build/pdf"];
 
-pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js';
+pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 
 var pdfDoc = null,
     pageNum = 1,
@@ -14,6 +14,28 @@ var pdfDoc = null,
     scale = 1.5,
     canvas = $thecanvas[0],
     ctx = canvas.getContext('2d');
+
+/*
+// Support HiDPI-screens and fit to full screen mode
+
+    var outputScale = window.devicePixelRatio || 1;
+
+    canvas.width = Math.floor(viewport.width * outputScale);
+    canvas.height = Math.floor(viewport.height * outputScale);
+    canvas.style.width = Math.floor(viewport.width) + "px";
+    canvas.style.height =  Math.floor(viewport.height) + "px";
+
+    var transform = outputScale !== 1
+      ? [outputScale, 0, 0, outputScale, 0, 0]
+      : null;
+
+    // Render PDF page into canvas context
+    var renderContext = {
+      canvasContext: ctx,
+      transform: transform,
+      viewport: viewport
+    };
+*/
 
 /**
  * Get page info from document, resize canvas accordingly, and render page.

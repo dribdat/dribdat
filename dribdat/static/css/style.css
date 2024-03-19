@@ -1643,7 +1643,7 @@ a.go-up {
 }
 
 .widget-team .kick-user {
-  position: absolute;
+  vertical-align: top;
   font-size: 150%;
 }
 .widget-team .kick-user:hover {
