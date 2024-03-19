@@ -21,7 +21,7 @@ class Config(object):
     DRIBDAT_STAGE = os_env.get('DRIBDAT_STAGE', '')
 
     # Application options
-    DRIBDAT_ALLOW_LOGINS = os_env.get('DRIBDAT_ALLOW_LOGINS', 'False')
+    DRIBDAT_ALLOW_LOGINS = os_env.get('DRIBDAT_ALLOW_LOGINS', 'True')
     DRIBDAT_ALLOW_LOGINS = bool(strtobool(DRIBDAT_ALLOW_LOGINS))
     DRIBDAT_NOT_REGISTER = os_env.get('DRIBDAT_NOT_REGISTER', 'False')
     DRIBDAT_NOT_REGISTER = bool(strtobool(DRIBDAT_NOT_REGISTER))
