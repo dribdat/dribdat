@@ -115,7 +115,7 @@ def user(user_id):
         originalhash = user.password
         user.username = sanitize_input(form.username.data)
 
-        # Check unique email (why does this pass validation?)
+        # Check unique email (why does this sometimes pass validation?)
         if form.email.data != user.email:
             if User.query.filter_by(email=form.email.data).count() > 0:
                 flash('A user with this e-mail already exists.', 'warning')
@@ -134,6 +134,7 @@ def user(user_id):
         user.updated_at = datetime.utcnow()
         db.session.add(user)
         db.session.commit()
+        user.socialize()
 
         flash('User updated.', 'success')
         return redirect(url_for("admin.users"))
