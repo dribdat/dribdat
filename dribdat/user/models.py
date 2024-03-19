@@ -235,7 +235,7 @@ class User(UserMixin, PkModel):
             ).order_by(Activity.timestamp.desc()).first()
         if not act:
             return 'Never'
-        return act.timestamp
+        return act.timestamp.strftime('%d.%m.%Y %H:%M')
 
     @property
     def activity_count(self):

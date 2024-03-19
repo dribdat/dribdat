@@ -1895,6 +1895,7 @@ a.go-up {
 .print-page .full-content > tt {
   display: block;
   text-align: center;
+  margin-bottom: 1em;
 }
 @media only print {
   .no-print,

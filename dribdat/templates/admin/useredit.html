@@ -44,7 +44,7 @@
     {% if user.updated_at %}
         <td>Last update: {{ user.updated_at|format_date }}</td>
     {% endif %}
-        <td>Last active: {{ user.last_active|format_date('%d.%m.%Y %H:%M') }}</td>
+        <td>Last active: {{ user.last_active }}</td>
     </tr></table>
 
     <hr>
