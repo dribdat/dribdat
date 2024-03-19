@@ -129,9 +129,12 @@
     <hr{% if request.args.get('longtext') %} style="clear: both; page-break-after: always;"{% endif %}>
   {% endfor %}
 
-  <hr style="page-break-after: always;">
+  {% if projects %}
+    <hr style="page-break-after: always;">
+  {% endif %}
+
   <a name="challenges"></a>
-  <center><h1>Challenges</h1></center>
+  <center><h1 class="m-5">Challenges</h1></center>
 
   {% for project in challenges %}
     {{ render_print_project(project) }}
