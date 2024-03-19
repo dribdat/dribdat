@@ -209,7 +209,7 @@
 
 <div class="tab-content" id="project-content">
 
-  {% if project.is_webembed %}
+  {% if project.is_webembed and project.webpage_url %}
     <div class="project-webembed resizable">
       {{ project.webembed|safe }}
       <div class="win-size-grip"></div>
@@ -549,7 +549,7 @@
   </div><!-- /.modal -->
 {% endif %}
 
-{% if project.is_webembed %}
+{% if project.is_webembed and project.webpage_url %}
   <div class="modal fade modal-fullscreen" id="webembedModal" role="dialog" tabindex="-1">
     <div class="modal-dialog">
       <div class="modal-content">

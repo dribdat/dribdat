@@ -15,7 +15,7 @@ from dribdat.user.constants import (
 )
 from dribdat.onebox import format_webembed  # noqa: I005
 from dribdat.utils import (
-    format_date_range, format_date, timesince
+    format_date_range, format_date, timesince, strtobool
 )
 from dribdat.database import (
     db,
@@ -944,9 +944,9 @@ class Project(PkModel):
             self.created_at = dt.datetime.utcnow()
             self.updated_at = dt.datetime.utcnow()
         if 'is_autoupdate' in data:
-            self.is_autoupdate = bool(data['is_autoupdate'])
+            self.is_autoupdate = strtobool(data['is_autoupdate'])
         if 'is_webembed' in data:
-            self.is_webembed = bool(data['is_webembed'])
+            self.is_webembed = strtobool(data['is_webembed'])
         if 'maintainer' in data:
             uname = data['maintainer']
             user = User.query.filter_by(username=uname).first()

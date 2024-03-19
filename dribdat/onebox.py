@@ -15,7 +15,7 @@ from dribdat.extensions import cache
 def format_webembed(project_id, url=None):
     """Create a well-formatted frame for project embeds."""
     if not url:
-        return "Please provide a valid demo link."
+        return ''
     urltest = url.lower().strip()
     if urltest.startswith('<iframe '):
         # Allow IFRAMEs
@@ -40,6 +40,7 @@ def format_webembed(project_id, url=None):
                           'https://www.youtube.com/embed/')
         url = url.replace('?t=', '?start=')
     # TODO: add more embeddables here
+    # TODO: whitelist
     return '<iframe src="%s"></iframe>' % url
 
 
