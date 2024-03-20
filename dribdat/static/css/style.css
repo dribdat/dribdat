@@ -2180,3 +2180,10 @@ SlackIn button
 }
 
 .__slackin { margin-bottom: 10px; display: block; }
+
+.attribution {
+  font-size: 80%;
+  font-family: monospace;
+  position: absolute;
+  right: 2.5em;
+}

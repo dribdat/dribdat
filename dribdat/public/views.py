@@ -135,13 +135,16 @@ def user(username):
     user = User.query.filter(
                 func.lower(User.username) == func.lower(username)
             ).first_or_404()
-    # logged_in = current_user and not current_user.is_anonymous
     if not isUserActive(user):
         flash(
             'Account undergoing review. Please contact the '
             + 'organizing team for full access.',
             'info'
         )
+        may_certify = False
+    else:
+        may_certify = current_user and not current_user.is_anonymous \
+                      and current_user.id == user.id and user.may_certify()[0]
     submissions = user.posted_challenges()
     projects = user.joined_projects(True)
     posts = user.latest_posts(20)
@@ -159,7 +162,7 @@ def user(username):
                            events_next=events_next,
                            score=user.get_score(),
                            submissions=submissions,
-                           may_certify=user.may_certify()[0])
+                           may_certify=may_certify)
 
 
 @blueprint.route('/user/_post', methods=['GET'])
