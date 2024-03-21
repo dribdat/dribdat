@@ -209,7 +209,7 @@
     var $togglebtn = $('button[data-target="#uploadFile"]');
     // Enable the available fields
     var $webpageurl = $('.fld-webpage_url');
-    // Append button to the pitch editor
+    // Append button to the editor
     $webpageurl.prepend($togglebtn.clone().show());
     // Set up the file dialog
     var $inputfd = $dialog.find('input[type="file"]');
@@ -263,23 +263,6 @@
               $('#webpage_url').val(response);
               $('#is_webembed:not(:checked)').click();
               $dialog.modal('hide');
-            } else if ($(this).data('target') == 'pitch') {
-              // Determine file extension
-              //var fileExt = filename.split('.');
-              //fileExt = (fileExt.length > 1) ? fileExt[fileExt.length - 1] : '?';
-                  // ... ' (' + fileExt.toUpperCase() + ')'; 
-              // Append to pitch
-              if (typeof window.toasteditor !== 'undefined') {
-                window.toasteditor.exec('addLink', { 
-                  linkUrl: response, linkText: filename
-                });
-              } else {
-                // Create Markdown link with a paperclip emoji
-                var fileLink = '📎 [' + filename + '](' + response + ')';
-                $('#longtext').val($('#longtext').val() +
-                  '\n\n' + fileLink);
-              }
-              $dialog.modal('hide');
             } else {
               // Copy to clipboard
               if (navigator.clipboard) {
@@ -300,7 +283,7 @@
   }); // -#uploadFile
 
 
-  // Upload a presentation file
+  // Upload a dataset file
   $('#uploadPackage').each(function() {
     var $dialog = $(this);
     var $togglebtn = $('button[data-target="#uploadPackage"]');
@@ -354,7 +337,7 @@
           }
 
           // User confirms the file upload
-          $('#file-confirm').show().find('button').off("click").click(function() {
+          $('#data-confirm').show().find('button').off("click").click(function() {
             if ($(this).data('target') == 'pitch') {
               // Determine file extension
               //var fileExt = filename.split('.');
