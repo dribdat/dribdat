@@ -244,11 +244,12 @@ class User(UserMixin, PkModel):
                 user_id=self.id
             ).count()
 
-    def may_certify(self):
+    def may_certify(self, for_project=None):
         """Check availability of certificate."""
-        projects = self.joined_projects(False)
-        if not len(projects) > 0:
-            return (False, 'projects')
+        if not for_project:
+            projects = self.joined_projects(False)
+            if not len(projects) > 0:
+                return (False, 'projects')
         cert_path = self.get_cert_path(projects[0].event)
         if not cert_path:
             return (False, 'event')
@@ -632,7 +633,7 @@ class Project(PkModel):
     @property
     def webembed(self):
         """Detect and return supported embed widgets."""
-        return format_webembed(self.id, self.webpage_url)
+        return format_webembed(self.webpage_url, self.id)
 
     @property
     def longhtml(self):

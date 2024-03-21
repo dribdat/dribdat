@@ -12,7 +12,7 @@ from .boxout.github import box_repo
 from dribdat.extensions import cache
 
 
-def format_webembed(project_id, url=None):
+def format_webembed(url, project_id):
     """Create a well-formatted frame for project embeds."""
     if not url:
         return ''
@@ -22,9 +22,8 @@ def format_webembed(project_id, url=None):
         # TODO: add a setting
         return url
     elif urltest.endswith('.pdf'):
-        # Embedded document
+        # Redirect to embed visualizer of this document
         url = url_for('project.render', project_id=project_id)
-        # url = '/project/%d/render' % project_id
     elif urltest.startswith('https://query.wikidata.org/'):
         # Fix WikiData queries
         url = url.replace('https://query.wikidata.org/',

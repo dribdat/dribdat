@@ -3,7 +3,7 @@
 	<div class="modal-dialog" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h5 class="modal-title" id="uploadLabel">Upload an image</h5>
+				<h5 class="modal-title" id="uploadLabel">Upload Images</h5>
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 					<span aria-hidden="true">&times;</span>
 				</button>
@@ -30,10 +30,6 @@
 					<input name="url" disabled style="display:block;margin-top:1em">
 				</center>
 				<center class="col hidden" style="margin-top:1em" id="img-confirm">
-					<button class="btn btn-warning btn-lg" data-target="weblink">
-						<i class="fa fa-desktop"></i><br>
-						Presentation
-					</button>
 					<button class="btn btn-info btn-lg" data-target="pitch">
 						<i class="fa fa-plus-square-o"></i><br>
 						Insert into Pitch
@@ -65,7 +61,62 @@
 	<div class="modal-dialog" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h5 class="modal-title" id="uploadFileLabel">Attach file</h5>
+				<h5 class="modal-title" id="uploadFileLabel">Attach Presentation</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<p class="upload-note mt-0">
+					You can upload a <sp>PDF</sp> export of your presentation here,
+					up to {{ (config.MAX_CONTENT_LENGTH/(1024*1024))|round(1) }} MB in size.
+
+					<br><b>Tip:</b> 
+					Use the <i>Export to PDF</i> function in your presentation, or an <a href="https://www.adobe.com/acrobat/online/ppt-to-pdf.html" target="_blank">online converter</a> to prepare your file.
+					Too big? Try <a href="https://tools.pdf24.org/compress-pdf" target="_blank">compressing your PDF</a> before uploading.
+				</p>
+				<div class="input-group mt-2">
+					<div class="input-group-prepend">
+						<span class="input-group-text" id="inputFileLabel">Select</span>
+					</div>
+					<div class="custom-file">
+						<input type="file" class="custom-file-input" id="inputFile"
+							name="image" aria-describedby="inputFileLabel" accept=".pdf"
+							data-maxsize="{{ config.MAX_CONTENT_LENGTH }}">
+						<label class="custom-file-label" for="inputFile">Choose file</label>
+					</div>
+				</div>
+				<div class="file-preview hidden mt-3">
+					<table width="100%">
+						<tr><th width="20%">File name:</th><td class="filename"></td></tr>
+						<tr><th>File size:</th><td class="filesize"></td></tr>
+					</table>
+				</div>
+				<center class="col hidden" style="margin-top:1em" id="file-confirm">
+					<button class="btn btn-warning btn-lg" data-target="weblink">
+						<i class="fa fa-desktop"></i><br>
+						Use as Presentation
+					</button>
+					<button class="btn btn-light btn-lg" data-target="xclip">
+						<i class="fa fa-clipboard"></i><br>
+						Copy link
+					</button>
+				</center>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+			</div>
+		</div>
+	</div>
+</div><!-- / Upload File -->
+
+
+<!-- Upload Data dialog -->
+<div class="modal fade uploader" id="uploadPackage" tabindex="-1" role="dialog" aria-labelledby="uploadDataLabel" aria-hidden="true">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="uploadDataLabel">Attach Data</h5>
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 					<span aria-hidden="true">&times;</span>
 				</button>
@@ -79,10 +130,11 @@
 					<sp>ODS</sp>
 					<sp>JSON</sp>
 					<sp>GeoJSON</sp>
-					up to {{ (config.MAX_CONTENT_LENGTH/(1024*1024))|round(1) }} MB in size.
-
-					<b>Tip:</b> <a href="https://frictionlessdata.io/" target="_blank">Data Packages</a> can be
-					<a href="https://frictionlessdata.io/projects/#visual-interfaces" target="_blank">made with tools</a> or <a href="https://github.com/schoolofdata-ch/datapackage-template" target="_blank">templates</a>.
+					<br>(up to {{ (config.MAX_CONTENT_LENGTH/(1024*1024))|round(1) }} MB in size)<br>
+					<br><b>Tip:</b> The
+					<a href="https://frictionlessdata.io/" target="_blank">Frictionless Data</a> standard
+					recommends putting our metadata into a <sp>datapackage.json</sp>, which can be generated
+					<a href="https://frictionlessdata.io/projects/#visual-interfaces" target="_blank">with tools</a> or copied from <a href="https://github.com/schoolofdata-ch/datapackage-template" target="_blank">a template</a>. 
 				</p>
 				<div class="input-group mt-2">
 					<div class="input-group-prepend">
@@ -111,17 +163,13 @@
 					</table>
 				</div>
 				<center class="col hidden" style="margin-top:1em" id="file-confirm">
-					<button class="btn btn-warning btn-lg" data-target="weblink">
-						<i class="fa fa-desktop"></i><br>
-						Presentation
-					</button>
 					<button class="btn btn-info btn-lg" data-target="pitch">
 						<i class="fa fa-plus-square-o"></i><br>
 						Insert into Pitch
 					</button>
 					<button class="btn btn-light btn-lg" data-target="xclip">
 						<i class="fa fa-clipboard"></i><br>
-						Copy
+						Copy the link
 					</button>
 				</center>
 			</div>
@@ -130,4 +178,4 @@
 			</div>
 		</div>
 	</div>
-</div><!-- / Upload File -->
+</div><!-- / Upload Data -->
