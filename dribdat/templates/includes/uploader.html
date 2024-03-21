@@ -10,8 +10,11 @@
 			</div>
 			<div class="modal-body">
 				<p class="upload-note">
-					Open web formats (<tt>PNG</tt>, GIF, JPEG, SVG, WebP) are accepted.
-					<b>Max {{ (config.MAX_CONTENT_LENGTH/(1024*1024))|round(1) }} MB.</b>
+					Open web formats accepted: <sp>PNG</sp> <sp>GIF</sp> <sp>JPEG</sp> <sp>SVG</sp> <sp>WebP</sp>
+					<b>&nbsp;Max {{ (config.MAX_CONTENT_LENGTH/(1024*1024))|round(1) }} MB.</b><br>
+
+					<br>&copy; Make sure to <a href="https://commons.wikimedia.org/wiki/Commons:Reusing_content_outside_Wikimedia" target="_blank">correctly attribute</a> 
+					in your Pitch the author and license of any creative works that you use.
 				</p>
 				<div class="input-group" style="margin-top:1em">
 					<div class="input-group-prepend">
@@ -25,11 +28,11 @@
 					</div>
 				</div>
 				<hr>
-				<center class="preview hidden" id="img-preview">
+				<center class="image-upload-preview preview hidden" id="img-preview">
 					<img src="" height="128">
-					<input name="url" disabled style="display:block;margin-top:1em">
+					<input name="url" disabled>
 				</center>
-				<center class="col hidden" style="margin-top:1em" id="img-confirm">
+				<center class="image-upload-confirm col hidden" id="img-confirm">
 					<button class="btn btn-info btn-lg" data-target="pitch">
 						<i class="fa fa-plus-square-o"></i><br>
 						Insert into Pitch
@@ -44,7 +47,7 @@
 					</button>
 					<button class="btn btn-light btn-lg" data-target="xclip">
 						<i class="fa fa-clipboard"></i><br>
-						Copy
+						Copy link
 					</button>
 				</center>
 			</div>
@@ -133,7 +136,7 @@
 					<br>(up to {{ (config.MAX_CONTENT_LENGTH/(1024*1024))|round(1) }} MB in size)<br>
 					<br><b>Tip:</b> The
 					<a href="https://frictionlessdata.io/" target="_blank">Frictionless Data</a> standard
-					recommends putting our metadata into a <sp>datapackage.json</sp>, which can be generated
+					recommends sharing our metadata with a <sp>datapackage.json</sp> generated
 					<a href="https://frictionlessdata.io/projects/#visual-interfaces" target="_blank">with tools</a> or copied from <a href="https://github.com/schoolofdata-ch/datapackage-template" target="_blank">a template</a>. 
 				</p>
 				<div class="input-group mt-2">
@@ -169,7 +172,7 @@
 					</button>
 					<button class="btn btn-light btn-lg" data-target="xclip">
 						<i class="fa fa-clipboard"></i><br>
-						Copy the link
+						Copy link
 					</button>
 				</center>
 			</div>

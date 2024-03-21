@@ -91,6 +91,7 @@ form input[type="checkbox"] {
   opacity: 0.5;
 }
 
+/* File upload dialog */
 .upload-note {
   font-size: 90%;
   margin: 1em 0;
@@ -101,6 +102,15 @@ form input[type="checkbox"] {
   vertical-align: top;
   border-top: 1px solid lightgrey;
   border-bottom: 1px solid lightgrey;
+}
+.uploader .image-upload-preview input {
+  display: block; margin-top: 1em; width: 100%;
+}
+.uploader .image-upload-preview {
+  overflow: hidden;
+}
+.uploader .image-upload-confirm {
+  margin-top: 1em;
 }
 
 .admin .form-group .control-label {
