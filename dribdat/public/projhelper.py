@@ -165,7 +165,7 @@ def project_action(project_id, of_type=None, as_view=True, then_redirect=False,
         # Obtain list of team members (performance!)
         project_team = project.get_team()
         # Suggest missing team roles
-        if allow_post:
+        if not event.has_finished:
             missing_roles = project.get_missing_roles()
         else:
             missing_roles = None
