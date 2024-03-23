@@ -94,7 +94,7 @@ def project_edit_action(project_id, detail_view=False):
     if form.is_submitted() and form.validate():
 
         # Check for minor edit toggle
-        if form.is_minoredit:
+        if 'is_minoredit' in dir(form):
             is_minoredit = form.is_minoredit.data
             del form.is_minoredit
         else:
