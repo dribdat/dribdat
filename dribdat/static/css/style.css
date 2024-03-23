@@ -47,6 +47,9 @@ form input[type="checkbox"] {
      -moz-box-sizing: border-box;
           box-sizing: border-box;
 }
+.form-project-post {
+  clear: both;
+}
 .form-project-post h4 {
   margin-top: 1em;
   font-weight: normal;
@@ -153,7 +156,6 @@ form input[type="checkbox"] {
   text-decoration: none;
 }
 .alert.project-tips .close {
-  margin: 0.2em 0.4em -1em -1em;
   position: relative;
   z-index: 99;
 }
@@ -905,9 +907,6 @@ nav .nav-login {
   font-size: 125%;
   hyphens: auto;
   width: 85%;
-}
-.project-tips.alert-light {
-  color: black;
 }
 .project-page .project-ident {
   display: inline-block;
@@ -2042,6 +2041,19 @@ Instruction page
 }
 .projectpost alert {
   margin-top: 0.5em;
+}
+.projectpost .project-name {
+  float: right;
+  color: #777;
+  margin-top: -2em;
+  margin-right: 0.1em;
+}
+.projectpost .form-project-post .checkbox {
+  float: right;
+}
+.project-tips.alert:hover {
+  color: black;
+  background: lightyellow;
 }
 
 /* ------------

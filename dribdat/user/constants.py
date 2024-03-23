@@ -3,6 +3,8 @@
 from os import environ as os_env
 from ..utils import load_yaml_presets
 from ..apifetch import FetchStageConfig
+from random import random
+
 
 # User role
 USER = 0
@@ -35,8 +37,20 @@ RESOURCE_TYPES = {
 # Content length
 MAX_EXCERPT_LENGTH = 500
 
+# Containers for stage data
 PR_CHALLENGE = 0
 PR_STAGES = { 'PROGRESS': {}, 'STAGE': {} }
+
+# Random questions for drib post
+DRIB_QUESTIONS = [
+        'Tell me about your latest work?',
+        'What was the last thing you did here?',
+        'Share a recent activity in your project?',
+        'How are the vibes in your team right now?',
+        'Could you share what you just completed?',
+        'Mind sharing your current move or task?',
+        'Can you describe your current challenge?',
+    ]
 
 
 def resourceTypeList(verbose=False):
@@ -127,6 +141,8 @@ def getStageByProgress(progress):
             return None
     return PR_STAGES['STAGE'][progress]
 
+
+# TODO: move to progress.py
 
 def getProjectPhase(project):
     """Return progress phase for a project."""
@@ -243,6 +259,11 @@ def getActivityByType(a, only_active=True):  # noqa: C901
     else:
         return None
     return (author, title, text, icon)
+
+
+def drib_question():
+    q = DRIB_QUESTIONS
+    return q[round(random()*(len(q)-1))]
 
 
 # TODO: make this happen in app.py

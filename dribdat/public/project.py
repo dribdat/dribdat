@@ -5,6 +5,7 @@ from flask import (
 )
 from flask_login import login_required, current_user
 from dribdat.user.models import Event, Project, Activity, User
+from dribdat.user.constants import drib_question
 from dribdat.database import db
 from dribdat.extensions import cache
 from dribdat.utils import timesince
@@ -23,6 +24,7 @@ from dribdat.public.projhelper import (
 )
 from ..decorators import admin_required
 from ..mailer import user_invitation
+
 
 blueprint = Blueprint('project', __name__,
                       static_folder="../static", url_prefix='/project')
@@ -149,6 +151,9 @@ def project_post(project_id):
     stage, all_valid = validateProjectData(project)
     form = ProjectPost(obj=project, next=request.args.get('next'))
 
+    # Apply random questions
+    form.note.label.text = drib_question()
+
     # Process form
     if form.is_submitted() and form.validate():
         if form.has_progress.data:
@@ -166,10 +171,11 @@ def project_post(project_id):
         db.session.add(project)
         db.session.commit()
         cache.clear()
+
+        # Write a post
         project_action(project_id, 'update',
                        action='post', text=form.note.data)
-
-        flash("Thanks for sharing!", 'success')
+        flash("Thanks for sharing your progress!", 'success')
 
         # Continue with project autoupdate
         if project.is_autoupdateable:

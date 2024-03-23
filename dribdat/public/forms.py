@@ -59,17 +59,18 @@ class ProjectForm(FlaskForm):
     is_webembed = BooleanField(u'Embed the Presentation on the project page')
     longtext = TextAreaField(
         u'Pitch', [length(max=64000)],
-        description="Markdown or HTML supported. Links on their own line"
-        + " to supported sites (SpeakerDeck, YouTube etc.) get live previews."
-        + " No copypasta: click the 'Upload Image' button.")
+        description="Markdown supported. Put a link"
+        + " to supported sites (SpeakerDeck, YouTube,..) on a line for a preview."
+        + " No copypasta - use the 'Upload Image' button.")
     autotext_url = URLField(
         u'Readme link', [length(max=255)],
         description="URL to a code repository, online document, or wiki to Sync with. Tips: dribdat.cc/usage")
     note = TextAreaField(
-        u'Log entry',
+        u'What changed?',
         [length(max=280)],
         render_kw={'maxlength': 280, 'rows': 3},
         description=u'(Optional) A short update for the project log')
+    is_minoredit = BooleanField(u'This is a minor edit')
     submit = SubmitField(u'Save changes')
 
 
@@ -117,7 +118,7 @@ class ProjectPost(FlaskForm):
     id = HiddenField('id')
     has_progress = BooleanField(u"Level up")
     note = TextAreaField(
-        u'What was the last thing you did?',
+        'How are the vibes in your team right now?',
         [length(max=280), DataRequired()],
         render_kw={'maxlength': 280},
         description=u'A short note for your project log.')
