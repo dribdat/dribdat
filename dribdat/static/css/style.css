@@ -897,7 +897,7 @@ nav .nav-login {
 
 .project-page .project-headline {
   margin-top: 0.5em;
-  overflow: hidden;
+  overflow-x: hidden;
 }
 .project-page .project-name {
   text-shadow: 1px 1px 1px white;
@@ -1005,9 +1005,14 @@ nav .nav-login {
 .project-page img {
   max-width: 100%;
 }
+.theme-dark .project-page.jumbotron {
+  color: white;
+  background-color: black;
+}
 .project-page.jumbotron {
   background-color: white;
   color: black;
+  overflow-x: hidden;
   padding: 1rem;
 }
 .project-page .project-longtext blockquote {
