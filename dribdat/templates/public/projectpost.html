@@ -8,11 +8,6 @@
 
 {% block content %}
 
-  <h4 class="project-name">
-    {{project.name}} &nbsp;
-    <i class="fa fa-comment"></i>
-  </h4>
-
   {% if (suggestions or stage) and project.progress and project.progress < 50 %}
     <div class="alert alert-secondary float-right resource-list project-tips profile-projects">
       <button type="button" class="close" data-dismiss="alert" aria-label="Dismiss" title="Hide">
@@ -95,16 +90,20 @@
   {% endif %}
 
   <h2 class="huge">
-    Post on 
+    <i class="fa fa-comment text-sm"></i>
+    {% if stage %}
+      Post
+    {% else %}
+      Comment
+    {% endif %}
+  </h2>
+
+  <h4 class="project-name">
     <a href="{{ url_for('project.project_view', project_id=project.id) }}" 
        title="Back to project" target="_blank">
-      {%- if project.is_challenge -%}
-      challenge
-      {%- else -%}
-      project
-      {%- endif -%}
+      {{project.name}} 
     </a>
-  </h2>
+  </h4>
 
   {% if config.S3_KEY %}
     <button title="Attach image" class="btn btn-light post-image-btn"

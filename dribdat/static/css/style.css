@@ -897,6 +897,7 @@ nav .nav-login {
 
 .project-page .project-headline {
   margin-top: 0.5em;
+  overflow: hidden;
 }
 .project-page .project-name {
   text-shadow: 1px 1px 1px white;
@@ -2043,10 +2044,7 @@ Instruction page
   margin-top: 0.5em;
 }
 .projectpost .project-name {
-  float: right;
   color: #777;
-  margin-top: -2em;
-  margin-right: 0.1em;
 }
 .projectpost .form-project-post .checkbox {
   float: right;

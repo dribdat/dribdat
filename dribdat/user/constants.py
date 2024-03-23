@@ -43,13 +43,13 @@ PR_STAGES = { 'PROGRESS': {}, 'STAGE': {} }
 
 # Random questions for drib post
 DRIB_QUESTIONS = [
-        'Tell me about your latest work?',
+        'Tell us about your latest work',
         'What was the last thing you did here?',
-        'Share a recent activity in your project?',
+        'Share a recent activity in your project',
         'How are the vibes in your team right now?',
         'Could you share what you just completed?',
-        'Mind sharing your current move or task?',
-        'Can you describe your current challenge?',
+        'What is your current task, and next move?',
+        'Describe your current challenge',
     ]
 
 

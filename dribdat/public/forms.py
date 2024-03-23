@@ -56,7 +56,7 @@ class ProjectForm(FlaskForm):
         u'Presentation', [length(max=2048)],
         description="URL to a live demo, presentation, or a link to get "
         + "more information.")
-    is_webembed = BooleanField(u'Embed the Presentation on the project page')
+    is_webembed = BooleanField(u'Embed the Presentation on page')
     longtext = TextAreaField(
         u'Pitch', [length(max=64000)],
         description="Markdown supported. Put a link"
@@ -70,8 +70,8 @@ class ProjectForm(FlaskForm):
         [length(max=280)],
         render_kw={'maxlength': 280, 'rows': 3},
         description=u'(Optional) A short update for the project log')
-    is_minoredit = BooleanField(u'This is a minor edit')
     submit = SubmitField(u'Save changes')
+    is_minoredit = BooleanField(u'This is a minor edit') # No log entry if checked
 
 
 class ProjectDetailForm(FlaskForm):
@@ -83,32 +83,32 @@ class ProjectDetailForm(FlaskForm):
         [length(max=80), UniqueValidator(Project, 'name'), DataRequired()],
         render_kw={'maxlength': 80, 'required': 'required'},
         description="A short name for your project or challenge.")
-    category_id = SelectField(u'Challenge category', coerce=int,
-        description="If available, which category does your project belong to.")
     source_url = URLField(
         u'Source', [length(max=255)],
         description="Link to the original source code of your project.")
-    download_url = URLField(
-        u'Download', [length(max=255)],
-        description="Link to a downloadable version of your work.")
     # Note: contact_url could be an e-mail or room number -> StringField
     contact_url = StringField(
         u'Contact', [length(max=255)],
         description="How to reach you via website or e-mail.")
+    download_url = URLField(
+        u'Demo', [length(max=255)],
+        description="Link to online demo or download area for this project.")
     hashtag = StringField(
-        u'Hashtag/Affiliation', [length(max=140)],
-        description="Your organization, team channel, or social media hashtags.")
+        u'Affiliation', [length(max=140)],
+        description="Your organization, channel, or social media hashtag.")
     # Note: relative links allowed in image_url -> StringField
     image_url = StringField(
         u'Cover image', [length(max=255)],
         description="Link to an image showing in the project overview and at the top of the page.")
     logo_color = StringField(
-        u'Color scheme',
-        description="Customize the outline color of your project page.")
+        u'Outline color',
+        description="Customize the color scheme of your project page.")
     logo_icon = StringField(
         u'Named icon',
         [length(max=20)], description='Select an icon from FontAwesome'
         + ': https://fontawesome.com/v4/cheatsheet')
+    category_id = SelectField(u'Challenge category', coerce=int,
+        description="If available, which category does your project belong to.")
     submit = SubmitField(u'Save changes')
 
 
