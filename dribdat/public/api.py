@@ -278,7 +278,8 @@ def get_users_for_event(event=None):
     for u in GetEventUsers(event):
          # with_challenges=True, limit=-1, event=None
         udata = u.data
-        udata['teams'] = u.joined_projects(True, -1, event)
+        pnames = [ p.name for p in u.joined_projects(True, -1, event) ]
+        udata['teams'] = ', '.join(pnames)
         userlist.append(udata)
     return userlist
 

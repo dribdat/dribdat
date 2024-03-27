@@ -65,6 +65,7 @@ class TestApi:
         userlist = get_users_for_event(event)
         assert user1.username in [ u['username'] for u in userlist ]
         assert user2.username in [ u['username'] for u in userlist ]
+        assert project.name in [ u['teams'] for u in userlist ]
 
         
     def test_get_platform_data(self):
