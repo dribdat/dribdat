@@ -5,6 +5,7 @@ import datetime as dt
 
 import pytest
 import pytz
+from base64 import b64decode
 
 from dribdat.user.models import Role, User, Event
 from dribdat.user.constants import stageProjectToNext
@@ -27,6 +28,16 @@ class TestUser:
 
         retrieved = User.get_by_id(user.id)
         assert retrieved == user
+
+        newdata = { 'username': 'bar', 'webpage_url': '#' }
+        user.set_from_data(newdata)
+        assert user.username == 'bar'
+        assert user.webpage_url == newdata['webpage_url']
+        assert 'localdomain' not in user.email
+
+        user = User()
+        user.set_from_data(newdata)
+        assert 'localdomain' in user.email
 
     def test_created_at_defaults_to_datetime(self):
         """Test creation date."""
@@ -67,6 +78,26 @@ class TestUser:
         user.roles.append(role)
         user.save()
         assert role in user.roles
+
+    def test_social(self):
+        """Check social network profile."""
+        user = UserFactory()
+        user.socialize()
+        assert user.cardtype == ''
+        assert 'gravatar' in user.carddata
+        user.webpage_url = 'https://github.com/dribdat'
+        user.socialize()
+        assert user.cardtype == 'github'
+        assert 'dribdat' in user.carddata
+        user.webpage_url = 'https://gitlab.com/dribdat'
+        user.email = b64decode(b'b2xAdXRvdS5jaA==').decode("utf-8")
+        user.socialize()
+        assert user.cardtype == 'gitlab'
+        assert 'identicon' in user.carddata
+        user.webpage_url = 'https://linkedin.com/in/loleg'
+        user.socialize()
+        assert user.cardtype == 'linkedin-square'
+        assert 'avatar' in user.carddata
 
 
 @pytest.mark.usefixtures('db')
@@ -136,6 +167,20 @@ class TestEvent:
         assert event.project_count == 2
         assert p1 in event.current_projects()
         assert p3 not in event.current_projects()
+
+    def test_event_certify(self, db):
+        event = EventFactory()
+        user = UserFactory()
+        user.save()
+        assert user.may_certify() == (False, 'projects')
+        project = ProjectFactory()
+        project.event = event
+        project.save()
+        ProjectActivity(project, 'star', user)
+        assert user.may_certify() == (False, 'event')
+        event.certificate_path = 'https://testcert.cc/{username}'
+        event.save()
+        assert user.may_certify()[0]
 
 
 @pytest.mark.usefixtures('db')

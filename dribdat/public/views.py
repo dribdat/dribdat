@@ -2,26 +2,24 @@
 """Public section, including homepage and signup."""
 from dribdat.utils import load_event_presets
 from flask import (Blueprint, request, render_template, flash, url_for,
-                   redirect, current_app, jsonify)
+        redirect, current_app, jsonify)
 from flask_login import login_required, current_user
 from dribdat.user.models import User, Event, Project, Activity
 from dribdat.public.forms import NewEventForm
+from dribdat.public.userhelper import (get_users_by_search, 
+        filter_users_by_search, get_dribs_paginated)
 from dribdat.database import db
 from dribdat.extensions import cache
 from dribdat.aggregation import GetEventUsers
 from dribdat.user import getProjectStages, isUserActive
-from urllib.parse import quote, quote_plus, urlparse
+from urllib.parse import urlparse
 from datetime import datetime
-from sqlalchemy import and_, or_, func
-import re
+from sqlalchemy import and_
 
 blueprint = Blueprint('public', __name__, static_folder="../static")
 
 # Loads confiuration for events
 EVENT_PRESET = load_event_presets()
-
-# Removes markdown and HTML tags
-RE_NO_TAGS = re.compile(r'\!\[[^\]]*\]\([^\)]+\)|\[|\]|<[^>]+>')
 
 
 def current_event():
@@ -219,31 +217,11 @@ def event_participants(event_id):
     """Show list of participants of an event."""
     event = Event.query.filter_by(id=event_id).first_or_404()
     users = GetEventUsers(event)
-    cert_path = None
     search_by = request.args.get('q') or ''
     role_call = request.args.get('r') or ''
-    # Quick (actually, rather slow..) search filter
-    if role_call and len(role_call) > 2:
-        usearch = []
-        for u in users:
-            for r in u.roles:
-                if role_call in str(r):
-                    usearch.append(u)
-                    search_by = role_call
-                    break
-    elif search_by and len(search_by) > 2:
-        usearch = []
-        qq = search_by.replace('@', '').lower()
-        for u in users:
-            if qq in u.username.lower() or qq in u.email.lower():
-                usearch.append(u)
-            elif (u.my_story and qq in u.my_story.lower()) or \
-                 (u.my_goals and qq in u.my_goals.lower()):
-                usearch.append(u)
-    else:
-        usearch = users
-        search_by = ''
+    usearch, search_by = filter_users_by_search(users, search_by, role_call)
     # Provide certificate if available
+    cert_path = None
     if current_user and not current_user.is_anonymous:
         cert_path = current_user.get_cert_path(event)
     usercount = len(usearch) if usearch else 0
@@ -258,34 +236,14 @@ def event_participants(event_id):
 @blueprint.route("/participants")
 def all_participants():
     """Show list of participants of an event."""
-    users = User.query.filter_by(active=True)
     search_by = request.args.get('q')
-    if search_by and len(search_by) > 2:
-        q = search_by.replace('@', '').lower()
-        q = "%%%s%%" % q
-        if '@' in search_by:
-            users = users.filter(or_(
-                User.email.ilike(q),
-                User.username.ilike(q)
-            ))
-        else:
-            users = users.filter(or_(
-                User.my_story.ilike(q),
-                User.my_goals.ilike(q),
-            ))
-    else:
-        users = users.limit(50).all()
-        search_by = ''
-    # Provide certificate if available
-    if users:
-        users = sorted(users, key=lambda x: x.username)
-        usercount = len(users)
-    else:
-        usercount = 0
+    users = get_users_by_search(search_by)
+    if len(users) == 200:
+        flash('Only the first 200 participants are shown.', 'info')
     return render_template("public/eventusers.html",
                            q=search_by,
                            participants=users, 
-                           usercount=usercount, 
+                           usercount=len(users), 
                            active="participants")
 
 
@@ -421,21 +379,7 @@ def dribs():
     """Show the latest logged posts."""
     page = int(request.args.get('page') or 1)
     per_page = int(request.args.get('limit') or 10)
-    latest_dribs = Activity.query.filter(or_(
-        Activity.action == "post",
-        Activity.name == "boost")).order_by(Activity.id.desc())
-    dribs = latest_dribs.paginate(page=page, per_page=per_page)
-    dribs.items = [
-        d for d in dribs.items
-        if not d.project.is_hidden and d.content]
-    # Generate social links
-    for d in dribs.items:
-        d.share = {
-            'text': quote(" ".join([
-                RE_NO_TAGS.sub('', d.content or d.project.name),
-                d.project.event.hashtags or '#dribdat']).strip()),
-            'url': quote_plus(request.host_url + d.project.url)
-        }
+    dribs = get_dribs_paginated(page, per_page, request.host_url)
     return render_template("public/dribs.html",
                            current_event=current_event(),
                            endpoint='public.dribs', active='dribs', 
