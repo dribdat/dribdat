@@ -60,6 +60,12 @@ class TestApi:
         ProjectActivity(project, 'star', user2)
         assert project in user1.joined_projects()
         assert project not in user1.joined_projects(False) # no challenges
+
+        # Test event API
+        userlist = get_users_for_event(event)
+        assert user1.username in [ u['username'] for u in userlist ]
+        assert user2.username in [ u['username'] for u in userlist ]
+
         
     def test_get_platform_data(self):
         """More global data types."""
