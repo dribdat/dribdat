@@ -4,7 +4,7 @@
 from dribdat.user.models import User, Activity
 from urllib.parse import quote, quote_plus
 
-from sqlalchemy import or_, func
+from sqlalchemy import or_
 
 import re
 

@@ -14,7 +14,7 @@ from dribdat.aggregation import GetEventUsers
 from dribdat.user import getProjectStages, isUserActive
 from urllib.parse import urlparse
 from datetime import datetime
-from sqlalchemy import and_
+from sqlalchemy import and_, func
 
 blueprint = Blueprint('public', __name__, static_folder="../static")
 
