@@ -177,7 +177,11 @@ class TestEvent:
         project.event = event
         project.save()
         ProjectActivity(project, 'star', user)
-        assert user.may_certify() == (False, 'event')
+        assert user.may_certify(project) == (False, 'projects')
+        project.progress = 100
+        project.save()
+        assert project in user.joined_projects(False)
+        assert user.may_certify(project) == (False, 'event')
         event.certificate_path = 'https://testcert.cc/{username}'
         event.save()
         assert user.may_certify()[0]

@@ -248,10 +248,11 @@ class User(UserMixin, PkModel):
 
     def may_certify(self, for_project=None):
         """Check availability of certificate."""
-        if not for_project:
-            projects = self.joined_projects(False)
-            if not len(projects) > 0:
-                return (False, 'projects')
+        projects = self.joined_projects(False)
+        if for_project is not None and for_project in projects:
+            projects = [for_project]
+        if not len(projects) > 0:
+            return (False, 'projects')
         cert_path = self.get_cert_path(projects[0].event)
         if not cert_path:
             return (False, 'event')
