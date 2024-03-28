@@ -77,8 +77,9 @@ def project_edit_action(project_id, detail_view=False):
     # Basic view
     if not detail_view:
         form = ProjectForm(obj=project, next=request.args.get('next'))
+
+    # Detail view
     else:
-        # Detail view
         form = ProjectDetailForm(obj=project, next=request.args.get('next'))
 
         # Populate categories
@@ -91,6 +92,14 @@ def project_edit_action(project_id, detail_view=False):
 
     # Continue with form validation
     if form.is_submitted() and form.validate():
+
+        # Check for minor edit toggle
+        if 'is_minoredit' in dir(form):
+            is_minoredit = form.is_minoredit.data
+            del form.is_minoredit
+        else:
+            is_minoredit = False
+        
         del form.id
         form.populate_obj(project)
         project.update_now()
@@ -102,10 +111,13 @@ def project_edit_action(project_id, detail_view=False):
         if 'note' in form and form.note.data:
             project_action(project_id, 'update',
                            action='post', text=form.note.data)
-
-        # Notify the user
-        flash('Project updated.', 'success')
-        project_action(project_id, 'update', False)
+    
+        # Save a log entry (unless minor) and notify the user
+        if not is_minoredit:
+            project_action(project_id, 'update', False)
+            flash('Project updated.', 'success')
+        else:
+            flash('Saved changes.', 'success')
 
         if allow_sync:
             return redirect(url_for(
@@ -153,7 +165,7 @@ def project_action(project_id, of_type=None, as_view=True, then_redirect=False,
         # Obtain list of team members (performance!)
         project_team = project.get_team()
         # Suggest missing team roles
-        if allow_post:
+        if not event.has_finished:
             missing_roles = project.get_missing_roles()
         else:
             missing_roles = None

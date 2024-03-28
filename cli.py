@@ -23,6 +23,16 @@ def create_app(script_info=None):
 
 
 @click.command()
+def ls():
+    """Lists events here."""
+    from dribdat.user.models import Event
+    q = Event.query.filter_by(is_hidden=False).order_by(Event.starts_at.desc())
+    print('total %d' % q.count())
+    for e in q.all():
+        print('%d\t%s\t%d' % (e.id, e.name, e.project_count))
+
+
+@click.command()
 @click.argument('kind', nargs=-1, required=False)
 def socialize(kind):
     """Reset user profile data."""
@@ -79,7 +89,7 @@ def numerise(event: int, clear: bool, primes: bool, challenges: bool):
                 c.ident = prefix + str(nq[ix])
             c.save()
             ix = ix + 1
-        print("Enumerated %d projects." % count)
+        print("Enumerated %d projects." % ix)
 
 
 @click.command()

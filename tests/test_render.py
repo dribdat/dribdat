@@ -3,12 +3,13 @@
 
 from dribdat.boxout.datapackage import box_datapackage
 from dribdat.boxout.ckan import box_dataset
+from dribdat.onebox import format_webembed
 from dribdat.apipackage import (
     event_to_data_package,
     load_file_datapackage,
     fetch_datapackage
 )
-from .factories import UserFactory, EventFactory
+from .factories import UserFactory, EventFactory, ProjectFactory
 import pytest
 
 
@@ -66,3 +67,20 @@ class TestRender:
         dpkg_html = box_dataset(self.TEST_CKAN)
         assert dpkg_html is not None
         assert "boxout" in dpkg_html
+
+    def test_webrender(self, testapp):
+        """Link conversion for popular embedded links."""
+        project = ProjectFactory()
+        project.save()
+        assert not format_webembed('')
+        url = '<iframe src="blah"></iframe>'
+        assert format_webembed(url) is url
+        url = 'test.PDF'
+        assert '/project/' in format_webembed(url, project.id)
+        url = 'https://query.wikidata.org/#SELECT%20%3Fitem%20%3FitemLabel%0AWHERE%0A%7B%0A' \
+            + '%20%20%3Fitem%20wdt%3AP31%20wd%3AQ46855.%0A%20%20SERVICE%20wikibase%3Alabel%' \
+            + '20%7B%20bd%3AserviceParam%20wikibase%3Alanguage%20%22en%22.%20%7D%0A%7D'
+        assert 'embed.html' in format_webembed(url)
+        url  = 'https://youtu.be/xm3YgoEiEDc?t=32399'
+        assert 'youtube' in format_webembed(url)
+        assert '?start=' in format_webembed(url)

@@ -16,7 +16,7 @@
       <h1 style="font-weight:bold; font-family:monospace">
         ? help dribdat
       </h1>
-      <small><tt>0.8.0</tt></small>
+      <small><tt>0.8.1</tt></small>
     </div>
 
     <div class="row">
@@ -37,7 +37,7 @@
       <p>Administrators:</p>
       <p class="organisers font-weight-bold">
       {% for user in orgs %}
-        &nbsp;🕴️<a href="{{ url_for('public.user', username=user.username) }}">{{ user.fullname or user.name }}</a>
+        &nbsp;🕴️<a href="{{ url_for('public.user_profile', username=user.username) }}">{{ user.fullname or user.name }}</a>
       {% endfor %}
       </p>
     </div><!-- /organiser -->

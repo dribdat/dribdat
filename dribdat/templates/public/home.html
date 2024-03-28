@@ -55,23 +55,6 @@
   </main>
 {% endif %}
 
-{% if my_projects %}
-{% cache 300, 'home-user-%d' % current_user.id %}
-  <div class="resource-list profile-projects honeycomb">
-    <div class="row ibws-fix">
-      {% for project in my_projects %}
-        {{ misc.render_project_hexagon(project) }}
-      {% endfor %}
-      </div>
-    </div><!-- /profile-projects -->
-    <p class="category-tip mb-0 mt-2">
-      <span class="user-score" style="background:white">&#x1F464;</span>
-      <a href="{{ url_for('public.user', username=current_user.username) }}" title="{{ current_user.username }}">My Profile</a>
-    </p>
-  </div>
-{% endcache %}
-{% endif %}
-
 <div class="body-content">
 
   {% if current_event and current_event.countdown and 'down' in config.DRIBDAT_CLOCK %}
@@ -81,6 +64,19 @@
       <div id="clockDown" class="event-countdown flipdown"
            data-start="{{ current_event.countdown }}"></div>
     </a>
+  {% endif %}
+  
+  {% if my_projects %}
+  {% cache 300, 'home-user-%d' % current_user.id %}
+    <div class="resource-list profile-projects honeycomb">
+      <div class="row ibws-fix">
+        {% for project in my_projects %}
+          {{ misc.render_project_hexagon(project) }}
+        {% endfor %}
+        </div>
+      </div><!-- /profile-projects -->
+    </div>
+  {% endcache %}
   {% endif %}
 
   {% if events_tips %}

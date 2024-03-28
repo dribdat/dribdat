@@ -2,9 +2,9 @@
 [![codecov status](https://codecov.io/gh/dribdat/dribdat/branch/main/graph/badge.svg?token=Ccd1vTxRXg)](https://codecov.io/gh/dribdat/dribdat)
 [![FOSSA status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Floleg%2Fdribdat.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Floleg%2Fdribdat?ref=badge_shield)
 
-## Tools for time-limited, team-based, open-by-default collaboration
+## Tooling for time-limited, team-based, open-by-default cooperation
 
-`dribdat` is an open source web application that assists teams working playfully on projects with data. Designed to support [awesome hackathons](https://github.com/dribdat/awesome-hackathon) and promote [data expeditions](https://schoolofdata.ch), it is a 🇨🇭 Swiss Army Knife for Civic Tech: your events, guidelines, count-downs, challenge board, project log, progress tracker, integrating with prototyping tools, group chat, code repositories, open data APIs, and more!
+`dribdat` is an open source web application that assists teams working playfully on projects with data. Designed to support [awesome hackathons](https://github.com/dribdat/awesome-hackathon) and promote [data expeditions](https://schoolofdata.ch), it is a 🇨🇭 Swiss Army Knife for civic techs: your events, guidelines, count-downs, challenge board, project log, progress tracker, integrating with prototyping tools, group chat, code repositories, open data APIs, and more!
 
 ![Dribdat Logo](dribdat/static/img/logo12_128x128.png)
 
@@ -23,7 +23,7 @@ _If you use Dribdat, please add yourself to the [Tour de Hack](https://meta.drib
 
 # Quickstart
 
-The dribdat project can be deployed to any server capable of serving [Python](https://python.org) applications, and is set up for fast deployment using [Ansible or Docker](https://dribdat.cc/deploy). The first user that registers becomes an admin, so don't delay! 
+The Dribdat project can be deployed to any server capable of serving [Python](https://python.org) applications, and is set up for fast deployment using [Ansible or Docker](https://dribdat.cc/deploy). The first user that registers becomes an admin, so don't delay! 
 
 If you would like to run dribdat on any other cloud or local machine, there are additional instructions in the [Deployment guide](https://docs.dribdat.cc/deploy). Information on contributing and extending the code can be found in the [Contributors guide](https://docs.dribdat.cc/contribute), which includes API documentation, and other details.
 

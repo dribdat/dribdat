@@ -74,14 +74,17 @@
   {% if config.S3_KEY %}
   <button type="button" class="btn btn-light btn-lg mt-2 m-1" style="display:none" data-toggle="modal" data-target="#uploadImage">
     <i class="fa fa-image text-info" area-hidden="true"></i>
-    Upload image
+    Upload Image
   </button>
-  {% endif %}
 
-  {% if config.S3_KEY %}
   <button type="button" class="btn btn-light btn-lg mt-2 m-1" style="display:none" data-toggle="modal" data-target="#uploadFile">
     <i class="fa fa-paperclip text-info" area-hidden="true"></i>
-    Attach file
+    Attach PDF
+  </button>
+  
+  <button type="button" class="btn btn-light btn-lg mt-2 m-1" style="display:none" data-toggle="modal" data-target="#uploadPackage">
+    <i class="fa fa-paperclip text-info" area-hidden="true"></i>
+    Attach Data
   </button>
   {% endif %}
 

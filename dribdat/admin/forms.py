@@ -164,31 +164,31 @@ class ProjectForm(FlaskForm):
 
     next = HiddenField()
     id = HiddenField('id')
-    user_name = StringField(u'Started by')
     event_id = SelectField(u'Event', coerce=int)
     category_id = SelectField(u'Category', coerce=int)
-    progress = SelectField(u'Progress', coerce=int,
-                           choices=projectProgressList())
+    progress = SelectField(
+        u'Progress', coerce=int, choices=projectProgressList())
     name = StringField(
         u'Title',
         [length(max=80), UniqueValidator(Project, 'name'), DataRequired()])
     ident = StringField(
         u'Identifier', [length(max=10)],
         description="Typically used for numbering the projects")
+    user_name = StringField(u'Started by')
     summary = StringField(u'Short summary', [length(max=2048)])
     longtext = TextAreaField(u'Description')
     autotext_url = URLField(
         u'Readme', [length(max=2048)],
         description="Location from which to Sync content")
     autotext = TextAreaField(u'Readme content')
-    webpage_url = URLField(u'Presentation or demo link', [length(max=2048)])
-    is_webembed = BooleanField(u'Embed contents of demo link', default=False)
+    webpage_url = URLField(u'Presentation link', [length(max=2048)])
+    is_webembed = BooleanField(u'Embed presentation link', default=False)
     hashtag = StringField(
         u'Hashtags', [length(max=140)],
-        description="Team channel, social media hashtag, organization name")
+        description="Team channel, hashtag, organization")
     contact_url = URLField(u'Contact link', [length(max=2048)])
     source_url = URLField(u'Source link', [length(max=2048)])
-    download_url = URLField(u'Download link', [length(max=2048)])
+    download_url = URLField(u'Demo link', [length(max=2048)])
     image_url = URLField(u'Image link', [length(max=255)])
     logo_color = StringField(u'Custom color')
     logo_icon = StringField(

@@ -47,6 +47,9 @@ form input[type="checkbox"] {
      -moz-box-sizing: border-box;
           box-sizing: border-box;
 }
+.form-project-post {
+  clear: both;
+}
 .form-project-post h4 {
   margin-top: 1em;
   font-weight: normal;
@@ -91,6 +94,7 @@ form input[type="checkbox"] {
   opacity: 0.5;
 }
 
+/* File upload dialog */
 .upload-note {
   font-size: 90%;
   margin: 1em 0;
@@ -101,6 +105,15 @@ form input[type="checkbox"] {
   vertical-align: top;
   border-top: 1px solid lightgrey;
   border-bottom: 1px solid lightgrey;
+}
+.uploader .image-upload-preview input {
+  display: block; margin-top: 1em; width: 100%;
+}
+.uploader .image-upload-preview {
+  overflow: hidden;
+}
+.uploader .image-upload-confirm {
+  margin-top: 1em;
 }
 
 .admin .form-group .control-label {
@@ -143,12 +156,20 @@ form input[type="checkbox"] {
   text-decoration: none;
 }
 .alert.project-tips .close {
-  margin: 0.2em 0.4em -1em -1em;
   position: relative;
   z-index: 99;
 }
 .alert.project-tips .user-score {
   margin: -1em 0em 1em -1em;
+}
+.alert.project-tips.profile-projects::before {
+  content: '⚡';
+  font-size: 250%;
+  position: relative;
+  left: -1em;
+  top: -1em;
+  width: 0em;
+  float: left;
 }
 
 /* pagination */
@@ -303,6 +324,11 @@ nav .navbar-nav .fa {
 nav .navbar-nav .nav-item {
   margin-right: 0.4em;
   padding-right: 0.4em;
+}
+nav .navbar-nav .nav-item .fa.text-white {
+  border-radius: 0.8em;
+  padding: 0.3em;
+  width: 1.6em;
 }
 nav .nav-login {
   font-weight: bolder;
@@ -885,6 +911,7 @@ nav .nav-login {
 
 .project-page .project-headline {
   margin-top: 0.5em;
+  overflow-x: hidden;
 }
 .project-page .project-name {
   text-shadow: 1px 1px 1px white;
@@ -895,9 +922,6 @@ nav .nav-login {
   font-size: 125%;
   hyphens: auto;
   width: 85%;
-}
-.project-tips.alert-light {
-  color: black;
 }
 .project-page .project-ident {
   display: inline-block;
@@ -980,6 +1004,9 @@ nav .nav-login {
 .project-page .project-longtext .card {
   background: none;
 }
+.project-page .project-longtext iframe {
+  max-width: 100%;
+}
 .project-page .project-star i {
   padding-right: 5px;
 }
@@ -995,9 +1022,14 @@ nav .nav-login {
 .project-page img {
   max-width: 100%;
 }
+.theme-dark .project-page.jumbotron {
+  color: white;
+  background-color: black;
+}
 .project-page.jumbotron {
   background-color: white;
   color: black;
+  overflow-x: hidden;
   padding: 1rem;
 }
 .project-page .project-longtext blockquote {
@@ -1068,6 +1100,7 @@ nav .nav-login {
 .timeline-finish .timeline-card::after,
 .timeline-progress .timeline-card::after { display: initial; }
 .timeline-card .close { margin: 0.4em; color: black; }
+.timeline-card.timeline-content { overflow: hidden; }
 /* Other project timeline customizations */
 .project-page .timeline-review .timeline-content { background: #f2fef2; border-top: none; }
 .project-page .timeline-pencil .timeline-content { background: #ffc; border-top: none; }
@@ -1642,7 +1675,7 @@ a.go-up {
 }
 
 .widget-team .kick-user {
-  position: absolute;
+  vertical-align: top;
   font-size: 150%;
 }
 .widget-team .kick-user:hover {
@@ -1711,7 +1744,6 @@ a.go-up {
 .userprofile h1 {
   text-align: center;
   margin-top: 1em;
-  color: grey;
 }
 .drib-count,
 .team-boost,
@@ -1881,8 +1913,20 @@ a.go-up {
   float: right;
   width: 50%;
   list-style-type: none;
-  border-left: 1px solid #999;
+  border-left: 1px dashed #999;
   padding-left: 15px;
+}
+.print-page .full-content {
+  padding: 2em;
+  margin: 0 1em;
+  background: white;
+  border: 1px solid #ccc;
+  box-shadow: 5px 5px 0px #ccc;
+}
+.print-page .full-content > tt {
+  display: block;
+  text-align: center;
+  margin-bottom: 1em;
 }
 @media only print {
   .no-print,
@@ -2019,6 +2063,16 @@ Instruction page
 }
 .projectpost alert {
   margin-top: 0.5em;
+}
+.projectpost .project-name {
+  color: #777;
+}
+.projectpost .form-project-post .checkbox {
+  float: right;
+}
+.project-tips.alert:hover {
+  color: black;
+  background: lightyellow;
 }
 
 /* ------------
@@ -2167,3 +2221,10 @@ SlackIn button
 }
 
 .__slackin { margin-bottom: 10px; display: block; }
+
+.attribution {
+  font-size: 80%;
+  font-family: monospace;
+  position: absolute;
+  right: 2.5em;
+}

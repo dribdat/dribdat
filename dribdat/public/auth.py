@@ -78,7 +78,7 @@ def login():
             if not form.user.active:
                 # Note: continue to profile page, where user is warned
                 username = current_user.username
-                return redirect(url_for('public.user', username=username))
+                return redirect(url_for('public.user_profile', username=username))
             # Regular user greeting
             flash("Time to make something awesome. ≧◡≦", 'info')
             return redirect_dest(fallback=url_for('public.home'))
@@ -277,7 +277,7 @@ def user_profile():
         db.session.commit()
         user.socialize()
         flash('Profile updated.', 'success')
-        return redirect(url_for('public.user', username=user.username))
+        return redirect(url_for('public.user_profile', username=user.username))
 
     if not form.roles.choices:
         del form.roles
