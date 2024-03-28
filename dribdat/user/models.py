@@ -198,11 +198,35 @@ class User(UserMixin, PkModel):
         return projects
 
 
-    def get_score(self):
-        """Calculate the total score across projects."""
-        projects = self.joined_projects(False)
-        return sum([p.score for p in projects])
+    def get_profile_percent(self):
+        """Calculate my profile completeness as a percent."""
+        p_score = 0
+        MAX_SCORE = 5
+        # Add to the score for every complete documentation field
+        if self.fullname and len(self.fullname) > 3: 
+            p_score = p_score + 1
+        if self.webpage_url and len(self.webpage_url) > 6: 
+            p_score = p_score + 1
+        if self.my_story and len(self.my_story) > 6: 
+            p_score = p_score + 1
+        if self.my_goals and len(self.my_goals) > 6: 
+            p_score = p_score + 1
+        if self.roles and len(self.roles) > 0:
+            p_score = p_score + 1
+        return p_score / MAX_SCORE
+    
 
+    def get_score(self):
+        """Calculate my personal score, based on profile completeness and projects."""
+        # See def calculate_score(self) below
+        projects = self.joined_projects(False)
+        project_total = sum([p.score for p in projects])
+        # Adjust score based on score
+        user_score = self.get_profile_percent()
+        if user_score > 0: 
+            project_total = project_total + 10
+        return round(project_total * user_score)
+        
 
     def posted_challenges(self):
         """Retrieve all challenges user has posted."""
@@ -1005,17 +1029,19 @@ class Project(PkModel):
 
     def calculate_score(self):  # noqa: C901
         """Calculate score of a project based on base progress."""
+        # See also get_score above
         score = self.progress or 0
         cqu = Activity.query.filter_by(project_id=self.id)
         # Challenges only get a point per team-member
         if self.is_challenge:
             return cqu.filter_by(name='star').count()
-        # Get a point for every (join, update, comment ..) activity in dribs
+        # Get a point for every (join, update, comment ..)
+        # activity in dribs:
         c_s = cqu.count()
-        score = score + (1 * c_s)
-        # Extra point for every boost (upvote)
+        score = score + (1 * int(c_s / 2))
+        # Extra points for every boost (upvote)
         c_a = cqu.filter_by(name="boost").count()
-        score = score + (1 * c_a)
+        score = score + (5 * c_a)
         # Add to the score for every complete documentation field
         score = score + 1 * int(len(self.summary) > 3)
         score = score + 1 * int(len(self.image_url) > 3)

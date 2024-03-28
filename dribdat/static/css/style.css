@@ -162,6 +162,15 @@ form input[type="checkbox"] {
 .alert.project-tips .user-score {
   margin: -1em 0em 1em -1em;
 }
+.alert.project-tips.profile-projects::before {
+  content: '⚡';
+  font-size: 250%;
+  position: relative;
+  left: -1em;
+  top: -1em;
+  width: 0em;
+  float: left;
+}
 
 /* pagination */
 .admin-search, .pagination { margin-bottom: 1em; clear: both; }

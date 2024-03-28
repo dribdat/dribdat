@@ -13,6 +13,16 @@
 {% if current_user and current_user.is_authenticated %}
 <div class="row">
 
+  {% if score_tip %}
+    <div class="category-tip mt-2 clearfix"
+         title="This tip is only visible to you">
+      To improve your score, please  
+      <a href="{{ url_for('auth.user_profile') }}">
+        complete your profile.
+      </a>
+    </div>
+  {% endif %}
+
   <div class="col-sm text-right mt-2">
   {% if current_user.id == user.id %}
 
@@ -92,7 +102,7 @@
 
   {% if score %}
   <div class="col-2 text-center">
-    <h5 title="Total score across all projects">
+    <h5 title="Total score across all projects, adjusted by profile completeness">
       <span class="user-score">{{ score }}</span>
     </h5>
   </div>
