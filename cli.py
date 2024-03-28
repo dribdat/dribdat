@@ -89,7 +89,7 @@ def numerise(event: int, clear: bool, primes: bool, challenges: bool):
                 c.ident = prefix + str(nq[ix])
             c.save()
             ix = ix + 1
-        print("Enumerated %d projects." % count)
+        print("Enumerated %d projects." % ix)
 
 
 @click.command()
