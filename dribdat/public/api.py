@@ -272,12 +272,24 @@ def project_info_json(project_id):
 # ------ USERS ----------
 
 
+def get_users_for_event(event=None):
+    if event is None: return []
+    userlist = []
+    for u in GetEventUsers(event):
+         # with_challenges=True, limit=-1, event=None
+        udata = u.data
+        pnames = [ p.name for p in u.joined_projects(True, -1, event) ]
+        udata['teams'] = ', '.join(pnames)
+        userlist.append(udata)
+    return userlist
+
+
 @blueprint.route('/event/<int:event_id>/participants.csv')
 @admin_required
 def event_participants_csv(event_id):
     """Download a CSV of event participants."""
     event = Event.query.filter_by(id=event_id).first_or_404()
-    userlist = [u.data for u in GetEventUsers(event)]
+    userlist = get_users_for_event(event)
     headers = {
         'Content-Disposition': 'attachment; '
         + 'filename=user_list_%d.csv' % event.id

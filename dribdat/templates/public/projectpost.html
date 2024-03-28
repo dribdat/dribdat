@@ -3,13 +3,13 @@
 
 {% extends "layout.html" %}
 
-{% block page_title %}Post: {{project.name}}{% endblock %}
+{% block page_title %}🖄 {{project.name}}{% endblock %}
 {% block body_class %}projectpost{% endblock %}
 
 {% block content %}
 
   {% if (suggestions or stage) and project.progress and project.progress < 50 %}
-    <div class="alert alert-secondary float-right resource-list project-tips profile-projects">
+    <div class="alert float-right resource-list project-tips profile-projects">
       <button type="button" class="close" data-dismiss="alert" aria-label="Dismiss" title="Hide">
         <span aria-hidden="true">&times;</span>
       </button>
@@ -77,7 +77,7 @@
         <p class="text-center mt-3 mb-0 hidden"><small>
           &#x1F3AF;
           To Post on another project, <b>Join</b> it or visit
-          <a href="{{ url_for('public.user', username=current_user.username) }}">your profile</a>
+          <a href="{{ url_for('public.user_profile', username=current_user.username) }}">your profile</a>
           to switch.
           For more info see
           <a href="{{ url_for('public.event_stages', event_id=current_event.id) }}" target="_blank">
@@ -90,16 +90,20 @@
   {% endif %}
 
   <h2 class="huge">
-    Post on 
+    <i class="fa fa-comment text-sm"></i>
+    {% if stage %}
+      Post
+    {% else %}
+      Comment
+    {% endif %}
+  </h2>
+
+  <h4 class="project-name">
     <a href="{{ url_for('project.project_view', project_id=project.id) }}" 
        title="Back to project" target="_blank">
-      {%- if project.is_challenge -%}
-      challenge
-      {%- else -%}
-      project
-      {%- endif -%}
+      {{project.name}} 
     </a>
-  </h2>
+  </h4>
 
   {% if config.S3_KEY %}
     <button title="Attach image" class="btn btn-light post-image-btn"

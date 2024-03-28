@@ -3,6 +3,9 @@
 
 VER=`git describe --tags --abbrev=0`
 
+echo Getting latest tags
+git pull upstream --tags
+
 echo Pushing to $VER ...
 docker login
 docker build -t loleg/dribdat:$VER .

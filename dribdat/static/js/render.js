@@ -5,15 +5,41 @@ let $thecanvas = $('#canv');
 let url = $thebody.attr('src');
 let pdfjsLib = window["pdfjs-dist/build/pdf"];
 
-pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js';
+pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 
-var pdfDoc = null,
+let pdfDoc = null,
     pageNum = 1,
+    scale = 1,
     pageRendering = false,
     pageNumPending = null,
-    scale = 1.5,
     canvas = $thecanvas[0],
     ctx = canvas.getContext('2d');
+
+const DEFAULT_SCALE_DELTA = 1.1,
+      MIN_SCALE = 0.25,
+      MAX_SCALE = 5.0;
+
+/*
+// Support HiDPI-screens and fit to full screen mode
+
+    var outputScale = window.devicePixelRatio || 1;
+
+    canvas.width = Math.floor(viewport.width * outputScale);
+    canvas.height = Math.floor(viewport.height * outputScale);
+    canvas.style.width = Math.floor(viewport.width) + "px";
+    canvas.style.height =  Math.floor(viewport.height) + "px";
+
+    var transform = outputScale !== 1
+      ? [outputScale, 0, 0, outputScale, 0, 0]
+      : null;
+
+    // Render PDF page into canvas context
+    var renderContext = {
+      canvasContext: ctx,
+      transform: transform,
+      viewport: viewport
+    };
+*/
 
 /**
  * Get page info from document, resize canvas accordingly, and render page.
@@ -23,13 +49,18 @@ function renderPage(num) {
   pageRendering = true;
   // Using promise to fetch the page
   pdfDoc.getPage(num).then(function(page) {
-    var viewport = page.getViewport({scale: scale});
+    var viewport = page.getViewport({scale: 1.5});
     canvas.height = viewport.height;
     canvas.width = viewport.width;
+
+    var transform = scale !== 1
+      ? [scale, 0, 0, scale, 0, 0]
+      : null;
 
     // Render PDF page into canvas context
     var renderContext = {
       canvasContext: ctx,
+      transform: transform,
       viewport: viewport
     };
     var renderTask = page.render(renderContext);
@@ -117,29 +148,33 @@ function onGoPage() {
 document.getElementById('go').addEventListener('click', onGoPage);
 
 /**
- * Displays next page.
+ * Twists the lens.
+ */
 function pdfViewZoomIn(ticks) {
-  let newScale = this.pdfViewer.currentScale;
+  let newScale = scale;
   do {
     newScale = (newScale * DEFAULT_SCALE_DELTA).toFixed(2);
     newScale = Math.ceil(newScale * 10) / 10;
     newScale = Math.min(MAX_SCALE, newScale);
   } while (--ticks && newScale < MAX_SCALE);
-  this.pdfViewer.currentScaleValue = newScale;
+  scale = newScale;
+  console.log(scale);
+  renderPage(pageNum);
 }
 document.getElementById('zoomIn').addEventListener('click', pdfViewZoomIn);
 
 function pdfViewZoomOut(ticks) {
-  let newScale = this.pdfViewer.currentScale;
+  let newScale = scale;
   do {
     newScale = (newScale / DEFAULT_SCALE_DELTA).toFixed(2);
     newScale = Math.floor(newScale * 10) / 10;
     newScale = Math.max(MIN_SCALE, newScale);
   } while (--ticks && newScale > MIN_SCALE);
-  this.pdfViewer.currentScaleValue = newScale;
+  scale = newScale;
+  console.log(scale);
+  renderPage(pageNum);
 }
-document.getElementById('zoomIn').addEventListener('click', pdfViewZoomOut);
- */
+document.getElementById('zoomOut').addEventListener('click', pdfViewZoomOut);
 
 /**
  * Asynchronously downloads PDF.

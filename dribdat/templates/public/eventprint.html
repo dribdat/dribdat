@@ -4,27 +4,8 @@
 {% block page_title %}{{current_event.name}} / Print{% endblock %}
 {% block body_class %}print-page{% endblock %}
 
-{% block content %}
-<div class="container">
-  <p>
-    All projects and <a href="#challenges">challenges</a> as of <b>{{ curdate }}</b>.
-  </p>
-  <p class="no-print">
-    Download as
-    <a href="{{ url_for('api.project_list_event_csv', event_id=current_event.id, moar=1)}}" download>
-      CSV file</a>
-     or
-    <a href="{{ url_for('api.package_specific_event', event_id=current_event.id, format='json')}}" download>
-      Data Package</a>.
-  </p>
-
-  {% if not request.args.get('longtext') %}
-    <a href="?longtext=1" class="no-print btn btn-light">Show full text</a>
-  {% endif %}
-
-  {% for project in projects %}
-  <hr>
-  <div class="project-info">
+{% macro render_print_project(project) %}
+<div class="project-info">
 
     <ul class="project-meta">
       {% if project.ident %}
@@ -43,13 +24,17 @@
       {% if project.contact_url %}
       <li>Contact: <a href="{{ project.contact_url }}">{{ project.contact_url|truncate(50) }}</a></li>
       {% endif %}
-      <li>Updated: <span>{{ project.updated_at|format_date }}</span> ({{project.score}}% complete)</li>
       <li>Created: <span>{{ project.created_at|format_date }}</span>
         {% if project.user %}
         by <a href="{{project.user.webpage_url}}">{{ project.user.name }}</a>
-        {% endif %}</li>
+        {% endif %}
+      </li>
+      <li>Updated: <span>{{ project.updated_at|format_date }}</span>
+      {% if project.score > 0 %}
+        <li>Progress: <span>{{project.score}}%</span> ({{project.phase}})</li>
+      {% endif %}
       {% if project.category_id %}
-      <li>Category: <b>{{ project.category.name }}</b></li>
+        <li>Category: <b>{{ project.category.name }}</b></li>
       {% endif %}
     </ul>
 
@@ -70,80 +55,91 @@
     </h2>
 
     {% if project.summary %}
-      <p class="project-summary">
+      <p class="project-summary" style="max-width: 50%;">
         {{project.summary}}
       </p>
     {% endif %}
 
-    {% if request.args.get('longtext') and project.longtext %}
-      <br clear="all">
-      <div class="project-page clear-both">
-        <div class="project-longtext">
-          {{project.longtext|markdown|safe}}
-        </div>
-      </div>
-    {% endif %}
-
     {% if project.team %}
-      <ul class="project-team" title="team">
+      <ul class="team-gravatar project-team" title="team">
       {% for user in project.team %}
-        <li><a href="{{ url_for('public.user', username=user) }}">
-          {{ user }}
+        <li><a href="{{ url_for('public.user_profile', username=user) }}">
+          <i class="fa fa-user"></i>
+           {{ user }}
         </a></li>
       {% endfor %}
       </ul>
     {% endif %}
-  </div>
-
+  
   <br clear="all">
+
+    {% if request.args.get('longtext') and project.longtext %}
+      <div class="full-content" style="background:#fafafa">
+        <tt>~ PITCH ~</tt>
+        <div class="project-page clear-both">
+          <div class="project-longtext">
+            {{project.longtext|markdown|safe}}
+          </div>
+        </div>
+      </div>
+    {% endif %}
+
+    {% if request.args.get('longtext') and project.autotext %}
+      <div class="full-content">
+        <tt>~ README ~</tt>
+        <div class="project-page clear-both">
+          <div class="project-autotext">
+            {{project.autotext|markdown|safe}}
+          </div>
+        </div>
+      </div>
+    {% endif %}
+  </div>
+{% endmacro %}
+
+{% block content %}
+<div class="container" style="background:white; color: black">
+  <div class="float-right mr-3" style="margin-top:-6em">
+    <a href="https://dribdat.cc" target="_blank"><img src="{{ url_for('static', filename='img/logo12.png') }}" height="100" alt="All our hack are belong to us."></a>
+  </div>
+  <p class="float-right m-4"><i>
+    Active projects and challenges as of {{ curdate }}.
+  </i></p>
+  <p class="no-print pt-4">
+    {% if not request.args.get('longtext') %}
+      <a href="?longtext=1" class="btn btn-danger">Show full text</a>
+    {% else %}
+      <a href="?" class="btn btn-danger">Hide full text</a>
+    {% endif %}
+
+    <a href="javascript:window.print()" class="ml-4 btn btn-info">
+      <i class="fa fa-print" aria-hidden="true"></i>
+      Print </a>
+    <a href="{{ url_for('api.project_list_event_csv', event_id=current_event.id, moar=1)}}" class="btn btn-light" download>
+      <i class="fa fa-file" aria-hidden="true"></i>
+      CSV</a>
+    <a href="{{ url_for('api.package_specific_event', event_id=current_event.id, format='json')}}" class="btn btn-light" download>
+      <i class="fa fa-file" aria-hidden="true"></i>
+      Data Package</a>
+  </p>
+  <hr>
+
+  {% for project in projects %}
+    {{ render_print_project(project) }}
+    <hr{% if request.args.get('longtext') %} style="clear: both; page-break-after: always;"{% endif %}>
   {% endfor %}
 
-  <hr style="page-break-after: always;">
+  {% if projects %}
+    <hr style="page-break-after: always;">
+  {% endif %}
+
   <a name="challenges"></a>
-  <center><h1>Challenges</h1></center>
+  <center><h1 class="m-5">Challenges</h1></center>
 
   {% for project in challenges %}
-  <hr>
-  <div class="project-info">
-
-    <ul class="project-meta">
-      <li>Permalink: <a href="{{ url_for('project.project_view', project_id=project.id) }}">{{ url_for('project.project_view', project_id=project.id, _external=True) }}</a></li>
-      <li>Updated: <span>{{ project.updated_at|format_date }}</span></li>
-      <li>Created: <span>{{ project.created_at|format_date }}</span>
-        {% if project.user %}
-        by <a href="{{project.user.webpage_url}}">{{ project.user.name }}</a>
-        {% endif %}</li>
-      {% if project.category_id %}
-      <li>Category: <b>{{ project.category.name }}</b></li>
-      {% endif %}
-    </ul>
-
-    {% if project.hashtag %}
-    <p class="project-hashtag m-0 p-0">{{project.hashtag}}</p>
-    {% endif %}
-    
-    <h2 style="font-weight:bold">
-      {% if project.logo_icon %}
-        <i class="fa fa-{{project.logo_icon}}"></i>
-      {% endif %}
-
-      {{project.name}}
-    </h2>
-
-    {% if project.summary %}
-      <p class="project-summary">
-        {{project.summary}}
-      </p>
-    {% else %}
-      {% if request.args.get('longtext') and project.longtext %}
-        <div class="project-longtext">
-          {{project.longtext|markdown|safe}}
-        </div>
-      {% endif %}
-    {% endif %}
-  </div>
-
-  <br clear="all">
+    {{ render_print_project(project) }}
+    <hr{% if request.args.get('longtext') %} style="clear: both; page-break-after: always;"{% endif %}>
   {% endfor %}
+
 </div>
 {% endblock %}

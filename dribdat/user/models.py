@@ -15,7 +15,7 @@ from dribdat.user.constants import (
 )
 from dribdat.onebox import format_webembed  # noqa: I005
 from dribdat.utils import (
-    format_date_range, format_date, timesince
+    format_date_range, format_date, timesince, strtobool
 )
 from dribdat.database import (
     db,
@@ -118,9 +118,6 @@ class User(UserMixin, PkModel):
             'id': self.id,
             'name': self.name,
             'email': self.email,
-            'sso_id': self.sso_id,
-            'active': self.active,
-            'is_admin': self.is_admin,
             'username': self.username,
             'fullname': self.fullname,
             'webpage_url': self.webpage_url,
@@ -139,8 +136,10 @@ class User(UserMixin, PkModel):
         self.username = data['username']
         self.webpage_url = data['webpage_url']
         if 'email' not in data:
-            data['email'] = "%s@%d.localdomain" % (self.username, data['id'])
-        self.email = data['email']
+            if not self.email or not '@' in self.email:
+                self.email = "%s@localhost.localdomain" % self.username
+        else:
+            self.email = data['email']
         self.updated_at = dt.datetime.utcnow()
 
     def socialize(self):
@@ -176,7 +175,7 @@ class User(UserMixin, PkModel):
             self.carddata = gravatar_url
         self.save()
 
-    def joined_projects(self, with_challenges=True, limit=-1):
+    def joined_projects(self, with_challenges=True, limit=-1, event=None):
         """Retrieve all projects user has joined."""
         activities = Activity.query.filter_by(
                 user_id=self.id, name='star'
@@ -189,20 +188,45 @@ class User(UserMixin, PkModel):
         project_ids = []
         for a in activities:
             if limit > 0 and len(projects) >= limit: break
-            if a.project_id not in project_ids and not a.project.is_hidden:
-                a_prog = a.project.progress
-                not_challenge = a_prog is not None and a_prog > 0
-                if with_challenges or not_challenge:
-                    projects.append(a.project)
-                    project_ids.append(a.project_id)
+            if a.project_id in project_ids or a.project.is_hidden:
+                continue
+            if event is not None and a.project.event != event:
+                continue
+            if with_challenges or not a.project.is_challenge:
+                projects.append(a.project)
+                project_ids.append(a.project_id)
         return projects
 
 
-    def get_score(self):
-        """Calculate the total score across projects."""
-        projects = self.joined_projects(False)
-        return sum([p.score for p in projects])
+    def get_profile_percent(self):
+        """Calculate my profile completeness as a percent."""
+        p_score = 0
+        MAX_SCORE = 5
+        # Add to the score for every complete documentation field
+        if self.fullname and len(self.fullname) > 3: 
+            p_score = p_score + 1
+        if self.webpage_url and len(self.webpage_url) > 6: 
+            p_score = p_score + 1
+        if self.my_story and len(self.my_story) > 6: 
+            p_score = p_score + 1
+        if self.my_goals and len(self.my_goals) > 6: 
+            p_score = p_score + 1
+        if self.roles and len(self.roles) > 0:
+            p_score = p_score + 1
+        return p_score / MAX_SCORE
+    
 
+    def get_score(self):
+        """Calculate my personal score, based on profile completeness and projects."""
+        # See def calculate_score(self) below
+        projects = self.joined_projects(False)
+        project_total = sum([p.score for p in projects])
+        # Adjust score based on score
+        user_score = self.get_profile_percent()
+        if user_score > 0: 
+            project_total = project_total + 10
+        return round(project_total * user_score)
+        
 
     def posted_challenges(self):
         """Retrieve all challenges user has posted."""
@@ -237,7 +261,7 @@ class User(UserMixin, PkModel):
             ).order_by(Activity.timestamp.desc()).first()
         if not act:
             return 'Never'
-        return act.timestamp
+        return act.timestamp.strftime('%d.%m.%Y %H:%M')
 
     @property
     def activity_count(self):
@@ -246,9 +270,11 @@ class User(UserMixin, PkModel):
                 user_id=self.id
             ).count()
 
-    def may_certify(self):
+    def may_certify(self, for_project=None):
         """Check availability of certificate."""
         projects = self.joined_projects(False)
+        if for_project is not None and for_project in projects:
+            projects = [for_project]
         if not len(projects) > 0:
             return (False, 'projects')
         cert_path = self.get_cert_path(projects[0].event)
@@ -634,7 +660,7 @@ class Project(PkModel):
     @property
     def webembed(self):
         """Detect and return supported embed widgets."""
-        return format_webembed(self.id, self.webpage_url)
+        return format_webembed(self.webpage_url, self.id)
 
     @property
     def longhtml(self):
@@ -946,9 +972,9 @@ class Project(PkModel):
             self.created_at = dt.datetime.utcnow()
             self.updated_at = dt.datetime.utcnow()
         if 'is_autoupdate' in data:
-            self.is_autoupdate = bool(data['is_autoupdate'])
+            self.is_autoupdate = strtobool(data['is_autoupdate'])
         if 'is_webembed' in data:
-            self.is_webembed = bool(data['is_webembed'])
+            self.is_webembed = strtobool(data['is_webembed'])
         if 'maintainer' in data:
             uname = data['maintainer']
             user = User.query.filter_by(username=uname).first()
@@ -1003,17 +1029,19 @@ class Project(PkModel):
 
     def calculate_score(self):  # noqa: C901
         """Calculate score of a project based on base progress."""
+        # See also get_score above
         score = self.progress or 0
         cqu = Activity.query.filter_by(project_id=self.id)
         # Challenges only get a point per team-member
         if self.is_challenge:
             return cqu.filter_by(name='star').count()
-        # Get a point for every (join, update, comment ..) activity in dribs
+        # Get a point for every (join, update, comment ..)
+        # activity in dribs:
         c_s = cqu.count()
-        score = score + (1 * c_s)
-        # Extra point for every boost (upvote)
+        score = score + (1 * int(c_s / 2))
+        # Extra points for every boost (upvote)
         c_a = cqu.filter_by(name="boost").count()
-        score = score + (1 * c_a)
+        score = score + (5 * c_a)
         # Add to the score for every complete documentation field
         score = score + 1 * int(len(self.summary) > 3)
         score = score + 1 * int(len(self.image_url) > 3)

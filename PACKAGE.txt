@@ -1,4 +1,4 @@
-dribdat Data Package
+Dribdat Data Package
 ====================
 
 This is an export of data about events, projects, participants and activities

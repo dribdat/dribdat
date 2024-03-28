@@ -2,7 +2,7 @@ display_information:
   name: Dribdat
   description: Co-creation, sprints & hackathons-in-a-box
   background_color: "#278268"
-  long_description: dribdat is an open source web application that enables more diverse and impactful sprints, hackathons, and open collaboration. We use it to publish challenges, track and coach teams, document all the results in real time. Visit dribdat.cc for more information.
+  long_description: An open source web application that enables more diverse and impactful sprints, hackathons, and open collaboration. We use it to publish challenges, track and coach teams, document all the results in real time. Visit dribdat.cc for more information.
 oauth_config:
   scopes:
     user:

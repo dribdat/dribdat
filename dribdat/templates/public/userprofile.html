@@ -12,10 +12,21 @@
 
 {% if current_user and current_user.is_authenticated %}
 <div class="row">
+
+  {% if score_tip %}
+    <div class="category-tip mt-2 clearfix"
+         title="This tip is only visible to you">
+      To improve your score, please  
+      <a href="{{ url_for('auth.user_profile') }}">
+        complete your profile.
+      </a>
+    </div>
+  {% endif %}
+
   <div class="col-sm text-right mt-2">
   {% if current_user.id == user.id %}
 
-    <div>
+    <div class="btn-group">
       <a id="project-post"
          href="{{ url_for('public.user_post') }}"
          title="Post an update to your current project" 
@@ -27,15 +38,6 @@
         <i class="fa fa-child"></i>
         Edit Profile
       </a>
-
-      {% if may_certify %}
-        <a id="get-certified" class="btn btn-info btn-lg"
-          href="{{ url_for('public.user_cert') }}"
-          title="Download a participation certificate">
-          <i class="fa fa-download" aria-hidden="true"></i>
-          Get Certificate
-        </a>
-      {% endif %}
     </div>
 
   {% elif current_user.is_admin %}
@@ -58,6 +60,20 @@
   {% endif %}
   </div>
 </div>
+
+{% if may_certify %}
+  <div class="float-right">
+    <br clear="all"/>
+    <a id="get-certified" class="btn btn-light btn-lg"
+      href="{{ url_for('public.user_cert') }}" download
+      title="Download a participation certificate" style="width: 12em">
+      <img src="{{ url_for('static', filename='img/noun-certificate-1191142.svg') }}"
+           style="width: 7em"><br>
+      My Certificate
+    </a>
+  </div>
+{% endif %}
+
 {% endif %}
 
 <div class="row mt-2 profile-header">
@@ -70,10 +86,10 @@
 
   {% if user.fullname %}
     <h1 class="col-sm text-left">
-      <span style="color:initial;">
+      <span>
         {{ user.fullname }}
       </span>
-      <br><tt>{{ user.username }}</tt>
+      <br><tt class="text-secondary">{{ user.username }}</tt>
     </h1>
   {% else %}
     <h1 class="col-sm text-left">
@@ -86,7 +102,7 @@
 
   {% if score %}
   <div class="col-2 text-center">
-    <h5 title="Total score across all projects">
+    <h5 title="Total score across all projects, adjusted by profile completeness">
       <span class="user-score">{{ score }}</span>
     </h5>
   </div>
@@ -223,5 +239,9 @@
   </section>
 </div>
 {% endif %}
+
+<p class="attribution">
+  Certificate icon by <a href="https://thenounproject.com/grega.cresnar/" target="_blank">Gregor Cresnar</a> - CC BY 3.0
+</p>
 
 {% endblock %}

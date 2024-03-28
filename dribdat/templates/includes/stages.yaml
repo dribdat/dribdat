@@ -42,7 +42,7 @@ stages:
     name: RESEARCH
     phase: Research
     description: ⚗️ Scoping of data collection and prototyping strategy.
-    tip: Write down what you are doing regularly to help stay on track.
+    tip: Write down what you are doing regularly to stay on track.
     conditions:
       validate:
         -

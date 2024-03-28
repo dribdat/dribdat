@@ -29,3 +29,7 @@ def box_repo(url='dribdat/dribdat'):
     project_repo = project_repo.strip()
     return pystache.render(TEMPLATE_GITHUB, {
         'repo': project_repo, 'issues': has_issues})
+
+def chk_github(line):
+    """Test for a GitHub repository link."""
+    return line.startswith('https://github.com/')

@@ -23,6 +23,16 @@ def create_app(script_info=None):
 
 
 @click.command()
+def ls():
+    """Lists events here."""
+    from dribdat.user.models import Event
+    q = Event.query.filter_by(is_hidden=False).order_by(Event.starts_at.desc())
+    print('total %d' % q.count())
+    for e in q.all():
+        print('%d\t%s\t%d' % (e.id, e.name, e.project_count))
+
+
+@click.command()
 @click.argument('kind', nargs=-1, required=False)
 def socialize(kind):
     """Reset user profile data."""
