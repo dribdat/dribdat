@@ -316,6 +316,11 @@ nav .navbar-nav .nav-item {
   margin-right: 0.4em;
   padding-right: 0.4em;
 }
+nav .navbar-nav .nav-item .fa.text-white {
+  border-radius: 0.8em;
+  padding: 0.3em;
+  width: 1.6em;
+}
 nav .nav-login {
   font-weight: bolder;
 }
@@ -989,6 +994,9 @@ nav .nav-login {
 }
 .project-page .project-longtext .card {
   background: none;
+}
+.project-page .project-longtext iframe {
+  max-width: 100%;
 }
 .project-page .project-star i {
   padding-right: 5px;
@@ -1727,7 +1735,6 @@ a.go-up {
 .userprofile h1 {
   text-align: center;
   margin-top: 1em;
-  color: grey;
 }
 .drib-count,
 .team-boost,
@@ -1897,7 +1904,7 @@ a.go-up {
   float: right;
   width: 50%;
   list-style-type: none;
-  border-left: 1px solid #999;
+  border-left: 1px dashed #999;
   padding-left: 15px;
 }
 .print-page .full-content {

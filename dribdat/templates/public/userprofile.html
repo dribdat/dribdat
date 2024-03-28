@@ -76,10 +76,10 @@
 
   {% if user.fullname %}
     <h1 class="col-sm text-left">
-      <span style="color:initial;">
+      <span>
         {{ user.fullname }}
       </span>
-      <br><tt>{{ user.username }}</tt>
+      <br><tt class="text-secondary">{{ user.username }}</tt>
     </h1>
   {% else %}
     <h1 class="col-sm text-left">

@@ -188,7 +188,7 @@ def project_post(project_id):
         'public/projectpost.html',
         current_event=event, project=project, form=form,
         stage=stage, all_valid=all_valid,
-        active="dribs"
+        active="post"
     )
 
 

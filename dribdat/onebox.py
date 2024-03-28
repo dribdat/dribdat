@@ -8,7 +8,7 @@ from micawber.parsers import standalone_url_re, full_handler
 from .boxout.ckan import box_dataset, chk_dataset, ini_dataset
 from .boxout.dribdat import box_project
 from .boxout.datapackage import box_datapackage, chk_datapackage
-from .boxout.github import box_repo
+from .boxout.github import box_repo, chk_github
 from dribdat.extensions import cache
 
 
@@ -84,9 +84,9 @@ def make_oembedplus(text, oembed_providers, **params):
             # Try to render a CKAN dataset link
             newline = box_dataset(line)
             has_dataset = has_dataset or newline is not None
-        #elif line.startswith('https://github.com/'):
+        elif chk_github(line):
             # Try to parse a GitHub link
-        #    newline = box_repo(line)
+            newline = box_repo(line)
         elif standalone_url_re.match(line):
             # Check for out of box providers
             newline = box_default(line, oembed_providers, **params)
