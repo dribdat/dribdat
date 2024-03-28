@@ -106,17 +106,17 @@ class TestUser:
         project.save()
         user1 = UserFactory()
         user1.save()
-        assert user1.get_score() == 0.0
+        assert user1.get_score() == 0
         user1.webpage_url = 'https://blah.com'
         user1.save()
-        assert user1.get_score() == 2.0
+        assert user1.get_score() == 2
         ProjectActivity(project, 'star', user1)
         project.update_now()
-        assert user1.get_score() == 8.6
+        assert user1.get_score() == 9
         project.longtext = 'lorem'.join('ipsum' for i in range(999))
         project.update_now()
         assert len(project.longtext) > 500
-        assert user1.get_score() == 10.4
+        assert user1.get_score() == 10
         project.progress = 80
         project.update_now()
-        assert user1.get_score() > 20.0
+        assert user1.get_score() == 20
