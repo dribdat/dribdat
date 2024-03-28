@@ -385,7 +385,7 @@
                 {% if s.author %}
                   ~
                   <a class="userlink"
-                    href="{{ url_for('public.user', username=s.author )}}">
+                    href="{{ url_for('public.user_profile', username=s.author )}}">
                     {{ s.author }}</a>
                 {% endif %}
             {% if s.ref_url %}
@@ -409,7 +409,7 @@
       Contributed
       <span title="{{ project.created_at }}">{{ project.created_at|until_date }}</span>
       by
-      <a href="{{ url_for('public.user', username=project.user) }}">
+      <a href="{{ url_for('public.user_profile', username=project.user) }}">
         <b>{{ project.user.username }}</b>
       </a>
       for

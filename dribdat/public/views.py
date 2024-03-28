@@ -128,8 +128,8 @@ def events_past():
 
 
 @blueprint.route('/user/<username>', methods=['GET'])
-def user(username):
-    """Show a user profile."""
+def user_profile(username):
+    """Show a public user profile."""
     user = User.query.filter(
                 func.lower(User.username) == func.lower(username)
             ).first_or_404()
@@ -163,6 +163,14 @@ def user(username):
                            may_certify=may_certify)
 
 
+
+@blueprint.route('/user', methods=['GET'])
+@login_required
+def user_current():
+    """Redirect to the current user's profile."""
+    return redirect(url_for("public.user_profile", username=current_user.username))
+
+
 @blueprint.route('/user/_post', methods=['GET'])
 @login_required
 def user_post():
@@ -188,7 +196,7 @@ def user_cert():
         flash('A certificate is not yet available for this event.', 'info')
     else:
         flash('Unknown error occurred.', 'warning')
-    return redirect(url_for("public.user", username=current_user.username))
+    return redirect(url_for("public.user_profile", username=current_user.username))
 
 
 @blueprint.route("/event/<int:event_id>/")

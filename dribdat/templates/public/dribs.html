@@ -57,7 +57,7 @@
               {% if s.user %}
                 ~
                 <a class="userlink"
-                  href="{{ url_for('public.user', username=s.user.username )}}">
+                  href="{{ url_for('public.user_profile', username=s.user.username )}}">
                   {{ s.user.name }}</a>
               {% endif %}
             </div>
