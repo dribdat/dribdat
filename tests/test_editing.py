@@ -135,6 +135,20 @@ class TestEditing:
         project = Project.query.first()
         assert 'Hello' == project.longtext
 
+    def test_project_activities(self, db, testapp):
+        """Test functions related to dribs."""
+        project = ProjectFactory()
+        event = EventFactory()
+        user = UserFactory()
+        project.event = event
+        ProjectActivity(project, 'star', user)
+        ProjectActivity(project, 'update', user)
+        ProjectActivity(project, 'boost', user, 'Data whiz', 'lorem ipsum')
+        project_dribs = project.all_dribs()
+        project_badge = [s for s in project_dribs if s['name'] == 'boost']
+        assert len(project_dribs) == 4 # includes start event drib
+        assert len(project_badge) == 1
+
     def test_create_project(self, db, testapp):
         """Test creating projects anonymously."""
         # Create an event 

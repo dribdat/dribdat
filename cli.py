@@ -5,8 +5,9 @@ import os
 import click
 import datetime as dt
 from dribdat.app import init_app
+from dribdat.user.models import User, Event
 from dribdat.settings import DevConfig, ProdConfig
-from dribdat.apipackage import fetch_datapackage, load_file_datapackage
+from dribdat.apipackage import fetch_datapackage, load_file_datapackage, import_users_csv
 
 HERE = os.path.abspath(os.path.dirname(__file__))
 TEST_PATH = os.path.join(HERE, 'tests')
@@ -36,12 +37,12 @@ def socialize(kind):
 @click.command()
 @click.argument('event', required=True)
 @click.argument('clear', required=False, default=False)
-@click.argument('primes', required=False, default=True)
-@click.argument('challenges', required=False, default=True)
+@click.argument('primes', required=False, default=False)
+@click.argument('challenges', required=False, default=False)
 def numerise(event: int, clear: bool, primes: bool, challenges: bool):
-    """Assign numbers to challenge hashtags for an EVENT ID."""
+    """Assign numbers to project or challenge identifiers for a given EVENT ID."""
     if clear:
-        print("- Clearing hashtags")
+        print("- Clear idents rather than set them")
     if primes:
         print("- Using prime numbers")
     if challenges:
@@ -62,17 +63,23 @@ def numerise(event: int, clear: bool, primes: bool, challenges: bool):
                     .order_by(Project.progress.desc()) \
                     .order_by(Project.name)
         ix = 0
+        count = projects.count()
         for c in projects:
             if c.is_hidden: continue
             if challenges and not c.is_challenge: continue
             if not challenges and c.is_challenge: continue
-            ch = "" # push existing hashtag aside
-            if not clear and c.hashtag and len(c.hashtag) > 0:
-                ch = " " + ch
-            c.hashtag = str(nq[ix]) + ch
+            if clear:
+                c.ident = ''
+            else:
+                prefix = ''
+                if count > 99 and nq[ix] < 100:
+                    prefix = prefix + '0'
+                if count > 9 and nq[ix] < 10:
+                    prefix = prefix + '0'
+                c.ident = prefix + str(nq[ix])
             c.save()
             ix = ix + 1
-        print("Enumerated %d projects." % projects.count())
+        print("Enumerated %d projects." % count)
 
 
 @click.command()
@@ -127,16 +134,45 @@ def imports(url, level='full'):
 @click.command()
 @click.argument('kind', nargs=-1, required=False)
 def exports(kind):
-    """Export some data."""
+    """Export system data to TSV."""
     with create_app().app_context():
         if 'people' in kind:
-            from dribdat.user.models import User
             for pp in User.query.filter_by(active=True).all():
                 print(pp.email)
         elif 'events' in kind:
-            from dribdat.user.models import Event
             for pp in Event.query.filter_by(is_hidden=False).all():
                 print('\t'.join([pp.name, str(pp.starts_at), str(pp.ends_at)]))
+
+
+@click.command()
+@click.argument('filename', required=True)
+@click.argument('testonly', required=False)
+def register(filename, testonly=False):
+    """Import user data from a CSV file."""
+    with create_app().app_context():
+        created, updated = import_users_csv(filename, testonly)
+        print('%d users imported, %d were updated')
+
+
+@click.command()
+@click.argument('deleteusers', required=False)
+def cleanup(deleteusers=True):
+    """Cull inactive accounts on the system."""
+    with create_app().app_context():
+        all_inactive = [ u for u in User.query.filter_by(active=False).all() ]
+        print('%d inactive user accounts found' % len(all_inactive))
+        delcount = 0
+        if deleteusers:
+            print('The following inactive users with no content are being deleted:')
+            print('---------------------------------------------------------------')
+            print('username,fullname,email,webpage_url')
+            for u in all_inactive:
+                if not u.get_score() and not u.posted_challenges():
+                    u.delete()
+                    print(','.join([u.username, u.fullname or '', u.email, u.webpage_url or '']))
+                    delcount = delcount + 1
+            print('---------------------------------------------------------------')
+        print('%d user accounts cleaned up' % delcount)
 
 
 @click.group(name='j')
@@ -147,8 +183,10 @@ def cli():
 
 cli.add_command(socialize)
 cli.add_command(numerise)
+cli.add_command(register)
 cli.add_command(imports)
 cli.add_command(exports)
+cli.add_command(cleanup)
 
 if __name__ == '__main__':
     cli()

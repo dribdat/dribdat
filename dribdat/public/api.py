@@ -405,6 +405,7 @@ def project_push_json():
     data = request.get_json(force=True)
     if 'key' not in data or data['key'] != current_app.config['SECRET_API']:
         return jsonify(error='Invalid key')
+    # TODO: explain this hack
     project = Project.query.filter_by(hashtag=data['hashtag']).first()
     if not project:
         project = Project()
@@ -427,6 +428,7 @@ def set_project_values(project, data):
     if 'name' in data and len(data['name']) > 0:
         project.name = data['name']
     else:
+        # TODO: Why are we doing this? Oh, right, the hack above
         project.name = project.hashtag.replace('-', ' ')
     if 'summary' in data and len(data['summary']) > 0:
         project.summary = data['summary']
@@ -438,6 +440,8 @@ def set_project_values(project, data):
         if not project.source_url or project.source_url == '':
             project.source_url = data['autotext_url']
     # MAX progress
+    if project.progress is None:
+        project.progress = -1
     if 'levelup' in data and 0 < project.progress + data['levelup'] * 10 < 50:
         project.progress = project.progress + data['levelup'] * 10
     # return jsonify(data=data)
@@ -533,13 +537,13 @@ def project_uploader():
 
 # ------ DATA PACKAGE API --------
 
-
 def generate_event_package(event, format='json'):
     """Create a Data Package from the data of an event."""
     if format not in ['zip', 'json']:
         return "Format not supported"
     full_contents = (format == 'zip')
     host_url = request.host_url
+    # current_user can be empty or anonymous
     package = event_to_data_package(event, current_user, host_url, full_contents)
     if format == 'json':
         # Generate JSON representation
@@ -574,6 +578,7 @@ def package_specific_event(event_id, format):
 
 
 @blueprint.route('/user/current/my-hackathons.json', methods=['GET'])
+@login_required
 def current_user_hackathon_json():
     """Output JSON-LD about a User's Event according to schema."""
     """See https://schema.org/Hackathon."""
@@ -583,6 +588,7 @@ def current_user_hackathon_json():
 
 
 @blueprint.route('/user/current/profile.json', methods=['GET'])
+@login_required
 def profile_user_current_json():
     """Output JSON with public data about the current user."""
     if current_user and not current_user.is_anonymous:
@@ -592,12 +598,18 @@ def profile_user_current_json():
 
 def get_user_data(current_user):
     """Retrieves public data for a user."""
-    current_data = current_user.data
-    current_data['score'] = current_user.get_score()
-    del current_data['email']
-    del current_data['sso_id']
-    del current_data['is_admin']
-    return current_data
+    cdata = current_user.data
+    return {
+        'username':     cdata['username'],
+        'fullname':     cdata['fullname'],
+        'webpage_url':  cdata['webpage_url'],
+        'roles':        cdata['roles'],
+        'my_story':     cdata['my_story'],
+        'my_goals':     cdata['my_goals'],
+        'created_at':   cdata['created_at'],
+        'updated_at':   cdata['updated_at'],
+        'score':        current_user.get_score()
+    }
 
 
 @blueprint.route('/user/<int:user_id>/profile.json', methods=['GET'])

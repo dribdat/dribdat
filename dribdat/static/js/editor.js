@@ -21,10 +21,9 @@
     // Toggle status indicator
     var $inputfield = $(this);
     var $indicator = $inputfield.parent()
-      .append('<span class="autotext-indicator d-none btn-group">' +
-        '<a title="Status" class="btn btn-lg btn-light btn-disabled"><i class="fa fa-circle-o"></i></a>' +
-        '<button class="btn btn-lg btn-warning" type="button">' +
-        'Sync content</button>' +
+      .prepend('<span class="autotext-indicator d-none float-right">' +
+        '<a title="Status" class="btn-disabled"><i class="fa fa-circle-o"></i></a>' +
+        '<button class="btn btn-lg btn-light" type="button">Sync</button>' +
       '</span>')
       .find('.autotext-indicator');
 
@@ -77,7 +76,13 @@
   }); // -autotext_url each
 
   // Allow project progress on acknowledge
-  $('.form-project-post label[for="has_progress"]').each(function() {
+  if ($('.projectpost .stage-conditions .stage-no').length == 0) {
+    $('.form-project-post label[for="has_progress"] input').click();
+  } else {
+    $('.form-project-post label[for="has_progress"]').parent().hide();
+  }
+  /*each(function() {
+    /*
     var vparent = $(this).parent().parent().hide();
     var vinput = $(this).parent().find('input')[0];
     vinput.checked = false;
@@ -86,7 +91,7 @@
       all_checked = $('.form-project-confirm input[type="checkbox"]:not(:checked)').length === 0;
       vinput.checked = all_checked;
     });
-  });
+  });*/
 
   // Make the custom color field HTML5 compatible
   $('input#logo_color[type=text]').attr('type', 'color');
@@ -116,7 +121,7 @@
     } else {
       $dialog.find("[data-target='pitch']").hide();
     }
-    var $webpage_url = $('.fld-webpage_url');
+    var $webpage_url = $('.projectedit .fld-webpage_url');
     if ($webpage_url.length > 0) {
       $webpage_url.prepend($togglebtn.clone().show());
     } else {
@@ -173,7 +178,7 @@
               $dialog.modal('hide');
             } else if ($(this).data('target') == 'post') {
               // Append to post
-              var imglink = '![Image caption](' + response + ')';
+              var imglink = '![  ](' + response + ')';
               $('#note').val(imglink + ' ' + $('#note').val());
               $dialog.modal('hide');
             } else if ($(this).data('target') == 'pitch') {
@@ -241,10 +246,29 @@
           if (response.indexOf('http') !== 0) {
              return alert('File could not be uploaded :(\n' + response);
           }
-          var path = $inputfd.val();
-          var filename = path.split(/(\\|\/)/g).pop().replaceAll('_', ' ');
+          // Parse the file name and size
+          var filename = response.split(/(\\|\/)/g).pop().replaceAll('_', ' ');
+          var fileext = filename.split('.').pop().toLowerCase();
+          var filesize = Math.round(thefile.size/102.4)/10;
+          filesize = (filesize>1000) ? (Math.round(filesize/102.4)/10) + ' MB' : filesize + ' KB';
+
+          // Get the form ready
           $dialog.find(".preview input").val(response);
-          $dialog.find(".hidden").show();
+          $dialog.find(".hidden").removeClass('hidden');
+
+          // Preview values
+          $dialog.find('.file-preview').removeClass('hidden');
+          $dialog.find('.file-preview .filename').html(filename);
+          $dialog.find('.file-preview .filesize').html(filesize);
+          $dialog.find('.file-preview .filetype *').addClass('hidden');
+
+          // Special file types
+          if (filename.indexOf('datapackage.json')>0) {
+            $dialog.find('.file-preview .filetype-frictionless').removeClass('hidden');
+          } else {
+            $dialog.find('.file-preview .filetype-' + fileext).removeClass('hidden');
+          }
+
           // User confirms the file upload
           $('#file-confirm').show().find('button').off("click").click(function() {
             if ($(this).data('target') == 'weblink') {
@@ -287,9 +311,6 @@
       }); // -ajax
     }); // -change
   }); // -#uploadImage Files
-
-
-
 
   // Admin button tips
   $('.admin-defaults button').click(function() {
@@ -422,6 +443,12 @@
     // Handle activation button
     $activateEditor.find('[data-do="activate"]')
                    .show().on('click', activate_editor);
+
+    // Clear button
+    $activateEditor.find('[data-do="clear"]').show().click(function() {
+      $longtext.val('');
+      if (window.toasteditor) { window.toasteditor.reset(); }
+    });
 
     // Enable by default
     if (localStorage.getItem('markdownhelper') === null) {

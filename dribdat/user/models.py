@@ -213,7 +213,8 @@ class User(UserMixin, PkModel):
         for a in activities:
             if limit > 0 and len(projects) >= limit: break
             if a.project_id not in project_ids and not a.project.is_hidden:
-                not_challenge = a.project.progress and a.project.progress > 0
+                a_prog = a.project.progress
+                not_challenge = a_prog is not None and a_prog > 0
                 if with_challenges or not_challenge:
                     projects.append(a.project)
                     project_ids.append(a.project_id)
@@ -329,7 +330,7 @@ class Event(PkModel):
 
     __tablename__ = 'events'
     name = Column(db.String(80), unique=True, nullable=False)
-    summary = Column(db.String(140), nullable=True)       # a short description
+    summary = Column(db.String(140), nullable=True)       # a short description of the event
     hostname = Column(db.String(80), nullable=True)       # institution hosting the event
     hashtags = Column(db.String(255), nullable=True)      # default hashtags for social media
     location = Column(db.String(255), nullable=True)      # where is the event being held?
@@ -340,8 +341,9 @@ class Event(PkModel):
     ends_at = Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)
 
     description = Column(db.UnicodeText(), nullable=True) # a longer text about the event
-    boilerplate = Column(db.UnicodeText(), nullable=True) # tips to show on starting a new project
     instruction = Column(db.UnicodeText(), nullable=True) # tips for logged-in event participants
+    boilerplate = Column(db.UnicodeText(), nullable=True) # tips to show on starting a new project
+    aftersubmit = Column(db.UnicodeText(), nullable=True) # additional content to show new projects
 
     logo_url = Column(db.String(255), nullable=True)      # icon of the event
     webpage_url = Column(db.String(255), nullable=True)   # location of "about page"
@@ -390,6 +392,7 @@ class Event(PkModel):
         d['ends_at'] = format_date(self.ends_at, '%Y-%m-%dT%H:%M')
         d['description'] = self.description or ''
         d['boilerplate'] = self.boilerplate or ''
+        d['aftersubmit'] = self.aftersubmit or ''
         d['instruction'] = self.instruction or ''
         # And by full, we mean really full!
         d['custom_css'] = self.custom_css or ''
@@ -410,6 +413,7 @@ class Event(PkModel):
         self.custom_css = d['custom_css'] or '' if 'custom_css' in d else ''
         self.description = d['description'] or '' if 'description' in d else ''
         self.boilerplate = d['boilerplate'] or '' if 'boilerplate' in d else ''
+        self.aftersubmit = d['aftersubmit'] or '' if 'aftersubmit' in d else ''
         self.instruction = d['instruction'] or '' if 'instruction' in d else ''
         self.gallery_url = d['gallery_url'] or '' if 'gallery_url' in d else ''
         self.webpage_url = d['webpage_url'] or '' if 'webpage_url' in d else ''
@@ -528,7 +532,7 @@ class Event(PkModel):
                 # Clear every now and then
                 time_limit = time_now - dt.timedelta(minutes=CLEAR_STATUS_AFTER)
                 if dt.datetime.fromtimestamp(status_time) < time_limit:
-                    print("Clearing announements")
+                    # Clearing announcements
                     self.status = None
                     self.save()
                     return ''
@@ -551,8 +555,7 @@ class Event(PkModel):
     def categories_for_event(self):
         """Event categories."""
         return Category.query.filter(or_(
-            Category.event_id is None,
-            Category.event_id == -1,
+            Category.event_id == None,
             Category.event_id == self.id
         )).order_by('name')
 
@@ -580,8 +583,9 @@ class Project(PkModel):
     __versioned__ = {}
     __tablename__ = 'projects'
     name = Column(db.String(80), unique=True, nullable=False)
-    summary = Column(db.String(140), nullable=True)
-    hashtag = Column(db.String(40), nullable=True)
+    ident = Column(db.String(10), nullable=True)
+    hashtag = Column(db.String(140), nullable=True)
+    summary = Column(db.String(2048), nullable=True)
 
     image_url = Column(db.String(2048), nullable=True)
     source_url = Column(db.String(2048), nullable=True)
@@ -673,6 +677,7 @@ class Project(PkModel):
         """Get JSON representation."""
         d = {
             'id': self.id,
+            'ident': self.ident,
             'url': self.url,
             'name': self.name,
             'score': self.score,
@@ -805,15 +810,19 @@ class Project(PkModel):
                     rollcall.append(r)
         return [r for r in get_roles if r not in rollcall and r.name]
 
-    def all_dribs(self):
+    def all_dribs(self, limit=50):
         """Query which formats the project's timeline."""
         activities = Activity.query.filter_by(
                         project_id=self.id
                     ).order_by(Activity.timestamp.desc())
+        if limit is not None:
+            activities = activities.limit(limit)
+        activities_array = activities.all()
         dribs = []
-        prev = None
         only_active = False  # show dribs from inactive users
-        for a in activities:
+        prev = { 'progress': None, 'title': None, 'text': None }
+        # Iterate through the dribs
+        for a in activities_array:
             a_parsed = getActivityByType(a, only_active)
             if a_parsed is None:
                 continue
@@ -823,17 +832,7 @@ class Project(PkModel):
                 if prev['title'] == title and prev['text'] == text:
                     # if prev['date']-a.timestamp).total_seconds() < 120:
                     continue
-                # Show changes in progress
-                if prev['progress'] != a.project_progress:
-                    proj_stage = getStageByProgress(a.project_progress)
-                    if proj_stage is not None:
-                        dribs.append({
-                            'title': proj_stage['phase'],
-                            'date': a.timestamp,
-                            'icon': 'arrow-up',
-                            'name': 'progress',
-                        })
-            prev = {
+            cur = {
                 'icon': icon,
                 'title': title,
                 'text': text,
@@ -844,7 +843,28 @@ class Project(PkModel):
                 'progress': a.project_progress,
                 'id': a.id,
             }
-            dribs.append(prev)
+            dribs.append(cur)
+            # Show changes in progress
+            if a.project_progress and prev['progress'] != a.project_progress:
+                proj_stage = getStageByProgress(a.project_progress)
+                if a.project_progress > 0 and proj_stage is not None:
+                    dribs.append({
+                        'title': proj_stage['phase'],
+                        'date': a.timestamp,
+                        'icon': 'arrow-up',
+                        'name': 'progress',
+                    })
+            prev = cur
+
+        # Start all logs at stage 0
+        if len(activities_array) > 0:
+            dribs.append({
+                'title': getStageByProgress(0)['phase'],
+                'date': activities_array.pop().timestamp,
+                'icon': 'arrow-up',
+                'name': 'progress',
+            })
+        # Add event start and finish to log
         if self.event.has_started or self.event.has_finished:
             dribs.append({
                 'title': "Event started",
@@ -868,6 +888,16 @@ class Project(PkModel):
         if event is not None:
             return event.categories_for_event()
         return Category.query.order_by('name')
+
+    def as_challenge(self):
+        """Find the last challenge version of this project."""
+        if not self.versions: 
+            return self
+        for v in self.versions[::-1]:
+            if v.progress <= 0: 
+                return v.revert()
+        self.progress = 0
+        return self
 
     def get_schema(self, host_url=''):
         """Schema.org compatible metadata."""
@@ -898,6 +928,8 @@ class Project(PkModel):
         if not 'name' in data:
             raise Exception("Missing project name!")
         self.name = data['name']
+        if 'ident' in data:
+            self.ident = data['ident']
         if 'summary' in data:
             self.summary = data['summary']
         if 'hashtag' in data:
@@ -1049,6 +1081,10 @@ class Category(PkModel):
         if not self.projects:
             return 0
         return len(self.projects)
+
+    def event_projects(self, event_id):
+        """Get projects in this event."""
+        return Project.query.filter_by(category_id=self.id).filter_by(event_id=event_id).all()
 
     @property
     def data(self):

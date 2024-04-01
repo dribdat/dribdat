@@ -148,6 +148,9 @@ class EventForm(FlaskForm):
     boilerplate = TextAreaField(
         u'Quickstart guide',
         description=u'Shown when starting a new project: Markdown and HTML supported')
+    aftersubmit = TextAreaField(
+        u'Submissions guide',
+        description=u'Shown to the team on projects at challenge stage: Markdown and HTML supported')
     community_embed = TextAreaField(
         u'Code of conduct and community links',
         description=u'Bottom of event and project page: Markdown, HTML and '
@@ -171,19 +174,20 @@ class ProjectForm(FlaskForm):
     name = StringField(
         u'Title',
         [length(max=80), UniqueValidator(Project, 'name'), DataRequired()])
-    summary = StringField(u'Short summary', [length(max=140)])
+    ident = StringField(
+        u'Identifier', [length(max=10)],
+        description="Typically used for numbering the projects")
+    summary = StringField(u'Short summary', [length(max=2048)])
     longtext = TextAreaField(u'Description')
     autotext_url = URLField(
-        u'Readme',
-        [length(max=2048)],
+        u'Readme', [length(max=2048)],
         description="Location from which to Sync content")
     autotext = TextAreaField(u'Readme content')
     webpage_url = URLField(u'Presentation or demo link', [length(max=2048)])
     is_webembed = BooleanField(u'Embed contents of demo link', default=False)
     hashtag = StringField(
-        u'Hashtags',
-        [length(max=255)],
-        description="Team channel or social media hashtag")
+        u'Hashtags', [length(max=140)],
+        description="Team channel, social media hashtag, organization name")
     contact_url = URLField(u'Contact link', [length(max=2048)])
     source_url = URLField(u'Source link', [length(max=2048)])
     download_url = URLField(u'Download link', [length(max=2048)])

@@ -27,6 +27,9 @@
   <div class="project-info">
 
     <ul class="project-meta">
+      {% if project.ident %}
+      <li><b>{{ project.ident }}</b></li>
+      {% endif %}
       <li><a href="{{ url_for('project.project_view', project_id=project.id) }}">{{ url_for('project.project_view', project_id=project.id, _external=True) }}</a></li>
       {% if project.webpage_url %}
       <li>Homepage: <a href="{{ project.webpage_url }}">{{ project.webpage_url|truncate(50) }}</a></li>

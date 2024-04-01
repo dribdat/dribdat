@@ -193,18 +193,19 @@ def user_cert():
 def event(event_id):
     """Show an event."""
     event = Event.query.filter_by(id=event_id).first_or_404()
-    projects = Project.query.filter_by(event_id=event_id, is_hidden=False)
+    # Sort visible projects by identity (if used), or alphabetically
+    projects = Project.query \
+        .filter_by(event_id=event_id, is_hidden=False) \
+        .order_by(Project.ident, Project.name)
+        # The above must match projhelper->navigate_around_project
+    # Embedding view
     if request.args.get('embed'):
         return render_template("public/embed.html",
                                current_event=event, projects=projects)
-    summaries = [p.data for p in projects]
-    # Sort projects by reverse score, then name
-    summaries.sort(key=lambda x: (
-        -x['score'] if isinstance(x['score'], int) else 0,
-        x['name'].lower()))
-    project_count = projects.count()
+    # TODO: seems inefficient? We only need a subset of the data here:
+    summaries = [ p.data for p in projects ]
     return render_template("public/event.html", current_event=event,
-                           projects=summaries, project_count=project_count,
+                           summaries=summaries, project_count=len(summaries),
                            active="projects")
 
 
@@ -214,22 +215,27 @@ def event_participants(event_id):
     event = Event.query.filter_by(id=event_id).first_or_404()
     users = GetEventUsers(event)
     cert_path = None
-    search_by = request.args.get('q')
+    search_by = request.args.get('q') or ''
+    role_call = request.args.get('r') or ''
     # Quick (actually, rather slow..) search filter
-    if search_by and len(search_by) > 2:
+    if role_call and len(role_call) > 2:
         usearch = []
-        if '@' in search_by:
-            qq = search_by.replace('@', '').lower()
-            for u in users:
-                if qq in u.username.lower() or qq in u.email.lower():
+        for u in users:
+            for r in u.roles:
+                if role_call in str(r):
                     usearch.append(u)
-        else:
-            qq = search_by.lower()
-            for u in users:
-                if (u.my_bio and qq in u.my_bio.lower()) or \
-                   (u.my_goals and qq in u.my_goals.lower()) or \
-                   (u.my_wishes and qq in u.my_wishes.lower()):
-                        usearch.append(u)
+                    search_by = role_call
+                    break
+    elif search_by and len(search_by) > 2:
+        usearch = []
+        qq = search_by.replace('@', '').lower()
+        for u in users:
+            if qq in u.username.lower() or qq in u.email.lower():
+                usearch.append(u)
+            elif (u.my_bio and qq in u.my_bio.lower()) or \
+                 (u.my_goals and qq in u.my_goals.lower()) or \
+                 (u.my_wishes and qq in u.my_wishes.lower()):
+                usearch.append(u)
     else:
         usearch = users
         search_by = ''
@@ -286,7 +292,8 @@ def event_stages(event_id):
     steps = getProjectStages()
     for s in steps:
         s['projects'] = []  # Reset the index
-    projects = Project.query.filter_by(event_id=event.id, is_hidden=False)
+    projects = Project.query.filter_by(event_id=event.id, is_hidden=False) \
+                            .order_by(Project.ident, Project.name)
     for s in steps:
         if 'projects' not in s:
             s['projects'] = []
@@ -316,14 +323,29 @@ def event_categories(event_id):
                            active="categories")
 
 
+@blueprint.route("/event/<int:event_id>/challenges")
+def event_challenges(event_id):
+    """Show all the challenges of an event."""
+    event = Event.query.filter_by(id=event_id).first_or_404()
+    projects = Project.query.filter_by(event_id=event.id, is_hidden=False) \
+                            .order_by(Project.ident, Project.name)
+    if not current_user or current_user.is_anonymous or not current_user.is_admin:
+        projects = projects.filter(Project.progress >= 0)
+    challenges = [ p.as_challenge() for p in projects ]
+    return render_template("public/eventchallenges.html",
+                           current_event=event, projects=challenges,
+                           project_count=projects.count(),
+                           active="challenges")
+
+
 @blueprint.route('/event/<int:event_id>/print')
 def event_print(event_id):
     """Print the results of an event."""
     now = datetime.utcnow().strftime("%d.%m.%Y %H:%M")
     event = Event.query.filter_by(id=event_id).first_or_404()
     eventdata = Project.query.filter_by(event_id=event_id, is_hidden=False)
-    projects = eventdata.filter(Project.progress > 0).order_by(Project.name)
-    challenges = eventdata.filter(Project.progress <= 0).order_by(Project.hashtag, Project.name)
+    projects = eventdata.filter(Project.progress > 0).order_by(Project.ident, Project.name)
+    challenges = eventdata.filter(Project.progress == 0).order_by(Project.ident, Project.name)
     return render_template('public/eventprint.html', active='print',
                            projects=projects, challenges=challenges,
                            current_event=event, curdate=now)

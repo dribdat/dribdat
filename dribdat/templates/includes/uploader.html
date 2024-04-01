@@ -10,15 +10,9 @@
 			</div>
 			<div class="modal-body">
 				<p class="upload-note">
-					Open web formats (PNG, GIF, JPEG, SVG, WebP) are accepted.
+					Open web formats (<tt>PNG</tt>, GIF, JPEG, SVG, WebP) are accepted.
 					<b>Max {{ (config.MAX_CONTENT_LENGTH/(1024*1024))|round(1) }} MB.</b>
-					
-					<b>Tip:</b> for slides, embed your online presentation, or upload a PDF file as your "Demo link" by editing your project.
 				</p>
-				<center class="preview hidden" id="img-preview">
-					<img src="" height="100">
-					<input name="url" disabled style="display:block;margin-top:1em">
-				</center>
 				<div class="input-group" style="margin-top:1em">
 					<div class="input-group-prepend">
 						<span class="input-group-text" id="inputImageLabel">Select</span>
@@ -30,25 +24,32 @@
 						<label class="custom-file-label" for="inputImageFile">Choose file</label>
 					</div>
 				</div>
+				<hr>
+				<center class="preview hidden" id="img-preview">
+					<img src="" height="128">
+					<input name="url" disabled style="display:block;margin-top:1em">
+				</center>
 				<center class="col hidden" style="margin-top:1em" id="img-confirm">
-					<div class="btn-group">
-						<button class="btn btn-warning" data-target="cover">
-							Use as cover image
-						</button>
-						<button class="btn btn-warning" data-target="weblink">
-							Use as demo link
-						</button>
-						<button class="btn btn-info" data-target="pitch">
-							Add to the pitch
-						</button>
-						<button class="btn btn-info" data-target="post">
-							Add to post
-						</button>
-						<button class="btn btn-primary" data-target="xclip">
-							&#128203;
-							Copy to clipboard
-						</button>
-					</div>
+					<button class="btn btn-warning btn-lg" data-target="weblink">
+						<i class="fa fa-desktop"></i><br>
+						Presentation
+					</button>
+					<button class="btn btn-info btn-lg" data-target="pitch">
+						<i class="fa fa-plus-square-o"></i><br>
+						Insert into Pitch
+					</button>
+					<button class="btn btn-info btn-lg" data-target="post">
+						<i class="fa fa-check-square"></i><br>
+						Add to Post
+					</button>
+					<button class="btn btn-warning btn-lg" data-target="cover">
+						<i class="fa fa-image"></i><br>
+						Use as Cover
+					</button>
+					<button class="btn btn-light btn-lg" data-target="xclip">
+						<i class="fa fa-clipboard"></i><br>
+						Copy
+					</button>
 				</center>
 			</div>
 			<div class="modal-footer">
@@ -64,18 +65,18 @@
 	<div class="modal-dialog" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h5 class="modal-title" id="uploadFileLabel">Attach data</h5>
+				<h5 class="modal-title" id="uploadFileLabel">Attach file</h5>
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 					<span aria-hidden="true">&times;</span>
 				</button>
 			</div>
 			<div class="modal-body">
-				<p class="upload-note">
+				<p class="upload-note mt-0">
 					Data formats permitted:
-					<sp>CSV</sp>
 					<sp>PDF</sp>
-					<sp>ODS</sp>
+					<sp>CSV</sp>
 					<sp>TSV</sp>
+					<sp>ODS</sp>
 					<sp>JSON</sp>
 					<sp>GeoJSON</sp>
 					up to {{ (config.MAX_CONTENT_LENGTH/(1024*1024))|round(1) }} MB in size.
@@ -83,7 +84,7 @@
 					<b>Tip:</b> <a href="https://frictionlessdata.io/" target="_blank">Data Packages</a> can be
 					<a href="https://frictionlessdata.io/projects/#visual-interfaces" target="_blank">made with tools</a> or <a href="https://github.com/schoolofdata-ch/datapackage-template" target="_blank">templates</a>.
 				</p>
-				<div class="input-group" style="margin-top:1em">
+				<div class="input-group mt-2">
 					<div class="input-group-prepend">
 						<span class="input-group-text" id="inputFileLabel">Select</span>
 					</div>
@@ -91,22 +92,37 @@
 						<input type="file" class="custom-file-input" id="inputFile"
 							name="image" aria-describedby="inputFileLabel" accept="application/json,.geojson,.csv,.tsv,.pdf,application/vnd.oasis.opendocument.spreadsheet"
 							data-maxsize="{{ config.MAX_CONTENT_LENGTH }}">
-						<label class="custom-file-label" for="inputImageFile">Choose file</label>
+						<label class="custom-file-label" for="inputFile">Choose file</label>
 					</div>
 				</div>
+				<div class="file-preview hidden mt-3">
+					<table width="100%">
+						<tr><th width="20%">File name:</th><td class="filename"></td></tr>
+						<tr><th>Size of file:</th><td class="filesize"></td></tr>
+						<tr><th>Type of data:</th><td class="filetype">
+							<div class="filetype-pdf hidden">PDF</div>
+							<div class="filetype-csv hidden">CSV</div>
+							<div class="filetype-tsv hidden">TSV</div>
+							<div class="filetype-ods hidden">ODS</div>
+							<div class="filetype-json hidden">JSON</div>
+							<div class="filetype-geojson hidden">GeoJSON</div>
+							<div class="filetype-frictionless hidden">Data Package</div>
+						</td></tr>
+					</table>
+				</div>
 				<center class="col hidden" style="margin-top:1em" id="file-confirm">
-					<div class="btn-group">
-						<button class="btn btn-warning" data-target="weblink">
-							Use as demo link
-						</button>
-						<button class="btn btn-info" data-target="pitch">
-							Add to pitch content
-						</button>
-						<button class="btn btn-primary" data-target="xclip">
-							&#128203;
-							Copy to clipboard
-						</button>
-					</div>
+					<button class="btn btn-warning btn-lg" data-target="weblink">
+						<i class="fa fa-desktop"></i><br>
+						Presentation
+					</button>
+					<button class="btn btn-info btn-lg" data-target="pitch">
+						<i class="fa fa-plus-square-o"></i><br>
+						Insert into Pitch
+					</button>
+					<button class="btn btn-light btn-lg" data-target="xclip">
+						<i class="fa fa-clipboard"></i><br>
+						Copy
+					</button>
 				</center>
 			</div>
 			<div class="modal-footer">
