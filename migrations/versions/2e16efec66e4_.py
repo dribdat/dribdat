@@ -1,7 +1,7 @@
 """Event aftersubmit, increased hashtag, summary
 
 Revision ID: 2e16efec66e4
-Revises: 2b948713686c
+Revises: 66da53eca449
 Create Date: 2024-03-11 17:00:00.739345
 
 """
@@ -11,7 +11,7 @@ import sqlalchemy as sa
 
 # revision identifiers, used by Alembic.
 revision = '2e16efec66e4'
-down_revision = '2b948713686c'
+down_revision = '66da53eca449'
 branch_labels = None
 depends_on = None
 
