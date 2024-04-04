@@ -15,6 +15,7 @@
     "font-awesome": "^4",
     "jquery": "^3",
     "jquery-resizable-dom": "^0",
-    "popper.js": "^1"
+    "popper.js": "^1",
+    "simplelightbox": "^2.14.3"
   }
 }
