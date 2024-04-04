@@ -65,6 +65,13 @@ def about():
     return render_template("public/about.html", active="about", orgs=orgs)
 
 
+@blueprint.route("/terms/")
+def terms():
+    """Render a static terms of use page."""
+    terms = EVENT_PRESET['terms']
+    return render_template("public/terms.html", active="terms", terms=terms)
+
+
 @blueprint.route("/favicon.ico")
 def favicon():
     """Favicon just points to a file."""
