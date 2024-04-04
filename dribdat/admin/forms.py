@@ -150,9 +150,9 @@ class EventForm(FlaskForm):
         u'Submissions guide',
         description=u'Shown to the team on projects at challenge stage: Markdown and HTML supported')
     community_embed = TextAreaField(
-        u'Code of conduct and community links',
-        description=u'Bottom of event and project page: Markdown, HTML and '
-        + 'embedded scripts are supported')
+        u'Community code',
+        description=u'Your terms and conditions under every event and project page: Markdown, HTML and '
+        + ' scripts are supported. See also terms.md')
     custom_css = TextAreaField(
         u'Custom stylesheet (CSS)',
         description=u'For external CSS: @import url(https://...);')

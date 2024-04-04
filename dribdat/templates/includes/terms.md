@@ -12,5 +12,6 @@ We encourage the maintainers of other Dribdat servers to comply with their relev
 
 See also:
 
+* [New data protection legislation](https://www.bj.admin.ch/bj/en/home/staat/datenschutz/rechtsgrundlagen.html) (bj.admin.ch)
 * [New Federal Act on Data Protection (nFADP)](https://www.kmu.admin.ch/kmu/en/home/facts-and-trends/digitization/data-protection/new-federal-act-on-data-protection-nfadp.html) (kmu.admin.ch)
 * [235.1 Federal Act on Data Protection](https://www.fedlex.admin.ch/filestore/fedlex.data.admin.ch/eli/cc/2022/491/20230901/en/pdf-a/fedlex-data-admin-ch-eli-cc-2022-491-20230901-en-pdf-a-1.pdf) (PDF fedlex.admin.ch)
