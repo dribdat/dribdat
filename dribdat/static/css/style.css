@@ -1938,6 +1938,11 @@ Code of Conduct
 		0 0 0 6px yellow,
 		0 0 0 10px cyan; }
 
+.creativecommons { margin-top: 1em; padding-left: 115px; min-height: 50px;
+    background: url('/static/img/cc-by.svg') no-repeat top left;
+    background-size: 106px auto;
+  }
+
 /* ------------
 Issues list view
 --------------- */
