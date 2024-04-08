@@ -121,6 +121,7 @@ def format_date_range(starts_at, ends_at):
 def load_event_presets():
     """Load event preset content."""
     event_preset = {
+        'terms': '',
         'eventstart': '',
         'quickstart': '',
         'codeofconduct': '',

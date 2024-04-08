@@ -455,7 +455,7 @@ nav .nav-login {
 }
 .home-page .carousel-caption a {
   text-decoration: none;
-  color: black;
+  color: initial;
 }
 .home-page .carousel-caption .event-header .section-header-content {
   text-align: left;
@@ -474,7 +474,7 @@ nav .nav-login {
 }
 .home-page .carousel-caption .home-description p {
   text-align: left;
-  color: black;
+  color: initial;
   display: inline-block;
   clear: both;
 }
@@ -1290,7 +1290,6 @@ nav .nav-login {
 }
 .onebox * {
   text-decoration: none !important;
-  color: black;
 }
 .onebox:hover {
   opacity: 1.0;
@@ -1693,7 +1692,6 @@ a.go-up {
   width: 200px;
   height: auto;
   display: inline-block;
-  background: rgba(0,0,0,0.02);
   border-top: 2px solid rgba(0,0,100,0.2);
   border-left: 2px solid rgba(0,0,100,0.2);
   border-radius: 10px;
@@ -1704,7 +1702,6 @@ a.go-up {
   opacity: 0.5;
   cursor: pointer;
   text-decoration: none;
-  color: black;
 }
 .missing-roles .role:hover {
   opacity: 1.0;
