@@ -9,13 +9,13 @@ from wtforms import (
 )
 from wtforms.fields import (
     TimeField, DateField,
-    URLField,
+    URLField, DateTimeLocalField
 )
 # from wtforms_html5 import AutoAttrMeta
-from wtforms.validators import DataRequired, length
+from wtforms.validators import InputRequired, length
 from ..user.validators import UniqueValidator
 from dribdat.user.models import Project, Event
-from datetime import time, datetime
+from datetime import time, datetime, timedelta
 
 
 class ProjectNew(FlaskForm):
@@ -28,7 +28,7 @@ class ProjectNew(FlaskForm):
         + "The content will be automatically synced here. Tips: dribdat.cc/handbook")
     name = StringField(
         u'Title',
-        [length(max=80), UniqueValidator(Project, 'name'), DataRequired()],
+        [length(max=80), UniqueValidator(Project, 'name'), InputRequired()],
         description=u"A short team or project name - you may change "
         + "this later.")
     summary = TextAreaField(
@@ -80,7 +80,7 @@ class ProjectDetailForm(FlaskForm):
     id = HiddenField('id')
     name = StringField(
         u'Title',
-        [length(max=80), UniqueValidator(Project, 'name'), DataRequired()],
+        [length(max=80), UniqueValidator(Project, 'name'), InputRequired()],
         render_kw={'maxlength': 80, 'required': 'required'},
         description="A short name for your project or challenge.")
     source_url = URLField(
@@ -119,7 +119,7 @@ class ProjectPost(FlaskForm):
     has_progress = BooleanField(u"Level up")
     note = TextAreaField(
         'How are the vibes in your team right now?',
-        [length(max=280), DataRequired()],
+        [length(max=280), InputRequired()],
         render_kw={'maxlength': 280},
         description=u'A short note for your project log.')
     submit = SubmitField(u'Save post')
@@ -131,7 +131,7 @@ class ProjectComment(FlaskForm):
     id = HiddenField('id')
     note = TextAreaField(
         u'Comments and reviews',
-        [length(max=280), DataRequired()],
+        [length(max=280), InputRequired()],
         render_kw={'maxlength': 280},
         description=u'A suggestion or constructive feedback for the team.'
                     + ' Please note the Code of Conduct.')
@@ -143,27 +143,25 @@ class ProjectBoost(FlaskForm):
 
     id = HiddenField('id')
     note = TextAreaField(u'Short praise and comments', [
-                         length(max=280), DataRequired()])
-    boost_type = SelectField(u'Select booster pack', [DataRequired()])
+                         length(max=280), InputRequired()])
+    boost_type = SelectField(u'Select booster pack', [InputRequired()])
     submit = SubmitField(u'Energize!')
 
 
-class NewEventForm(FlaskForm):
+class EventNew(FlaskForm):
     """Add a new Event."""
 
     next = HiddenField()
     id = HiddenField('id')
     name = StringField(
         u'Title',
-        [length(max=80), UniqueValidator(Event, 'name'), DataRequired()])
-    starts_date = DateField(u'Starting date', default=datetime.now())
-    starts_time = TimeField(u'Starting time', default=time(9, 0, 0))
-    ends_date = DateField(u'Finish date', default=datetime.now())
-    ends_time = TimeField(u'Finish time', default=time(16, 0, 0))
+        [length(max=80), UniqueValidator(Event, 'name'), InputRequired()])
+    starts_at = DateTimeLocalField(u'Starting', [InputRequired()])
+    ends_at = DateTimeLocalField(u'Finishing', [InputRequired()])
     summary = StringField(
         u'Summary',
         [length(max=140)],
-        description=u'A short overview (140 chars) of the upcoming event')
+        description=u'A short overview of the upcoming event')
     hostname = StringField(
         u'Hosted by', [length(max=80)],
         description=u'Organization responsible for the event')

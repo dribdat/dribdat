@@ -5,7 +5,7 @@ from flask import (Blueprint, request, render_template, flash, url_for,
         redirect, current_app, jsonify)
 from flask_login import login_required, current_user
 from dribdat.user.models import User, Event, Project, Activity
-from dribdat.public.forms import NewEventForm
+from dribdat.public.forms import EventNew
 from dribdat.public.userhelper import (get_users_by_search, 
         filter_users_by_search, get_dribs_paginated)
 from dribdat.database import db
@@ -349,30 +349,31 @@ def event_new():
         if not current_user.is_admin:
             return redirect(url_for("public.event_start"))
     event = Event()
-    form = NewEventForm(obj=event, next=request.args.get('next'))
+    form = EventNew(obj=event, next=request.args.get('next'))
     if form.is_submitted() and form.validate():
-        del form.id
-        form.populate_obj(event)
-        event.starts_at = datetime.combine(
-            form.starts_date.data, form.starts_time.data)
-        event.ends_at = datetime.combine(
-            form.ends_date.data, form.ends_time.data)
-        # Load default event content
-        event.boilerplate = EVENT_PRESET['quickstart']
-        event.community_embed = EVENT_PRESET['codeofconduct']
-        db.session.add(event)
-        db.session.commit()
-        if not current_user.is_admin:
-            event.is_hidden = True
-            event.save()
-            flash(
-                'Please contact an administrator (see About page)'
-                + 'to make changes or to promote this event.',
-                'warning')
+        # Check event dates
+        if not form.starts_at.data < form.ends_at.data:
+            flash('Please check Starting and Finishing dates', 'warning')
         else:
-            flash('A new event has been planned!', 'success')
-        cache.clear()
-        return redirect(url_for("public.event", event_id=event.id))
+            # Save event data
+            del form.id
+            form.populate_obj(event)
+            # Load default event content
+            event.boilerplate = EVENT_PRESET['quickstart']
+            event.community_embed = EVENT_PRESET['codeofconduct']
+            db.session.add(event)
+            db.session.commit()
+            if not current_user.is_admin:
+                event.is_hidden = True
+                event.save()
+                flash(
+                    'Please contact an administrator (see About page)'
+                    + 'to make changes or to promote this event.',
+                    'warning')
+            else:
+                flash('A new event has been planned!', 'success')
+            cache.clear()
+            return redirect(url_for("public.event", event_id=event.id))
     if not current_user.is_admin:
         flash('An administrator can make your new event visible on the home page.',
                 'info')
