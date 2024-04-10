@@ -11,10 +11,7 @@
 			<div class="modal-body">
 				<p class="upload-note">
 					Open web formats accepted: <sp>PNG</sp> <sp>GIF</sp> <sp>JPEG</sp> <sp>SVG</sp> <sp>WebP</sp>
-					<br><b>Max file size: {{ (config.MAX_CONTENT_LENGTH/(1024*1024))|round(1) }} MB</b><br>
-
-					<br>&copy; Make sure to <a href="https://commons.wikimedia.org/wiki/Commons:Reusing_content_outside_Wikimedia" target="_blank">correctly attribute</a> 
-					in your Pitch the author and license of any creative works that you use.
+					<br><b>Max file size: {{ (config.MAX_CONTENT_LENGTH/(1024*1024))|round(1) }} MB</b>
 				</p>
 				<div class="input-group" style="margin-top:1em">
 					<div class="input-group-prepend">
@@ -50,6 +47,11 @@
 						Copy link
 					</button>
 				</center>
+				<p class="upload-note mt-4">
+					<b>Tip:</b>
+					&copy; Make sure to <a href="https://commons.wikimedia.org/wiki/Commons:Reusing_content_outside_Wikimedia" target="_blank">correctly attribute</a> 
+					in your Pitch the author and license of any creative works that you use.
+				</p>
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -73,10 +75,6 @@
 				<p class="upload-note mt-0">
 					You can upload a <sp>PDF</sp> export of your presentation here,
 					up to {{ (config.MAX_CONTENT_LENGTH/(1024*1024))|round(1) }} MB in size.
-
-					<br><br><b>Tip:</b> 
-					Use the <i>Export to PDF</i> function in your presentation, or an <a href="https://www.adobe.com/acrobat/online/ppt-to-pdf.html" target="_blank">online converter</a> to prepare your file.
-					Too big? Try <a href="https://tools.pdf24.org/compress-pdf" target="_blank">compressing your PDF</a> before uploading.
 				</p>
 				<div class="input-group mt-2">
 					<div class="input-group-prepend">
@@ -105,6 +103,11 @@
 						Copy link
 					</button>
 				</center>
+				<p class="upload-note mt-4">
+					<b>Tip:</b> 
+					Use the <i>Export to PDF</i> function in your presentation, or an <a href="https://www.adobe.com/acrobat/online/ppt-to-pdf.html" target="_blank">online converter</a> to prepare your file.
+					Too big? Try <a href="https://tools.pdf24.org/compress-pdf" target="_blank">compressing your PDF</a> before uploading.
+				</p>
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -133,11 +136,7 @@
 					<sp>ODS</sp>
 					<sp>JSON</sp>
 					<sp>GeoJSON</sp>
-					<br>(up to {{ (config.MAX_CONTENT_LENGTH/(1024*1024))|round(1) }} MB in size)<br>
-					<br><b>Tip:</b> The
-					<a href="https://frictionlessdata.io/" target="_blank">Frictionless Data</a> standard
-					recommends sharing our metadata with a <sp>datapackage.json</sp> generated
-					<a href="https://frictionlessdata.io/projects/#visual-interfaces" target="_blank">with tools</a> or copied from <a href="https://github.com/schoolofdata-ch/datapackage-template" target="_blank">a template</a>. 
+					<br>(up to {{ (config.MAX_CONTENT_LENGTH/(1024*1024))|round(1) }} MB in size)
 				</p>
 				<div class="input-group mt-2">
 					<div class="input-group-prepend">
@@ -175,6 +174,12 @@
 						Copy link
 					</button>
 				</center>
+				<p class="upload-note mt-4">
+					<b>Tip:</b> The
+					<a href="https://frictionlessdata.io/" target="_blank">Frictionless Data</a> standard
+					recommends sharing our metadata with a <sp>datapackage.json</sp> generated
+					<a href="https://frictionlessdata.io/projects/#visual-interfaces" target="_blank">with tools</a> or copied from <a href="https://github.com/schoolofdata-ch/datapackage-template" target="_blank">a template</a>.
+				</p>
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -182,3 +187,30 @@
 		</div>
 	</div>
 </div><!-- / Upload Data -->
+
+<!-- Upload Media dialog -->
+<div class="modal fade uploader" id="uploadMedia" tabindex="-1" role="dialog" aria-labelledby="uploadMediaLabel" aria-hidden="true">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="uploadMediaLabel">Insert Media</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<p class="upload-note mt-0">
+					We support rich media that has been uploaded to the following sites:
+				</p>
+				<ul>
+					<li>Vimeo</li>
+					<li>YouTube</li>
+					<li>SpeakerDeck</li>
+				</ul>				
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+			</div>
+		</div>
+	</div>
+</div><!-- / Upload Media -->

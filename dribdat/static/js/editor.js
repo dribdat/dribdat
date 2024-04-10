@@ -374,6 +374,14 @@
     }); // -change
   }); // -#uploadPackage
 
+  $('#uploadMedia').each(function() {
+    var $dialog = $(this);
+    var $togglebtn = $('button[data-target="#uploadMedia"]');
+    // Append button to the pitch editor
+    var $longtext = $('.fld-longtext');
+    $longtext.prepend($togglebtn.clone().show());
+  });
+
   // Admin button tips
   $('.admin-defaults button').click(function() {
     $('input#name').val($(this).text());

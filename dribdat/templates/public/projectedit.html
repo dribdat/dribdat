@@ -88,6 +88,11 @@
   </button>
   {% endif %}
 
+  <button type="button" class="btn btn-light btn-lg mt-2 m-1" style="display:none" data-toggle="modal" data-target="#uploadMedia">
+    <i class="fa fa-tv text-info" area-hidden="true"></i>
+    Insert Media
+  </button>
+
   <div class="jumbotron project-page phase-Project">
   {% if detail_view %}
     {{ render_form(url_for('project.project_details', project_id=project.id), form, formid='projectDetails') }}
