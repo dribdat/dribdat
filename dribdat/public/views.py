@@ -254,6 +254,7 @@ def all_participants():
     """Show list of participants of an event."""
     search_by = request.args.get('q')
     MAX_COUNT = 200
+    # TODO: add pagination as with dribs
     users = get_users_by_search(search_by, MAX_COUNT)
     if len(users) == MAX_COUNT:
         flash('Only the first %d participants are shown.' % MAX_COUNT, 'info')

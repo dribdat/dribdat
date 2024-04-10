@@ -245,15 +245,23 @@
   });
 
   // Enable lightboxes on embedded images
-  $('.project-longtext').each(function() {
+  let hasLightbox = false;
+  $('.project-longtext, .project-autotext, .timeline .content').each(function() {
     $(this).find('img').each(function() {
-      const mysrc = $(this).attr('src');
-      if (!$(this).parent().tagName == 'a') {
-        $(this).wrap('<a href="' + mysrc + '"></a>');
+      const imgtag = $(this);
+      if (imgtag.width() < 260 || imgtag.height() < 260) { return; }
+      const mysrc = imgtag.attr('src');
+      if (imgtag.parent().tagName !== 'A') {
+        imgtag.wrap('<a href="' + mysrc + '"></a>');
+        imgtag.parent().addClass('lightboxed');
       }
     });
-    let gallery = new SimpleLightbox('.project-longtext a[has:img]');
+    hasLightbox = true;
   });
+  if (hasLightbox) {
+    let gallery = new SimpleLightbox('.lightboxed');
+    console.log(gallery);
+  }
 
   // Show GitHub issues
   $('#issues-list').each(function() {
