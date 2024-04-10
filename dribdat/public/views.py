@@ -253,9 +253,10 @@ def event_participants(event_id):
 def all_participants():
     """Show list of participants of an event."""
     search_by = request.args.get('q')
-    users = get_users_by_search(search_by)
-    if len(users) == 200:
-        flash('Only the first 200 participants are shown.', 'info')
+    MAX_COUNT = 200
+    users = get_users_by_search(search_by, MAX_COUNT)
+    if len(users) == MAX_COUNT:
+        flash('Only the first %d participants are shown.' % MAX_COUNT, 'info')
     return render_template("public/eventusers.html",
                            q=search_by,
                            participants=users, 

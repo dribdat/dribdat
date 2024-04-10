@@ -244,6 +244,17 @@
     });
   });
 
+  // Enable lightboxes on embedded images
+  $('.project-longtext').each(function() {
+    $(this).find('img').each(function() {
+      const mysrc = $(this).attr('src');
+      if (!$(this).parent().tagName == 'a') {
+        $(this).wrap('<a href="' + mysrc + '"></a>');
+      }
+    });
+    let gallery = new SimpleLightbox('.project-longtext a[has:img]');
+  });
+
   // Show GitHub issues
   $('#issues-list').each(function() {
     var per_page = 5;
