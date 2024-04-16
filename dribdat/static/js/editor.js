@@ -330,7 +330,8 @@
           $dialog.find('.file-preview .filetype *').addClass('hidden');
 
           // Special file types
-          if (filename.indexOf('datapackage.json')>0) {
+          const isDataPackage = filename.indexOf('datapackage.json') >= 0;
+          if (isDataPackage) {
             $dialog.find('.file-preview .filetype-frictionless').removeClass('hidden');
           } else {
             $dialog.find('.file-preview .filetype-' + fileext).removeClass('hidden');
@@ -345,12 +346,19 @@
                   // ... ' (' + fileExt.toUpperCase() + ')'; 
               // Append to pitch
               if (typeof window.toasteditor !== 'undefined') {
-                window.toasteditor.exec('addLink', { 
-                  linkUrl: response, linkText: filename
-                });
+                if (isDataPackage) {
+                  window.toasteditor.insertText(response);
+                } else {
+                  window.toasteditor.exec('addLink', { 
+                    linkUrl: response, linkText: filename
+                  });
+                }
               } else {
                 // Create Markdown link with a paperclip emoji
                 var fileLink = '📎 [' + filename + '](' + response + ')';
+                if (isDataPackage) {
+                  fileLink = response;
+                }
                 $('#longtext').val($('#longtext').val() +
                   '\n\n' + fileLink);
               }
@@ -374,13 +382,32 @@
     }); // -change
   }); // -#uploadPackage
 
+  // Media upload
   $('#uploadMedia').each(function() {
     var $dialog = $(this);
     var $togglebtn = $('button[data-target="#uploadMedia"]');
     // Append button to the pitch editor
     var $longtext = $('.fld-longtext');
     $longtext.prepend($togglebtn.clone().show());
-  });
+    // Set up the dialog
+    var $inputfd = $dialog.find('input[type="url"]');
+    var $submitb = $dialog.find('button[data-target="insert"');
+    $submitb.click(function() {
+      var theurl = $inputfd.val();
+      if (theurl.indexOf('https://') !== 0) {
+        return window.alert('Invalid address');
+      }
+      // Append to pitch
+      if (typeof window.toasteditor !== 'undefined') {
+        window.toasteditor.insertText(theurl);
+      } else {
+        // Create Markdown link with a paperclip emoji
+        $('#longtext').val($('#longtext').val() +
+          '\n\n' + theurl);
+      }
+      $dialog.modal('hide');
+    });
+  }); // -#uploadMedia
 
   // Admin button tips
   $('.admin-defaults button').click(function() {
