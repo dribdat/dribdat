@@ -13,7 +13,7 @@ from dribdat.extensions import cache
 from dribdat.aggregation import GetEventUsers
 from dribdat.user import getProjectStages, isUserActive
 from urllib.parse import urlparse
-from datetime import datetime
+from datetime import datetime, timedelta
 from sqlalchemy import and_, func
 
 blueprint = Blueprint('public', __name__, static_folder="../static")
@@ -351,6 +351,8 @@ def event_new():
         if not current_user.is_admin:
             return redirect(url_for("public.event_start"))
     event = Event()
+    event.starts_at = (datetime.now() + timedelta(days=1)).replace(hour=9, minute=00, second=00)
+    event.ends_at = (event.starts_at + timedelta(days=1)).replace(hour=16)
     form = EventNew(obj=event, next=request.args.get('next'))
     if form.is_submitted() and form.validate():
         # Check event dates
