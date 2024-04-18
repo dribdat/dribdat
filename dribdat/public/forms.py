@@ -25,7 +25,7 @@ class ProjectNew(FlaskForm):
     autotext_url = URLField(
         u'Readme', [length(max=2048)],
         description="[Optional] Link to a code repository or online document. "
-        + "The content will be automatically synced here. Tips: dribdat.cc/handbook")
+        + "The content will be automatically synced here 💡 Tips: dribdat.cc/sync")
     name = StringField(
         u'Title',
         [length(max=80), UniqueValidator(Project, 'name'), InputRequired()],
@@ -64,7 +64,7 @@ class ProjectForm(FlaskForm):
         + " No copypasta - use the 'Upload Image' button.")
     autotext_url = URLField(
         u'Readme link', [length(max=255)],
-        description="URL to a code repository, online document, or wiki to Sync with. Tips: dribdat.cc/usage")
+        description="URL to a code repository, document, or wiki to Sync with. 💡 Tips: dribdat.cc/sync")
     note = TextAreaField(
         u'What changed?',
         [length(max=280)],

@@ -397,13 +397,13 @@
       if (theurl.indexOf('https://') !== 0) {
         return window.alert('Invalid address');
       }
+      // Add some spaces
+      theurl = '\n\n' + theurl + '\n\n';
       // Append to pitch
       if (typeof window.toasteditor !== 'undefined') {
         window.toasteditor.insertText(theurl);
       } else {
-        // Create Markdown link with a paperclip emoji
-        $('#longtext').val($('#longtext').val() +
-          '\n\n' + theurl);
+        $('#longtext').val($('#longtext').val() + theurl);
       }
       $dialog.modal('hide');
     });
