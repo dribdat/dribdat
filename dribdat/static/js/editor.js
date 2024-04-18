@@ -398,11 +398,12 @@
         return window.alert('Invalid address');
       }
       // Add some spaces
-      theurl = '\n\n' + theurl + '\n\n';
+      theurl = '\n' + theurl + '\n';
       // Append to pitch
       if (typeof window.toasteditor !== 'undefined') {
         window.toasteditor.insertText(theurl);
       } else {
+        theurl = '\n' + theurl + '\n'; // More spaces
         $('#longtext').val($('#longtext').val() + theurl);
       }
       $dialog.modal('hide');
