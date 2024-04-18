@@ -6,7 +6,7 @@
 
 `dribdat` is an open source web application that assists teams working playfully on projects with data. Designed to support [awesome hackathons](https://github.com/dribdat/awesome-hackathon) and promote [data expeditions](https://schoolofdata.ch), it is a 🇨🇭 Swiss Army Knife for civic techs: your events, guidelines, count-downs, challenge board, project log, progress tracker, integrating with prototyping tools, group chat, code repositories, open data APIs, and more!
 
-![Dribdat Logo](dribdat/static/img/logo12_128x128.png)
+![Dribdat Logo](dribdat/static/img/logo/logo12_128x128.png)
 
 The philosophy of this project, in a nutshell, is: **live and let live** (no tech religion, use whatever design / dev / doc tools you want as long as they are accessible to your team), **commit sustainably** (aggregate outputs in standard web of data formats for optimal search and archiving), **create in safe spaces** (embedded code of conduct, works offline, minimal privacy footprint). 
 
