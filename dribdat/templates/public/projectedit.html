@@ -16,7 +16,7 @@
 {% endblock %}
 
 {% block content %}
-  <div class="float-right" style="z-index: 9999; position: relative">
+  <div class="float-right" style="z-index: 99; position: relative">
     <div class="switch-editor">
       <a href="{{ url_for('project.project_edit', project_id=project.id) }}" 
          title="Switch to editing of project basic information" 
@@ -87,6 +87,11 @@
     Attach Data
   </button>
   {% endif %}
+
+  <button type="button" class="btn btn-light btn-lg mt-2 m-1" style="display:none" data-toggle="modal" data-target="#uploadMedia">
+    <i class="fa fa-tv text-info" area-hidden="true"></i>
+    Insert Media
+  </button>
 
   <div class="jumbotron project-page phase-Project">
   {% if detail_view %}

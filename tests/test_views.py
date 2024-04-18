@@ -83,6 +83,16 @@ class TestViews:
         user.save()
         assert user in userhelper.get_users_by_search('@bob')
 
+        user2 = UserFactory()
+        user2.username = 'Bobby'
+        user2.save()
+        assert len(userhelper.get_users_by_search('@bob', 2)) == 2
+        assert len(userhelper.get_users_by_search('@bob', 1)) == 1
+        
+        user_view = testapp.get('/participants')
+        assert user.username in user_view
+        assert user2.username in user_view
+
         event = EventFactory()
         event.save()
         project = ProjectFactory()

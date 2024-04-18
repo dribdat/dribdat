@@ -13,7 +13,7 @@ import re
 RE_NO_TAGS = re.compile(r'\!\[[^\]]*\]\([^\)]+\)|\[|\]|<[^>]+>')
 
 
-def get_users_by_search(search_by):
+def get_users_by_search(search_by, MAX_COUNT=200):
     """Collects all users."""
     users = User.query.filter_by(active=True)
     if search_by and len(search_by) > 2:
@@ -30,9 +30,9 @@ def get_users_by_search(search_by):
                 User.my_goals.ilike(q),
             ))
     # TODO: pagination!
-    if users.count() > 200:
+    if users.count() > MAX_COUNT:
         # Only the first 200 participants are shown
-        users = users.limit(200)
+        users = users.limit(MAX_COUNT)
     # Provide certificate if available
     if users:
         return sorted(users.all(), key=lambda x: x.username)

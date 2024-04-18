@@ -499,7 +499,7 @@ def project_uploader():
         return 'No filename'
     ext = img.filename.split('.')[-1].lower()
     if ext not in ACCEPTED_TYPES:
-        return 'Invalid format (allowed: %s)' % ','.join(ACCEPTED_TYPES)
+        return 'Invalid format (not one of: %s)' % ', '.join(ACCEPTED_TYPES)
     # generate a simpler filename
     keepcharacters = ('.', '_')
     safe_filename = img.filename.replace(' ', '_')

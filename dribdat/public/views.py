@@ -5,7 +5,7 @@ from flask import (Blueprint, request, render_template, flash, url_for,
         redirect, current_app, jsonify)
 from flask_login import login_required, current_user
 from dribdat.user.models import User, Event, Project, Activity
-from dribdat.public.forms import NewEventForm
+from dribdat.public.forms import EventNew
 from dribdat.public.userhelper import (get_users_by_search, 
         filter_users_by_search, get_dribs_paginated)
 from dribdat.database import db
@@ -13,7 +13,7 @@ from dribdat.extensions import cache
 from dribdat.aggregation import GetEventUsers
 from dribdat.user import getProjectStages, isUserActive
 from urllib.parse import urlparse
-from datetime import datetime
+from datetime import datetime, timedelta
 from sqlalchemy import and_, func
 
 blueprint = Blueprint('public', __name__, static_folder="../static")
@@ -253,9 +253,11 @@ def event_participants(event_id):
 def all_participants():
     """Show list of participants of an event."""
     search_by = request.args.get('q')
-    users = get_users_by_search(search_by)
-    if len(users) == 200:
-        flash('Only the first 200 participants are shown.', 'info')
+    MAX_COUNT = 200
+    # TODO: add pagination as with dribs
+    users = get_users_by_search(search_by, MAX_COUNT)
+    if len(users) == MAX_COUNT:
+        flash('Only the first %d participants are shown.' % MAX_COUNT, 'info')
     return render_template("public/eventusers.html",
                            q=search_by,
                            participants=users, 
@@ -349,30 +351,33 @@ def event_new():
         if not current_user.is_admin:
             return redirect(url_for("public.event_start"))
     event = Event()
-    form = NewEventForm(obj=event, next=request.args.get('next'))
+    event.starts_at = (datetime.now() + timedelta(days=1)).replace(hour=9, minute=00, second=00)
+    event.ends_at = (event.starts_at + timedelta(days=1)).replace(hour=16)
+    form = EventNew(obj=event, next=request.args.get('next'))
     if form.is_submitted() and form.validate():
-        del form.id
-        form.populate_obj(event)
-        event.starts_at = datetime.combine(
-            form.starts_date.data, form.starts_time.data)
-        event.ends_at = datetime.combine(
-            form.ends_date.data, form.ends_time.data)
-        # Load default event content
-        event.boilerplate = EVENT_PRESET['quickstart']
-        event.community_embed = EVENT_PRESET['codeofconduct']
-        db.session.add(event)
-        db.session.commit()
-        if not current_user.is_admin:
-            event.is_hidden = True
-            event.save()
-            flash(
-                'Please contact an administrator (see About page)'
-                + 'to make changes or to promote this event.',
-                'warning')
+        # Check event dates
+        if not form.starts_at.data < form.ends_at.data:
+            flash('Please check Starting and Finishing dates', 'warning')
         else:
-            flash('A new event has been planned!', 'success')
-        cache.clear()
-        return redirect(url_for("public.event", event_id=event.id))
+            # Save event data
+            del form.id
+            form.populate_obj(event)
+            # Load default event content
+            event.boilerplate = EVENT_PRESET['quickstart']
+            event.community_embed = EVENT_PRESET['codeofconduct']
+            db.session.add(event)
+            db.session.commit()
+            if not current_user.is_admin:
+                event.is_hidden = True
+                event.save()
+                flash(
+                    'Please contact an administrator (see About page)'
+                    + 'to make changes or to promote this event.',
+                    'warning')
+            else:
+                flash('A new event has been planned!', 'success')
+            cache.clear()
+            return redirect(url_for("public.event", event_id=event.id))
     if not current_user.is_admin:
         flash('An administrator can make your new event visible on the home page.',
                 'info')

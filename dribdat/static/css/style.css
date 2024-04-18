@@ -1001,12 +1001,6 @@ nav .nav-login {
   border-radius: 0px;
   clear: both;
 }
-.project-page .project-longtext .card {
-  background: none;
-}
-.project-page .project-longtext iframe {
-  max-width: 100%;
-}
 .project-page .project-star i {
   padding-right: 5px;
 }
@@ -1032,6 +1026,33 @@ nav .nav-login {
   overflow-x: hidden;
   padding: 1rem;
 }
+
+/* Content blocks on project page */
+.project-page .project-autotext img,
+.project-page .project-longtext img {
+  max-width: 100%;
+  max-height: 400px;
+}
+.timeline .lightboxed {
+  clear: both;
+  display: block;
+}
+.project-page .lightboxed:hover:before {
+  content: '🔍';
+  font-size: 2rem;
+  position: absolute;
+  vertical-align: top;
+  margin-left: 0.4rem;
+}
+.project-page .project-autotext .card,
+.project-page .project-longtext .card {
+  background: none;
+}
+.project-page .project-autotext iframe,
+.project-page .project-longtext iframe {
+  max-width: 100%;
+}
+.project-page .project-autotext blockquote,
 .project-page .project-longtext blockquote {
   border-left: 3px solid lightgrey;
   padding-left: 1em;
@@ -1043,8 +1064,8 @@ nav .nav-login {
   .project.hexalist .hexagontent {
     left: 35%;
   }
+  .project-page .project-autotext,
   .project-page .project-longtext { margin: 2em; }
-  .project-page .project-autotext { margin: 2em; }
   .project-page .project-ident { line-height: 0px; }
 
   .nav-projects-abs-next,
@@ -1937,6 +1958,11 @@ Code of Conduct
 		0 0 0 4px orange,
 		0 0 0 6px yellow,
 		0 0 0 10px cyan; }
+
+.creativecommons { margin-top: 1em; padding-left: 115px; min-height: 50px;
+    background: url('/static/img/cc-by.svg') no-repeat top left;
+    background-size: 106px auto;
+  }
 
 /* ------------
 Issues list view
