@@ -1,8 +1,8 @@
 [tool.poetry]
 name = "Dribdat"
-version = "0.8.1"
+version = "0.8.2"
 description = "Online platform for time-limited collaborative events"
-authors = ["Oleg Lavrovsky <dribdat@datalets.ch>"]
+authors = ["Dribdat contributors <dribdat@datalets.ch>"]
 
 [tool.poetry.dependencies]
 bleach = "^6"
