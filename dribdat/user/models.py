@@ -277,16 +277,19 @@ class User(UserMixin, PkModel):
             projects = [for_project]
         if not len(projects) > 0:
             return (False, 'projects')
-        cert_path = self.get_cert_path(projects[0].event)
-        if not cert_path:
-            return (False, 'event')
-        return (True, cert_path)
+        for p in projects:
+            cert_path = self.get_cert_path(p.event)
+            if cert_path:
+                return (True, cert_path)
+        return (False, 'event')
 
     def get_cert_path(self, event):
         """Generate URL to participation certificate."""
         if not event:
             return None
         if not event.certificate_path:
+            return None
+        if not event.has_finished:
             return None
         path = event.certificate_path
         userdata = self.data

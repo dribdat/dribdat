@@ -100,9 +100,12 @@ def home():
     resource_events = events.filter(Event.lock_resources)
     resource_events = resource_events.order_by(Event.name.asc())
     # Select my challenges
-    my_projects = None
+    my_projects = may_certify = None
     if current_user and not current_user.is_anonymous:
         my_projects = current_user.joined_projects(True, 3)
+    if cur_event is not None:
+        may_certify = cur_event.has_finished 
+        may_certify = may_certify and cur_event.certificate_path
     # Filter past events
     MAX_PAST_EVENTS = 6
     events_past_next = events_past.count() > MAX_PAST_EVENTS
@@ -115,6 +118,7 @@ def home():
                            events_past=events_past.all(),
                            events_past_next=events_past_next,
                            my_projects=my_projects,
+                           may_certify=may_certify,
                            current_event=cur_event)
 
 
@@ -221,9 +225,12 @@ def event(event_id):
     if request.args.get('embed'):
         return render_template("public/embed.html",
                                current_event=event, projects=projects)
+    # Check for certificate
+    may_certify = event.has_finished and event.certificate_path
     # TODO: seems inefficient? We only need a subset of the data here:
     summaries = [ p.data for p in projects ]
     return render_template("public/event.html", current_event=event,
+                           may_certify=may_certify,
                            summaries=summaries, project_count=len(summaries),
                            active="projects")
 

@@ -108,6 +108,14 @@
       <i class="fa fa-comment"></i>
       Connect</a>
   {% endif %}
+  {% if may_certify %}
+    <a class="btn btn-lg btn-light"
+      href="{{ url_for('public.user_current') }}"
+      title="Download a participation certificate on your profile">
+      <i class="fa fa-check text-info"></i>
+      Certificate&nbsp;available
+    </a>
+  {% endif %}
 </div>
 
 <div class="event-nav mt-2 mb-2 text-center" role="group" aria-label="Event navigation">
