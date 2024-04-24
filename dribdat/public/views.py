@@ -104,8 +104,7 @@ def home():
     if current_user and not current_user.is_anonymous:
         my_projects = current_user.joined_projects(True, 3)
     if cur_event is not None:
-        may_certify = cur_event.has_finished 
-        may_certify = may_certify and cur_event.certificate_path
+        may_certify = cur_event.has_finished and cur_event.certificate_path
     # Filter past events
     MAX_PAST_EVENTS = 6
     events_past_next = events_past.count() > MAX_PAST_EVENTS

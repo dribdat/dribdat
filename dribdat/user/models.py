@@ -289,8 +289,6 @@ class User(UserMixin, PkModel):
             return None
         if not event.certificate_path:
             return None
-        if not event.has_finished:
-            return None
         path = event.certificate_path
         userdata = self.data
         for m in ['sso', 'username', 'email']:
