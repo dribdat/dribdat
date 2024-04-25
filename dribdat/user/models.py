@@ -120,14 +120,14 @@ class User(UserMixin, PkModel):
             'email': self.email,
             'username': self.username,
             'fullname': self.fullname,
-            'webpage_url': self.webpage_url,
-            'roles': ",".join([r.name for r in self.roles]),
+            'created_at': self.created_at,
+            'updated_at': self.updated_at,
             'cardtype': self.cardtype,
             'carddata': self.carddata,
             'my_story': self.my_story,
             'my_goals': self.my_goals,
-            'created_at': self.created_at,
-            'updated_at': self.updated_at,
+            'webpage_url': self.webpage_url,
+            'roles': ",".join([r.name for r in self.roles]),
         }
 
     def set_from_data(self, data):

@@ -50,7 +50,7 @@ def get_event_categories(event_id=None):
 
 
 def get_event_users(event, full_data=False):
-    """Return plain user objects and personal data."""
+    """Return plain formatted user objects and personal data."""
     eventusers = GetEventUsers(event)
     if not eventusers:
         return []
@@ -73,6 +73,22 @@ def get_event_users(event, full_data=False):
                 usr['updated_at'], '%Y-%m-%dT%H:%M')
         userdata.append(usr)
     return userdata
+
+
+# TODO: combine with function above
+def get_users_for_event(event=None, with_score=False):
+    """Collect full user data for a particular event, optionally with the user scores."""
+    if event is None: return []
+    userlist = []
+    for u in GetEventUsers(event):
+         # with_challenges=True, limit=-1, event=None
+        udata = u.data
+        pnames = [ p.name for p in u.joined_projects(True, -1, event) ]
+        udata['teams'] = ', '.join(pnames)
+        if with_score:
+            udata['score'] = u.get_score()
+        userlist.append(udata)
+    return userlist
 
 
 def get_project_summaries(projects, host_url, is_moar=False):

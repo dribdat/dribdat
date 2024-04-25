@@ -62,10 +62,11 @@ class TestApi:
         assert project not in user1.joined_projects(False) # no challenges
 
         # Test event API
-        userlist = get_users_for_event(event)
+        userlist = get_users_for_event(event, True)
         assert user1.username in [ u['username'] for u in userlist ]
         assert user2.username in [ u['username'] for u in userlist ]
         assert project.name in [ u['teams'] for u in userlist ]
+        assert 'score' in userlist[0]
 
         
     def test_get_platform_data(self):
