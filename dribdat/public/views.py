@@ -103,8 +103,8 @@ def home():
     my_projects = may_certify = None
     if current_user and not current_user.is_anonymous:
         my_projects = current_user.joined_projects(True, 3)
-    if cur_event is not None:
-        may_certify = cur_event.has_finished and cur_event.certificate_path
+        if cur_event is not None:
+            may_certify = cur_event.has_finished and cur_event.certificate_path
     # Filter past events
     MAX_PAST_EVENTS = 6
     events_past_next = events_past.count() > MAX_PAST_EVENTS
@@ -226,6 +226,9 @@ def event(event_id):
                                current_event=event, projects=projects)
     # Check for certificate
     may_certify = event.has_finished and event.certificate_path
+    if may_certify:
+        may_certify = current_user and not current_user.is_anonymous
+        may_certify = may_certify and current_user.may_certify()[0]
     # TODO: seems inefficient? We only need a subset of the data here:
     summaries = [ p.data for p in projects ]
     return render_template("public/event.html", current_event=event,

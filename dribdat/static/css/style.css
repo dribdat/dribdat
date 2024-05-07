@@ -1006,9 +1006,9 @@ nav .nav-login {
 }
 .project-edit-cover {
   z-index: 99;
-  position: absolute;
   margin-top: -2em;
-  margin-left: 1em;
+  line-height: 0px;
+  float: right;
 }
 .jumbotron.projectnew-boilerplate {
   border: 10px solid lightseagreen;

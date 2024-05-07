@@ -13,7 +13,7 @@
 {% if current_user and current_user.is_authenticated %}
 <div class="row">
 
-  {% if score_tip %}
+  {% if score_tip and current_user.id == user.id %}
     <div class="category-tip mt-2 clearfix"
          title="This tip is only visible to you">
       To improve your score, please  
