@@ -13,7 +13,7 @@
 {% if current_user and current_user.is_authenticated %}
 <div class="row">
 
-  {% if score_tip %}
+  {% if score_tip and current_user.id == user.id %}
     <div class="category-tip mt-2 clearfix"
          title="This tip is only visible to you">
       To improve your score, please  
@@ -66,10 +66,8 @@
     <br clear="all"/>
     <a id="get-certified" class="btn btn-light btn-lg"
       href="{{ url_for('public.user_cert') }}" download
-      title="Download a participation certificate" style="width: 12em">
-      <img src="{{ url_for('static', filename='img/noun-certificate-1191142.svg') }}"
-           style="width: 7em"><br>
-      My Certificate
+      title="Download a participation certificate">
+      Download&nbsp;Certificate
     </a>
   </div>
 {% endif %}
@@ -239,9 +237,4 @@
   </section>
 </div>
 {% endif %}
-
-<p class="attribution">
-  Certificate icon by <a href="https://thenounproject.com/grega.cresnar/" target="_blank">Gregor Cresnar</a> - CC BY 3.0
-</p>
-
 {% endblock %}

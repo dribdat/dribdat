@@ -1,6 +1,6 @@
 {
   "name": "Dribdat",
-  "version": "0.8.1",
+  "version": "0.8.2",
   "description": "Online platform for time-limited collaborative events",
   "repository": "https://codeberg.org/dribdat/dribdat",
   "author": "Oleg Lavrovsky <oleg@datalets.ch>",

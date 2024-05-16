@@ -10,9 +10,6 @@
   <meta property="og:title" content="{{project.name}}"/>
   <meta property="og:image" content="{{project_image_url|quote_plus}}"/>
   <meta property="og:description" content="{% if project.summary %}{{project.summary}}{% else %}{{ project.longtext|striptags|truncate(120) }}{% endif %}"/>
-  <meta name="twitter:site" content="@opendatach"/>
-  <meta name="twitter:card" content="summary"/>
-  {% if project.user.cardtype == 'twitter' %}<meta name="twitter:creator" content="@{{ project.user.carddata }}"/>{% endif %}
   <meta name="description" content="{{project.summary}}"/>
   <meta name="author" content="{{project.user.username}}"/>
   <meta name="dribdat:project:id" content="{{project.id}}"/>
@@ -329,7 +326,7 @@
         <div class="btn btn-lg" title="Contact the team"><span>&#x1f44b;</span> {{ project.contact_url }}</div>
       {% endif %}
     {% endif %}
-    {% if project.webpage_url %}
+    {% if project.webpage_url and not project.is_webembed %}
       <a href="{{ project.webpage_url }}" class="btn btn-lg" target="_blank" rel="noopener noreferrer" title="Project web link"><span>&#x1f310;</span> Open</a>
     {% endif %}
     {% if project.download_url %}

@@ -120,14 +120,14 @@ class User(UserMixin, PkModel):
             'email': self.email,
             'username': self.username,
             'fullname': self.fullname,
-            'webpage_url': self.webpage_url,
-            'roles': ",".join([r.name for r in self.roles]),
+            'created_at': self.created_at,
+            'updated_at': self.updated_at,
             'cardtype': self.cardtype,
             'carddata': self.carddata,
             'my_story': self.my_story,
             'my_goals': self.my_goals,
-            'created_at': self.created_at,
-            'updated_at': self.updated_at,
+            'webpage_url': self.webpage_url,
+            'roles': ",".join([r.name for r in self.roles]),
         }
 
     def set_from_data(self, data):
@@ -277,10 +277,11 @@ class User(UserMixin, PkModel):
             projects = [for_project]
         if not len(projects) > 0:
             return (False, 'projects')
-        cert_path = self.get_cert_path(projects[0].event)
-        if not cert_path:
-            return (False, 'event')
-        return (True, cert_path)
+        for p in projects:
+            cert_path = self.get_cert_path(p.event)
+            if cert_path:
+                return (True, cert_path)
+        return (False, 'event')
 
     def get_cert_path(self, event):
         """Generate URL to participation certificate."""
