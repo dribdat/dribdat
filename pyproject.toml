@@ -68,3 +68,6 @@ pytest = "*"
 WebTest = "*"
 coverage = "*"
 
+[tool.poetry.group.dev.dependencies]
+flask-openapi3 = "^3.1.2"
+
