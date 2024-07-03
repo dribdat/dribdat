@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "Dribdat"
-version = "0.8.2"
+version = "0.8.3"
 description = "Online platform for time-limited collaborative events"
 authors = ["Dribdat contributors <dribdat@datalets.ch>"]
 
@@ -67,7 +67,3 @@ pyopenssl = "*"
 pytest = "*"
 WebTest = "*"
 coverage = "*"
-
-[tool.poetry.group.dev.dependencies]
-flask-openapi3 = "^3.1.2"
-

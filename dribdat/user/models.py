@@ -36,9 +36,12 @@ import datetime as dt
 import hashlib
 import re
 from urllib.parse import urlencode, urlparse
+
 # Standard library fix
-from future.standard_library import install_aliases
-install_aliases()  # noqa: I005
+from future.utils import PY2
+if PY2:
+    from future.standard_library import install_aliases
+    install_aliases()  # noqa: I005
 
 
 # Set up user roles mapping

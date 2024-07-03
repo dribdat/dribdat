@@ -29,7 +29,7 @@ def create_app(script_info=None):
         app = init_app(DevConfig)
     # Enable debugger and profiler
     if bool(strtobool(os.environ.get("FLASK_DEBUG", "False"))):
-        app.config['DEBUG_TB_PROFILER_ENABLED'] = True
+        #app.config['DEBUG_TB_PROFILER_ENABLED'] = True
         app.debug = True
         from flask_debugtoolbar import DebugToolbarExtension
         DebugToolbarExtension(app)

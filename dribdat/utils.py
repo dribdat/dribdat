@@ -179,7 +179,8 @@ def fix_relative_links(readme, imgroot, repo_full_name, default_branch):
     readme = re.sub(
         r"\!\[(.*)\]\((?!http)",
         # Pass named group to include full path in the image URL
-        "![\g<1>](%s/%s/%s/" % (imgroot, repo_full_name, default_branch),
+        r"![\g<1>]" + \
+        "(%s/%s/%s/" % (imgroot, repo_full_name, default_branch),
         readme
     )
     return readme

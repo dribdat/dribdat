@@ -96,6 +96,7 @@ def init_talisman(app):
 def register_blueprints(app):
     """Register Flask blueprints."""
     app.register_blueprint(public.api.blueprint)
+    app.register_blueprint(public.openapi.blueprint)
     app.register_blueprint(public.auth.blueprint)
     app.register_blueprint(public.views.blueprint)
     app.register_blueprint(public.feeds.blueprint)

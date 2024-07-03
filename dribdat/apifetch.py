@@ -18,8 +18,11 @@ from .apievents import (
 from .utils import (
     sanitize_url, load_presets, load_yaml_presets, fix_relative_links
 )
-from future.standard_library import install_aliases
-install_aliases()
+
+from future.utils import PY2
+if PY2:
+    from future.standard_library import install_aliases
+    install_aliases()  # noqa: I005
 
 # In seconds, how long to wait for API response
 REQUEST_TIMEOUT = 10
