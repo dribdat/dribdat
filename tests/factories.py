@@ -47,7 +47,7 @@ class EventFactory(BaseFactory):
 
     name = Sequence(lambda n: 'Event {0}'.format(n))
     summary = "Just a sample event"
-    starts_at = datetime.now(UTC)
+    starts_at = datetime.now(UTC) - timedelta(hours=1)
     ends_at = datetime.now(UTC) + timedelta(days=2)
 
     class Meta:  # noqa: D106

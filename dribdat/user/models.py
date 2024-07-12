@@ -92,11 +92,11 @@ class User(UserMixin, PkModel):
     # A temporary hash for logins
     hashword = Column(db.String(128), nullable=True)
     updated_at = Column(db.DateTime, nullable=True,
-                        default=datetime.now)
+                        default=datetime.now(UTC))
     # The hashed password
     password = Column(db.String(128), nullable=True)
     created_at = Column(db.DateTime, nullable=False,
-                        default=datetime.now)
+                        default=datetime.now(UTC))
 
     # State flags
     active = Column(db.Boolean(), default=False)
@@ -342,8 +342,8 @@ class Event(PkModel):
     location_lat = Column(SqliteDecimal(5), nullable=True)    # coordinates (Latitude)
     location_lon = Column(SqliteDecimal(5), nullable=True)    # coordinates (Longitude)
 
-    starts_at = Column(db.DateTime, nullable=False, default=datetime.now)
-    ends_at = Column(db.DateTime, nullable=False, default=datetime.now)
+    starts_at = Column(db.DateTime, nullable=False, default=datetime.now(UTC))
+    ends_at = Column(db.DateTime, nullable=False, default=datetime.now(UTC))
 
     description = Column(db.UnicodeText(), nullable=True) # a longer text about the event
     instruction = Column(db.UnicodeText(), nullable=True) # tips for logged-in event participants
@@ -467,12 +467,13 @@ class Event(PkModel):
     @property
     def has_started(self):
         """Extra property."""
-        return self.starts_at <= datetime.now(UTC) <= self.ends_at
+        return self.starts_at.timestamp() <= datetime.today().timestamp() \
+            <= self.ends_at.timestamp()
 
     @property
     def has_finished(self):
         """Extra property."""
-        return datetime.now(UTC) > self.ends_at
+        return datetime.today().timestamp() > self.ends_at.timestamp()
 
     @property
     def can_start_project(self):
@@ -495,7 +496,7 @@ class Event(PkModel):
         starts_at = current_app.tz.localize(self.starts_at)
         ends_at = current_app.tz.localize(self.ends_at)
         # Check event time limit (hard coded to 30 days)
-        tz_now = current_app.tz.localize(datetime.now(UTC))
+        tz_now = datetime.now(UTC)
         time_limit = tz_now + timedelta(days=30)
         # Show countdown within limits
         if starts_at > tz_now:
@@ -611,9 +612,9 @@ class Project(PkModel):
     logo_icon = Column(db.String(40), nullable=True)
 
     created_at = Column(db.DateTime, nullable=False,
-                        default=datetime.now)
+                        default=datetime.now(UTC))
     updated_at = Column(db.DateTime, nullable=False,
-                        default=datetime.now)
+                        default=datetime.now(UTC))
 
     # User who created the project
     user_id = reference_col('users', nullable=True)
@@ -1144,7 +1145,7 @@ class Activity(PkModel):
                           name="activity_type"))
     action = Column(db.String(32), nullable=True)
     # 'external', 'commit', 'sync', 'post', ...
-    timestamp = Column(db.DateTime, nullable=False, default=datetime.now)
+    timestamp = Column(db.DateTime, nullable=False, default=datetime.now(UTC))
     content = Column(db.UnicodeText, nullable=True)
     ref_url = Column(db.String(2048), nullable=True)
 
@@ -1219,7 +1220,7 @@ class Resource(PkModel):
     type_id = Column(db.Integer(), nullable=True, default=0)
 
     created_at = Column(db.DateTime, nullable=False,
-                        default=datetime.now)
+                        default=datetime.now(UTC))
     # At which progress level did it become relevant
     progress_tip = Column(db.Integer(), nullable=True)
     # order = Column(db.Integer, nullable=True)
