@@ -73,17 +73,12 @@ def login():
     # Handle logging in
     if request.method == 'POST':
         if form.is_submitted() and form.validate():
-            # Allow login with e-mail address
-            if '@' in form.username.data:
-                user_by_email = User.query.filter_by(email=form.username.data).first()
-                if user_by_email:
-                    form.username.data = user_by_email.username
             # Validate user account
             login_user(form.user, remember=True)
             if not form.user.active:
                 # Note: continue to profile page, where user is warned
                 username = current_user.username
-                return redirect(url_for('public.user', username=username))
+                return redirect(url_for('public.user_profile', username=username))
             # Regular user greeting
             flash("Time to make something awesome. ≧◡≦", 'info')
             return redirect_dest(fallback=url_for('public.home'))
@@ -282,7 +277,7 @@ def user_profile():
         db.session.commit()
         user.socialize()
         flash('Profile updated.', 'success')
-        return redirect(url_for('public.user', username=user.username))
+        return redirect(url_for('public.user_profile', username=user.username))
 
     if not form.roles.choices:
         del form.roles

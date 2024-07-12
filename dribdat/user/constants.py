@@ -3,6 +3,8 @@
 from os import environ as os_env
 from ..utils import load_yaml_presets
 from ..apifetch import FetchStageConfig
+from random import random
+
 
 # User role
 USER = 0
@@ -35,8 +37,20 @@ RESOURCE_TYPES = {
 # Content length
 MAX_EXCERPT_LENGTH = 500
 
+# Containers for stage data
 PR_CHALLENGE = 0
 PR_STAGES = { 'PROGRESS': {}, 'STAGE': {} }
+
+# Random questions for drib post
+DRIB_QUESTIONS = [
+        'Tell us about your latest work',
+        'What was the last thing you did here?',
+        'Share a recent activity in your project',
+        'How are the vibes in your team right now?',
+        'Could you share what you just completed?',
+        'What is your current task, and next move?',
+        'Describe your current challenge',
+    ]
 
 
 def resourceTypeList(verbose=False):
@@ -87,14 +101,21 @@ def projectProgressList(All=True, WithEmpty=True):
 
 def stageProjectToNext(project):
     """Updates project stage to next level."""
+    if project.progress is not None and project.progress < 0:
+        # Approve a challenge
+        project.progress = projectProgressList(False, False)[0][0]
+        return True
     found_next = False
+    # TODO: Check that we have not auto-promoted in the past hour
+    #for act in project.activities.order_by(Activity.id.desc()):
+    #    if act.type == ''
+    # Promote to next stage in progress list
     for a in projectProgressList(True, False):
         if found_next:
             project.progress = a[0]
             break
         if a[0] == project.progress or \
-            not project.progress or \
-                project.progress < 0:
+            not project.progress:
             found_next = True
     return found_next
     
@@ -120,6 +141,8 @@ def getStageByProgress(progress):
             return None
     return PR_STAGES['STAGE'][progress]
 
+
+# TODO: move to progress.py
 
 def getProjectPhase(project):
     """Return progress phase for a project."""
@@ -198,18 +221,16 @@ def getActivityByType(a, only_active=True):  # noqa: C901
     if a.action == 'sync':
         text = "Repository updated"
         icon = 'code'
-    elif a.action == 'post' and a.name == 'review':
+    elif a.action == 'post' and a.name == 'review' and a.content is not None:
         text = a.content
         icon = 'comment'
     elif a.action == 'post' and a.content is not None:
         text = a.content
         icon = 'pencil'
     elif a.name == 'star':
-        # title = "Team forming"
         text = "Joined the team"
         icon = 'thumbs-up'
     elif a.name == 'update' and a.action == 'commit':
-        # title = "Code commit"
         text = a.content
         author = None
         icon = 'random'
@@ -219,9 +240,9 @@ def getActivityByType(a, only_active=True):  # noqa: C901
             text += " version %d" % a.project_version
         icon = 'paperclip'
     elif a.name == 'update':
-        text = "Edited content"
+        text = "Edited"
         if a.project_version:
-            text += " version %d" % a.project_version
+            text += " (version %d)" % a.project_version
         icon = 'paperclip'
     # elif a.name == 'revert':
     #     text = "Reverted content"
@@ -229,7 +250,7 @@ def getActivityByType(a, only_active=True):  # noqa: C901
     #         text += " version %d" % a.project_version
     #     icon = 'undo'
     elif a.name == 'create':
-        text = "Challenge posted"
+        text = "First post <a class='btn btn-light float-right' href='/%s/challenge'>View challenge</a>" % a.project.url
         icon = 'flag-checkered'
     elif a.name == 'boost':
         title = a.action
@@ -238,6 +259,11 @@ def getActivityByType(a, only_active=True):  # noqa: C901
     else:
         return None
     return (author, title, text, icon)
+
+
+def drib_question():
+    q = DRIB_QUESTIONS
+    return q[round(random()*(len(q)-1))]
 
 
 # TODO: make this happen in app.py

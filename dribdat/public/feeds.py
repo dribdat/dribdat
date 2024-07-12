@@ -47,7 +47,7 @@ def get_user(username):
     """Output feed by username."""
     a_user = User.query.filter_by(username=username).first_or_404()
     atomlink = url_for("feeds.get_user", username=username, _external=True)
-    fqdn = url_for("public.user", username=username, _external=True)
+    fqdn = url_for("public.user_profile", username=username, _external=True)
     activities = a_user.latest_posts(MAX_ITEMS)
     return format_rss_feed("Dribs by " + a_user.name, fqdn, atomlink, activities)
 

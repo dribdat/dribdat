@@ -1,0 +1,39 @@
+{% extends "layout.html" %}
+
+{% block page_title %}Terms of Use{% endblock %}
+
+{% block body_class %}terms-dribdat{% endblock %}
+
+{% block content %}
+
+<div class="jumbotron bg-white">
+  <div class="container">
+
+    <div class="float-right ml-3">
+      <a href="https://dribdat.cc" target="_blank"><img src="{{ url_for('static', filename='img/logo/logo12_swi.png') }}" height="128" alt="All our hack are belong to us."></a>
+    </div>
+    <div class="row">
+      <h1 style="font-weight:bold; font-family:monospace">
+        ? terms and conditions
+      </h1>
+    </div>
+
+    <div class="row">
+      {{ terms|markdown }}
+    </div>
+    <hr>
+    <center>
+      <b>dribdat</b> is distributed under the
+      <a href="https://en.wikipedia.org/wiki/MIT_License" target="_blank">MIT license</a>
+       -
+      source code available on
+        <a href="https://github.com/dribdat/dribdat" target="_blank">GitHub</a> and
+        <a href="https://codeberg.org/dribdat/dribdat" target="_blank">Codeberg</a>
+       -
+      visit <a href="https://app.fossa.com/projects/git%2Bgithub.com%2Floleg%2Fdribdat?utm_source=share_link">FOSSA</a>
+      for a list of bundled code works.
+    </center>
+  </div>
+</div>
+
+{% endblock %}

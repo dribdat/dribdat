@@ -4,8 +4,8 @@
 See: http://webtest.readthedocs.org/
 """
 from .factories import ProjectFactory, EventFactory, UserFactory
-from dribdat.public import views
-from dribdat.aggregation import ProjectActivity
+from dribdat.public import views, userhelper
+from dribdat.aggregation import ProjectActivity, GetEventUsers
 from datetime import datetime
 
 class TestViews:
@@ -37,9 +37,17 @@ class TestViews:
         view_html = testapp.get('/event/%d/stages' % event.id)
         assert 'Stages' in view_html
 
+        # Test the categories view
+        view_html = testapp.get('/event/%d/categories' % event.id)
+        assert 'Categories' in view_html
+
+        # Test the challenges view
+        view_html = testapp.get('/event/%d/challenges' % event.id)
+        assert 'Challenges' in view_html
+
         # Test the print view
         view_html = testapp.get('/event/%d/print' % event.id)
-        assert 'All projects' in view_html
+        assert 'Active projects' in view_html
 
         # Test the dribs view
         view_html = testapp.get('/dribs')
@@ -60,6 +68,39 @@ class TestViews:
         view_rss = testapp.get('/feeds/dribs.xml')
         assert 'content:encoded' in view_rss
 
+        querypage = userhelper.get_dribs_paginated()
+        assert len(querypage.items) == 1
+
         # Test personal view
         user_rss = testapp.get('/feeds/user/' + user.username)
         assert 'Hello, world' in user_rss
+
+    def test_user_helpers(self, event, testapp):
+        """Functions used in user search."""
+
+        user = UserFactory()
+        user.username = 'Bob'
+        user.save()
+        assert user in userhelper.get_users_by_search('@bob')
+
+        user2 = UserFactory()
+        user2.username = 'Bobby'
+        user2.save()
+        assert len(userhelper.get_users_by_search('@bob', 2)) == 2
+        assert len(userhelper.get_users_by_search('@bob', 1)) == 1
+        
+        user_view = testapp.get('/participants')
+        assert user.username in user_view
+        assert user2.username in user_view
+
+        event = EventFactory()
+        event.save()
+        project = ProjectFactory()
+        project.event = event
+        project.save()
+        ProjectActivity(project, 'star', user)
+        assert project in user.joined_projects()
+        users = GetEventUsers(event)
+        assert user in users
+        assert user in userhelper.filter_users_by_search(users, '@bob')[0]
+        

@@ -27,7 +27,7 @@ def event_to_data_package(event, author=None, host_url='', full_content=False):
     """Create a Data Package from the data of an event."""
     # Define the author, if available
     contributors = []
-    if author and not author.is_anonymous and author.is_admin:
+    if author and not author.is_anonymous:
         contributors.append({
             "title": author.name,
             "path": author.webpage_url or '',
@@ -315,3 +315,8 @@ def import_projects_csv(filedata, event=None, dry_run=True):
             csvreader = csv.DictReader(csvfile)
             projdata = [ deepcopy(row) for row in csvreader ]
             return { 'projects': import_project_data(projdata, dry_run, event) }
+
+
+def import_users_csv(filedata, dry_run=True):
+    """Import the user database from a file."""
+    raise Exception("Not implemented")

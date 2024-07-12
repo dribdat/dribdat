@@ -21,10 +21,12 @@ class Config(object):
     DRIBDAT_STAGE = os_env.get('DRIBDAT_STAGE', '')
 
     # Application options
-    DRIBDAT_USER_APPROVE = os_env.get('DRIBDAT_USER_APPROVE', 'False')
-    DRIBDAT_USER_APPROVE = bool(strtobool(DRIBDAT_USER_APPROVE))
+    DRIBDAT_ALLOW_LOGINS = os_env.get('DRIBDAT_ALLOW_LOGINS', 'True')
+    DRIBDAT_ALLOW_LOGINS = bool(strtobool(DRIBDAT_ALLOW_LOGINS))
     DRIBDAT_NOT_REGISTER = os_env.get('DRIBDAT_NOT_REGISTER', 'False')
     DRIBDAT_NOT_REGISTER = bool(strtobool(DRIBDAT_NOT_REGISTER))
+    DRIBDAT_USER_APPROVE = os_env.get('DRIBDAT_USER_APPROVE', 'False')
+    DRIBDAT_USER_APPROVE = bool(strtobool(DRIBDAT_USER_APPROVE))
     DRIBDAT_ALLOW_EVENTS = os_env.get('DRIBDAT_ALLOW_EVENTS', 'False')
     DRIBDAT_ALLOW_EVENTS = bool(strtobool(DRIBDAT_ALLOW_EVENTS))
     DRIBDAT_SOCIAL_LINKS = os_env.get('DRIBDAT_SOCIAL_LINKS', 'True')

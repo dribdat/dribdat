@@ -101,8 +101,12 @@ def TrimProjectData(project, data):
     """Map remote fields to project data."""
     if len(data['name']) > 0:
         project.name = data['name'][0:80]
+    if 'ident' in data and len(data['ident']) > 0:
+        project.ident = data['ident'][0:10]
+    if 'hashtag' in data and len(data['hashtag']) > 0:
+        project.hashtag = data['hashtag'][0:140]
     if 'summary' in data and len(data['summary']) > 0:
-        project.summary = data['summary'][0:140]
+        project.summary = data['summary'][0:2048]
     if 'description' in data and len(data['description']) > 0:
         project.longtext = data['description']
     if 'source_url' in data and len(data['source_url']) > 0:
@@ -131,24 +135,24 @@ def SyncProjectData(project, data):
     if 'name' in data and data['name'] and \
        (not project.name or not project.name.strip()):
         project.name = data['name'][:80]
+    if 'ident' in data and data['ident'] and \
+       (not project.ident or not project.ident.strip()):
+        project.ident = data['ident'][:10]
+    if 'hashtag' in data and data['hashtag'] and \
+       (not project.hashtag or not project.hashtag.strip()):
+        project.hashtag = data['hashtag'][:140]
     if 'summary' in data and data['summary'] and \
        (not project.summary or not project.summary.strip()):
-        project.summary = data['summary'][:140]
+        project.summary = data['summary'][:2048]
     if 'image_url' in data and data['image_url'] and \
        (not project.image_url):
         project.image_url = data['image_url'][:2048]
     if 'source_url' in data and data['source_url'] and \
        (not project.source_url):
         project.source_url = data['source_url'][:2048]
-        # Add link to the Pitch
-        if not project.longtext:
-            project.longtext = project.source_url
     if 'webpage_url' in data and data['webpage_url'] and \
        (not project.webpage_url):
         project.webpage_url = data['webpage_url'][:2048]
-        # Add link to the Pitch
-        if not project.longtext:
-            project.longtext = project.webpage_url
     if 'contact_url' in data and data['contact_url'] and \
        (not project.contact_url):
         project.contact_url = data['contact_url'][:2048]
@@ -224,7 +228,7 @@ def ProjectsByProgress(progress=None, event=None):
 
 
 def GetEventUsers(event):
-    """Fetch all users that have a project in this event."""
+    """Fetch all active users that have a project in this event."""
     if not event.projects:
         return None
     users = []
@@ -236,7 +240,7 @@ def GetEventUsers(event):
             Activity.project_id.in_(projects)
         )).all()
     for a in activities:
-        if a.user and a.user_id not in userlist:
+        if a.user and a.user.active and a.user_id not in userlist:
             userlist.append(a.user_id)
             users.append(a.user)
     return sorted(users, key=lambda x: x.username)

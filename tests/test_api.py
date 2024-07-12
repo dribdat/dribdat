@@ -49,7 +49,26 @@ class TestApi:
         res = testapp.get('/api/events.csv')
         assert '"test"' in res
 
+        # Test participants
+        user1 = UserFactory()
+        user2 = UserFactory()
+        project = ProjectFactory()
+        project.user = user1
+        project.event = event
+        project.save()
+        ProjectActivity(project, 'star', user1)
+        ProjectActivity(project, 'star', user2)
+        assert project in user1.joined_projects()
+        assert project not in user1.joined_projects(False) # no challenges
 
+        # Test event API
+        userlist = get_users_for_event(event, True)
+        assert user1.username in [ u['username'] for u in userlist ]
+        assert user2.username in [ u['username'] for u in userlist ]
+        assert project.name in [ u['teams'] for u in userlist ]
+        assert 'score' in userlist[0]
+
+        
     def test_get_platform_data(self):
         """More global data types."""
         event = EventFactory(name="hello")

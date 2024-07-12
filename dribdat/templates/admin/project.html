@@ -4,26 +4,29 @@
 
 {% block content %}
 <div class="container">
-    <h2>Update project</h2>
+    <h2 class="huge">Edit project</h2>
 
-    <div class="text-right">
+    <small>Note: changes made here will not be reflected in the log, and will not be revertable!</small>
+
+    <div class="float-right">
 
       <a href="{{ url_for('project.project_view', project_id=project.id) }}" class="btn btn-warning m-4" target="_blank">
         &#128065; Public view
       </a>
 
       {% if project.is_hidden %}
-      <a href="{{ url_for('admin.project_toggle', project_id=project.id) }}" class="btn btn-sm btn-success">
+      <a href="{{ url_for('admin.project_toggle', project_id=project.id) }}" class="btn btn-success">
         Enable
       </a>
-
-      <a href="{{ url_for('admin.project_delete', project_id=project.id) }}" class="btn btn-sm btn-danger"
+      <a href="{{ url_for('admin.project_delete', project_id=project.id) }}" class="btn btn-danger"
         onclick="if(!window.confirm('Are you sure you wish to delete this project?')) return false">
+        <i class="fa fa-trash" aria-hidden="true"></i>
         Delete
       </a>
       {% else %}
-      <a href="{{ url_for('admin.project_toggle', project_id=project.id) }}" class="btn btn-sm btn-danger">
-        Disable
+      <a href="{{ url_for('admin.project_toggle', project_id=project.id) }}" class="btn btn-dark">
+        <i class="fa fa-eye" aria-hidden="true"></i>
+        Hide
       </a>
       {% endif %}
 

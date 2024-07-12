@@ -8,10 +8,15 @@
 
 <div class="jumbotron bg-white">
   <div class="container">
+
+    <div class="float-right ml-3">
+      <a href="https://dribdat.cc" target="_blank"><img src="{{ url_for('static', filename='img/logo/logo12_swi.png') }}" height="128" alt="All our hack are belong to us."></a>
+    </div>
     <div class="row">
       <h1 style="font-weight:bold; font-family:monospace">
-        ? About dribdat_
+        ? help dribdat
       </h1>
+      <small><tt>0.8.2</tt></small>
     </div>
 
     <div class="row">
@@ -28,31 +33,29 @@
         see the <a href="https://docs.dribdat.cc/deploy" target="_blank">installation guide</a>, fork the 
         <a href="https://github.com/dribdat" target="_blank">open source project</a>,
         and set it up to your liking.
-        Get in touch on the <a href="https://dribdat.cc" target="_blank">dribdat home page</a>.
-        Or contact one of the organisers on this site:</p>
+        Get in touch on the <a href="https://dribdat.cc" target="_blank">dribdat home page</a>.</p>
+      <p>Administrators:</p>
       <p class="organisers font-weight-bold">
       {% for user in orgs %}
-        &nbsp;🕴️<a href="{{ url_for('public.user', username=user.username) }}">{{ user.name }}</a>
+        &nbsp;🕴️<a href="{{ url_for('public.user_profile', username=user.username) }}">{{ user.fullname or user.name }}</a>
       {% endfor %}
       </p>
     </div><!-- /organiser -->
 
     <center>
-      <a href="https://docs.dribdat.cc/usage" class="btn btn-light">📖 User handbook</a>
+      <a href="https://docs.dribdat.cc/usage" class="btn btn-success">📖 User handbook</a>
       <div class="btn-group m-3">
-        <a href="https://github.com/dribdat/dribdat/issues" class="btn btn-warning">Issues</a>
-        <a href="https://opencollective.com/dribdat/updates" class="btn btn-dark">News &raquo;</a>
+        <a href="https://github.com/dribdat/dribdat/issues" class="btn btn-secondary">Issues &raquo;</a>
+        <a href="https://opencollective.com/dribdat/updates" class="btn btn-secondary">News &raquo;</a>
       </div>
       {% if config.DRIBDAT_ALLOW_EVENTS %}
-        <a href="{{ url_for('public.event_start') }}" class="btn btn-success"> 📅 Start an event</a>
+        <a href="{{ url_for('public.event_start') }}" class="btn btn-info"> 
+          <i class="fa fa-calendar mr-2" aria-hidden="true"></i>
+          Start an event</a>
       {% endif %}
     </center>
 
     <hr>
-
-    <div class="float-right">
-      <a href="https://dribdat.cc" target="_blank"><img src="{{ url_for('static', filename='img/logo12.png') }}" height="128" alt="All our hack are belong to us."></a>
-    </div>
 
     <div class="row" id="api">
       <div class="content">
@@ -60,23 +63,74 @@
         <p>
           You can use the <b>My Data</b> button on your profile to download a summary of your contributions. There is a simple open API for accessing data from this site in machine-readable form over the Web. See details in the <a href="https://dribdat.cc/contribute.html#api-guide">Dribdat API Guide</a>.
         </p>
-        <p>Download data on the featured or past (replace <tt>current</tt> by <tt>id</tt>) events</p>
-        <ul class="pl-3">
-          <li><a href="/hackathon.json">/hackathon.json</a> (JSON <a href="https://schema.org/Hackathon">Schema</a>)</li>
-          <li><a href="/api/events.json">/api/events.json</a> (JSON list of events)</li>
-          <li><a href="/api/events.csv">/api/events.csv</a> (CSV list of events)</li>
-          <li><a href="/api/event/current/info.json">/api/event/current/info.json</a> (JSON for current event)</li>
-          <li><a href="/api/event/current/datapackage.json">/api/event/current/datapackage.json</a> (<a href="https://frictionlessdata.io">Frictionless Data</a> Package)</li>
-          <li><a href="/api/event/current/projects.json">/api/event/current/projects</a> (JSON)</li>
-          <li><a href="/api/event/current/projects.csv">/api/event/current/projects</a> (CSV)</li>
-        </ul>
-        <p>Search projects, recent activity, and posts (use <tt>q=...</tt> for query, set <tt>limit=10</tt>)</p>
-        <ul class="pl-3">
-          <li><a href="/api/project/activity.json">/api/project/activity.json</a> (JSON)</li>
-          <li><a href="/api/project/search.json">/api/project/search.json</a> (JSON)</li>
-          <li><a href="/api/project/posts.json">/api/project/posts.json</a> (JSON)</li>
-        </ul>
       </div>
+      <table class="api-table mt-2 ml-2" style="width:100%">
+        <thead>
+          <td>Type</td><td>Link</td><td>Format</td>
+        </thead>
+        <tbody>
+          <tr>
+            <td rowspan=3>
+              Featured events
+            </td>
+            <td class="text-bold">
+              <a href="/hackathon.json">hackathon.json</a>
+            </td><td>JSON - <a href="https://schema.org/Hackathon">Hackathon Schema</a></td>
+          </tr>
+          <tr>
+            <td class="text-bold">
+              <a href="/api/events.json">/api/events.json</a>
+              </td><td>JSON list of events</td>
+          </tr>
+          <tr>
+            <td class="text-bold">
+              <a href="/api/events.csv">/api/events.csv</a>
+            </td><td>CSV list of events</td>
+          </tr>
+          <tr>
+            <td rowspan=4>
+              Current or specific (by id) event
+            </td>
+            <td class="text-bold">
+              <a href="/api/event/current/datapackage.json">/api/event/current/datapackage.json</a>
+            </td><td>JSON - <a href="https://frictionlessdata.io">Frictionless Data</a></td>
+          </tr>
+          <tr>
+            <td class="text-bold">
+              <a href="/api/event/current/info.json">/api/event/current/info.json</a>
+            </td><td>JSON overview</td>
+          </tr>
+          <tr>
+            <td class="text-bold">
+              <a href="/api/event/current/projects.json">/api/event/current/projects</a>
+            </td><td>JSON of projects</td>
+          </tr>
+          <tr>
+            <td class="text-bold">
+              <a href="/api/event/current/projects.csv">/api/event/current/projects</a>
+            </td><td>CSV of projects</td>
+          </tr>
+          <tr>
+            <td rowspan=3>
+              Search projects, recent activity, and posts <br>
+              (use <tt>q=...</tt> for query, set <tt>limit=10</tt>)
+            </td>
+            <td class="text-bold">
+              <a href="/api/project/activity.json">/api/project/activity.json</a>
+            </td><td>JSON activities</td>
+          </tr>
+          <tr>
+            <td class="text-bold">
+              <a href="/api/project/search.json">/api/project/search.json</a>
+            </td><td>JSON search</td>
+          </tr>
+          <tr>
+            <td class="text-bold">
+              <a href="/api/project/posts.json">/api/project/posts.json</a>
+            </td><td>JSON posts (Dribs)</td>
+          </tr>
+        </tbody>
+      </table>
     </div><!-- /api -->
     <hr>
     <center>
@@ -92,4 +146,32 @@
     </center>
   </div>
 </div>
+
+<style type="text/css">
+.api-table {
+    border-collapse: collapse;
+    margin: 25px 0;
+    font-size: 0.9em;
+    font-family: sans-serif;
+    min-width: 400px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+}
+.api-table thead tr {
+    background-color: #00647f;
+    color: #ffffff;
+    text-align: left;
+}
+.api-table th,
+.api-table td {
+    padding: 12px 15px;
+}
+.api-table tbody tr {
+    border-bottom: 1px solid #dddddd;
+}
+.api-table tbody td[rowspan] {
+    background-color: #f3f3f3;
+    vertical-align: top;
+}
+</style>
+
 {% endblock %}

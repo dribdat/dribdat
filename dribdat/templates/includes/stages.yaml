@@ -5,9 +5,9 @@ stages:
   -
     id: 0
     name: CHALLENGE
-    phase: Ask
+    phase: Challenge
     description: 🚧 Define questions to answer with data about issues that matter.
-    tip: Advance to the next stage by posting an Update.
+    tip: Advance to the next stage by posting an update.
     conditions:
       validate:
         -
@@ -23,10 +23,10 @@ stages:
         - Acquiring data to meet the challenge is realistic within our time limits.
   -
     id: 5
-    name: NEW
-    phase: Find
+    name: PROJECT
+    phase: Project
     description: 👪 Collecting resources together in a shared space.
-    tip: Find tips, examples and resources to inspire your team.
+    tip: Find examples and resources to inspire your team.
     conditions:
       validate:
         -
@@ -39,10 +39,10 @@ stages:
         - We are obtaining data, and sharing it in a space accessible to everyone.
   -
     id: 10
-    name: RESEARCHED
-    phase: Get
+    name: RESEARCH
+    phase: Research
     description: ⚗️ Scoping of data collection and prototyping strategy.
-    tip: Write down what you are doing regularly to help stay on track.
+    tip: Write down what you are doing regularly to stay on track.
     conditions:
       validate:
         -
@@ -54,9 +54,9 @@ stages:
         - A shared repository has been set up, your work on code and data is backed up.
   -
     id: 20
-    name: SKETCHED
-    phase: Verify
-    description: 🎨 Evaluating and explaining to fellow humans.
+    name: SKETCH
+    phase: Sketching
+    description: 🎨 Evaluating and explaining to humans and machines.
     tip: The more you share, the more feedback you will get.
     conditions:
       validate:
@@ -65,29 +65,29 @@ stages:
           test: validurl
           help: Upload or link to an image in your project Details.
       agree:
-        - Annotate key datasets to explain your understanding of the structure and content.
-        - Make wireframes or sketches of your idea, attaching it here as an image.
+        - Annotate key datasets to reflect your understanding of the structure and content.
+        - Make wireframes or sketches of your idea, attaching it as an image to your documentation.
   -
     id: 30
-    name: PROTOTYPED
-    phase: Clean
+    name: PROTOTYPE
+    phase: Prototype
     description: 🐣 Efforts to improve the quality of the output.
-    tip: Give credit to everyone involved and all sources used.
+    tip: There is no such thing as a stupid question. Just ask if you are stuck.
     conditions:
       validate:
         -
           field: webpage_url
           test: validurl
-          help: Online access to browse your data or demo in the Project Link.
+          help: Online access to see your presentation, dataset or demo in the Project Link.
       agree:
-        - We have checked the rights / licenses / permissions to use all assets, data, and code.
-        - Link any third-party resources, data schema or code frameworks in your documentation.
+        - Gain more depth by exploring the data with visualisations and interactive interfaces.
+        - We have checked permissions to use all assets, data, or code, and linked the sources.
   -
     id: 40
-    name: LAUNCHED
-    phase: Analyse
+    name: LAUNCH
+    phase: Launch
     description: 🎈 Gaining insights on the problem defined in the beginning.
-    tip: There is no such thing as a stupid question. Just ask.
+    tip: Make sure to give credit to everyone involved and document all sources used.
     conditions:
       validate:
         -
@@ -95,7 +95,6 @@ stages:
           test: validurl
           help: Provide a contact link in your project Details.
       agree:
-        - Gain more depth by exploring data with visualisations and interfaces.
         - While correlating and linking data fields, we are critical of causality.
         - Contact with the maintainers is possible to ask questions or send feedback.
   -
@@ -103,7 +102,7 @@ stages:
     name: LIVE
     phase: Share
     description: 🚀 Thinking about audience and making the results public.
-    tip: There are many ways your explorations may continue.
+    tip: Think of next steps and action points (take-aways) from your work.
     conditions:
       validate:
         -
@@ -112,5 +111,4 @@ stages:
           help: Provide a download link in your project Details.
       agree:
         - The full results of this work have been showcased and published under an open license.
-        - The necessary infrastructure for hosting is available, and can be maintained.
         - We have correctly attributed all sources, and thanked all contributors.

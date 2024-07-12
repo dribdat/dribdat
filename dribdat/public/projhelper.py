@@ -77,8 +77,9 @@ def project_edit_action(project_id, detail_view=False):
     # Basic view
     if not detail_view:
         form = ProjectForm(obj=project, next=request.args.get('next'))
+
+    # Detail view
     else:
-        # Detail view
         form = ProjectDetailForm(obj=project, next=request.args.get('next'))
 
         # Populate categories
@@ -91,6 +92,14 @@ def project_edit_action(project_id, detail_view=False):
 
     # Continue with form validation
     if form.is_submitted() and form.validate():
+
+        # Check for minor edit toggle
+        if 'is_minoredit' in dir(form):
+            is_minoredit = form.is_minoredit.data
+            del form.is_minoredit
+        else:
+            is_minoredit = False
+        
         del form.id
         form.populate_obj(project)
         project.update_now()
@@ -102,10 +111,13 @@ def project_edit_action(project_id, detail_view=False):
         if 'note' in form and form.note.data:
             project_action(project_id, 'update',
                            action='post', text=form.note.data)
-
-        # Notify the user
-        flash('Project updated.', 'success')
-        project_action(project_id, 'update', False)
+    
+        # Save a log entry (unless minor) and notify the user
+        if not is_minoredit:
+            project_action(project_id, 'update', False)
+            flash('Project updated.', 'success')
+        else:
+            flash('Saved changes.', 'success')
 
         if allow_sync:
             return redirect(url_for(
@@ -153,7 +165,7 @@ def project_action(project_id, of_type=None, as_view=True, then_redirect=False,
         # Obtain list of team members (performance!)
         project_team = project.get_team()
         # Suggest missing team roles
-        if allow_post:
+        if not event.has_finished:
             missing_roles = project.get_missing_roles()
         else:
             missing_roles = None
@@ -175,16 +187,22 @@ def project_action(project_id, of_type=None, as_view=True, then_redirect=False,
         'url': quote_plus(request.url)
     }
 
+    # Get navigation
+    go_nav = navigate_around_project(project)
+
     # Send a warning for hidden projects
     if project.is_hidden:
-        flash('This project is currently hidden, and needs admin approval.', 'warning')
+        flash('This project is hidden, and needs moderation from an organizer.', 'warning')
+    # Send a warning for unapproved challenges
+    if project.progress is not None and project.progress < 0:
+        flash('This challenge is awaiting approval from an organizer.', 'warning')
 
     # Dump all that data into a template
     return render_template(
         'public/project.html', current_event=event, project=project,
         project_starred=starred, project_team=project_team,
         project_badge=project_badge, project_dribs=project_dribs,
-        project_image_url=project_image_url,
+        project_image_url=project_image_url, go_nav=go_nav,
         allow_edit=allow_edit, allow_post=allow_post,
         lock_editing=lock_editing, missing_roles=missing_roles,
         share=share, active="projects"
@@ -201,3 +219,35 @@ def revert_project_by_activity(project, activity):
     # Apply revert
     project.versions[revert_to].revert()
     return revert_to, 'Project data reverted to version %d.' % revert_to
+
+
+def navigate_around_project(project, as_challenge=False):
+    """Returns previous and next projects in the default order."""
+    go_nav = {}
+    # Sort visible projects by identity (if used), or alphabetically
+    projects = Project.query \
+        .filter_by(event_id=project.event_id, is_hidden=False) \
+        .order_by(Project.ident, Project.name)
+        # The above must match views->event
+    p_prev = p_next = p_found = None
+    for p in projects:
+        if p_found:
+            p_next = p
+            break
+        elif p.id == project.id:
+            p_found = True
+        else:
+            p_prev = p
+    if p_prev:
+        go_nav['prev'] = p_prev.data
+        go_nav['prev']['url'] = '/' + p_prev.url
+        if as_challenge:
+            go_nav['prev']['url'] = '/' + p_prev.url + '/challenge'
+    if p_next:
+        go_nav['next'] = p_next.data
+        go_nav['next']['url'] = '/' + p_next.url
+        if as_challenge:
+            go_nav['next']['url'] = '/' + p_next.url + '/challenge'
+    elif not p_prev:
+        return None
+    return go_nav

@@ -6,7 +6,7 @@ See: http://webtest.readthedocs.org/
 from flask import url_for
 from .factories import ProjectFactory, EventFactory, UserFactory
 from dribdat.onebox import make_onebox
-from dribdat.public.projhelper import resources_by_stage, project_action
+from dribdat.public.projhelper import resources_by_stage, project_action, navigate_around_project
 from dribdat.aggregation import ProjectActivity
 from dribdat.utils import load_yaml_presets
 from dribdat.apifetch import FetchStageConfig
@@ -74,6 +74,17 @@ EOF""" % (url, url)
         assert 'CHALLENGE' in stages_remote
         assert int(stages_remote['CHALLENGE']['id']) == PR_CHALLENGE
 
+    def test_project_navigation(self, project, testapp):
+        """Check next/previous and sort ordering."""
+        event = EventFactory()
+        event.save()
+        project1 = ProjectFactory()
+        project2 = ProjectFactory()
+        project3 = ProjectFactory()
+        getnav = navigate_around_project(project2)
+        assert getnav['prev']['id'] == project1.id
+        assert getnav['next']['id'] == project3.id
+
     def test_project_stage(self, project, testapp):
         """Check stage progression."""
         event = EventFactory()
@@ -100,7 +111,7 @@ EOF""" % (url, url)
         form['q'] = '@ibraci'
         res = form.submit()
         assert res.status_code == 200
-        assert 'No profiles' in res
+        assert 'No matches' in res
         # Create a user and search it
         user1 = UserFactory()
         user1.username = 'abracadabra'
@@ -115,7 +126,7 @@ EOF""" % (url, url)
         event.save()
         res = testapp.get('/event/%d/participants' % event.id)
         assert res.status_code == 200
-        assert 'No profiles' in res
+        assert 'No matches' in res
         project = ProjectFactory()
         project.event_id = event.id
         project.save()

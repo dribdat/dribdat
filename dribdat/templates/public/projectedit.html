@@ -16,10 +16,27 @@
 {% endblock %}
 
 {% block content %}
+  <div class="float-right" style="z-index: 99; position: relative">
+    <div class="switch-editor">
+      <a href="{{ url_for('project.project_edit', project_id=project.id) }}" 
+         title="Switch to editing of project basic information" 
+         class="btn btn-lg btn-warning {% if not detail_view %}disabled hidden{% endif %}">
+        <i class="fa fa-arrow-left" aria-hidden="true"></i>
+        Basics</a>
+      <a href="{{ url_for('project.project_details', project_id=project.id) }}" 
+         title="Switch to editing of project details" 
+         class="btn btn-lg btn-warning {% if detail_view %}disabled hidden{% endif %}">
+        <i class="fa fa-arrow-right" aria-hidden="true"></i>
+        Details</a>
+    </div>
+  </div>
+
   <h2 class="huge">
     Edit
-    <a href="{{ url_for('project.project_view', project_id=project.id) }}" title="Back to project">
-      {%- if project.event.lock_resources -%}
+    <a href="{{ url_for('project.project_view', project_id=project.id) }}" target="_blank" title="Back to project">
+      {%- if detail_view -%}
+      details
+      {%- elif project.event.lock_resources -%}
       resource
       {%- elif project.is_challenge -%}
       challenge
@@ -27,65 +44,79 @@
       project
       {%- endif -%}
     </a>
-    {% if detail_view %}details{% else %}basics{% endif %}
   </h2>
 
-  <div class="text-center">
-    <div class="btn-group switch-editor">
-      <a href="{{ url_for('project.project_edit', project_id=project.id) }}" title="Edit project" 
-         class="btn btn-lg {% if not detail_view %}btn-light disabled{% else %}btn-warning{% endif %}">
-        <i class="fa fa-pencil" aria-hidden="true"></i>
-        Basics</a>
-      <a href="{{ url_for('project.project_details', project_id=project.id) }}" title="Edit project details" 
-         class="btn btn-lg {% if detail_view %}btn-light disabled{% else %}btn-warning{% endif %}">
-        <i class="fa fa-magic" aria-hidden="true"></i>
-        Details</a>
-    </div>
-  </div>
-
   {% if not detail_view %}
-  <span id="activateEditor">
+  <span id="activateEditor" class="btn-group">
     <button data-do="activate" type="button" 
-      class="btn btn-light hidden mt-2 mb-1" aria-pressed="false"
+      class="btn btn-light btn-lg hidden mt-2 mb-1" aria-pressed="false"
       title="Click to activate a WYSIWYG editor">
       <i class="fa fa-pencil text-info" area-hidden="true"></i>
       Editor: <b>off</b>
     </button>
     <button data-do="reset" type="button" 
-      class="btn btn-light hidden mt-2 mb-1" aria-pressed="false"
+      class="btn btn-light btn-lg hidden mt-2 mb-1" aria-pressed="false"
       title="Click to use a plain text editor">
         <i class="fa fa-pencil text-info" area-hidden="true"></i>
         Editor: <b>on</b>
     </button>
+    {%- if not project.is_challenge -%}
+      <button data-do="clear" type="button" 
+        class="btn btn-light btn-lg hidden mt-2 mb-1" aria-pressed="false"
+        title="You can still Undo (Ctrl-Z), or view the previously saved version later">
+          <i class="fa fa-circle-o text-info" area-hidden="true"></i>
+          Reset
+      </button>
+    {%- endif -%}
   </span>
   {% endif %}
 
   {% if config.S3_KEY %}
-  <button type="button" class="btn btn-light mt-2 m-1" style="display:none" data-toggle="modal" data-target="#uploadImage">
+  <button type="button" class="btn btn-light btn-lg mt-2 m-1" style="display:none" data-toggle="modal" data-target="#uploadImage">
     <i class="fa fa-image text-info" area-hidden="true"></i>
-    Upload an image
+    Upload Image
+  </button>
+
+  <button type="button" class="btn btn-light btn-lg mt-2 m-1" style="display:none" data-toggle="modal" data-target="#uploadFile">
+    <i class="fa fa-paperclip text-info" area-hidden="true"></i>
+    Attach PDF
+  </button>
+  
+  <button type="button" class="btn btn-light btn-lg mt-2 m-1" style="display:none" data-toggle="modal" data-target="#uploadPackage">
+    <i class="fa fa-paperclip text-info" area-hidden="true"></i>
+    Attach Data
   </button>
   {% endif %}
 
-  {% if config.S3_KEY %}
-  <button type="button" class="btn btn-light mt-2 m-1" style="display:none" data-toggle="modal" data-target="#uploadFile">
-    <i class="fa fa-folder text-info" area-hidden="true"></i>
-    Attach data
+  <button type="button" class="btn btn-light btn-lg mt-2 m-1" style="display:none" data-toggle="modal" data-target="#uploadMedia">
+    <i class="fa fa-tv text-info" area-hidden="true"></i>
+    Insert Media
   </button>
-  {% endif %}
 
+  <div class="jumbotron project-page phase-Project">
   {% if detail_view %}
     {{ render_form(url_for('project.project_details', project_id=project.id), form, formid='projectDetails') }}
   {% else %}
+   <div class="project-headline">
+      <h2 class="project-name">
+        {{project.name}}
+        <a class="btn btn-sm mb-4 btn-light" 
+           href="{{ url_for('project.project_details', project_id=project.id) }}" 
+           title="Edit project title">
+          <i class="fa fa-pencil"></i>
+        </a>
+      </h2>
+    </div>
     {{ render_form(url_for('project.project_edit', project_id=project.id), form, formid='projectEdit') }}
   {% endif %}
+  </div>
 
   <div class="alert-warning text-center mt-4 p-2">
   {% if not detail_view %}
-      Looking for a way to add more links, contacts, or change the cover image?
-      <i class="fa fa-pencil" aria-hidden="true"></i>
+      Looking for a way to add more links, contacts, change the title or cover image?
+      <i class="fa fa-arrow-right" aria-hidden="true"></i>
       <a href="{{ url_for('project.project_details', project_id=project.id) }}" target="_blank">
-        Edit Details</a> (new window)
+        Edit Project Details</a>
   {% elif project.is_hidden %}
     <a href="{{ url_for('project.project_toggle', project_id=project.id) }}"
        class="btn btn-light">

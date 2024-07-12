@@ -37,10 +37,12 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@4/dist/{{ config.DRIBDAT_THEME }}/bootstrap.min.css" alt-href="https://cdn.jsdelivr.net/npm/bootswatch@4/dist/darkly/bootstrap.min.css" id="css-bootswatch"/>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flipdown@0/dist/flipdown.min.css"/>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4/css/font-awesome.min.css"/>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simplelightbox@2/dist/simple-lightbox.min.css" />
   {% else %}
   <link rel="stylesheet" href="{{ url_for('static', filename='libs/bootswatch/' + config.DRIBDAT_THEME + '/bootstrap.css')}}" alt-href="{{ url_for('static', filename='libs/bootswatch/darkly/bootstrap.css')}}" id="css-bootswatch"/>
   <link rel="stylesheet" href="{{ url_for('static', filename='libs/flipdown/flipdown.css')}}"/>
   <link rel="stylesheet" href="{{ url_for('static', filename='libs/font-awesome/css/font-awesome.css')}}"/>
+  <link rel="stylesheet" href="{{ url_for('static', filename='libs/simplelightbox/simple-lightbox.css')}}"/>
   {% endif %}
 
   {% assets "css_all" %}
@@ -101,13 +103,15 @@
   <script src="https://cdn.jsdelivr.net/npm/jquery-resizable-dom@0/dist/jquery-resizable.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/flipdown@0/dist/flipdown.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" integrity="sha512-CNgIRecGo7nphbeZ04Sc13ka07paqdeTu0WR1IM4kNcpmBAUSHSQX0FslNhTDadL4O5SAGapGt4FodqL8My0mA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1/qrcode.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/simplelightbox@2/dist/simple-lightbox.min.js"></script>
 {% else %}
   <script src="{{ url_for('static', filename='libs/jquery/jquery.js')}}"></script>
   <script src="{{ url_for('static', filename='libs/jquery-resizable/jquery-resizable.js') }}"></script>
   <script src="{{ url_for('static', filename='libs/flipdown/flipdown.js')}}"></script>
   <script src="{{ url_for('static', filename='libs/bootstrap/bootstrap.bundle.js')}}"></script>
-  <script src="{{ url_for('static', filename='libs/qrcodejs/qrcode.min.js')}}"></script>
+  <script src="{{ url_for('static', filename='libs/qrcodejs/qrcode.js')}}"></script>
+  <script src="{{ url_for('static', filename='libs/simplelightbox/simple-lightbox.js')}}"></script>
 {% endif %}
 {% assets "js_all" %}
   <script type="text/javascript" src="{{ ASSET_URL }}"></script>

@@ -3,73 +3,63 @@
 
 {% extends "layout.html" %}
 
-{% block page_title %}Post: {{project.name}}{% endblock %}
+{% block page_title %}🖄 {{project.name}}{% endblock %}
 {% block body_class %}projectpost{% endblock %}
 
 {% block content %}
-  <h2 class="huge">
-    Post on 
-    <a href="{{ url_for('project.project_view', project_id=project.id) }}" title="Back to project">
-      {%- if project.is_challenge -%}
-      challenge
-      {%- else -%}
-      project
-      {%- endif -%}
-    </a>
-  </h2>
 
-  {% if (suggestions or stage) and project.progress < 50 %}
-    <div class="alert alert-default resource-list project-tips profile-projects">
+  {% if (suggestions or stage) and project.progress and project.progress < 50 %}
+    <div class="alert float-right resource-list project-tips profile-projects">
       <button type="button" class="close" data-dismiss="alert" aria-label="Dismiss" title="Hide">
         <span aria-hidden="true">&times;</span>
       </button>
 
       <div class="resource-list-suggestions container-fluid p-1">
-        <h5 class="category-tip m-0 clearfix"
+        <h5 class="category-tip m-0 mb-2 clearfix"
             title="This tip is only visible to you and your team">
-          <span class="user-score" style="background:white">&#x1F4A1;</span>{{stage.tip}}
+          {{stage.tip}}
         </h5>
         <div class="row flex-row flex-nowrap">
-        {% for project in suggestions %}
-          <a class="col-md-5 ms-auto card project"
-            {%- if project.image_url %}
-              style="background-image:url('{{project.image_url}}'); padding-left:100px"
-            {%- endif %}
-             href="{{ url_for('project.project_view', project_id=project.id) }}">
-            <div class="card-body">
-              <h5 class="card-title">{{ project.name }}</h5>
-              <p class="card-text">{{ project.summary }}</p>
-            </div>
-          </a>
-        {% endfor %}
-        </div>
-        <p class="stage-conditions clearfix pl-2 pb-3">
-          {% for item in stage.conditions.validate %}
-            {% if item.valid %}
-              <span class="mr-2 float-left stage-ok">
-                <i class="fa fa-thumbs-up"></i>&nbsp;
-                {{ item.help }}
-              </span>
-            {% else %}
-              <span class="mr-2 float-left stage-no">
-                <i class="fa fa-paw"></i>&nbsp;
-                {{ item.help }}
-              </span>
-            {% endif %}
+          {% for project in suggestions %}
+            <a class="col-md-5 ms-auto card project"
+              {%- if project.image_url %}
+                style="background-image:url('{{project.image_url}}'); padding-left:100px"
+              {%- endif %}
+               href="{{ url_for('project.project_view', project_id=project.id) }}">
+              <div class="card-body">
+                <h5 class="card-title">{{ project.name }}</h5>
+                <p class="card-text">{{ project.summary }}</p>
+              </div>
+            </a>
           {% endfor %}
-        </p>
+        </div>
+        {% if not all_valid %}
+          <p class="stage-conditions clearfix pl-2">
+            {% for item in stage.conditions.validate %}
+              {% if item.valid %}
+                <span class="mr-2 float-left stage-ok">
+                  <i class="fa fa-thumbs-up"></i>&nbsp;
+                  {{ item.help }}
+                </span>
+              {% else %}
+                <span class="mr-2 float-left stage-no">
+                  <i class="fa fa-paw"></i>&nbsp;
+                  {{ item.help }}
+                </span>
+              {% endif %}
+            {% endfor %}
+          </p>
+        {% endif %}
       </div><!-- /resource-list-suggestions -->
 
       {% if all_valid %}
-        <div class="form-project-confirm" role="alert">
-          <h5 class="mt-0" id="next-level-hint">
-            Ready for the next level?
-          </h5>
-          <label><input type="checkbox">
+        <div class="form-project-confirm clearfix pl-2 ml-1" role="alert">
           {% for item in stage.conditions.agree %}
-            <span>&mdash; {{ item }}</span><br>
+            <span>
+              <i class="fa fa-check-square-o"></i>&nbsp;
+              {{ item }}
+            </span><br>
           {% endfor %}
-          </label>
         </div>
       {% endif %}
     </div><!-- /alert -->
@@ -84,30 +74,10 @@
     {% else %}
       {% if not all_valid %}
       <div class="form-project-stage">
-        <h5 class="mb-3">
-          Your project is at stage <a href="{{ url_for('public.event_stages', event_id=current_event.id) }}#{{ stage.id }}" target="_blank">
-            <b>&#128161; {{stage.phase}}</b>
-          </a>
-          &mdash; to reach the next one:
-        </h5>
-        {% for item in stage.conditions.validate %}
-          {% if item.valid %}
-            <div class="alert alert-success" role="alert">
-              <i class="fa fa-thumbs-up"></i>
-              {{ item.help }}
-            </div>
-          {% else %}
-            <div class="alert alert-warning" role="alert">
-              <i class="fa fa-paw"></i>
-              {{ item.help }}
-            </div>
-          {% endif %}
-        {% endfor %}
-
         <p class="text-center mt-3 mb-0 hidden"><small>
           &#x1F3AF;
           To Post on another project, <b>Join</b> it or visit
-          <a href="{{ url_for('public.user', username=current_user.username) }}">your profile</a>
+          <a href="{{ url_for('public.user_profile', username=current_user.username) }}">your profile</a>
           to switch.
           For more info see
           <a href="{{ url_for('public.event_stages', event_id=current_event.id) }}" target="_blank">
@@ -119,6 +89,22 @@
     {% endif %}
   {% endif %}
 
+  <h2 class="huge">
+    <i class="fa fa-comment text-sm"></i>
+    {% if stage %}
+      Post
+    {% else %}
+      Comment
+    {% endif %}
+  </h2>
+
+  <h4 class="project-name">
+    <a href="{{ url_for('project.project_view', project_id=project.id) }}" 
+       title="Back to project" target="_blank">
+      {{project.name}} 
+    </a>
+  </h4>
+
   {% if config.S3_KEY %}
     <button title="Attach image" class="btn btn-light post-image-btn"
             style="display:none" type="button"
@@ -128,7 +114,7 @@
     </button>
   {% endif %}
 
-  <div class="form-project-post" id="search" action="/api/project/search.json">
+  <div class="form-project-post">
     {% if stage %}
       {{ render_form(url_for('project.project_post', project_id=project.id), form) }}
     {% else %}
@@ -140,7 +126,7 @@
     onclick="return $('#note').val().length == 0 || window.confirm('Your post will not be saved - continue?')">
     <a href="{{ url_for('project.project_view', project_id=project.id) }}"
        title="Cancel" class="btn btn-light">
-      <i class="fa fa-arrow-left" aria-hidden="true"></i> Cancel and return to project
+      <i class="fa fa-arrow-left" aria-hidden="true"></i> Project
     </a>
     {% if stage %}
       <div class="btn-group">

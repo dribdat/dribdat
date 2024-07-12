@@ -23,7 +23,7 @@
 
     {% if not data.items %}
       <div class="nothing-here">
-        Log in and write a <b>Post</b> to see your project updates here!
+        Log in and write a <b>Post</b> to see your Dribs* (project updates) here
       </div>
     {% else %}
     <section class="timeline">
@@ -57,7 +57,7 @@
               {% if s.user %}
                 ~
                 <a class="userlink"
-                  href="{{ url_for('public.user', username=s.user.username )}}">
+                  href="{{ url_for('public.user_profile', username=s.user.username )}}">
                   {{ s.user.name }}</a>
               {% endif %}
             </div>

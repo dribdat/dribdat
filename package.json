@@ -1,8 +1,8 @@
 {
-  "name": "dribdat",
-  "version": "0.7",
-  "description": "Open source hackathon platform",
-  "repository": "git@github.com:dribdat/dribdat.git",
+  "name": "Dribdat",
+  "version": "0.8.2",
+  "description": "Online platform for time-limited collaborative events",
+  "repository": "https://codeberg.org/dribdat/dribdat",
   "author": "Oleg Lavrovsky <oleg@datalets.ch>",
   "license": "MIT",
   "private": false,
@@ -15,6 +15,7 @@
     "font-awesome": "^4",
     "jquery": "^3",
     "jquery-resizable-dom": "^0",
-    "popper.js": "^1"
+    "popper.js": "^1",
+    "simplelightbox": "^2.14.3"
   }
 }

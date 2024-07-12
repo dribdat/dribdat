@@ -21,10 +21,9 @@
     // Toggle status indicator
     var $inputfield = $(this);
     var $indicator = $inputfield.parent()
-      .append('<span class="autotext-indicator d-none btn-group">' +
-        '<a title="Status" class="btn btn-lg btn-light btn-disabled"><i class="fa fa-circle-o"></i></a>' +
-        '<button class="btn btn-lg btn-warning" type="button">' +
-        'Sync content</button>' +
+      .prepend('<span class="autotext-indicator d-none float-right">' +
+        '<a title="Status" class="btn-disabled"><i class="fa fa-circle-o"></i></a>' +
+        '<button class="btn btn-lg btn-light" type="button">Sync</button>' +
       '</span>')
       .find('.autotext-indicator');
 
@@ -77,7 +76,13 @@
   }); // -autotext_url each
 
   // Allow project progress on acknowledge
-  $('.form-project-post label[for="has_progress"]').each(function() {
+  if ($('.projectpost .stage-conditions .stage-no').length == 0) {
+    $('.form-project-post label[for="has_progress"] input').click();
+  } else {
+    $('.form-project-post label[for="has_progress"]').parent().hide();
+  }
+  /*each(function() {
+    /*
     var vparent = $(this).parent().parent().hide();
     var vinput = $(this).parent().find('input')[0];
     vinput.checked = false;
@@ -86,7 +91,7 @@
       all_checked = $('.form-project-confirm input[type="checkbox"]:not(:checked)').length === 0;
       vinput.checked = all_checked;
     });
-  });
+  });*/
 
   // Make the custom color field HTML5 compatible
   $('input#logo_color[type=text]').attr('type', 'color');
@@ -116,12 +121,6 @@
     } else {
       $dialog.find("[data-target='pitch']").hide();
     }
-    var $webpage_url = $('.fld-webpage_url');
-    if ($webpage_url.length > 0) {
-      $webpage_url.prepend($togglebtn.clone().show());
-    } else {
-      $dialog.find("[data-target='weblink']").hide();
-    }
     var $imageurl = $('.fld-image_url,.fld-logo_url');
     if ($imageurl.length > 0) {
       // Image url field
@@ -143,7 +142,7 @@
       // Check file size limits
       var maxsize = parseInt($inputfd.data('maxsize'));
       if (imgfile.size > maxsize) {
-        return alert("Please upload a smaller file (1 MB limit)");
+        return alert("Please upload a smaller file (reduce resolution, save as JPEG)");
       }
       // Create upload object
       var fdd = new FormData();
@@ -162,18 +161,13 @@
           $dialog.find(".preview input").val(response);
           $dialog.find(".hidden").show();
           $('#img-confirm').show().find('button').off("click").click(function() {
-            if ($(this).data('target') == 'weblink') {
-              // Replace the demo link
-              $('#webpage_url').val(response);
-              $('#is_webembed:not(:checked)').click();
-              $dialog.modal('hide');
-            } else if ($(this).data('target') == 'cover') {
+            if ($(this).data('target') == 'cover') {
               // Replace the cover
               $('#image_url,#logo_url').val(response);
               $dialog.modal('hide');
             } else if ($(this).data('target') == 'post') {
               // Append to post
-              var imglink = '![Image caption](' + response + ')';
+              var imglink = '![  ](' + response + ')';
               $('#note').val(imglink + ' ' + $('#note').val());
               $dialog.modal('hide');
             } else if ($(this).data('target') == 'pitch') {
@@ -209,15 +203,13 @@
     }); // -change
   }); // -#uploadImage
 
-  // Upload files
+  // Upload a presentation file
   $('#uploadFile').each(function() {
     var $dialog = $(this);
     var $togglebtn = $('button[data-target="#uploadFile"]');
     // Enable the available fields
-    var $longtext = $('.fld-longtext');
     var $webpageurl = $('.fld-webpage_url');
-    // Append button to the pitch editor
-    $longtext.prepend($togglebtn.clone().show());
+    // Append button to the editor
     $webpageurl.prepend($togglebtn.clone().show());
     // Set up the file dialog
     var $inputfd = $dialog.find('input[type="file"]');
@@ -241,10 +233,29 @@
           if (response.indexOf('http') !== 0) {
              return alert('File could not be uploaded :(\n' + response);
           }
-          var path = $inputfd.val();
-          var filename = path.split(/(\\|\/)/g).pop().replaceAll('_', ' ');
+          // Parse the file name and size
+          var filename = response.split(/(\\|\/)/g).pop().replaceAll('_', ' ');
+          var fileext = filename.split('.').pop().toLowerCase();
+          var filesize = Math.round(thefile.size/102.4)/10;
+          filesize = (filesize>1000) ? (Math.round(filesize/102.4)/10) + ' MB' : filesize + ' KB';
+
+          // Get the form ready
           $dialog.find(".preview input").val(response);
-          $dialog.find(".hidden").show();
+          $dialog.find(".hidden").removeClass('hidden');
+
+          // Preview values
+          $dialog.find('.file-preview').removeClass('hidden');
+          $dialog.find('.file-preview .filename').html(filename);
+          $dialog.find('.file-preview .filesize').html(filesize);
+          $dialog.find('.file-preview .filetype *').addClass('hidden');
+
+          // Special file types
+          if (filename.indexOf('datapackage.json')>0) {
+            $dialog.find('.file-preview .filetype-frictionless').removeClass('hidden');
+          } else {
+            $dialog.find('.file-preview .filetype-' + fileext).removeClass('hidden');
+          }
+
           // User confirms the file upload
           $('#file-confirm').show().find('button').off("click").click(function() {
             if ($(this).data('target') == 'weblink') {
@@ -252,19 +263,102 @@
               $('#webpage_url').val(response);
               $('#is_webembed:not(:checked)').click();
               $dialog.modal('hide');
-            } else if ($(this).data('target') == 'pitch') {
+            } else {
+              // Copy to clipboard
+              if (navigator.clipboard) {
+                navigator.clipboard.writeText(response);
+                $dialog.modal('hide');
+              } else {
+                $dialog.find(".preview input").click().select();
+                document.execCommand("copy");
+              }
+            }
+          });
+        },
+        error: function(e) {
+          alert("Sorry, an error has occurred.\n" + e.statusText);
+        }
+      }); // -ajax
+    }); // -change
+  }); // -#uploadFile
+
+
+  // Upload a dataset file
+  $('#uploadPackage').each(function() {
+    var $dialog = $(this);
+    var $togglebtn = $('button[data-target="#uploadPackage"]');
+    // Enable the available fields
+    var $longtext = $('.fld-longtext');
+    // Append button to the pitch editor
+    $longtext.prepend($togglebtn.clone().show());
+    // Set up the file dialog
+    var $inputfd = $dialog.find('input[type="file"]');
+    $inputfd.change(function() {
+      var thefile = $inputfd[0].files[0];
+      // Check file size limits
+      var maxsize = parseInt($inputfd.data('maxsize'));
+      if (thefile.size > maxsize) {
+        return alert("Please upload a smaller file (1 MB limit)");
+      }
+      // Create upload object
+      var fdd = new FormData();
+      fdd.append('file', thefile);
+      $.ajax({
+        url: '/api/project/uploader',
+        type: 'post',
+        data: fdd,
+        processData: false,
+        contentType: false,
+        success: function(response) {
+          if (response.indexOf('http') !== 0) {
+             return alert('File could not be uploaded :(\n' + response);
+          }
+          // Parse the file name and size
+          var filename = response.split(/(\\|\/)/g).pop().replaceAll('_', ' ');
+          var fileext = filename.split('.').pop().toLowerCase();
+          var filesize = Math.round(thefile.size/102.4)/10;
+          filesize = (filesize>1000) ? (Math.round(filesize/102.4)/10) + ' MB' : filesize + ' KB';
+
+          // Get the form ready
+          $dialog.find(".preview input").val(response);
+          $dialog.find(".hidden").removeClass('hidden');
+
+          // Preview values
+          $dialog.find('.file-preview').removeClass('hidden');
+          $dialog.find('.file-preview .filename').html(filename);
+          $dialog.find('.file-preview .filesize').html(filesize);
+          $dialog.find('.file-preview .filetype *').addClass('hidden');
+
+          // Special file types
+          const isDataPackage = filename.indexOf('datapackage.json') >= 0;
+          if (isDataPackage) {
+            $dialog.find('.file-preview .filetype-frictionless').removeClass('hidden');
+          } else {
+            $dialog.find('.file-preview .filetype-' + fileext).removeClass('hidden');
+          }
+
+          // User confirms the file upload
+          $('#data-confirm').show().find('button').off("click").click(function() {
+            if ($(this).data('target') == 'pitch') {
               // Determine file extension
               //var fileExt = filename.split('.');
               //fileExt = (fileExt.length > 1) ? fileExt[fileExt.length - 1] : '?';
                   // ... ' (' + fileExt.toUpperCase() + ')'; 
               // Append to pitch
               if (typeof window.toasteditor !== 'undefined') {
-                window.toasteditor.exec('addLink', { 
-                  linkUrl: response, linkText: filename
-                });
+                if (isDataPackage) {
+                  window.toasteditor.insertText(response);
+                } else {
+                  window.toasteditor.exec('addLink', { 
+                    linkUrl: response, linkText: filename
+                  });
+                }
               } else {
                 // Create Markdown link with a paperclip emoji
                 var fileLink = '📎 [' + filename + '](' + response + ')';
+                if (isDataPackage) {
+                  fileLink = response;
+                }
                 $('#longtext').val($('#longtext').val() +
                   '\n\n' + fileLink);
               }
@@ -286,10 +380,35 @@
         }
       }); // -ajax
     }); // -change
-  }); // -#uploadImage Files
+  }); // -#uploadPackage
 
-
-
+  // Media upload
+  $('#uploadMedia').each(function() {
+    var $dialog = $(this);
+    var $togglebtn = $('button[data-target="#uploadMedia"]');
+    // Append button to the pitch editor
+    var $longtext = $('.fld-longtext');
+    $longtext.prepend($togglebtn.clone().show());
+    // Set up the dialog
+    var $inputfd = $dialog.find('input[type="url"]');
+    var $submitb = $dialog.find('button[data-target="insert"');
+    $submitb.click(function() {
+      var theurl = $inputfd.val();
+      if (theurl.indexOf('https://') !== 0) {
+        return window.alert('Invalid address');
+      }
+      // Add some spaces
+      theurl = '\n' + theurl + '\n';
+      // Append to pitch
+      if (typeof window.toasteditor !== 'undefined') {
+        window.toasteditor.insertText(theurl);
+      } else {
+        theurl = '\n' + theurl + '\n'; // More spaces
+        $('#longtext').val($('#longtext').val() + theurl);
+      }
+      $dialog.modal('hide');
+    });
+  }); // -#uploadMedia
 
   // Admin button tips
   $('.admin-defaults button').click(function() {
@@ -384,7 +503,8 @@
   }
   function countCharacters() {
       var max = $(this).attr("maxlength");
-      if (!max) return;
+      // Ignore for big fields
+      if (!max || max > 1000) return;
       var length = $(this).val().length;
       var counter = max - length;
       var helper = $(this).next().find(".form-text");
@@ -422,6 +542,12 @@
     // Handle activation button
     $activateEditor.find('[data-do="activate"]')
                    .show().on('click', activate_editor);
+
+    // Clear button
+    $activateEditor.find('[data-do="clear"]').show().click(function() {
+      $longtext.val('');
+      if (window.toasteditor) { window.toasteditor.reset(); }
+    });
 
     // Enable by default
     if (localStorage.getItem('markdownhelper') === null) {

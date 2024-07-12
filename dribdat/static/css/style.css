@@ -47,6 +47,9 @@ form input[type="checkbox"] {
      -moz-box-sizing: border-box;
           box-sizing: border-box;
 }
+.form-project-post {
+  clear: both;
+}
 .form-project-post h4 {
   margin-top: 1em;
   font-weight: normal;
@@ -56,9 +59,6 @@ form input[type="checkbox"] {
 .projectform textarea[id="note"],
 .form-project-post textarea {
   height: 4em;
-}
-.projectform label[for="note"] {
-  display: none; /* Hide label on Project Edit log */
 }
 .form-project-post .checkbox input {
   opacity: 1;
@@ -94,11 +94,28 @@ form input[type="checkbox"] {
   opacity: 0.5;
 }
 
+/* File upload dialog */
 .upload-note {
   font-size: 90%;
   margin: 1em 0;
   opacity: 0.8;
 }
+.uploader .file-preview tr {
+  width: 100%;
+  vertical-align: top;
+  border-top: 1px solid lightgrey;
+  border-bottom: 1px solid lightgrey;
+}
+.uploader .image-upload-preview input {
+  display: block; margin-top: 1em; width: 100%;
+}
+.uploader .image-upload-preview {
+  overflow: hidden;
+}
+.uploader .image-upload-confirm {
+  margin-top: 1em;
+}
+
 .admin .form-group .control-label {
   font-size: 175%;
   margin-top: 1em;
@@ -139,12 +156,20 @@ form input[type="checkbox"] {
   text-decoration: none;
 }
 .alert.project-tips .close {
-  margin: 0.2em 0.4em -1em -1em;
   position: relative;
   z-index: 99;
 }
 .alert.project-tips .user-score {
   margin: -1em 0em 1em -1em;
+}
+.alert.project-tips.profile-projects::before {
+  content: '⚡';
+  font-size: 250%;
+  position: relative;
+  left: -1em;
+  top: -1em;
+  width: 0em;
+  float: left;
 }
 
 /* pagination */
@@ -218,8 +243,8 @@ footer .dribdat-logo {
   float: left;
 }
 footer .dribdat-logo img {
-  height: 4em;
-  margin-top: -1.5em;
+  height: 3em;
+  margin-top: -0.8em;
   margin-left: 13px;
 }
 footer .dribdat-logo:hover {
@@ -299,6 +324,11 @@ nav .navbar-nav .fa {
 nav .navbar-nav .nav-item {
   margin-right: 0.4em;
   padding-right: 0.4em;
+}
+nav .navbar-nav .nav-item .fa.text-white {
+  border-radius: 0.8em;
+  padding: 0.3em;
+  width: 1.6em;
 }
 nav .nav-login {
   font-weight: bolder;
@@ -425,7 +455,7 @@ nav .nav-login {
 }
 .home-page .carousel-caption a {
   text-decoration: none;
-  color: black;
+  color: initial;
 }
 .home-page .carousel-caption .event-header .section-header-content {
   text-align: left;
@@ -444,7 +474,7 @@ nav .nav-login {
 }
 .home-page .carousel-caption .home-description p {
   text-align: left;
-  color: black;
+  color: initial;
   display: inline-block;
   clear: both;
 }
@@ -523,29 +553,35 @@ nav .nav-login {
 .event-home .event-nav .btn:hover {
   border: 1px solid black;
 }
+.event-home .event-nav .btn span {
+  display: none;
+}
+/*.event-home .event-nav .btn:hover span {
+  display: inline;
+}*/
 
 /* ---- Hexagonal hawtness ---- */
 
-.event-home .honeycomb {
+.with-event .honeycomb {
   width: 760px;
   margin-top: 30px;
 }
 .hexagon.blank { display: none; }
 @media (max-width: 900px) {
-  .event-home .honeycomb {
+  .with-event .honeycomb {
     margin-top: 0px;
     width: 600px;
   }
   .hexagon.blank { display: inline-block; }
 }
 @media (max-width: 560px) {
-  .event-home .honeycomb {
+  .with-event .honeycomb {
     margin-top: 0px;
     width: 300px;
   }
 }
 @media (max-width: 480px) {
-  .event-home .honeycomb {
+  .with-event .honeycomb {
     text-align: center;
   }
 }
@@ -616,7 +652,6 @@ nav .nav-login {
   z-index: 99;
 }
 
-.project-page.phase-Challenge .progress,
 .challenge.hexagon .progress { display: none; }
 .hide-challenges .challenge { opacity: 0.1 !important; }
 
@@ -647,7 +682,10 @@ nav .nav-login {
 /* Fade out unapproved hexagons */
 .honeycomb .hexagon.challenge { opacity: 1; }
 .honeycomb .hexagon.challenge.stage--1,
-.honeycomb .hexagon.challenge.stage--100 { opacity: 0.6; }
+.honeycomb .hexagon.challenge.stage--100 { 
+  opacity: 0.8; 
+  border-bottom: 3px solid red;
+}
 
 /* Hexagon inner content */
 .hexagon .hexagontent {
@@ -761,14 +799,14 @@ nav .nav-login {
 /* .project.hexagon:nth-child(odd) { background-color: rgba(230, 210, 200, 0.95); } */
 
 /* --- Hexagon default palette --- */
-.project.hexagon  { background-color: #f5d1e4; } /* primary color */
-.hexagon.stage-5  { background-color: #f5d1e4; }
-.hexagon.stage-10 { background-color: #e3d0e3; }
-.hexagon.stage-20 { background-color: #e0c9ca; }
-.hexagon.stage-30 { background-color: #e8b6a6; }
-.hexagon.stage-40 { background-color: #f1cfad; }
-.hexagon.stage-50 { background-color: #f6e8c0; }
-/* https://colorkit.co/palette/f5d1e4-e3d0e3-e0c9ca-e8b6a6-f1cfad-f6e8c0/ */
+.project.hexagon  { background-color: #ebd8c3; } /* primary color */
+.hexagon.stage-5  { background-color: #ebd8c3; }
+.hexagon.stage-10 { background-color: #ffeeba; }
+.hexagon.stage-20 { background-color: #ffd9ba; }
+.hexagon.stage-30 { background-color: #ffe7ba; }
+.hexagon.stage-40 { background-color: #fff5ba; }
+.hexagon.stage-50 { background-color: #fbffba; }
+/* hhttps://colorkit.co/palette/ffeeba-ffd9ba-ffe7ba-fff5ba-fbffba/ */
 
 /* --- Tooltips used on honeycomb --- */
 
@@ -792,12 +830,18 @@ nav .nav-login {
   text-shadow: 1px 1px 1px white;
   font-family: monospace;
 }
-.hexagon .hexagontent span.project-hashtag {
+.hexagon .hexagontent span.project-ident {
   font-size: 90%;
+  opacity: 0.5;
+  text-shadow: 1px 1px 1px white;
+  font-family: monospace;
   padding-top: 0.3em;
 }
-.hexagon:hover .hexagontent span.project-hashtag {
-  visibility: hidden;
+.event-home .hexagon .hexagontent span.project-ident {
+  text-shadow: 2px 1px 1px white;
+  color: black;
+  font-weight: bold;
+  margin-left: -5em;
 }
 .tooltip .tooltip-inner img {
   max-width: 100%;
@@ -865,21 +909,35 @@ nav .nav-login {
 
 /* --- Project page --- */
 
-.project-page .project-name {
-  font-weight: bold;
+.project-page .project-headline {
   margin-top: 0.5em;
+  overflow-x: hidden;
 }
-.project-page .project-name h2 {
+.project-page .project-name {
   text-shadow: 1px 1px 1px white;
   font-weight: bold;
   font-size: 3rem;
 }
-.project-tips.alert-light {
-  color: black;
+.project-page .project-summary {
+  font-size: 125%;
+  hyphens: auto;
+  width: 85%;
+}
+.project-page .project-ident {
+  display: inline-block;
+  margin-bottom: 0.5em;
+  font-size: 250%;
+  opacity: 0.6;
 }
 .project-page .project-team {
   font-weight: normal;
   color: #999;
+}
+.project-home .project-headline i.fa {
+  float: left;
+  font-size: 3.5rem;
+  margin-right: 0.2em;
+  margin-left: -0.2em;
 }
 .project-home .project-image-container {
   margin-top: 0px;
@@ -893,7 +951,7 @@ nav .nav-login {
   background-size: cover;
   opacity: 0.1;
 }
-.project-home .jumbotron.project-page {
+.jumbotron.project-page {
   border-top-left-radius: 20px;
   border-top-right-radius: 20px;
   border: 4px solid transparent;
@@ -943,17 +1001,14 @@ nav .nav-login {
   border-radius: 0px;
   clear: both;
 }
-.project-page .project-longtext .card {
-  background: none;
-}
 .project-page .project-star i {
   padding-right: 5px;
 }
 .project-edit-cover {
   z-index: 99;
-  position: absolute;
   margin-top: -2em;
-  margin-left: 1em;
+  line-height: 0px;
+  float: right;
 }
 .jumbotron.projectnew-boilerplate {
   border: 10px solid lightseagreen;
@@ -961,11 +1016,43 @@ nav .nav-login {
 .project-page img {
   max-width: 100%;
 }
+.theme-dark .project-page.jumbotron {
+  color: white;
+  background-color: black;
+}
 .project-page.jumbotron {
   background-color: white;
   color: black;
+  overflow-x: hidden;
   padding: 1rem;
 }
+
+/* Content blocks on project page */
+.project-page .project-autotext img,
+.project-page .project-longtext img {
+  max-width: 100%;
+  max-height: 400px;
+}
+.timeline .lightboxed {
+  clear: both;
+  display: block;
+}
+.project-page .lightboxed:hover:before {
+  content: '🔍';
+  font-size: 2rem;
+  position: absolute;
+  vertical-align: top;
+  margin-left: 0.4rem;
+}
+.project-page .project-autotext .card,
+.project-page .project-longtext .card {
+  background: none;
+}
+.project-page .project-autotext iframe,
+.project-page .project-longtext iframe {
+  max-width: 100%;
+}
+.project-page .project-autotext blockquote,
 .project-page .project-longtext blockquote {
   border-left: 3px solid lightgrey;
   padding-left: 1em;
@@ -977,8 +1064,12 @@ nav .nav-login {
   .project.hexalist .hexagontent {
     left: 35%;
   }
+  .project-page .project-autotext,
   .project-page .project-longtext { margin: 2em; }
-  .project-page .project-autotext { margin: 2em; }
+  .project-page .project-ident { line-height: 0px; }
+
+  .nav-projects-abs-next,
+  .nav-projects-abs-prev { visibility: visible !important; }
 }
 @media (min-width: 1000px) {
   .project-home #overlayImage { max-width: 800px; }
@@ -991,6 +1082,16 @@ nav .nav-login {
 .project-page .project-autotext { margin: 0em; }
 
 .project-page .latest-drib { padding: 1em; }
+
+.nav-projects-abs-prev, .nav-projects-abs-next { 
+  visibility: hidden;
+  position: absolute; 
+  height: 6em;
+  top: 16em; 
+}
+.nav-projects-abs-prev { left: 0px; border-left: none !important; border-bottom-left-radius: 0px; border-top-left-radius: 0px; }
+.nav-projects-abs-next { right: 0px; border-right: none !important; border-bottom-right-radius: 0px; border-top-right-radius: 0px; }
+.nav-project-helper .btn { max-width: 20em; vertical-align: top; height: 4em; line-height: 1.5em; overflow: hidden; text-align: left; }
 
 /* -- Timeline (dribs) -- */
 
@@ -1020,6 +1121,7 @@ nav .nav-login {
 .timeline-finish .timeline-card::after,
 .timeline-progress .timeline-card::after { display: initial; }
 .timeline-card .close { margin: 0.4em; color: black; }
+.timeline-card.timeline-content { overflow: hidden; }
 /* Other project timeline customizations */
 .project-page .timeline-review .timeline-content { background: #f2fef2; border-top: none; }
 .project-page .timeline-pencil .timeline-content { background: #ffc; border-top: none; }
@@ -1027,7 +1129,7 @@ nav .nav-login {
 .project-page .timeline-start .timeline-content { background: #aaa; }
 .project-page .timeline-finish .date,
 .project-page .timeline-start .date { color: white; }
-.project-page .timeline-progress .timeline-img-header { background: lightblue; border: 5px solid #aaa; }
+.project-page .timeline-progress .timeline-img-header { border: 5px solid #aaa; }
 .project-page .timeline-progress .timeline-content .date { display: none; }
 .project-page .timeline-item { margin-bottom: 20px; }
 .timeline-boost .timeline-img-header {
@@ -1129,7 +1231,7 @@ nav .nav-login {
 /* Project embedded content */
 .project-page .resizable {
   width: 100%;
-  height: 640px;
+  height: 584px;
   box-shadow: 5px 5px 10px #535353;
   margin-bottom: 1em;
   border: 1px silver;
@@ -1137,9 +1239,23 @@ nav .nav-login {
   overflow: hidden;
   position: sticky;
 }
+.project-home .modal-body iframe,
 .project-page .resizable iframe {
   width: 100% !important; height: 100% !important;
   border: none !important;
+}
+.modal-fullscreen .modal-body {
+  padding: 0px;
+}
+.modal-fullscreen .modal-dialog {
+    max-width: 100%;
+    margin: 0;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 100vh;
+    display: flex;
 }
 @media (max-width: 1000px) {
   .project-page .resizable {
@@ -1195,7 +1311,6 @@ nav .nav-login {
 }
 .onebox * {
   text-decoration: none !important;
-  color: black;
 }
 .onebox:hover {
   opacity: 1.0;
@@ -1258,14 +1373,18 @@ nav .nav-login {
   margin-right: 0.4em;
 }
 .projectform form .autotext-indicator {
-  margin-top: 2em;
   display: block;
+  margin-top:-4em; 
+  height: 0px;
 }
 .projectform form .autotext-indicator i {
   margin:0px 1em; color:red;
 }
 .projectform #mdeditor {
   background: white; color: black;
+}
+.projectform .fld-longtext .help-inline .form-text {
+  display: none;
 }
 
 /* General form styles */
@@ -1344,6 +1463,9 @@ pre { color: #333; background: white; }
 }
 #project-md:not(.tab-pane)::before {
   content: 'Pitch';
+}
+.phase-Challenge #project-md:not(.tab-pane)::before {
+  content: 'Challenge';
 }
 #team-md:not(.tab-pane)::before,
 #dribs-md:not(.tab-pane)::before,
@@ -1540,7 +1662,7 @@ a.go-up {
   height: 5em;
   display: inline-block;
   background: rgba(255,255,255,0.5);
-  border: 2px solid rgba(0,0,0,0.1);
+  border: 1px solid rgba(0,0,0,0.1);
   border-radius: 10px;
   padding: 0.5em;
   margin-right: 5px;
@@ -1549,7 +1671,7 @@ a.go-up {
 }
 .team-gravatar:hover {
   text-decoration: none;
-  border: 2px solid white;
+  border: 1px solid white;
   box-shadow: 2px 2px 2px rgba(0,0,200,0.5);
 }
 
@@ -1573,7 +1695,7 @@ a.go-up {
 }
 
 .widget-team .kick-user {
-  position: absolute;
+  vertical-align: top;
   font-size: 150%;
 }
 .widget-team .kick-user:hover {
@@ -1591,7 +1713,6 @@ a.go-up {
   width: 200px;
   height: auto;
   display: inline-block;
-  background: rgba(0,0,0,0.02);
   border-top: 2px solid rgba(0,0,100,0.2);
   border-left: 2px solid rgba(0,0,100,0.2);
   border-radius: 10px;
@@ -1601,6 +1722,7 @@ a.go-up {
   text-align: left;
   opacity: 0.5;
   cursor: pointer;
+  text-decoration: none;
 }
 .missing-roles .role:hover {
   opacity: 1.0;
@@ -1640,7 +1762,14 @@ a.go-up {
 .userprofile h1 {
   text-align: center;
   margin-top: 1em;
-  color: grey;
+}
+#get-certified {
+  background-image: url('/static/img/certificate.png');
+  background-repeat: no-repeat;
+  background-size: contain;
+  padding-left: 5.4em;
+  padding-top: 1.2em;
+  height: 4em;
 }
 .drib-count,
 .team-boost,
@@ -1659,12 +1788,15 @@ a.go-up {
   text-decoration: none;
   color: #fff;
 }
+.project-tips {
+  margin-top: -4em;
+}
+.project-tips,
 .profile-projects {
-  width: 100%;
-  padding-top: 1em;
-  padding-left: 2.3em;
-  border-radius: 20px;
-  border: 1px dotted rgba(0,0,0,0.5);
+  margin-top: 1em;
+  padding: 1em 1.4em;
+  border-radius: 0px;
+  border-left: 1px dotted rgba(0,0,0,0.5);
 }
 .home-page .profile-projects {
   padding-left: 25px;
@@ -1763,6 +1895,12 @@ a.go-up {
   .profile-projects .card {
     padding-left: 0px !important;
   }
+  .profile-projects.honeycomb .row {
+    min-height: 240px;
+  }
+  .profile-projects.honeycomb .hexagon {
+    margin-bottom: 0px;
+  }
 }
 
 /* Embed view of the projects */
@@ -1807,8 +1945,20 @@ a.go-up {
   float: right;
   width: 50%;
   list-style-type: none;
-  border-left: 1px solid #999;
+  border-left: 1px dashed #999;
   padding-left: 15px;
+}
+.print-page .full-content {
+  padding: 2em;
+  margin: 0 1em;
+  background: white;
+  border: 1px solid #ccc;
+  box-shadow: 5px 5px 0px #ccc;
+}
+.print-page .full-content > tt {
+  display: block;
+  text-align: center;
+  margin-bottom: 1em;
 }
 @media only print {
   .no-print,
@@ -1822,6 +1972,11 @@ Code of Conduct
 		0 0 0 4px orange,
 		0 0 0 6px yellow,
 		0 0 0 10px cyan; }
+
+.creativecommons { margin-top: 1em; padding-left: 115px; min-height: 50px;
+    background: url('/static/img/cc-by.svg') no-repeat top left;
+    background-size: 106px auto;
+  }
 
 /* ------------
 Issues list view
@@ -1907,8 +2062,9 @@ Instruction page
 }
 .list-stages .step .agree-list,
 .list-stages .step .subtitle {
-  margin: 0em 3em;
+  margin: 0em 6em;
   font-size: 125%;
+  padding-bottom: 1em;
 }
 .list-stages .step .agree-list li {
   clear: both;
@@ -1937,12 +2093,23 @@ Instruction page
 }
 .form-project-confirm label {
   clear: both;
+  /*
   margin-top: 0.5em;
   cursor: pointer;
-  padding: 0 0 0 2em;
+  padding: 0 0 0 2em;*/
 }
 .projectpost alert {
   margin-top: 0.5em;
+}
+.projectpost .project-name {
+  color: #777;
+}
+.projectpost .form-project-post .checkbox {
+  float: right;
+}
+.project-tips.alert:hover {
+  color: black;
+  background: lightyellow;
 }
 
 /* ------------
@@ -2091,3 +2258,10 @@ SlackIn button
 }
 
 .__slackin { margin-bottom: 10px; display: block; }
+
+.attribution {
+  font-size: 80%;
+  font-family: monospace;
+  position: absolute;
+  right: 2.5em;
+}

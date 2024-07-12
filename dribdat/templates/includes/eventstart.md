@@ -1,4 +1,4 @@
-Planning your next event? Here are some tips for your hackathon guru meditation. _Yes, you can [skip this page](/event/new), if you like._
+Planning your next event? Here are tips for hackathon guru meditation. _[Skip this page](/event/new)_
 
 ## 🏁 Challenges
 

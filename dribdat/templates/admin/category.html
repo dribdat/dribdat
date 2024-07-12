@@ -4,10 +4,11 @@
 
 {% block content %}
 <div class="container">
-    <h2>Update category</h2>
+    <h2 class="huge">Update category</h2>
+
     {{ render_form(url_for('admin.category', category_id=category.id), form) }}
 
-    <a href="{{ url_for('admin.category_delete', category_id=category.id) }}" class="btn btn-sm btn-danger"
+    <a href="{{ url_for('admin.category_delete', category_id=category.id) }}" class="btn btn-danger"
       onclick="if(!window.confirm('Are you sure you wish to delete this category?')) return false">
       Delete
     </a>

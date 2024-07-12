@@ -15,7 +15,7 @@ from dribdat.user.constants import (
 )
 from dribdat.onebox import format_webembed  # noqa: I005
 from dribdat.utils import (
-    format_date_range, format_date, timesince
+    format_date_range, format_date, timesince, strtobool
 )
 from dribdat.database import (
     db,
@@ -118,19 +118,16 @@ class User(UserMixin, PkModel):
             'id': self.id,
             'name': self.name,
             'email': self.email,
-            'sso_id': self.sso_id,
-            'active': self.active,
-            'is_admin': self.is_admin,
             'username': self.username,
             'fullname': self.fullname,
-            'webpage_url': self.webpage_url,
-            'roles': ",".join([r.name for r in self.roles]),
+            'created_at': self.created_at,
+            'updated_at': self.updated_at,
             'cardtype': self.cardtype,
             'carddata': self.carddata,
             'my_story': self.my_story,
             'my_goals': self.my_goals,
-            'created_at': self.created_at,
-            'updated_at': self.updated_at,
+            'webpage_url': self.webpage_url,
+            'roles': ",".join([r.name for r in self.roles]),
         }
 
     def set_from_data(self, data):
@@ -139,8 +136,10 @@ class User(UserMixin, PkModel):
         self.username = data['username']
         self.webpage_url = data['webpage_url']
         if 'email' not in data:
-            data['email'] = "%s@%d.localdomain" % (self.username, data['id'])
-        self.email = data['email']
+            if not self.email or not '@' in self.email:
+                self.email = "%s@localhost.localdomain" % self.username
+        else:
+            self.email = data['email']
         self.updated_at = dt.datetime.utcnow()
 
     def socialize(self):
@@ -176,7 +175,7 @@ class User(UserMixin, PkModel):
             self.carddata = gravatar_url
         self.save()
 
-    def joined_projects(self, with_challenges=True, limit=-1):
+    def joined_projects(self, with_challenges=True, limit=-1, event=None):
         """Retrieve all projects user has joined."""
         activities = Activity.query.filter_by(
                 user_id=self.id, name='star'
@@ -189,19 +188,45 @@ class User(UserMixin, PkModel):
         project_ids = []
         for a in activities:
             if limit > 0 and len(projects) >= limit: break
-            if a.project_id not in project_ids and (a.project and not a.project.is_hidden):
-                not_challenge = a.project.progress and a.project.progress > 0
-                if with_challenges or not_challenge:
-                    projects.append(a.project)
-                    project_ids.append(a.project_id)
+            if not a.project or a.project_id in project_ids or a.project.is_hidden:
+                continue
+            if event is not None and a.project.event != event:
+                continue
+            if with_challenges or not a.project.is_challenge:
+                projects.append(a.project)
+                project_ids.append(a.project_id)
         return projects
 
 
-    def get_score(self):
-        """Calculate the total score across projects."""
-        projects = self.joined_projects(False)
-        return sum([p.score for p in projects])
+    def get_profile_percent(self):
+        """Calculate my profile completeness as a percent."""
+        p_score = 0
+        MAX_SCORE = 5
+        # Add to the score for every complete documentation field
+        if self.fullname and len(self.fullname) > 3: 
+            p_score = p_score + 1
+        if self.webpage_url and len(self.webpage_url) > 6: 
+            p_score = p_score + 1
+        if self.my_story and len(self.my_story) > 6: 
+            p_score = p_score + 1
+        if self.my_goals and len(self.my_goals) > 6: 
+            p_score = p_score + 1
+        if self.roles and len(self.roles) > 0:
+            p_score = p_score + 1
+        return p_score / MAX_SCORE
+    
 
+    def get_score(self):
+        """Calculate my personal score, based on profile completeness and projects."""
+        # See def calculate_score(self) below
+        projects = self.joined_projects(False)
+        project_total = sum([p.score for p in projects])
+        # Adjust score based on score
+        user_score = self.get_profile_percent()
+        if user_score > 0: 
+            project_total = project_total + 10
+        return round(project_total * user_score)
+        
 
     def posted_challenges(self):
         """Retrieve all challenges user has posted."""
@@ -236,7 +261,7 @@ class User(UserMixin, PkModel):
             ).order_by(Activity.timestamp.desc()).first()
         if not act:
             return 'Never'
-        return act.timestamp
+        return act.timestamp.strftime('%d.%m.%Y %H:%M')
 
     @property
     def activity_count(self):
@@ -245,15 +270,18 @@ class User(UserMixin, PkModel):
                 user_id=self.id
             ).count()
 
-    def may_certify(self):
+    def may_certify(self, for_project=None):
         """Check availability of certificate."""
         projects = self.joined_projects(False)
+        if for_project is not None and for_project in projects:
+            projects = [for_project]
         if not len(projects) > 0:
             return (False, 'projects')
-        cert_path = self.get_cert_path(projects[0].event)
-        if not cert_path:
-            return (False, 'event')
-        return (True, cert_path)
+        for p in projects:
+            cert_path = self.get_cert_path(p.event)
+            if cert_path:
+                return (True, cert_path)
+        return (False, 'event')
 
     def get_cert_path(self, event):
         """Generate URL to participation certificate."""
@@ -307,7 +335,7 @@ class Event(PkModel):
 
     __tablename__ = 'events'
     name = Column(db.String(80), unique=True, nullable=False)
-    summary = Column(db.String(140), nullable=True)       # a short description
+    summary = Column(db.String(140), nullable=True)       # a short description of the event
     hostname = Column(db.String(80), nullable=True)       # institution hosting the event
     hashtags = Column(db.String(255), nullable=True)      # default hashtags for social media
     location = Column(db.String(255), nullable=True)      # where is the event being held?
@@ -318,8 +346,9 @@ class Event(PkModel):
     ends_at = Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)
 
     description = Column(db.UnicodeText(), nullable=True) # a longer text about the event
-    boilerplate = Column(db.UnicodeText(), nullable=True) # tips to show on starting a new project
     instruction = Column(db.UnicodeText(), nullable=True) # tips for logged-in event participants
+    boilerplate = Column(db.UnicodeText(), nullable=True) # tips to show on starting a new project
+    aftersubmit = Column(db.UnicodeText(), nullable=True) # additional content to show new projects
 
     logo_url = Column(db.String(255), nullable=True)      # icon of the event
     webpage_url = Column(db.String(255), nullable=True)   # location of "about page"
@@ -368,6 +397,7 @@ class Event(PkModel):
         d['ends_at'] = format_date(self.ends_at, '%Y-%m-%dT%H:%M')
         d['description'] = self.description or ''
         d['boilerplate'] = self.boilerplate or ''
+        d['aftersubmit'] = self.aftersubmit or ''
         d['instruction'] = self.instruction or ''
         # And by full, we mean really full!
         d['custom_css'] = self.custom_css or ''
@@ -388,6 +418,7 @@ class Event(PkModel):
         self.custom_css = d['custom_css'] or '' if 'custom_css' in d else ''
         self.description = d['description'] or '' if 'description' in d else ''
         self.boilerplate = d['boilerplate'] or '' if 'boilerplate' in d else ''
+        self.aftersubmit = d['aftersubmit'] or '' if 'aftersubmit' in d else ''
         self.instruction = d['instruction'] or '' if 'instruction' in d else ''
         self.gallery_url = d['gallery_url'] or '' if 'gallery_url' in d else ''
         self.webpage_url = d['webpage_url'] or '' if 'webpage_url' in d else ''
@@ -506,7 +537,7 @@ class Event(PkModel):
                 # Clear every now and then
                 time_limit = time_now - dt.timedelta(minutes=CLEAR_STATUS_AFTER)
                 if dt.datetime.fromtimestamp(status_time) < time_limit:
-                    print("Clearing announements")
+                    # Clearing announcements
                     self.status = None
                     self.save()
                     return ''
@@ -529,8 +560,7 @@ class Event(PkModel):
     def categories_for_event(self):
         """Event categories."""
         return Category.query.filter(or_(
-            Category.event_id is None,
-            Category.event_id == -1,
+            Category.event_id == None,
             Category.event_id == self.id
         )).order_by('name')
 
@@ -558,8 +588,9 @@ class Project(PkModel):
     __versioned__ = {}
     __tablename__ = 'projects'
     name = Column(db.String(80), unique=True, nullable=False)
-    summary = Column(db.String(140), nullable=True)
-    hashtag = Column(db.String(40), nullable=True)
+    ident = Column(db.String(10), nullable=True)
+    hashtag = Column(db.String(140), nullable=True)
+    summary = Column(db.String(2048), nullable=True)
 
     image_url = Column(db.String(2048), nullable=True)
     source_url = Column(db.String(2048), nullable=True)
@@ -630,7 +661,7 @@ class Project(PkModel):
     @property
     def webembed(self):
         """Detect and return supported embed widgets."""
-        return format_webembed(self.id, self.webpage_url)
+        return format_webembed(self.webpage_url, self.id)
 
     @property
     def longhtml(self):
@@ -651,6 +682,7 @@ class Project(PkModel):
         """Get JSON representation."""
         d = {
             'id': self.id,
+            'ident': self.ident,
             'url': self.url,
             'name': self.name,
             'score': self.score,
@@ -783,15 +815,19 @@ class Project(PkModel):
                     rollcall.append(r)
         return [r for r in get_roles if r not in rollcall and r.name]
 
-    def all_dribs(self):
+    def all_dribs(self, limit=50):
         """Query which formats the project's timeline."""
         activities = Activity.query.filter_by(
                         project_id=self.id
                     ).order_by(Activity.timestamp.desc())
+        if limit is not None:
+            activities = activities.limit(limit)
+        activities_array = activities.all()
         dribs = []
-        prev = None
         only_active = False  # show dribs from inactive users
-        for a in activities:
+        prev = { 'progress': None, 'title': None, 'text': None }
+        # Iterate through the dribs
+        for a in activities_array:
             a_parsed = getActivityByType(a, only_active)
             if a_parsed is None:
                 continue
@@ -801,17 +837,7 @@ class Project(PkModel):
                 if prev['title'] == title and prev['text'] == text:
                     # if prev['date']-a.timestamp).total_seconds() < 120:
                     continue
-                # Show changes in progress
-                if prev['progress'] != a.project_progress:
-                    proj_stage = getStageByProgress(a.project_progress)
-                    if proj_stage is not None:
-                        dribs.append({
-                            'title': proj_stage['phase'],
-                            'date': a.timestamp,
-                            'icon': 'arrow-up',
-                            'name': 'progress',
-                        })
-            prev = {
+            cur = {
                 'icon': icon,
                 'title': title,
                 'text': text,
@@ -822,7 +848,28 @@ class Project(PkModel):
                 'progress': a.project_progress,
                 'id': a.id,
             }
-            dribs.append(prev)
+            dribs.append(cur)
+            # Show changes in progress
+            if a.project_progress and prev['progress'] != a.project_progress:
+                proj_stage = getStageByProgress(a.project_progress)
+                if a.project_progress > 0 and proj_stage is not None:
+                    dribs.append({
+                        'title': proj_stage['phase'],
+                        'date': a.timestamp,
+                        'icon': 'arrow-up',
+                        'name': 'progress',
+                    })
+            prev = cur
+
+        # Start all logs at stage 0
+        if len(activities_array) > 0:
+            dribs.append({
+                'title': getStageByProgress(0)['phase'],
+                'date': activities_array.pop().timestamp,
+                'icon': 'arrow-up',
+                'name': 'progress',
+            })
+        # Add event start and finish to log
         if self.event.has_started or self.event.has_finished:
             dribs.append({
                 'title': "Event started",
@@ -846,6 +893,16 @@ class Project(PkModel):
         if event is not None:
             return event.categories_for_event()
         return Category.query.order_by('name')
+
+    def as_challenge(self):
+        """Find the last challenge version of this project."""
+        if not self.versions: 
+            return self
+        for v in self.versions[::-1]:
+            if v.progress <= 0: 
+                return v.revert()
+        self.progress = 0
+        return self
 
     def get_schema(self, host_url=''):
         """Schema.org compatible metadata."""
@@ -876,6 +933,8 @@ class Project(PkModel):
         if not 'name' in data:
             raise Exception("Missing project name!")
         self.name = data['name']
+        if 'ident' in data:
+            self.ident = data['ident']
         if 'summary' in data:
             self.summary = data['summary'][:140]
         if 'hashtag' in data:
@@ -914,9 +973,9 @@ class Project(PkModel):
             self.created_at = dt.datetime.utcnow()
             self.updated_at = dt.datetime.utcnow()
         if 'is_autoupdate' in data:
-            self.is_autoupdate = bool(data['is_autoupdate'])
+            self.is_autoupdate = strtobool(data['is_autoupdate'])
         if 'is_webembed' in data:
-            self.is_webembed = bool(data['is_webembed'])
+            self.is_webembed = strtobool(data['is_webembed'])
         if 'maintainer' in data:
             uname = data['maintainer']
             user = User.query.filter_by(username=uname).first()
@@ -971,17 +1030,19 @@ class Project(PkModel):
 
     def calculate_score(self):  # noqa: C901
         """Calculate score of a project based on base progress."""
+        # See also get_score above
         score = self.progress or 0
         cqu = Activity.query.filter_by(project_id=self.id)
         # Challenges only get a point per team-member
         if self.is_challenge:
             return cqu.filter_by(name='star').count()
-        # Get a point for every (join, update, comment ..) activity in dribs
+        # Get a point for every (join, update, comment ..)
+        # activity in dribs:
         c_s = cqu.count()
-        score = score + (1 * c_s)
-        # Extra point for every boost (upvote)
+        score = score + (1 * int(c_s / 2))
+        # Extra points for every boost (upvote)
         c_a = cqu.filter_by(name="boost").count()
-        score = score + (1 * c_a)
+        score = score + (5 * c_a)
         # Add to the score for every complete documentation field
         score = score + 1 * int(len(self.summary) > 3)
         score = score + 1 * int(len(self.image_url) > 3)
@@ -1027,6 +1088,10 @@ class Category(PkModel):
         if not self.projects:
             return 0
         return len(self.projects)
+
+    def event_projects(self, event_id):
+        """Get projects in this event."""
+        return Project.query.filter_by(category_id=self.id).filter_by(event_id=event_id).all()
 
     @property
     def data(self):

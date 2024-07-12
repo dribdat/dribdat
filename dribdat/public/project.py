@@ -5,8 +5,10 @@ from flask import (
 )
 from flask_login import login_required, current_user
 from dribdat.user.models import Event, Project, Activity, User
+from dribdat.user.constants import drib_question
 from dribdat.database import db
 from dribdat.extensions import cache
+from dribdat.utils import timesince
 from dribdat.public.forms import (
     ProjectNew, ProjectPost, ProjectBoost, ProjectComment
 )
@@ -17,11 +19,13 @@ from dribdat.user import (
     validateProjectData, stageProjectToNext, isUserActive,
 )
 from dribdat.public.projhelper import (
-    project_action, project_edit_action, templates_from_event, revert_project_by_activity
+    project_action, project_edit_action, templates_from_event, 
+    revert_project_by_activity, navigate_around_project,
 )
 from dribdat.apigenerate import gen_project_pitch
 from ..decorators import admin_required
 from ..mailer import user_invitation
+
 
 blueprint = Blueprint('project', __name__,
                       static_folder="../static", url_prefix='/project')
@@ -76,11 +80,14 @@ def project_boost(project_id):
     # TODO: load from a YAML file or from the Presets config
     form.boost_type.choices = [
         '---',
-        'Awesome sauce',
-        'Data wizards',
-        'Glorious purpose',
+        'Award',
+        'Qualified',
         'Top tutorial',
+        'Data wizardry',
+        'Awesome sauce',
+        "People's choice",
         'Super committers',
+        'Glorious purpose',
     ]
 
     # Process form
@@ -145,15 +152,17 @@ def project_post(project_id):
     stage, all_valid = validateProjectData(project)
     form = ProjectPost(obj=project, next=request.args.get('next'))
 
+    # Apply random questions
+    form.note.label.text = drib_question()
+
     # Process form
     if form.is_submitted() and form.validate():
         if form.has_progress.data:
             # Check and update progress
             if all_valid:
-                found_next = stageProjectToNext(project)
-            if all_valid and found_next:
-                flash("Level up! You are at stage '%s'" % 
-                    project.phase, 'info')
+                if stageProjectToNext(project):
+                    flash("Level up! You are at stage '%s'" % 
+                        project.phase, 'info')
 
         # Update project data
         del form.id
@@ -163,10 +172,11 @@ def project_post(project_id):
         db.session.add(project)
         db.session.commit()
         cache.clear()
+
+        # Write a post
         project_action(project_id, 'update',
                        action='post', text=form.note.data)
-
-        flash("Thanks for sharing!", 'success')
+        flash("Thanks for sharing your progress!", 'success')
 
         # Continue with project autoupdate
         if project.is_autoupdateable:
@@ -179,7 +189,7 @@ def project_post(project_id):
         'public/projectpost.html',
         current_event=event, project=project, form=form,
         stage=stage, all_valid=all_valid,
-        active="dribs"
+        active="post"
     )
 
 
@@ -256,10 +266,30 @@ def post_preview(project_id, activity_id):
         return redirect(purl)
     preview_at = activity.project_version
     project = project.versions[preview_at]
-    flash('This is the archived version (%d) of this page.' % preview_at, 'info')
+    flash('This is an archived version (%d) of this project.' % preview_at, 'info')
     return render_template(
         'public/project.html', current_event=project.event, project=project,
-        past_version=activity_id, active="projects"
+        past_version=activity_id, allow_revert=True, active="projects"
+    )
+
+
+@blueprint.route('/<int:project_id>/challenge', methods=['GET'])
+def get_challenge(project_id):
+    """Preview project data at the previous version."""
+    project = Project.query.filter_by(id=project_id).first_or_404()
+    purl = url_for('project.project_view_posted', project_id=project.id)
+    challenge = project.as_challenge()
+    if not challenge:
+        flash('Could not find challenge data.', 'warning')
+        return redirect(purl)
+    preview_at = challenge.id
+    p_date = timesince(challenge.updated_at)
+    flash('This Challenge was posted %s' % p_date, 'info')
+    go_nav = navigate_around_project(project, True)
+    return render_template(
+        'public/project.html', 
+        project=challenge, go_nav=go_nav, challenge_when=p_date,
+        current_event=challenge.event, active="projects"
     )
 
 
