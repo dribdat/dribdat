@@ -96,6 +96,8 @@ def project_boost(project_id):
         cache.clear()
         project_action(project_id, 'boost',
                        action=form.boost_type.data, text=form.note.data)
+        project.update_now()
+        project.save()
         flash('Thanks for your boost!', 'success')
         return project_view(project.id)
 

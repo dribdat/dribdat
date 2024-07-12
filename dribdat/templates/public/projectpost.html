@@ -116,9 +116,9 @@
 
   <div class="form-project-post">
     {% if stage %}
-      {{ render_form(url_for('project.project_post', project_id=project.id), form) }}
+      {{ render_form(url_for('project.project_post', project_id=project.id), form, formid='projectPost') }}
     {% else %}
-      {{ render_form(url_for('project.project_comment', project_id=project.id), form) }}
+      {{ render_form(url_for('project.project_comment', project_id=project.id), form, formid='projectPost') }}
     {% endif %}
   </div>
 
