@@ -170,7 +170,7 @@ class TestActivation:
         # And go activate that user
         res = testapp.get(url_for('auth.activate', userid=user.id, userhash=my_hash))
         assert res.status_code == 302
-        assert '/user/profile' in res
+        assert user.active
         # Test the message now
         msg = user_activation_message(user, 'abracadabra')
         assert 'activate' in msg.body

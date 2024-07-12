@@ -91,11 +91,11 @@ class User(UserMixin, PkModel):
     sso_id = Column(db.String(128), nullable=True)
     # A temporary hash for logins
     hashword = Column(db.String(128), nullable=True)
-    updated_at = Column(db.DateTime, nullable=True,
+    updated_at = Column(db.DateTime(timezone=True), nullable=True,
                         default=datetime.now(UTC))
     # The hashed password
     password = Column(db.String(128), nullable=True)
-    created_at = Column(db.DateTime, nullable=False,
+    created_at = Column(db.DateTime(timezone=True), nullable=False,
                         default=datetime.now(UTC))
 
     # State flags
@@ -319,7 +319,7 @@ class User(UserMixin, PkModel):
 
     def check_hashword(self, value):
         """Check the hash value."""
-        timediff = datetime.now(UTC) - self.updated_at
+        timediff = datetime.now() - self.updated_at.replace(tzinfo=None)
         if timediff > timedelta(minutes=30):
             # Half-hour time limit exceeded
             return False
@@ -342,8 +342,8 @@ class Event(PkModel):
     location_lat = Column(SqliteDecimal(5), nullable=True)    # coordinates (Latitude)
     location_lon = Column(SqliteDecimal(5), nullable=True)    # coordinates (Longitude)
 
-    starts_at = Column(db.DateTime, nullable=False, default=datetime.now(UTC))
-    ends_at = Column(db.DateTime, nullable=False, default=datetime.now(UTC))
+    starts_at = Column(db.DateTime(timezone=True), nullable=False, default=datetime.now(UTC))
+    ends_at = Column(db.DateTime(timezone=True), nullable=False, default=datetime.now(UTC))
 
     description = Column(db.UnicodeText(), nullable=True) # a longer text about the event
     instruction = Column(db.UnicodeText(), nullable=True) # tips for logged-in event participants
@@ -611,9 +611,9 @@ class Project(PkModel):
     logo_color = Column(db.String(7), nullable=True)
     logo_icon = Column(db.String(40), nullable=True)
 
-    created_at = Column(db.DateTime, nullable=False,
+    created_at = Column(db.DateTime(timezone=True), nullable=False,
                         default=datetime.now(UTC))
-    updated_at = Column(db.DateTime, nullable=False,
+    updated_at = Column(db.DateTime(timezone=True), nullable=False,
                         default=datetime.now(UTC))
 
     # User who created the project
@@ -1145,7 +1145,7 @@ class Activity(PkModel):
                           name="activity_type"))
     action = Column(db.String(32), nullable=True)
     # 'external', 'commit', 'sync', 'post', ...
-    timestamp = Column(db.DateTime, nullable=False, default=datetime.now(UTC))
+    timestamp = Column(db.DateTime(timezone=True), nullable=False, default=datetime.now(UTC))
     content = Column(db.UnicodeText, nullable=True)
     ref_url = Column(db.String(2048), nullable=True)
 
@@ -1219,7 +1219,7 @@ class Resource(PkModel):
     name = Column(db.String(80), nullable=False)
     type_id = Column(db.Integer(), nullable=True, default=0)
 
-    created_at = Column(db.DateTime, nullable=False,
+    created_at = Column(db.DateTime(timezone=True), nullable=False,
                         default=datetime.now(UTC))
     # At which progress level did it become relevant
     progress_tip = Column(db.Integer(), nullable=True)

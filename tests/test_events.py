@@ -49,22 +49,19 @@ class TestEvent:
 
     def test_countdown_4_hours(self, db):
         timezone = pytz.timezone(Config.TIME_ZONE)
-        now = datetime.now()
-        tz_now = timezone.localize(datetime.now(UTC))
+        now = datetime.now(UTC)
         # need to add 10 seconds to avoid timesince to compute 3.9999h
         # formated to 3 by timesince
         event_dt = now + timedelta(hours=4, seconds=10)
         event = Event(name="test", starts_at=event_dt)
         event.save()
 
-        tz_event = timezone.localize(event_dt)
-        timediff = tz_event - tz_now
+        timediff = event_dt - now
         timediff_hours = timediff.total_seconds()//3600
 
-        assert event.starts_at == event_dt  # store as naive
         assert event.name == "test"
         assert event.countdown is not None
-        assert event.countdown == tz_event
+        assert event.countdown == event_dt
         assert timesince(
             event.countdown, until=True) == "%d hours to go" % timediff_hours
 
