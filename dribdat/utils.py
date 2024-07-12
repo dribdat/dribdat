@@ -6,7 +6,7 @@ from math import floor
 from os import path
 
 # from Py3.12: from datetime import UTC
-from datetime import timezone
+from datetime import datetime, timezone
 UTC = timezone.utc 
 
 import pytz
@@ -88,9 +88,15 @@ def timesince(dt, default="just now", until=False):
     return default
 
 
-def format_date(value, format='%Y-%m-%d'):
+def format_date(value, format='%Y-%m-%dT%H:%M'):
     """Return a standard format of a date."""
     return value.strftime(format)
+
+
+def parse_date(value, format='%Y-%m-%dT%H:%M'):
+    """Parse a standard format of a date from a string."""
+    if not isinstance(value, str): return value
+    return datetime.strptime(value, format)
 
 
 def format_date_range(starts_at, ends_at):

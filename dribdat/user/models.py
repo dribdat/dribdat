@@ -15,7 +15,7 @@ from dribdat.user.constants import (
 )
 from dribdat.onebox import format_webembed  # noqa: I005
 from dribdat.utils import (
-    format_date_range, format_date, timesince, strtobool
+    format_date_range, format_date, parse_date, timesince, strtobool
 )
 from dribdat.database import (
     db,
@@ -30,7 +30,6 @@ from dribdat.apifetch import FetchGitlabAvatar
 from flask import current_app
 from flask_login import UserMixin
 from time import mktime
-from dateutil.parser import parse
 from dateutil.parser._parser import ParserError
 from datetime import datetime, timedelta
 # from Py3.12: from datetime import UTC
@@ -397,8 +396,8 @@ class Event(PkModel):
     def get_full_data(self):
         """Return full JSON event content."""
         d = self.data
-        d['starts_at'] = format_date(self.starts_at, '%Y-%m-%dT%H:%M')
-        d['ends_at'] = format_date(self.ends_at, '%Y-%m-%dT%H:%M')
+        d['starts_at'] = format_date(self.starts_at)
+        d['ends_at'] = format_date(self.ends_at)
         d['description'] = self.description or ''
         d['boilerplate'] = self.boilerplate or ''
         d['aftersubmit'] = self.aftersubmit or ''
@@ -413,8 +412,8 @@ class Event(PkModel):
         """Set from a full JSON event content."""
         self.name = d['name']
         self.summary = d['summary'] or ''
-        self.ends_at = parse(d['ends_at'])
-        self.starts_at = parse(d['starts_at'])
+        self.ends_at = parse_date(d['ends_at'])
+        self.starts_at = parse_date(d['starts_at'])
         self.hostname = d['hostname'] or '' if 'hostname' in d else ''
         self.location = d['location'] or '' if 'location' in d else ''
         self.hashtags = d['hashtags'] or '' if 'hashtags' in d else ''
@@ -442,8 +441,8 @@ class Event(PkModel):
             "name": self.name,
             "url": host_url + self.url,
             "description": desc,
-            "startDate": format_date(self.starts_at, '%Y-%m-%dT%H:%M'),
-            "endDate": format_date(self.ends_at, '%Y-%m-%dT%H:%M'),
+            "startDate": format_date(self.starts_at),
+            "endDate": format_date(self.ends_at),
             "workPerformed": [p.get_schema(host_url) for p in self.projects]
         }
         if self.hostname and self.location:
@@ -709,8 +708,8 @@ class Project(PkModel):
             'logo_icon': self.logo_icon or '',
             'excerpt': '',
         }
-        d['created_at'] = format_date(self.created_at, '%Y-%m-%dT%H:%M')
-        d['updated_at'] = format_date(self.updated_at, '%Y-%m-%dT%H:%M')
+        d['created_at'] = format_date(self.created_at)
+        d['updated_at'] = format_date(self.updated_at)
         # Generate excerpt based on summary data
         if self.longtext and len(self.longtext) > 10:
             d['excerpt'] = self.longtext[:MAX_EXCERPT_LENGTH]
@@ -925,8 +924,8 @@ class Project(PkModel):
             "@type": "CreativeWork",
             "name": self.name,
             "description": cleansummary,
-            "dateCreated": format_date(self.created_at, '%Y-%m-%dT%H:%M'),
-            "dateModified": format_date(self.updated_at, '%Y-%m-%dT%H:%M'),
+            "dateCreated": format_date(self.created_at),
+            "dateModified": format_date(self.updated_at),
             "discussionUrl": self.contact_url,
             "image": self.image_url,
             "license": content_license,
@@ -971,8 +970,8 @@ class Project(PkModel):
         try:
             if not 'created_at' in data or not 'updated_at' in data:
                 raise ParserError("Date values missing")
-            self.created_at = parse(data['created_at'])
-            self.updated_at = parse(data['updated_at'])
+            self.created_at = parse_date(data['created_at'])
+            self.updated_at = parse_date(data['updated_at'])
         except ParserError as ex:
             # Resetting dates to current time
             self.created_at = datetime.now(UTC)
@@ -1169,7 +1168,7 @@ class Activity(PkModel):
         a = {
             'id': self.id,
             'time': int(mktime(self.timestamp.timetuple())),
-            'date': format_date(localtime, '%Y-%m-%dT%H:%M'),
+            'date': format_date(localtime),
             'timesince': timesince(localtime),
             'name': self.name,
             'action': self.action or '',

@@ -355,6 +355,18 @@ def event_delete(event_id):
     return events()
 
 
+@blueprint.route('/event/<int:event_id>/copy', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def event_copy(event_id):
+    event = Event.query.filter_by(id=event_id).first_or_404()
+    new_event = Event(name='Copy')
+    new_event.set_from_data(event.data)
+    new_event.name = new_event.name + ' (copy)'
+    new_event.save()
+    return redirect(url_for("admin.event", event_id=new_event.id))
+
+
 @blueprint.route('/event/<int:event_id>/autosync', methods=['GET', 'POST'])
 @login_required
 @admin_required

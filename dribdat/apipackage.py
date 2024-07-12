@@ -51,7 +51,7 @@ def event_to_data_package(event, author=None, host_url='', full_content=False):
         }],
         contributors=contributors,
         homepage=event.webpage_url or '',
-        created=format_date(dtt.now(), '%Y-%m-%dT%H:%M'),
+        created=format_date(dtt.now()),
         version="0.2.0",
     )
 
