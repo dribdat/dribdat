@@ -8,8 +8,12 @@ from flask import (
 )
 from flask_login import current_user
 from sqlalchemy import or_
-from datetime import datetime, UTC
+
 from dateutil import parser
+from datetime import datetime, UTC
+# from Py3.12: from datetime import UTC
+from datetime import timezone
+UTC = timezone.utc 
 
 from ..user.models import Event, Project, Activity, User
 from ..apiutils import (

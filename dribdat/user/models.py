@@ -32,7 +32,11 @@ from flask_login import UserMixin
 from time import mktime
 from dateutil.parser import parse
 from dateutil.parser._parser import ParserError
-from datetime import datetime, timedelta, UTC
+from datetime import datetime, timedelta
+# from Py3.12: from datetime import UTC
+from datetime import timezone
+UTC = timezone.utc 
+
 import hashlib
 import re
 from urllib.parse import urlencode, urlparse

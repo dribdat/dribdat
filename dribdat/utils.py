@@ -4,7 +4,10 @@ from flask import flash, current_app
 from urllib.parse import quote
 from math import floor
 from os import path
-from datetime import UTC
+
+# from Py3.12: from datetime import UTC
+from datetime import timezone
+UTC = timezone.utc 
 
 import pytz
 import re

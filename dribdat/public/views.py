@@ -13,8 +13,11 @@ from dribdat.extensions import cache
 from dribdat.aggregation import GetEventUsers
 from dribdat.user import getProjectStages, isUserActive
 from urllib.parse import urlparse
-from datetime import datetime, timedelta, UTC
 from sqlalchemy import and_, func
+from datetime import datetime, timedelta
+# from Py3.12: from datetime import UTC
+from datetime import timezone
+UTC = timezone.utc 
 
 blueprint = Blueprint('public', __name__, static_folder="../static")
 
