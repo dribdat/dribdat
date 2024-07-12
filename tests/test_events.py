@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """Model unit tests."""
 
-import datetime as dt
+from datetime import datetime, timedelta, UTC
 
 import pytest
 import pytz
@@ -23,8 +23,8 @@ class TestEvent:
 
     def test_countdown_10_days(self, db):
         timezone = pytz.timezone(Config.TIME_ZONE)
-        now = dt.datetime.now()
-        event_dt = now + dt.timedelta(days=10)
+        now = datetime.now()
+        event_dt = now + timedelta(days=10)
         event = Event(name="test", starts_at=event_dt)
         event.save()
 
@@ -35,9 +35,9 @@ class TestEvent:
         assert timesince(event.countdown, until=True) == "1 week to go"
 
     def test_countdown_24_days(self, db):
-        now = dt.datetime.now()
+        now = datetime.now()
         timezone = pytz.timezone(Config.TIME_ZONE)
-        event_dt = now + dt.timedelta(days=24)
+        event_dt = now + timedelta(days=24)
         event = Event(name="test", starts_at=event_dt)
         event.save()
 
@@ -49,11 +49,11 @@ class TestEvent:
 
     def test_countdown_4_hours(self, db):
         timezone = pytz.timezone(Config.TIME_ZONE)
-        now = dt.datetime.now()
-        tz_now = timezone.localize(dt.datetime.utcnow())
+        now = datetime.now()
+        tz_now = timezone.localize(datetime.now(UTC))
         # need to add 10 seconds to avoid timesince to compute 3.9999h
         # formated to 3 by timesince
-        event_dt = now + dt.timedelta(hours=4, seconds=10)
+        event_dt = now + timedelta(hours=4, seconds=10)
         event = Event(name="test", starts_at=event_dt)
         event.save()
 

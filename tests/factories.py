@@ -5,7 +5,7 @@ from factory.alchemy import SQLAlchemyModelFactory
 
 from dribdat.database import db
 from dribdat.user.models import User, Project, Event, Activity
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, UTC
 
 
 class BaseFactory(SQLAlchemyModelFactory):
@@ -47,8 +47,8 @@ class EventFactory(BaseFactory):
 
     name = Sequence(lambda n: 'Event {0}'.format(n))
     summary = "Just a sample event"
-    starts_at = datetime.utcnow()
-    ends_at = datetime.utcnow() + timedelta(days=2)
+    starts_at = datetime.now(UTC)
+    ends_at = datetime.now(UTC) + timedelta(days=2)
 
     class Meta:  # noqa: D106
         model = Event

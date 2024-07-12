@@ -8,7 +8,7 @@ from flask import (
 )
 from flask_login import current_user
 from sqlalchemy import or_
-from datetime import datetime
+from datetime import datetime, UTC
 from dateutil import parser
 
 from ..user.models import Event, Project, Activity, User
@@ -54,7 +54,7 @@ def get_user(username):
 
 def format_rss_feed(title, fqdn, atomlink, activities):
     """Return an RSS formatted feed."""
-    now = datetime.utcnow().strftime(RSS_DATE_FORMAT)
+    now = datetime.now(UTC).strftime(RSS_DATE_FORMAT)
     for a in activities:
         a['rssdate'] = parser.parse(a['date']).strftime(RSS_DATE_FORMAT)
     html = render_template("public/rss.xml",

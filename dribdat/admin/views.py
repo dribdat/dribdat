@@ -18,7 +18,7 @@ from .forms import (
     CategoryForm, ResourceForm,
 )
 
-from datetime import datetime
+from datetime import datetime, UTC
 import random
 import string
 
@@ -131,7 +131,7 @@ def user(user_id):
         else:
             user.password = originalhash
 
-        user.updated_at = datetime.utcnow()
+        user.updated_at = datetime.now(UTC)
         db.session.add(user)
         db.session.commit()
         user.socialize()
@@ -156,7 +156,7 @@ def user_profile(user_id):
             id=r).first() for r in form.roles.data]
         del form.roles
         form.populate_obj(user)
-        user.updated_at = datetime.utcnow()
+        user.updated_at = datetime.now(UTC)
         db.session.add(user)
         db.session.commit()
         user.socialize()
