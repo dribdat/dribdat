@@ -326,6 +326,7 @@ class User(UserMixin, PkModel):
         timediff = datetime.now() - self.updated_at.replace(tzinfo=None)
         if timediff > timedelta(minutes=30):
             # Half-hour time limit exceeded
+            print("Time limit exceeded")
             return False
         return hashing.check_value(self.hashword, value)
 
