@@ -25,7 +25,7 @@ flask-sqlalchemy = ">=2.3.2"
 flask-talisman = ">=0.7.0"
 flask-wtf = ">=1.0.1"
 frictionless = ">=4.19.5,<5"
-future = "^0.18"
+future = ">=1.0.0"
 graphene = "^3.2"
 gunicorn = {extras = ["gevent"], version = ">=21.2.0"}
 hiredis = "^2.2"
