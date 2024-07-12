@@ -51,6 +51,7 @@ urllib3 = "<2"
 werkzeug = "^3.0"
 whitenoise = "^5.3"
 wtforms = "^3.0"
+openai = "^1.35.13"
 
 [tool.poetry.dev-dependencies]
 factory-boy = "*"

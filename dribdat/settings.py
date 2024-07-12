@@ -76,8 +76,10 @@ class Config(object):
     TIME_ZONE = os_env.get('TIME_ZONE', 'UTC')
     MAX_CONTENT_LENGTH = int(os_env.get('MAX_CONTENT_LENGTH', 1 * 1024 * 1024))
 
-    # Configure other external APIs
+    # Configure an external LLM API
+    LLM_MODEL = os_env.get('LLM_MODEL', 'gpt-3.5-turbo')
     LLM_API_KEY = os_env.get('LLM_API_KEY', '')
+    LLM_BASE_URL = os_env.get('LLM_BASE_URL', '')
 
     # Configure web analytics providers
     ANALYTICS_HREF = os_env.get('ANALYTICS_HREF', None)
