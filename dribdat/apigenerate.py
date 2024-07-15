@@ -10,7 +10,6 @@ from .user.models import Project
 
 # In seconds, how long to wait for API response
 REQUEST_TIMEOUT = 10
-ai_client = None
 
 def gen_project_pitch(project: Project):
     topic = ""
@@ -23,22 +22,25 @@ def gen_challenge_openai(title: str, topic: str, summary: str):
     if not current_app.config['LLM_API_KEY']:
         logging.error('Missing ChatGPT configuration (LLM_API_KEY)')
         return None
-    if ai_client is None:
-        if current_app.config['LLM_BASE_URL']:
-            ai_client = openai.OpenAI(
-                api_key=current_app.config['LLM_API_KEY'],
-                base_url=current_app.config['LLM_BASE_URL']
-            )
-        else:
-            logging.info("Using default OpenAI provider")
-            ai_client = openai.OpenAI(
-                api_key=current_app.config['LLM_API_KEY'],
-            )
+    # TODO: move to app.py
+    if current_app.config['LLM_BASE_URL']:
+        ai_client = openai.OpenAI(
+            api_key=current_app.config['LLM_API_KEY'],
+            base_url=current_app.config['LLM_BASE_URL']
+        )
+    elif current_app.config['LLM_API_KEY']:
+        logging.info("Using default OpenAI provider")
+        ai_client = openai.OpenAI(
+            api_key=current_app.config['LLM_API_KEY'],
+        )
+    else:
+        logging.error("No LLM configuration available")
+        return None
 
     prompt = "Write a challenge statement for a hackathon project about the following: " +\
         '\n\n%s\n%s\n%s' % (title, topic, summary)
     
-    response = client.chat.completions.create(
+    response = ai_client.chat.completions.create(
         model=current_app.config['LLM_MODEL'], 
         timeout=REQUEST_TIMEOUT,
         messages = [
