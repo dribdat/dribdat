@@ -24,6 +24,7 @@ from dribdat.extensions import (
 from dribdat.settings import ProdConfig  # noqa: I005
 from dribdat.utils import timesince
 from dribdat.onebox import make_oembedplus
+from pytz import timezone
 
 
 def init_app(config_object=ProdConfig):
@@ -159,7 +160,7 @@ def register_filters(app):
         )
 
     # Timezone helper
-    app.tz = datetime.strptime(app.config['TIME_ZONE'] or 'UTC', '%Z')
+    app.tz = timezone(app.config['TIME_ZONE'] or 'UTC')
 
     # Lambda filters for safe image_url's
     app.jinja_env.filters['quote_plus'] = lambda u: quote_plus(u or '', ':/?&=')

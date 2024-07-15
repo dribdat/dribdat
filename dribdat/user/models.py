@@ -486,18 +486,18 @@ class Event(PkModel):
     @property
     def ends_at_tz(self):
         """Extra property."""
-        return current_app.tz.localize(self.ends_at)
+        return self.ends_at.replace(tzinfo=current_app.tz)
 
     @property
     def starts_at_tz(self):
         """Extra property."""
-        return current_app.tz.localize(self.starts_at)
+        return self.starts_at.replace(tzinfo=current_app.tz)
 
     @property
     def countdown(self):
         """Provide a normalized countdown timer."""
-        starts_at = current_app.tz.localize(self.starts_at)
-        ends_at = current_app.tz.localize(self.ends_at)
+        starts_at = self.starts_at_tz
+        ends_at = self.ends_at_tz
         # Check event time limit (hard coded to 30 days)
         tz_now = datetime.now(UTC)
         time_limit = tz_now + timedelta(days=30)
@@ -1164,7 +1164,7 @@ class Activity(PkModel):
     @property
     def data(self):
         """Get JSON representation."""
-        localtime = current_app.tz.localize(self.timestamp)
+        localtime = self.timestamp.replace(tzinfo=current_app.tz)
         a = {
             'id': self.id,
             'time': int(mktime(self.timestamp.timetuple())),

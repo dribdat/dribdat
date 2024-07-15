@@ -24,6 +24,9 @@ from .factories import UserFactory, ProjectFactory, EventFactory
 class TestEvent:
     """Event tests."""
 
+    def is_naive(d):
+        return d.tzinfo is None or d.tzinfo.utcoffset(d) is None
+
     def test_countdown_10_days(self, db):
         timezone = pytz.timezone(Config.TIME_ZONE)
         now = datetime.now()
@@ -34,7 +37,7 @@ class TestEvent:
         assert event.starts_at == event_dt  # store as naive
         assert event.name == "test"
         assert event.countdown is not None
-        assert event.countdown == timezone.localize(event_dt)
+        assert event.countdown == event_dt.replace(tzinfo=timezone)
         assert timesince(event.countdown, until=True) == "1 week to go"
 
     def test_countdown_24_days(self, db):
@@ -47,7 +50,7 @@ class TestEvent:
         assert event.starts_at == event_dt  # store as naive
         assert event.name == "test"
         assert event.countdown is not None
-        assert event.countdown == timezone.localize(event_dt)
+        assert event.countdown == event_dt.replace(tzinfo=timezone)
         assert timesince(event.countdown, until=True) == "3 weeks to go"
 
     def test_countdown_4_hours(self, db):
