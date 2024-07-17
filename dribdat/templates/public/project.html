@@ -229,9 +229,16 @@
       {% if allow_edit %}
       <center class="project-edit-pitch">
         <a href="{{ url_for('project.project_edit', project_id=project.id) }}#is_webembed" 
-           class="btn btn-sm btn-light" title="Edit project pitch">
+           title="Edit project pitch" class="btn btn-sm btn-light">
           <i class="fa fa-pencil" aria-hidden="true"></i>
           Edit</a>
+
+        {% if config.LLM_API_KEY %}
+          <a href="{{ url_for('project.project_autopost', project_id=project.id) }}" 
+             title="Get a suggestion from an AI coach" class="btn btn-sm btn-light">
+            🅰️ℹ️ Tip
+          </a>
+        {% endif %}
       </center>
       {% endif %}
 

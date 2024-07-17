@@ -226,7 +226,7 @@ def project_autopost(project_id):
     project = Project.query.filter_by(id=project_id).first_or_404()
     autopost = gen_project_post(project)
     if not autopost:
-        flash("AI service is not configured", 'warning')
+        flash("AI service is currently not available.", 'warning')
         return redirect(url_for(
             'project.project_view', project_id=project.id))
     project_action(project_id, 'review', action='post', text=autopost[:280])
