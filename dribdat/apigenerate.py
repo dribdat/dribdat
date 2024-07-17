@@ -91,6 +91,9 @@ def gen_openai(prompt: str):
                     "role": "system", "content": SYSTEM_PROMPT
                 }
             ])
+    except openai.InternalServerError as e:
+        logging.error('Server error (invalid model?)')
+        return None
     except openai.APIConnectionError as e:
         logging.error('No LLM connection')
         return None

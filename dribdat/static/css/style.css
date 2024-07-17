@@ -155,6 +155,11 @@ form input[type="checkbox"] {
   padding-left: 0.5em;
   text-decoration: none;
 }
+.alert.project-tips {
+  border: 3px double orange;
+  border-radius: 12px;
+  margin-top: -1em;
+}
 .alert.project-tips .close {
   position: relative;
   z-index: 99;
@@ -163,7 +168,6 @@ form input[type="checkbox"] {
   margin: -1em 0em 1em -1em;
 }
 .alert.project-tips.profile-projects::before {
-  content: '⚡';
   font-size: 250%;
   position: relative;
   left: -1em;
