@@ -866,7 +866,7 @@ class Project(PkModel):
             prev = cur
 
         # Start all logs at stage 0
-        if len(activities_array) > 0:
+        if len(activities_array) > 0 and False:
             dribs.append({
                 'title': getStageByProgress(0)['phase'],
                 'date': activities_array.pop().timestamp,
@@ -876,14 +876,14 @@ class Project(PkModel):
         # Add event start and finish to log
         if self.event.has_started or self.event.has_finished:
             dribs.append({
-                'title': "Event started",
+                'title': "Start",
                 'date': self.event.starts_at,
                 'icon': 'calendar',
                 'name': 'start',
             })
         if self.event.has_finished:
             dribs.append({
-                'title': "Event finished",
+                'title': "Event finish",
                 'date': self.event.ends_at,
                 'icon': 'bullhorn',
                 'name': 'finish',
@@ -901,7 +901,7 @@ class Project(PkModel):
     def as_challenge(self):
         """Find the last challenge version of this project."""
         if not self.versions: 
-            return self
+            return None
         for v in self.versions[::-1]:
             if v.progress <= 0: 
                 return v.revert()

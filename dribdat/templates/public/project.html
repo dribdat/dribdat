@@ -116,7 +116,7 @@
           </div>
         </div>
       </a>
-      <div class="preview-challenge mt-2">
+      <div class="preview-challenge mt-2 hidden">
         <a title="Click to show the Challenge from which this project started" 
            href="{{ url_for('project.get_challenge', project_id=project.id) }}">
              Challenge</a>
@@ -127,11 +127,11 @@
   {% elif challenge_when %}
     <div class="project-score">
       <div class="preview-challenge">
-        Challenge
-        <i class="fa fa-map" aria-hidden="true"></i> 
+        <h4>Challenge view</h4>
         <a title="Go back to the current version of this Project" 
            href="{{ url_for('project.project_view', project_id=project.id) }}">
-           Project</a>
+          <i class="fa fa-arrow-left" aria-hidden="true"></i> 
+           Back to Project</a>
       </div>
     </div>
   {% endif %}
@@ -140,6 +140,8 @@
     <div class="project-category">
       {% if project.category.logo_icon %}
         <i class="fa fa-{{project.category.logo_icon}}"></i>
+      {% else %}
+        <span style="opacity:0.5;font-size:200%">⬣</span>
       {% endif %}
       <a href="#"
          data-toggle="modal" data-target="#categoryModal" title="Show Category">

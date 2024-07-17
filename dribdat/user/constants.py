@@ -250,7 +250,7 @@ def getActivityByType(a, only_active=True):  # noqa: C901
     #         text += " version %d" % a.project_version
     #     icon = 'undo'
     elif a.name == 'create':
-        text = "First post <a class='btn btn-light float-right' href='/%s/challenge'>View challenge</a>" % a.project.url
+        text = "<a class='challenge-posted' href='/%s/challenge'>Challenge shared</a><br>Tap here to review." % a.project.url
         icon = 'flag-checkered'
     elif a.name == 'boost':
         title = a.action

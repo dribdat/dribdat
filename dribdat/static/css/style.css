@@ -1109,7 +1109,7 @@ nav .nav-login {
   margin-top: 0.5em;
   margin-left: -1em;
   text-align: center;
-  line-height: 1.8em;
+  line-height: 2em;
   font-size: 150%;
 }
 .project-page .timeline-content {
@@ -1117,6 +1117,9 @@ nav .nav-login {
 }
 .timeline-content .content img {
   width: 100%;
+}
+.timeline-content .challenge-posted {
+  font-weight: bold;
 }
 
 /* Hides the triangle pointers in the timeline */

@@ -463,12 +463,13 @@ def create_new_project(event, is_anonymous=False):
         project.webpage_url = template.webpage_url
         project.download_url = template.download_url
 
-    # Start as challenge
-    project.progress = -1
     project.event_id = event.id
-    # (Unless the event has started ..)
+
+    # Start as unapproved challenge
+    project.progress = -1
+    # Unless the event has started
     if event.has_started:
-        project.progress = 5
+        project.progress = 0
 
     # Update the project
     project.update_now()
