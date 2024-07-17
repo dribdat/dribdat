@@ -229,7 +229,7 @@ def project_autopost(project_id):
         flash("AI service is currently not available.", 'warning')
         return redirect(url_for(
             'project.project_view', project_id=project.id))
-    project_action(project_id, 'review', action='post', text=autopost[:280])
+    project_action(project_id, 'review', action='post', text=autopost)
     flash("The robots have spoken", 'success')
     return redirect(url_for(
         'project.project_view_posted', project_id=project.id))

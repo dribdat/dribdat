@@ -10,7 +10,7 @@ from flask import current_app
 from .user.models import Project
 
 # In seconds, how long to wait for API response
-REQUEST_TIMEOUT = 10
+REQUEST_TIMEOUT = 30
 
 # System prompt for our requests
 SYSTEM_PROMPT = "A hackathon project involves: " +\
@@ -46,8 +46,9 @@ def prompt_ideas(project: Project):
     topic = project.summary
     summary = project.longtext or project.autotext
     return "Generate a short (100 words or less) suggestion as a next step " +\
-        'in a hackathon project, with title "%s" on the topic of "%s", ' % (title, topic) +\
-        "in which so far the following has been worked on: \n" +\
+        'in a hackathon project, with title "%s" on the topic of "%s". ' % (title, topic) +\
+        'Do not include the word "Suggestion" or repeat the title. ' +\
+        "Note that so far the following has been worked on, so propose something else: \n" +\
         summary
 
 
@@ -96,10 +97,7 @@ def gen_openai(prompt: str):
 
     # Return the obtained result
     if len(completion.choices) > 0:
-        if completion.choices[0].message.content:
-            content = completion.choices[0].message.content
-        else:
-            content = completion.choices[0].message
+        content = completion.choices[0].message.content
         return "🅰️ℹ️ " + content
     else:
         logging.error('No LLM data in response')

@@ -229,13 +229,14 @@
       {% if allow_edit %}
       <center class="project-edit-pitch">
         <a href="{{ url_for('project.project_edit', project_id=project.id) }}#is_webembed" 
-           title="Edit project pitch" class="btn btn-sm btn-light">
+           title="Edit project pitch" class="btn btn-md btn-light">
           <i class="fa fa-pencil" aria-hidden="true"></i>
           Edit</a>
 
         {% if config.LLM_API_KEY %}
-          <a href="{{ url_for('project.project_autopost', project_id=project.id) }}" 
-             title="Get a suggestion from an AI coach" class="btn btn-sm btn-light">
+          <a onclick="location.href='{{ url_for('project.project_autopost', project_id=project.id) }}'"
+             data-toggle="modal" data-target="#pleasewaitModal" 
+             title="Get a suggestion from an AI coach" class="btn btn-md btn-light">
             🅰️ℹ️ Tip
           </a>
         {% endif %}
@@ -251,6 +252,25 @@
 
   {% if project_team %}
     <div id="team-md" aria-labelledby="team-tab-md">
+      
+      {% if not lock_editing and not project.event.has_finished and not project.event.lock_resources and not past_version %}
+        <center class="team-invite-button">
+          {% if project_starred %}
+            <a class="btn btn-md btn-light" data-toggle="modal" data-target="#addUser"
+              title="Invite someone to this project">
+              <i class="fa fa-child" aria-hidden="true"></i>
+              Invite others
+            </a>
+          {% else %}
+            <a href="{{ url_for('project.project_star', project_id=project.id) }}" class="btn btn-md btn-light project-star"
+              title="{% if project.is_challenge %}Follow this challenge{% else %}Join the project{% endif %}">
+               <i class="fa fa-thumbs-up"></i>
+               Join the team
+            </a>
+          {% endif %}
+        </center>
+      {% endif %}
+
       <div class="widget widget-team m-4">
       {% for user in project_team %}
         {% if project.user == user %}
@@ -275,24 +295,6 @@
         </div>
       {% endif %}
       </div>
-
-      {% if not lock_editing and not project.event.has_finished and not project.event.lock_resources and not past_version %}
-        <center class="team-invite-button">
-          {% if project_starred %}
-            <a class="btn btn-sm btn-light" data-toggle="modal" data-target="#addUser"
-              title="Invite someone to this project">
-              <i class="fa fa-child" aria-hidden="true"></i>
-              Invite others
-            </a>
-          {% else %}
-            <a href="{{ url_for('project.project_star', project_id=project.id) }}" class="btn btn-sm btn-light project-star"
-              title="{% if project.is_challenge %}Follow this challenge{% else %}Join the project{% endif %}">
-               <i class="fa fa-thumbs-up"></i>
-               Join the team
-            </a>
-          {% endif %}
-        </center>
-      {% endif %}
     </div>
   {% endif %}
 
@@ -313,7 +315,7 @@
       {% if allow_edit and project.is_autoupdateable %}
         <div class="text-center m-0">
           <a href="{{ url_for('project.project_autoupdate', project_id=project.id) }}"
-             title="Sync external Readme data" class="btn btn-sm btn-light">
+             title="Sync external Readme data" class="btn btn-md btn-light">
             <i class="fa fa-refresh" aria-hidden="true"></i>
             Refresh</a>
         </div>
@@ -575,6 +577,8 @@
 {% endif %}
 
 {% if allow_edit %}
+  {% include "includes/pleasewait.html" %}
+
   <div class="modal fade widget-team-add" id="addUser" tabindex="-1"
           role="dialog" aria-labelledby="addUserLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">

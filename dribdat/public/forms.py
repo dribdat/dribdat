@@ -123,7 +123,8 @@ class ProjectPost(FlaskForm):
         [length(max=280), InputRequired()],
         render_kw={'maxlength': 280},
         description=u'A short note for your project log.')
-    submit = SubmitField(u'Save post')
+    submit = SubmitField(u'Save post',
+        render_kw={'data-toggle': "modal", 'data-target': "#pleasewaitModal"})
 
 
 class ProjectComment(FlaskForm):
@@ -136,7 +137,8 @@ class ProjectComment(FlaskForm):
         render_kw={'maxlength': 280},
         description=u'A suggestion or constructive feedback for the team.'
                     + ' Please note the Code of Conduct.')
-    submit = SubmitField(u'Save comment')
+    submit = SubmitField(u'Save comment',
+        render_kw={'data-toggle': "modal", 'data-target': "#pleasewaitModal"})
 
 
 class ProjectBoost(FlaskForm):
