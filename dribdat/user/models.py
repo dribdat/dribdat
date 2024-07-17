@@ -1002,6 +1002,8 @@ class Project(PkModel):
         # Correct fields
         if self.category_id == -1:
             self.category_id = None
+        elif self.category_id and not self.category:
+            self.category = Category.query.get(self.category_id)
         if self.logo_icon and self.logo_icon.startswith('fa-'):
             self.logo_icon = self.logo_icon.replace('fa-', '')
         if self.logo_color == '#000000':

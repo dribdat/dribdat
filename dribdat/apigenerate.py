@@ -11,13 +11,37 @@ from .user.models import Project
 # In seconds, how long to wait for API response
 REQUEST_TIMEOUT = 10
 
-def gen_project_pitch(project: Project):
+def prompt_initial(project: Project):
+    title = project.name
     topic = ""
-    if project.category:
-        topic = project.category.name
-    return gen_challenge_openai(project.name, topic, project.summary)
-    
-def gen_challenge_openai(title: str, topic: str, summary: str):
+    if project.category_id is not None:
+        topic = project.category.description
+    summary = project.summary
+    return "Write a challenge statement for a hackathon project, which involves " +\
+        "collecting data, designing a solution, and making a prototype. " +\
+        'Do not include the words "Challenge statement". ' +\
+        'It is to be on the topic of "%s", involving "%s". Furthermore: %s' %\
+        (title, topic, summary)
+
+def prompt_ideas(project: Project):
+    title = project.name
+    topic = project.summary
+    summary = project.longtext or project.autotext
+    return "Generate a short (140 characters) suggestion of brainstorming, " +\
+        "design thinking, or prototyping as a next step " +\
+        'in a project with title "%s" on the topic of "%s", ' % (title, topic) +\
+        "in which so far the following has been worked on: \n" +\
+        summary
+
+def gen_project_pitch(project: Project):
+    prompt = prompt_initial(project)
+    return gen_openai(prompt)
+
+def gen_project_post(project: Project):
+    prompt = prompt_ideas(project)
+    return gen_openai(prompt)
+
+def gen_openai(prompt: str):
     """Request data from an OpenAI API."""
     if not current_app.config['LLM_API_KEY']:
         logging.error('Missing ChatGPT configuration (LLM_API_KEY)')
@@ -36,11 +60,8 @@ def gen_challenge_openai(title: str, topic: str, summary: str):
     else:
         logging.error("No LLM configuration available")
         return None
-
-    prompt = "Write a challenge statement for a hackathon project about the following: " +\
-        '\n\n%s\n%s\n%s' % (title, topic, summary)
     
-    response = ai_client.chat.completions.create(
+    completion = ai_client.chat.completions.create(
         model=current_app.config['LLM_MODEL'], 
         timeout=REQUEST_TIMEOUT,
         messages = [
@@ -49,9 +70,9 @@ def gen_challenge_openai(title: str, topic: str, summary: str):
                 "content": prompt
             }
         ])
-    jsondata = response.json()
-    if 'choices' in jsondata and len(jsondata['choices']) > 0:
-        return jsondata['choices'][0]['message']['content']
+    completion.choices[0].message.content
+    if len(completion.choices) > 0:
+        return completion.choices[0].message.content
     else:
         logging.error('No LLM data in response')
         print(jsondata)

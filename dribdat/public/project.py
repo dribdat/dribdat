@@ -22,7 +22,7 @@ from dribdat.public.projhelper import (
     project_action, project_edit_action, templates_from_event, 
     revert_project_by_activity, navigate_around_project,
 )
-from dribdat.apigenerate import gen_project_pitch
+from dribdat.apigenerate import gen_project_pitch, gen_project_post
 from ..decorators import admin_required
 from ..mailer import user_invitation
 
@@ -217,6 +217,23 @@ def project_comment(project_id):
         current_event=event, project=project, form=form,
         active="dribs"
     )
+
+
+@blueprint.route('/<int:project_id>/auto', methods=['GET', 'POST'])
+@login_required
+def project_autopost(project_id):
+    """Try to generate a project post."""
+    project = Project.query.filter_by(id=project_id).first_or_404()
+    autopost = gen_project_post(project)
+    if not autopost:
+        flash("AI service is not configured", 'warning')
+        return redirect(url_for(
+            'project.project_view', project_id=project.id))
+    project_action(project_id, 'review', action='post', text=autopost[:280])
+    flash("The robots have spoken", 'success')
+    return redirect(url_for(
+        'project.project_view_posted', project_id=project.id))
+
 
 
 @blueprint.route('/<int:project_id>/unpost/<int:activity_id>', methods=['GET'])
@@ -441,16 +458,18 @@ def create_new_project(event, is_anonymous=False):
     # Start as challenge
     project.progress = -1
     project.event_id = event.id
-    # Unless the event has started
+    # (Unless the event has started ..)
     if event.has_started:
         project.progress = 5
+
+    # Update the project
+    project.update_now()
 
     # Magically populate description
     if form.generate_pitch.data:
         project.longtext = gen_project_pitch(project)
 
-    # Update the project
-    project.update_now()
+    # Save to database
     db.session.add(project)
     db.session.commit()
     cache.clear()

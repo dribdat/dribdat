@@ -31,10 +31,10 @@ class ProjectNew(FlaskForm):
         [length(max=80), UniqueValidator(Project, 'name'), InputRequired()],
         description=u"A short team or project name - you may change "
         + "this later.")
+    generate_pitch = BooleanField(u"Use AI to auto-generate challenge based on my summary and chosen category.")
     summary = TextAreaField(
         u'Summary', [length(max=2048)],
         description="A short, plain-text description of your project or challenge.")
-    generate_pitch = BooleanField(u"Use AI to auto-generate a challenge based on the summary and category")
     category_id = SelectField(
         u'Category', coerce=int, description=u"Select the category that your "
         + " challenge addresses.")
