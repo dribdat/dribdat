@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """Views related to project management."""
 from flask import (
-    Blueprint, request, render_template, flash, url_for, redirect
+    Blueprint, request, render_template, flash, url_for, redirect, current_app
 )
 from flask_login import login_required, current_user
 from dribdat.user.models import Event, Project, Activity, User
@@ -432,12 +432,18 @@ def create_new_project(event, is_anonymous=False):
         project.is_hidden = True
     
     form = ProjectNew(obj=project, next=request.args.get('next'))
+
+    # Add project categories
     form.category_id.choices = [(c.id, c.name)
                                 for c in project.categories_all(event)]
     if len(form.category_id.choices) > 0:
         form.category_id.choices.insert(0, (-1, ''))
     else:
         del form.category_id
+
+    # Check if LLM support is configured
+    if not current_app.config['LLM_API_KEY']:
+        del form.generate_pitch
 
     if not (form.is_submitted() and form.validate()):
         return render_template(
