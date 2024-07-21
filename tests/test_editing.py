@@ -151,8 +151,8 @@ class TestEditing:
         ProjectActivity(project, 'boost', user, 'Data whiz', 'lorem ipsum')
         project_dribs = project.all_dribs()
 
-        # project joined, updated, boosted
-        assert len(project_dribs) == 3
+        # event start, project joined, updated, boosted
+        assert len(project_dribs) == 4
         project_badge = [s for s in project_dribs if s['name'] == 'boost']
         assert len(project_badge) == 1
 
