@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
 """Model unit tests."""
 
-import datetime as dt
+from datetime import datetime, timedelta
+# from Py3.12: from datetime import UTC
+from datetime import timezone
+UTC = timezone.utc 
 
 import pytest
 import pytz
@@ -21,50 +24,50 @@ from .factories import UserFactory, ProjectFactory, EventFactory
 class TestEvent:
     """Event tests."""
 
+    def is_naive(d):
+        return d.tzinfo is None or d.tzinfo.utcoffset(d) is None
+
     def test_countdown_10_days(self, db):
         timezone = pytz.timezone(Config.TIME_ZONE)
-        now = dt.datetime.now()
-        event_dt = now + dt.timedelta(days=10)
+        now = datetime.now()
+        event_dt = now + timedelta(days=10)
         event = Event(name="test", starts_at=event_dt)
         event.save()
 
         assert event.starts_at == event_dt  # store as naive
         assert event.name == "test"
         assert event.countdown is not None
-        assert event.countdown == timezone.localize(event_dt)
+        assert event.countdown == event_dt.replace(tzinfo=timezone)
         assert timesince(event.countdown, until=True) == "1 week to go"
 
     def test_countdown_24_days(self, db):
-        now = dt.datetime.now()
+        now = datetime.now()
         timezone = pytz.timezone(Config.TIME_ZONE)
-        event_dt = now + dt.timedelta(days=24)
+        event_dt = now + timedelta(days=24)
         event = Event(name="test", starts_at=event_dt)
         event.save()
 
         assert event.starts_at == event_dt  # store as naive
         assert event.name == "test"
         assert event.countdown is not None
-        assert event.countdown == timezone.localize(event_dt)
+        assert event.countdown == event_dt.replace(tzinfo=timezone)
         assert timesince(event.countdown, until=True) == "3 weeks to go"
 
     def test_countdown_4_hours(self, db):
         timezone = pytz.timezone(Config.TIME_ZONE)
-        now = dt.datetime.now()
-        tz_now = timezone.localize(dt.datetime.utcnow())
+        now = datetime.now(UTC)
         # need to add 10 seconds to avoid timesince to compute 3.9999h
         # formated to 3 by timesince
-        event_dt = now + dt.timedelta(hours=4, seconds=10)
+        event_dt = now + timedelta(hours=4, seconds=10)
         event = Event(name="test", starts_at=event_dt)
         event.save()
 
-        tz_event = timezone.localize(event_dt)
-        timediff = tz_event - tz_now
+        timediff = event_dt - now
         timediff_hours = timediff.total_seconds()//3600
 
-        assert event.starts_at == event_dt  # store as naive
         assert event.name == "test"
         assert event.countdown is not None
-        assert event.countdown == tz_event
+        assert event.countdown == event_dt
         assert timesince(
             event.countdown, until=True) == "%d hours to go" % timediff_hours
 

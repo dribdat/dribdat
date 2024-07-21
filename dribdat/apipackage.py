@@ -51,7 +51,7 @@ def event_to_data_package(event, author=None, host_url='', full_content=False):
         }],
         contributors=contributors,
         homepage=event.webpage_url or '',
-        created=format_date(dtt.now(), '%Y-%m-%dT%H:%M'),
+        created=format_date(dtt.now()),
         version="0.2.0",
     )
 
@@ -182,6 +182,7 @@ def import_project_data(data, dry_run=False, event=None):
         # Get project name and content
         name = pjt['name']
         if not 'longtext' in pjt and 'excerpt' in pjt:
+            logging.warning('Importing excerpt as longtext')
             pjt['longtext'] = pjt.pop('excerpt')
         # Search for event
         event_name = None
@@ -200,6 +201,7 @@ def import_project_data(data, dry_run=False, event=None):
         else:
             logging.info('Updating project: %s' % name)
         project.set_from_data(pjt)
+        project.update_null_fields()
         project.event_id = event.id
         if not dry_run:
             project.save()

@@ -67,10 +67,10 @@ def get_event_users(event, full_data=False):
             }
         if 'created_at' in usr and usr['created_at']:
             usr['created_at'] = format_date(
-                usr['created_at'], '%Y-%m-%dT%H:%M')
+                usr['created_at'])
         if 'updated_at' in usr and usr['updated_at']:
             usr['updated_at'] = format_date(
-                usr['updated_at'], '%Y-%m-%dT%H:%M')
+                usr['updated_at'])
         userdata.append(usr)
     return userdata
 

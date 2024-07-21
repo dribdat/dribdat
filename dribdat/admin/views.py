@@ -19,6 +19,10 @@ from .forms import (
 )
 
 from datetime import datetime
+# from Py3.12: from datetime import UTC
+from datetime import timezone
+UTC = timezone.utc 
+
 import random
 import string
 
@@ -131,7 +135,7 @@ def user(user_id):
         else:
             user.password = originalhash
 
-        user.updated_at = datetime.utcnow()
+        user.updated_at = datetime.now(UTC)
         db.session.add(user)
         db.session.commit()
         user.socialize()
@@ -156,7 +160,7 @@ def user_profile(user_id):
             id=r).first() for r in form.roles.data]
         del form.roles
         form.populate_obj(user)
-        user.updated_at = datetime.utcnow()
+        user.updated_at = datetime.now(UTC)
         db.session.add(user)
         db.session.commit()
         user.socialize()
@@ -349,6 +353,18 @@ def event_delete(event_id):
         cache.clear()
         flash('Event deleted.', 'success')
     return events()
+
+
+@blueprint.route('/event/<int:event_id>/copy', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def event_copy(event_id):
+    event = Event.query.filter_by(id=event_id).first_or_404()
+    new_event = Event(name='Copy')
+    new_event.set_from_data(event.data)
+    new_event.name = new_event.name + ' (copy)'
+    new_event.save()
+    return redirect(url_for("admin.event", event_id=new_event.id))
 
 
 @blueprint.route('/event/<int:event_id>/autosync', methods=['GET', 'POST'])

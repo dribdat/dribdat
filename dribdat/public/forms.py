@@ -31,6 +31,7 @@ class ProjectNew(FlaskForm):
         [length(max=80), UniqueValidator(Project, 'name'), InputRequired()],
         description=u"A short team or project name - you may change "
         + "this later.")
+    generate_pitch = BooleanField(u"Use AI to auto-generate challenge based on my summary and chosen category.")
     summary = TextAreaField(
         u'Summary', [length(max=2048)],
         description="A short, plain-text description of your project or challenge.")
@@ -108,7 +109,7 @@ class ProjectDetailForm(FlaskForm):
         [length(max=20)], description='Select an icon from FontAwesome'
         + ': https://fontawesome.com/v4/cheatsheet')
     category_id = SelectField(u'Challenge category', coerce=int,
-        description="If available, which category does your project belong to.")
+        description="If available, which category does your project belong to?")
     submit = SubmitField(u'Save changes')
 
 
@@ -122,7 +123,8 @@ class ProjectPost(FlaskForm):
         [length(max=280), InputRequired()],
         render_kw={'maxlength': 280},
         description=u'A short note for your project log.')
-    submit = SubmitField(u'Save post')
+    submit = SubmitField(u'Save post',
+        render_kw={'data-toggle': "modal", 'data-target': "#pleasewaitModal"})
 
 
 class ProjectComment(FlaskForm):
@@ -135,7 +137,8 @@ class ProjectComment(FlaskForm):
         render_kw={'maxlength': 280},
         description=u'A suggestion or constructive feedback for the team.'
                     + ' Please note the Code of Conduct.')
-    submit = SubmitField(u'Save comment')
+    submit = SubmitField(u'Save comment',
+        render_kw={'data-toggle': "modal", 'data-target': "#pleasewaitModal"})
 
 
 class ProjectBoost(FlaskForm):
@@ -144,7 +147,7 @@ class ProjectBoost(FlaskForm):
     id = HiddenField('id')
     note = TextAreaField(u'Short praise and comments', [
                          length(max=280), InputRequired()])
-    boost_type = SelectField(u'Select booster pack', [InputRequired()])
+    boost_type = SelectField(u'Select a booster pack', [InputRequired()])
     submit = SubmitField(u'Energize!')
 
 

@@ -1,0 +1,93 @@
+<!-- Dialog for getting suggestions -->
+<div class="modal fade" id="autopostModal" role="dialog" tabindex="-1">
+  <div class="modal-dialog auto-post">
+    <div class="modal-content">
+      <div class="modal-header text-center"><h3>Get tips and suggestions ⛹️</h3></div>
+      <div class="modal-body text-left">
+        <p>
+          Feeling stuck? We can fetch tips into your logs from an AI service that was configured
+          by the <a href="/about">administrator</a>. Data from your project page will be uploaded for
+          processing, and a short text will appear in your log after a minute.
+        </p>
+        <p>
+          <button
+             onclick="this.disabled=1; this.innerHTML='Please wait...'; location.href='{{ url_for('project.project_autopost', project_id=project.id) }}'"
+             title="Get a tip from an AI coach" class="btn btn-lg btn-light">
+            🅰️ℹ️ Log an automated suggestion
+          </button>
+        <p>
+          Or click here to just get the prompt for use in a tool of your choice:
+        </p>
+        <p class="auto-prompt">
+          <button id="autoprompt"
+             data-api="{{ url_for('project.project_autoprompt', project_id=project.id) }}"
+             class="btn btn-light btn-md">📋 Get a prompt</button>
+        </p>
+        <p>
+          If you are looking for help with Dribdat, visit the 
+          <a href="https://dribdat.cc/usage" target="_blank">📖 User Guide</a>
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-lg btn-dark" type="button" class="close" data-dismiss="modal" aria-label="Close">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+</div><!-- /.modal -->
+
+<!-- Dialog for adding new team members -->
+<div class="modal fade widget-team-add" id="addUser" tabindex="-1"
+        role="dialog" aria-labelledby="addUserLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addUserLabel">Invite to team</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <center>
+          <div id="qrcode"
+            data-href="{{ url_for('project.project_star', project_id=project.id,  _external=True) }}" 
+          ></div>
+        </center>
+        <div class="input-group mb-3 mt-3">
+          <span class="input-group-text btn btn-light" title="Copy invite link" id="basic-addon1">📋 Copy</span>
+          <input class="form-control" aria-label="Invite link" type="text" 
+            value="{{ url_for('project.project_star', project_id=project.id,  _external=True) }}" 
+            id="invite-link" disabled />
+        </div>
+        <p class="text-small text-left">
+          Use the <a href="{{ url_for('public.all_participants')}}">participant list</a>
+          to look up a username, or enter an e-mail address to send out an invite:
+        {% if current_user.is_admin %}
+          (Admins: you can kick a user with the <b>X</b> button next to their profile, 
+          or unjoin them in the <a href="{{ url_for('admin.users')}}">user admin</a>.)
+        {% endif %}        
+        </p>
+        <form action="{{ url_for('project.project_star_user', project_id=project.id)}}" 
+              method="post" onsubmit="$('#addUser').modal('hide')">
+          <div class="input-group mb-3">
+            <span class="input-group-text" id="basic-addon1">@</span>
+            <input class="form-control" aria-label="User name" type="text" name="username" placeholder="username" size="12" />
+            <input class="form-control" type="submit" value="Invite" />
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <a href="{{ url_for('project.project_unstar_me', project_id=project.id) }}" 
+           class="project-star btn-lg btn-light"
+          title="Click to stop being a member of the project"
+          onclick="return confirm('Are you sure you wish to leave this team?')">
+          Leave the team
+        </a>
+        <button class="btn btn-lg btn-dark" type="button" class="close" data-dismiss="modal" aria-label="Close">
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+</div><!-- /modal -->

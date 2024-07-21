@@ -144,8 +144,12 @@ def project_action(project_id, of_type=None, as_view=True, then_redirect=False,
     if then_redirect:
         return redirect(url_for('project.project_view', project_id=project.id))
 
+    if not event:
+        raise Exception("No event associated with project!")
+
     # The next line seems rather inefficient
     starred = IsProjectStarred(project, for_user)
+
     # Figure out permissions (hackybehack!)
     allow_edit = not current_user.is_anonymous and current_user.is_admin
     lock_editing = event.lock_editing

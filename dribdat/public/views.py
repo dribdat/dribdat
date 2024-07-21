@@ -13,8 +13,11 @@ from dribdat.extensions import cache
 from dribdat.aggregation import GetEventUsers
 from dribdat.user import getProjectStages, isUserActive
 from urllib.parse import urlparse
-from datetime import datetime, timedelta
 from sqlalchemy import and_, func
+from datetime import datetime, timedelta
+# from Py3.12: from datetime import UTC
+from datetime import timezone
+UTC = timezone.utc 
 
 blueprint = Blueprint('public', __name__, static_folder="../static")
 
@@ -92,7 +95,7 @@ def home():
     timed_events = events.filter(Event.lock_resources.isnot(
         True)).order_by(Event.starts_at.desc())
     # Filter out by today's date
-    today = datetime.utcnow()
+    today = datetime.now(UTC)
     events_next = timed_events.filter(Event.ends_at > today)
     events_featured = events_next.filter(Event.is_current)
     events_past = timed_events.filter(Event.ends_at < today)
@@ -127,7 +130,7 @@ def events_past():
     # Skip any hidden events
     events = Event.query.filter(Event.is_hidden.isnot(True))
     # Query past events which are not resource-typed
-    today = datetime.utcnow()
+    today = datetime.now(UTC)
     timed_events = events.filter(Event.lock_resources.isnot(
         True)).order_by(Event.starts_at.desc())
     events_past = timed_events.filter(Event.ends_at < today)
@@ -156,7 +159,7 @@ def user_profile(username):
     submissions = user.posted_challenges()
     projects = user.joined_projects(True)
     posts = user.latest_posts(20)
-    today = datetime.utcnow()
+    today = datetime.now(UTC)
     events_next = Event.query.filter(and_(
         Event.is_hidden.isnot(True),
         Event.lock_resources.isnot(True),
@@ -330,7 +333,7 @@ def event_challenges(event_id):
 @blueprint.route('/event/<int:event_id>/print')
 def event_print(event_id):
     """Print the results of an event."""
-    now = datetime.utcnow().strftime("%d.%m.%Y %H:%M")
+    now = datetime.now(UTC).strftime("%d.%m.%Y %H:%M")
     event = Event.query.filter_by(id=event_id).first_or_404()
     eventdata = Project.query.filter_by(event_id=event_id, is_hidden=False)
     projects = eventdata.filter(Project.progress > 0).order_by(Project.ident, Project.name)

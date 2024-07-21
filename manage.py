@@ -31,8 +31,8 @@ def create_app(script_info=None):
     if bool(strtobool(os.environ.get("FLASK_DEBUG", "False"))):
         app.config['DEBUG_TB_PROFILER_ENABLED'] = True
         app.debug = True
-        from flask_debugtoolbar import DebugToolbarExtension
-        DebugToolbarExtension(app)
+        #from flask_debugtoolbar import DebugToolbarExtension
+        #DebugToolbarExtension(app)
         # from werkzeug.middleware.profiler import ProfilerMiddleware
         # app.wsgi_app = ProfilerMiddleware(
         #     app.wsgi_app,
