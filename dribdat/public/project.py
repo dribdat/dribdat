@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """Views related to project management."""
 from flask import (
-    Blueprint, request, render_template, flash, url_for, redirect
+    Blueprint, request, render_template, flash, url_for, redirect, current_app
 )
 from flask_login import login_required, current_user
 from dribdat.user.models import Event, Project, Activity, User
@@ -22,6 +22,7 @@ from dribdat.public.projhelper import (
     project_action, project_edit_action, templates_from_event, 
     revert_project_by_activity, navigate_around_project,
 )
+from dribdat.apigenerate import gen_project_pitch, gen_project_post, prompt_ideas
 from ..decorators import admin_required
 from ..mailer import user_invitation
 
@@ -95,6 +96,8 @@ def project_boost(project_id):
         cache.clear()
         project_action(project_id, 'boost',
                        action=form.boost_type.data, text=form.note.data)
+        project.update_now()
+        project.save()
         flash('Thanks for your boost!', 'success')
         return project_view(project.id)
 
@@ -214,6 +217,31 @@ def project_comment(project_id):
         current_event=event, project=project, form=form,
         active="dribs"
     )
+
+
+@blueprint.route('/<int:project_id>/prompt', methods=['GET'])
+@login_required
+def project_autoprompt(project_id):
+    """Share prompt for a project post."""
+    project = Project.query.filter_by(id=project_id).first_or_404()
+    return prompt_ideas(project)
+
+
+@blueprint.route('/<int:project_id>/auto', methods=['GET', 'POST'])
+@login_required
+def project_autopost(project_id):
+    """Try to generate a project post."""
+    project = Project.query.filter_by(id=project_id).first_or_404()
+    autopost = gen_project_post(project)
+    if not autopost:
+        flash("AI service is currently not available.", 'warning')
+        return redirect(url_for(
+            'project.project_view', project_id=project.id))
+    project_action(project_id, 'review', action='post', text=autopost)
+    flash("The robots have spoken", 'success')
+    return redirect(url_for(
+        'project.project_view_posted', project_id=project.id))
+
 
 
 @blueprint.route('/<int:project_id>/unpost/<int:activity_id>', methods=['GET'])
@@ -404,12 +432,18 @@ def create_new_project(event, is_anonymous=False):
         project.is_hidden = True
     
     form = ProjectNew(obj=project, next=request.args.get('next'))
+
+    # Add project categories
     form.category_id.choices = [(c.id, c.name)
                                 for c in project.categories_all(event)]
     if len(form.category_id.choices) > 0:
         form.category_id.choices.insert(0, (-1, ''))
     else:
         del form.category_id
+
+    # Check if LLM support is configured
+    if not current_app.config['LLM_API_KEY']:
+        del form.generate_pitch
 
     if not (form.is_submitted() and form.validate()):
         return render_template(
@@ -435,15 +469,22 @@ def create_new_project(event, is_anonymous=False):
         project.webpage_url = template.webpage_url
         project.download_url = template.download_url
 
-    # Start as challenge
-    project.progress = -1
     project.event_id = event.id
+
+    # Start as unapproved challenge
+    project.progress = -1
     # Unless the event has started
     if event.has_started:
-        project.progress = 5
+        project.progress = 0
 
     # Update the project
     project.update_now()
+
+    # Magically populate description
+    if form.generate_pitch.data:
+        project.longtext = gen_project_pitch(project)
+
+    # Save to database
     db.session.add(project)
     db.session.commit()
     cache.clear()

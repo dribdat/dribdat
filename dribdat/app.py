@@ -9,7 +9,7 @@ from flask_talisman import Talisman
 from werkzeug.middleware.proxy_fix import ProxyFix
 from micawber.providers import bootstrap_basic
 from whitenoise import WhiteNoise
-from pytz import timezone
+from datetime import datetime
 from urllib.parse import quote_plus
 from dribdat import commands, public, admin
 from dribdat.assets import assets  # noqa: I005
@@ -24,6 +24,7 @@ from dribdat.extensions import (
 from dribdat.settings import ProdConfig  # noqa: I005
 from dribdat.utils import timesince
 from dribdat.onebox import make_oembedplus
+from pytz import timezone
 
 
 def init_app(config_object=ProdConfig):
@@ -159,7 +160,7 @@ def register_filters(app):
         )
 
     # Timezone helper
-    app.tz = timezone(app.config['TIME_ZONE'])
+    app.tz = timezone(app.config['TIME_ZONE'] or 'UTC')
 
     # Lambda filters for safe image_url's
     app.jinja_env.filters['quote_plus'] = lambda u: quote_plus(u or '', ':/?&=')

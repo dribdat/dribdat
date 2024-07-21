@@ -5,6 +5,7 @@ import pytest
 import json
 
 from dribdat.aggregation import ProjectActivity
+from dribdat.apigenerate import gen_project_pitch
 from dribdat.user.models import Event
 from dribdat.public.api import *
 
@@ -97,3 +98,13 @@ class TestApi:
         # Test Project search
         ppj = json.loads(projects_top_json().get_data())
         assert len(ppj['projects']) == 1
+
+    def test_get_autochallenge(self):
+        project = ProjectFactory()
+        project.longtext = "Smeeagain"
+        project.save()
+        autogen = gen_project_pitch(project)
+        # TODO: minimal inline model?
+        assert autogen is None
+        #print(autogen)
+        #assert "Smee" in autogen

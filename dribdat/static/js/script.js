@@ -244,6 +244,20 @@
     });
   });
 
+  // Fetch a prompts for AI yadayada
+  $('#autoprompt').click(function() {
+    var apiUrl = $(this).data('api');
+    $(this).after('<textarea rows="3" style="width:100%" id="autoprompt"></textarea>');
+    $(this).remove();
+    $.get(apiUrl, function(d) { 
+      let $ap = $('#autoprompt').val(d);
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(d);
+        $ap.after('<tt>✅ Copied to clipboard</tt>');
+      }
+    });
+  });
+
   // Enable lightboxes on embedded images
   let hasLightbox = false;
   $('.project-longtext, .project-autotext, .timeline .content').each(function() {

@@ -5,6 +5,10 @@ from urllib.parse import quote
 from math import floor
 from os import path
 
+# from Py3.12: from datetime import UTC
+from datetime import datetime, timezone
+UTC = timezone.utc 
+
 import pytz
 import re
 import csv
@@ -56,7 +60,7 @@ def timesince(dt, default="just now", until=False):
     if dt is None:
         return ""
     tz = pytz.timezone(current_app.config["TIME_ZONE"])
-    tz_now = tz.localize(dt.utcnow())
+    tz_now = dt.now(UTC)
     dt = dt.astimezone(tz)
     if dt is None:
         return ""
@@ -84,9 +88,15 @@ def timesince(dt, default="just now", until=False):
     return default
 
 
-def format_date(value, format='%Y-%m-%d'):
+def format_date(value, format='%Y-%m-%dT%H:%M'):
     """Return a standard format of a date."""
     return value.strftime(format)
+
+
+def parse_date(value, format='%Y-%m-%dT%H:%M'):
+    """Parse a standard format of a date from a string."""
+    if not isinstance(value, str): return value
+    return datetime.strptime(value, format)
 
 
 def format_date_range(starts_at, ends_at):
@@ -179,7 +189,7 @@ def fix_relative_links(readme, imgroot, repo_full_name, default_branch):
     readme = re.sub(
         r"\!\[(.*)\]\((?!http)",
         # Pass named group to include full path in the image URL
-        "![\g<1>](%s/%s/%s/" % (imgroot, repo_full_name, default_branch),
+        r"![\g<1>](%s/%s/%s/" % (imgroot, repo_full_name, default_branch),
         readme
     )
     return readme

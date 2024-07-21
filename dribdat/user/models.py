@@ -15,7 +15,7 @@ from dribdat.user.constants import (
 )
 from dribdat.onebox import format_webembed  # noqa: I005
 from dribdat.utils import (
-    format_date_range, format_date, timesince, strtobool
+    format_date_range, format_date, parse_date, timesince, strtobool
 )
 from dribdat.database import (
     db,
@@ -30,9 +30,12 @@ from dribdat.apifetch import FetchGitlabAvatar
 from flask import current_app
 from flask_login import UserMixin
 from time import mktime
-from dateutil.parser import parse
 from dateutil.parser._parser import ParserError
-import datetime as dt
+from datetime import datetime, timedelta
+# from Py3.12: from datetime import UTC
+from datetime import timezone
+UTC = timezone.utc 
+
 import hashlib
 import re
 from urllib.parse import urlencode, urlparse
@@ -91,12 +94,12 @@ class User(UserMixin, PkModel):
     sso_id = Column(db.String(128), nullable=True)
     # A temporary hash for logins
     hashword = Column(db.String(128), nullable=True)
-    updated_at = Column(db.DateTime, nullable=True,
-                        default=dt.datetime.utcnow)
+    updated_at = Column(db.DateTime(timezone=True), nullable=True,
+                        default=datetime.now(UTC))
     # The hashed password
     password = Column(db.String(128), nullable=True)
-    created_at = Column(db.DateTime, nullable=False,
-                        default=dt.datetime.utcnow)
+    created_at = Column(db.DateTime(timezone=True), nullable=False,
+                        default=datetime.now(UTC))
 
     # State flags
     active = Column(db.Boolean(), default=False)
@@ -140,7 +143,7 @@ class User(UserMixin, PkModel):
                 self.email = "%s@localhost.localdomain" % self.username
         else:
             self.email = data['email']
-        self.updated_at = dt.datetime.utcnow()
+        self.updated_at = datetime.now(UTC)
 
     def socialize(self):
         """Parse the user's web profile."""
@@ -188,7 +191,7 @@ class User(UserMixin, PkModel):
         project_ids = []
         for a in activities:
             if limit > 0 and len(projects) >= limit: break
-            if a.project_id in project_ids or a.project.is_hidden:
+            if not a.project or a.project_id in project_ids or a.project.is_hidden:
                 continue
             if event is not None and a.project.event != event:
                 continue
@@ -306,7 +309,7 @@ class User(UserMixin, PkModel):
     def set_password(self, password):
         """Set password."""
         self.password = hashing.hash_value(password)
-        self.updated_at = dt.datetime.utcnow()
+        self.updated_at = datetime.now(UTC)
 
     def check_password(self, value):
         """Check password."""
@@ -315,12 +318,12 @@ class User(UserMixin, PkModel):
     def set_hashword(self, hashword):
         """Set a hash."""
         self.hashword = hashing.hash_value(hashword)
-        self.updated_at = dt.datetime.utcnow()
+        self.updated_at = datetime.now(UTC)
 
     def check_hashword(self, value):
         """Check the hash value."""
-        timediff = dt.datetime.utcnow() - self.updated_at
-        if timediff > dt.timedelta(minutes=30):
+        timediff = datetime.now(UTC).replace(tzinfo=None) - self.updated_at.replace(tzinfo=None)
+        if timediff > timedelta(minutes=30):
             # Half-hour time limit exceeded
             return False
         return hashing.check_value(self.hashword, value)
@@ -342,8 +345,8 @@ class Event(PkModel):
     location_lat = Column(SqliteDecimal(5), nullable=True)    # coordinates (Latitude)
     location_lon = Column(SqliteDecimal(5), nullable=True)    # coordinates (Longitude)
 
-    starts_at = Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)
-    ends_at = Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)
+    starts_at = Column(db.DateTime(timezone=True), nullable=False, default=datetime.now(UTC))
+    ends_at = Column(db.DateTime(timezone=True), nullable=False, default=datetime.now(UTC))
 
     description = Column(db.UnicodeText(), nullable=True) # a longer text about the event
     instruction = Column(db.UnicodeText(), nullable=True) # tips for logged-in event participants
@@ -393,8 +396,8 @@ class Event(PkModel):
     def get_full_data(self):
         """Return full JSON event content."""
         d = self.data
-        d['starts_at'] = format_date(self.starts_at, '%Y-%m-%dT%H:%M')
-        d['ends_at'] = format_date(self.ends_at, '%Y-%m-%dT%H:%M')
+        d['starts_at'] = format_date(self.starts_at)
+        d['ends_at'] = format_date(self.ends_at)
         d['description'] = self.description or ''
         d['boilerplate'] = self.boilerplate or ''
         d['aftersubmit'] = self.aftersubmit or ''
@@ -409,8 +412,8 @@ class Event(PkModel):
         """Set from a full JSON event content."""
         self.name = d['name']
         self.summary = d['summary'] or ''
-        self.ends_at = parse(d['ends_at'])
-        self.starts_at = parse(d['starts_at'])
+        self.ends_at = parse_date(d['ends_at'])
+        self.starts_at = parse_date(d['starts_at'])
         self.hostname = d['hostname'] or '' if 'hostname' in d else ''
         self.location = d['location'] or '' if 'location' in d else ''
         self.hashtags = d['hashtags'] or '' if 'hashtags' in d else ''
@@ -438,8 +441,8 @@ class Event(PkModel):
             "name": self.name,
             "url": host_url + self.url,
             "description": desc,
-            "startDate": format_date(self.starts_at, '%Y-%m-%dT%H:%M'),
-            "endDate": format_date(self.ends_at, '%Y-%m-%dT%H:%M'),
+            "startDate": format_date(self.starts_at),
+            "endDate": format_date(self.ends_at),
             "workPerformed": [p.get_schema(host_url) for p in self.projects]
         }
         if self.hostname and self.location:
@@ -467,12 +470,13 @@ class Event(PkModel):
     @property
     def has_started(self):
         """Extra property."""
-        return self.starts_at <= dt.datetime.utcnow() <= self.ends_at
+        return self.starts_at.timestamp() <= datetime.today().timestamp() \
+            <= self.ends_at.timestamp()
 
     @property
     def has_finished(self):
         """Extra property."""
-        return dt.datetime.utcnow() > self.ends_at
+        return datetime.today().timestamp() > self.ends_at.timestamp()
 
     @property
     def can_start_project(self):
@@ -482,21 +486,21 @@ class Event(PkModel):
     @property
     def ends_at_tz(self):
         """Extra property."""
-        return current_app.tz.localize(self.ends_at)
+        return self.ends_at.replace(tzinfo=current_app.tz)
 
     @property
     def starts_at_tz(self):
         """Extra property."""
-        return current_app.tz.localize(self.starts_at)
+        return self.starts_at.replace(tzinfo=current_app.tz)
 
     @property
     def countdown(self):
         """Provide a normalized countdown timer."""
-        starts_at = current_app.tz.localize(self.starts_at)
-        ends_at = current_app.tz.localize(self.ends_at)
+        starts_at = self.starts_at_tz
+        ends_at = self.ends_at_tz
         # Check event time limit (hard coded to 30 days)
-        tz_now = current_app.tz.localize(dt.datetime.utcnow())
-        time_limit = tz_now + dt.timedelta(days=30)
+        tz_now = datetime.now(UTC)
+        time_limit = tz_now + timedelta(days=30)
         # Show countdown within limits
         if starts_at > tz_now:
             if starts_at > time_limit:
@@ -533,10 +537,10 @@ class Event(PkModel):
                 status_text = ess[1]
                 status_time = float(ess[0])
                 # Check timeout
-                time_now = dt.datetime.now()
+                time_now = datetime.now()
                 # Clear every now and then
-                time_limit = time_now - dt.timedelta(minutes=CLEAR_STATUS_AFTER)
-                if dt.datetime.fromtimestamp(status_time) < time_limit:
+                time_limit = time_now - timedelta(minutes=CLEAR_STATUS_AFTER)
+                if datetime.fromtimestamp(status_time) < time_limit:
                     # Clearing announcements
                     self.status = None
                     self.save()
@@ -610,10 +614,10 @@ class Project(PkModel):
     logo_color = Column(db.String(7), nullable=True)
     logo_icon = Column(db.String(40), nullable=True)
 
-    created_at = Column(db.DateTime, nullable=False,
-                        default=dt.datetime.utcnow)
-    updated_at = Column(db.DateTime, nullable=False,
-                        default=dt.datetime.utcnow)
+    created_at = Column(db.DateTime(timezone=True), nullable=False,
+                        default=datetime.now(UTC))
+    updated_at = Column(db.DateTime(timezone=True), nullable=False,
+                        default=datetime.now(UTC))
 
     # User who created the project
     user_id = reference_col('users', nullable=True)
@@ -704,8 +708,8 @@ class Project(PkModel):
             'logo_icon': self.logo_icon or '',
             'excerpt': '',
         }
-        d['created_at'] = format_date(self.created_at, '%Y-%m-%dT%H:%M')
-        d['updated_at'] = format_date(self.updated_at, '%Y-%m-%dT%H:%M')
+        d['created_at'] = format_date(self.created_at)
+        d['updated_at'] = format_date(self.updated_at)
         # Generate excerpt based on summary data
         if self.longtext and len(self.longtext) > 10:
             d['excerpt'] = self.longtext[:MAX_EXCERPT_LENGTH]
@@ -862,7 +866,7 @@ class Project(PkModel):
             prev = cur
 
         # Start all logs at stage 0
-        if len(activities_array) > 0:
+        if len(activities_array) > 0 and False:
             dribs.append({
                 'title': getStageByProgress(0)['phase'],
                 'date': activities_array.pop().timestamp,
@@ -872,14 +876,14 @@ class Project(PkModel):
         # Add event start and finish to log
         if self.event.has_started or self.event.has_finished:
             dribs.append({
-                'title': "Event started",
+                'title': "Start",
                 'date': self.event.starts_at,
                 'icon': 'calendar',
                 'name': 'start',
             })
         if self.event.has_finished:
             dribs.append({
-                'title': "Event finished",
+                'title': "Event finish",
                 'date': self.event.ends_at,
                 'icon': 'bullhorn',
                 'name': 'finish',
@@ -897,7 +901,7 @@ class Project(PkModel):
     def as_challenge(self):
         """Find the last challenge version of this project."""
         if not self.versions: 
-            return self
+            return None
         for v in self.versions[::-1]:
             if v.progress <= 0: 
                 return v.revert()
@@ -920,8 +924,8 @@ class Project(PkModel):
             "@type": "CreativeWork",
             "name": self.name,
             "description": cleansummary,
-            "dateCreated": format_date(self.created_at, '%Y-%m-%dT%H:%M'),
-            "dateModified": format_date(self.updated_at, '%Y-%m-%dT%H:%M'),
+            "dateCreated": format_date(self.created_at),
+            "dateModified": format_date(self.updated_at),
             "discussionUrl": self.contact_url,
             "image": self.image_url,
             "license": content_license,
@@ -936,25 +940,25 @@ class Project(PkModel):
         if 'ident' in data:
             self.ident = data['ident']
         if 'summary' in data:
-            self.summary = data['summary']
+            self.summary = data['summary'][:140]
         if 'hashtag' in data:
-            self.hashtag = data['hashtag']
+            self.hashtag = data['hashtag'][:40]
         if 'image_url' in data:
-            self.image_url = data['image_url']
+            self.image_url = data['image_url'][:2048]
         if 'source_url' in data:
-            self.source_url = data['source_url']
+            self.source_url = data['source_url'][:2048]
         if 'webpage_url' in data:
-            self.webpage_url = data['webpage_url']
+            self.webpage_url = data['webpage_url'][:2048]
         if 'autotext_url' in data:
-            self.autotext_url = data['autotext_url']
+            self.autotext_url = data['autotext_url'][:2048]
         if 'download_url' in data:
-            self.download_url = data['download_url']
+            self.download_url = data['download_url'][:2048]
         if 'contact_url' in data:
-            self.contact_url = data['contact_url']
+            self.contact_url = data['contact_url'][:2048]
         if 'logo_color' in data:
-            self.logo_color = data['logo_color']
+            self.logo_color = data['logo_color'][:7]
         if 'logo_icon' in data:
-            self.logo_icon = data['logo_icon']
+            self.logo_icon = data['logo_icon'][:40]
         if 'longtext' in data:
             self.longtext = data['longtext']
         if 'autotext' in data:
@@ -966,12 +970,12 @@ class Project(PkModel):
         try:
             if not 'created_at' in data or not 'updated_at' in data:
                 raise ParserError("Date values missing")
-            self.created_at = parse(data['created_at'])
-            self.updated_at = parse(data['updated_at'])
+            self.created_at = parse_date(data['created_at'])
+            self.updated_at = parse_date(data['updated_at'])
         except ParserError as ex:
             # Resetting dates to current time
-            self.created_at = dt.datetime.utcnow()
-            self.updated_at = dt.datetime.utcnow()
+            self.created_at = datetime.now(UTC)
+            self.updated_at = datetime.now(UTC)
         if 'is_autoupdate' in data:
             self.is_autoupdate = strtobool(data['is_autoupdate'])
         if 'is_webembed' in data:
@@ -998,6 +1002,8 @@ class Project(PkModel):
         # Correct fields
         if self.category_id == -1:
             self.category_id = None
+        elif self.category_id and not self.category:
+            self.category = Category.query.get(self.category_id)
         if self.logo_icon and self.logo_icon.startswith('fa-'):
             self.logo_icon = self.logo_icon.replace('fa-', '')
         if self.logo_color == '#000000':
@@ -1005,7 +1011,7 @@ class Project(PkModel):
         if self.webpage_url and self.webpage_url.find('<iframe ') >= 0:
             self.webpage_url = re.sub(r'.* src="(.+)".*', r'\1', self.webpage_url)
         # Set the timestamp
-        self.updated_at = dt.datetime.utcnow()
+        self.updated_at = datetime.now(UTC)
         self.update_null_fields()
         self.score = self.calculate_score()
 
@@ -1144,7 +1150,7 @@ class Activity(PkModel):
                           name="activity_type"))
     action = Column(db.String(32), nullable=True)
     # 'external', 'commit', 'sync', 'post', ...
-    timestamp = Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)
+    timestamp = Column(db.DateTime(timezone=True), nullable=False, default=datetime.now(UTC))
     content = Column(db.UnicodeText, nullable=True)
     ref_url = Column(db.String(2048), nullable=True)
 
@@ -1160,11 +1166,11 @@ class Activity(PkModel):
     @property
     def data(self):
         """Get JSON representation."""
-        localtime = current_app.tz.localize(self.timestamp)
+        localtime = self.timestamp.replace(tzinfo=current_app.tz)
         a = {
             'id': self.id,
             'time': int(mktime(self.timestamp.timetuple())),
-            'date': format_date(localtime, '%Y-%m-%dT%H:%M'),
+            'date': format_date(localtime),
             'timesince': timesince(localtime),
             'name': self.name,
             'action': self.action or '',
@@ -1187,7 +1193,7 @@ class Activity(PkModel):
         self.action = data['action']
         self.content = data['content']
         self.ref_url = data['ref_url']
-        self.timestamp = dt.datetime.fromtimestamp(data['time'])
+        self.timestamp = datetime.fromtimestamp(data['time'])
         if 'user_name' in data:
             uname = data['user_name']
             user = User.query.filter_by(username=uname).first()
@@ -1218,8 +1224,8 @@ class Resource(PkModel):
     name = Column(db.String(80), nullable=False)
     type_id = Column(db.Integer(), nullable=True, default=0)
 
-    created_at = Column(db.DateTime, nullable=False,
-                        default=dt.datetime.utcnow)
+    created_at = Column(db.DateTime(timezone=True), nullable=False,
+                        default=datetime.now(UTC))
     # At which progress level did it become relevant
     progress_tip = Column(db.Integer(), nullable=True)
     # order = Column(db.Integer, nullable=True)

@@ -19,6 +19,9 @@ from dribdat.user.forms import RegisterForm, EmailForm, LoginForm, UserForm
 from dribdat.database import db
 from dribdat.mailer import user_activation
 from datetime import datetime
+# from Py3.12: from datetime import UTC
+from datetime import timezone
+UTC = timezone.utc 
 # noqa: I005
 
 blueprint = Blueprint('auth', __name__, static_folder="../static")
@@ -272,7 +275,7 @@ def user_profile():
             else:
                 user.password = originalhash
 
-        user.updated_at = datetime.utcnow()
+        user.updated_at = datetime.now(UTC)
         db.session.add(user)
         db.session.commit()
         user.socialize()

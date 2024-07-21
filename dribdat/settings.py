@@ -40,6 +40,7 @@ class Config(object):
     OAUTH_BASE_URL = os_env.get('OAUTH_BASE_URL', None)
     OAUTH_TOKEN_URL = os_env.get('OAUTH_TOKEN_URL', None)
     OAUTH_AUTH_URL = os_env.get('OAUTH_AUTH_URL', None)
+
     # (Optional) Go directly to external login screen
     OAUTH_SKIP_LOGIN = bool(strtobool(os_env.get('OAUTH_SKIP_LOGIN', 'False')))
     OAUTH_LINK_REGISTER = os_env.get('OAUTH_LINK_REGISTER', None)
@@ -74,6 +75,11 @@ class Config(object):
         'CSP_DIRECTIVES', "default-src * 'unsafe-inline' 'unsafe-eval' data:")
     TIME_ZONE = os_env.get('TIME_ZONE', 'UTC')
     MAX_CONTENT_LENGTH = int(os_env.get('MAX_CONTENT_LENGTH', 1 * 1024 * 1024))
+
+    # Configure an external LLM API
+    LLM_MODEL = os_env.get('LLM_MODEL', 'local-model') # e.g. gpt-3.5-turbo
+    LLM_API_KEY = os_env.get('LLM_API_KEY', '')
+    LLM_BASE_URL = os_env.get('LLM_BASE_URL', '')
 
     # Configure web analytics providers
     ANALYTICS_HREF = os_env.get('ANALYTICS_HREF', None)

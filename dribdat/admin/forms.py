@@ -18,12 +18,13 @@ from ..user.validators import (
 from ..user import projectProgressList, resourceTypeList
 from os import environ
 from datetime import time, datetime
+from pytz import timezone
 
 
 def get_time_note():
     """Construct a time zone message."""
-    tz = environ.get('TIME_ZONE', None)
-    aware_time = datetime.now().astimezone()
+    tz = timezone(environ.get('TIME_ZONE', 'UTC'))
+    aware_time = datetime.now().astimezone(tz)
     tzinfo = "The current server time is %s." % aware_time.strftime('%H:%M%z')
     if tz is not None:
         return "%s Time zone: %s" % (tzinfo, tz)
