@@ -141,12 +141,19 @@ class TestEditing:
         event = EventFactory()
         user = UserFactory()
         project.event = event
+
+        # Add some activities
+        ProjectActivity(project, 'star', user)
+        # TODO: weirdly, without this the star doesn't register
+        ProjectActivity(project, 'unstar', user)
         ProjectActivity(project, 'star', user)
         ProjectActivity(project, 'update', user)
         ProjectActivity(project, 'boost', user, 'Data whiz', 'lorem ipsum')
         project_dribs = project.all_dribs()
+
+        # project joined, updated, boosted
+        assert len(project_dribs) == 3
         project_badge = [s for s in project_dribs if s['name'] == 'boost']
-        assert len(project_dribs) == 4 # includes start event drib
         assert len(project_badge) == 1
 
     def test_create_project(self, db, testapp):

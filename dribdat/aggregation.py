@@ -260,19 +260,22 @@ def ProjectActivity(project, of_type, user, action=None, comments=None):
     if comments is not None and len(comments) > 3:
         activity.content = comments
     # Check for existing stars
-    allstars = Activity.query.filter_by(
-        name='star',
-        project_id=project.id,
-        user_id=user.id
-    )
-    if of_type == 'star':
-        if allstars.count() > 0:
-            return False # One star per user
-    elif of_type == 'unstar':
-        if allstars.count() > 0:
-            allstars.first().delete()
-            return True
-        return False
+    if 'star' in of_type:
+        allstars = Activity.query.filter_by(
+            name='star',
+            project_id=project.id,
+            user_id=user.id
+        )
+        if of_type == 'star':
+            # One star per user
+            if allstars.count() > 0:
+                return False 
+        elif of_type == 'unstar':
+            # Not an actual activity
+            if allstars.count() > 0:
+                allstars.first().delete()
+                return True
+            return False
     activity.project_score = project.score
     activity.save()
     return True
