@@ -23,8 +23,6 @@ For more background and references, see the [User Handbook](https://docs.dribdat
 
 <a href="https://opencollective.com/dribdat/donate" target="_blank"><img src="https://opencollective.com/dribdat/donate/button@2x.png?color=blue" width=300 /></a>
 
-_If you use Dribdat, please add yourself to the [Tour de Hack](https://meta.dribdat.cc/event/5)! It only takes a minute, and knowing this helps keep the 🔥 alive._
-
 # Quickstart
 
 The Dribdat project can be deployed to any server capable of serving [Python](https://python.org) applications, and is set up for fast deployment using [Ansible or Docker](https://dribdat.cc/deploy). The first user that registers becomes an admin, so don't delay! 
