@@ -21,15 +21,25 @@ class UniqueValidator(object):
                 raise ValidationError(self.message)
 
 
-def event_date_check(form, starts_date):
+def event_date_check(form, starts_date=None):
+    if not form.ends_date or not form.ends_date.data:
+        return False
+    if not starts_date:
+        starts_date = form.starts_date
     ends_date = form.ends_date.data
     if starts_date.data > ends_date:
         raise ValidationError('Start date must not be after end date.')
+    return True
 
 
-def event_time_check(form, starts_time):
+def event_time_check(form, starts_time=None):
+    if not form.starts_date or not form.ends_time or not form.ends_date:
+        return False
+    if not starts_time:
+        starts_time = form.starts_time
     ends_time = form.ends_time.data
     ends_date = form.ends_date.data
     starts_date = form.starts_date.data
     if starts_date == ends_date and starts_time.data > ends_time:
         raise ValidationError('Start time must be before end time.')
+    return True

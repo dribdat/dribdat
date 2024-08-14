@@ -10,8 +10,10 @@ import pytest
 import pytz
 from base64 import b64decode
 
+from dribdat.user.validators import event_date_check, event_time_check
 from dribdat.user.models import Role, User, Event
 from dribdat.user.constants import stageProjectToNext
+from dribdat.admin.forms import EventForm
 from dribdat.utils import timesince
 from dribdat.settings import Config
 from dribdat.aggregation import ProjectActivity
@@ -26,6 +28,16 @@ class TestEvent:
 
     def is_naive(d):
         return d.tzinfo is None or d.tzinfo.utcoffset(d) is None
+
+
+    def test_event_validator(self, db):
+        now = datetime.now()
+        event_dt = now + timedelta(days=1)
+        event = Event(name="test", starts_at=now)
+        event.save()
+        form = EventForm(obj=event)
+        assert event_time_check(form)
+        assert event_date_check(form)
 
     def test_countdown_10_days(self, db):
         timezone = pytz.timezone(Config.TIME_ZONE)
