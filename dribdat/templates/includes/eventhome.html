@@ -11,17 +11,14 @@
       </h2>
 
       {% if not event.lock_resources %}
-        <span class="event-date">
-          {{ event.date }}</span>
-      {% endif %}
-      {% if event.hostname %}
-        <span class="event-hostname ml-2">
-          <i class="fa fa-bank"></i>
-          {{ event.hostname }}</span>
-      {% elif event.location %}
-        <span class="event-location ml-2">
-          <i class="fa fa-map"></i>
-          {{ event.location }}</span>
+        <p class="an-event-meta">
+          <b>{{ event.date }}</b>
+          <span>{{ event.hostname }}</span>
+          {% if event.location %}
+            <i class="fa fa-map-pin"></i>
+            <span>{{ event.location }}</span>
+          {% endif %}
+        </p>
       {% endif %}
 
       {% if event.summary|trim %}

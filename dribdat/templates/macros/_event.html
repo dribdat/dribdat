@@ -168,7 +168,11 @@
 	        {% if not event.lock_resources %}
             <p class="an-event-meta">
               <b>{{ event.date }}</b>
-              <span>{{ event.location }}</span>
+              <span>{{ event.hostname }}</span>
+              {% if event.location %}
+		            <i class="fa fa-map-pin"></i>
+		            <span>{{ event.location }}</span>
+		          {% endif %}
             </p>
 	        {% endif %}
 	        <p class="an-event-description">

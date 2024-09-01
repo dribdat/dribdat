@@ -392,6 +392,10 @@ nav .nav-login {
   z-index: 1;
   position: relative;
 }
+.home h1 {
+  opacity: 0.5;
+  font-style: italic  ;
+}
 
 /* Customize the flipclock widget */
 .event-countdown {
@@ -578,6 +582,16 @@ nav .nav-login {
     width: 600px;
   }
   .hexagon.blank { display: inline-block; }
+}
+.honeycomb .hexagon.challenge.new::after,
+.honeycomb .hexagon.challenge.new::before,
+.honeycomb .hexagon.challenge.new { 
+  opacity: 0.8;
+  border: none;
+  background: none;
+}
+.hexagon.challenge.new .hexagontent i {
+  color: green;
 }
 @media (max-width: 560px) {
   .with-event .honeycomb {
@@ -1914,6 +1928,29 @@ a.go-up {
   font-size: 125%;
   padding: 1em 1em 0.1em;
   box-shadow: 5px 5px 5px rgba(0,0,0,0.2);
+}
+.userprofile .profile-goals {
+  font-family: monospace;
+  font-size: 150%;
+  padding: 1em 1em 0.1em;
+  border-left: 1px solid rgba(0,0,0,0.3);
+  border-top: 1px solid rgba(0,0,0,0.3);
+  border-radius: 0.5em;
+  background: #eed;
+}
+.userprofile .profile-goals:after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 20%;
+  width: 0;
+  height: 0;
+  border: 20px solid transparent;
+  border-top-color: #eed;
+  border-bottom: 0;
+  border-left: 0;
+  margin-left: -10px;
+  margin-bottom: -20px;
 }
 @media (max-width: 760px) {
   .profile-projects .project-score,

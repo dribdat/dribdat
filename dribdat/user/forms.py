@@ -106,6 +106,10 @@ class UserForm(FlaskForm):
     """User profile form."""
 
     id = HiddenField('id')
+    my_goals = TextAreaField(
+        u'My goals',
+        description="What brings you here? Share a few words about your "
+        + "interests. This is at the top of your profile.")
     roles = SelectMultipleField(
         u'Roles', coerce=int,
         description="Choose one or more team roles for yourself.")
@@ -118,11 +122,7 @@ class UserForm(FlaskForm):
     my_story = TextAreaField(
         u'My story',
         description="A brief bio and outline of the competencies you bring "
-        + "into the mix. The top portion of your profile.")
-    my_goals = TextAreaField(
-        u'My goals',
-        description="What brings you here? Share a few words about your "
-        + "interests. This is the bottom portion of your profile.")
+        + "into the mix. The center of your profile.")
     username = StringField(
         u'Username', [Length(max=25), UniqueValidator(
             User, 'username'), DataRequired()],

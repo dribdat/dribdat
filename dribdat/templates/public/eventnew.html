@@ -16,7 +16,7 @@
     {{ render_form(url_for('public.event_new'), form) }}
 
     {% if config.S3_KEY %}
-      <button type="button" class="btn btn-light mt-2 m-1" data-toggle="modal" data-target="#uploadImage">
+      <button type="button" class="btn btn-light mt-2 m-1" style="display:none" data-toggle="modal" data-target="#uploadImage">
         <i class="fa fa-image text-info" area-hidden="true"></i>
         Upload an image
       </button>
