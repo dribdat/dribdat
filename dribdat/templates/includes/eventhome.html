@@ -35,14 +35,14 @@
       {% endif %}
       <div class="an-event-actions text-center">
         {% if event.project_count %}
-          <a href="{{ url_for('public.event', event_id=event.id) }}" class="btn btn-light btn-lg">
+          <a href="{{ url_for('public.event', event_id=event.id) }}" class="btn btn-lg">
           {% if event.has_finished %}
             <span>{{ event.project_count }}</span>
-            <i class="fa fa-certificate" aria-hidden="true"></i>
+            <i class="fa fa-star" aria-hidden="true"></i>
             Results
           {% elif event.has_started %}
             <span>{{ event.project_count }}</span>
-            <i class="fa fa-cubes" aria-hidden="true"></i>
+            <i class="fa fa-cube" aria-hidden="true"></i>
             Challenges
           {% else %}
             <span>{{ event.project_count }}</span>
@@ -53,7 +53,7 @@
         {% endif %}
 
         {% if event.webpage_url and not event.has_finished %}
-          <a href="{{ event.webpage_url }}" class="btn btn-info btn-lg" target="_blank">
+          <a href="{{ event.webpage_url }}" class="btn btn-dark btn-lg" target="_blank">
             <i class="fa fa-ticket" aria-hidden="true"></i>
             Register
           </a>

@@ -56,13 +56,6 @@
 {% endcache %}
 
 <div class="category-info clearfix pt-4 mt-4">
-  {% if current_event.has_started and not current_event.has_finished %}
-    {% if not current_user or not current_user.active %}
-    <div category-id="infobox" class="category-container category-tip">
-      <center><h4><i class="fa fa-lightbulb-o"></i> &nbsp;The event has started! Explore the challenges above, then log in to get instructed and join projects.</h4></center>
-    </div>
-    {% endif %}
-  {% endif %}
   {% for category in current_event.categories_for_event() %}
   <div category-id="{{category.id}}" class="category-container" 
        style="border-top:5px solid {{category.logo_color}}; display:none">
@@ -80,10 +73,10 @@
 
 <div class="start-project btn-group m-4 pt-4">
   {% if current_event.webpage_url %}
-    <a href="{{ current_event.webpage_url }}" class="btn btn-lg btn-info" target="_blank">
+    <a href="{{ current_event.webpage_url }}" class="btn btn-lg btn-dark" target="_blank">
     {% if not current_event.has_finished %}
       <i class="fa fa-ticket" aria-hidden="true"></i>
-      How to join
+      Register
     {% else %}
       About
     {% endif %}
@@ -104,7 +97,7 @@
     </a>
   {% endif %}
   {% if current_event.community_url %}
-    <a href="{{ current_event.community_url }}" target="community" class="btn btn-lg btn-dark">
+    <a href="{{ current_event.community_url }}" target="community" class="btn btn-lg btn-info">
       <i class="fa fa-comment"></i>
       Connect</a>
   {% endif %}
@@ -193,6 +186,12 @@
     {{current_event.instruction|markdown}}
   </div>
 </div>
+{% elif current_event.has_started and not current_event.has_finished %}
+  {% if not current_user or not current_user.active %}
+  <div category-id="infobox" class="category-container category-tip">
+    <center><h4><i class="fa fa-lightbulb-o"></i> &nbsp;The event has started! Join any of the projects after you log in.</h4></center>
+  </div>
+  {% endif %}
 {% endif %}
 
 {% if current_event.countdown and not 'off' in config.DRIBDAT_CLOCK and not current_event.lock_resources %}

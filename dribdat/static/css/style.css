@@ -1559,15 +1559,16 @@ a.go-up {
 }
 .project-page .project-category {
   float: right;
-  font-size: 110%;
-  font-weight: bold;
-  margin-top: 0.6em;
-  margin-right: 15px;
+  font-size: 150%;
+  margin-top: 1.4em;
   text-align: right;
   clear: both;
 }
 .project-page .project-category a:hover {
   text-decoration: none;
+}
+.project-page .project-category-hexagon {
+  opacity: 0.3;
 }
 .profile-projects .stage-conditions .stage-no {
   font-weight: bold;
@@ -1736,12 +1737,31 @@ a.go-up {
   opacity: 1.0;
 }
 
-.profile-header img {
-  width: 100px;
-  border-radius: 50%;
-  -moz-border-radius: 50%;
-  -webkit-border-radius: 50%;
+.profile-picture img {
+  width: 125px;
+  border-radius: 5px;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  box-shadow: 0px 0px 5px rgba(0,0,0,0.3);
+  margin-bottom: 1em;
 }
+
+.profipic::after,
+.profipic::before {
+  width: 50px; height: 50px;
+  border-top: 5px solid rgba(0,0,0,0.5);
+  content: "";
+  position: absolute;
+}
+.profipic::before {
+  left: 0;
+  transform: rotate(-60deg);
+}
+.profipic::after {
+  right: 0; bottom: 40px;
+  transform: rotate(-240deg);
+}
+
 .profile-header span {
   font-size: 3rem;
 }
@@ -1768,8 +1788,7 @@ a.go-up {
   font-weight: bold;
 }
 .userprofile h1 {
-  text-align: center;
-  margin-top: 1em;
+  margin-top: 0.5em;
 }
 #get-certified {
   background-image: url('/static/img/certificate.png');
