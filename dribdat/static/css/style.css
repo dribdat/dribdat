@@ -459,11 +459,12 @@ nav .nav-login {
 }
 .home-page .carousel-caption a {
   text-decoration: none;
+}
+.home-page .carousel-caption span {
   color: initial;
 }
 .home-page .carousel-caption .event-header .section-header-content {
   text-align: left;
-  color: initial;
   background: white;
   box-shadow: 3px 3px 3px rgba(0,0,0,0.2);
   padding: 1em;

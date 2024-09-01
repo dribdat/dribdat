@@ -161,7 +161,7 @@
 	      {% if not event.lock_resources %}
 		      <h3 class="card-title">
 		        <a href="{{ url_for('public.event', event_id=event.id) }}">
-		          {{event.name}}</a>
+		          {{ event.name }}</a>
 		      </h3>
 				{% endif %}
 	      <div class="card-text">
@@ -174,7 +174,7 @@
 	        <p class="an-event-description">
 	          {{event.summary or event.description|truncate(300) or event.oneliner|markdown|striptags|truncate(300)}}
 		        {% if event.webpage_url %}
-		          <a href="{{ event.webpage_url }}">
+		          <a href="{{ event.webpage_url }}" target="_blank">
 		            <i class="fa fa-globe" aria-hidden="true"></i> www</a>
 		        {% endif %}
 	        </p>
@@ -183,11 +183,11 @@
 	        {% if event.lock_resources %}
             <a href="{{ url_for('public.event_stages', event_id=event.id) }}" class="btn btn-lg btn-warning">
 			 				  <i class="fa fa-life-ring" aria-hidden="true"></i>
-                {{event.name}}
+                {{ event.name }}
             </a>
           {% else %}
-          	<a href="{{ url_for('public.event', event_id=event.id) }}" class="btn btn-light">
-          		{% if event.project_count %}
+          	{% if event.project_count %}
+          		<a href="{{ url_for('public.event', event_id=event.id) }}" class="btn btn-light">
 			          {% if event.has_finished %}
 			            <span>{{ event.project_count }}</span>
 			            <i class="fa fa-certificate" aria-hidden="true"></i>
@@ -201,8 +201,14 @@
 			            <i class="fa fa-arrow-right" aria-hidden="true"></i>
 		              Projects
 			          {% endif %}
-			        {% endif %}
-	          </a>
+	        		</a>
+			      {% endif %}
+			      {% if event.webpage_url and not event.has_finished %}
+					  	<a href="{{ event.webpage_url }}" class="btn btn-light">
+						    <i class="fa fa-ticket" aria-hidden="true"></i>
+						    <b>Register</b>
+					    </a>
+					  {% endif %}
 		      {% endif %}
 	      </div>
 	    </div><!-- /.card-body -->
