@@ -193,17 +193,17 @@ files = [
 
 [[package]]
 name = "boto3"
-version = "1.35.9"
+version = "1.35.10"
 description = "The AWS SDK for Python"
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "boto3-1.35.9-py3-none-any.whl", hash = "sha256:1ee9c52d83e8f4902300e985d62688cf31ca8fc47a80534b4295350ebc418e46"},
-    {file = "boto3-1.35.9.tar.gz", hash = "sha256:07e0f335d801765999da67325455ea8219c1a6d7f06bdaad0975ee505276bcbe"},
+    {file = "boto3-1.35.10-py3-none-any.whl", hash = "sha256:add26dd58e076dfd387013da4704716d5cff215cf14f6d4347c4b9b7fc1f0b8e"},
+    {file = "boto3-1.35.10.tar.gz", hash = "sha256:189ab1e2b4cd86df56f82438d89b4040eb140c92683f1bda7cb2e62624f20ea5"},
 ]
 
 [package.dependencies]
-botocore = ">=1.35.9,<1.36.0"
+botocore = ">=1.35.10,<1.36.0"
 jmespath = ">=0.7.1,<2.0.0"
 s3transfer = ">=0.10.0,<0.11.0"
 
@@ -212,21 +212,21 @@ crt = ["botocore[crt] (>=1.21.0,<2.0a0)"]
 
 [[package]]
 name = "botocore"
-version = "1.35.9"
+version = "1.35.10"
 description = "Low-level, data-driven core of boto 3."
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "botocore-1.35.9-py3-none-any.whl", hash = "sha256:92962460e4f35d139a23bca28149722030143257ee2916de442243c2464a7434"},
-    {file = "botocore-1.35.9.tar.gz", hash = "sha256:9e44572fd2401b89dd58bf8b71ac2c36d5b0437f8cbf40de83302c499965fb54"},
+    {file = "botocore-1.35.10-py3-none-any.whl", hash = "sha256:0d96d023b9b0cea99a0a428a431d011329d3a958730aee6ed6a6fec5d9bfbc03"},
+    {file = "botocore-1.35.10.tar.gz", hash = "sha256:6c8a1377b6636a0d80218115e1cd41bcceba0a2f050b79c206f4cf8d002c54d7"},
 ]
 
 [package.dependencies]
 jmespath = ">=0.7.1,<2.0.0"
 python-dateutil = ">=2.1,<3.0.0"
 urllib3 = [
-    {version = ">=1.25.4,<2.2.0 || >2.2.0,<3", markers = "python_version >= \"3.10\""},
     {version = ">=1.25.4,<1.27", markers = "python_version < \"3.10\""},
+    {version = ">=1.25.4,<2.2.0 || >2.2.0,<3", markers = "python_version >= \"3.10\""},
 ]
 
 [package.extras]
@@ -702,13 +702,13 @@ doc = ["Sphinx", "sphinx-rtd-theme", "sphinxcontrib-spelling"]
 
 [[package]]
 name = "faker"
-version = "28.0.0"
+version = "28.1.0"
 description = "Faker is a Python package that generates fake data for you."
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "Faker-28.0.0-py3-none-any.whl", hash = "sha256:6a3a08be54c37e05f7943d7ba5211d252c1de737687a46ad6f29209d8d5db11f"},
-    {file = "faker-28.0.0.tar.gz", hash = "sha256:0d3c0399204aaf8205cc1750db443474ca0436f177126b2c27b798e8336cc74f"},
+    {file = "Faker-28.1.0-py3-none-any.whl", hash = "sha256:b17d69312ef6485a720e21bffa997668c88876a5298b278e903ba706243c9c6b"},
+    {file = "faker-28.1.0.tar.gz", hash = "sha256:bc460a0e6020966410d0b276043879abca0fac51890f3324bc254bb0a383ee3a"},
 ]
 
 [package.dependencies]
@@ -872,13 +872,13 @@ Flask = "*"
 
 [[package]]
 name = "flask-cors"
-version = "4.0.1"
+version = "5.0.0"
 description = "A Flask extension adding a decorator for CORS support"
 optional = false
 python-versions = "*"
 files = [
-    {file = "Flask_Cors-4.0.1-py2.py3-none-any.whl", hash = "sha256:f2a704e4458665580c074b714c4627dd5a306b333deb9074d0b1794dfa2fb677"},
-    {file = "flask_cors-4.0.1.tar.gz", hash = "sha256:eeb69b342142fdbf4766ad99357a7f3876a2ceb77689dc10ff912aac06c389e4"},
+    {file = "Flask_Cors-5.0.0-py2.py3-none-any.whl", hash = "sha256:b9e307d082a9261c100d8fb0ba909eec6a228ed1b60a8315fd85f783d61910bc"},
+    {file = "flask_cors-5.0.0.tar.gz", hash = "sha256:5aadb4b950c4e93745034594d9f3ea6591f734bb3662e16e255ffbf5e89c88ef"},
 ]
 
 [package.dependencies]
@@ -1185,8 +1185,8 @@ files = [
 [package.dependencies]
 cffi = {version = ">=1.12.2", markers = "platform_python_implementation == \"CPython\" and sys_platform == \"win32\""}
 greenlet = [
-    {version = ">=3.0rc3", markers = "platform_python_implementation == \"CPython\" and python_version >= \"3.11\""},
     {version = ">=2.0.0", markers = "platform_python_implementation == \"CPython\" and python_version < \"3.11\""},
+    {version = ">=3.0rc3", markers = "platform_python_implementation == \"CPython\" and python_version >= \"3.11\""},
 ]
 "zope.event" = "*"
 "zope.interface" = "*"
@@ -2317,8 +2317,8 @@ files = [
 annotated-types = ">=0.4.0"
 pydantic-core = "2.20.1"
 typing-extensions = [
-    {version = ">=4.12.2", markers = "python_version >= \"3.13\""},
     {version = ">=4.6.1", markers = "python_version < \"3.13\""},
+    {version = ">=4.12.2", markers = "python_version >= \"3.13\""},
 ]
 
 [package.extras]
