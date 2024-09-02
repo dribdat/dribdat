@@ -121,7 +121,7 @@ class ProjectPost(FlaskForm):
     note = TextAreaField(
         'How are the vibes in your team right now?',
         [length(max=280), InputRequired()],
-        render_kw={'maxlength': 280},
+        render_kw={'maxlength': 280, 'minlength': 4},
         description=u'A short note for your project log.')
     submit = SubmitField(u'Save post',
         render_kw={'data-toggle': "modal", 'data-target': "#pleasewaitModal"})
@@ -134,7 +134,7 @@ class ProjectComment(FlaskForm):
     note = TextAreaField(
         u'Comments and reviews',
         [length(max=280), InputRequired()],
-        render_kw={'maxlength': 280},
+        render_kw={'maxlength': 280, 'minlength': 4},
         description=u'A suggestion or constructive feedback for the team.'
                     + ' Please note the Code of Conduct.')
     submit = SubmitField(u'Save comment',
