@@ -116,5 +116,7 @@ class TestEvent:
         assert user.may_certify(project) == (False, 'event')
         event.certificate_path = 'https://testcert.cc/{username}'
         event.save()
-        assert user.may_certify(project)[0]
-        assert 'testcert' in user.may_certify()[1]
+        cert_status, cert_url = user.may_certify(project)
+        assert cert_status
+        assert 'testcert' in cert_url
+        assert user.username in cert_url

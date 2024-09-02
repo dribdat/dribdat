@@ -154,7 +154,9 @@ class TestRegistering:
         assert User.query.count() == old_count + 1
         # Check user can create an event
         view_html = testapp.get('/event/start')
-        assert 'Get started' in view_html
+        assert view_html.status_code == 200
+        assert '/event/new' in view_html
+        
 
 class TestActivation:
     """Activate a user to interact with projects."""
