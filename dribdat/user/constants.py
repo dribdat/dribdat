@@ -24,6 +24,7 @@ USER_STATUS = {
 CLEAR_STATUS_AFTER = 10 # minutes
 
 # Resource types
+# TODO: load from YAML
 RESOURCE_TYPES = {
     0: ('forks', "Forks the source of"),
     1: ('proves', "Demo or example of"),

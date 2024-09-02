@@ -392,6 +392,10 @@ nav .nav-login {
   z-index: 1;
   position: relative;
 }
+.home h1 {
+  opacity: 0.5;
+  font-style: italic  ;
+}
 
 /* Customize the flipclock widget */
 .event-countdown {
@@ -459,11 +463,12 @@ nav .nav-login {
 }
 .home-page .carousel-caption a {
   text-decoration: none;
+}
+.home-page .carousel-caption span {
   color: initial;
 }
 .home-page .carousel-caption .event-header .section-header-content {
   text-align: left;
-  color: initial;
   background: white;
   box-shadow: 3px 3px 3px rgba(0,0,0,0.2);
   padding: 1em;
@@ -577,6 +582,16 @@ nav .nav-login {
     width: 600px;
   }
   .hexagon.blank { display: inline-block; }
+}
+.honeycomb .hexagon.challenge.new::after,
+.honeycomb .hexagon.challenge.new::before,
+.honeycomb .hexagon.challenge.new { 
+  opacity: 0.8;
+  border: none;
+  background: none;
+}
+.hexagon.challenge.new .hexagontent i {
+  color: green;
 }
 @media (max-width: 560px) {
   .with-event .honeycomb {
@@ -1558,15 +1573,16 @@ a.go-up {
 }
 .project-page .project-category {
   float: right;
-  font-size: 110%;
-  font-weight: bold;
-  margin-top: 0.6em;
-  margin-right: 15px;
+  font-size: 150%;
+  margin-top: 1.4em;
   text-align: right;
   clear: both;
 }
 .project-page .project-category a:hover {
   text-decoration: none;
+}
+.project-page .project-category-hexagon {
+  opacity: 0.3;
 }
 .profile-projects .stage-conditions .stage-no {
   font-weight: bold;
@@ -1735,12 +1751,31 @@ a.go-up {
   opacity: 1.0;
 }
 
-.profile-header img {
-  width: 100px;
-  border-radius: 50%;
-  -moz-border-radius: 50%;
-  -webkit-border-radius: 50%;
+.profile-picture img {
+  width: 125px;
+  border-radius: 5px;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  box-shadow: 0px 0px 5px rgba(0,0,0,0.3);
+  margin-bottom: 1em;
 }
+
+.profipic::after,
+.profipic::before {
+  width: 50px; height: 50px;
+  border-top: 5px solid rgba(0,0,0,0.5);
+  content: "";
+  position: absolute;
+}
+.profipic::before {
+  left: 0;
+  transform: rotate(-60deg);
+}
+.profipic::after {
+  right: 0; bottom: 40px;
+  transform: rotate(-240deg);
+}
+
 .profile-header span {
   font-size: 3rem;
 }
@@ -1767,8 +1802,7 @@ a.go-up {
   font-weight: bold;
 }
 .userprofile h1 {
-  text-align: center;
-  margin-top: 1em;
+  margin-top: 0.5em;
 }
 #get-certified {
   background-image: url('/static/img/certificate.png');
@@ -1894,6 +1928,29 @@ a.go-up {
   font-size: 125%;
   padding: 1em 1em 0.1em;
   box-shadow: 5px 5px 5px rgba(0,0,0,0.2);
+}
+.userprofile .profile-goals {
+  font-family: monospace;
+  font-size: 150%;
+  padding: 1em 1em 0.1em;
+  border-left: 1px solid rgba(0,0,0,0.3);
+  border-top: 1px solid rgba(0,0,0,0.3);
+  border-radius: 0.5em;
+  background: #eed;
+}
+.userprofile .profile-goals:after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 20%;
+  width: 0;
+  height: 0;
+  border: 20px solid transparent;
+  border-top-color: #eed;
+  border-bottom: 0;
+  border-left: 0;
+  margin-left: -10px;
+  margin-bottom: -20px;
 }
 @media (max-width: 760px) {
   .profile-projects .project-score,

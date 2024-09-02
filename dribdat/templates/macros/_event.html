@@ -161,48 +161,54 @@
 	      {% if not event.lock_resources %}
 		      <h3 class="card-title">
 		        <a href="{{ url_for('public.event', event_id=event.id) }}">
-		          {{event.name}}</a>
+		          {{ event.name }}</a>
 		      </h3>
 				{% endif %}
 	      <div class="card-text">
 	        {% if not event.lock_resources %}
-	            <p class="an-event-meta">
-	              <b>{{ event.date }}</b>
-	              <span>{{ event.location }}</span>
-	            </p>
+            <p class="an-event-meta">
+              <b>{{ event.date }}</b>
+              <span>{{ event.hostname }}</span>
+              {% if event.location %}
+		            <i class="fa fa-map-pin"></i>
+		            <span>{{ event.location }}</span>
+		          {% endif %}
+            </p>
 	        {% endif %}
 	        <p class="an-event-description">
 	          {{event.summary or event.description|truncate(300) or event.oneliner|markdown|striptags|truncate(300)}}
-		        {% if event.webpage_url %}
-		          <a href="{{ event.webpage_url }}">
-		            <i class="fa fa-globe" aria-hidden="true"></i> www</a>
-		        {% endif %}
 	        </p>
 	      </div>
 	      <div class="an-event-actions text-center">
 	        {% if event.lock_resources %}
             <a href="{{ url_for('public.event_stages', event_id=event.id) }}" class="btn btn-lg btn-warning">
 			 				  <i class="fa fa-life-ring" aria-hidden="true"></i>
-                {{event.name}}
+                {{ event.name }}
             </a>
           {% else %}
-          	<a href="{{ url_for('public.event', event_id=event.id) }}" class="btn btn-light">
-          		{% if event.project_count %}
+          	{% if event.project_count %}
+          		<a href="{{ url_for('public.event', event_id=event.id) }}" class="btn">
 			          {% if event.has_finished %}
 			            <span>{{ event.project_count }}</span>
-			            <i class="fa fa-certificate" aria-hidden="true"></i>
+			            <i class="fa fa-star" aria-hidden="true"></i>
 		              Results
 			          {% elif event.has_started %}
 			            <span>{{ event.project_count }}</span>
-			            <i class="fa fa-cubes" aria-hidden="true"></i>
+			            <i class="fa fa-cube" aria-hidden="true"></i>
 		              Challenges
 			          {% else %}
 			            <span>{{ event.project_count }}</span>
 			            <i class="fa fa-arrow-right" aria-hidden="true"></i>
 		              Projects
 			          {% endif %}
-			        {% endif %}
-	          </a>
+	        		</a>
+			      {% endif %}
+			      {% if event.webpage_url and not event.has_finished %}
+					  	<a href="{{ event.webpage_url }}" class="btn btn-light" target="_blank">
+						    <i class="fa fa-ticket" aria-hidden="true"></i>
+						    Register
+					    </a>
+					  {% endif %}
 		      {% endif %}
 	      </div>
 	    </div><!-- /.card-body -->
@@ -218,7 +224,18 @@
 				 			  xlink:href="{{ event.background_image }}"
 								preserveAspectRatio="xMinYMin slice"/>
 			{% else %}
-				 <rect width="100%" height="100%" fill="#777"/>
+				 <defs><!-- https://toolcool.org/svg-stripes-maker-react/ -->
+		      <pattern id="svg-stripes-pattern-32796" patternTransform="rotate(299)" width="100%" height="60" x="0" y="0" patternUnits="userSpaceOnUse">
+		          <animate attributeName="y" begin="0s" dur="375s" from="0" to="5000px" repeatCount="indefinite" fill="freeze"></animate>
+		          <g>
+		              <rect x="0" y="0" width="100%" height="20" fill="rgba(246, 246, 246, 1)"></rect>
+		              <rect x="0" y="20" width="100%" height="10" fill="rgba(227, 227, 227, 1)"></rect>
+		              <rect x="0" y="30" width="100%" height="20" fill="rgba(255, 207, 175, 1)"></rect>
+		              <rect x="0" y="50" width="100%" height="10" fill="rgba(255, 255, 255, 1)"></rect>
+		          </g>
+		      </pattern>
+		     </defs>
+		     <rect x="0" y="0" width="100%" height="100%" fill="url(#svg-stripes-pattern-32796)"></rect>
 			{% endif %}
 		</svg>
 

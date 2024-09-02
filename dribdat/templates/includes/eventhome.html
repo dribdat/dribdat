@@ -6,22 +6,19 @@
   {% endif %}
   <a href="{{ url_for('public.event', event_id=event.id) }}">
     <div class="section-header-content">
-      <h3 class="event-name">{{ event.name }}</h3>
+      <h2 class="event-name">
+        <span>{{ event.name }}</span>
+      </h2>
 
       {% if not event.lock_resources %}
-        <span class="event-date">
-          <i class="fa fa-calendar"></i>
-          {{ event.date }}</span>
-      {% endif %}
-      {% if event.hostname %}
-        <span class="event-hostname ml-2">
-          <i class="fa fa-bank"></i>
-          {{ event.hostname }}</span>
-      {% endif %}
-      {% if event.location %}
-        <span class="event-location ml-2">
-          <i class="fa fa-map"></i>
-          {{ event.location }}</span>
+        <p class="an-event-meta">
+          <b>{{ event.date }}</b>
+          <span>{{ event.hostname }}</span>
+          {% if event.location %}
+            <i class="fa fa-map-pin"></i>
+            <span>{{ event.location }}</span>
+          {% endif %}
+        </p>
       {% endif %}
 
       {% if event.summary|trim %}
@@ -34,23 +31,30 @@
         </div>
       {% endif %}
       <div class="an-event-actions text-center">
-        <a href="{{ url_for('public.event', event_id=event.id) }}" class="btn btn-light">
         {% if event.project_count %}
+          <a href="{{ url_for('public.event', event_id=event.id) }}" class="btn btn-lg">
           {% if event.has_finished %}
             <span>{{ event.project_count }}</span>
-            <i class="fa fa-certificate" aria-hidden="true"></i>
+            <i class="fa fa-star" aria-hidden="true"></i>
             Results
           {% elif event.has_started %}
             <span>{{ event.project_count }}</span>
-            <i class="fa fa-cubes" aria-hidden="true"></i>
+            <i class="fa fa-cube" aria-hidden="true"></i>
             Challenges
           {% else %}
             <span>{{ event.project_count }}</span>
             <i class="fa fa-arrow-right" aria-hidden="true"></i>
             Projects
           {% endif %}
+          </a>
         {% endif %}
-        </a>
+
+        {% if event.webpage_url and not event.has_finished %}
+          <a href="{{ event.webpage_url }}" class="btn btn-dark btn-lg" target="_blank">
+            <i class="fa fa-ticket" aria-hidden="true"></i>
+            Register
+          </a>
+        {% endif %}
       </div>
     </div><!-- /.header-content -->
   </a>

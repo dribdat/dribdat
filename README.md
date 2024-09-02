@@ -43,10 +43,10 @@ This project is inspired by the work of many wonderful hackathonistas to the [Ea
 
 Additional and ♥-felt thanks for your contributions to: [Alexandre Cotting](https://github.com/Cotting), [Anthony Ritz](https://github.com/RitzAnthony), [Chris Mutel](https://github.com/cmutel), [Fabien Schwob](https://github.com/jibaku), [Gonzalo Casas](https://github.com/gonzalocasas), [Jonathan Schnyder](https://github.com/jonHESSO), [Jonathan Sobel](https://github.com/JonathanSOBEL), [Philip Shemella](https://github.com/philshem), [Thomas Amberg](https://github.com/tamberg), [Yusuf Khasbulatov](https://github.com/khashashin) .. and all the participants and organizers sending in bugs and requests! 🤗
 
-![Dribdat Logo](dribdat/static/img/logo/logo13.png)
-
 ## License
 
 This project is open source under the [MIT License](LICENSE).
 
 Due to the use of the [boto3](https://github.com/boto/boto3/) library for S3 support, there is a dependency on OpenSSL via awscrt. If you use these features, please note that the product includes cryptographic software written by Eric Young (eay@cryptsoft.com) and Tim Hudson (tjh@cryptsoft.com).
+
+<img title="Dribdat Logo" src="dribdat/static/img/logo/logo13.png" width="256">

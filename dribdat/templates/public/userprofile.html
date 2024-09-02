@@ -10,6 +10,13 @@
 
 {% block content %}
 
+{% if user.my_goals %}
+  <div class="profile-goals col-6 bg-body" title="My Goals">
+    <a name="goals"></a>
+      {{ user.my_goals|markdown }}
+  </div>
+{% endif %}
+
 {% if current_user and current_user.is_authenticated %}
 <div class="row">
 
@@ -64,7 +71,7 @@
 {% if may_certify %}
   <div class="float-right">
     <br clear="all"/>
-    <a id="get-certified" class="btn btn-light btn-lg"
+    <a id="get-certified" class="btn btn-success btn-lg"
       href="{{ url_for('public.user_cert') }}" download
       title="Download a participation certificate">
       Download&nbsp;Certificate
@@ -76,9 +83,11 @@
 
 <div class="row mt-2 profile-header">
 
-  <div class="col-2 text-center">
+  <div class="col-3 text-center">
     {% if user.carddata %}
-      <img src="{{user.carddata}}"/>
+      <div class="profile-picture">
+        <img src="{{user.carddata}}"/>
+      </div>
     {% endif %}
   </div>
 
@@ -96,15 +105,26 @@
   {% endif %}
 
 </div>
-<div class="row mb-3 mt-2">
+<div class="row mb-3">
 
-  {% if score %}
-  <div class="col-2 text-center">
-    <h5 title="Total score across all projects, adjusted by profile completeness">
-      <span class="user-score">{{ score }}</span>
-    </h5>
+  <div class="col-3 text-center">
+    {% if score %}
+      <h5 title="Total score across all projects, adjusted by profile completeness">
+        <span class="user-score">{{ score }}</span>
+      </h5>
+    {% endif %}
+    {% if user.webpage_url %}
+      <div class="profile-social">
+        <a href="{{ user.webpage_url }}" class="btn btn-lg" target="_blank" rel="noopener noreferrer">
+        {% if not user.cardtype %}
+          <i class="fa fa-globe"></i>&nbsp;Visit
+        {% else %}
+          <i class="fa fa-{{ user.cardtype }}"></i>&nbsp;Follow
+        {% endif %}
+        </a>
+      </div>
+    {% endif %}
   </div>
-  {% endif %}
 
   <div class="col-sm">
     <ul class="profile-roles">
@@ -112,29 +132,14 @@
       <li>{{ role.name }}</li>
     {% endfor %}
     </ul>
-
-    {% if user.webpage_url %}
-    <div class="profile-social">
-      <a href="{{ user.webpage_url }}" class="btn btn-lg btn-light" target="_blank" rel="noopener noreferrer">
-      {% if not user.cardtype %}
-        <i class="fa fa-globe"></i>
-        Visit
-      {% else %}
-        <i class="fa fa-{{ user.cardtype }}"></i>
-        Follow
-      {% endif %}
-      </a>
-    </div>
-    {% endif %}
   </div>
 
 </div>
 
 {% if user.my_story %}
 <div class="row">
-  <div class="profile-story col-12 bg-body" title="My story">
+  <div class="profile-story col-9 bg-body" title="My story">
     <a name="story"></a>
-    <h2 class="mt-5 text-center">📜</h2>
     <blockquote class="profile-text">
       {{ user.my_story|markdown }}
     </blockquote>
@@ -167,18 +172,6 @@
   </div><!-- /profile-projects -->
 {% endif %}
 
-{% if user.my_goals %}
-<div class="row">
-  <div class="profile-goals col-12 bg-body" title="My Goals">
-    <a name="goals"></a>
-    <h2 class="mt-5 text-center">&#127919;</h2>
-    <blockquote class="profile-text">
-      {{ user.my_goals|markdown }}
-    </blockquote>
-  </div>
-</div>
-{% endif %}
-
 {% if submissions %}
   <a name="challenges"><h1>Challenges</h1></a>
   <div class="profile-projects profile-challenges honeycomb">
@@ -190,6 +183,7 @@
   </div><!-- /profile-challenges -->
 {% endif %}
 
+{% if current_user and current_user.id == user.id %}
 <center>
   <div class="btn-group mt-4">
     <a id="get-mydata" class="btn btn-success btn-lg text-left"
@@ -200,6 +194,7 @@
     </a>
   </div>
 </center>
+{% endif %}
 
 {% if not posts %}
   {% if current_user and current_user.id == user.id %}
