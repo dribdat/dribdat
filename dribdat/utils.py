@@ -5,7 +5,8 @@ from urllib.parse import quote
 from math import floor
 from os import path
 
-from datetime import datetime, UTC
+from datetime import datetime
+from .futures import UTC
 
 import pytz
 import re

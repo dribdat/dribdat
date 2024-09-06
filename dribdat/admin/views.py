@@ -18,7 +18,8 @@ from .forms import (
     CategoryForm, ResourceForm,
 )
 
-from datetime import datetime, UTC
+from datetime import datetime
+from dribdat.futures import UTC
 
 import random
 import string

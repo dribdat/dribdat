@@ -10,7 +10,8 @@ from flask_login import current_user
 from sqlalchemy import or_
 
 from dateutil import parser
-from datetime import datetime, UTC
+from datetime import datetime
+from dribdat.futures import UTC
 
 from ..user.models import Event, Project, Activity, User
 from ..apiutils import (

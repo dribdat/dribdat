@@ -5,7 +5,8 @@ from factory.alchemy import SQLAlchemyModelFactory
 
 from dribdat.database import db
 from dribdat.user.models import User, Project, Event, Activity
-from datetime import datetime, timedelta, timezone, UTC
+from datetime import datetime, timedelta, timezone
+from dribdat.futures import UTC
 
 class BaseFactory(SQLAlchemyModelFactory):
     """Base factory."""

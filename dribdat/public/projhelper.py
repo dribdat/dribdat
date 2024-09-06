@@ -18,6 +18,7 @@ from dribdat.user import (
 )
 from dribdat.database import db
 from dribdat.extensions import cache
+from dribdat.futures import UTC
 
 
 def current_event():
@@ -27,7 +28,7 @@ def current_event():
 
 def check_update(obj, minutes=5):
     """Has the object been updated in the last minutes."""
-    td = datetime.now() - obj.updated_at
+    td = datetime.now(UTC) - obj.updated_at
     return td < timedelta(minutes=minutes)
 
 

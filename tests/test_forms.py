@@ -5,6 +5,7 @@ from dribdat.user.forms import RegisterForm, LoginForm
 from dribdat.admin.forms import EventForm
 
 from datetime import time, datetime
+from dribdat.futures import UTC
 
 
 class TestRegisterForm:
@@ -88,7 +89,7 @@ class TestEventForm:
         """Time validation test."""
         form = EventForm(
             event_id=event.id, name="Name",
-            starts_date=datetime.now(), ends_date=datetime.now(),
+            starts_date=datetime.now(UTC), ends_date=datetime.now(UTC),
             starts_time=time(2, 0, 0), ends_time=time(1, 0, 0))
         # Ends before starting
         # assert form.validate() is False

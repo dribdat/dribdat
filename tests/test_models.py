@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """Model unit tests."""
 
-import datetime as dt
+from datetime import datetime
 
 import pytest
 import pytz
@@ -44,7 +44,7 @@ class TestUser:
         user = User(username='foo', email='foo@bar.com')
         user.save()
         assert bool(user.created_at)
-        assert isinstance(user.created_at, dt.datetime)
+        assert isinstance(user.created_at, datetime)
 
     def test_password_is_nullable(self):
         """Test null password."""

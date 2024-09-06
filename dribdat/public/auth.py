@@ -18,7 +18,8 @@ from dribdat.utils import flash_errors, random_password, sanitize_input
 from dribdat.user.forms import RegisterForm, EmailForm, LoginForm, UserForm
 from dribdat.database import db
 from dribdat.mailer import user_activation
-from datetime import datetime, UTC
+from datetime import datetime
+from dribdat.futures import UTC
 # noqa: I005
 
 blueprint = Blueprint('auth', __name__, static_folder="../static")

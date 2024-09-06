@@ -19,6 +19,7 @@ from ..user import projectProgressList, resourceTypeList
 from os import environ
 from datetime import time, datetime
 from pytz import timezone
+from dribdat.futures import UTC
 
 
 def get_time_note():
@@ -86,12 +87,12 @@ class EventForm(FlaskForm):
         u'Templates', default=False,
         description=u'💡 Contains templates, which can be used for new projects.')
     starts_date = DateField(
-        u'Starting date', [event_date_check], default=datetime.now())
+        u'Starting date', [event_date_check], default=datetime.now(UTC))
     starts_time = TimeField(
         u'Starting time',
         [event_time_check], default=time(9, 0, 0),
         description=get_time_note())
-    ends_date = DateField(u'Finish date', default=datetime.now())
+    ends_date = DateField(u'Finish date', default=datetime.now(UTC))
     ends_time = TimeField(u'Finish time', default=time(16, 0, 0))
     summary = StringField(
         u'Summary',
