@@ -6,9 +6,9 @@ from math import floor
 from os import path
 
 from datetime import datetime
+from pytz import timezone
 from .futures import UTC
 
-import pytz
 import re
 import csv
 import yaml
@@ -51,6 +51,16 @@ def flash_errors(form, category='warning'):
                 getattr(form, field).label.text, error), category)
 
 
+def get_time_note():
+    """Construct a time zone message."""
+    tz = timezone(current_app.config["TIME_ZONE"])
+    aware_time = datetime.now().astimezone(tz)
+    tzinfo = "Server time: %s." % aware_time.strftime('%H:%M%z')
+    if tz is not None:
+        return "%s Time zone: %s" % (tzinfo, tz)
+    return tzinfo
+
+
 def timesince(dt, default="just now", until=False):
     """Return a string representing 'time since'."""
     """E.g.: 3 days ago, 5 hours ago etc.
@@ -58,8 +68,8 @@ def timesince(dt, default="just now", until=False):
     """
     if dt is None:
         return ""
-    tz = pytz.timezone(current_app.config["TIME_ZONE"])
-    tz_now = dt.now(UTC)
+    tz = timezone(current_app.config["TIME_ZONE"])
+    tz_now = dt.now(UTC).astimezone(tz)
     dt = dt.astimezone(tz)
     if dt is None:
         return ""

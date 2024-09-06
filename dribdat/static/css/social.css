@@ -4,6 +4,7 @@
 }
 
 .timeline-item .social-media {
+  padding-top: 8px;
   opacity: 0.25; transition: opacity 0.2s ease-out;
   /* max-height: 20px; transition: max-height 0.5s ease-out; overflow: hidden; */
 }

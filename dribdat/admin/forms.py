@@ -22,16 +22,6 @@ from pytz import timezone
 from dribdat.futures import UTC
 
 
-def get_time_note():
-    """Construct a time zone message."""
-    tz = timezone(environ.get('TIME_ZONE', 'UTC'))
-    aware_time = datetime.now().astimezone(tz)
-    tzinfo = "The current server time is %s." % aware_time.strftime('%H:%M%z')
-    if tz is not None:
-        return "%s Time zone: %s" % (tzinfo, tz)
-    return tzinfo
-
-
 class UserForm(FlaskForm):
     """User editing form."""
 
@@ -89,9 +79,7 @@ class EventForm(FlaskForm):
     starts_date = DateField(
         u'Starting date', [event_date_check], default=datetime.now(UTC))
     starts_time = TimeField(
-        u'Starting time',
-        [event_time_check], default=time(9, 0, 0),
-        description=get_time_note())
+        u'Starting time', [event_time_check], default=time(9, 0, 0))
     ends_date = DateField(u'Finish date', default=datetime.now(UTC))
     ends_time = TimeField(u'Finish time', default=time(16, 0, 0))
     summary = StringField(

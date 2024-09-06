@@ -846,6 +846,7 @@ class Project(PkModel):
                 'author': author,
                 'name': a.name,
                 'date': a.timestamp,
+                'timesince': a.data['timesince'],
                 'ref_url': a.ref_url,
                 'progress': a.project_progress,
                 'id': a.id,
