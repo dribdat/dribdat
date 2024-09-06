@@ -5,9 +5,7 @@ from urllib.parse import quote
 from math import floor
 from os import path
 
-# from Py3.12: from datetime import UTC
-from datetime import datetime, timezone
-UTC = timezone.utc 
+from datetime import datetime, UTC
 
 import pytz
 import re

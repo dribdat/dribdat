@@ -1,10 +1,7 @@
 # -*- coding: utf-8 -*-
 """Model unit tests."""
 
-from datetime import datetime, timedelta
-# from Py3.12: from datetime import UTC
-from datetime import timezone
-UTC = timezone.utc 
+from datetime import datetime, timedelta, UTC
 
 import pytest
 import pytz

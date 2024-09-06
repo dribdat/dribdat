@@ -18,10 +18,7 @@ from .forms import (
     CategoryForm, ResourceForm,
 )
 
-from datetime import datetime
-# from Py3.12: from datetime import UTC
-from datetime import timezone
-UTC = timezone.utc 
+from datetime import datetime, UTC
 
 import random
 import string

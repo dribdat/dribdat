@@ -31,10 +31,7 @@ from flask import current_app
 from flask_login import UserMixin
 from time import mktime
 from dateutil.parser._parser import ParserError
-from datetime import datetime, timedelta
-# from Py3.12: from datetime import UTC
-from datetime import timezone
-UTC = timezone.utc 
+from datetime import datetime, timezone, timedelta, UTC
 
 import hashlib
 import re
