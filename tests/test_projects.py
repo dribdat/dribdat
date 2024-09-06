@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 """Model unit tests."""
 
-import datetime as dt
-
 import pytest
 import pytz
 from base64 import b64decode

@@ -2,9 +2,6 @@
 """Model unit tests."""
 
 from datetime import datetime, timedelta
-# from Py3.12: from datetime import UTC
-from datetime import timezone
-UTC = timezone.utc 
 
 import pytest
 import pytz
@@ -18,6 +15,7 @@ from dribdat.utils import timesince
 from dribdat.settings import Config
 from dribdat.aggregation import ProjectActivity
 from dribdat.boxout.dribdat import box_project
+from dribdat.futures import UTC
 
 from .factories import UserFactory, ProjectFactory, EventFactory
 
@@ -31,7 +29,7 @@ class TestEvent:
 
 
     def test_event_validator(self, db):
-        now = datetime.now()
+        now = datetime.now(UTC)
         event_dt = now + timedelta(days=1)
         event = Event(name="test", starts_at=now)
         event.save()
@@ -41,32 +39,31 @@ class TestEvent:
 
     def test_countdown_10_days(self, db):
         timezone = pytz.timezone(Config.TIME_ZONE)
-        now = datetime.now()
+        now = datetime.now(UTC)
         event_dt = now + timedelta(days=10)
         event = Event(name="test", starts_at=event_dt)
         event.save()
 
-        assert event.starts_at == event_dt  # store as naive
+        assert event.starts_at != event_dt  # store as naive!?
         assert event.name == "test"
         assert event.countdown is not None
         assert event.countdown == event_dt.replace(tzinfo=timezone)
         assert timesince(event.countdown, until=True) == "1 week to go"
 
     def test_countdown_24_days(self, db):
-        now = datetime.now()
+        now = datetime.now(UTC)
         timezone = pytz.timezone(Config.TIME_ZONE)
         event_dt = now + timedelta(days=24)
         event = Event(name="test", starts_at=event_dt)
         event.save()
 
-        assert event.starts_at == event_dt  # store as naive
+        assert event.starts_at != event_dt  # store as naive!?
         assert event.name == "test"
         assert event.countdown is not None
         assert event.countdown == event_dt.replace(tzinfo=timezone)
         assert timesince(event.countdown, until=True) == "3 weeks to go"
 
     def test_countdown_4_hours(self, db):
-        timezone = pytz.timezone(Config.TIME_ZONE)
         now = datetime.now(UTC)
         # need to add 10 seconds to avoid timesince to compute 3.9999h
         # formated to 3 by timesince

@@ -388,7 +388,9 @@
             {% if s.ref_url %}
               <a href="{{ s.ref_url }}">
             {% endif %}
-                {{ s.date|format_datetime }}
+                <span title="{{ s.date }}">
+                  {{ s.timesince }}
+                </span>
                 {% if s.author %}
                   ~
                   <a class="userlink"

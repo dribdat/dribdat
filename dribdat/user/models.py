@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """Dribdat data schema."""
 
-from sqlalchemy import Table, or_
+from sqlalchemy import Table, or_, func
 from sqlalchemy_continuum import make_versioned
 from sqlalchemy_continuum.plugins import FlaskPlugin
 from dribdat.user.constants import (
@@ -31,10 +31,8 @@ from flask import current_app
 from flask_login import UserMixin
 from time import mktime
 from dateutil.parser._parser import ParserError
-from datetime import datetime, timedelta
-# from Py3.12: from datetime import UTC
-from datetime import timezone
-UTC = timezone.utc 
+from datetime import datetime, timezone, timedelta
+from dribdat.futures import UTC
 
 import hashlib
 import re
@@ -95,11 +93,11 @@ class User(UserMixin, PkModel):
     # A temporary hash for logins
     hashword = Column(db.String(128), nullable=True)
     updated_at = Column(db.DateTime(timezone=True), nullable=True,
-                        default=datetime.now(UTC))
+                        default=func.now())
     # The hashed password
     password = Column(db.String(128), nullable=True)
     created_at = Column(db.DateTime(timezone=True), nullable=False,
-                        default=datetime.now(UTC))
+                        default=func.now())
 
     # State flags
     active = Column(db.Boolean(), default=False)
@@ -345,8 +343,8 @@ class Event(PkModel):
     location_lat = Column(SqliteDecimal(5), nullable=True)    # coordinates (Latitude)
     location_lon = Column(SqliteDecimal(5), nullable=True)    # coordinates (Longitude)
 
-    starts_at = Column(db.DateTime(timezone=True), nullable=False, default=datetime.now(UTC))
-    ends_at = Column(db.DateTime(timezone=True), nullable=False, default=datetime.now(UTC))
+    starts_at = Column(db.DateTime(timezone=True), nullable=False, default=func.now())
+    ends_at = Column(db.DateTime(timezone=True), nullable=False, default=func.now())
 
     description = Column(db.UnicodeText(), nullable=True) # a longer text about the event
     instruction = Column(db.UnicodeText(), nullable=True) # tips for logged-in event participants
@@ -537,7 +535,7 @@ class Event(PkModel):
                 status_text = ess[1]
                 status_time = float(ess[0])
                 # Check timeout
-                time_now = datetime.now()
+                time_now = datetime.now() # not UTC!
                 # Clear every now and then
                 time_limit = time_now - timedelta(minutes=CLEAR_STATUS_AFTER)
                 if datetime.fromtimestamp(status_time) < time_limit:
@@ -615,9 +613,9 @@ class Project(PkModel):
     logo_icon = Column(db.String(40), nullable=True)
 
     created_at = Column(db.DateTime(timezone=True), nullable=False,
-                        default=datetime.now(UTC))
+                        default=func.now())
     updated_at = Column(db.DateTime(timezone=True), nullable=False,
-                        default=datetime.now(UTC))
+                        default=func.now())
 
     # User who created the project
     user_id = reference_col('users', nullable=True)
@@ -848,6 +846,7 @@ class Project(PkModel):
                 'author': author,
                 'name': a.name,
                 'date': a.timestamp,
+                'timesince': a.data['timesince'],
                 'ref_url': a.ref_url,
                 'progress': a.project_progress,
                 'id': a.id,
@@ -1150,7 +1149,7 @@ class Activity(PkModel):
                           name="activity_type"))
     action = Column(db.String(32), nullable=True)
     # 'external', 'commit', 'sync', 'post', ...
-    timestamp = Column(db.DateTime(timezone=True), nullable=False, default=datetime.now(UTC))
+    timestamp = Column(db.DateTime(timezone=True), nullable=False, default=func.now())
     content = Column(db.UnicodeText, nullable=True)
     ref_url = Column(db.String(2048), nullable=True)
 
@@ -1193,7 +1192,7 @@ class Activity(PkModel):
         self.action = data['action']
         self.content = data['content']
         self.ref_url = data['ref_url']
-        self.timestamp = datetime.fromtimestamp(data['time'])
+        self.timestamp = datetime.utcfromtimestamp(data['time'])
         if 'user_name' in data:
             uname = data['user_name']
             user = User.query.filter_by(username=uname).first()
@@ -1224,7 +1223,7 @@ class Resource(PkModel):
     name = Column(db.String(80), nullable=False)
     is_visible = Column(db.Boolean(), default=True)
     created_at = Column(db.DateTime(timezone=True), nullable=False,
-                        default=datetime.now(UTC))
+                        default=func.now())
 
     # At which progress level (stage) did it become relevant
     progress_tip = Column(db.Integer(), nullable=True)
@@ -1237,6 +1236,10 @@ class Resource(PkModel):
     # Text blob of externally fetched structured content (e.g. supported URLs)
     sync_content = Column(db.UnicodeText, nullable=True)
 
+    # The project this is referenced in
+    project_id = reference_col('projects', nullable=True)
+    project = relationship('Project', backref='components')
+    
     @property
     def of_type(self):  # noqa: D102
         """Fetch human-readable Type of this Resource."""

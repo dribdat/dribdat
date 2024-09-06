@@ -6,7 +6,7 @@ from flask import (
 )
 from flask_login import login_required
 
-from ..utils import sanitize_input
+from ..utils import sanitize_input, get_time_note
 from ..extensions import db, cache
 from ..decorators import admin_required
 from ..aggregation import GetProjectData, SyncProjectData
@@ -19,9 +19,7 @@ from .forms import (
 )
 
 from datetime import datetime
-# from Py3.12: from datetime import UTC
-from datetime import timezone
-UTC = timezone.utc 
+from dribdat.futures import UTC
 
 import random
 import string
@@ -59,7 +57,8 @@ def index():
         },
     ]
     return render_template('admin/index.html',
-                           stats=stats, default_event=event, active='index')
+                           stats=stats, timeinfo=get_time_note(), 
+                           default_event=event, active='index')
 
 
 @blueprint.route('/users')

@@ -2,7 +2,7 @@
 """API calls for dribdat."""
 import boto3
 import tempfile
-import datetime as dt
+from datetime import datetime
 
 from flask import (
     Blueprint, current_app,
@@ -393,7 +393,7 @@ def event_push_status(event_id):
         event.status = None
     else:
         # Update the status
-        event.status = str(dt.datetime.now().timestamp()) + ';' \
+        event.status = str(datetime.now().timestamp()) + ';' \
             + newstatus.replace(';', ':')
     event.save()
     return jsonify(status='OK')

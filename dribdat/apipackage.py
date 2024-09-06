@@ -8,7 +8,7 @@ import tempfile
 from os import path
 from copy import deepcopy
 from werkzeug.utils import secure_filename
-from datetime import datetime as dtt
+from datetime import datetime
 from frictionless import Package, Resource
 from .user.models import Event, Project, Activity, Category, User, Role
 from .utils import format_date
@@ -18,6 +18,7 @@ from .apiutils import (
     get_event_activities,
     get_event_categories,
 )
+from dribdat.futures import UTC
 
 # In seconds, how long to wait for API response
 REQUEST_TIMEOUT = 10
@@ -51,7 +52,7 @@ def event_to_data_package(event, author=None, host_url='', full_content=False):
         }],
         contributors=contributors,
         homepage=event.webpage_url or '',
-        created=format_date(dtt.now()),
+        created=format_date(datetime.now(UTC)),
         version="0.2.0",
     )
 
@@ -216,7 +217,7 @@ def import_activities(data, dry_run=False):
     pname = ""
     for act in data:
         aname = act['name']
-        tstamp = dtt.utcfromtimestamp(act['time'])
+        tstamp = datetime.utcfromtimestamp(act['time'])
         activity = Activity.query.filter_by(name=aname,
                                             timestamp=tstamp).first()
         if activity:

@@ -19,9 +19,7 @@ from dribdat.user.forms import RegisterForm, EmailForm, LoginForm, UserForm
 from dribdat.database import db
 from dribdat.mailer import user_activation
 from datetime import datetime
-# from Py3.12: from datetime import UTC
-from datetime import timezone
-UTC = timezone.utc 
+from dribdat.futures import UTC
 # noqa: I005
 
 blueprint = Blueprint('auth', __name__, static_folder="../static")

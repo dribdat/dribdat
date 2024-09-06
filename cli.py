@@ -3,11 +3,12 @@
 """Management functions for dribdat."""
 import os
 import click
-import datetime as dt
+from datetime import datetime, timedelta
 from dribdat.app import init_app
 from dribdat.user.models import User, Event
 from dribdat.settings import DevConfig, ProdConfig
 from dribdat.apipackage import fetch_datapackage, load_file_datapackage, import_users_csv
+from dribdat.futures import UTC
 
 HERE = os.path.abspath(os.path.dirname(__file__))
 TEST_PATH = os.path.join(HERE, 'tests')
@@ -99,13 +100,13 @@ def numerise(event: int, clear: bool, primes: bool, challenges: bool):
 def event_start(name, start=None, finish=None):
     """Create a new event."""
     if start is None:
-        start = dt.datetime.now() + dt.timedelta(days=1)
+        start = datetime.now(UTC) + timedelta(days=1)
     else:
-        start = dt.datetime.parse(start)
+        start = datetime.parse(start)
     if finish is None:
-        finish = dt.datetime.now() + dt.timedelta(days=2)
+        finish = datetime.now(UTC) + timedelta(days=2)
     else:
-        finish = dt.datetime.parse(finish)
+        finish = datetime.parse(finish)
     with create_app().app_context():
         from dribdat.user.models import Event
         event = Event(name=name, starts_at=start, ends_at=finish)

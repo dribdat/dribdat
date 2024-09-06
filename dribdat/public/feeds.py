@@ -11,9 +11,7 @@ from sqlalchemy import or_
 
 from dateutil import parser
 from datetime import datetime
-# from Py3.12: from datetime import UTC
-from datetime import timezone
-UTC = timezone.utc 
+from dribdat.futures import UTC
 
 from ..user.models import Event, Project, Activity, User
 from ..apiutils import (
