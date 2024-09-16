@@ -24,7 +24,7 @@
           let userOptOut = localStorage.getItem('eventstatus-mute');
           if (!userOptOut) {
             userOptOut = !window.confirm(eventStatus + 
-              '\n\n(OK to see more alerts like this?)');
+              '\n\n(Cancel to opt out from future alerts)');
           }
 
           if (userOptOut) {
@@ -44,12 +44,16 @@
 
     // To enable the popups, click the button in the footer
     $('#notification-button').show().click(function() {
+      let userOptOut = localStorage.getItem('eventstatus-mute');
+      if (userOptOut) {
+        
       //console.log('un-muting...');
       $('#notifications-status-text').html('You will now receive alerts');
       $('#global-notifications-alert').removeClass('hidden');
       localStorage.removeItem('eventstatus-mute');
       localStorage.removeItem('eventstatus');
       createNotification();
+      }
     });
 
   } // -no-dashboard

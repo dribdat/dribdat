@@ -2196,6 +2196,17 @@ Search engine
   background-size: contain;
   margin-right: 8px;
 }
+#search-results sm {
+  font-weight: normal;
+  font-size: 80%;
+  display: block;
+}
+#search-results tr {
+  cursor: pointer;
+}
+#search-results tr:hover {
+  background: lightyellow;
+}
 
 
 /* ------------

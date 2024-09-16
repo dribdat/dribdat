@@ -126,7 +126,16 @@
         <input type="text" class="form-control" name="q" aria-label="Search projects" placeholder="Start typing ..."  style="width:20em">
       </div>
     </div>
-    <div class="row flex-row flex-nowrap pb-2" id="search-results"></div>
+    <table class="table">
+      <thead class="thead-light">
+        <tr>
+          <th scope="col">Team</th>
+          <th scope="col">Event</th>
+          <th scope="col">Updated</th>
+        </tr>
+      </thead>
+      <tbody id="search-results"></tbody>
+    </table>
     <div class="text-center mb-2" id="search-matches"></div>
   </div>
 </div>

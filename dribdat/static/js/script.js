@@ -49,6 +49,12 @@
     };
   }
 
+  // A very quick and basic date formatter
+  function dateFormat(dt) {
+    let d = new Date(Date.parse(dt.replace(' ', 'T')));
+    return d.getDate() + '.' + (d.getMonth() + 1) + '.' + d.getFullYear();
+  }
+
   // About page simple stupid search
   var lastSearch = null;
   var searchForm = $('#search');
@@ -90,19 +96,15 @@
       } else {
         $sm.html('Zero, zilch, zip, nada.')
       }
+      console.log(projects);
       // Create project cards
       projects.forEach(function(p) {
         $ul.append(
-          '<a class="col col-2 col-sm-2 col-md-4 col-lg-4 ms-auto mr-1 card project" ' +
-             'target="_blank" ' +
-             'href="' + p.url + '"' +
-             (p.image_url ?
-               ' style="background-image:url(' + p.image_url + '); padding-left:100px"' : '') + '>' +
-            '<div class="card-body">' +
-              '<h5 class="card-title">' + p.name + '</h5>' +
-              '<p class="card-text">' + p.summary + '</p>' +
-            '</div>' +
-          '</a>'
+          '<tr onclick="location.href=\'' + p.url + '\'">' +
+            '<th scope="row">' + p.name + '<sm>' + p.summary + '</sm></th>' +
+            '<td>' + p.event_name + '</td>' +
+            '<td>' + dateFormat(p.updated_at) + '</td>' +
+          '</tr>'
         );
       });
     }); //- get searchForm
