@@ -61,23 +61,22 @@ def get_time_note():
     return tzinfo
 
 
-def timesince(dt, default="just now", until=False):
+def timesince(dtsince, default="just now", until=False):
     """Return a string representing 'time since'."""
     """E.g.: 3 days ago, 5 hours ago etc.
     See http://flask.pocoo.org/snippets/33/
     """
+    if dtsince is None:
+        return ""
+    dt_now = datetime.now(UTC)
+    dt = dtsince.astimezone(UTC)
     if dt is None:
         return ""
-    tz = timezone(current_app.config["TIME_ZONE"])
-    tz_now = dt.now(UTC).astimezone(tz)
-    dt = dt.astimezone(tz)
-    if dt is None:
-        return ""
-    if until and dt > tz_now:
-        diff = dt - tz_now
+    if until and dt > dt_now:
+        diff = dt - dt_now
         suffix = "to go"
     else:
-        diff = tz_now - dt
+        diff = dt_now - dt
         suffix = "ago"
     periods = (
         (diff.days / 365, "year", "years"),
