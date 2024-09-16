@@ -29,7 +29,6 @@
 
           if (userOptOut) {
             // Stop showing prompts in the future
-            //console.log('muting...');
             localStorage.setItem('eventstatus-mute', 1);
           }
         }, 500);
@@ -46,14 +45,19 @@
     $('#notification-button').show().click(function() {
       let userOptOut = localStorage.getItem('eventstatus-mute');
       if (userOptOut) {
-        
-      //console.log('un-muting...');
-      $('#notifications-status-text').html('You will now receive alerts');
-      $('#global-notifications-alert').removeClass('hidden');
-      localStorage.removeItem('eventstatus-mute');
-      localStorage.removeItem('eventstatus');
-      createNotification();
+        $('#notifications-status-text').html('You will now receive alerts');
+        $('#global-notifications-alert').removeClass('hidden');
+        localStorage.removeItem('eventstatus-mute');
+        localStorage.removeItem('eventstatus');
+        createNotification();
+      } else {
+        localStorage.setItem('eventstatus-mute', 1);
+        $('#notifications-status-text').html('Alerts have been muted');
+        $('#global-notifications-alert').removeClass('hidden');
       }
+      setTimeout(function() {
+        $('#global-notifications-alert').addClass('hidden');
+      }, 3 * 1000); // hide after a few seconds
     });
 
   } // -no-dashboard
