@@ -5,7 +5,9 @@
 
 .timeline-item .social-media {
   padding-top: 8px;
-  opacity: 0.25; transition: opacity 0.2s ease-out;
+  opacity: 0.25; 
+  margin: 1em 0px;
+  transition: opacity 0.2s ease-out;
   /* max-height: 20px; transition: max-height 0.5s ease-out; overflow: hidden; */
 }
 .timeline-item .social-media .resp-sharing-button {

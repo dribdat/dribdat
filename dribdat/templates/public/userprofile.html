@@ -10,6 +10,17 @@
 
 {% block content %}
 
+{% if score_tip and current_user.id == user.id %}
+  <div class="alert alert-info"
+       title="This tip is only visible to you">
+    <a class="close" title="Close" href="#" data-dismiss="alert">&times;</a>
+    To improve your score, please  
+    <a href="{{ url_for('auth.user_profile') }}">
+      complete your profile.
+    </a>
+  </div>
+{% endif %}
+
 {% if user.my_goals %}
   <div class="profile-goals col-6 bg-body" title="My Goals">
     <a name="goals"></a>
@@ -19,16 +30,6 @@
 
 {% if current_user and current_user.is_authenticated %}
 <div class="row">
-
-  {% if score_tip and current_user.id == user.id %}
-    <div class="category-tip mt-2 clearfix"
-         title="This tip is only visible to you">
-      To improve your score, please  
-      <a href="{{ url_for('auth.user_profile') }}">
-        complete your profile.
-      </a>
-    </div>
-  {% endif %}
 
   <div class="col-sm text-right mt-2">
   {% if current_user.id == user.id %}

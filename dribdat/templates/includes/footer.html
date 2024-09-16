@@ -10,6 +10,10 @@
     <i class="fa fa-bell" aria-hidden="true"></i>
     Alerts
   </a>
+  <a href="{{ url_for('public.about') }}" class="ml-3">
+    <i class="fa fa-book" aria-hidden="true"></i>
+    About
+  </a>
   <ul class="footer-nav">
     {% if current_user and current_user.is_authenticated %}
       {% if current_user.is_admin %}
@@ -48,10 +52,6 @@
 
     <li>
       <a href="{{ url_for('public.terms') }}">&#x1F4DC;&nbsp;Terms</a>
-    </li>
-    
-    <li>
-      <a href="{{ url_for('public.about') }}">&#128214;&nbsp;About</a>
     </li>
 
     <li>

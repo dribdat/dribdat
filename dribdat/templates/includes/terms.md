@@ -1,3 +1,5 @@
+**Out of the box, this application (Dribdat) does not collect any usage data. Your site administrators, however, may activate separate tracking features. We advise replacing this default terms.md text and/or adding a cookie banner as necessary in your legal jurisdiction.**
+
 Switzerland implemented the Revised Federal Act on Data Protection (revFADP) to better protect its citizens' data. Swiss companies have to comply with this legislation from September 1, 2023.
 
 The revFADP aims to protect the personal rights and the fundamental rights of natural persons whose personal data is processed. Since Switzerland is not a member state of the European Union or the European Economic Area it seeks to align with the Council of Europe’s Convention 108, and with the General Data Protection Regulation (GDPR). An adequate level of privacy is also important in view of the pending adequacy finding by the EU Commission.

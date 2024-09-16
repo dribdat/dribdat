@@ -29,7 +29,7 @@ When participants bring their own material, sharing is encouraged as long as the
 In the interest of creating a safe and inclusive environment, we strongly encourage applying a Code of Conduct and open license to your event. We have provided an example at the bottom of every page, which you may modify, and also include a reference to in your opening presentation or e-mailed instructions.
 
 <label><input type="checkbox"> Check the **Community** section in your event settings </label><br>
-<label><input type="checkbox"> Make sure your fellow organisers are <u>aware and ready</u> to enforce a Code of Conduct </label><br>
+<label><input type="checkbox"> Make sure that the organisers are ready to enforce the Code of Conduct </label><br>
 <label><input type="checkbox"> Verify compliance during evaluation rounds, when issuing certificates, or other post-event analysis </label><br>
 
 _Disagree with something?_ Please raise [an issue](https://github.com/dribdat/dribdat/issues) or [Edit this page](https://github.com/dribdat/dribdat/blob/main/dribdat/templates/includes/eventstart.md).
