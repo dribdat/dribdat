@@ -948,10 +948,6 @@ nav .nav-login {
   font-size: 250%;
   opacity: 0.6;
 }
-.project-page .project-team {
-  font-weight: normal;
-  color: #999;
-}
 .project-home .project-headline i.fa {
   float: left;
   font-size: 3.5rem;
@@ -1044,6 +1040,12 @@ nav .nav-login {
   color: black;
   overflow-x: hidden;
   padding: 1rem;
+}
+.project-info .project-team {
+  font-weight: normal;
+  list-style: none;
+  margin: 0px;
+  padding: 0px;
 }
 
 /* Content blocks on project page */
@@ -1981,8 +1983,9 @@ a.go-up {
   background: none;
 }
 .embed-view .honeycomb {
-  transform: scale(0.4);
-  transform-origin: top center;
+  transform: scale(0.32);
+  transform-origin: top left;
+  padding-left: 10%;
 }
 .embed-event .event-countdown {
   bottom: 0px;
@@ -1994,11 +1997,8 @@ a.go-up {
   display: none;
 }
 .carousel-caption .embed-view {
-  width: 100%;
   height: 13em;
   overflow: hidden;
-  margin-left: -14% !important;
-  margin-top: 2em !important;
 }
 .carousel-caption .embed-view .ibws-fix {
   width: 800px;

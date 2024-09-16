@@ -64,7 +64,7 @@
           Use the <a href="{{ url_for('public.all_participants')}}">participant list</a>
           to look up a username, or enter an e-mail address to send out an invite:
         {% if current_user.is_admin %}
-          (Admins: you can kick a user with the <b>X</b> button next to their profile, 
+          (Admins can kick a user with the <b>X</b> button next to their profile, 
           or unjoin them in the <a href="{{ url_for('admin.users')}}">user admin</a>.)
         {% endif %}        
         </p>
