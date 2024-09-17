@@ -20,7 +20,7 @@ from dribdat.user import (
 )
 from dribdat.public.projhelper import (
     project_action, project_edit_action, templates_from_event, 
-    revert_project_by_activity, navigate_around_project,
+    revert_project_by_activity, navigate_around_project, check_update,
 )
 from dribdat.apigenerate import gen_project_pitch, gen_project_post, prompt_ideas
 from ..decorators import admin_required
@@ -181,11 +181,10 @@ def project_post(project_id):
         flash("Thanks for sharing your progress!", 'success')
 
         # Continue with project autoupdate
-        if project.is_syncable:
-            return project_autoupdate(project.id)
-        else:
-            return redirect(url_for(
-                'project.project_view_posted', project_id=project.id))
+        if project.is_syncable and check_update(project, 10):
+            project_autoupdate(project.id)
+        return redirect(url_for(
+            'project.project_view_posted', project_id=project.id))
 
     return render_template(
         'public/projectpost.html',
