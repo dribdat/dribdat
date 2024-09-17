@@ -22,7 +22,10 @@
                 </div>
               </th>
               <th>
-                <a href="?sort=created">Created</a>/<a href="?sort=updated">Updated</a>
+                <a href="?sort=created">Created</a>
+              </th>
+              <th>
+                <a href="?sort=updated">Updated</a>
               </th>
               <th>
                 <a href="?sort=sso" title="Single Sign-on ?">SSO</a>
@@ -34,7 +37,7 @@
         <tr data-href="{{ url_for('admin.user', user_id=user.id) }}">
             <td>
               <a href="{{ url_for('public.user_profile', username=user.username) }}" class="btn btn-lg btn-light">
-                  <i class="fa fa-child">&nbsp;{{ user.activity_count }}</i>
+                  &nbsp;{{ user.activity_count }}&nbsp;
               </a>
             </td>
             <td {% if not user.active %}style="background:yellow" title="Account inactive"{% endif %}>
@@ -43,9 +46,10 @@
                 &#10003;
               </div>
               {% endif %}
-              <h5>{{ user.username }}</h5>
+              <b>{{ user.username }}</b>
             </td>
-            <td>{{ user.created_at|format_date }}<br>{{ user.updated_at|format_date }}</td>
+            <td>{{ user.created_at|format_date }}</td>
+            <td>{{ user.updated_at|format_date }}</td>
             <td>{% if user.sso_id %}&#10003;{% endif %}</td>
             <td><div class="btn-group">
               <a href="{{ url_for('admin.user', user_id=user.id) }}" class="btn btn-warning" title="Edit user">
