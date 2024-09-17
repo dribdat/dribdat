@@ -96,17 +96,17 @@
       } else {
         $sm.html('Zero, zilch, zip, nada.')
       }
-      console.log(projects);
       // Create project cards
       projects.forEach(function(p) {
         $ul.append(
-          '<tr onclick="location.href=\'' + p.url + '\'">' +
+          '<tr data-href="' + p.url + '">' +
             '<th scope="row">' + p.name + '<sm>' + p.summary + '</sm></th>' +
             '<td>' + p.event_name + '</td>' +
             '<td>' + dateFormat(p.updated_at) + '</td>' +
           '</tr>'
         );
       });
+      enableClickableRows();
     }); //- get searchForm
   } // -runSearch
 
@@ -149,6 +149,13 @@
       $('[category-id="' + selected_id + '"]', $infotext).show();
     }
   }); // -navCategories
+
+  // Clickable table rows
+  function enableClickableRows() {
+    $("tr[data-href]").click(function() {
+      window.location = $(this).data("href");
+    });
+  }
 
   // Toggle challenges after the hackathon
   // $('.event-finished .nav-categories #challenges').parent().click();
@@ -372,6 +379,7 @@
   // Bootup
   init_clock();
   checkSearchQuery();
+  enableClickableRows();
 
   //console.info('dribdat ready.');
 

@@ -73,7 +73,7 @@ def project_edit_action(project_id, detail_view=False):
         flash('You do not have access to edit this project.', 'warning')
         return project_action(project_id, None)
 
-    allow_sync = project.is_autoupdateable and check_update(project)
+    allow_sync = project.is_syncable and check_update(project)
 
     # Basic view
     if not detail_view:

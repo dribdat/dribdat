@@ -181,7 +181,7 @@ def project_post(project_id):
         flash("Thanks for sharing your progress!", 'success')
 
         # Continue with project autoupdate
-        if project.is_autoupdateable:
+        if project.is_syncable:
             return project_autoupdate(project.id)
         else:
             return redirect(url_for(
@@ -513,7 +513,7 @@ def create_new_project(event, is_anonymous=False):
 def project_autoupdate(project_id):
     """Sync remote project data."""
     project = Project.query.filter_by(id=project_id).first_or_404()
-    if not project.is_autoupdateable:
+    if not project.is_syncable:
         return project_action(project_id)
 
     # Check user permissions
@@ -545,7 +545,7 @@ def project_autoupdate(project_id):
         if project.autotext and len(project.autotext) > 1:
             project_action(project.id, 'update', action='sync',
                            text=str(len(project.autotext)) + ' bytes')
-            flash("Thanks for contributing: %s synced." % data['type'], 'success')
+            flash("The latest data from %s has been synced." % data['type'], 'success')
         else:
             flash("Could not sync: remote README is empty.", 'warning')
     return redirect(url_for(

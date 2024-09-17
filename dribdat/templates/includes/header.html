@@ -9,7 +9,7 @@
     {% endif %}
     <div class="section-header-content">
       <a href="{{ url_for('public.event', event_id=event.id) }}">
-        <h3 class="event-name">{{ event.name }}</h3>
+        <h2 class="event-name">{{ event.name }}</h2>
       </a>
       {% if event.hostname %}
         <div class="event-hostname">

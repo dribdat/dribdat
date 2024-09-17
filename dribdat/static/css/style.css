@@ -116,6 +116,11 @@ form input[type="checkbox"] {
   margin-top: 1em;
 }
 
+.admin tr[data-href] {
+  cursor: pointer;
+  cursor: hand;
+}
+
 .admin .form-group .control-label {
   font-size: 175%;
   margin-top: 1em;
@@ -139,7 +144,8 @@ form input[type="checkbox"] {
   background: #ff3;
 }
 .admin-events .event-name {
-  font-size: 125%;
+  font-size: 150%;
+  line-height: 1em;
 }
 .admin-projects .projects-extra {
   float:right; clear:both; margin-bottom:1em;
@@ -183,7 +189,6 @@ form input[type="checkbox"] {
 .admin .container table td { vertical-align: middle; }
 
 .admin .card.stat {
-  width: 20%;
   display: inline-block;
   vertical-align: bottom;
   background: #922;
@@ -285,6 +290,10 @@ ul.help-block {
   opacity: 0.5;
   width: 1.2em;
 }
+.section-header .event-name {
+  font-size: 300%;
+  line-height: 1em;
+}
 .section-header a:hover {
   text-decoration: none;
 }
@@ -292,6 +301,10 @@ ul.help-block {
   .section-header .section-header-logo {
     position: relative;
     margin: 0px 10px 0 0;
+  }
+  .section-header .event-name {
+    font-size: 200%;
+    line-height: 1em;
   }
 }
 
@@ -1974,7 +1987,8 @@ a.go-up {
 .embed-view h2 { margin-bottom: 0px; }
 .embed-event {
   text-align: center;
-  background: none transparent !important;
+  background: #fed;
+  padding-top: 10px;
 }
 .embed-view, .embed-view .container {
   margin: 0 !important;
@@ -1997,7 +2011,7 @@ a.go-up {
   display: none;
 }
 .carousel-caption .embed-view {
-  height: 13em;
+  max-height: 13em;
   overflow: hidden;
 }
 .carousel-caption .embed-view .ibws-fix {
