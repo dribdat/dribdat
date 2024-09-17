@@ -656,7 +656,7 @@ class Project(PkModel):
         return self.progress <= PR_CHALLENGE
 
     @property
-    def is_autoupdateable(self):
+    def is_syncable(self):
         """Return True if this project can be autoupdated."""
         return self.autotext_url and self.autotext_url.strip()
 
@@ -713,7 +713,7 @@ class Project(PkModel):
             d['excerpt'] = self.longtext[:MAX_EXCERPT_LENGTH]
             if len(self.longtext) > MAX_EXCERPT_LENGTH:
                 d['excerpt'] += '...'
-        elif self.is_autoupdateable:
+        elif self.is_syncable:
             if self.autotext and len(self.autotext) > 10:
                 d['excerpt'] = self.autotext[:MAX_EXCERPT_LENGTH]
                 if len(self.autotext) > MAX_EXCERPT_LENGTH:
