@@ -6,7 +6,7 @@ See: http://webtest.readthedocs.org/
 from flask import url_for
 from .factories import ProjectFactory, EventFactory, UserFactory
 from dribdat.onebox import make_onebox
-from dribdat.public.projhelper import resources_by_stage, project_action, navigate_around_project
+from dribdat.public.projhelper import check_update, resources_by_stage, project_action, navigate_around_project
 from dribdat.aggregation import ProjectActivity
 from dribdat.utils import load_yaml_presets
 from dribdat.apifetch import FetchStageConfig
@@ -102,6 +102,7 @@ EOF""" % (url, url)
         project.save()
         assert len(resources_by_stage(0)) == 1
         assert project_action(project.id)
+        assert check_update(project)
 
     def test_participant_search(self, user, testapp):
         """Search for participants."""

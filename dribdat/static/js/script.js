@@ -283,7 +283,6 @@
   });
   if (hasLightbox) {
     let gallery = new SimpleLightbox('.lightboxed');
-    console.log(gallery);
   }
 
   // Show GitHub issues
