@@ -28,7 +28,7 @@ def current_event():
 
 def check_update(obj, minutes=5):
     """Has the object been updated in the last minutes."""
-    td = datetime.now(UTC) - obj.updated_at
+    td = datetime.now(UTC) - obj.updated_at.replace(tzinfo=UTC)
     return td < timedelta(minutes=minutes)
 
 
