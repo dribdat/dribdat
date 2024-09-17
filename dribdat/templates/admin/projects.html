@@ -20,6 +20,8 @@
       <a href="{{ url_for('admin.event', event_id=event.id) }}" class="btn btn-light">
         <i class="fa fa-arrow-left" aria-hidden="true"></i>
         Event</a>
+    {% else %}
+      <span><b>Tip</b>: Manage the projects of a specific event for more options.</span>
     {% endif %}
 
     {% if data %}
@@ -39,27 +41,21 @@
             </tr>
         </thead>
         {% for project in projects or data.items %}
-        <tr>
+        <tr data-href="{{ url_for('admin.project_view', project_id=project.id) }}">
             <td style="text-align:right">
               <a href="{{ url_for('project.project_view', project_id=project.id) }}" title="Open">
                 <div class="btn btn-lg btn-light">
                   {% if project.logo_icon %}
                     <i class="fa fa-{{project.logo_icon}}"></i>
                   {% else %}
-                    <i class="fa fa-eye"></i>
+                    <i class="fa fa-link"></i>
                   {% endif %}
                 </div>
             </td>
-            <td width="50%">
-              <a href="{{ url_for('project.project_view', project_id=project.id) }}">
-                {{ project.name }}
-              </a>
-              <br>
+            <td width="50%" {% if project.is_hidden %}style="background:pink" title="Hidden"{% elif project.progress<0 %}style="background:yellow" title="Awaiting approval"{% endif %}>
+              <h5>{{ project.name }}</h5>
               <small>
-                <a href="{{ url_for('public.event_stages', event_id=project.event_id) }}">
-                  {{ project.phase }}
-                </a>
-                &nbsp;
+                {{ project.phase }} &nbsp;
                 <b>{{ project.ident or '' }}</b>
               </small>
             </td>
@@ -68,26 +64,27 @@
               <small><br>{{ project.user.name }}</small></td>
             <td>{{ project.updated_at|since_date }}</td>
             <td><div class="btn-group">
-              <a href="{{ url_for('admin.project_view', project_id=project.id) }}" class="btn btn-warning">
-                Edit
+              <a class="btn btn-warning" href="{{ url_for('admin.project_view', project_id=project.id) }}">
+                <i class="fa fa-pencil"></i>
               </a>
               {% if project.is_hidden %}
                 <a href="{{ url_for('admin.project_toggle', project_id=project.id) }}" class="btn btn-danger"
                    onclick="if(!window.confirm('Are you sure you wish to make this project visible?')) return false"
                    title="Click to enable this project">
-                  <i class="fa fa-lock"></i>
+                  <i class="fa fa-eye-slash"></i>
                 </a>
               {% else %}
                 <a href="{{ url_for('admin.project_toggle', project_id=project.id) }}" 
                    title="Hide this project" class="btn btn-light"
                    onclick="if(!window.confirm('Are you sure you wish to hide this project?')) return false">
-                  <i class="fa fa-unlock"></i>
+                  <i class="fa fa-eye"></i>
                 </a>
-                {% if project.is_autoupdate %}
-                <a href="{{ url_for('project.project_autoupdate', project_id=project.id) }}" class="btn btn-dark">
-                  Sync
-                </a>
-                {% endif %}
+              {% endif %}
+              {% if project.is_syncable %}
+              <a href="{{ url_for('project.project_autoupdate', project_id=project.id) }}" 
+                 title="Sync project data" class="btn btn-dark">
+                <i class="fa fa-recycle"></i>
+              </a>
               {% endif %}
             </div></td>
         </tr>
@@ -95,9 +92,6 @@
     </table>
   {% if data %}
     {% include "includes/pagination.html" %}
-  {% endif %}
-  {% if not event %}
-    <span><b>Tip</b>: Manage the projects of a specific event for more options.</span>
   {% endif %}
 </div>
 {% endblock %}

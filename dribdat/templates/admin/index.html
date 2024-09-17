@@ -10,7 +10,7 @@
     {% if default_event %}
         <a href="{{ url_for('admin.event', event_id=default_event.id) }}" class="btn btn-lg btn-warning">
           <i class="fa fa-calendar" aria-hidden="true"></i>
-          Current event</a>
+          Featured Event</a>
         <a href="{{ url_for('admin.event_projects', event_id=default_event.id) }}" class="btn btn-lg btn-success">
           <i class="fa fa-star" aria-hidden="true"></i>
           Projects</a>
@@ -24,7 +24,7 @@
     {% endif %}
     </div>
     <div class="btn-group mb-2 text-center">
-      <a href="{{ url_for('public.dashboard') }}" class="btn btn-lg btn-danger">
+      <a href="{{ url_for('public.dashboard') }}" class="btn btn-lg btn-dark">
         <i class="fa fa-recycle" aria-hidden="true"></i>
         Dashboard</a>
       <a href="{{ url_for('admin.presets') }}" class="btn btn-lg btn-info">
@@ -45,7 +45,7 @@
     {% else %}
       <a href="{{ url_for('admin.projects') }}"
     {% endif %}
-       class="card stat" style="height: {{ stat.height }}em">
+       class="card stat" style="width: {{ 90/stats|length }}%; height: {{ stat.height }}em">
       {% if stat.img %}
         <img src="{{ stat.img }}" class="card-img-top">
       {% endif %}

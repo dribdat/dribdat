@@ -22,7 +22,7 @@
             </tr>
         </thead>
         {% for event in events %}
-        <tr>
+        <tr data-href="{{ url_for('public.event', event_id=event.id) }}">
             <td>
               <div class="dropdown">
                 <button class="btn btn-secondary dropdown-toggle" type="button" id="evMenu{{ event.id }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -86,15 +86,15 @@
               {% endif %}
               </a>
 
-              <a class="event-name" href="{{ url_for('public.event', event_id=event.id) }}">
+              <h5 class="event-name">
                 {{ event.name }}
-              </a>
+              </h5>
             </td>
             <td>{{ event.starts_at|format_date }}</td>
             <td>{{ event.ends_at|format_date }}</td>
             <td class="btn-group">
-              <a href="{{ url_for('admin.event', event_id=event.id) }}" class="btn btn-primary">
-                Edit
+              <a href="{{ url_for('admin.event', event_id=event.id) }}" class="btn btn-warning" title="Edit this event">
+                <i class="fa fa-pencil" aria-hidden="true"></i>
               </a>
               <a href="{{ url_for('admin.event_projects', event_id=event.id) }}" class="btn btn-info">
                 {{ event.project_count }}&nbsp;projects
