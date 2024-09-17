@@ -10,7 +10,7 @@ from ..utils import sanitize_input, get_time_note
 from ..extensions import db, cache
 from ..decorators import admin_required
 from ..aggregation import GetProjectData, SyncProjectData
-from ..user.models import Role, User, Event, Project, Category, Resource
+from ..user.models import Role, User, Event, Activity, Project, Category, Resource
 from .forms import (
     RoleForm,
     UserForm, UserProfileForm,
@@ -32,7 +32,9 @@ blueprint = Blueprint('admin', __name__, url_prefix='/admin')
 @login_required
 @admin_required
 def index():
-    event = Event.query.filter_by(is_current=True).first()
+    current_event = Event.query.filter_by(is_current=True).first()
+    sum_hidden = Project.query.filter(Project.event_id==current_event.id) \
+                              .filter(Project.is_hidden).count()
     stats = [
         {
             'value': Event.query.count(),
@@ -45,20 +47,28 @@ def index():
             'icon': 'user',
             'height': 11
         }, {
-            'value': Project.query.filter(Project.progress < 0).count(),
+            'value': Project.query.filter(Project.progress == 0).count(),
             'text': 'Challenges',
             'icon': 'trophy',
             'height': 13
         }, {
-            'value': Project.query.filter(Project.progress >= 0).count(),
+            'value': Project.query.filter(Project.progress > 0).count(),
             'text': 'Projects',
             'icon': 'star',
             'height': 16
+        }, {
+            'value': Activity.query.count(),
+            'text': 'Dribs',
+            'icon': 'comments',
+            'height': 16
         },
     ]
+    if sum_hidden > 0:
+        flash(('There are %d projects in the featured event ' % sum_hidden) + \
+              ' that are hidden and possibly awaiting moderation.', 'warning')
     return render_template('admin/index.html',
                            stats=stats, timeinfo=get_time_note(), 
-                           default_event=event, active='index')
+                           default_event=current_event, active='index')
 
 
 @blueprint.route('/users')
@@ -373,7 +383,7 @@ def event_autosync(event_id):
     event = Event.query.filter_by(id=event_id).first_or_404()
     count = 0
     for project in event.projects:
-        if not project.is_autoupdateable:
+        if not project.is_syncable:
             continue
         data = GetProjectData(project.autotext_url)
         if 'name' not in data:
@@ -473,7 +483,7 @@ def project_toggle(project_id):
         flash('Project "%s" is now hidden.' % project.name, 'success')
     else:
         flash('Project "%s" is now visible.' % project.name, 'success')
-    return redirect(url_for("admin.project_view", project_id=project.id))
+    return redirect(url_for("admin.event_projects", event_id=project.event_id))
 
 
 @blueprint.route('/project/<int:project_id>/delete', methods=['GET', 'POST'])
