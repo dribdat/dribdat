@@ -2,23 +2,22 @@
 <div class="modal fade" id="autopostModal" role="dialog" tabindex="-1">
   <div class="modal-dialog auto-post">
     <div class="modal-content">
-      <div class="modal-header text-center"><h3>Get tips and suggestions ⛹️</h3></div>
       <div class="modal-body text-left">
         <p>
           Feeling stuck? We can fetch tips into your logs from an AI service that was configured
           by the <a href="/about">administrator</a>. Data from your project page will be uploaded for
           processing, and a short text will appear in your log after a minute.
         </p>
-        <p>
+        <p class="text-center">
           <button
              onclick="this.disabled=1; this.innerHTML='Please wait...'; location.href='{{ url_for('project.project_autopost', project_id=project.id) }}'"
-             title="Get a tip from an AI coach" class="btn btn-lg btn-light">
+             title="Get a tip from an AI coach" class="btn btn-lg btn-success">
             🅰️ℹ️ Log an automated suggestion
           </button>
         <p>
           Or click here to just get the prompt for use in a tool of your choice:
         </p>
-        <p class="auto-prompt">
+        <p class="auto-prompt text-center">
           <button id="autoprompt"
              data-api="{{ url_for('project.project_autoprompt', project_id=project.id) }}"
              class="btn btn-light btn-md">📋 Get a prompt</button>
