@@ -6,13 +6,11 @@
 <div class="container">
     <h1 class="huge">Edit event</h1>
 
-    <div class="float-right">
-      <a href="{{ url_for('public.event', event_id=event.id) }}" class="btn btn-warning m-2" target="_blank">
+    <div class="float-right btn-group">
+      <a href="{{ url_for('public.event', event_id=event.id) }}" class="btn btn-info">
         &#128065; Public view
       </a>
-
-      <a href="{{ url_for('admin.event_projects', event_id=event.id) }}" class="btn btn-info m-4"
-        onclick="if(!window.confirm('Make sure you have saved any changes.')) return false">
+      <a href="{{ url_for('admin.event_projects', event_id=event.id) }}" class="btn btn-warning">
         <i class="fa fa-arrow-right" aria-hidden="true"></i>
         Projects</a>
 
