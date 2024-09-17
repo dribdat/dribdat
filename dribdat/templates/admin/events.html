@@ -22,13 +22,25 @@
             </tr>
         </thead>
         {% for event in events %}
-        <tr data-href="{{ url_for('public.event', event_id=event.id) }}">
+        <tr>
             <td>
               <div class="dropdown">
                 <button class="btn btn-secondary dropdown-toggle" type="button" id="evMenu{{ event.id }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                   Action ...
                 </button>
                 <div class="dropdown-menu" aria-labelledby="evMenu{{ event.id }}">
+                  <a href="{{ url_for('public.event', event_id=event.id) }}" class="dropdown-item">
+                    Open
+                  </a>
+                  <a href="{{ url_for('public.event_print', event_id=event.id) }}" class="dropdown-item">
+                    Report
+                  </a>
+                  <a href="{{ url_for('public.event', event_id=event.id, _external=True) }}?embed=1" class="dropdown-item" id="embed-link">
+                    Embed
+                  </a>
+                  <a href="{{ url_for('public.dashboard', event_id=event.id) }}" class="dropdown-item">
+                    Dashboard
+                  </a>
                   <a href="{{ url_for('admin.event', event_id=event.id) }}" class="dropdown-item">
                     &#9734; Edit
                   </a>
@@ -38,31 +50,22 @@
                   <a href="{{ url_for('admin.event_copy', event_id=event.id) }}" 
                      onclick="if(!window.confirm('Are you sure you wish to make a copy?')) return false"
                      class="dropdown-item" title="Duplicate this event">
-                    &#9734; Copy
-                  </a>
-                  <a href="{{ url_for('public.event_print', event_id=event.id) }}" class="dropdown-item">
-                    &#9734; Print
-                  </a>
-                  <a href="{{ url_for('public.event', event_id=event.id, _external=True) }}?embed=1" class="dropdown-item" id="embed-link">
-                    Embed
-                  </a>
-                  <a href="{{ url_for('public.dashboard', event_id=event.id) }}" class="dropdown-item">
-                    Dashboard
+                    &#9734; Duplicate
                   </a>
                   <a href="{{ url_for('api.info_event_hackathon_json', event_id=event.id) }}" class="dropdown-item">
-                    &#9734; hackathon<b>.json</b>
-                  </a>
-                  <a href="{{ url_for('api.project_list_event_csv', event_id=event.id, moar=True) }}" class="dropdown-item">
-                    &#9660; projects<b>.csv</b>
-                  </a>
-                  <a href="{{ url_for('api.event_participants_csv', event_id=event.id) }}" class="dropdown-item">
-                    &#9660; participants<b>.csv</b>
+                    &#9660; hackathon<b>.json</b>
                   </a>
                   <a href="{{ url_for('api.package_specific_event', event_id=event.id, format='json') }}" class="dropdown-item">
                     &#9660; datapackage<b>.json</b>
                   </a>
                   <a href="{{ url_for('api.package_specific_event', event_id=event.id, format='zip') }}" class="dropdown-item">
                     &#9660; datapackage<b>.zip</b>
+                  </a>
+                  <a href="{{ url_for('api.event_participants_csv', event_id=event.id) }}" class="dropdown-item">
+                    &#9660; participants<b>.csv</b>
+                  </a>
+                  <a href="{{ url_for('api.project_list_event_csv', event_id=event.id, moar=True) }}" class="dropdown-item">
+                    &#9660; projects<b>.csv</b>
                   </a>
                 </div>
               </div>
@@ -93,11 +96,11 @@
             <td>{{ event.starts_at|format_date }}</td>
             <td>{{ event.ends_at|format_date }}</td>
             <td class="btn-group">
+              <a href="{{ url_for('admin.event_projects', event_id=event.id) }}" class="btn btn-info" title="See projects">
+                &nbsp;{{ event.project_count }}&nbsp;
+              </a>
               <a href="{{ url_for('admin.event', event_id=event.id) }}" class="btn btn-warning" title="Edit this event">
                 <i class="fa fa-pencil" aria-hidden="true"></i>
-              </a>
-              <a href="{{ url_for('admin.event_projects', event_id=event.id) }}" class="btn btn-info">
-                {{ event.project_count }}&nbsp;projects
               </a>
             </td>
         </tr>
