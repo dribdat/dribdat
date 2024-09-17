@@ -2,7 +2,9 @@
 [![codecov status](https://codecov.io/gh/dribdat/dribdat/branch/main/graph/badge.svg?token=Ccd1vTxRXg)](https://codecov.io/gh/dribdat/dribdat)
 [![FOSSA status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Floleg%2Fdribdat.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Floleg%2Fdribdat?ref=badge_shield)
 
-## Tooling for time-limited, team-based, open-by-default cooperation
+# Dribdat
+
+**Tooling for time-limited, team-based, open-by-default cooperation**
 
 `dribdat` is an open source web application that playfully assists teams collaborating on technical projects with data. Designed to support your [awesome hackathon](https://github.com/dribdat/awesome-hackathon), it is used as a versatile toolbox for civic tech events: bundling high quality guidelines, timers, trackers, loggers, integrating with prototyping tools, group chat, code repositories, open data APIs, and more!
 
