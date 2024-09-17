@@ -811,7 +811,7 @@ nav .nav-login {
 .hexagon .hexaicon {
   width: 2em;
   height: 2em;
-  background-color: white;
+  background-color: transparent;
   background-size: cover;
   position: relative;
   left: 50%;
@@ -878,10 +878,13 @@ nav .nav-login {
   margin: 0.5em 0;
   background: whitesmoke;
 }
-.tooltip .tooltip-inner p { /* Status */
+.tooltip .tooltip-inner p { 
+/* Status as icon
   font-size: 150%;
   letter-spacing: 0.8em;
   margin: 0px 0px 5px 0.7em;
+*/
+  margin-bottom: 5px;
 }
 
 /* --- Progress bars on projects --- */
@@ -1028,12 +1031,6 @@ nav .nav-login {
 }
 .project-page .project-star i {
   padding-right: 5px;
-}
-.project-edit-cover {
-  z-index: 99;
-  margin-top: -2em;
-  line-height: 0px;
-  float: right;
 }
 .jumbotron.projectnew-boilerplate {
   border: 10px solid lightseagreen;
@@ -1291,12 +1288,15 @@ nav .nav-login {
     height: 100vh;
     display: flex;
 }
+.timeline h2 {
+  font-size: 1.3rem;
+}
 @media (max-width: 1000px) {
   .project-page .resizable {
     height: 320px;
   }
   .timeline h2 {
-    font-size: 1.3rem;
+    font-size: 1rem;
   }
 }
 .win-size-grip {
@@ -1996,7 +1996,8 @@ a.go-up {
 .embed-view .honeycomb {
   transform: scale(0.32);
   transform-origin: top left;
-  padding-left: 10%;
+  padding-left: 50%;
+  margin-top: 0px !important;
 }
 .embed-event .event-countdown {
   bottom: 0px;

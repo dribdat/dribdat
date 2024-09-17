@@ -154,8 +154,11 @@ def user_profile(username):
     else:
         may_certify = current_user and not current_user.is_anonymous \
                       and current_user.id == user.id and user.may_certify()[0]
-    submissions = user.posted_challenges()
     projects = user.joined_projects(True)
+    events = []
+    for p in projects:
+        if p.event not in events:
+            events.append(p.event)
     posts = user.latest_posts(20)
     today = datetime.now(UTC)
     events_next = Event.query.filter(and_(
@@ -170,8 +173,7 @@ def user_profile(username):
     return render_template("public/userprofile.html", active="profile",
                            user=user, projects=projects, posts=posts,
                            score=user.get_score(), score_tip=score_tip,
-                           submissions=submissions,
-                           events_next=events_next,
+                           events=events, events_next=events_next,
                            may_certify=may_certify)
 
 

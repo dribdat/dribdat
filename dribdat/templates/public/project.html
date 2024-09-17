@@ -45,7 +45,7 @@
 
   {% if allow_post %}
      <a id="project-post" href="{{ url_for('project.project_post', project_id=project.id) }}" 
-        title="Post to this project" class="btn btn-lg btn-info">
+        title="Post to this project" class="btn btn-lg btn-success">
        <i class="fa fa-paper-plane" aria-hidden="true"></i>
        Post
      </a>
@@ -59,13 +59,12 @@
     <a href="{{ url_for('project.project_edit', project_id=project.id) }}" 
        title="Edit project" class="btn btn-lg btn-warning">
       <i class="fa fa-pencil" aria-hidden="true"></i>
-      Edit
     </a>
   {% endif %}
 
   {% if not lock_editing and not project.event.has_finished and not project.event.lock_resources and not past_version %}
     {% if project_starred %}
-      <a class="btn btn-lg btn-success" data-toggle="modal" data-target="#addUser"
+      <a class="btn btn-lg btn-info" data-toggle="modal" data-target="#addUser"
         title="Invite someone to this project">
         <i class="fa fa-child" aria-hidden="true"></i>
       </a>
@@ -73,7 +72,7 @@
       <a href="{{ url_for('project.project_star', project_id=project.id) }}" class="btn btn-lg btn-success project-star"
         title="{% if project.is_challenge %}Follow this challenge{% else %}Join the project{% endif %}">
          <i class="fa fa-thumbs-up"></i>
-         Join team
+         Join
       </a>
     {% endif %}
   {% endif %}
@@ -85,11 +84,6 @@
     style="background-image:url('{{project.image_url|quote_plus}}'); {% if project.logo_color %}background-color:{{project.logo_color}}; opacity:1.0{% endif %}"
     data-href="{{project.image_url|quote_plus}}">
   </div>
-  {% if allow_edit %}
-    <a class="project-edit-cover" href="{{ url_for('project.project_details', project_id=project.id) }}#image_url" title="Edit cover image">
-      <i class="fa fa-magic"></i>
-    </a>
-  {% endif %}
 {% endif %}
 
 <!-- Main project content container -->
@@ -434,7 +428,7 @@
 
 <div role="group" aria-label="Project controls" class="btn-group project-controls">
   {% if allow_post %}
-  <a href="{{ url_for('project.project_post', project_id=project.id) }}" class="btn btn-lg btn-info"
+  <a href="{{ url_for('project.project_post', project_id=project.id) }}" class="btn btn-lg btn-success"
      title="Write a progress update">
     <i class="fa fa-paper-plane" aria-hidden="true"></i>
     Post</a>
@@ -451,7 +445,7 @@
   {% endif %}
   {% if allow_edit and project.is_syncable %}
     <a href="{{ url_for('project.project_autoupdate', project_id=project.id) }}"
-       title="Refresh external Readme data" class="btn btn-lg btn-success">
+       title="Refresh external Readme data" class="btn btn-lg btn-dark">
       <i class="fa fa-refresh" aria-hidden="true"></i>
       Sync</a>
   {% endif %}
