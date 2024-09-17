@@ -297,12 +297,14 @@ def project_search_json():
         return jsonify(projects=[])
     limit = request.args.get('limit') or 10
     q = "%%%s%%" % q
-    projects = Project.query.filter(or_(
-        Project.name.like(q),
-        Project.summary.like(q),
-        Project.longtext.like(q),
-        Project.autotext.like(q),
-    )).limit(limit).all()
+    projects = Project.query \
+        .filter(Project.is_hidden==False) \
+        .filter(or_(
+            Project.name.like(q),
+            Project.summary.like(q),
+            Project.longtext.like(q),
+            Project.autotext.like(q),
+        )).limit(limit).all()
     projects = expand_project_urls(
         [p.data for p in projects],
         request.host_url
