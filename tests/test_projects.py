@@ -119,16 +119,3 @@ class TestProject:
         project.webpage_url = '<iframe src="https://12345"></iframe>'
         project.update_now()
         assert project.webpage_url == "https://12345"
-        
-# @pytest.mark.usefixtures('db')
-# class TestResource:
-#     """Resource (Component) tests."""
-#
-#     def test_resource_collection(self, db):
-#         resourceA = Resource(name="Test A")
-#         resourceA.save()
-#
-#         assert resourceA.name == "Test A"
-#         assert getResourceType(resourceB) == 'Code'
-#         assert getResourceType(resourceC) == 'Other'
-#         assert getResourceType(resourceN) == 'Other'

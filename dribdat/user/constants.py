@@ -23,18 +23,6 @@ USER_STATUS = {
 }
 CLEAR_STATUS_AFTER = 10 # minutes
 
-# Resource types
-# TODO: load from YAML
-RESOURCE_TYPES = {
-    0: ('forks', "Forks the source of"),
-    1: ('proves', "Demo or example of"),
-    2: ('permits', "License or terms applied"),
-    3: ('includes', "Includes this library or resource"),
-    4: ('uses data', "Uses this data source"),
-    5: ('built with', "Uses this hardware component"),
-    6: ('inspired by', "Is inspired by this"),
-}
-
 # Content length
 MAX_EXCERPT_LENGTH = 500
 
@@ -52,27 +40,6 @@ DRIB_QUESTIONS = [
         'What is your current task, and next move?',
         'Describe your current challenge',
     ]
-
-
-def resourceTypeList(verbose=False):
-    """Get a sorted list of resources by type."""
-    # TODO: clean up
-    vb = 1 if verbose else 0
-    pl = [(g, RESOURCE_TYPES[g][vb]) for g in RESOURCE_TYPES]
-    return sorted(pl, key=lambda x: x[0])
-
-
-def getResourceType(resource, verbose=False):
-    """Return a resource type."""
-    vb = 1 if verbose else 0
-    # TODO: clean up
-    if resource is None:
-        return ""
-    if resource.type_id is None:
-        return RESOURCE_TYPES[0][vb]
-    if resource.type_id not in RESOURCE_TYPES:
-        return ""
-    return RESOURCE_TYPES[resource.type_id][vb]
 
 
 def load_project_stages():

@@ -7,7 +7,6 @@ from .constants import (
     isUserActive,
     getProjectStages,
     validateProjectData,
-    resourceTypeList,
     projectProgressList,
     stageProjectToNext,
 )

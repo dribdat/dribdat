@@ -55,12 +55,6 @@ def upgrade():
                existing_nullable=True,
                autoincrement=False)
 
-    with op.batch_alter_table('resources', schema=None) as batch_op:
-        batch_op.alter_column('created_at',
-               existing_type=postgresql.TIMESTAMP(),
-               type_=sa.DateTime(timezone=True),
-               existing_nullable=False)
-
     with op.batch_alter_table('users', schema=None) as batch_op:
         batch_op.alter_column('updated_at',
                existing_type=postgresql.TIMESTAMP(),
@@ -82,12 +76,6 @@ def downgrade():
                existing_type=sa.DateTime(timezone=True),
                type_=postgresql.TIMESTAMP(),
                existing_nullable=True)
-
-    with op.batch_alter_table('resources', schema=None) as batch_op:
-        batch_op.alter_column('created_at',
-               existing_type=sa.DateTime(timezone=True),
-               type_=postgresql.TIMESTAMP(),
-               existing_nullable=False)
 
     with op.batch_alter_table('projects_version', schema=None) as batch_op:
         batch_op.alter_column('updated_at',

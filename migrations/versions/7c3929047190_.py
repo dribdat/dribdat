@@ -76,23 +76,6 @@ def upgrade():
     sa.ForeignKeyConstraint(['event_id'], ['events.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
-    op.create_table('resources',
-    sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('name', sa.String(length=80), nullable=False),
-    sa.Column('type_id', sa.Integer(), nullable=True),
-    sa.Column('created_at', sa.DateTime(), nullable=False),
-    sa.Column('is_visible', sa.Boolean(), nullable=True),
-    sa.Column('progress_tip', sa.Integer(), nullable=True),
-    sa.Column('source_url', sa.String(length=2048), nullable=True),
-    sa.Column('download_url', sa.String(length=2048), nullable=True),
-    sa.Column('summary', sa.String(length=140), nullable=True),
-    sa.Column('sync_content', sa.UnicodeText(), nullable=True),
-    sa.Column('content', sa.UnicodeText(), nullable=True),
-    sa.Column('user_id', sa.Integer(), nullable=True),
-    sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
-    sa.PrimaryKeyConstraint('id'),
-    sa.UniqueConstraint('name')
-    )
     op.create_table('users_roles',
     sa.Column('user_id', sa.Integer(), nullable=False),
     sa.Column('role_id', sa.Integer(), nullable=False),
@@ -140,9 +123,7 @@ def upgrade():
     sa.Column('project_id', sa.Integer(), nullable=False),
     sa.Column('project_progress', sa.Integer(), nullable=True),
     sa.Column('project_score', sa.Integer(), nullable=True),
-    sa.Column('resource_id', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['project_id'], ['projects.id'], ),
-    sa.ForeignKeyConstraint(['resource_id'], ['resources.id'], ),
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id')
     )

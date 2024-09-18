@@ -11,11 +11,11 @@ from wtforms.fields import (
     URLField, EmailField,
 )
 from wtforms.validators import DataRequired, length
-from dribdat.user.models import User, Project, Event, Role, Resource
+from dribdat.user.models import User, Project, Event, Role
 from ..user.validators import (
     UniqueValidator, event_date_check, event_time_check
 )
-from ..user import projectProgressList, resourceTypeList
+from ..user import projectProgressList
 from os import environ
 from datetime import time, datetime
 from pytz import timezone
@@ -211,29 +211,4 @@ class RoleForm(FlaskForm):
     name = StringField(
         u'Name',
         [length(max=80), UniqueValidator(Role, 'name'), DataRequired()])
-    submit = SubmitField(u'Save')
-
-
-class ResourceForm(FlaskForm):
-    """Resource form (NOT USED)."""
-
-    next = HiddenField()
-    id = HiddenField('id')
-    name = StringField(
-        u'Name',
-        [length(max=80), UniqueValidator(Resource, 'name'), DataRequired()])
-    project_id = IntegerField(u'Project id')
-    type_id = RadioField(u'Type', coerce=int, choices=resourceTypeList())
-    source_url = URLField(
-        u'Link',
-        [length(max=2048)], description=u'URL to get more information')
-    content = TextAreaField(
-        u'Comment',
-        description=u'Describe this resource in more detail')
-    progress_tip = SelectField(
-        u'Recommended at',
-        coerce=int,
-        choices=projectProgressList(True, True),
-        description=u'Progress level at which to suggest this to teams')
-    is_visible = BooleanField(u'Approved and visible to participants')
     submit = SubmitField(u'Save')
