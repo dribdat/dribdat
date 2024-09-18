@@ -146,7 +146,7 @@
 {% endmacro %}
 
 {% macro render_home_event(event, details=True) %}
-	<div class="col-lg-4 an-event"><div class="card">
+	<div class="col-lg-4 an-event mb-1"><div class="card">
 			<div title="{{ event.hostname }}"
 				{% if event.gallery_url %}
 				  class="card-img-top gallery-img" style="background-image: url('{{ event.gallery_url }}')"
@@ -172,11 +172,11 @@
 		          {% endif %}
             </p>
 	        {% endif %}
+	    	{% if details %}
 	        <p class="an-event-description">
 	          {{event.summary or event.description|truncate(300) or event.oneliner|markdown|striptags|truncate(300)}}
 	        </p>
 	      </div>
-	    {% if details %}
 	      <div class="an-event-actions text-center">
 	        {% if event.lock_resources %}
             <a href="{{ url_for('public.event_stages', event_id=event.id) }}" class="btn btn-lg btn-warning">
@@ -208,8 +208,8 @@
 					    </a>
 					  {% endif %}
 		      {% endif %}
+		  	{% endif %}
 	      </div>
-		  {% endif %}
 	    </div><!-- /.card-body -->
 	</div></div>
 {% endmacro %}

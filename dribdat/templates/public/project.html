@@ -230,13 +230,6 @@
            title="Edit project pitch" class="btn btn-md btn-light">
           <i class="fa fa-pencil" aria-hidden="true"></i>
           Edit</a>
-
-        {% if config.LLM_API_KEY %}
-          <button data-toggle="modal" data-target="#autopostModal" 
-             title="Get a tip from an AI coach" class="btn btn-md btn-light">
-            🅰️ℹ️ Help
-          </button>
-        {% endif %}
       </center>
       {% endif %}
 
@@ -350,6 +343,24 @@
   <a name="log"></a>
   <div id="dribs-md" aria-labelledby="dribs-tab-md">
 
+    {% if allow_post %}
+      <center>
+        <div class="btn-group">
+        {% if config.LLM_API_KEY %}
+          <button data-toggle="modal" data-target="#autopostModal" 
+             title="Get tips from an AI coach" class="btn pl-2 pr-2 btn-lg btn-light">
+            &#x1F170;&#xFE0F;&#x2139;&#xFE0F;
+          </button>
+        {% endif %}
+          <a href="{{ url_for('project.project_post', project_id=project.id) }}" 
+             class="btn btn-lg btn-success pl-4 pr-3"
+             title="Write a progress update">
+            <i class="fa fa-paper-plane" aria-hidden="true"></i>
+          </a>
+        </div>
+      </center>
+    {% endif %}
+
     <section class="timeline">
       {% for s in project_dribs %}
       <div class="timeline-item timeline-{{ s.name }} timeline-{{ s.icon }}">
@@ -429,12 +440,6 @@
 <center class="project-footer-controls">
 
 <div role="group" aria-label="Project controls" class="btn-group project-controls">
-  {% if allow_post %}
-  <a href="{{ url_for('project.project_post', project_id=project.id) }}" class="btn btn-lg btn-success"
-     title="Write a progress update">
-    <i class="fa fa-paper-plane" aria-hidden="true"></i>
-    Post</a>
-  {% endif %}
   {% if allow_edit %}
     <a href="{{ url_for('project.project_edit', project_id=project.id) }}" class="btn btn-lg btn-warning"
        title="Edit basic project data">
@@ -444,12 +449,12 @@
        title="Edit project details" style="opacity:0.9">
       <i class="fa fa-magic" aria-hidden="true"></i>
       Details</a>
-  {% endif %}
-  {% if allow_edit and project.is_syncable %}
-    <a href="{{ url_for('project.project_autoupdate', project_id=project.id) }}"
-       title="Refresh external Readme data" class="btn btn-lg btn-dark">
-      <i class="fa fa-refresh" aria-hidden="true"></i>
-      Sync</a>
+    {% if project.is_syncable %}
+      <a href="{{ url_for('project.project_autoupdate', project_id=project.id) }}"
+         title="Refresh external Readme data" class="btn btn-lg btn-dark">
+        <i class="fa fa-refresh" aria-hidden="true"></i>
+        Sync</a>
+    {% endif %}
   {% endif %}
 </div><!-- / .project-controls -->
 
@@ -459,11 +464,14 @@
       title="Share an invite link to this team">
       <i class="fa fa-child" aria-hidden="true"></i>
       Invite</a>
-
+    <a href="{{ url_for('project.project_post', project_id=project.id) }}" class="btn btn-lg btn-success"
+       title="Write a progress update">
+      <i class="fa fa-paper-plane" aria-hidden="true"></i>
+      Post</a>
   {% if config.LLM_API_KEY %}
     <button data-toggle="modal" data-target="#autopostModal" 
-       title="Get help from an AI coach" class="btn btn-lg btn-light">
-      🅰️ℹ️ tip
+       title="Get tips from an AI coach" class="btn btn-lg btn-light">
+      &#x1F170;&#xFE0F;&#x2139;&#xFE0F;
     </button>
   {% endif %}
   </div><!-- /.project-controls -->

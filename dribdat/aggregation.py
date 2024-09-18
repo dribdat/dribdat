@@ -167,14 +167,6 @@ def SyncProjectData(project, data):
     if 'commits' in data:
         SyncCommitData(project, data['commits'])
 
-# The above, in one step
-def SyncResourceData(resource):
-    """Collect data from a remote resource."""
-    url = resource.source_url
-    dpdata = GetProjectData(url)
-    resource.sync_content = json.dumps(dpdata)
-    resource.save()
-
 
 def AddProjectDataFromAutotext(project):
     """Fills the project from the configured remote URL."""

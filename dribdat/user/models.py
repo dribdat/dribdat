@@ -9,7 +9,6 @@ from dribdat.user.constants import (
     MAX_EXCERPT_LENGTH,
     PR_CHALLENGE,
     getProjectPhase,
-    getResourceType,
     getStageByProgress,
     getActivityByType,
 )
@@ -1214,54 +1213,3 @@ class Activity(PkModel):
 
     def __repr__(self):  # noqa: D105
         return '<Activity({name})>'.format(name=self.name)
-
-
-class Resource(PkModel):
-    """Allows building a graph of project resources."""
-
-    __tablename__ = 'resources'
-    name = Column(db.String(80), nullable=False)
-    is_visible = Column(db.Boolean(), default=True)
-    created_at = Column(db.DateTime(timezone=True), nullable=False,
-                        default=func.now())
-
-    # At which progress level (stage) did it become relevant
-    progress_tip = Column(db.Integer(), nullable=True)
-    # What is the type of this resource (user definable à la stages)
-    type_id = Column(db.Integer(), nullable=True, default=0)
-    # The URL where more information can be found
-    source_url = Column(db.String(2048), nullable=True)
-    # This is the text content of a comment or description
-    content = Column(db.UnicodeText, nullable=True)
-    # Text blob of externally fetched structured content (e.g. supported URLs)
-    sync_content = Column(db.UnicodeText, nullable=True)
-
-    # The project this is referenced in
-    project_id = reference_col('projects', nullable=True)
-    project = relationship('Project', backref='components')
-    
-    @property
-    def of_type(self):  # noqa: D102
-        """Fetch human-readable Type of this Resource."""
-        return getResourceType(self)
-
-    @property
-    def data(self):
-        """Get JSON representation."""
-        return {
-            'id': self.id,
-            'date': self.created_at,
-            'name': self.name,
-            'url': self.source_url or '',
-            'content': self.content or '',
-            'of_type': self.of_type(self),
-            'project_count': len(self.projects),
-        }
-
-    def __init__(self, name, project_id, **kwargs):  # noqa: D107
-        db.Model.__init__(
-            self, name=name, **kwargs
-        )
-
-    def __repr__(self):  # noqa: D105
-        return '<Resource({name})>'.format(name=self.name)

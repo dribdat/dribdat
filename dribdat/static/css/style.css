@@ -368,12 +368,21 @@ nav .nav-login {
   display: block;
   text-align: center;
 }
+.home h1 {
+  opacity: 0.5;
+  font-style: italic  ;
+}
 .home-page .home-description p:only-child {
   margin: 0px;
 }
 .home-page .home-description {
   margin: 1em;
   font-size: 125%;
+}
+.home .home-buttons {
+  font-size: 120%;
+  z-index: 1;
+  position: relative;
 }
 .home .start-event {
   margin: 1em;
@@ -392,22 +401,13 @@ nav .nav-login {
 .home .an-event .card-img-top.gallery-img {
   background-size: cover;
 }
-.home .an-event-meta {
+.an-event-meta {
   font-size: 90%;
   color: #777;
   text-align: right;
 }
-.home .an-event-meta b {
+.an-event-meta b {
   display: block;
-}
-.home .home-buttons {
-  font-size: 120%;
-  z-index: 1;
-  position: relative;
-}
-.home h1 {
-  opacity: 0.5;
-  font-style: italic  ;
 }
 
 /* Customize the flipclock widget */

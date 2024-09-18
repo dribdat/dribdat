@@ -21,15 +21,9 @@ def upgrade():
         batch_op.alter_column(
             'resources', new_column_name='instruction'
         )
-    with op.batch_alter_table('resources') as batch_op:
-        batch_op.add_column(sa.Column('event_id', sa.Integer(), nullable=True))
-        batch_op.create_foreign_key('resources', 'events', ['event_id'], ['id'])
 
 
 def downgrade():
-    with op.batch_alter_table('resources') as batch_op:
-        batch_op.drop_column('event_id')
-        # batch_op.drop_constraint('events', type_='foreignkey')
     with op.batch_alter_table('events') as batch_op:
         batch_op.alter_column(
             'instruction', new_column_name='resources'
