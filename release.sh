@@ -6,7 +6,6 @@
 if [ "$FORCE_MIGRATE" ]; then
 	# Forced upgrade
 	"${APPDIR:-.}/force-migrate.sh" psql
-	echo "Warning! Your database may be out of sync due to a forced upgrade."
 
 else
 	# Standard upgrade
