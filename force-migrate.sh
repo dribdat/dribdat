@@ -10,14 +10,14 @@ fi
 
 if [ "$1" = "psql" ]; then
 	echo "Force upgrading Postgres database"
-	python "${APPDIR:-.}/manage.py" db stamp --purge 7c3929047190
+	python "${APPDIR:-.}/manage.py" db stamp --purge
 	python "${APPDIR:-.}/manage.py" db upgrade
 	echo "Upgrade complete"
 
 elif [ "$1" = "xpsqlx" ]; then
 	echo "Resetting migrating and upgrating Postgres database"
-	rm -rf migrations/
-	psql -c "DROP TABLE alembic_version;" $DATABASE_URL
+	python "${APPDIR:-.}/manage.py" db stamp --purge
+	rm -rf migrations
 	python "${APPDIR:-.}/manage.py" db init 2>&1 >/dev/null
 	python "${APPDIR:-.}/manage.py" db migrate
 	python "${APPDIR:-.}/manage.py" db upgrade
@@ -29,7 +29,7 @@ elif [ "$1" = "heroku" ]; then
 		exit
 	fi
 	echo "Migrating Heroku DB on $2"
-	heroku run -a $2 "python ${APPDIR:-.}/manage.py db stamp --purge 7c3929047190 && python ${APPDIR:-.}/manage.py db upgrade"
+	heroku run -a $2 "python ${APPDIR:-.}/manage.py db stamp --purge && python ${APPDIR:-.}/manage.py db upgrade"
 	echo "Upgrade complete"
 
 elif [ "$1" = "xherokux" ]; then
@@ -44,7 +44,7 @@ elif [ "$1" = "xherokux" ]; then
 
 elif [ "$1" = "sqlite" ]; then
 	echo "Migrating local SQLite DB (dev.db)"
-	python "${APPDIR:-.}/manage.py" db stamp --purge 7c3929047190
+	python "${APPDIR:-.}/manage.py" db stamp --purge
 	python "${APPDIR:-.}/manage.py" db upgrade
 	echo "Upgrade complete"
 
