@@ -145,14 +145,18 @@ def imports(url, level='full'):
 @click.command()
 @click.argument('kind', nargs=-1, required=False)
 def exports(kind):
-    """Export system data to TSV."""
+    """Export system data to CSV."""
     with create_app().app_context():
         if 'people' in kind:
+            print(';'.join(['username','email','updated_at','fullname']))
             for pp in User.query.filter_by(active=True).all():
-                print(pp.email)
+                print(';'.join([pp.username, pp.email, str(pp.updated_at or ''), str(pp.fullname or '').replace(';',':')]))
         elif 'events' in kind:
+            print(';'.join(['name','starts_at','ends_at']))
             for pp in Event.query.filter_by(is_hidden=False).all():
-                print('\t'.join([pp.name, str(pp.starts_at), str(pp.ends_at)]))
+                print(';'.join([pp.name.replace(';',':'), str(pp.starts_at), str(pp.ends_at)]))
+        else:
+            print('At least one <kind> should be provided. See --help')
 
 
 @click.command()
