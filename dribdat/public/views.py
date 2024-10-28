@@ -17,11 +17,13 @@ from sqlalchemy import and_, func
 from datetime import datetime, timedelta
 from dribdat.futures import UTC
 
+# Set project version
+VERSION = '0.8.5'
+
 blueprint = Blueprint('public', __name__, static_folder="../static")
 
 # Loads confiuration for events
 EVENT_PRESET = load_event_presets()
-
 
 def current_event():
     """Just get a current event."""
@@ -63,7 +65,7 @@ def info_current_hackathon_json():
 def about():
     """Render a static about page."""
     orgs = [u.data for u in User.query.filter_by(is_admin=True)]
-    return render_template("public/about.html", active="about", orgs=orgs)
+    return render_template("public/about.html", active="about", orgs=orgs, ver=VERSION)
 
 
 @blueprint.route("/terms/")
