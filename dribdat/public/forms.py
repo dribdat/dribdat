@@ -18,20 +18,29 @@ from dribdat.user.models import Project, Event
 from datetime import time, datetime, timedelta
 
 
-class ProjectNew(FlaskForm):
-    """Create a project form."""
+class ProjectImport(FlaskForm):
+    """Import a project from a repostiroy."""
 
     id = HiddenField('id')
     autotext_url = URLField(
         u'Readme', [length(max=2048)],
-        description="[Optional] Link to a code repository or online document. "
-        + "The content will be automatically synced here 💡 Tips: dribdat.cc/sync")
+        description="Link to a code repository or document, "
+        + "the contents of which should be synced 💡 dribdat.cc/sync")
+    name = HiddenField(u'Title',
+        [length(max=80), UniqueValidator(Project, 'name'), InputRequired()])
+    submit = SubmitField(u'Import')
+
+
+class ProjectNew(FlaskForm):
+    """Create a project form."""
+
+    id = HiddenField('id')
     name = StringField(
         u'Title',
         [length(max=80), UniqueValidator(Project, 'name'), InputRequired()],
         description=u"A short team or project name - you may change "
         + "this later.")
-    generate_pitch = BooleanField(u"Use AI to auto-generate challenge based on my summary and chosen category.")
+    generate_pitch = BooleanField(u"🅰️ℹ️ Generate a challenge based on my title and summary")
     summary = TextAreaField(
         u'Summary', [length(max=2048)],
         description="A short, plain-text description of your project or challenge.")

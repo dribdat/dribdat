@@ -10,7 +10,7 @@ from dribdat.database import db
 from dribdat.extensions import cache
 from dribdat.utils import timesince
 from dribdat.public.forms import (
-    ProjectNew, ProjectPost, ProjectBoost, ProjectComment
+    ProjectImport, ProjectNew, ProjectPost, ProjectBoost, ProjectComment
 )
 from dribdat.aggregation import (
     SyncProjectData, GetProjectData, AllowProjectEdit
@@ -19,7 +19,7 @@ from dribdat.user import (
     validateProjectData, stageProjectToNext, isUserActive,
 )
 from dribdat.public.projhelper import (
-    project_action, project_edit_action, templates_from_event, 
+    project_action, project_edit_action, templates_from_event,
     revert_project_by_activity, navigate_around_project, check_update,
 )
 from dribdat.apigenerate import gen_project_pitch, gen_project_post, prompt_ideas
@@ -120,7 +120,7 @@ def project_approve(project_id):
         db.session.add(project)
         db.session.commit()
         cache.clear()
-        flash("Promoted to stage '%s'" % 
+        flash("Promoted to stage '%s'" %
             project.phase, 'info')
     return redirect(url_for(
         'project.project_view', project_id=project.id))
@@ -163,7 +163,7 @@ def project_post(project_id):
             # Check and update progress
             if all_valid:
                 if stageProjectToNext(project):
-                    flash("Level up! You are at stage '%s'" % 
+                    flash("Level up! You are at stage '%s'" %
                         project.phase, 'info')
 
         # Update project data
@@ -313,7 +313,7 @@ def get_challenge(project_id):
     flash('This Challenge was posted %s' % p_date, 'info')
     go_nav = navigate_around_project(project, True)
     return render_template(
-        'public/project.html', 
+        'public/project.html',
         project=challenge, go_nav=go_nav, challenge_when=p_date,
         current_event=challenge.event, active="projects"
     )
@@ -412,7 +412,60 @@ def project_new(event_id):
         flash('Projects may not be started in this event.', 'error')
         return redirect(url_for('public.event', event_id=event.id))
     # Checks passed, continue ...
-    return create_new_project(event, is_anonymous)
+    if request.args.get('create'):
+        return create_new_project(event, is_anonymous)
+    return import_new_project(event, is_anonymous)
+
+
+def import_new_project(event, is_anonymous=False):
+    """Proceed to import a new project."""
+
+    form = None
+    project = Project()
+
+    if not is_anonymous:
+        project.user_id = current_user.id
+    else:
+        project.hashtag = "Guest"
+        project.is_hidden = True
+
+    form = ProjectImport(obj=project, next=request.args.get('next'))
+
+    if form.is_submitted() and not form.validate():
+        flash('Make sure to tap "Sync" first before importing', 'warning')
+
+    if not (form.is_submitted() and form.validate()):
+        return render_template(
+            'public/projectimport.html',
+            current_event=event, form=form,
+            active="projects"
+        )
+
+    # Process form result
+    del form.id
+    form.populate_obj(project)
+    project.event_id = event.id
+    if event.has_started:
+        project.progress = 0
+    else:
+        project.progress = -1
+
+    # Update the project
+    project.update_now()
+    db.session.add(project)
+    db.session.commit()
+    cache.clear()
+
+    if is_anonymous:
+        flash('Thanks for your submission - login and Join to make changes', 'warning')
+    else:
+        flash('Invite your team to Join this page and contribute!', 'success')
+        project_action(project.id, 'create', False)
+        if not current_user.is_admin:
+            project_action(project.id, 'star', False)
+
+    # Automatically sync data
+    return project_autoupdate(project.id)
 
 
 def create_new_project(event, is_anonymous=False):
@@ -429,7 +482,7 @@ def create_new_project(event, is_anonymous=False):
     else:
         project.hashtag = "Guest"
         project.is_hidden = True
-    
+
     form = ProjectNew(obj=project, next=request.args.get('next'))
 
     # Add project categories
@@ -489,13 +542,12 @@ def create_new_project(event, is_anonymous=False):
     cache.clear()
 
     if is_anonymous:
-        flash('Thanks for your submission - login and click Join to make changes', 'warning')
+        flash('Thanks for your submission - login and Join to make changes', 'warning')
     else:
-        flash('Now invite your team to Join this page and contribute!', 'success')
+        flash('Invite your team to Join this page and contribute!', 'success')
         project_action(project.id, 'create', False)
-
         # Automatically join new projects
-        if event.has_started:
+        if not current_user.is_admin:
             project_action(project.id, 'star', False)
 
     # Automatically sync data
@@ -535,7 +587,7 @@ def project_autoupdate(project_id):
     if not data or 'name' not in data:
         flash("To Sync: ensure a README on the remote site.", 'warning')
         return redirect(url_for('project.project_view', project_id=project_id))
-    
+
     # Transfer the project fields
     SyncProjectData(project, data)
 

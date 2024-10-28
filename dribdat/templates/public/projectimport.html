@@ -1,0 +1,36 @@
+{% from "macros/_form.html" import render_form %}
+
+{% extends "layout.html" %}
+
+{% block page_title %}Import project{% endblock %}
+{% block body_class %}projectform projectimport{% endblock %}
+
+{% block content %}
+  {% if form %}
+    {% if current_event.boilerplate %}
+    <div class="jumbotron projectnew-boilerplate">
+      <a class="close" title="Close" href="#" data-dismiss="alert">&times;</a>
+      <div class="container scroll-after-500">
+        {{ current_event.boilerplate|markdown }}
+      </div>
+    </div>
+    {% endif %}
+
+    <div class="container">
+      {{ render_form(url_for('project.project_new', event_id=current_event.id), form, formid="projectImport") }}
+    </div>
+
+    <div class="container mt-4 text-center">
+      <a class="btn btn-lg btn-success"
+        href="{{ url_for('project.project_new', event_id=current_event.id) }}?create=1">
+            Skip this step ...
+      </a>
+    </div>
+
+  {% else %}
+    <div class="alert alert-info">
+      Please <b><a href="{{ url_for('auth.login') }}">log in</a></b>
+      to publish a project here.
+    </div>
+  {% endif %}
+{% endblock %}
