@@ -1,8 +1,8 @@
 [tool.poetry]
-name = "Dribdat"
-version = "0.8.4"
+name = "dribdat"
+version = "0.8.5"
 description = "Online platform for time-limited collaborative events"
-authors = ["Dribdat contributors <dribdat@datalets.ch>"]
+authors = ["Dribdat Contributors <dribdat@datalets.ch>"]
 
 [tool.poetry.dependencies]
 bleach = "^6"
@@ -38,7 +38,7 @@ misaka = "^2.1"
 psycopg2-binary = "^2.9"
 pyquery = "^2.0"
 pystache = "^0.6"
-python = ">=3.8,<4"
+python = ">=3.9,<4"
 python-dotenv = "^0.21"
 pytz = "^2023"
 pyyaml = "^6"
@@ -62,13 +62,10 @@ flake8-docstrings = "*"
 flake8-isort = "*"
 flake8-quotes = "*"
 Flask-DebugToolbar = "*"
+flask-openapi3 = "^3.1.2"
 isort = "*"
 pep8-naming = "*"
 pyopenssl = "*"
 pytest = "*"
 WebTest = "*"
 coverage = "*"
-
-[tool.poetry.group.dev.dependencies]
-flask-openapi3 = "^3.1.2"
-
