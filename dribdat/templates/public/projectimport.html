@@ -1,36 +1,143 @@
-{% from "macros/_form.html" import render_form %}
-
-{% extends "layout.html" %}
-
-{% block page_title %}Import project{% endblock %}
-{% block body_class %}projectform projectimport{% endblock %}
-
-{% block content %}
-  {% if form %}
-    {% if current_event.boilerplate %}
-    <div class="jumbotron projectnew-boilerplate">
-      <a class="close" title="Close" href="#" data-dismiss="alert">&times;</a>
-      <div class="container scroll-after-500">
+{% from "macros/_form.html" import render_form %} {% extends "layout.html" %} {%
+block page_title %}Import project{% endblock %} {% block body_class
+%}projectform projectimport{% endblock %} {% block content %} {% if form %} {%
+if current_event.boilerplate %}
+<div class="jumbotron projectnew-boilerplate">
+    <a class="close" title="Close" href="#" data-dismiss="alert">&times;</a>
+    <div class="container scroll-after-500">
         {{ current_event.boilerplate|markdown }}
-      </div>
     </div>
-    {% endif %}
+</div>
+{% endif %}
 
-    <div class="container">
-      {{ render_form(url_for('project.project_new', event_id=current_event.id), form, formid="projectImport") }}
-    </div>
+<div class="container import-note mt-3">
+    <p>
+        You can use the <b>Readme</b> function to fetch content from one of the
+        <a href="https://docs.dribdat.cc/sync" target="_blank">supported</a>
+        open repositories - or
+        <a
+            href="{{ url_for('project.project_new', event_id=current_event.id) }}?create=1"
+            >skip this page</a
+        >
+        to create a project from scratch:
+    </p>
+    <ul class="list-unstyled container">
+        <div class="row m-4">
+            <a
+                href="https://github.com/"
+                target="_blank"
+                class="media col-sm text-default"
+            >
+                <i class="mr-3 fa fa-github" alt="Logo"></i>
+                <div class="media-body">
+                    <h5 class="mt-0 mb-1">GitHub</h5>
+                </div>
+            </a>
+            <a
+                href="https://gitlab.com/"
+                target="_blank"
+                class="media col-sm text-default"
+            >
+                <i class="mr-3 fa fa-gitlab" alt="Logo"></i>
+                <div class="media-body">
+                    <h5 class="mt-0 mb-1">GitLab</h5>
+                </div>
+            </a>
+            <a
+                href="https://codeberg.org/"
+                target="_blank"
+                class="media col-sm text-default"
+            >
+                <img src="/static/img/sso/gitea.svg" height="14" class="mr-3" />
+                <div class="media-body">
+                    <h5 class="mt-0 mb-1">Codeberg</h5>
+                </div>
+            </a>
+        </div>
+        <div class="row m-4">
+            <a
+                href="https://bitbucket.org/"
+                target="_blank"
+                class="media col-sm text-default"
+            >
+                <i class="mr-3 fa fa-bitbucket" alt="Logo"></i>
+                <div class="media-body">
+                    <h5 class="mt-0 mb-1">Bitbucket</h5>
+                </div>
+            </a>
+            <a
+                href="http://instructables.com/"
+                target="_blank"
+                class="media col-sm text-default"
+            >
+                <i class="mr-3 fa fa-cog" alt="Logo"></i>
+                <div class="media-body">
+                    <h5 class="mt-0 mb-1">Instructables</h5>
+                </div>
+            </a>
+            <a
+                href="http://make.opendata.ch/wiki/project:home"
+                target="_blank"
+                class="media col-sm text-default"
+            >
+                <i class="mr-3 fa fa-sticky-note" alt="Logo"></i>
+                <div class="media-body">
+                    <h5 class="mt-0 mb-1">DokuWiki</h5>
+                </div>
+            </a>
+        </div>
+        <div class="row m-4">
+            <a
+                href="http://etherpad.org/"
+                target="_blank"
+                class="media col-sm text-default"
+            >
+                <i class="mr-3 fa fa-th-large" alt="Logo"></i>
+                <div class="media-body">
+                    <h5 class="mt-0 mb-1">Etherpad</h5>
+                </div>
+            </a>
+            <a
+                href="https://hackmd.io/"
+                target="_blank"
+                class="media col-sm text-default"
+            >
+                <i class="mr-3 fa fa-pencil" alt="Logo"></i>
+                <div class="media-body">
+                    <h5 class="mt-0 mb-1">HackMD / CodiMD</h5>
+                </div>
+            </a>
+            <a
+                href="https://dribdat.cc/sync#%F0%9F%92%A1-tips"
+                target="_blank"
+                class="media col-sm text-default"
+            >
+                <i class="mr-3 fa fa-google" alt="Logo"></i>
+                <div class="media-body">
+                    <h5 class="mt-0 mb-1">Google Docs (P2W)</h5>
+                </div>
+            </a>
+        </div>
+    </ul>
+</div>
 
-    <div class="container mt-4 text-center">
-      <a class="btn btn-lg btn-success"
-        href="{{ url_for('project.project_new', event_id=current_event.id) }}?create=1">
-            Skip this step ...
-      </a>
-    </div>
+<div class="container">
+    {{ render_form(url_for('project.project_new', event_id=current_event.id),
+    form, formid="projectImport") }}
+</div>
 
-  {% else %}
-    <div class="alert alert-info">
-      Please <b><a href="{{ url_for('auth.login') }}">log in</a></b>
-      to publish a project here.
-    </div>
-  {% endif %}
-{% endblock %}
+<div class="container mt-4 text-center">
+    <a
+        class="btn btn-lg btn-success"
+        href="{{ url_for('project.project_new', event_id=current_event.id) }}?create=1"
+    >
+        Skip this step ...
+    </a>
+</div>
+
+{% else %}
+<div class="alert alert-info">
+    Please <b><a href="{{ url_for('auth.login') }}">log in</a></b>
+    to publish a project here.
+</div>
+{% endif %} {% endblock %}

@@ -24,8 +24,8 @@ class ProjectImport(FlaskForm):
     id = HiddenField('id')
     autotext_url = URLField(
         u'Readme', [length(max=2048)],
-        description="Link to a code repository or document, "
-        + "the contents of which should be synced 💡 dribdat.cc/sync")
+        description="Paste link to a code repository or document, "
+        + "then click the Sync button")
     name = HiddenField(u'Title',
         [length(max=80), UniqueValidator(Project, 'name'), InputRequired()])
     submit = SubmitField(u'Import')

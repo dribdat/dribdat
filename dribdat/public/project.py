@@ -395,6 +395,7 @@ def project_unstar(project_id, user_id):
 @blueprint.route('/new/<int:event_id>', methods=['GET', 'POST'])
 def project_new(event_id):
     """If allowed to create a new project, do so."""
+
     is_anonymous = not current_user or current_user.is_anonymous
     if not is_anonymous and not isUserActive(current_user):
         flash(
