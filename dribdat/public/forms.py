@@ -40,10 +40,11 @@ class ProjectNew(FlaskForm):
         [length(max=80), UniqueValidator(Project, 'name'), InputRequired()],
         description=u"A short team or project name - you may change "
         + "this later.")
-    generate_pitch = BooleanField(u"🅰️ℹ️ Generate a challenge based on my title and summary")
     summary = TextAreaField(
         u'Summary', [length(max=2048)],
+        render_kw={'maxlength': 2048, 'rows': 3},
         description="A short, plain-text description of your project or challenge.")
+    generate_pitch = BooleanField(u"🅰️ℹ️ Propose a challenge text based on my title and summary")
     category_id = SelectField(
         u'Category', coerce=int, description=u"Select the category that your "
         + " challenge addresses.")
@@ -60,7 +61,7 @@ class ProjectForm(FlaskForm):
     id = HiddenField('id')
     summary = StringField(
         u'Summary', [length(max=2048)],
-        render_kw={'maxlength': 2048},
+        render_kw={'maxlength': 2048, 'rows': 3},
         description="A short, plain-text description of your topic.")
     webpage_url = URLField(
         u'Presentation', [length(max=2048)],
