@@ -431,7 +431,7 @@ def import_new_project(event, is_anonymous=False):
     form = ProjectImport(obj=project, next=request.args.get('next'))
 
     if form.is_submitted() and not form.validate():
-        flash('Make sure to tap "Sync" first before importing', 'warning')
+        flash('Make sure to "Test" first before importing', 'warning')
 
     if not (form.is_submitted() and form.validate()):
         return render_template(

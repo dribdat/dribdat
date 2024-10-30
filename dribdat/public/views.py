@@ -226,12 +226,11 @@ def event(event_id):
         .order_by(Project.ident, Project.name)
         # The above must match projhelper->navigate_around_project
     # Admin messages
-    if current_user and current_user.is_admin:
-        sum_hidden = Project.query \
-            .filter_by(event_id=event_id, is_hidden=True).count()
+    if current_user and not current_user.is_anonymous and current_user.is_admin:
+        sum_hidden = len(event.projects) - projects.count()
         if sum_hidden > 0:
             flash(('There are %d projects in this event ' % sum_hidden) + \
-                ' that are hidden and possibly awaiting moderation (click Admin below)', 'warning')
+                ' that are hidden and possibly awaiting moderation (click Admin below)', 'dark')
     # Embedding view
     if request.args.get('embed'):
         return render_template("public/embed.html",

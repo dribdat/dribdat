@@ -25,7 +25,7 @@
       {% endif %}
 
       <li class="nav-item">
-        <a class="nav-link {% if active == 'dribs' %}active{% endif %}" 
+        <a class="nav-link {% if active == 'dribs' %}active{% endif %}"
            title="Latest posts from the teams"
            href="{{ url_for('public.dribs') }}">
           <i class="fa fa-comment bg-warning text-white" aria-hidden="true"></i>
@@ -39,12 +39,12 @@
                class="nav-link{{ ' active' if active == 'post' }}"
                href="{{ url_for('public.user_post') }}"
                title="Post an update to your current project">
-              <i class="fa fa-paper-plane bg-info text-white" aria-hidden="true"></i>
+              <i class="fa fa-clock-o bg-info text-white" aria-hidden="true"></i>
               Post
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link{{ ' active' if active == 'profile' }}" 
+            <a class="nav-link{{ ' active' if active == 'profile' }}"
                title="Take me to my profile"
                href="{{ url_for('public.user_current') }}" title="My User Profile">
               <i class="fa fa-user bg-primary text-white" aria-hidden="true"></i>
@@ -54,7 +54,7 @@
           {% if current_user.is_admin %}
             <li class="nav-item admin-area">
               <a class="nav-link{{ ' active' if active == 'index' }}"
-                 title="The engine room" 
+                 title="The engine room"
                  href="{{ url_for('admin.index') }}">
                 <i class="fa fa-gear" aria-hidden="true"></i>
                 Admin
@@ -83,7 +83,7 @@
           {% endif %}
       {% else %}
         <li class="nav-item">
-          <a class="nav-link nav-login" 
+          <a class="nav-link nav-login"
              title="Sign in with your account"
              href="{{ url_for('auth.login') }}">
             <i class="fa fa-sign-in" aria-hidden="true"></i>
@@ -93,7 +93,7 @@
       {% endif %}
 
       <li class="nav-item">
-        <a class="nav-link" id="navSearchButton" 
+        <a class="nav-link" id="navSearchButton"
            title="Search this dribdat site"
            href="{{ url_for('public.about') }}">
           <i class="fa fa-search" aria-hidden="true"></i>
@@ -115,7 +115,7 @@
 </div>
 
 <!-- Popup search results -->
-<div class="hidden container nav-search" id="navSearch" 
+<div class="hidden container nav-search" id="navSearch"
      tabindex="-1" role="dialog" aria-labelledby="searchLabel" aria-hidden="true">
   <div class="profile-projects container-fluid mb-3">
     <div data-action="/api/project/search.json" id="search">

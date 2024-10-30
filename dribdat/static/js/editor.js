@@ -1,6 +1,7 @@
 (function ($, window) {
   // Initialize project data loader
   $("#autotext_url").each(function () {
+    // Check if the URL is compliant
     var checkAutotext = function (val, $ind) {
       if (typeof val !== "string") return;
       if (val.trim() === "") return;
@@ -21,32 +22,18 @@
       .prepend(
         '<span class="autotext-indicator float-right">' +
           '<a title="Status" class="btn-disabled"><i class="fa fa-circle-o"></i></a>' +
-          '<button class="btn btn-lg btn-light" type="button">Sync</button>' +
+          '<button class="btn btn-lg btn-light" type="button">Test</button>' +
           "</span>",
       )
       .find(".autotext-indicator");
-
-    // On load
-    checkAutotext($inputfield.val(), $indicator);
-
-    // On keypress
-    $inputfield.on("keyup", function (e) {
-      checkAutotext($inputfield.val(), $indicator);
-      // Clear template selection
-      $(".template-select label input").prop("checked", false);
-    });
-
-    // Update button
-    $indicator.find("button").click(function (e) {
-      e.preventDefault();
-      e.stopPropagation();
-      var url = $inputfield.val();
-      var $button = $(this);
+    // Get remote data
+    var runAutofill = function ($button, url) {
+      // Put UI in waiting mode
       $indicator.find("i").css("color", "blue");
       $button.attr("disabled", "disabled").html("Please wait ...");
       // Call updater API
       $.getJSON("/api/project/autofill?url=" + url, function (data) {
-        $button.removeAttr("disabled").html("Refresh");
+        $button.removeAttr("disabled");
         if (!data || typeof data.name === "undefined" || data.name === "") {
           if (
             window.confirm(
@@ -57,8 +44,10 @@
           }
           $("#is_autoupdate").prop("checked", false);
           $indicator.find("i").css("color", "red");
+          $button.html("Retry");
           return;
         }
+        $button.html("Ready");
         $indicator.find("i").css("color", "green");
         // Set form values
         if (!$("input#name").val()) $("input#name").val(data.name);
@@ -73,7 +62,34 @@
           $("input#download_url").val(data.download_url);
         if (!$("input#image_url").val())
           $("input#image_url").val(data.image_url);
+        // Allow submitting form
+        $("#submit").removeAttr("disabled");
+      }).fail(function () {
+        window.alert(
+          "Could not connect to remote site - please try again later",
+        );
+        $button.removeAttr("disabled").html("Retry");
       });
+    }; // -runAutofill
+
+    // On load
+    checkAutotext($inputfield.val(), $indicator);
+    $("#submit").attr("disabled", "disabled");
+
+    // On keypress
+    $inputfield.on("keyup", function (e) {
+      checkAutotext($inputfield.val(), $indicator);
+      // Clear template selection
+      $(".template-select label input").prop("checked", false);
+    });
+
+    // Update button
+    $indicator.find("button").click(function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      var url = $inputfield.val();
+      var $button = $(this);
+      runAutofill($button, url);
       return true;
     });
   }); // -autotext_url each
