@@ -43,13 +43,13 @@ class ProjectNew(FlaskForm):
         u'Summary', [length(max=2048)],
         render_kw={'maxlength': 2048, 'rows': 3},
         description="A short, plain-text description of your project or challenge.")
-    generate_pitch = BooleanField(u"🅰️ℹ️ Propose a challenge text based on my title and summary")
+    generate_pitch = BooleanField(u"🅰️ℹ️ Generate an initial challenge")
     category_id = SelectField(
         u'Category', coerce=int, description=u"Select the category that your "
         + " challenge addresses.")
     contact_url = StringField(
         u'Contact', [length(max=2048)],
-        description="On which channel, or in which room, to find you.")
+        description="Your channel, room, or contact address.")
     template = HiddenField('template')
     submit = SubmitField(u'Save')
 
