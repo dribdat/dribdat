@@ -404,10 +404,8 @@ def project_new(event_id):
         )
         return redirect(url_for('public.event', event_id=event_id))
     elif is_anonymous:
-        flash(
-            'You are not logged in, so your new project'
-            + ' will be invisible until it is approved.', 'warning'
-        )
+        # You are not logged in, so your new project will be invisible until it is approved.
+        pass
     event = Event.query.filter_by(id=event_id).first_or_404()
     if event.lock_starting:
         flash('Projects may not be started in this event.', 'error')
@@ -543,17 +541,13 @@ def create_new_project(event, is_anonymous=False):
     cache.clear()
 
     if is_anonymous:
-        flash('Thanks for your submission - login and Join to make changes', 'warning')
+        flash('Thanks for your submission - login and Join to make changes', 'success')
     else:
         flash('Invite your team to Join this page and contribute!', 'success')
         project_action(project.id, 'create', False)
         # Automatically join new projects
         if not current_user.is_admin:
             project_action(project.id, 'star', False)
-
-    # Automatically sync data
-    if len(project.autotext_url) > 1:
-        return project_autoupdate(project.id)
 
     # Continue to project view
     purl = url_for('project.project_view', project_id=project.id)
