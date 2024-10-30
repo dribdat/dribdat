@@ -29,7 +29,7 @@
            title="Latest posts from the teams"
            href="{{ url_for('public.dribs') }}">
           <i class="fa fa-comment bg-warning text-white" aria-hidden="true"></i>
-          Dribs
+          Dribdat
         </a>
       </li>
 
@@ -56,7 +56,7 @@
               <a class="nav-link{{ ' active' if active == 'index' }}"
                  title="The engine room"
                  href="{{ url_for('admin.index') }}">
-                <i class="fa fa-gear" aria-hidden="true"></i>
+                <i class="fa fa-gear bg-danger text-white" aria-hidden="true"></i>
                 Admin
               </a>
             </li>
@@ -97,6 +97,7 @@
            title="Search this dribdat site"
            href="{{ url_for('public.about') }}">
           <i class="fa fa-search" aria-hidden="true"></i>
+          Search
         </a>
       </li>
 
@@ -121,13 +122,15 @@
     <div data-action="/api/project/search.json" id="search">
       <div class="content input-group">
         <div class="input-group-prepend">
-          <span class="input-group-text">Search</span>
+          <span class="input-group-text">
+            <i class="fa fa-search" aria-hidden="true"></i>
+          </span>
         </div>
         <input type="text" class="form-control" name="q" aria-label="Search projects" placeholder="Start typing ..."  style="width:20em">
       </div>
     </div>
     <table class="table">
-      <thead class="thead-light">
+      <thead class="thead">
         <tr>
           <th scope="col">Team</th>
           <th scope="col">Event</th>
