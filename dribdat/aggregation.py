@@ -8,6 +8,7 @@ from dribdat.apifetch import (
     FetchWebGitHub,
     FetchWebGitHubGist,
     FetchGithubProject,
+    FetchGithubIssue,
     FetchGitlabProject,
     FetchGiteaProject,
     FetchBitbucketProject,
@@ -75,6 +76,10 @@ def get_github_project(url):
     if apiurl.endswith('.md'):
         # GitHub Markdown
         return FetchWebGitHub(url)
+    if '/issues/' in apiurl:
+        iuarr = apiurl.split('/issues/')
+        if len(iuarr) == 2:
+            return FetchGithubIssue(iuarr[0], int(iuarr[1]))
     return FetchGithubProject(apiurl)
 
 

@@ -171,6 +171,26 @@ def FetchGithubProject(project_url):
     }
 
 
+def FetchGithubIssue(project_url, issue_id):
+    """Download an issue from GitHub."""
+    project_data = FetchGithubProject(project_url)
+    logging.info("Fetching GitHub Issue", issue_id)
+    API_BASE = "https://api.github.com/repos/%s/issues/%d"
+    data = requests.get(API_BASE % (project_url, issue_id), timeout=REQUEST_TIMEOUT)
+    if data.text.find('{') < 0:
+        logging.debug("No data", data.text)
+        return {}
+    json = data.json()
+    if 'title' not in json or 'body' not in json:
+        logging.debug("Invalid data", data.text)
+        return {}
+    project_data['hashtag'] = '#%d' % issue_id
+    project_data['summary'] = project_data['name']
+    project_data['name'] = json['title'][:77]
+    project_data['description'] = json['body']
+    return project_data
+
+
 def FetchBitbucketProject(project_url):
     """Download data from Bitbucket."""
     WEB_BASE = "https://bitbucket.org/%s"
@@ -277,7 +297,7 @@ def parse_data_package(json):
 
 def FetchDribdatProject(dribdat_url):
     """Try to load a Dribdat project from a remote page."""
-    project_url = dribdat_url.replace('/project/', '/api/project/') 
+    project_url = dribdat_url.replace('/project/', '/api/project/')
     project_url = sanitize_url(project_url) + '?full=1'
     data = requests.get(project_url, timeout=REQUEST_TIMEOUT)
     # TODO: treat dribdat events as special
@@ -298,7 +318,7 @@ def FetchDribdatProject(dribdat_url):
 
 # Basis: https://github.com/mozilla/bleach/blob/master/bleach/sanitizer.py#L16
 ALLOWED_HTML_TAGS = [
-    'acronym', 'a', 'blockquote', 'li', 'abbr', 
+    'acronym', 'a', 'blockquote', 'li', 'abbr',
     'strong', 'b', 'i', 'ul', 'ol', 'code', 'em',
     'img', 'font', 'center', 'sub', 'sup', 'pre',
     'table', 'tr', 'thead', 'tbody', 'td',
@@ -319,7 +339,7 @@ ALLOWED_HTML_ATTR['font'] = ['color']
 def RequestRemoteContent(project_url):
     try:
         # TODO: the admin should be able to whitelist a range of allowed
-        # online resources controlling the domains from which we can 
+        # online resources controlling the domains from which we can
         # fetch remote content.
         project_url = sanitize_url(project_url)
         logging.info("Fetching", project_url)
@@ -332,7 +352,7 @@ def RequestRemoteContent(project_url):
 
 def FetchWebProject(project_url):
     """Parse a remote Document, wiki or website URL."""
-    
+
     datatext = RequestRemoteContent(project_url)
     if datatext is None: return {}
 
