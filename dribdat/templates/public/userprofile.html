@@ -14,7 +14,7 @@
   <div class="alert alert-info"
        title="This tip is only visible to you">
     <a class="close" title="Close" href="#" data-dismiss="alert">&times;</a>
-    To improve your score, please  
+    To improve your score, please
     <a href="{{ url_for('auth.user_profile') }}">
       complete your profile.
     </a>
@@ -35,13 +35,6 @@
   {% if current_user.id == user.id %}
 
     <div class="btn-group">
-      <a id="project-post"
-         href="{{ url_for('public.user_post') }}"
-         title="Post an update to your current project" 
-         class="btn btn-success btn-lg">
-      <i class="fa fa-paper-plane" aria-hidden="true"></i>
-        Write a Post</a>
-
       <a href="{{ url_for('auth.user_profile') }}" class="btn btn-warning btn-lg">
         <i class="fa fa-child"></i>
         Edit Profile
@@ -189,15 +182,24 @@
   </div><!-- /.row -->
 {% endif %}
 
-{% if not posts %}
-  {% if current_user and current_user.id == user.id %}
-    <div class="alert alert-info">
-    Once you join a project, write some <b>Posts</b> to show a log of your work.
-    </div>
-  {% endif %}
-{% else %}
 <a name="timeline"><h2 class="mt-4 mb-2" onclick="this.innerHTML='Captain\'s Log, supplemental';console.log('To boldly go...')">Dribs</h2></a>
 <div class="jumbotron">
+
+{% if current_user and current_user.id == user.id %}
+    {% if not posts %}
+        <div class="alert alert-light">
+        Once you join a project, write some <b>Posts</b> to show a log of your work.
+        </div>
+    {% endif %}
+    <center>
+        <a id="project-post"
+                href="{{ url_for('public.user_post') }}"
+                title="Post an update to your current project"
+                class="btn btn-success btn-lg">
+            <i class="fa fa-clock-o" aria-hidden="true"></i>
+            Write a Post</a>
+    </center>
+{% endif %}
 
   <section class="timeline">
   {% for s in posts %}
@@ -224,5 +226,4 @@
   {% endfor %}
   </section>
 </div>
-{% endif %}
 {% endblock %}

@@ -8,8 +8,8 @@ git pull upstream --tags
 
 echo Pushing to $VER ...
 docker login
-docker build -t loleg/dribdat:$VER .
-docker push loleg/dribdat:$VER
-docker tag loleg/dribdat:$VER loleg/dribdat:latest
-docker push loleg/dribdat:latest
+docker build -t dribdat/dribdat:$VER .
+docker push dribdat/dribdat:$VER
+docker tag dribdat/dribdat:$VER dribdat/dribdat:latest
+docker push dribdat/dribdat:latest
 echo Done!

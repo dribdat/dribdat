@@ -6,7 +6,7 @@ from flask import (Blueprint, request, render_template, flash, url_for,
 from flask_login import login_required, current_user
 from dribdat.user.models import User, Event, Project, Activity
 from dribdat.public.forms import EventNew
-from dribdat.public.userhelper import (get_users_by_search, 
+from dribdat.public.userhelper import (get_users_by_search,
         filter_users_by_search, get_dribs_paginated)
 from dribdat.database import db
 from dribdat.extensions import cache
@@ -17,11 +17,13 @@ from sqlalchemy import and_, func
 from datetime import datetime, timedelta
 from dribdat.futures import UTC
 
+# Set project version
+VERSION = '0.8.5'
+
 blueprint = Blueprint('public', __name__, static_folder="../static")
 
 # Loads confiuration for events
 EVENT_PRESET = load_event_presets()
-
 
 def current_event():
     """Just get a current event."""
@@ -63,7 +65,7 @@ def info_current_hackathon_json():
 def about():
     """Render a static about page."""
     orgs = [u.data for u in User.query.filter_by(is_admin=True)]
-    return render_template("public/about.html", active="about", orgs=orgs)
+    return render_template("public/about.html", active="about", orgs=orgs, ver=VERSION)
 
 
 @blueprint.route("/terms/")
@@ -223,6 +225,12 @@ def event(event_id):
         .filter_by(event_id=event_id, is_hidden=False) \
         .order_by(Project.ident, Project.name)
         # The above must match projhelper->navigate_around_project
+    # Admin messages
+    if current_user and not current_user.is_anonymous and current_user.is_admin:
+        sum_hidden = len(event.projects) - projects.count()
+        if sum_hidden > 0:
+            flash(('There are %d projects in this event ' % sum_hidden) + \
+                ' that are hidden and possibly awaiting moderation (click Admin below)', 'dark')
     # Embedding view
     if request.args.get('embed'):
         return render_template("public/embed.html",
@@ -272,8 +280,8 @@ def all_participants():
         flash('Only the first %d participants are shown.' % MAX_COUNT, 'info')
     return render_template("public/eventusers.html",
                            q=search_by,
-                           participants=users, 
-                           usercount=len(users), 
+                           participants=users,
+                           usercount=len(users),
                            active="participants")
 
 
@@ -324,8 +332,8 @@ def event_challenges(event_id):
     if not current_user or current_user.is_anonymous or not current_user.is_admin:
         projects = projects.filter(Project.progress >= 0)
     challenges = [ p.as_challenge() for p in projects ]
-    return render_template("public/eventchallenges.html", 
-                           current_event=event, projects=challenges, 
+    return render_template("public/eventchallenges.html",
+                           current_event=event, projects=challenges,
                            project_count=projects.count(),
                            active="challenges")
 
@@ -414,5 +422,5 @@ def dribs():
     per_page = int(request.args.get('limit') or 10)
     dribs = get_dribs_paginated(page, per_page, request.host_url)
     return render_template("public/dribs.html",
-                           endpoint='public.dribs', active='dribs', 
+                           endpoint='public.dribs', active='dribs',
                            data=dribs)

@@ -1,9 +1,9 @@
 {
-  "name": "Dribdat",
-  "version": "0.8.4",
+  "name": "dribdat",
+  "version": "0.8.5",
   "description": "Online platform for time-limited collaborative events",
   "repository": "https://codeberg.org/dribdat/dribdat",
-  "author": "Oleg Lavrovsky <oleg@datalets.ch>",
+  "author": "Dribdat Contributors <dribdat@datalets.ch>",
   "license": "MIT",
   "private": false,
   "dependencies": {

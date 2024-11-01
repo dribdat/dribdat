@@ -32,8 +32,11 @@ blueprint = Blueprint('admin', __name__, url_prefix='/admin')
 @admin_required
 def index():
     current_event = Event.query.filter_by(is_current=True).first()
-    sum_hidden = Project.query.filter(Project.event_id==current_event.id) \
-                              .filter(Project.is_hidden).count()
+    if current_event is None:
+        sum_hidden = 0
+    else:
+        sum_hidden = Project.query.filter(Project.event_id==current_event.id) \
+                                  .filter(Project.is_hidden).count()
     stats = [
         {
             'value': Event.query.count(),

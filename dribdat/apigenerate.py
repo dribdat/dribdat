@@ -101,7 +101,7 @@ def gen_openai(prompt: str):
     # Return the obtained result
     if len(completion.choices) > 0:
         content = completion.choices[0].message.content
-        return "🅰️ℹ️ " + content
+        return "> 🅰️ℹ️ " + content.replace("\n", "\n> ")
     else:
         logging.error('No LLM data in response')
         return None
