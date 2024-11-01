@@ -74,7 +74,6 @@
 
     // On load
     checkAutotext($inputfield.val(), $indicator);
-    $("#submit").attr("disabled", "disabled");
 
     // On keypress
     $inputfield.on("keyup", function (e) {
