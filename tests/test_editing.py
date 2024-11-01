@@ -41,7 +41,7 @@ class TestEditing:
         res3 = testapp.get('/project/new/1?create=1')
         form3 = res3.forms[0]
         form3['name'] = 'New Project'
-        res3 = form3.submit()
+        res3 = form3.submit().follow()
         assert res3.status_code == 200
         # A new project was created
         assert len(Project.query.all()) == 2
