@@ -2158,12 +2158,13 @@ a.go-up {
 }
 .userprofile .profile-goals {
     font-family: monospace;
-    font-size: 150%;
+    font-size: 120%;
     padding: 1em 1em 0.1em;
     border-left: 1px solid rgba(0, 0, 0, 0.3);
     border-top: 1px solid rgba(0, 0, 0, 0.3);
     border-radius: 0.5em;
     background: #eed;
+    color: #333;
 }
 .userprofile .profile-goals:after {
     content: "";
