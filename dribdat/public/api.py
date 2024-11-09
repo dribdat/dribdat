@@ -70,8 +70,7 @@ def info_event_hackathon_json(event_id):
 def info_event_ical(event_id):
     """Output a calendar invite (iCal) about an Event."""
     event = Event.query.filter_by(id=event_id).first_or_404()
-    return jsonify(event.get_schema(request.host_url))
-    # https://github.com/collective/icalendar
+    return event.get_ical(request.host_url)
 
 
 # ------ EVENT PROJECTS ---------

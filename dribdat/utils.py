@@ -32,7 +32,7 @@ def sanitize_input(text):
 def sanitize_url(url):
     """Ensures a URL is just a URL."""
     return quote(url, safe='/:?&')
-    
+
 
 def random_password(pwdlen=20):
     """Provide a strongly secure random string."""
@@ -74,7 +74,7 @@ def timesince(dtsince, default="just now", until=False):
         return ""
     if until and dt > dt_now:
         diff = dt - dt_now
-        suffix = "to go"
+        suffix = "" # "to go"
     else:
         diff = dt_now - dt
         suffix = "ago"

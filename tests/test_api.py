@@ -35,9 +35,9 @@ class TestApi:
         assert "http://schema.org" == jsondata["@context"]
 
         # Test iCalendar compliance
-        icaldata = info_event_ical(event.id).data
-        print(icaldata)
-        assert 'ICAL' in icaldata
+        icaldata = info_event_ical(event.id)
+        assert 'VEVENT' in icaldata
+        assert event.name in icaldata
 
 
     def test_get_event_data(self, testapp):
