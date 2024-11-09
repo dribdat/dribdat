@@ -12,10 +12,13 @@
 
       {% if not event.lock_resources %}
         <p class="an-event-meta">
-          <b>{{ event.date }}</b>
-          <span>{{ event.hostname }}</span>
+          <span>{{ event.date }}</span>
+          {% if event.hostname %}
+            <i class="fa fa-bank"></i>
+            <span>{{ event.hostname }}</span>
+          {% endif %}
           {% if event.location %}
-            <i class="fa fa-map-pin"></i>
+            <i class="fa fa-map"></i>
             <span>{{ event.location }}</span>
           {% endif %}
         </p>
@@ -65,13 +68,6 @@
                 Register
             </a>
             {% endif %}
-
-            <a href="{{ url_for('api.info_event_ical', event_id=event.id }}"
-                title="Add this event to my calendar"
-                class="btn btn-info btn-lg" target="_blank">
-                <i class="fa fa-calendar" aria-hidden="true"></i>
-                Save
-            </a>
         {% endif %}
       </div><!-- /.an-event-actions -->
     </div><!-- /.header-content -->

@@ -229,8 +229,8 @@ def event(event_id):
     if current_user and not current_user.is_anonymous and current_user.is_admin:
         sum_hidden = len(event.projects) - projects.count()
         if sum_hidden > 0:
-            flash(('There are %d projects in this event ' % sum_hidden) + \
-                ' that are hidden and possibly awaiting moderation (click Admin below)', 'dark')
+            flash(('There are %d hidden projects in this event ' % sum_hidden) + \
+                ' that may need moderation: check the Admin.', 'secondary')
     # Embedding view
     if request.args.get('embed'):
         return render_template("public/embed.html",

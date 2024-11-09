@@ -67,9 +67,9 @@ def index():
     ]
     if sum_hidden > 0:
         flash(('There are %d projects in the featured event ' % sum_hidden) + \
-              ' that are hidden and possibly awaiting moderation.', 'warning')
+              ' that are hidden and may need moderation.', 'secondary')
     return render_template('admin/index.html',
-                           stats=stats, timeinfo=get_time_note(), 
+                           stats=stats, timeinfo=get_time_note(),
                            default_event=current_event, active='index')
 
 

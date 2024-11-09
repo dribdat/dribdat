@@ -9,11 +9,13 @@
 
     {% if event %}
       <div class="btn-group projects-extra">
-        <a href="{{ url_for('public.event', event_id=event.id) }}" class="btn btn-info">
-          &#128065; Public view
+        <a href="{{ url_for('public.event', event_id=event.id) }}" class="btn btn-light">
+          &#128065; View
         </a>
-        <a href="{{ url_for('api.project_list_event_csv', event_id=event.id) }}" class="btn btn-light">
-          <i class="fa fa-download"></i>&nbsp;CSV
+        <a href="{{ url_for('public.event_print', event_id=event.id) }}"
+             title="Detailed overview of this event" class="btn btn-light">
+            <i class="fa fa-print" aria-hidden="true"></i>
+            Report
         </a>
         <a href="{{ url_for('admin.event_autosync', event_id=event.id) }}" class="btn btn-dark">
           <i class="fa fa-recycle" aria-hidden="true"></i>&nbsp;Sync all
