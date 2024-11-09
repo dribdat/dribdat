@@ -5,7 +5,7 @@ from flask import (Blueprint, request, render_template, flash, url_for,
         redirect, current_app, jsonify)
 from flask_login import login_required, current_user
 from dribdat.user.models import User, Event, Project, Activity
-from dribdat.public.forms import EventNew
+from dribdat.public.forms import EventNew, EventEdit
 from dribdat.public.userhelper import (get_users_by_search,
         filter_users_by_search, get_dribs_paginated)
 from dribdat.database import db
@@ -383,6 +383,7 @@ def event_new():
             del form.id
             form.populate_obj(event)
             # Load default event content
+            event.manager = current_user.username
             event.boilerplate = EVENT_PRESET['quickstart']
             event.community_embed = EVENT_PRESET['codeofconduct']
             db.session.add(event)
@@ -402,6 +403,41 @@ def event_new():
         flash('An administrator can make your new event visible on the home page.',
                 'info')
     return render_template('public/eventnew.html', form=form, active='Event')
+
+@blueprint.route('/event/<int:event_id>/edit', methods=['GET', 'POST'])
+@login_required
+def event_edit(event_id):
+    event = Event.query.filter_by(id=event_id).first_or_404()
+
+    if not current_user.is_admin and not event.manager == current_user:
+        flash('Only admins and event owners are allowed to edit.')
+        return redirect(url_for("public.event", event_id=event.id))
+
+    if event.location_lat is None or event.location_lon is None:
+        event.location_lat = event.location_lon = 0
+
+    form = EventEdit(obj=event, next=request.args.get('next'))
+
+    if form.is_submitted() and form.validate():
+        form.populate_obj(event)
+        event.starts_at = datetime.combine(
+            form.starts_date.data, form.starts_time.data)
+        event.ends_at = datetime.combine(
+            form.ends_date.data, form.ends_time.data)
+
+        db.session.add(event)
+        db.session.commit()
+
+        cache.clear()
+
+        flash('Saved your event.', 'success')
+        return redirect(url_for("public.event", event_id=event.id))
+
+    form.starts_date.data = event.starts_at
+    form.starts_time.data = event.starts_at
+    form.ends_date.data = event.ends_at
+    form.ends_time.data = event.ends_at
+    return render_template('public/eventedit.html', event=event, form=form)
 
 #####
 

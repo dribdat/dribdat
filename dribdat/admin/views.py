@@ -338,7 +338,6 @@ def event(event_id):
         cache.clear()
 
         flash('Event updated.', 'success')
-        cache.clear()
         return redirect(url_for("admin.events"))
 
     form.starts_date.data = event.starts_at

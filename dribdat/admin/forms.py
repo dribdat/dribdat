@@ -154,9 +154,6 @@ class ProjectForm(FlaskForm):
 
     next = HiddenField()
     id = HiddenField('id')
-    user_name = StringField(u'Manager username')
-    event_id = SelectField(u'Event', coerce=int)
-    category_id = SelectField(u'Category', coerce=int)
     progress = SelectField(
         u'Progress', coerce=int, choices=projectProgressList())
     name = StringField(
@@ -185,6 +182,9 @@ class ProjectForm(FlaskForm):
         u'Custom icon',
         [length(max=20)],
         description='https://fontawesome.com/v4/cheatsheet')
+    user_name = StringField(u'Author', description='User who created this challenge')
+    event_id = SelectField(u'Event', coerce=int)
+    category_id = SelectField(u'Category', coerce=int)
     submit = SubmitField(u'Save')
 
 

@@ -12,10 +12,13 @@ from wtforms.fields import (
     URLField, DateTimeLocalField
 )
 # from wtforms_html5 import AutoAttrMeta
-from wtforms.validators import InputRequired, length
-from ..user.validators import UniqueValidator
+from wtforms.validators import InputRequired, DataRequired, length
 from dribdat.user.models import Project, Event
+from ..user.validators import (
+    UniqueValidator, event_date_check, event_time_check
+)
 from datetime import time, datetime, timedelta
+from dribdat.futures import UTC
 
 
 class ProjectImport(FlaskForm):
@@ -198,4 +201,64 @@ class EventNew(FlaskForm):
     community_url = URLField(
         u'Community link', [length(max=255)],
         description=u'Link to connect to a community forum or hashtag')
+    submit = SubmitField(u'Save')
+
+
+class EventEdit(FlaskForm):
+    """Event editing form."""
+
+    next = HiddenField()
+    id = HiddenField('id')
+    name = StringField(
+        u'Title',
+        [length(max=80), UniqueValidator(Event, 'name'), DataRequired()])
+    starts_date = DateField(
+        u'Starting date', [event_date_check], default=datetime.now(UTC))
+    starts_time = TimeField(
+        u'Starting time', [event_time_check], default=time(9, 0, 0))
+    ends_date = DateField(u'Finish date', default=datetime.now(UTC))
+    ends_time = TimeField(u'Finish time', default=time(16, 0, 0))
+    summary = StringField(
+        u'Summary',
+        [length(max=140)],
+        description=u'A short tagline of the event, in max 140 characters')
+    hostname = StringField(
+        u'Hosted by',
+        [length(max=80)],
+        description=u'Organization responsible for the event')
+    location = StringField(
+        u'Located at',
+        [length(max=255)],
+        description=u'The event locale or virtual space')
+    hashtags = StringField(
+        u'Hashtags',
+        [length(max=255)],
+        description=u'Social media hashtags for this event')
+    description = TextAreaField(
+        u'Description',
+        description=u'Markdown and HTML supported')
+    logo_url = URLField(
+        u'Host logo link',
+        [length(max=255)],
+        description=u'Image hosted on a hotlinkable website - '
+        + 'such as imgbox.com (max 688x130)')
+    gallery_url = URLField(
+        u'Gallery links',
+        [length(max=2048)],
+        description=u'Larger background image (max 1920x1080)')
+    webpage_url = URLField(
+        u'Home page link',
+        [length(max=255)],
+        description=u'Link to register or get more info about the event')
+    community_url = URLField(
+        u'Community link',
+        [length(max=255)],
+        description=u'To find others on a community forum or social media')
+    instruction = TextAreaField(
+        u'Instructions',
+        description=u'Shown to registered participants only - '
+        + 'Markdown and HTML supported')
+    aftersubmit = TextAreaField(
+        u'Submissions guide',
+        description=u'Shown to the team on projects at challenge stage: Markdown and HTML supported')
     submit = SubmitField(u'Save')

@@ -1654,6 +1654,7 @@ nav .nav-login {
     min-width: 7em;
     font-size: 150%;
 }
+.eventedit .form-actions input,
 .projectpost .form-actions input,
 .projectform .form-actions input {
     margin-top: 1em;

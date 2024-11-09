@@ -372,6 +372,10 @@ class Event(PkModel):
     lock_resources = Column(db.Boolean(), default=False)  # this event contains Resources
     lock_templates = Column(db.Boolean(), default=False)  # this event contains Templates
 
+    # User who created the project
+    manager_id = reference_col('users', nullable=True)
+    manager = relationship('User', backref='events')
+
     @property
     def data(self):
         """Get JSON representation."""
