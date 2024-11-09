@@ -62,8 +62,8 @@
             </li>
             {% if event %}
               <li class="nav-item">
-                <a href="{{ url_for('admin.event_projects', event_id=current_event.id) }}" class="btn btn-secondary"
-                    title="Administer event projects">
+                <a href="{{ url_for('admin.event_projects', event_id=current_event.id) }}"
+                    title="Administer event projects" class="nav-link">
                   <i class="fa fa-check" aria-hidden="true"></i>
                   Check</a>
               </li>

@@ -154,6 +154,7 @@ class ProjectForm(FlaskForm):
 
     next = HiddenField()
     id = HiddenField('id')
+    user_name = StringField(u'Manager username')
     event_id = SelectField(u'Event', coerce=int)
     category_id = SelectField(u'Category', coerce=int)
     progress = SelectField(
@@ -164,8 +165,10 @@ class ProjectForm(FlaskForm):
     ident = StringField(
         u'Identifier', [length(max=10)],
         description="Typically used for numbering the projects")
-    user_name = StringField(u'Started by')
     summary = StringField(u'Short summary', [length(max=2048)])
+    hashtag = StringField(
+        u'Hashtags', [length(max=140)],
+        description="Team channel, hashtag, organization")
     longtext = TextAreaField(u'Description')
     autotext_url = URLField(
         u'Readme', [length(max=2048)],
@@ -173,16 +176,13 @@ class ProjectForm(FlaskForm):
     autotext = TextAreaField(u'Readme content')
     webpage_url = URLField(u'Presentation link', [length(max=2048)])
     is_webembed = BooleanField(u'Embed presentation link', default=False)
-    hashtag = StringField(
-        u'Hashtags', [length(max=140)],
-        description="Team channel, hashtag, organization")
     contact_url = URLField(u'Contact link', [length(max=2048)])
     source_url = URLField(u'Source link', [length(max=2048)])
     download_url = URLField(u'Demo link', [length(max=2048)])
     image_url = URLField(u'Image link', [length(max=255)])
     logo_color = StringField(u'Custom color')
     logo_icon = StringField(
-        u'Custom icon', 
+        u'Custom icon',
         [length(max=20)],
         description='https://fontawesome.com/v4/cheatsheet')
     submit = SubmitField(u'Save')
