@@ -121,8 +121,8 @@
             <h5>Click here to get started:</h5>
           </p>
         {% endif %}
-        {% if config.DRIBDAT_ALLOW_EVENTS or current_user.is_admin %}
-          <a href="{{ url_for('public.event_start') }}" class="btn btn-lg btn-light ml-4">
+        {% if config.DRIBDAT_ALLOW_EVENTS %}
+          <a href="{{ url_for('public.event_start') }}" class="btn btn-lg btn-info ml-4">
             <i class="fa fa-calendar mr-3" aria-hidden="true"></i>
             Share an event
           </a>
