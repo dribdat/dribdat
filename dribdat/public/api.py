@@ -21,7 +21,7 @@ from ..user.models import Event, Project, Activity, User
 from ..apipackage import import_event_package, event_to_data_package
 from ..aggregation import (
     AddProjectDataFromAutotext,
-    GetProjectData, 
+    GetProjectData,
 )
 from ..apiutils import (
     get_project_list,
@@ -64,6 +64,14 @@ def info_event_hackathon_json(event_id):
     """See https://schema.org/Hackathon."""
     event = Event.query.filter_by(id=event_id).first_or_404()
     return jsonify(event.get_schema(request.host_url))
+
+
+@blueprint.route('/event/<int:event_id>/ical')
+def info_event_ical(event_id):
+    """Output a calendar invite (iCal) about an Event."""
+    event = Event.query.filter_by(id=event_id).first_or_404()
+    return jsonify(event.get_schema(request.host_url))
+    # https://github.com/collective/icalendar
 
 
 # ------ EVENT PROJECTS ---------
@@ -390,7 +398,7 @@ def event_push_status(event_id):
     """Update event status."""
     event = Event.query.filter_by(id=event_id).first_or_404()
     newstatus = request.form.get('text')
-    if not request.form.get('text'): 
+    if not request.form.get('text'):
         # Clear the status
         event.status = None
     else:
