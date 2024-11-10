@@ -121,6 +121,13 @@
       <i class="fa fa-check text-info"></i>
       Certificate</a>
   {% endif %}
+  {% if may_edit %}
+    <a class="btn btn-lg btn-warning"
+      href="{{ url_for('public.event_edit', event_id=current_event.id) }}"
+      title="Edit details of this event">
+      <i class="fa fa-pencil"></i>
+      Edit</a>
+  {% endif %}
 </div>
 
 

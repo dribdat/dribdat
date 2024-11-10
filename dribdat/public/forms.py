@@ -237,6 +237,13 @@ class EventEdit(FlaskForm):
     description = TextAreaField(
         u'Description',
         description=u'Markdown and HTML supported')
+    instruction = TextAreaField(
+        u'Instructions',
+        description=u'Shown to registered participants only - '
+        + 'Markdown and HTML supported')
+    aftersubmit = TextAreaField(
+        u'Submissions guide',
+        description=u'Shown to the team on projects at challenge stage: Markdown and HTML supported')
     logo_url = URLField(
         u'Host logo link',
         [length(max=255)],
@@ -254,11 +261,4 @@ class EventEdit(FlaskForm):
         u'Community link',
         [length(max=255)],
         description=u'To find others on a community forum or social media')
-    instruction = TextAreaField(
-        u'Instructions',
-        description=u'Shown to registered participants only - '
-        + 'Markdown and HTML supported')
-    aftersubmit = TextAreaField(
-        u'Submissions guide',
-        description=u'Shown to the team on projects at challenge stage: Markdown and HTML supported')
     submit = SubmitField(u'Save')

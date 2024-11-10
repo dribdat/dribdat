@@ -12,6 +12,8 @@ from .futures import UTC
 import re
 import csv
 import yaml
+import random
+import string
 
 
 def strtobool(text):
@@ -36,8 +38,6 @@ def sanitize_url(url):
 
 def random_password(pwdlen=20):
     """Provide a strongly secure random string."""
-    import string
-    import random
     return ''.join(random.SystemRandom()
                    .choice(string.ascii_uppercase + string.digits)
                    for _ in range(pwdlen))
@@ -201,3 +201,10 @@ def fix_relative_links(readme, imgroot, repo_full_name, default_branch):
         readme
     )
     return readme
+
+
+def get_random_alphanumeric_string(length=24):
+    """ Get a reasonably secure password """
+    return ''.join(
+        (random.SystemRandom().choice(string.ascii_letters + string.digits)
+         for i in range(length)))

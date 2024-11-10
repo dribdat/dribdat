@@ -6,8 +6,12 @@ from flask import (Blueprint, request, render_template, flash, url_for,
 from flask_login import login_required, current_user
 from dribdat.user.models import User, Event, Project, Activity
 from dribdat.public.forms import EventNew, EventEdit
-from dribdat.public.userhelper import (get_users_by_search,
-        filter_users_by_search, get_dribs_paginated)
+from dribdat.public.userhelper import (
+    get_user_by_name,
+    get_users_by_search,
+    filter_users_by_search,
+    get_dribs_paginated
+)
 from dribdat.database import db
 from dribdat.extensions import cache
 from dribdat.aggregation import GetEventUsers
@@ -226,11 +230,14 @@ def event(event_id):
         .order_by(Project.ident, Project.name)
         # The above must match projhelper->navigate_around_project
     # Admin messages
-    if current_user and not current_user.is_anonymous and current_user.is_admin:
-        sum_hidden = len(event.projects) - projects.count()
-        if sum_hidden > 0:
-            flash(('There are %d hidden projects in this event ' % sum_hidden) + \
-                ' that may need moderation: check the Admin.', 'secondary')
+    editable = False
+    if current_user and not current_user.is_anonymous:
+        editable = current_user.is_admin or event.manager == current_user
+        if current_user.is_admin:
+            sum_hidden = len(event.projects) - projects.count()
+            if sum_hidden > 0:
+                flash(('There are %d hidden projects in this event ' % sum_hidden) + \
+                    ' that may need moderation: check the Admin.', 'secondary')
     # Embedding view
     if request.args.get('embed'):
         return render_template("public/embed.html",
@@ -243,7 +250,7 @@ def event(event_id):
     # TODO: seems inefficient? We only need a subset of the data here:
     summaries = [ p.data for p in projects ]
     return render_template("public/event.html", current_event=event,
-                           may_certify=may_certify,
+                           may_certify=may_certify, may_edit=editable,
                            summaries=summaries, project_count=len(summaries),
                            active="projects")
 

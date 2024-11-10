@@ -146,6 +146,7 @@ class EventForm(FlaskForm):
     custom_css = TextAreaField(
         u'Custom stylesheet (CSS)',
         description=u'For external CSS: @import url(https://...);')
+    user_name = StringField(u'Author', description='User who managed this event')
     submit = SubmitField(u'Save')
 
 
@@ -182,9 +183,9 @@ class ProjectForm(FlaskForm):
         u'Custom icon',
         [length(max=20)],
         description='https://fontawesome.com/v4/cheatsheet')
-    user_name = StringField(u'Author', description='User who created this challenge')
     event_id = SelectField(u'Event', coerce=int)
     category_id = SelectField(u'Category', coerce=int)
+    user_name = StringField(u'Author', description='User who created this challenge')
     submit = SubmitField(u'Save')
 
 

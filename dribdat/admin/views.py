@@ -6,11 +6,12 @@ from flask import (
 )
 from flask_login import login_required
 
-from ..utils import sanitize_input, get_time_note
+from ..utils import sanitize_input, get_time_note, get_random_alphanumeric_string
 from ..extensions import db, cache
 from ..decorators import admin_required
 from ..aggregation import GetProjectData, SyncProjectData
 from ..user.models import Role, User, Event, Activity, Project, Category
+from ..public.userhelper import get_user_by_name
 from .forms import (
     RoleForm, CategoryForm,
     EventForm, ProjectForm,
@@ -20,8 +21,6 @@ from .forms import (
 from datetime import datetime
 from dribdat.futures import UTC
 
-import random
-import string
 
 
 blueprint = Blueprint('admin', __name__, url_prefix='/admin')
@@ -231,27 +230,6 @@ def user_delete(user_id):
     return redirect(url_for("admin.users"))
 
 
-def get_random_alphanumeric_string(length=24):
-    """ Get a reasonably secure password """
-    return ''.join(
-        (random.SystemRandom().choice(string.ascii_letters + string.digits)
-         for i in range(length)))
-
-
-def get_user_by_name(username):
-    """ Retrieves a user by name """
-    if not username:
-        return None
-    username = username.strip()
-    if not username:
-        return None
-    user = User.query.filter_by(username=username).first()
-    if not user:
-        flash('Username %s not found!' % username, 'warning')
-        return None
-    return user
-
-
 @blueprint.route('/user/<int:user_id>/reset/')
 @login_required
 @admin_required
@@ -331,6 +309,7 @@ def event(event_id):
             form.starts_date.data, form.starts_time.data)
         event.ends_at = datetime.combine(
             form.ends_date.data, form.ends_time.data)
+        event.manager = get_user_by_name(form.user_name.data)
 
         db.session.add(event)
         db.session.commit()
