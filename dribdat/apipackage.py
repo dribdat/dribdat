@@ -176,7 +176,7 @@ def import_project_data(data, dry_run=False, event=None):
     updates = []
     for pjt in data:
         # Skip empty rows
-        if not 'name' in pjt: 
+        if not 'name' in pjt:
             logging.warning('Skipping empty row')
             logging.debug(pjt)
             continue
@@ -221,9 +221,9 @@ def import_activities(data, dry_run=False):
         activity = Activity.query.filter_by(name=aname,
                                             timestamp=tstamp).first()
         if activity:
-            logging.info('Skipping activity', tstamp)
+            logging.info('Skipping activity: %s', tstamp)
             continue
-        logging.info('Creating activity', tstamp)
+        logging.info('Creating activity: %s', tstamp)
         if act['project_name'] != pname:
             pname = act['project_name']
             # TODO: unreliable; rather use a map of project_id to new id
@@ -271,7 +271,7 @@ def fetch_datapackage(url, dry_run=False, all_data=False):
     # For security, can only be used from CLI.
     # In the future, we can add a subscription setting on the server side.
     if not url.endswith('datapackage.json'):
-        logging.error("Invalid URL", url)
+        logging.error("Invalid URL: %s", url)
         return {}
     try:
         data = requests.get(url, timeout=REQUEST_TIMEOUT).json()

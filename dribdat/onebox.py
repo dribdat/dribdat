@@ -43,8 +43,10 @@ def format_webembed(url, project_id=None):
     return '<iframe src="%s"></iframe>' % url
 
 
-def repl_onebox(mat=None, li=[]):
+def repl_onebox(mat=None, li=None):
     """Check for onebox application links."""
+    if li is None:
+        li = []
     if mat is None:
         li[:] = []
         return

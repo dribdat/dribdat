@@ -12,6 +12,7 @@ from dribdat.public.userhelper import (
     filter_users_by_search,
     get_dribs_paginated
 )
+from dribdat.public.projhelper import current_event
 from dribdat.database import db
 from dribdat.extensions import cache
 from dribdat.aggregation import GetEventUsers
@@ -28,10 +29,6 @@ blueprint = Blueprint('public', __name__, static_folder="../static")
 
 # Loads confiuration for events
 EVENT_PRESET = load_event_presets()
-
-def current_event():
-    """Just get a current event."""
-    return Event.current()
 
 
 @blueprint.route("/dashboard/")

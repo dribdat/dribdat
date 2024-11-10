@@ -504,7 +504,7 @@ def project_uploader():
         c for c in safe_filename
         if c.isalnum() or c in keepcharacters).rstrip()
     if not safe_filename:
-        safe_filename = "".join(random_password(8), '.', ext)
+        safe_filename = "".join([random_password(8), '.', ext])
     # use random subfolder inside user id folder
     filename = '/'.join([
                     str(current_user.id),

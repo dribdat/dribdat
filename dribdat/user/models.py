@@ -601,11 +601,6 @@ class Event(PkModel):
         """Check if the event has categories to show."""
         return self.categories_for_event().count() > 0
 
-    def current():
-        """Return currently featured event."""
-        # TODO: allow multiple featurettes?
-        return Event.query.filter_by(is_current=True).first()
-
     def __init__(self, name=None, **kwargs):  # noqa: D107
         if name:
             db.Model.__init__(self, name=name, **kwargs)

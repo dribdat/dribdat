@@ -22,8 +22,9 @@ from dribdat.futures import UTC
 
 
 def current_event():
-    """Just get current event."""
-    return Event.current()
+    """Return currently featured event."""
+    # TODO: allow multiple featurettes?
+    return Event.query.filter_by(is_current=True).first()
 
 
 def check_update(obj, minutes=5):
