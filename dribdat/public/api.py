@@ -375,10 +375,8 @@ def event_push_csv(filedata, dry_run=False):
     results = import_projects_csv(filedata, event, dry_run)
     if 'errors' in results:
         return jsonify(status='Error', errors=results['errors'])
-    else:
-        flash("Event projects uploaded: %s (%d)" % (event.name, len(results)), 'success')
-        return redirect(url_for("admin.events"))
-    return jsonify(status=status, results=results)
+    flash("Event projects uploaded: %s (%d)" % (event.name, len(results)), 'success')
+    return redirect(url_for("admin.events"))
 
 
 @blueprint.route('/event/current/get/status', methods=["GET"])
@@ -625,7 +623,7 @@ def get_user_data(current_user):
 def profile_user_json(user_id: int):
     """Output JSON with public data about a user."""
     current_user = User.query.filter_by(id=user_id).first_or_404()
-    return jsonify(get_user_data(current_data))
+    return jsonify(get_user_data(current_user))
 
 
 @blueprint.route('/user/<username>', methods=['GET'])
