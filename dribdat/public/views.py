@@ -232,7 +232,7 @@ def event(event_id):
     # Admin messages
     editable = False
     if current_user and not current_user.is_anonymous:
-        editable = current_user.is_admin or event.manager == current_user
+        editable = current_user.is_admin or event.user == current_user
         if current_user.is_admin:
             sum_hidden = len(event.projects) - projects.count()
             if sum_hidden > 0:
@@ -390,7 +390,7 @@ def event_new():
             del form.id
             form.populate_obj(event)
             # Load default event content
-            event.manager = current_user.username
+            event.user_name = current_user.username
             event.boilerplate = EVENT_PRESET['quickstart']
             event.community_embed = EVENT_PRESET['codeofconduct']
             db.session.add(event)
@@ -416,7 +416,7 @@ def event_new():
 def event_edit(event_id):
     event = Event.query.filter_by(id=event_id).first_or_404()
 
-    if not current_user.is_admin and not event.manager == current_user:
+    if not current_user.is_admin and not event.user == current_user:
         flash('Only admins and event owners are allowed to edit.')
         return redirect(url_for("public.event", event_id=event.id))
 

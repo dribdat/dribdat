@@ -309,7 +309,7 @@ def event(event_id):
             form.starts_date.data, form.starts_time.data)
         event.ends_at = datetime.combine(
             form.ends_date.data, form.ends_time.data)
-        event.manager = get_user_by_name(form.user_name.data)
+        event.user = get_user_by_name(form.user_name.data)
 
         db.session.add(event)
         db.session.commit()

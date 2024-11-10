@@ -373,8 +373,8 @@ class Event(PkModel):
     lock_templates = Column(db.Boolean(), default=False)  # this event contains Templates
 
     # User who created the project
-    manager_id = reference_col('users', nullable=True)
-    manager = relationship('User', backref='events')
+    user_id = reference_col('users', nullable=True)
+    user = relationship('User', backref='events')
 
     @property
     def data(self):
