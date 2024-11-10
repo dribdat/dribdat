@@ -387,7 +387,7 @@ def event_new():
             del form.id
             form.populate_obj(event)
             # Load default event content
-            event.user_name = current_user.username
+            event.user_id = current_user.id
             event.boilerplate = EVENT_PRESET['quickstart']
             event.community_embed = EVENT_PRESET['codeofconduct']
             db.session.add(event)
