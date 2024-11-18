@@ -362,6 +362,9 @@ def FetchWebProject(project_url):
     # Instructables
     elif project_url.startswith('https://www.instructables.com/'):
         return FetchWebInstructables(datatext, project_url)
+    # Pretalx
+    elif datatext.find('<meta name="generator" content="pretalx">') > 0:
+        return FetchWebPretalx(datatext, project_url)
     # CodiMD / HackMD
     elif datatext.find('<div id="doc" ') > 0:
         return FetchWebCodiMD(datatext, project_url)
@@ -547,3 +550,23 @@ def ParseInstructablesElement(elem):
                          tags=ALLOWED_HTML_TAGS,
                          attributes=ALLOWED_HTML_ATTR)
         return elem.tag, p
+
+
+def FetchWebPretalx(text, url):
+    """Grab Pretalx data from a talk."""
+    if not '/talk/' in url:
+        return {}
+    doc = pq(text)
+    apiurl = doc('link[@rel="alternate"]').attr('href')
+    rawdata = requests.get(apiurl + '?format=json', timeout=REQUEST_TIMEOUT)
+    if rawdata.text.find('{') < 0:
+        return {}
+    jsondata = rawdata.json()
+    return {
+        'type': 'Pretalx',
+        'name': jsondata['title'],
+        'summary': jsondata['abstract'][:2000],
+        'description': jsondata['description'],
+        'source_url': url,
+        'logo_icon': 'window-maximize',
+    }
