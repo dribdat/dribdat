@@ -2,6 +2,7 @@
 """API calls for dribdat."""
 import boto3
 import tempfile
+from json import loads
 from datetime import datetime
 
 from flask import (
@@ -631,3 +632,10 @@ def profile_username_json(username):
     """Output JSON with public data by username."""
     a_user = User.query.filter_by(username=username).first_or_404()
     return jsonify(get_user_data(a_user))
+
+
+@blueprint.route('/user/<int:user_id>/resume.json', methods=['GET'])
+def profile_user_resume_json(user_id: int):
+    """Output JSON with resume data about a user."""
+    current_user = User.query.filter_by(id=user_id).first_or_404()
+    return jsonify(loads(current_user.vitae))

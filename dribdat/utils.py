@@ -9,12 +9,12 @@ from datetime import datetime
 from pytz import timezone
 from .futures import UTC
 
-import re
-import csv
-import yaml
-import random
-import string
+from yaml import safe_load
+from json import loads
+from csv import DictReader
+from random import SystemRandom
 
+import re, string
 
 def strtobool(text):
     """Truthy conversion as per PEP 632."""
@@ -25,6 +25,12 @@ def strtobool(text):
         return False
     raise ValueError("{} is not convertable to boolean".format(tls))
 
+def get_any_key(obj, keys=[], default=''):
+    """Returns the value of a dict of any key, else default"""
+    for k in keys:
+        if k in obj:
+            return obj[k]
+    return default
 
 def sanitize_input(text):
     """Remove unsavoury characters."""
@@ -38,7 +44,7 @@ def sanitize_url(url):
 
 def random_password(pwdlen=20):
     """Provide a strongly secure random string."""
-    return ''.join(random.SystemRandom()
+    return ''.join(SystemRandom()
                    .choice(string.ascii_uppercase + string.digits)
                    for _ in range(pwdlen))
 
@@ -160,7 +166,7 @@ def load_csv_presets(filename, by_col='name'):
         path.dirname(__file__), 'templates'), 'includes'), filename + '.csv')
     settings_dict = {}
     with open(fn, mode='r') as file:
-        csvreader = csv.DictReader(file, delimiter=';')
+        csvreader = DictReader(file, delimiter=';')
         for row in csvreader:
             settings_dict[row[by_col]] = row
     return settings_dict
@@ -169,7 +175,7 @@ def load_csv_presets(filename, by_col='name'):
 def load_presets(stagedata, top_element='stages', by_col='name'):
     """Load presets as a dictionary."""
     settings_dict = {}
-    stages = yaml.safe_load(stagedata)
+    stages = safe_load(stagedata)
     for row in stages[top_element]:
         settings_dict[row[by_col]] = row
     return settings_dict
@@ -177,13 +183,24 @@ def load_presets(stagedata, top_element='stages', by_col='name'):
 
 def load_yaml_presets(filename, by_col='name', filepath=None):
     """Load structured settings from a YAML file."""
-    # Expects filename to *not* have a .yaml extension
-    # and be equivalent to the top level element -
-    # unless the filepath argument is used.
-    fn = filepath or path.join(path.join(path.join(
-        path.dirname(__file__), 'templates'), 'includes'), filename + '.yaml')
+    original_filename = filename
+    if not (filename.endswith('.yaml') or filename.endswith('.yml')):
+        filename = filename + '.yaml'
+    fn = path.join(filepath or path.join(path.join(
+        path.dirname(__file__), 'templates'), 'includes'), filename)
     with open(fn, mode='r') as file:
-        config = load_presets(file, filename, by_col)
+        config = load_presets(file, original_filename, by_col)
+    return config
+
+
+def load_json_presets(filename, filepath=None):
+    """Load structured settings from a JSON file."""
+    if not (filename.endswith('.json')):
+        filename = filename + '.json'
+    fn = path.join(filepath or path.join(path.join(
+        path.dirname(__file__), 'templates'), 'includes'), filename)
+    with open(fn, mode='r') as file:
+        config = loads(file.read())
     return config
 
 
@@ -206,5 +223,5 @@ def fix_relative_links(readme, imgroot, repo_full_name, default_branch):
 def get_random_alphanumeric_string(length=24):
     """ Get a reasonably secure password """
     return ''.join(
-        (random.SystemRandom().choice(string.ascii_letters + string.digits)
+        (SystemRandom().choice(string.ascii_letters + string.digits)
          for i in range(length)))

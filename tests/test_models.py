@@ -5,16 +5,20 @@ from datetime import datetime
 
 import pytest
 import pytz
+
 from base64 import b64decode
+from json import dumps
 
 from dribdat.user.models import Role, User, Event
 from dribdat.user.constants import stageProjectToNext
-from dribdat.utils import timesince
+from dribdat.utils import timesince, load_json_presets
 from dribdat.settings import Config
 from dribdat.aggregation import ProjectActivity
 from dribdat.boxout.dribdat import box_project
 
 from .factories import UserFactory, ProjectFactory, EventFactory
+
+
 
 
 @pytest.mark.usefixtures('db')
@@ -120,3 +124,19 @@ class TestUser:
         project.progress = 80
         project.update_now()
         assert user1.get_score() == 20
+
+
+    def test_user_vitals(self, db):
+        """Test support for the JSON Resume format"""
+        user = UserFactory()
+        vitae = load_json_presets('sample.resume', 'tests/mock')
+        assert '$schema' in vitae
+        user.vitae = dumps(vitae)
+        user.socialize()
+        user.save()
+        simplr = user.simple_resume()
+        assert simplr is not None
+        #print(simplr)
+        assert len(simplr)>1
+        sample = {'type': 'projects', 'date': '2016-08-24', 'name': 'Miss Direction', 'summary': 'A mapping engine that misguides you'}
+        assert sample in simplr

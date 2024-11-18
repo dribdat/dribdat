@@ -23,8 +23,15 @@
       {{ render_form(url_for('auth.passwordless'), form) }}
     </div>
   {% else %}
+    <h5>
+      Please contact the organizers, and ask them to change your password.
+    </h5>
     <p>
-      Please contact the organizers, and ask them to change your password in the Admin - or enable the Mail service for Dribdat to let you do this yourself.
+      Admins:
+      <a href="https://dribdat.cc/deploy#mail">see the docs</a> and
+      <a href="https://dribdat.cc/trouble.html#restore-admin-access">help areaf</a>
+      on enabling Mail services to let users reset their own passwords,
+      or setting up a Single Sign-On provider.
     </p>
   {% endif %}
 </div>

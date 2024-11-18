@@ -8,6 +8,7 @@ from flask import current_app
 from flask_login import UserMixin
 from icalendar import Event as iCalEvent
 from icalendar import Calendar as iCalendar
+from json import dumps, loads
 # Time functions
 from time import mktime
 from dateutil.parser._parser import ParserError
@@ -24,7 +25,7 @@ from dribdat.user.constants import (
 )
 from dribdat.onebox import format_webembed  # noqa: I005
 from dribdat.utils import (
-    format_date_range, format_date, parse_date, timesince, strtobool
+    format_date_range, format_date, parse_date, timesince, strtobool, get_any_key
 )
 from dribdat.database import (
     db,
@@ -107,13 +108,16 @@ class User(UserMixin, PkModel):
     is_admin = Column(db.Boolean(), default=False)
 
     # External profile
-    cardtype = Column(db.String(80), nullable=True)
-    carddata = Column(db.String(255), nullable=True)
+    cardtype = Column(db.String(80), nullable=True) # type of avatar
+    carddata = Column(db.String(1024), nullable=True) # user avatar
 
     # Internal profile
     roles = relationship('Role', secondary=users_roles, backref='users')
     my_story = Column(db.UnicodeText(), nullable=True)
     my_goals = Column(db.UnicodeText(), nullable=True)
+
+    # JSON blob of Curriculum Vitae
+    vitae = Column(db.UnicodeText(), nullable=True)
 
     @property
     def data(self):
@@ -131,6 +135,7 @@ class User(UserMixin, PkModel):
             'my_story': self.my_story,
             'my_goals': self.my_goals,
             'webpage_url': self.webpage_url,
+            'vitae': dumps(self.vitae),
             'roles': ",".join([r.name for r in self.roles]),
         }
 
@@ -201,6 +206,21 @@ class User(UserMixin, PkModel):
                 project_ids.append(a.project_id)
         return projects
 
+    def simple_resume(self):
+        if not self.vitae: return None
+        vvdata = loads(self.vitae)
+        vvtypes = 'work', 'volunteer', 'education', 'awards', 'publications', 'skills', 'languages', 'interests', 'references', 'projects'
+        vvlist = []
+        for vtype in vvtypes:
+            if vtype in vvdata:
+                vvlist.append([
+                    {   'type': vtype,
+                        'date': get_any_key(vv, ['startDate', 'date']),
+                        'name': get_any_key(vv, ['name', 'institution', 'language']),
+                        'summary': get_any_key(vv, ['summary', 'area', 'level', 'fluency', 'reference', 'description']),
+                    } for vv in vvdata[vtype]
+                    ][0])
+        return vvlist
 
     def get_profile_percent(self):
         """Calculate my profile completeness as a percent."""
