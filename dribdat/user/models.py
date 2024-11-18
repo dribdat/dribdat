@@ -80,7 +80,7 @@ class Role(PkModel):
 
 
 class User(UserMixin, PkModel):
-    """Just a regular Joe."""
+    """Just a regular Jane."""
 
     __tablename__ = 'users'
     username = Column(db.String(80), unique=True, nullable=False)
