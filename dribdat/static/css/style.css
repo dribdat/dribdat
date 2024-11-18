@@ -1654,9 +1654,7 @@ nav .nav-login {
     min-width: 7em;
     font-size: 150%;
 }
-.eventedit .form-actions input,
-.projectpost .form-actions input,
-.projectform .form-actions input {
+.container.with-event .form-actions input {
     margin-top: 1em;
     font-size: 150%;
     width: 100%;
@@ -2454,7 +2452,7 @@ Search engine
     cursor: pointer;
 }
 #search-results tr:hover {
-    background: lightyellow;
+    background: lightyellow; color: black;
 }
 
 /* ------------
