@@ -14,7 +14,7 @@
   <div class="alert alert-info"
        title="This tip is only visible to you">
     <a class="close" title="Close" href="#" data-dismiss="alert">&times;</a>
-    To improve your score, please  
+    To improve your score, please
     <a href="{{ url_for('auth.user_profile') }}">
       complete your profile.
     </a>
@@ -35,13 +35,6 @@
   {% if current_user.id == user.id %}
 
     <div class="btn-group">
-      <a id="project-post"
-         href="{{ url_for('public.user_post') }}"
-         title="Post an update to your current project" 
-         class="btn btn-success btn-lg">
-      <i class="fa fa-paper-plane" aria-hidden="true"></i>
-        Write a Post</a>
-
       <a href="{{ url_for('auth.user_profile') }}" class="btn btn-warning btn-lg">
         <i class="fa fa-child"></i>
         Edit Profile
@@ -155,6 +148,32 @@
 </div>
 {% endif %}
 
+{% if user.vitae %}
+<a name="vitae"></a>
+<h2 title="Edolare Vitae">Resume</h2>
+<div class="profile-vitae jumbotron" title="Hacker Vitae">
+    <table class="table bg-white"><tbody>
+    {% for vita in user.simple_resume() %}
+    <tr>
+      <td title="Type of career step" class="alert alert-info">
+          {{ vita.type }}
+      </td><th title="Title or position">
+          {{ vita.name }}
+      </th><td title="Summary">
+          {{ vita.summary }}
+      </td>
+    </tr>
+    {% endfor %}
+    </tbody></table>
+    <a id="get-myvitae" class="btn btn-light btn-sm"
+      href="{{ url_for('api.profile_user_resume_json', user_id=user.id) }}" download
+      title="Download my JSON resume">
+      <i class="fa fa-download"></i>
+      Download
+    </a>
+  </div>
+{% endif %}
+
 {% if not projects %}
   {% if current_user and current_user.id == user.id %}
     <div class="alert alert-success">
@@ -189,15 +208,24 @@
   </div><!-- /.row -->
 {% endif %}
 
-{% if not posts %}
-  {% if current_user and current_user.id == user.id %}
-    <div class="alert alert-info">
-    Once you join a project, write some <b>Posts</b> to show a log of your work.
-    </div>
-  {% endif %}
-{% else %}
 <a name="timeline"><h2 class="mt-4 mb-2" onclick="this.innerHTML='Captain\'s Log, supplemental';console.log('To boldly go...')">Dribs</h2></a>
 <div class="jumbotron">
+
+{% if current_user and current_user.id == user.id %}
+    {% if not posts %}
+        <div class="alert alert-light">
+        Once you join a project, write some <b>Posts</b> to show a log of your work.
+        </div>
+    {% endif %}
+    <center>
+        <a id="project-post"
+                href="{{ url_for('public.user_post') }}"
+                title="Post an update to your current project"
+                class="btn btn-success btn-lg">
+            <i class="fa fa-clock-o" aria-hidden="true"></i>
+            Write a Post</a>
+    </center>
+{% endif %}
 
   <section class="timeline">
   {% for s in posts %}
@@ -224,5 +252,4 @@
   {% endfor %}
   </section>
 </div>
-{% endif %}
 {% endblock %}

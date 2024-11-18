@@ -1,0 +1,26 @@
+{% from "macros/_form.html" import render_form %}
+
+{% extends "layout.html" %}
+
+{% block page_title %}Edit: {{event.name}}{% endblock %}
+{% block body_class %}eventform eventedit{% endblock %}
+
+{% block content %}
+  <h2 class="huge">
+    Edit event
+  </h2>
+
+  {% if config.S3_KEY %}
+  <button type="button" class="btn btn-light btn-lg mt-2 m-1" style="display:none" data-toggle="modal" data-target="#uploadImage">
+    <i class="fa fa-image text-info" area-hidden="true"></i>
+    Upload Image
+  </button>
+  {% endif %}
+
+  <div class="jumbotron">
+    {{ render_form(url_for('public.event_edit', event_id=event.id), form, formid='eventEdit') }}
+  </div>
+
+{% include "includes/uploader.html" %}
+
+{% endblock %}

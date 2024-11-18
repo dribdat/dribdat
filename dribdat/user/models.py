@@ -4,6 +4,17 @@
 from sqlalchemy import Table, or_, func
 from sqlalchemy_continuum import make_versioned
 from sqlalchemy_continuum.plugins import FlaskPlugin
+from flask import current_app
+from flask_login import UserMixin
+from icalendar import Event as iCalEvent
+from icalendar import Calendar as iCalendar
+from json import dumps, loads
+# Time functions
+from time import mktime
+from dateutil.parser._parser import ParserError
+from datetime import datetime, timezone, timedelta
+from dribdat.futures import UTC
+# Project local variables
 from dribdat.user.constants import (
     CLEAR_STATUS_AFTER,
     MAX_EXCERPT_LENGTH,
@@ -14,7 +25,7 @@ from dribdat.user.constants import (
 )
 from dribdat.onebox import format_webembed  # noqa: I005
 from dribdat.utils import (
-    format_date_range, format_date, parse_date, timesince, strtobool
+    format_date_range, format_date, parse_date, timesince, strtobool, get_any_key
 )
 from dribdat.database import (
     db,
@@ -26,12 +37,6 @@ from dribdat.database import (
 )
 from dribdat.extensions import hashing
 from dribdat.apifetch import FetchGitlabAvatar
-from flask import current_app
-from flask_login import UserMixin
-from time import mktime
-from dateutil.parser._parser import ParserError
-from datetime import datetime, timezone, timedelta
-from dribdat.futures import UTC
 
 import hashlib
 import re
@@ -76,7 +81,7 @@ class Role(PkModel):
 
 
 class User(UserMixin, PkModel):
-    """Just a regular Joe."""
+    """Just a regular Jane."""
 
     __tablename__ = 'users'
     username = Column(db.String(80), unique=True, nullable=False)
@@ -103,13 +108,16 @@ class User(UserMixin, PkModel):
     is_admin = Column(db.Boolean(), default=False)
 
     # External profile
-    cardtype = Column(db.String(80), nullable=True)
-    carddata = Column(db.String(255), nullable=True)
+    cardtype = Column(db.String(80), nullable=True) # type of avatar
+    carddata = Column(db.String(1024), nullable=True) # user avatar
 
     # Internal profile
     roles = relationship('Role', secondary=users_roles, backref='users')
     my_story = Column(db.UnicodeText(), nullable=True)
     my_goals = Column(db.UnicodeText(), nullable=True)
+
+    # JSON blob of Curriculum Vitae
+    vitae = Column(db.UnicodeText(), nullable=True)
 
     @property
     def data(self):
@@ -127,6 +135,7 @@ class User(UserMixin, PkModel):
             'my_story': self.my_story,
             'my_goals': self.my_goals,
             'webpage_url': self.webpage_url,
+            'vitae': dumps(self.vitae),
             'roles': ",".join([r.name for r in self.roles]),
         }
 
@@ -169,7 +178,7 @@ class User(UserMixin, PkModel):
             gr_size = 80
             email = self.email.lower().encode('utf-8')
             gravatar_url = "https://www.gravatar.com/avatar/"
-            gravatar_url += hashlib.md5(email).hexdigest() 
+            gravatar_url += hashlib.md5(email).hexdigest()
             gravatar_url += "?d=retro&"
             gravatar_url += urlencode({'s': str(gr_size)})
             self.carddata = gravatar_url
@@ -197,24 +206,39 @@ class User(UserMixin, PkModel):
                 project_ids.append(a.project_id)
         return projects
 
+    def simple_resume(self):
+        if not self.vitae: return None
+        vvdata = loads(self.vitae)
+        vvtypes = 'work', 'volunteer', 'education', 'awards', 'publications', 'skills', 'languages', 'interests', 'references', 'projects'
+        vvlist = []
+        for vtype in vvtypes:
+            if vtype in vvdata:
+                vvlist.append([
+                    {   'type': vtype,
+                        'date': get_any_key(vv, ['startDate', 'date']),
+                        'name': get_any_key(vv, ['name', 'institution', 'language']),
+                        'summary': get_any_key(vv, ['summary', 'area', 'level', 'fluency', 'reference', 'description']),
+                    } for vv in vvdata[vtype]
+                    ][0])
+        return vvlist
 
     def get_profile_percent(self):
         """Calculate my profile completeness as a percent."""
         p_score = 0
         MAX_SCORE = 5
         # Add to the score for every complete documentation field
-        if self.fullname and len(self.fullname) > 3: 
+        if self.fullname and len(self.fullname) > 3:
             p_score = p_score + 1
-        if self.webpage_url and len(self.webpage_url) > 6: 
+        if self.webpage_url and len(self.webpage_url) > 6:
             p_score = p_score + 1
-        if self.my_story and len(self.my_story) > 6: 
+        if self.my_story and len(self.my_story) > 6:
             p_score = p_score + 1
-        if self.my_goals and len(self.my_goals) > 6: 
+        if self.my_goals and len(self.my_goals) > 6:
             p_score = p_score + 1
         if self.roles and len(self.roles) > 0:
             p_score = p_score + 1
         return p_score / MAX_SCORE
-    
+
 
     def get_score(self):
         """Calculate my personal score, based on profile completeness and projects."""
@@ -223,10 +247,10 @@ class User(UserMixin, PkModel):
         project_total = sum([p.score for p in projects])
         # Adjust score based on score
         user_score = self.get_profile_percent()
-        if user_score > 0: 
+        if user_score > 0:
             project_total = project_total + 10
         return round(project_total * user_score)
-        
+
 
     def posted_challenges(self):
         """Retrieve all challenges user has posted."""
@@ -368,6 +392,10 @@ class Event(PkModel):
     lock_resources = Column(db.Boolean(), default=False)  # this event contains Resources
     lock_templates = Column(db.Boolean(), default=False)  # this event contains Templates
 
+    # User who created the project
+    user_id = reference_col('users', nullable=True)
+    user = relationship('User', backref='events')
+
     @property
     def data(self):
         """Get JSON representation."""
@@ -453,6 +481,29 @@ class Event(PkModel):
             d["mainEntityOfPage"] = self.webpage_url
             d["offers"] = {"@type": "Offer", "url": self.webpage_url}
         return d
+
+    def get_ical(self, host_url=''):
+        """Return iCalendar formatted metadata."""
+        # Uses https://github.com/collective/icalendar
+        descriptives = []
+        # Prefer summary, if available
+        if self.summary:
+            descriptives.append(self.summary)
+        elif self.description:
+            descriptives.append(self.description)
+        # Add link to the bottom of description
+        if host_url: descriptives.append(host_url)
+        location = self.location or self.hostname
+        icalev = iCalEvent()
+        icalev.add('CREATED', datetime.today())
+        icalev.add('DESCRIPTION', '\n\n'.join(descriptives))
+        if location: icalev.add('LOCATION', location)
+        if self.name: icalev.add('SUMMARY', self.name)
+        if self.starts_at: icalev.add('DTSTART', self.starts_at)
+        if self.ends_at: icalev.add('DTEND', self.ends_at)
+        ics = iCalendar()
+        ics.add_component(icalev)
+        return ics.to_ical().decode('utf-8')
 
     @property
     def url(self):
@@ -543,7 +594,7 @@ class Event(PkModel):
                     self.save()
                     return ''
         return status_text
-    
+
     @property
     def project_count(self):
         """Number of active projects in an event."""
@@ -569,11 +620,6 @@ class Event(PkModel):
     def has_categories(self):
         """Check if the event has categories to show."""
         return self.categories_for_event().count() > 0
-
-    def current():
-        """Return currently featured event."""
-        # TODO: allow multiple featurettes?
-        return Event.query.filter_by(is_current=True).first()
 
     def __init__(self, name=None, **kwargs):  # noqa: D107
         if name:
@@ -786,7 +832,7 @@ class Project(PkModel):
                 if act.timestamp > self.event.starts_at and \
                    act.timestamp < self.event.ends_at:
                     s_during += 1
-        
+
         # A byte count of contents
         s_sizepitch = 0
         if self.longtext:
@@ -898,10 +944,10 @@ class Project(PkModel):
 
     def as_challenge(self):
         """Find the last challenge version of this project."""
-        if not self.versions: 
+        if not self.versions:
             return None
         for v in self.versions[::-1]:
-            if v.progress <= 0: 
+            if v.progress <= 0:
                 return v.revert()
         self.progress = 0
         return self

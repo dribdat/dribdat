@@ -38,25 +38,25 @@
 <div class="btn-group project-edit-buttons" role="group" aria-label="Project tools">
 
   {% if past_version and allow_revert %}
-    <a class="btn btn-lg btn-dark" title="Restore this version" 
+    <a class="btn btn-lg btn-dark" title="Restore this version"
        href="{{ url_for('project.post_revert', project_id=project.id, activity_id=past_version) }}"
       onclick="if(!window.confirm('Are you sure you wish to restore this version of the project data?')) return false">&#9100; Restore</a>
   {% endif %}
 
   {% if allow_post %}
-     <a id="project-post" href="{{ url_for('project.project_post', project_id=project.id) }}" 
+     <a id="project-post" href="{{ url_for('project.project_post', project_id=project.id) }}"
         title="Post to this project" class="btn btn-lg btn-success">
-       <i class="fa fa-paper-plane" aria-hidden="true"></i>
+       <i class="fa fa-clock-o" aria-hidden="true"></i>
        Post
      </a>
   {% elif current_user and current_user.active and not project.event.lock_resources %}
-     <a id="project-comment" href="{{ url_for('project.project_comment', project_id=project.id) }}" 
+     <a id="project-comment" href="{{ url_for('project.project_comment', project_id=project.id) }}"
         title="Write a public comment" class="btn btn-lg btn-info">
-       <i class="fa fa-paper-plane" aria-hidden="true"></i>
+       <i class="fa fa-clock-o" aria-hidden="true"></i>
        Comment</a>
   {% endif %}
   {% if allow_edit %}
-    <a href="{{ url_for('project.project_edit', project_id=project.id) }}" 
+    <a href="{{ url_for('project.project_edit', project_id=project.id) }}"
        title="Edit project" class="btn btn-lg btn-warning">
       <i class="fa fa-pencil" aria-hidden="true"></i>
     </a>
@@ -101,20 +101,20 @@
   {% elif project.score and not project.is_challenge %}
     <div class="project-score">
       <a href="{{ url_for('public.event_stages', event_id=project.event.id) }}#{{project.phase}}">
-        <div class="progress" 
+        <div class="progress"
           title="({{project.score}}) {{project.phase}}"
           alt="A score based on profile completeness and voting results">
-          <div class="progress-bar" role="progressbar" 
-               aria-valuenow="{{project.score}}" aria-valuemin="0" aria-valuemax="70" 
+          <div class="progress-bar" role="progressbar"
+               aria-valuenow="{{project.score}}" aria-valuemin="0" aria-valuemax="70"
                style="width:{{project.score}}%">
           </div>
         </div>
       </a>
       <div class="preview-challenge mt-2 hidden">
-        <a title="Click to show the Challenge from which this project started" 
+        <a title="Click to show the Challenge from which this project started"
            href="{{ url_for('project.get_challenge', project_id=project.id) }}">
              Challenge</a>
-        <i class="fa fa-trophy" aria-hidden="true"></i> 
+        <i class="fa fa-trophy" aria-hidden="true"></i>
         Project
       </div>
     </div>
@@ -122,9 +122,9 @@
     <div class="project-score">
       <div class="preview-challenge">
         <h4>Challenge view</h4>
-        <a title="Go back to the current version of this Project" 
+        <a title="Go back to the current version of this Project"
            href="{{ url_for('project.project_view', project_id=project.id) }}">
-          <i class="fa fa-arrow-left" aria-hidden="true"></i> 
+          <i class="fa fa-arrow-left" aria-hidden="true"></i>
            Back to Project</a>
       </div>
     </div>
@@ -206,18 +206,18 @@
       {{ project.webembed|safe }}
       <div class="win-size-grip"></div>
     </div>
-    <a href="#top" class="btn btn-small btn-default" 
-       data-toggle="modal" data-target="#webembedModal" 
+    <a href="#top" class="btn btn-small btn-default"
+       data-toggle="modal" data-target="#webembedModal"
        aria-label="Full screen view" title="Press Esc to close">
        &#x26F6;&nbsp;&nbsp;Fullscreen</a>
-    <a href="{{ project.webpage_url }}" class="btn btn-small btn-default" 
+    <a href="{{ project.webpage_url }}" class="btn btn-small btn-default"
        target="_blank" rel="noopener noreferrer" title="Open source file">
        &#x2193;&nbsp;&nbsp;Download</a>
   {% endif %}
 
   {% if project.download_url %}
     <center>
-      <a href="{{ project.download_url }}" target="_blank" rel="noopener noreferrer" 
+      <a href="{{ project.download_url }}" target="_blank" rel="noopener noreferrer"
          class="btn btn-lg btn-primary ml-2 font-bold" title="Download link"><span>&#x2728;</span> Demo</a>
     </center>
   {% endif %}
@@ -226,7 +226,7 @@
     <div id="project-md" aria-labelledby="project-tab-md">
       {% if allow_edit %}
       <center class="project-edit-pitch">
-        <a href="{{ url_for('project.project_edit', project_id=project.id) }}#is_webembed" 
+        <a href="{{ url_for('project.project_edit', project_id=project.id) }}#is_webembed"
            title="Edit project pitch" class="btn btn-md btn-light">
           <i class="fa fa-pencil" aria-hidden="true"></i>
           Edit</a>
@@ -264,7 +264,7 @@
       <div class="widget widget-team m-4">
       {% for user in project_team %}
         {% if project.user == user %}
-          <i class="fa fa-star project-owner" 
+          <i class="fa fa-star project-owner"
               title="Started this project" aria-hidden="true"></i>
         {% endif %}
         {{ misc.render_user_profile(user) }}
@@ -295,7 +295,7 @@
       </div>
 
       {% if not project.event.lock_resources %}
-        <div class="alert alert-light text-center mb-1">
+        <div class="alert alert-light text-center mb-2 mt-2">
           This content is a preview from an
           <a href="{{ project.autotext_url }}" target="_blank" rel="noopener noreferrer" title="Source link">
             external site</a>.
@@ -346,17 +346,18 @@
     {% if allow_post %}
       <center>
         <div class="btn-group">
-        {% if config.LLM_API_KEY %}
-          <button data-toggle="modal" data-target="#autopostModal" 
-             title="Get tips from an AI coach" class="btn pl-2 pr-2 btn-lg btn-light">
-            &#x1F170;&#xFE0F;&#x2139;&#xFE0F;
-          </button>
-        {% endif %}
-          <a href="{{ url_for('project.project_post', project_id=project.id) }}" 
-             class="btn btn-lg btn-success pl-4 pr-3"
+          <a href="{{ url_for('project.project_post', project_id=project.id) }}"
+             class="btn btn-lg btn-success pr-3"
              title="Write a progress update">
-            <i class="fa fa-paper-plane" aria-hidden="true"></i>
+            <i class="fa fa-clock-o" aria-hidden="true"></i>
+            Post
           </a>
+          {% if config.LLM_API_KEY %}
+            <button data-toggle="modal" data-target="#autopostModal"
+               title="Get tips from an AI coach" class="btn pl-3 pr-4 btn-lg btn-dark">
+              &#x1F170;&#xFE0F;&#x2139;&#xFE0F;
+            </button>
+          {% endif %}
         </div>
       </center>
     {% endif %}
@@ -466,11 +467,11 @@
       Invite</a>
     <a href="{{ url_for('project.project_post', project_id=project.id) }}" class="btn btn-lg btn-success"
        title="Write a progress update">
-      <i class="fa fa-paper-plane" aria-hidden="true"></i>
+      <i class="fa fa-clock-o" aria-hidden="true"></i>
       Post</a>
   {% if config.LLM_API_KEY %}
-    <button data-toggle="modal" data-target="#autopostModal" 
-       title="Get tips from an AI coach" class="btn btn-lg btn-light">
+    <button data-toggle="modal" data-target="#autopostModal"
+       title="Get tips from an AI coach" class="btn btn-lg btn-dark">
       &#x1F170;&#xFE0F;&#x2139;&#xFE0F;
     </button>
   {% endif %}
@@ -488,7 +489,7 @@
     <!--Edit--></a>
 
   {% if project.is_hidden %}
-    <a href="{{ url_for('admin.project_toggle', project_id=project.id) }}" 
+    <a href="{{ url_for('admin.project_toggle', project_id=project.id) }}"
        title="Make this project visible" class="btn btn-lg btn-dark">
       <i class="fa fa-eye" aria-hidden="true"></i>
       <!--Show--></a>
@@ -505,7 +506,7 @@
       <i class="fa fa-trophy" aria-hidden="true"></i>
     <!--  Boost--></a>
 
-    <a href="{{ url_for('admin.project_toggle', project_id=project.id) }}" 
+    <a href="{{ url_for('admin.project_toggle', project_id=project.id) }}"
        title="Toggle visibility of this project" class="btn btn-lg btn-dark">
       <i class="fa fa-eye" aria-hidden="true"></i>
     <!--  Hide--></a>

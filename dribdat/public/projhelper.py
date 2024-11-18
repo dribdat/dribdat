@@ -22,8 +22,9 @@ from dribdat.futures import UTC
 
 
 def current_event():
-    """Just get current event."""
-    return Event.current()
+    """Return currently featured event."""
+    # TODO: allow multiple featurettes?
+    return Event.query.filter_by(is_current=True).first()
 
 
 def check_update(obj, minutes=5):
@@ -100,7 +101,7 @@ def project_edit_action(project_id, detail_view=False):
             del form.is_minoredit
         else:
             is_minoredit = False
-        
+
         del form.id
         form.populate_obj(project)
         project.update_now()
@@ -112,7 +113,7 @@ def project_edit_action(project_id, detail_view=False):
         if 'note' in form and form.note.data:
             project_action(project_id, 'update',
                            action='post', text=form.note.data)
-    
+
         # Save a log entry (unless minor) and notify the user
         if not is_minoredit:
             project_action(project_id, 'update', False)
@@ -197,10 +198,10 @@ def project_action(project_id, of_type=None, as_view=True, then_redirect=False,
 
     # Send a warning for hidden projects
     if project.is_hidden:
-        flash('This project is hidden, and needs moderation from an organizer.', 'warning')
+        flash('This project is hidden, and needs moderation from an organizer.', 'dark')
     # Send a warning for unapproved challenges
     if project.progress is not None and project.progress < 0:
-        flash('This challenge is awaiting approval from an organizer.', 'warning')
+        flash('This challenge is awaiting approval from an organizer.', 'dark')
 
     # Dump all that data into a template
     return render_template(

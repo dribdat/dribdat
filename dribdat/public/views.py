@@ -5,9 +5,14 @@ from flask import (Blueprint, request, render_template, flash, url_for,
         redirect, current_app, jsonify)
 from flask_login import login_required, current_user
 from dribdat.user.models import User, Event, Project, Activity
-from dribdat.public.forms import EventNew
-from dribdat.public.userhelper import (get_users_by_search, 
-        filter_users_by_search, get_dribs_paginated)
+from dribdat.public.forms import EventNew, EventEdit
+from dribdat.public.userhelper import (
+    get_user_by_name,
+    get_users_by_search,
+    filter_users_by_search,
+    get_dribs_paginated
+)
+from dribdat.public.projhelper import current_event
 from dribdat.database import db
 from dribdat.extensions import cache
 from dribdat.aggregation import GetEventUsers
@@ -17,15 +22,13 @@ from sqlalchemy import and_, func
 from datetime import datetime, timedelta
 from dribdat.futures import UTC
 
+# Set project version
+VERSION = '0.8.5'
+
 blueprint = Blueprint('public', __name__, static_folder="../static")
 
 # Loads confiuration for events
 EVENT_PRESET = load_event_presets()
-
-
-def current_event():
-    """Just get a current event."""
-    return Event.current()
 
 
 @blueprint.route("/dashboard/")
@@ -63,7 +66,7 @@ def info_current_hackathon_json():
 def about():
     """Render a static about page."""
     orgs = [u.data for u in User.query.filter_by(is_admin=True)]
-    return render_template("public/about.html", active="about", orgs=orgs)
+    return render_template("public/about.html", active="about", orgs=orgs, ver=VERSION)
 
 
 @blueprint.route("/terms/")
@@ -223,6 +226,15 @@ def event(event_id):
         .filter_by(event_id=event_id, is_hidden=False) \
         .order_by(Project.ident, Project.name)
         # The above must match projhelper->navigate_around_project
+    # Admin messages
+    editable = False
+    if current_user and not current_user.is_anonymous:
+        editable = current_user.is_admin or event.user == current_user
+        if current_user.is_admin:
+            sum_hidden = len(event.projects) - projects.count()
+            if sum_hidden > 0:
+                flash(('There are %d hidden projects in this event ' % sum_hidden) + \
+                    ' that may need moderation: check the Admin.', 'secondary')
     # Embedding view
     if request.args.get('embed'):
         return render_template("public/embed.html",
@@ -235,7 +247,7 @@ def event(event_id):
     # TODO: seems inefficient? We only need a subset of the data here:
     summaries = [ p.data for p in projects ]
     return render_template("public/event.html", current_event=event,
-                           may_certify=may_certify,
+                           may_certify=may_certify, may_edit=editable,
                            summaries=summaries, project_count=len(summaries),
                            active="projects")
 
@@ -272,8 +284,8 @@ def all_participants():
         flash('Only the first %d participants are shown.' % MAX_COUNT, 'info')
     return render_template("public/eventusers.html",
                            q=search_by,
-                           participants=users, 
-                           usercount=len(users), 
+                           participants=users,
+                           usercount=len(users),
                            active="participants")
 
 
@@ -324,8 +336,8 @@ def event_challenges(event_id):
     if not current_user or current_user.is_anonymous or not current_user.is_admin:
         projects = projects.filter(Project.progress >= 0)
     challenges = [ p.as_challenge() for p in projects ]
-    return render_template("public/eventchallenges.html", 
-                           current_event=event, projects=challenges, 
+    return render_template("public/eventchallenges.html",
+                           current_event=event, projects=challenges,
                            project_count=projects.count(),
                            active="challenges")
 
@@ -375,6 +387,7 @@ def event_new():
             del form.id
             form.populate_obj(event)
             # Load default event content
+            event.user_id = current_user.id
             event.boilerplate = EVENT_PRESET['quickstart']
             event.community_embed = EVENT_PRESET['codeofconduct']
             db.session.add(event)
@@ -395,6 +408,41 @@ def event_new():
                 'info')
     return render_template('public/eventnew.html', form=form, active='Event')
 
+@blueprint.route('/event/<int:event_id>/edit', methods=['GET', 'POST'])
+@login_required
+def event_edit(event_id):
+    event = Event.query.filter_by(id=event_id).first_or_404()
+
+    if not current_user.is_admin and not event.user == current_user:
+        flash('Only admins and event owners are allowed to edit.')
+        return redirect(url_for("public.event", event_id=event.id))
+
+    if event.location_lat is None or event.location_lon is None:
+        event.location_lat = event.location_lon = 0
+
+    form = EventEdit(obj=event, next=request.args.get('next'))
+
+    if form.is_submitted() and form.validate():
+        form.populate_obj(event)
+        event.starts_at = datetime.combine(
+            form.starts_date.data, form.starts_time.data)
+        event.ends_at = datetime.combine(
+            form.ends_date.data, form.ends_time.data)
+
+        db.session.add(event)
+        db.session.commit()
+
+        cache.clear()
+
+        flash('Saved your event.', 'success')
+        return redirect(url_for("public.event", event_id=event.id))
+
+    form.starts_date.data = event.starts_at
+    form.starts_time.data = event.starts_at
+    form.ends_date.data = event.ends_at
+    form.ends_time.data = event.ends_at
+    return render_template('public/eventedit.html', event=event, form=form)
+
 #####
 
 
@@ -414,5 +462,5 @@ def dribs():
     per_page = int(request.args.get('limit') or 10)
     dribs = get_dribs_paginated(page, per_page, request.host_url)
     return render_template("public/dribs.html",
-                           endpoint='public.dribs', active='dribs', 
+                           endpoint='public.dribs', active='dribs',
                            data=dribs)

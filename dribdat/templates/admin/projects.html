@@ -9,11 +9,13 @@
 
     {% if event %}
       <div class="btn-group projects-extra">
-        <a href="{{ url_for('public.event', event_id=event.id) }}" class="btn btn-info">
-          &#128065; Public view
+        <a href="{{ url_for('public.event', event_id=event.id) }}" class="btn btn-light">
+          &#128065; View
         </a>
-        <a href="{{ url_for('api.project_list_event_csv', event_id=event.id) }}" class="btn btn-light">
-          <i class="fa fa-download"></i>&nbsp;CSV
+        <a href="{{ url_for('public.event_print', event_id=event.id) }}"
+             title="Detailed overview of this event" class="btn btn-light">
+            <i class="fa fa-print" aria-hidden="true"></i>
+            Report
         </a>
         <a href="{{ url_for('admin.event_autosync', event_id=event.id) }}" class="btn btn-dark">
           <i class="fa fa-recycle" aria-hidden="true"></i>&nbsp;Sync all
@@ -44,7 +46,8 @@
             </tr>
         </thead>
         {% for project in projects or data.items %}
-        <tr data-href="{{ url_for('admin.project_view', project_id=project.id) }}">
+        <tr data-href="{{ url_for('admin.project_view', project_id=project.id) }}"
+            {% if project.is_hidden %}style="background:salmon" title="Hidden"{% elif project.progress<0 %}style="background:orange" title="Awaiting approval"{% endif %}>
             <td style="text-align:right">
               <a href="{{ url_for('project.project_view', project_id=project.id) }}" title="Open">
                 <div class="btn btn-lg btn-light">
@@ -55,11 +58,12 @@
                   {% endif %}
                 </div>
             </td>
-            <td width="50%" {% if project.is_hidden %}style="background:pink" title="Hidden"{% elif project.progress<0 %}style="background:yellow" title="Awaiting approval"{% endif %}>
+            <td width="50%">
               <h5>{{ project.name }}</h5>
               <small>
                 {{ project.phase }} &nbsp;
                 <b>{{ project.ident or '' }}</b>
+                {% if project.is_hidden %}(hidden){%endif%}
               </small>
             </td>
             <td>{{ project.category.name }}</td>
@@ -73,18 +77,18 @@
               {% if project.is_hidden %}
                 <a href="{{ url_for('admin.project_toggle', project_id=project.id) }}" class="btn btn-danger"
                    onclick="if(!window.confirm('Are you sure you wish to make this project visible?')) return false"
-                   title="Click to enable this project">
+                   title="Show this project">
                   <i class="fa fa-eye-slash"></i>
                 </a>
               {% else %}
-                <a href="{{ url_for('admin.project_toggle', project_id=project.id) }}" 
-                   title="Hide this project" class="btn btn-light"
+                <a href="{{ url_for('admin.project_toggle', project_id=project.id) }}"
+                   title="Hide this project" class="btn btn-primary"
                    onclick="if(!window.confirm('Are you sure you wish to hide this project?')) return false">
                   <i class="fa fa-eye"></i>
                 </a>
               {% endif %}
               {% if project.is_syncable %}
-              <a href="{{ url_for('project.project_autoupdate', project_id=project.id) }}" 
+              <a href="{{ url_for('project.project_autoupdate', project_id=project.id) }}"
                  title="Sync project data" class="btn btn-dark">
                 <i class="fa fa-recycle"></i>
               </a>

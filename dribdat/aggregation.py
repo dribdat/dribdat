@@ -8,6 +8,7 @@ from dribdat.apifetch import (
     FetchWebGitHub,
     FetchWebGitHubGist,
     FetchGithubProject,
+    FetchGithubIssue,
     FetchGitlabProject,
     FetchGiteaProject,
     FetchBitbucketProject,
@@ -18,7 +19,8 @@ from dribdat.apifetch import (
 import json
 import re
 from sqlalchemy import and_
-
+from requests.exceptions import ConnectionError
+from flask import flash
 
 def GetProjectData(url):
     """Parse the Readme URL to collect remote data."""
@@ -74,6 +76,10 @@ def get_github_project(url):
     if apiurl.endswith('.md'):
         # GitHub Markdown
         return FetchWebGitHub(url)
+    if '/issues/' in apiurl:
+        iuarr = apiurl.split('/issues/')
+        if len(iuarr) == 2:
+            return FetchGithubIssue(iuarr[0], int(iuarr[1]))
     return FetchGithubProject(apiurl)
 
 
@@ -170,9 +176,12 @@ def SyncProjectData(project, data):
 
 def AddProjectDataFromAutotext(project):
     """Fills the project from the configured remote URL."""
-    data = GetProjectData(project.autotext_url)
-    TrimProjectData(project, data)
-    
+    try:
+        data = GetProjectData(project.autotext_url)
+        TrimProjectData(project, data)
+    except ConnectionError as ex:
+        flash("Data could not be synced.", 'error')
+
 
 def IsProjectStarred(project, current_user):
     """Check if a project has been starred by the current user."""
@@ -228,7 +237,7 @@ def GetEventUsers(event):
     projects = set([p.id for p in event.projects])
     # TODO: slow; how about actual membership?
     activities = Activity.query.filter(and_(
-            Activity.name=='star', 
+            Activity.name=='star',
             Activity.project_id.in_(projects)
         )).all()
     for a in activities:
@@ -261,7 +270,7 @@ def ProjectActivity(project, of_type, user, action=None, comments=None):
         if of_type == 'star':
             # One star per user
             if allstars.count() > 0:
-                return False 
+                return False
         elif of_type == 'unstar':
             # Not an actual activity
             if allstars.count() > 0:

@@ -51,7 +51,7 @@
        {% endfor %}
 
       </div>
-      
+
       {% if events_featured %}
         <a class="carousel-control-prev" href="#homeCarousel" role="button" data-slide="prev">
           <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -76,7 +76,7 @@
            data-start="{{ current_event.countdown }}"></div>
     </a>
   {% endif %}
-  
+
   {% if my_projects %}
   {% cache 300, 'home-user-%d' % current_user.id %}
     <h1 class="m-5">My projects</h1>
@@ -114,16 +114,17 @@
     <div class="row start-event">
       <div class="col-lg-12 text-center">
         {% if not current_event and not events_next and not events_past and not events_tips %}
-          <p class="m-5">Thank you for using Dribdat <tt>&lt;3 &lt;3 &lt;3</tt>
-            <br>Read <a href="https://docs.dribdat.cc/organiser" target="_blank">the docs</a> or 
+          <p class="m-5">Thank you for using Dribdat &#x1F3C0;
+            <p><b>We hope you have an <a href="https://github.com/dribdat/awesome-hackathon" target="_blank">awesome hackathon</a>!</b></p>
+            <br>Read <a href="https://docs.dribdat.cc/organiser" target="_blank">the docs</a> or
             <a href="mailto:dribdat@datalets.ch">contact us</a> if you need help.
-            <h5>Click here to start your first event 🎉 </h5>
+            <h5>Click here to get started:</h5>
           </p>
         {% endif %}
-        {% if config.DRIBDAT_ALLOW_EVENTS or current_user.is_admin %}
-          <a href="{{ url_for('public.event_start') }}" class="btn btn-lg btn-light ml-4">
+        {% if config.DRIBDAT_ALLOW_EVENTS %}
+          <a href="{{ url_for('public.event_start') }}" class="btn btn-lg btn-info ml-4">
             <i class="fa fa-calendar mr-3" aria-hidden="true"></i>
-            Share another event
+            Share an event
           </a>
         {% endif %}
       </div>

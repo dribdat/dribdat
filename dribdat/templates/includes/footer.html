@@ -2,14 +2,17 @@
   <a class="dribdat-logo" href="{{ url_for('public.home') }}" title="GO HOME">
     <img src="{{ url_for('static', filename='img/logo/logo13.png') }}">
   </a>
+
   <a href="{{ url_for('public.about') }}" class="ml-3">
-    <i class="fa fa-book ml-3" aria-hidden="true"></i>
+    <i class="fa fa-question ml-3" aria-hidden="true"></i>
     About
   </a>
-  <a href="#top" id="notification-button" class="hidden ml-3">
-    <i class="fa fa-bell" aria-hidden="true"></i>
-    Alerts
+
+  <a href="{{ url_for('public.terms') }}">
+    <i class="fa fa-exclamation ml-3" aria-hidden="true"></i>
+    Terms
   </a>
+
   <ul class="footer-nav">
     {% if current_user and current_user.is_authenticated %}
       {% if current_user.is_admin %}
@@ -46,8 +49,12 @@
     </li>
     {% endif %}
 
+
     <li>
-      <a href="{{ url_for('public.terms') }}">&#x1F4DC;&nbsp;Terms</a>
+        <a href="#top" id="notification-button" class="hidden ml-3">
+            <i class="fa fa-bell" aria-hidden="true"></i>
+            Alerts
+        </a>
     </li>
 
     <li>

@@ -5,7 +5,7 @@ See: http://webtest.readthedocs.org/
 """
 from flask import url_for
 
-from dribdat.user.models import User, Project
+from dribdat.user.models import User, Project, Event
 
 from dribdat.aggregation import ProjectActivity, AllowProjectEdit
 from dribdat.public.project import post_preview
@@ -25,20 +25,38 @@ class TestEditing:
         form['password'] = 'myprecious'
         res = form.submit().follow()
         assert res.status_code == 200
-        # Fills out the new event form 
+        # Fills out the new event form
         res1 = testapp.get('/event/new')
         form1 = res1.forms[0]
         form1['name'] = 'New Event'
         res1 = form1.submit().follow()
         assert res1.status_code == 200
-        # Fills out the add project form
+        # Fills out the sync project form
         res2 = testapp.get('/project/new/1')
         form2 = res2.forms[0]
-        form2['name'] = 'New Project'
-        res2 = form2.submit().follow()
+        form2['name'] = 'Sync Project'
+        res2 = form2.submit()
         assert res2.status_code == 200
+        # Fills out the create project form
+        res3 = testapp.get('/project/new/1?create=1')
+        form3 = res3.forms[0]
+        form3['name'] = 'New Project'
+        res3 = form3.submit().follow()
+        assert res3.status_code == 200
         # A new project was created
-        assert len(Project.query.all()) == 1
+        assert len(Project.query.all()) == 2
+        # Check that we can edit also the event
+        res4 = testapp.get('/event/1/edit')
+        event = Event.query.first()
+        assert event.user == user
+        assert res4.status_code == 200
+        form4 = res4.forms['eventEdit']
+        form4['name'] = 'Another Event'
+        res5 = form4.submit().follow()
+        assert res5.status_code == 200
+        event = Event.query.first()
+        assert event.name == 'Another Event'
+
 
     def test_sees_error_message_if_passwords_dont_match(self, user, testapp):
         """Show error if passwords don't match."""
@@ -113,7 +131,7 @@ class TestEditing:
         project.save()
         ProjectActivity(project, 'update', user)
 
-        # Get latest activity 
+        # Get latest activity
         activity = project.activities[-1]
         assert activity.project_version == 3
         activity = project.activities[-2]
@@ -158,12 +176,12 @@ class TestEditing:
 
     def test_create_project(self, db, testapp):
         """Test creating projects anonymously."""
-        # Create an event 
+        # Create an event
         event = EventFactory()
         event.save()
 
         # Add a new project without logging in
-        res1 = testapp.get('/project/new/%d' % event.id)
+        res1 = testapp.get('/project/new/%d?create=1' % event.id)
         form1 = res1.forms['projectNew']
         form1['name'] = 'Hello Anon'
         res1 = form1.submit().follow()

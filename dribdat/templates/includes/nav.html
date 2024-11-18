@@ -25,11 +25,11 @@
       {% endif %}
 
       <li class="nav-item">
-        <a class="nav-link {% if active == 'dribs' %}active{% endif %}" 
+        <a class="nav-link {% if active == 'dribs' %}active{% endif %}"
            title="Latest posts from the teams"
            href="{{ url_for('public.dribs') }}">
           <i class="fa fa-comment bg-warning text-white" aria-hidden="true"></i>
-          Dribs
+          Dribdat
         </a>
       </li>
 
@@ -39,12 +39,12 @@
                class="nav-link{{ ' active' if active == 'post' }}"
                href="{{ url_for('public.user_post') }}"
                title="Post an update to your current project">
-              <i class="fa fa-paper-plane bg-info text-white" aria-hidden="true"></i>
+              <i class="fa fa-clock-o bg-info text-white" aria-hidden="true"></i>
               Post
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link{{ ' active' if active == 'profile' }}" 
+            <a class="nav-link{{ ' active' if active == 'profile' }}"
                title="Take me to my profile"
                href="{{ url_for('public.user_current') }}" title="My User Profile">
               <i class="fa fa-user bg-primary text-white" aria-hidden="true"></i>
@@ -54,18 +54,18 @@
           {% if current_user.is_admin %}
             <li class="nav-item admin-area">
               <a class="nav-link{{ ' active' if active == 'index' }}"
-                 title="The engine room" 
+                 title="The engine room"
                  href="{{ url_for('admin.index') }}">
-                <i class="fa fa-gear" aria-hidden="true"></i>
+                <i class="fa fa-gear bg-danger text-white" aria-hidden="true"></i>
                 Admin
               </a>
             </li>
             {% if event %}
               <li class="nav-item">
-                <a href="{{ url_for('public.event_print', event_id=event.id) }}"
-                   title="Detailed overview of this event" class="nav-link">
-                  <i class="fa fa-print" aria-hidden="true"></i>
-                  Report</a>
+                <a href="{{ url_for('admin.event_projects', event_id=current_event.id) }}"
+                    title="Administer event projects" class="nav-link">
+                  <i class="fa fa-check" aria-hidden="true"></i>
+                  Check</a>
               </li>
               <li class="nav-item">
                 <a href="{{ url_for('admin.event', event_id=event.id) }}"
@@ -83,7 +83,7 @@
           {% endif %}
       {% else %}
         <li class="nav-item">
-          <a class="nav-link nav-login" 
+          <a class="nav-link nav-login"
              title="Sign in with your account"
              href="{{ url_for('auth.login') }}">
             <i class="fa fa-sign-in" aria-hidden="true"></i>
@@ -93,10 +93,11 @@
       {% endif %}
 
       <li class="nav-item">
-        <a class="nav-link" id="navSearchButton" 
+        <a class="nav-link" id="navSearchButton"
            title="Search this dribdat site"
            href="{{ url_for('public.about') }}">
           <i class="fa fa-search" aria-hidden="true"></i>
+          Search
         </a>
       </li>
 
@@ -115,19 +116,21 @@
 </div>
 
 <!-- Popup search results -->
-<div class="hidden container nav-search" id="navSearch" 
+<div class="hidden container nav-search" id="navSearch"
      tabindex="-1" role="dialog" aria-labelledby="searchLabel" aria-hidden="true">
   <div class="profile-projects container-fluid mb-3">
     <div data-action="/api/project/search.json" id="search">
       <div class="content input-group">
         <div class="input-group-prepend">
-          <span class="input-group-text">Search</span>
+          <span class="input-group-text">
+            <i class="fa fa-search" aria-hidden="true"></i>
+          </span>
         </div>
         <input type="text" class="form-control" name="q" aria-label="Search projects" placeholder="Start typing ..."  style="width:20em">
       </div>
     </div>
     <table class="table">
-      <thead class="thead-light">
+      <thead class="thead">
         <tr>
           <th scope="col">Team</th>
           <th scope="col">Event</th>

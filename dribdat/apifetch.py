@@ -33,7 +33,7 @@ def FetchStageConfig(url, top_element='stages', by_col='name'):
     logging.info("Loading stages from URL")
     data = requests.get(url, timeout=REQUEST_TIMEOUT)
     if data.text.find('stages:') < 0:
-        logging.debug("No stage data", data.text)
+        logging.debug("No stage data: %s", data.text)
         return {}
     blob = data.text
     return load_presets(blob, top_element, by_col)
@@ -47,14 +47,14 @@ def FetchGiteaProject(project_url):
     api_repos = site_root + "/api/v1/repos/%s" % url_q
     api_content = api_repos + "/contents"
     # Collect basic data
-    logging.info("Fetching Gitea", url_q)
+    logging.info("Fetching Gitea: %s", url_q)
     data = requests.get(api_repos, timeout=REQUEST_TIMEOUT)
     if data.text.find('{') < 0:
-        logging.debug("No data", data.text)
+        logging.debug("No data: %s", data.text)
         return {}
     json = data.json()
     if 'name' not in json:
-        logging.debug("Invalid data", data.text)
+        logging.debug("Invalid data: %s", data.text)
         return {}
     # Collect the README
     data = requests.get(api_content, timeout=REQUEST_TIMEOUT)
@@ -68,7 +68,7 @@ def FetchGiteaProject(project_url):
                 readme = readmedata.text
                 break
         if readmeurl is None:
-            logging.info("Could not find README", url_q)
+            logging.info("Could not find README: %s", url_q)
     issuesurl = ''
     if json['has_issues']:
         issuesurl = json['html_url'] + '/issues'
@@ -90,14 +90,14 @@ def FetchGitlabProject(project_url):
     API_BASE = WEB_BASE + "/api/v4/projects/%s"
     url_q = quote_plus(project_url)
     # Collect basic data
-    logging.info("Fetching GitLab", url_q)
+    logging.info("Fetching GitLab: %s", url_q)
     data = requests.get(API_BASE % url_q, timeout=REQUEST_TIMEOUT)
     if data.text.find('{') < 0:
-        logging.debug("No data", data.text)
+        logging.debug("No data: %s", data.text)
         return {}
     json = data.json()
     if 'name' not in json:
-        logging.debug("Invalid data", data.text)
+        logging.debug("Invalid data: %s", data.text)
         return {}
     # Collect the README
     readmeurl = json['readme_url'] + '?inline=false'
@@ -121,7 +121,7 @@ def FetchGitlabAvatar(email):
     apiurl = "https://gitlab.com/api/v4/avatar?email=%s&size=80"
     data = requests.get(apiurl % email, timeout=REQUEST_TIMEOUT)
     if data.text.find('{') < 0:
-        logging.debug("No data", data.text)
+        logging.debug("No data: %s", data.text)
         return None
     json = data.json()
     if 'avatar_url' not in json:
@@ -132,14 +132,14 @@ def FetchGitlabAvatar(email):
 def FetchGithubProject(project_url):
     """Download data from GitHub."""
     API_BASE = "https://api.github.com/repos/%s"
-    logging.info("Fetching GitHub", project_url)
+    logging.info("Fetching GitHub: %s", project_url)
     data = requests.get(API_BASE % project_url, timeout=REQUEST_TIMEOUT)
     if data.text.find('{') < 0:
-        logging.debug("No data", data.text)
+        logging.debug("No data: %s", data.text)
         return {}
     json = data.json()
     if 'name' not in json or 'full_name' not in json:
-        logging.debug("Invalid data", data.text)
+        logging.debug("Invalid data: %s", data.text)
         return {}
     repo_full_name = json['full_name']
     default_branch = json['default_branch'] or 'main'
@@ -147,7 +147,7 @@ def FetchGithubProject(project_url):
     readmedata = requests.get(readmeurl, timeout=REQUEST_TIMEOUT)
     readme = ''
     if readmedata.text.find('{') < 0:
-        logging.debug("No readme", data.text)
+        logging.debug("No readme: %s", data.text)
     else:
         readme = readmedata.json()
     if 'content' not in readme:
@@ -171,18 +171,38 @@ def FetchGithubProject(project_url):
     }
 
 
+def FetchGithubIssue(project_url, issue_id):
+    """Download an issue from GitHub."""
+    project_data = FetchGithubProject(project_url)
+    logging.info("Fetching GitHub Issue: %s", issue_id)
+    API_BASE = "https://api.github.com/repos/%s/issues/%d"
+    data = requests.get(API_BASE % (project_url, issue_id), timeout=REQUEST_TIMEOUT)
+    if data.text.find('{') < 0:
+        logging.debug("No data: %s", data.text)
+        return {}
+    json = data.json()
+    if 'title' not in json or 'body' not in json:
+        logging.debug("Invalid data: %s", data.text)
+        return {}
+    project_data['hashtag'] = '#%d' % issue_id
+    project_data['summary'] = project_data['name']
+    project_data['name'] = json['title'][:77]
+    project_data['description'] = json['body']
+    return project_data
+
+
 def FetchBitbucketProject(project_url):
     """Download data from Bitbucket."""
     WEB_BASE = "https://bitbucket.org/%s"
     API_BASE = "https://api.bitbucket.org/2.0/repositories/%s"
-    logging.info("Fetching Bitbucket", project_url)
+    logging.info("Fetching Bitbucket: %s", project_url)
     data = requests.get(API_BASE % project_url, timeout=REQUEST_TIMEOUT)
     if data.text.find('{') < 0:
-        logging.debug('No data at', project_url)
+        logging.debug('No data at: %s', project_url)
         return {}
     json = data.json()
     if 'name' not in json:
-        logging.debug('Invalid format at', project_url)
+        logging.debug('Invalid format at: %s', project_url)
         return {}
     readme = ''
     for docext in ['.md', '.rst', '.txt', '']:
@@ -222,13 +242,13 @@ def FetchDataProject(datapackage_url):
     project_url = sanitize_url(project_url) + 'datapackage.json'
     data = requests.get(project_url, timeout=REQUEST_TIMEOUT)
     # TODO: treat dribdat events as special
-    logging.info("Fetching Data Package", project_url)
+    logging.info("Fetching Data Package: %s", project_url)
     if data.text.find('{') < 0:
-        logging.debug('No data at', project_url)
+        logging.debug('No data at: %s', project_url)
         return {}
     json = data.json()
     if 'name' not in json or 'title' not in json:
-        logging.debug('Invalid format at', project_url)
+        logging.debug('Invalid format at: %s', project_url)
         return {}
     try:
         text_content = parse_data_package(json)
@@ -277,17 +297,17 @@ def parse_data_package(json):
 
 def FetchDribdatProject(dribdat_url):
     """Try to load a Dribdat project from a remote page."""
-    project_url = dribdat_url.replace('/project/', '/api/project/') 
+    project_url = dribdat_url.replace('/project/', '/api/project/')
     project_url = sanitize_url(project_url) + '?full=1'
     data = requests.get(project_url, timeout=REQUEST_TIMEOUT)
     # TODO: treat dribdat events as special
-    logging.info("Fetching Dribdat site", project_url)
+    logging.info("Fetching Dribdat site: %s", project_url)
     if data.text.find('{') < 0:
-        logging.debug('No data at', project_url)
+        logging.debug('No data at: %s', project_url)
         return {}
     json = data.json()
     if 'project' not in json or 'event' not in json:
-        logging.debug('Invalid format at', project_url)
+        logging.debug('Invalid format at: %s', project_url)
         return {}
     projectdata = json['project']
     projectdata['type'] = 'Dribdat'
@@ -298,7 +318,7 @@ def FetchDribdatProject(dribdat_url):
 
 # Basis: https://github.com/mozilla/bleach/blob/master/bleach/sanitizer.py#L16
 ALLOWED_HTML_TAGS = [
-    'acronym', 'a', 'blockquote', 'li', 'abbr', 
+    'acronym', 'a', 'blockquote', 'li', 'abbr',
     'strong', 'b', 'i', 'ul', 'ol', 'code', 'em',
     'img', 'font', 'center', 'sub', 'sup', 'pre',
     'table', 'tr', 'thead', 'tbody', 'td',
@@ -319,10 +339,10 @@ ALLOWED_HTML_ATTR['font'] = ['color']
 def RequestRemoteContent(project_url):
     try:
         # TODO: the admin should be able to whitelist a range of allowed
-        # online resources controlling the domains from which we can 
+        # online resources controlling the domains from which we can
         # fetch remote content.
         project_url = sanitize_url(project_url)
-        logging.info("Fetching", project_url)
+        logging.info("Fetching: %s", project_url)
         data = requests.get(project_url, timeout=REQUEST_TIMEOUT)
         return data.text or None
     except requests.exceptions.RequestException:
@@ -332,7 +352,7 @@ def RequestRemoteContent(project_url):
 
 def FetchWebProject(project_url):
     """Parse a remote Document, wiki or website URL."""
-    
+
     datatext = RequestRemoteContent(project_url)
     if datatext is None: return {}
 

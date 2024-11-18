@@ -106,7 +106,7 @@ class UserForm(FlaskForm):
     """User profile form."""
 
     id = HiddenField('id')
-    my_goals = TextAreaField(
+    my_goals = StringField(
         u'My goals',
         description="What brings you here? Share a few words about your "
         + "interests. This is at the top of your profile.")

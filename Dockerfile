@@ -1,10 +1,10 @@
 # Based on python image which itself is based on debian image
 # https://hub.docker.com/_/python
 # https://hub.docker.com/_/debian
-FROM python:3.9-slim
+FROM python:3.12-slim
 
 # Maintainer information
-LABEL maintainer="Dribdat <dribdat@datalets.ch>"
+LABEL maintainer="Dribdat Contributors <dribdat@datalets.ch>"
 
 # Environment
 # Keeps Python from generating .pyc files in the container

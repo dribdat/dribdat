@@ -48,7 +48,7 @@ class TestEvent:
         assert event.name == "test"
         assert event.countdown is not None
         assert event.countdown == event_dt.replace(tzinfo=timezone)
-        assert timesince(event.countdown, until=True) == "1 week to go"
+        assert timesince(event.countdown, until=True) == "1 week "
 
     def test_countdown_24_days(self, db):
         now = datetime.now(UTC)
@@ -61,7 +61,7 @@ class TestEvent:
         assert event.name == "test"
         assert event.countdown is not None
         assert event.countdown == event_dt.replace(tzinfo=timezone)
-        assert timesince(event.countdown, until=True) == "3 weeks to go"
+        assert timesince(event.countdown, until=True) == "3 weeks "
 
     def test_countdown_4_hours(self, db):
         now = datetime.now(UTC)
@@ -78,7 +78,7 @@ class TestEvent:
         assert event.countdown is not None
         assert event.countdown == event_dt
         assert timesince(
-            event.countdown, until=True) == "%d hours to go" % timediff_hours
+            event.countdown, until=True) == "%d hours " % timediff_hours
 
     def test_event_projects(self, db):
         event = EventFactory()
