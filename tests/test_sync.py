@@ -4,7 +4,7 @@
 from dribdat.aggregation import (
     AddProjectDataFromAutotext,
     SyncProjectData,
-    TrimProjectData, 
+    TrimProjectData,
     FetchWebProject,
     ProjectActivity,
 )
@@ -18,7 +18,7 @@ from string import ascii_uppercase
 
 class TestSync:
     """Testing sync and aggregation features."""
-    
+
     a_long_random_string = ''.join(random.choices(ascii_uppercase, k=5000))
 
     def test_data_sync(self, user, testapp):
@@ -90,3 +90,14 @@ class TestSync:
         assert imgroot in readme
         assert not '(world.png)' in readme
         assert not '"again.jpg"' in readme
+
+
+    def test_pretalx(self):
+            """Test parsing a Pretalx page."""
+            test_url = 'https://pretalx.com/workshoptage-2024/talk/QKRVRA/'
+            test_obj = FetchWebProject(test_url)
+            assert test_obj['type'] == 'Pretalx'
+            assert test_obj['source_url'] == test_url
+            assert 'Open' in test_obj['name']
+            assert 'Grundlagen' in test_obj['summary']
+            assert 'Downstreaming' in test_obj['description']
