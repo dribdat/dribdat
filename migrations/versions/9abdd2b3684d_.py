@@ -22,18 +22,14 @@ def upgrade():
         batch_op.create_foreign_key('eventuser', 'users', ['user_id'], ['id'])
 
     with op.batch_alter_table('users', schema=None) as batch_op:
-            batch_op.add_column(sa.Column('vitae', sa.UnicodeText(), nullable=True))
-            batch_op.alter_column('carddata',
-                   existing_type=sa.VARCHAR(length=255),
-                   type_=sa.String(length=1024),
-                   existing_nullable=True)
+        batch_op.add_column(sa.Column('vitae', sa.UnicodeText(), nullable=True))
+        batch_op.alter_column('carddata',
+            existing_type=sa.VARCHAR(length=255),
+            type_=sa.String(length=1024),
+            existing_nullable=True)
 
 
 def downgrade():
     with op.batch_alter_table('events', schema=None) as batch_op:
         batch_op.drop_constraint('eventuser', type_='foreignkey')
-        batch_op.drop_column('user_id')
-
-    with op.batch_alter_table('events', schema=None) as batch_op:
-        batch_op.drop_constraint(None, type_='foreignkey')
         batch_op.drop_column('user_id')
