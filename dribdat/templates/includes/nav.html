@@ -62,10 +62,10 @@
             </li>
             {% if event %}
               <li class="nav-item">
-                <a href="{{ url_for('public.event_print', event_id=event.id) }}"
-                   title="Detailed overview of this event" class="nav-link">
-                  <i class="fa fa-print" aria-hidden="true"></i>
-                  Report</a>
+                <a href="{{ url_for('admin.event_projects', event_id=current_event.id) }}"
+                    title="Administer event projects" class="nav-link">
+                  <i class="fa fa-check" aria-hidden="true"></i>
+                  Check</a>
               </li>
               <li class="nav-item">
                 <a href="{{ url_for('admin.event', event_id=event.id) }}"

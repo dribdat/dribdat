@@ -5,7 +5,7 @@ See: http://webtest.readthedocs.org/
 """
 from flask import url_for
 
-from dribdat.user.models import User, Project
+from dribdat.user.models import User, Project, Event
 
 from dribdat.aggregation import ProjectActivity, AllowProjectEdit
 from dribdat.public.project import post_preview
@@ -41,10 +41,22 @@ class TestEditing:
         res3 = testapp.get('/project/new/1?create=1')
         form3 = res3.forms[0]
         form3['name'] = 'New Project'
-        res3 = form3.submit()
+        res3 = form3.submit().follow()
         assert res3.status_code == 200
         # A new project was created
         assert len(Project.query.all()) == 2
+        # Check that we can edit also the event
+        res4 = testapp.get('/event/1/edit')
+        event = Event.query.first()
+        assert event.user == user
+        assert res4.status_code == 200
+        form4 = res4.forms['eventEdit']
+        form4['name'] = 'Another Event'
+        res5 = form4.submit().follow()
+        assert res5.status_code == 200
+        event = Event.query.first()
+        assert event.name == 'Another Event'
+
 
     def test_sees_error_message_if_passwords_dont_match(self, user, testapp):
         """Show error if passwords don't match."""

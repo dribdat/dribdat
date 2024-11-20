@@ -3,6 +3,7 @@ name = "dribdat"
 version = "0.8.5"
 description = "Online platform for time-limited collaborative events"
 authors = ["Dribdat Contributors <dribdat@datalets.ch>"]
+package-mode = false
 
 [tool.poetry.dependencies]
 bleach = "^6"
@@ -52,6 +53,7 @@ werkzeug = "^3.0"
 whitenoise = "^5.3"
 wtforms = "^3.0"
 openai = "^1.35.13"
+icalendar = "^6.0.1"
 
 [tool.poetry.dev-dependencies]
 factory-boy = "*"

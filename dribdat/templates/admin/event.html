@@ -7,8 +7,8 @@
     <h1 class="huge">Edit event</h1>
 
     <div class="float-right btn-group">
-      <a href="{{ url_for('public.event', event_id=event.id) }}" class="btn btn-info">
-        &#128065; Public view
+      <a href="{{ url_for('public.event', event_id=event.id) }}" class="btn btn-light" target="_blank">
+        &#128065; View
       </a>
       <a href="{{ url_for('admin.event_projects', event_id=event.id) }}" class="btn btn-warning">
         <i class="fa fa-arrow-right" aria-hidden="true"></i>

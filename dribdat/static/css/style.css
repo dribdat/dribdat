@@ -308,7 +308,6 @@ ul.help-block {
 }
 .section-header .section-header-content div {
     /* color: initial; */
-    font-size: 125%;
     display: inline-block;
     margin-right: 1em;
 }
@@ -321,7 +320,7 @@ ul.help-block {
     width: 1.2em;
 }
 .section-header .event-name {
-    font-size: 300%;
+    font-size: 400%;
     line-height: 1em;
 }
 .section-header a:hover {
@@ -436,7 +435,6 @@ nav .nav-login {
 .an-event-meta {
     font-size: 90%;
     color: #777;
-    text-align: right;
 }
 .an-event-meta b {
     display: block;
@@ -603,9 +601,6 @@ nav .nav-login {
 }
 .event-home .event-nav .btn:hover {
     border: 1px solid black;
-}
-.event-home .event-nav .btn span {
-    display: none;
 }
 /*.event-home .event-nav .btn:hover span {
   display: inline;
@@ -1659,8 +1654,7 @@ nav .nav-login {
     min-width: 7em;
     font-size: 150%;
 }
-.projectpost .form-actions input,
-.projectform .form-actions input {
+.container.with-event .form-actions input {
     margin-top: 1em;
     font-size: 150%;
     width: 100%;
@@ -2158,12 +2152,13 @@ a.go-up {
 }
 .userprofile .profile-goals {
     font-family: monospace;
-    font-size: 150%;
+    font-size: 120%;
     padding: 1em 1em 0.1em;
     border-left: 1px solid rgba(0, 0, 0, 0.3);
     border-top: 1px solid rgba(0, 0, 0, 0.3);
     border-radius: 0.5em;
     background: #eed;
+    color: #333;
 }
 .userprofile .profile-goals:after {
     content: "";
@@ -2457,7 +2452,7 @@ Search engine
     cursor: pointer;
 }
 #search-results tr:hover {
-    background: lightyellow;
+    background: lightyellow; color: black;
 }
 
 /* ------------

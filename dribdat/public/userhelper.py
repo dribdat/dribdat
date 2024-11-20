@@ -3,6 +3,7 @@
 
 from dribdat.user.models import User, Activity
 from urllib.parse import quote, quote_plus
+from flask import flash
 
 from sqlalchemy import or_
 
@@ -84,3 +85,17 @@ def get_dribs_paginated(page=1, per_page=10, host_url=''):
             'url': quote_plus(host_url + d.project.url)
         }
     return dribs
+
+
+def get_user_by_name(username):
+    """ Retrieves a user by name """
+    if not username:
+        return None
+    username = username.strip()
+    if not username:
+        return None
+    user = User.query.filter_by(username=username).first()
+    if not user:
+        flash('Username %s not found!' % username, 'warning')
+        return None
+    return user

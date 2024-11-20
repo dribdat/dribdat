@@ -70,7 +70,7 @@
       {% endfor %}
       </ul>
     {% endif %}
-  
+
   <br clear="all">
 
     {% if request.args.get('longtext') and project.longtext %}
@@ -117,7 +117,7 @@
       Print </a>
     <a href="{{ url_for('api.project_list_event_csv', event_id=current_event.id, moar=1)}}" class="btn btn-light" download>
       <i class="fa fa-file" aria-hidden="true"></i>
-      CSV</a>
+      Download CSV</a>
     <a href="{{ url_for('api.package_specific_event', event_id=current_event.id, format='json')}}" class="btn btn-light" download>
       <i class="fa fa-file" aria-hidden="true"></i>
       Data Package</a>

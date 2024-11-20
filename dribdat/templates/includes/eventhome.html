@@ -12,10 +12,13 @@
 
       {% if not event.lock_resources %}
         <p class="an-event-meta">
-          <b>{{ event.date }}</b>
-          <span>{{ event.hostname }}</span>
+          <span>{{ event.date }}</span>
+          {% if event.hostname %}
+            <i class="fa fa-bank"></i>
+            <span>{{ event.hostname }}</span>
+          {% endif %}
           {% if event.location %}
-            <i class="fa fa-map-pin"></i>
+            <i class="fa fa-map"></i>
             <span>{{ event.location }}</span>
           {% endif %}
         </p>
@@ -48,7 +51,7 @@
           {% endif %}
           </a>
         {% elif event.can_start_project %}
-          <a href="{{ url_for('project.project_new', event_id=event.id) }}" 
+          <a href="{{ url_for('project.project_new', event_id=event.id) }}"
              title="Write a challenge statement"
              class="btn btn-success btn-lg">
             <i class="fa fa-plus"></i>
@@ -56,11 +59,15 @@
           </a>
         {% endif %}
 
-        {% if event.webpage_url and not event.has_finished %}
-          <a href="{{ event.webpage_url }}" class="btn btn-dark btn-lg" target="_blank">
-            <i class="fa fa-ticket" aria-hidden="true"></i>
-            Register
-          </a>
+        {% if not event.has_finished %}
+            {% if event.webpage_url %}
+            <a href="{{ event.webpage_url }}"
+                title="Visit this page for more information and to sign up"
+                class="btn btn-dark btn-lg" target="_blank">
+                <i class="fa fa-ticket" aria-hidden="true"></i>
+                Register
+            </a>
+            {% endif %}
         {% endif %}
       </div><!-- /.an-event-actions -->
     </div><!-- /.header-content -->

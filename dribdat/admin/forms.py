@@ -45,8 +45,9 @@ class UserProfileForm(FlaskForm):
     id = HiddenField('id')
     roles = SelectMultipleField(u'Roles', coerce=int)
     webpage_url = URLField(u'Online profile', [length(max=128)])
+    my_goals = StringField(u'My goals')
     my_story = TextAreaField(u'My story')
-    my_goals = TextAreaField(u'My goals')
+    vitae = TextAreaField(u'JSON Resume', description=u'See jsonresume.org')
     submit = SubmitField(u'Save')
 
 
@@ -146,6 +147,7 @@ class EventForm(FlaskForm):
     custom_css = TextAreaField(
         u'Custom stylesheet (CSS)',
         description=u'For external CSS: @import url(https://...);')
+    user_name = StringField(u'Author', description='User who managed this event')
     submit = SubmitField(u'Save')
 
 
@@ -154,8 +156,6 @@ class ProjectForm(FlaskForm):
 
     next = HiddenField()
     id = HiddenField('id')
-    event_id = SelectField(u'Event', coerce=int)
-    category_id = SelectField(u'Category', coerce=int)
     progress = SelectField(
         u'Progress', coerce=int, choices=projectProgressList())
     name = StringField(
@@ -164,8 +164,10 @@ class ProjectForm(FlaskForm):
     ident = StringField(
         u'Identifier', [length(max=10)],
         description="Typically used for numbering the projects")
-    user_name = StringField(u'Started by')
     summary = StringField(u'Short summary', [length(max=2048)])
+    hashtag = StringField(
+        u'Hashtags', [length(max=140)],
+        description="Team channel, hashtag, organization")
     longtext = TextAreaField(u'Description')
     autotext_url = URLField(
         u'Readme', [length(max=2048)],
@@ -173,18 +175,18 @@ class ProjectForm(FlaskForm):
     autotext = TextAreaField(u'Readme content')
     webpage_url = URLField(u'Presentation link', [length(max=2048)])
     is_webembed = BooleanField(u'Embed presentation link', default=False)
-    hashtag = StringField(
-        u'Hashtags', [length(max=140)],
-        description="Team channel, hashtag, organization")
     contact_url = URLField(u'Contact link', [length(max=2048)])
     source_url = URLField(u'Source link', [length(max=2048)])
     download_url = URLField(u'Demo link', [length(max=2048)])
     image_url = URLField(u'Image link', [length(max=255)])
     logo_color = StringField(u'Custom color')
     logo_icon = StringField(
-        u'Custom icon', 
+        u'Custom icon',
         [length(max=20)],
         description='https://fontawesome.com/v4/cheatsheet')
+    event_id = SelectField(u'Event', coerce=int)
+    category_id = SelectField(u'Category', coerce=int)
+    user_name = StringField(u'Author', description='User who created this challenge')
     submit = SubmitField(u'Save')
 
 

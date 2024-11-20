@@ -98,6 +98,18 @@ class TestRepository:
         assert 'description' in test_gist
         assert len(test_gist['description']) > 50
 
+    def test_github_issue(self):
+        """Test parsing a GitHub Issue."""
+        test_url = 'https://github.com/dribdat/dribdat/issues/424'
+        try:
+            test_git = GetProjectData(test_url)
+        except ReadTimeout:
+            return warnings.warn("GitHub Issue is not accessible")
+        assert 'name' in test_git
+        assert 'Challenge' in test_git['name']
+        assert 'description' in test_git
+        assert len(test_git['description']) > 50
+
     def test_gitlab(self):
         """Test parsing a GitLab readme."""
         test_url = 'https://gitlab.com/seismist/dribdat'

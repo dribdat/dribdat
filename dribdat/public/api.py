@@ -2,6 +2,7 @@
 """API calls for dribdat."""
 import boto3
 import tempfile
+from json import loads
 from datetime import datetime
 
 from flask import (
@@ -21,7 +22,7 @@ from ..user.models import Event, Project, Activity, User
 from ..apipackage import import_event_package, event_to_data_package
 from ..aggregation import (
     AddProjectDataFromAutotext,
-    GetProjectData, 
+    GetProjectData,
 )
 from ..apiutils import (
     get_project_list,
@@ -64,6 +65,13 @@ def info_event_hackathon_json(event_id):
     """See https://schema.org/Hackathon."""
     event = Event.query.filter_by(id=event_id).first_or_404()
     return jsonify(event.get_schema(request.host_url))
+
+
+@blueprint.route('/event/<int:event_id>/ical')
+def info_event_ical(event_id):
+    """Output a calendar invite (iCal) about an Event."""
+    event = Event.query.filter_by(id=event_id).first_or_404()
+    return event.get_ical(request.host_url)
 
 
 # ------ EVENT PROJECTS ---------
@@ -368,10 +376,8 @@ def event_push_csv(filedata, dry_run=False):
     results = import_projects_csv(filedata, event, dry_run)
     if 'errors' in results:
         return jsonify(status='Error', errors=results['errors'])
-    else:
-        flash("Event projects uploaded: %s (%d)" % (event.name, len(results)), 'success')
-        return redirect(url_for("admin.events"))
-    return jsonify(status=status, results=results)
+    flash("Event projects uploaded: %s (%d)" % (event.name, len(results)), 'success')
+    return redirect(url_for("admin.events"))
 
 
 @blueprint.route('/event/current/get/status', methods=["GET"])
@@ -390,7 +396,7 @@ def event_push_status(event_id):
     """Update event status."""
     event = Event.query.filter_by(id=event_id).first_or_404()
     newstatus = request.form.get('text')
-    if not request.form.get('text'): 
+    if not request.form.get('text'):
         # Clear the status
         event.status = None
     else:
@@ -497,7 +503,7 @@ def project_uploader():
         c for c in safe_filename
         if c.isalnum() or c in keepcharacters).rstrip()
     if not safe_filename:
-        safe_filename = "".join(random_password(8), '.', ext)
+        safe_filename = "".join([random_password(8), '.', ext])
     # use random subfolder inside user id folder
     filename = '/'.join([
                     str(current_user.id),
@@ -618,7 +624,7 @@ def get_user_data(current_user):
 def profile_user_json(user_id: int):
     """Output JSON with public data about a user."""
     current_user = User.query.filter_by(id=user_id).first_or_404()
-    return jsonify(get_user_data(current_data))
+    return jsonify(get_user_data(current_user))
 
 
 @blueprint.route('/user/<username>', methods=['GET'])
@@ -626,3 +632,10 @@ def profile_username_json(username):
     """Output JSON with public data by username."""
     a_user = User.query.filter_by(username=username).first_or_404()
     return jsonify(get_user_data(a_user))
+
+
+@blueprint.route('/user/<int:user_id>/resume.json', methods=['GET'])
+def profile_user_resume_json(user_id: int):
+    """Output JSON with resume data about a user."""
+    current_user = User.query.filter_by(id=user_id).first_or_404()
+    return jsonify(loads(current_user.vitae))

@@ -12,8 +12,8 @@
         <u title="TIME_ZONE environment setting">{{ config.TIME_ZONE }}</u>
         time zone.
     </p>
-    
-    {{ render_form(url_for('public.event_new'), form) }}
+
+    {{ render_form(url_for('public.event_new'), form, formid='eventNew') }}
 
     {% if config.S3_KEY %}
       <button type="button" class="btn btn-light mt-2 m-1" style="display:none" data-toggle="modal" data-target="#uploadImage">

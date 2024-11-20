@@ -34,6 +34,11 @@ class TestApi:
         assert "Hackathon" == jsondata["@type"]
         assert "http://schema.org" == jsondata["@context"]
 
+        # Test iCalendar compliance
+        icaldata = info_event_ical(event.id)
+        assert 'VEVENT' in icaldata
+        assert event.name in icaldata
+
 
     def test_get_event_data(self, testapp):
         """Get basic event data."""
@@ -69,7 +74,7 @@ class TestApi:
         assert project.name in [ u['teams'] for u in userlist ]
         assert 'score' in userlist[0]
 
-        
+
     def test_get_platform_data(self):
         """More global data types."""
         event = EventFactory(name="hello")

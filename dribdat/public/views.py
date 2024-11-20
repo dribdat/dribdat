@@ -5,9 +5,14 @@ from flask import (Blueprint, request, render_template, flash, url_for,
         redirect, current_app, jsonify)
 from flask_login import login_required, current_user
 from dribdat.user.models import User, Event, Project, Activity
-from dribdat.public.forms import EventNew
-from dribdat.public.userhelper import (get_users_by_search,
-        filter_users_by_search, get_dribs_paginated)
+from dribdat.public.forms import EventNew, EventEdit
+from dribdat.public.userhelper import (
+    get_user_by_name,
+    get_users_by_search,
+    filter_users_by_search,
+    get_dribs_paginated
+)
+from dribdat.public.projhelper import current_event
 from dribdat.database import db
 from dribdat.extensions import cache
 from dribdat.aggregation import GetEventUsers
@@ -24,10 +29,6 @@ blueprint = Blueprint('public', __name__, static_folder="../static")
 
 # Loads confiuration for events
 EVENT_PRESET = load_event_presets()
-
-def current_event():
-    """Just get a current event."""
-    return Event.current()
 
 
 @blueprint.route("/dashboard/")
@@ -226,11 +227,14 @@ def event(event_id):
         .order_by(Project.ident, Project.name)
         # The above must match projhelper->navigate_around_project
     # Admin messages
-    if current_user and not current_user.is_anonymous and current_user.is_admin:
-        sum_hidden = len(event.projects) - projects.count()
-        if sum_hidden > 0:
-            flash(('There are %d projects in this event ' % sum_hidden) + \
-                ' that are hidden and possibly awaiting moderation (click Admin below)', 'dark')
+    editable = False
+    if current_user and not current_user.is_anonymous:
+        editable = current_user.is_admin or event.user == current_user
+        if current_user.is_admin:
+            sum_hidden = len(event.projects) - projects.count()
+            if sum_hidden > 0:
+                flash(('There are %d hidden projects in this event ' % sum_hidden) + \
+                    ' that may need moderation: check the Admin.', 'secondary')
     # Embedding view
     if request.args.get('embed'):
         return render_template("public/embed.html",
@@ -243,7 +247,7 @@ def event(event_id):
     # TODO: seems inefficient? We only need a subset of the data here:
     summaries = [ p.data for p in projects ]
     return render_template("public/event.html", current_event=event,
-                           may_certify=may_certify,
+                           may_certify=may_certify, may_edit=editable,
                            summaries=summaries, project_count=len(summaries),
                            active="projects")
 
@@ -383,6 +387,7 @@ def event_new():
             del form.id
             form.populate_obj(event)
             # Load default event content
+            event.user_id = current_user.id
             event.boilerplate = EVENT_PRESET['quickstart']
             event.community_embed = EVENT_PRESET['codeofconduct']
             db.session.add(event)
@@ -402,6 +407,41 @@ def event_new():
         flash('An administrator can make your new event visible on the home page.',
                 'info')
     return render_template('public/eventnew.html', form=form, active='Event')
+
+@blueprint.route('/event/<int:event_id>/edit', methods=['GET', 'POST'])
+@login_required
+def event_edit(event_id):
+    event = Event.query.filter_by(id=event_id).first_or_404()
+
+    if not current_user.is_admin and not event.user == current_user:
+        flash('Only admins and event owners are allowed to edit.')
+        return redirect(url_for("public.event", event_id=event.id))
+
+    if event.location_lat is None or event.location_lon is None:
+        event.location_lat = event.location_lon = 0
+
+    form = EventEdit(obj=event, next=request.args.get('next'))
+
+    if form.is_submitted() and form.validate():
+        form.populate_obj(event)
+        event.starts_at = datetime.combine(
+            form.starts_date.data, form.starts_time.data)
+        event.ends_at = datetime.combine(
+            form.ends_date.data, form.ends_time.data)
+
+        db.session.add(event)
+        db.session.commit()
+
+        cache.clear()
+
+        flash('Saved your event.', 'success')
+        return redirect(url_for("public.event", event_id=event.id))
+
+    form.starts_date.data = event.starts_at
+    form.starts_time.data = event.starts_at
+    form.ends_date.data = event.ends_at
+    form.ends_time.data = event.ends_at
+    return render_template('public/eventedit.html', event=event, form=form)
 
 #####
 

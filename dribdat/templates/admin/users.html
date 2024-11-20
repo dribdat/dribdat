@@ -62,7 +62,7 @@
                 <i class="fa fa-asterisk"></i>
               </a>
               {% if user.active %}
-              <a href="{{ url_for('admin.user_deactivate', user_id=user.id) }}" class="btn btn-light" onclick="if(!window.confirm('Deactivate user {{ user.username }} ?')) return false" title="Block user account">
+              <a href="{{ url_for('admin.user_deactivate', user_id=user.id) }}" class="btn btn-primary" onclick="if(!window.confirm('Deactivate user {{ user.username }} ?')) return false" title="Block user account">
                 <i class="fa fa-exclamation"></i>
               </a>
               {% else %}

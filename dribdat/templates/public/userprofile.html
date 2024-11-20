@@ -148,6 +148,32 @@
 </div>
 {% endif %}
 
+{% if user.vitae %}
+<a name="vitae"></a>
+<h2 title="Edolare Vitae">Resume</h2>
+<div class="profile-vitae jumbotron" title="Hacker Vitae">
+    <table class="table bg-white"><tbody>
+    {% for vita in user.simple_resume() %}
+    <tr>
+      <td title="Type of career step" class="alert alert-info">
+          {{ vita.type }}
+      </td><th title="Title or position">
+          {{ vita.name }}
+      </th><td title="Summary">
+          {{ vita.summary }}
+      </td>
+    </tr>
+    {% endfor %}
+    </tbody></table>
+    <a id="get-myvitae" class="btn btn-light btn-sm"
+      href="{{ url_for('api.profile_user_resume_json', user_id=user.id) }}" download
+      title="Download my JSON resume">
+      <i class="fa fa-download"></i>
+      Download
+    </a>
+  </div>
+{% endif %}
+
 {% if not projects %}
   {% if current_user and current_user.id == user.id %}
     <div class="alert alert-success">
