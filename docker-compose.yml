@@ -1,9 +1,9 @@
 services:
   dribdat:
-    image: dribdat
+    image: dribdat/dribdat
     ports:
       - 5000:5000
-    environment: 
+    environment:
       - SERVER_URL=localhost.changeme:5000
       - DATABASE_URL=postgres://dribdat_user:changeme@db:5432/dribdat
       - DRIBDAT_ENV=prod
