@@ -60,7 +60,7 @@ def get_auth_blueprint(app):
         blueprint = oauth2.make_oauth2_blueprint(
             client_id=app.config['OAUTH_ID'],
             secret=app.config['OAUTH_SECRET'],
-            domain=app.config['OAUTH_DOMAIN'],
+            base_url=app.config['OAUTH_DOMAIN'],
             scope=app.config['OAUTH_SCOPE'] or '',
             redirect_to="auth.oauth2_login",
             login_url="/login",
