@@ -42,11 +42,16 @@ blueprint = Blueprint('api', __name__, url_prefix='/api')
 
 # ------ EVENT INFORMATION ---------
 
+def get_current_event():
+    """The first current or just latest added Event."""
+    return Event.query.filter_by(is_current=True).first() or \
+        Event.query.order_by(Event.id.desc()).first_or_404()
+
+
 @blueprint.route('/event/current/info.json')
 def info_current_event_json():
     """Output JSON about the current event."""
-    event = Event.query.filter_by(is_current=True).first() or \
-        Event.query.order_by(Event.id.desc()).first_or_404()
+    event = get_current_event()
     timeuntil = timesince(event.countdown, until=True)
     return jsonify(event=event.data, timeuntil=timeuntil)
 
@@ -58,6 +63,12 @@ def info_event_json(event_id):
     timeuntil = timesince(event.countdown, until=True)
     return jsonify(event=event.data, timeuntil=timeuntil)
 
+@blueprint.route('/event/current/hackathon.json')
+def info_event_current_hackathon_json():
+    """Output JSON-LD about an Event according to schema."""
+    """See https://schema.org/Hackathon."""
+    event = get_current_event()
+    return info_event_hackathon_json(event.id)
 
 @blueprint.route('/event/<int:event_id>/hackathon.json')
 def info_event_hackathon_json(event_id):
@@ -86,8 +97,7 @@ def request_project_list(event_id):
 @blueprint.route('/event/current/projects.json')
 def project_list_current_json():
     """Output JSON of projects in the current event with its info."""
-    event = Event.query.filter_by(is_current=True).first() or \
-        Event.query.order_by(Event.id.desc()).first_or_404()
+    event = get_current_event()
     return jsonify(projects=request_project_list(event.id), event=event.data)
 
 
@@ -119,8 +129,7 @@ def project_list_event_csv(event_id):
 @blueprint.route('/event/current/projects.csv')
 def project_list_current_csv():
     """Output CSV of projects and challenges in the current event."""
-    event = Event.query.filter_by(is_current=True).first() or \
-        Event.query.order_by(Event.id.desc()).first_or_404()
+    event = get_current_event()
     return project_list_csv(event.id, event.name)
 
 
@@ -158,7 +167,7 @@ def project_list_all_events_csv():
 @blueprint.route('/event/current/categories.json')
 def categories_list_current_json():
     """Output JSON of categories in the current event."""
-    event = Event.query.filter_by(is_current=True).first()
+    event = get_current_event()
     categories = [c.data for c in event.categories_for_event()]
     return jsonify(categories=categories, event=event.data)
 
@@ -178,7 +187,7 @@ def event_activity_json(event_id):
 @blueprint.route('/event/current/activity.json')
 def event_activity_current_json():
     """Output JSON of categories in the current event."""
-    event = Event.query.filter_by(is_current=True).first()
+    event = get_current_event()
     if not event:
         return jsonify(activities=[])
     return event_activity_json(event.id)
@@ -383,8 +392,7 @@ def event_push_csv(filedata, dry_run=False):
 @blueprint.route('/event/current/get/status', methods=["GET"])
 def event_get_status():
     """Get current event status."""
-    event = Event.query.filter_by(is_current=True).first() or \
-        Event.query.order_by(Event.id.desc()).first()
+    event = get_current_event()
     if not event:
         return jsonify(status='')
     return jsonify(status=event.status_text or '')
@@ -420,7 +428,7 @@ def project_push_json():
         project.user_id = 1
         project.progress = 0
         project.is_autoupdate = True
-        project.event = Event.query.filter_by(is_current=True).first()
+        project.event = get_current_event()
     elif project.user_id != 1 or project.is_hidden:
         return jsonify(error='Access denied')
     set_project_values(project, data)
@@ -569,8 +577,7 @@ def generate_event_package(event, format='json'):
 @cache.cached()
 def package_current_event(format):
     """Download a Data Package for an event."""
-    event = Event.query.filter_by(is_current=True).first() or \
-        Event.query.order_by(Event.id.desc()).first_or_404()
+    event = get_current_event()
     return generate_event_package(event, format)
 
 

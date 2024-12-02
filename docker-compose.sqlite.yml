@@ -1,0 +1,15 @@
+services:
+  dribdat:
+    image: dribdat/dribdat
+    ports:
+      - 5000:5000
+    environment:
+      - DATABASE_URL=sqlite:////opt/dribdat.db
+      - SERVER_URL=localhost:5000
+      - DRIBDAT_ENV=prod
+      - DRIBDAT_SECRET=changeme
+      - TIME_ZONE=Europe/Zurich
+      - DRIBDAT_ALLOW_EVENTS=1
+      - DRIBDAT_SOCIAL_LINKS=0
+    volumes:
+      - ./data/:/opt

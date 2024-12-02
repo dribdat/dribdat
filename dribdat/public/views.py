@@ -2,7 +2,7 @@
 """Public section, including homepage and signup."""
 from dribdat.utils import load_event_presets
 from flask import (Blueprint, request, render_template, flash, url_for,
-        redirect, current_app, jsonify)
+        redirect, current_app)
 from flask_login import login_required, current_user
 from dribdat.user.models import User, Event, Project, Activity
 from dribdat.public.forms import EventNew, EventEdit
@@ -55,11 +55,8 @@ def dashboard():
 
 @blueprint.route('/hackathon.json')
 def info_current_hackathon_json():
-    """Output JSON-LD about the current event."""
-    # (see also api.py/info_event_hackathon_json)
-    event = Event.query.filter_by(is_current=True).first(
-    ) or Event.query.order_by(Event.id.desc()).first()
-    return jsonify(event.get_schema(request.host_url))
+    """Redirect to current event API."""
+    return redirect(url_for('api.info_event_current_hackathon_json'))
 
 
 @blueprint.route("/about/")

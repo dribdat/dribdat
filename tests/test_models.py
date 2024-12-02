@@ -138,5 +138,5 @@ class TestUser:
         assert simplr is not None
         #print(simplr)
         assert len(simplr)>1
-        sample = {'type': 'projects', 'date': '2016-08-24', 'name': 'Miss Direction', 'summary': 'A mapping engine that misguides you'}
-        assert sample in simplr
+        sample = {'date': '2016-08-24', 'name': 'Miss Direction', 'summary': 'A mapping engine that misguides you'}
+        assert sample in simplr['projects']

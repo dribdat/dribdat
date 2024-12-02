@@ -153,16 +153,22 @@
 <h2 title="Edolare Vitae">Resume</h2>
 <div class="profile-vitae jumbotron" title="Hacker Vitae">
     <table class="table bg-white"><tbody>
-    {% for vita in user.simple_resume() %}
+    {% for vitatype in user.simple_resume() %}
     <tr>
-      <td title="Type of career step" class="alert alert-info">
-          {{ vita.type }}
-      </td><th title="Title or position">
-          {{ vita.name }}
-      </th><td title="Summary">
-          {{ vita.summary }}
-      </td>
+      <th colspan="2" title="Type of career step" class="alert alert-info text-center"
+        data-toggle="collapse" href="#collapse-{{vitatype}}" role="button" aria-expanded="false">
+          {{ vitatype }}
+      </th>
     </tr>
+      {% for vita in user.simple_resume()[vitatype] %}
+      <tr class="collapse" id="collapse-{{vitatype}}">
+        </td><th title="Title or position">
+            {{ vita.name }}
+        </th><td title="Summary">
+            {{ vita.summary }}
+        </td>
+      </tr>
+      {% endfor %}
     {% endfor %}
     </tbody></table>
     <a id="get-myvitae" class="btn btn-light btn-sm"

@@ -210,16 +210,17 @@ class User(UserMixin, PkModel):
         if not self.vitae: return None
         vvdata = loads(self.vitae)
         vvtypes = 'work', 'volunteer', 'education', 'awards', 'publications', 'skills', 'languages', 'interests', 'references', 'projects'
-        vvlist = []
+        vvlist = {}
         for vtype in vvtypes:
-            if vtype in vvdata:
-                vvlist.append([
-                    {   'type': vtype,
+            if vtype in vvdata and len(vvdata[vtype]) > 0:
+                for vv in vvdata[vtype]:
+                    if not vtype in vvlist:
+                        vvlist[vtype] = []   
+                    vvlist[vtype].append({
                         'date': get_any_key(vv, ['startDate', 'date']),
-                        'name': get_any_key(vv, ['name', 'institution', 'language']),
+                        'name': get_any_key(vv, ['name', 'institution', 'organization', 'language']),
                         'summary': get_any_key(vv, ['summary', 'area', 'level', 'fluency', 'reference', 'description']),
-                    } for vv in vvdata[vtype]
-                    ][0])
+                    })
         return vvlist
 
     def get_profile_percent(self):

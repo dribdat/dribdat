@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """Helper functions for authentication steps."""
 from flask_dance.contrib import (slack, azure, github, gitlab)
-from dribdat.sso import (auth0, mattermost, hitobito)
+from dribdat.sso import (oauth2, mattermost, hitobito)
 
 
 def get_auth_blueprint(app):
@@ -56,12 +56,13 @@ def get_auth_blueprint(app):
                 login_url="/login",
                 scope='read_user'
             )
-    elif app.config['OAUTH_TYPE'] == 'auth0':
-        blueprint = auth0.make_auth0_blueprint(
+    elif app.config['OAUTH_TYPE'] == 'oauth2':
+        blueprint = oauth2.make_oauth2_blueprint(
             client_id=app.config['OAUTH_ID'],
             secret=app.config['OAUTH_SECRET'],
             domain=app.config['OAUTH_DOMAIN'],
-            redirect_to="auth.auth0_login",
+            scope=app.config['OAUTH_SCOPE'] or '',
+            redirect_to="auth.oauth2_login",
             login_url="/login",
         )
     elif app.config['OAUTH_TYPE'] == 'mattermost':
