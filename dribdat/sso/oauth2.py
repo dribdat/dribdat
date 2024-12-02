@@ -30,7 +30,7 @@ def make_oauth2_blueprint(
     Args:
         client_id (str): The OAuth2 Client ID for your application
         secret (str): The OAuth2 Client Secret for your application
-        base_url (str): URL with base path to the authentication endpoint
+        domain (str): FQDN with base path to the authentication endpoint
         scope (str, optional): comma-separated list of scopes for OAuth token
         redirect_url (str): the URL to redirect to after the authentication
             dance is complete
@@ -53,15 +53,17 @@ def make_oauth2_blueprint(
     :rtype: :class:`~flask_dance.consumer.OAuth2ConsumerBlueprint`
     :returns: A :doc:`blueprint <flask:blueprints>` to attach to Flask app.
     """
+    if not base_url.startswith('https://'):
+        base_url = 'https://' + base_url
     oauth2_bp = OAuth2ConsumerBlueprint(
         "oauth2",
         __name__,
         client_id=client_id,
         client_secret=secret,
         scope=scope.split(','),
-        base_url=baseurl,
-        authorization_url=baseurl + "/authorize",
-        token_url=baseurl + "/token",
+        base_url=base_url,
+        authorization_url=base_url + "/authorize",
+        token_url=base_url + "/token",
         redirect_url=redirect_url,
         redirect_to=redirect_to,
         login_url=login_url,
