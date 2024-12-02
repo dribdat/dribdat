@@ -1,5 +1,4 @@
 {% extends "layout.html" %}
-{% from "macros/_form.html" import render_form %}
 
 {% block page_title %}Log in{% endblock %}
 {% block body_class %}userform login{% endblock %}
@@ -65,8 +64,14 @@
 
   {% if config.MAIL_SERVER %}
     <p>Enter an e-mail address you registered with to receive a login link:</p>
-    <div class="form-passwordless">
-      {{ render_form(url_for('auth.passwordless'), form) }}
+    <div class="form-passwordless mb-2">
+      <form id="passwordlessForm" method="POST" action="{{ url_for('auth.passwordless', next=request.args.get('next')) }}" role="login" class="navbar-form form-inline">
+        {{ form.hidden_tag() }}
+        <div class="form-group">
+          {{ form.username(placeholder="username or e-mail", class_="form-control") }}
+          <button type="submit" class="btn btn-default btn-primary btn-submit">Login</button>
+        </div>
+      </form>
     </div>
   {% endif %}
 
