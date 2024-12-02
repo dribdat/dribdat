@@ -2555,8 +2555,8 @@ SlackIn button
 .sso-login .btn.signin-gitlab {
     background-image: url("/static/img/sso/gitlab-logo.svg");
 }
-.sso-login .btn.signin-auth0 {
-    background-image: url("/static/img/sso/auth0_icon.png");
+.sso-login .btn.signin-oauth2 {
+    background-image: url("/static/img/sso/oauth.png");
     height: 60px;
 }
 .sso-login .btn.signin-mattermost {

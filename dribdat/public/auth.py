@@ -8,7 +8,7 @@ from flask_dance.contrib.slack import slack
 from flask_dance.contrib.azure import azure  # noqa: I005
 from flask_dance.contrib.github import github
 from flask_dance.contrib.gitlab import gitlab
-from dribdat.sso.auth0 import auth0
+from dribdat.sso.oauth2 import oauth2
 from dribdat.sso.hitobito import hitobito
 from dribdat.sso.mattermost import mattermost
 # Dribdat modules
@@ -424,20 +424,20 @@ def github_login():
     return redirect(url_for("auth.login", local=1))
 
 
-@blueprint.route("/auth0_login", methods=["GET", "POST"])
-def auth0_login():
-    """Handle login via Auth0."""
-    if not auth0.authorized:
-        flash('Access denied to Auth0', 'danger')
+@blueprint.route("/oauth2_login", methods=["GET", "POST"])
+def oauth2_login():
+    """Handle login via OAuth."""
+    if not oauth2.authorized:
+        flash('Access denied', 'danger')
         return redirect(url_for("auth.login", local=1))
     # Get remote user data
-    resp = auth0.get("/userinfo")
+    resp = oauth2.get("/userinfo")
     if not resp.ok:
-        flash('Unable to access Auth0 data', 'danger')
+        flash('Unable to access your user data', 'danger')
         return redirect(url_for("auth.login", local=1))
     resp_data = resp.json()
     if 'nickname' not in resp_data:
-        flash('Invalid Auth0 data format', 'danger')
+        flash('Invalid authentication data format', 'danger')
         # print(resp_data)
         return redirect(url_for("auth.login", local=1))
     return get_or_create_sso_user(

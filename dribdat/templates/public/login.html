@@ -42,10 +42,10 @@
         <span>&#x1f512; Sign in with GitLab</span>
       </a>
     </p>
-  {% elif oauth_type == 'auth0' %}
+  {% elif oauth_type == 'oauth2' %}
     <p class="sso-login">
-      <a class="btn signin-auth0" href="{{ url_for('auth0.login', next=request.args.get('next')) }}" title="Click to sign in - Auth0">
-        <span>&#x1f512; Sign in with Auth0</span>
+      <a class="btn signin-oauth2" href="{{ url_for('oauth2.login', next=request.args.get('next')) }}" title="Click to sign in - OAuth 2.0">
+        <span>&#x1f512; Sign in with OAuth</span>
       </a>
     </p>
   {% elif oauth_type == 'mattermost' %}

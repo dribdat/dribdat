@@ -6,31 +6,31 @@ from flask_dance.consumer import OAuth2ConsumerBlueprint
 __maintainer__ = "Oleg Lavrovsky <oleg@datalets.ch>"
 
 
-def make_auth0_blueprint(
-    client_id=None,
-    secret=None,
-    domain=None,
+def make_oauth2_blueprint(
+    client_id: str,
+    secret: str,
+    domain: str,
     *,
-    scope=None,
-    redirect_url=None,
-    redirect_to=None,
-    login_url=None,
-    authorized_url=None,
+    scope: str="",
+    redirect_url: str="",
+    redirect_to: str="",
+    login_url: str="",
+    authorized_url: str="",
     session_class=None,
     storage=None,
     rule_kwargs=None,
 ):
     """
-    Make a blueprint for authenticating with Auth0 using OAuth 2. This requires
-    an OAuth consumer from Auth0. Either pass the domain, client ID and secret
-    to this constructor, or make sure that the Flask application config defines
-    them, using the variables :envvar:`AUTH0_CLIENT_DOMAIN`,
-    :envvar:`AUTH0_CLIENT_ID` and
-    :envvar:`AUTH0_CLIENT_SECRET`.
+    Make a blueprint for authenticating with any OAuth 2 provder. This requires
+    an OAuth consumer. Pass the domain, client ID and secret to this constructor,
+    or make sure that the Flask application config defines them, using the variables:
+    :envvar:`OAUTH2_CLIENT_DOMAIN`,
+    :envvar:`OAUTH2_CLIENT_ID` and
+    :envvar:`OAUTH2_CLIENT_SECRET`.
     Args:
-        client_id (str): The Auth0 Client ID for your application
-        secret (str): The Auth0 Client Secret for your application
-        domain (str): The Auth0 Domain for your application
+        client_id (str): The OAuth2 Client ID for your application
+        secret (str): The OAuth2 Client Secret for your application
+        domain (str): The OAuth2 Domain for your application
         scope (str, optional): comma-separated list of scopes for OAuth token
         redirect_url (str): the URL to redirect to after the authentication
             dance is complete
@@ -53,17 +53,16 @@ def make_auth0_blueprint(
     :rtype: :class:`~flask_dance.consumer.OAuth2ConsumerBlueprint`
     :returns: A :doc:`blueprint <flask:blueprints>` to attach to Flask app.
     """
-    scope = scope or ["email", "profile", "openid"]
-    auth0_bp = OAuth2ConsumerBlueprint(
-        "auth0",
+    baseurl = "https://" + domain + "/oauth"
+    oauth2_bp = OAuth2ConsumerBlueprint(
+        "oauth2",
         __name__,
         client_id=client_id,
         client_secret=secret,
-        scope=scope,
-        base_url="https://" + domain,
-        authorization_url="https://" + domain + "/authorize",
-        token_url="https://" + domain + "/oauth/token",
-        # token_url_params={"include_client_id": True},
+        scope=scope.split(','),
+        base_url=baseurl,
+        authorization_url=baseurl + "/authorize",
+        token_url=baseurl + "/token",
         redirect_url=redirect_url,
         redirect_to=redirect_to,
         login_url=login_url,
@@ -72,15 +71,15 @@ def make_auth0_blueprint(
         storage=storage,
         rule_kwargs=rule_kwargs,
     )
-    auth0_bp.from_config["base_url"] = "AUTH0_CLIENT_DOMAIN"
-    auth0_bp.from_config["client_id"] = "AUTH0_CLIENT_ID"
-    auth0_bp.from_config["client_secret"] = "AUTH0_CLIENT_SECRET"
+    oauth2_bp.from_config["base_url"] = "OAUTH2_CLIENT_DOMAIN"
+    oauth2_bp.from_config["client_id"] = "OAUTH2_CLIENT_ID"
+    oauth2_bp.from_config["client_secret"] = "OAUTH2_CLIENT_SECRET"
 
-    @auth0_bp.before_app_request
+    @oauth2_bp.before_app_request
     def set_applocal_session():
-        g.flask_dance_auth0 = auth0_bp.session
+        g.flask_dance_oauth2 = oauth2_bp.session
 
-    return auth0_bp
+    return oauth2_bp
 
 
-auth0 = LocalProxy(lambda: g.flask_dance_auth0)
+oauth2 = LocalProxy(lambda: g.flask_dance_oauth2)
