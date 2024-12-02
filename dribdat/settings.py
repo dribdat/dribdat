@@ -36,9 +36,9 @@ class Config(object):
     OAUTH_TYPE = os_env.get('OAUTH_TYPE', '').lower()
     OAUTH_ID = os_env.get('OAUTH_ID', None)
     OAUTH_SECRET = os_env.get('OAUTH_SECRET', None)
-    OAUTH_SCOPE = os_env.get('OAUTH_SCOPE', None)
     OAUTH_DOMAIN = os_env.get('OAUTH_DOMAIN', None)
-    OAUTH_BASE_URL = os_env.get('OAUTH_BASE_URL', None)
+    OAUTH_SCOPE = os_env.get('OAUTH_SCOPE', None)
+    OAUTH_USERINFO = os_env.get('OAUTH_USERINFO', None)
     OAUTH_TOKEN_URL = os_env.get('OAUTH_TOKEN_URL', None)
     OAUTH_AUTH_URL = os_env.get('OAUTH_AUTH_URL', None)
 

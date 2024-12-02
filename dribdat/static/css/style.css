@@ -2569,15 +2569,17 @@ SlackIn button
 }
 
 .sso-login .btn:hover {
-    color: red;
-    border-left: 4px double orange;
+    border: 4px double orange;
     margin-left: -3px;
 }
 .sso-login .btn {
+    border: 4px double lightgoldenrodyellow;
     height: 50px;
     width: 100%;
+    font-size: 125%;
     font-weight: bold;
     text-align: left;
+    vertical-align: middle;
     background-position: 14em;
     background-size: contain;
     background-repeat: no-repeat;

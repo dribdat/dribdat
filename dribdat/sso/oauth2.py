@@ -21,7 +21,7 @@ def make_oauth2_blueprint(
     rule_kwargs=None,
 ):
     """
-    Make a blueprint for authenticating with any OAuth 2 provder. This requires
+    Make a blueprint for authenticating with a generic OAuth 2 provder. This requires
     an OAuth consumer. Pass the client ID and secret and URL to this constructor,
     or make sure that the Flask application config defines them, using the variables:
     :envvar:`OAUTH2_CLIENT_DOMAIN`,
@@ -72,9 +72,6 @@ def make_oauth2_blueprint(
         storage=storage,
         rule_kwargs=rule_kwargs,
     )
-    oauth2_bp.from_config["base_url"] = "OAUTH2_CLIENT_DOMAIN"
-    oauth2_bp.from_config["client_id"] = "OAUTH2_CLIENT_ID"
-    oauth2_bp.from_config["client_secret"] = "OAUTH2_CLIENT_SECRET"
 
     @oauth2_bp.before_app_request
     def set_applocal_session():

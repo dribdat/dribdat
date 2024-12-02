@@ -431,7 +431,8 @@ def oauth2_login():
         flash('Access denied', 'danger')
         return redirect(url_for("auth.login", local=1))
     # Get remote user data
-    resp = oauth2.get("/userinfo")
+    userinfo_url = current_app.config['OAUTH_USERINFO']
+    resp = oauth2.get(userinfo_url or "/userinfo")
     if not resp.ok:
         flash('Unable to access your user data', 'danger')
         return redirect(url_for("auth.login", local=1))
@@ -442,7 +443,7 @@ def oauth2_login():
         return redirect(url_for("auth.login", local=1))
     return get_or_create_sso_user(
         resp_data['sub'],
-        resp_data['nickname'],
+        resp_data['nickname'] or resp_data['name'],
         resp_data['email'],
     )
 
