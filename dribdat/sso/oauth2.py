@@ -9,7 +9,7 @@ __maintainer__ = "Oleg Lavrovsky <oleg@datalets.ch>"
 def make_oauth2_blueprint(
     client_id: str,
     secret: str,
-    domain: str,
+    base_url: str,
     *,
     scope: str="",
     redirect_url: str="",
@@ -22,7 +22,7 @@ def make_oauth2_blueprint(
 ):
     """
     Make a blueprint for authenticating with any OAuth 2 provder. This requires
-    an OAuth consumer. Pass the domain, client ID and secret to this constructor,
+    an OAuth consumer. Pass the client ID and secret and URL to this constructor,
     or make sure that the Flask application config defines them, using the variables:
     :envvar:`OAUTH2_CLIENT_DOMAIN`,
     :envvar:`OAUTH2_CLIENT_ID` and
@@ -30,7 +30,7 @@ def make_oauth2_blueprint(
     Args:
         client_id (str): The OAuth2 Client ID for your application
         secret (str): The OAuth2 Client Secret for your application
-        domain (str): The OAuth2 Domain for your application
+        base_url (str): URL with base path to the authentication endpoint
         scope (str, optional): comma-separated list of scopes for OAuth token
         redirect_url (str): the URL to redirect to after the authentication
             dance is complete
@@ -53,7 +53,6 @@ def make_oauth2_blueprint(
     :rtype: :class:`~flask_dance.consumer.OAuth2ConsumerBlueprint`
     :returns: A :doc:`blueprint <flask:blueprints>` to attach to Flask app.
     """
-    baseurl = "https://" + domain + "/oauth"
     oauth2_bp = OAuth2ConsumerBlueprint(
         "oauth2",
         __name__,
