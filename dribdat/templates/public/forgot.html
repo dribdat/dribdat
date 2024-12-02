@@ -7,32 +7,38 @@
 
 {% block content %}
 <div class="container-narrow">
-  <h1>Restore access</h1>
+  <h1>Log in</h1>
+  
   {% if oauth_type %}
-     <p>This site has &#x1f511;
-      <b><a href="{{ url_for('auth.login') }}">Single Sign On</a></b> enabled.
-      Please first try to reset your password using <b>{{ oauth_type }}</b>.</p>
-  {% endif %}
-  {% if config.DRIBDAT_NOT_REGISTER %}
-    <p>Registration is currently disabled in this application. How very hacky.
-      Please contact the organizers, and ask them to change your password in the Admin.
+    <p>This site has Single Sign On, so you can try to &#x1f511;
+      <b><a href="{{ url_for('auth.login') }}">Login with {{ oauth_type }}</a></b>
     </p>
-  {% elif config.MAIL_SERVER %}
-    <p>Enter an e-mail address you registered with here to receive a login link.</p>
+  {% endif %}
+  
+  {% if config.MAIL_SERVER %}
+    <p>Enter an e-mail address you registered with to receive a login link.</p>
     <div class="form-passwordless">
       {{ render_form(url_for('auth.passwordless'), form) }}
     </div>
+  
+  {% elif config.DRIBDAT_NOT_REGISTER %}
+    <h5>Registration is currently unavailable</h5>
+    <p>
+      How very hacky. Please contact the organizers, and ask them to change your password in the Admin.
+    </p>
+  
   {% else %}
     <h5>
-      Please contact the organizers, and ask them to change your password.
+      Please contact the organizers
     </h5>
     <p>
-      Admins:
+      You will need to ask their help to restore access.
+    </p><p><i>
+      If you are an admin,
       <a href="https://dribdat.cc/deploy#mail">see the docs</a> and
-      <a href="https://dribdat.cc/trouble.html#restore-admin-access">help area</a>
-      on enabling Mail services to let users reset their own passwords,
-      or setting up a Single Sign-On provider.
-    </p>
+      <a href="https://dribdat.cc/trouble.html#restore-admin-access">f.a.q.</a>
+      on enabling Mail services or setting up a Single Sign-On provider.
+    </i></p>
   {% endif %}
 </div>
 {% endblock %}
