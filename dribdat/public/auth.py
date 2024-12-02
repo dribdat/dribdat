@@ -437,7 +437,7 @@ def oauth2_login():
         flash('Unable to access your user data', 'danger')
         return redirect(url_for("auth.login", local=1))
     resp_data = resp.json()
-    if 'nickname' not in resp_data:
+    if 'nickname' not in resp_data and 'name' not in resp_data:
         flash('Invalid authentication data format', 'danger')
         # print(resp_data)
         return redirect(url_for("auth.login", local=1))
