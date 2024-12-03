@@ -200,12 +200,12 @@ def passwordless():
         + "an activation mail. Check your Spam folder if you do not. "
         + "Then click the link in that e-mail to log into this application.",
         'success')
-    a_user = User.query.filter_by(email=form.email.data).first()
+    a_user = User.query.filter_by(email=form.username.data).first()
     if a_user:
         # Continue with reset
         user_activation(a_user)
     else:
-        current_app.logger.warn('User not found: %s' % form.email.data)
+        current_app.logger.warn('User not found: %s' % form.username.data)
     # Don't let people spy on your address
     return redirect(url_for("auth.login"))
 
