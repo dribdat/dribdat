@@ -64,11 +64,11 @@
 
   {% if config.MAIL_SERVER %}
     <p>Enter an e-mail address you registered with to receive a login link:</p>
-    <div class="form-passwordless mb-2">
+    <div class="form-passwordless mb-5">
       <form id="passwordlessForm" method="POST" action="{{ url_for('auth.passwordless', next=request.args.get('next')) }}" role="login" class="navbar-form form-inline">
         {{ form.hidden_tag() }}
         <div class="form-group">
-          {{ form.username(placeholder="username or e-mail", class_="form-control") }}
+          {{ form.username(placeholder="e-mail @", class_="form-control") }}
           <button type="submit" class="btn btn-default btn-primary btn-submit">Login</button>
         </div>
       </form>
@@ -77,13 +77,13 @@
 
   {% if config.DRIBDAT_ALLOW_LOGINS %}
     {% if oauth_type or config.MAIL_SERVER %}
-        <p>Or log in with your Dribdat credentials:</p>
+        <p>Or log in with your Dribdat credentials here:</p>
     {% endif %}
 
     <form id="loginForm" method="POST" action="{{ url_for('auth.login', next=request.args.get('next')) }}" role="login" class="navbar-form form-inline">
       {{ form.hidden_tag() }}
       <div class="form-group">
-        {{ form.username(placeholder="username or e-mail", class_="form-control") }}
+        {{ form.username(placeholder="username", class_="form-control") }}
         {{ form.password(placeholder="password", class_="form-control") }}
         <button type="submit" class="btn btn-default btn-primary btn-submit">Verify me</button>
       </div>
