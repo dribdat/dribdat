@@ -40,7 +40,7 @@
                   &nbsp;{{ user.activity_count }}&nbsp;
               </a>
             </td>
-            <td {% if not user.active %}style="background:yellow" title="Account inactive"{% endif %}>
+            <td {% if not user.active %}style="background:yellow;color:black" title="Account inactive"{% endif %}>
               {% if user.is_admin %}
               <div style="float:right">
                 &#10003;
