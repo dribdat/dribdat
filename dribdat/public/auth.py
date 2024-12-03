@@ -187,8 +187,7 @@ def forgot():
 @blueprint.route("/passwordless/", methods=['POST'])
 def passwordless():
     """Log in a new user via e-mail."""
-    if current_app.config['DRIBDAT_NOT_REGISTER'] or \
-       not current_app.config['MAIL_SERVER']:
+    if not current_app.config['MAIL_SERVER']:
         flash("Passwordless login currently not possible.", 'warning')
         return redirect(url_for("auth.login", local=1))
     form = EmailForm(request.form)
