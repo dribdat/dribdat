@@ -204,8 +204,8 @@ def passwordless():
     if a_user:
         # Continue with reset
         user_activation(a_user)
-    else:
-        current_app.logger.warn('User not found: %s' % form.username.data)
+        return redirect(url_for("public.home"))
+    current_app.logger.warn('User not found: %s' % form.username.data)
     # Don't let people spy on your address
     return redirect(url_for("auth.login"))
 
