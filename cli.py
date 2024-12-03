@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 """Management functions for dribdat."""
 import os
+import time
 import click
 from datetime import datetime, timedelta
 from dribdat.app import init_app
@@ -170,23 +171,61 @@ def register(filename, testonly=False):
 
 
 @click.command()
-@click.argument('deleteusers', required=False)
-def cleanup(deleteusers=True):
+@click.option('-0', '--lowscore', is_flag=True, help="Users with a low score")
+@click.option('-i', '--inactive', is_flag=True, help="Users which are not active")
+@click.option('-o', '--withsso', is_flag=True, help="Include users with active SSO")
+@click.option('-d', '--delete', is_flag=True, help="Delete users, not just deactivate them")
+@click.option('-s', '--score', required=False, default=0, help="What counts as a minimum low score")
+def kick(lowscore: bool, inactive: bool, withsso: bool, delete: bool, score: int):
     """Cull inactive accounts on the system."""
     with create_app().app_context():
-        all_inactive = [ u for u in User.query.filter_by(active=False).all() ]
-        print('%d inactive user accounts found' % len(all_inactive))
+        q_active = User.query.filter_by(active=True, is_admin=False)
+        q_inactive = User.query.filter_by(active=False, is_admin=False)
+        print('There are currently %d active and %d blocked user accounts.' % (q_active.count(), q_inactive.count()))
+        
+        whatnext = 'blocked'
+        if delete:
+            whatnext = 'deleted'
+        if inactive and lowscore:
+            print('All inactive users with no content will be %s.' % whatnext)
+        elif inactive:
+            print('All inactive users are about to be %s.' % whatnext)
+        elif lowscore:
+            print('Any users with no content are about to be %s.' % whatnext)
+        else:
+            print('You need to specify a condition to kick users.')
+            return
+
         delcount = 0
-        if deleteusers:
-            print('The following inactive users with no content are being deleted:')
+        del_targets = []
+        if inactive: 
+            del_query = q_inactive.all()
+        else:
+            del_query = q_active.all()
+        for u in del_query:
+            if withsso or not u.sso_id:
+                if not lowscore:
+                    del_targets.append(u)
+                elif not u.posted_challenges() and not u.joined_projects() and u.get_score() < score:
+                    del_targets.append(u)
+
+        if len(del_targets) > 0:
+            print('This will affect a total of %d users' % len(del_targets))
+            print('... waiting 5 seconds - Ctrl-C to abort! ...')
+            time.sleep(5)
+
             print('---------------------------------------------------------------')
             print('username,fullname,email,webpage_url')
-            for u in all_inactive:
-                if not u.get_score() and not u.posted_challenges():
+            for u in del_targets:
+                if delete:
                     u.delete()
-                    print(','.join([u.username, u.fullname or '', u.email, u.webpage_url or '']))
-                    delcount = delcount + 1
+                else:
+                    u.active = False
+                    u.save()
+                print(','.join([u.username, u.fullname or '', u.email, u.webpage_url or '']))
+                delcount = delcount + 1
             print('---------------------------------------------------------------')
+
         print('%d user accounts cleaned up' % delcount)
 
 
@@ -201,7 +240,7 @@ cli.add_command(numerise)
 cli.add_command(register)
 cli.add_command(imports)
 cli.add_command(exports)
-cli.add_command(cleanup)
+cli.add_command(kick)
 
 if __name__ == '__main__':
     cli()

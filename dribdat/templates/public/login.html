@@ -14,7 +14,7 @@
     </p>
   {% elif oauth_type %}
     <p>
-      Use this button to continue with your {{ oauth_type|capitalize }} account:
+      Use this button to use your {{ oauth_type|capitalize }} account:
     </p>
   {% endif %}
 
@@ -62,16 +62,29 @@
     </p>
   {% endif %}
 
+  {% if config.MAIL_SERVER %}
+    <p>Enter your e-mail address to get a login link:</p>
+    <div class="form-passwordless mb-5">
+      <form id="passwordlessForm" method="POST" action="{{ url_for('auth.passwordless', next=request.args.get('next')) }}" role="login" class="navbar-form form-inline">
+        {{ form.hidden_tag() }}
+        <div class="form-group">
+          {{ form.username(placeholder="e-mail @", class_="form-control") }}
+          <button type="submit" class="btn btn-default btn-primary btn-submit">Login</button>
+        </div>
+      </form>
+    </div>
+  {% endif %}
+
   {% if config.DRIBDAT_ALLOW_LOGINS %}
-    {% if oauth_type %}
-        <p>Or log in with your username or e-mail:</p>
+    {% if oauth_type or config.MAIL_SERVER %}
+        <p>Or log in with your Dribdat credentials here:</p>
     {% endif %}
 
     <form id="loginForm" method="POST" action="{{ url_for('auth.login', next=request.args.get('next')) }}" role="login" class="navbar-form form-inline">
       {{ form.hidden_tag() }}
       <div class="form-group">
-        {{ form.username(placeholder="user", class_="form-control") }}
-        {{ form.password(placeholder="pwd", class_="form-control") }}
+        {{ form.username(placeholder="username", class_="form-control") }}
+        {{ form.password(placeholder="password", class_="form-control") }}
         <button type="submit" class="btn btn-default btn-primary btn-submit">Verify me</button>
       </div>
     </form>

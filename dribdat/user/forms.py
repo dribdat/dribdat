@@ -96,7 +96,7 @@ class RegisterForm(FlaskForm):
 class EmailForm(FlaskForm):
     """Just the e-mail, please."""
 
-    email = EmailField('Email',
+    username = EmailField('Email',
                        validators=[
                             DataRequired(), Email(), Length(min=6, max=40)])
     submit = SubmitField(u'Continue')

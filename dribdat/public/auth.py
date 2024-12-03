@@ -187,8 +187,7 @@ def forgot():
 @blueprint.route("/passwordless/", methods=['POST'])
 def passwordless():
     """Log in a new user via e-mail."""
-    if current_app.config['DRIBDAT_NOT_REGISTER'] or \
-       not current_app.config['MAIL_SERVER']:
+    if not current_app.config['MAIL_SERVER']:
         flash("Passwordless login currently not possible.", 'warning')
         return redirect(url_for("auth.login", local=1))
     form = EmailForm(request.form)
@@ -201,14 +200,14 @@ def passwordless():
         + "an activation mail. Check your Spam folder if you do not. "
         + "Then click the link in that e-mail to log into this application.",
         'success')
-    a_user = User.query.filter_by(email=form.email.data).first()
+    a_user = User.query.filter_by(email=form.username.data).first()
     if a_user:
         # Continue with reset
         user_activation(a_user)
     else:
-        current_app.logger.warn('User not found: %s' % form.email.data)
+        current_app.logger.warn('User not found: %s' % form.username.data)
     # Don't let people spy on your address
-    return redirect(url_for("auth.login"))
+    return redirect(url_for("public.home"))
 
 
 @blueprint.route('/user/profile/delete', methods=['POST'])
@@ -431,18 +430,24 @@ def oauth2_login():
         flash('Access denied', 'danger')
         return redirect(url_for("auth.login", local=1))
     # Get remote user data
-    resp = oauth2.get("/userinfo")
+    userinfo_url = current_app.config['OAUTH_USERINFO']
+    resp = oauth2.get(userinfo_url or "/userinfo")
     if not resp.ok:
         flash('Unable to access your user data', 'danger')
         return redirect(url_for("auth.login", local=1))
     resp_data = resp.json()
-    if 'nickname' not in resp_data:
+    nickname = ''
+    if 'nickname' in resp_data:
+        nickname = resp_data['nickname']
+    elif 'name' in resp_data:
+        nickname = resp_data['name']
+    if not nickname or not 'sub' in resp_data or not 'email' in resp_data:
         flash('Invalid authentication data format', 'danger')
         # print(resp_data)
         return redirect(url_for("auth.login", local=1))
     return get_or_create_sso_user(
         resp_data['sub'],
-        resp_data['nickname'],
+        nickname,
         resp_data['email'],
     )
 
