@@ -204,10 +204,10 @@ def passwordless():
     if a_user:
         # Continue with reset
         user_activation(a_user)
-        return redirect(url_for("public.home"))
-    current_app.logger.warn('User not found: %s' % form.username.data)
+    else:
+        current_app.logger.warn('User not found: %s' % form.username.data)
     # Don't let people spy on your address
-    return redirect(url_for("auth.login"))
+    return redirect(url_for("public.home"))
 
 
 @blueprint.route('/user/profile/delete', methods=['POST'])

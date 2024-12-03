@@ -63,7 +63,7 @@
   {% endif %}
 
   {% if config.MAIL_SERVER %}
-    <p>Enter an e-mail address you registered with to receive a login link:</p>
+    <p>Enter your e-mail address to get a login link:</p>
     <div class="form-passwordless mb-5">
       <form id="passwordlessForm" method="POST" action="{{ url_for('auth.passwordless', next=request.args.get('next')) }}" role="login" class="navbar-form form-inline">
         {{ form.hidden_tag() }}
