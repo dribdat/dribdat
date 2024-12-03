@@ -173,9 +173,10 @@ def register(filename, testonly=False):
 @click.command()
 @click.option('-0', '--lowscore', is_flag=True, help="Users with a low score")
 @click.option('-i', '--inactive', is_flag=True, help="Users which are not active")
+@click.option('-o', '--withsso', is_flag=True, help="Include users with active SSO")
 @click.option('-d', '--delete', is_flag=True, help="Delete users, not just deactivate them")
 @click.option('-s', '--score', required=False, default=0, help="What counts as a minimum low score")
-def kick(lowscore: bool, inactive: bool, delete: bool, score: int):
+def kick(lowscore: bool, inactive: bool, withsso: bool, delete: bool, score: int):
     """Cull inactive accounts on the system."""
     with create_app().app_context():
         q_active = User.query.filter_by(active=True, is_admin=False)
@@ -202,10 +203,11 @@ def kick(lowscore: bool, inactive: bool, delete: bool, score: int):
         else:
             del_query = q_active.all()
         for u in del_query:
-            if not lowscore:
-                del_targets.append(u)
-            elif not u.posted_challenges() and not u.joined_projects() and u.get_score() < score:
-                del_targets.append(u)
+            if withsso or not u.sso_id:
+                if not lowscore:
+                    del_targets.append(u)
+                elif not u.posted_challenges() and not u.joined_projects() and u.get_score() < score:
+                    del_targets.append(u)
 
         if len(del_targets) > 0:
             print('This will affect a total of %d users' % len(del_targets))
