@@ -215,7 +215,11 @@ def kick(lowscore: bool, inactive: bool, delete: bool, score: int):
             print('---------------------------------------------------------------')
             print('username,fullname,email,webpage_url')
             for u in del_targets:
-                u.delete()
+                if delete:
+                    u.delete()
+                else:
+                    u.active = False
+                    u.save()
                 print(','.join([u.username, u.fullname or '', u.email, u.webpage_url or '']))
                 delcount = delcount + 1
             print('---------------------------------------------------------------')
