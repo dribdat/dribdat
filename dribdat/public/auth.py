@@ -436,13 +436,18 @@ def oauth2_login():
         flash('Unable to access your user data', 'danger')
         return redirect(url_for("auth.login", local=1))
     resp_data = resp.json()
-    if 'nickname' not in resp_data and 'name' not in resp_data:
+    nickname = ''
+    if 'nickname' in resp_data:
+        nickname = resp_data['nickname']
+    elif 'name' in resp_data:
+        nickname = resp_data['name']
+    if not nickname or not 'sub' in resp_data or not 'email' in resp_data:
         flash('Invalid authentication data format', 'danger')
         # print(resp_data)
         return redirect(url_for("auth.login", local=1))
     return get_or_create_sso_user(
         resp_data['sub'],
-        resp_data['nickname'] or resp_data['name'],
+        nickname,
         resp_data['email'],
     )
 
