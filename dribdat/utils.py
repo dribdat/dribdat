@@ -16,6 +16,15 @@ from random import SystemRandom
 
 import re, string
 
+from markdown_it import MarkdownIt
+
+# Instantiate Markdown parser
+md = MarkdownIt()
+
+def markdownit(content):
+    """ Converts a value to Markdown """
+    return md.render(content)
+
 def strtobool(text):
     """Truthy conversion as per PEP 632."""
     tls = str(text).lower().strip()

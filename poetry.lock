@@ -973,21 +973,6 @@ Flask = ">=0.9"
 Flask-SQLAlchemy = ">=1.0"
 
 [[package]]
-name = "flask-misaka"
-version = "1.0.1"
-description = "A pleasant interface between the Flask web framework and the Misaka Markdown parser."
-optional = false
-python-versions = "*"
-files = [
-    {file = "Flask-Misaka-1.0.1.tar.gz", hash = "sha256:5dc58780b79666c107bdd301764b658d56a97a22af06e716b281d641a98a29fa"},
-    {file = "Flask_Misaka-1.0.1-py3-none-any.whl", hash = "sha256:10a39185b4d3f1bd306ff827deb8d20c8121176e6b26c3d962c15845655f43ce"},
-]
-
-[package.dependencies]
-markupsafe = "*"
-misaka = ">=2.0,<3.0"
-
-[[package]]
 name = "flask-openapi3"
 version = "3.1.3"
 description = "Generate REST API and OpenAPI documentation for your Flask project."
@@ -1756,6 +1741,26 @@ files = [
 ]
 
 [[package]]
+name = "linkify-it-py"
+version = "2.0.3"
+description = "Links recognition library with FULL unicode support."
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "linkify-it-py-2.0.3.tar.gz", hash = "sha256:68cda27e162e9215c17d786649d1da0021a451bdc436ef9e0fa0ba5234b9b048"},
+    {file = "linkify_it_py-2.0.3-py3-none-any.whl", hash = "sha256:6bcbc417b0ac14323382aef5c5192c0075bf8a9d6b41820a2b66371eac6b6d79"},
+]
+
+[package.dependencies]
+uc-micro-py = "*"
+
+[package.extras]
+benchmark = ["pytest", "pytest-benchmark"]
+dev = ["black", "flake8", "isort", "pre-commit", "pyproject-flake8"]
+doc = ["myst-parser", "sphinx", "sphinx-book-theme"]
+test = ["coverage", "pytest", "pytest-cov"]
+
+[[package]]
 name = "lxml"
 version = "5.3.0"
 description = "Powerful and Pythonic XML processing library combining libxml2/libxslt with the ElementTree API."
@@ -2068,19 +2073,6 @@ python-versions = "*"
 files = [
     {file = "micawber-0.5.6.tar.gz", hash = "sha256:20dc4e074c17a741880b489cf2558845c050987f5b796c8ff07ea2ff011a8c8d"},
 ]
-
-[[package]]
-name = "misaka"
-version = "2.1.1"
-description = "A CFFI binding for Hoedown, a markdown parsing library."
-optional = false
-python-versions = "*"
-files = [
-    {file = "misaka-2.1.1.tar.gz", hash = "sha256:62f35254550095d899fc2ab8b33e156fc5e674176f074959cbca43cf7912ecd7"},
-]
-
-[package.dependencies]
-cffi = ">=1.0.0"
 
 [[package]]
 name = "mkdocs-material-extensions"
@@ -3254,6 +3246,20 @@ files = [
 ]
 
 [[package]]
+name = "uc-micro-py"
+version = "1.0.3"
+description = "Micro subset of unicode data files for linkify-it-py projects."
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "uc-micro-py-1.0.3.tar.gz", hash = "sha256:d321b92cff673ec58027c04015fcaa8bb1e005478643ff4a500882eaab88c48a"},
+    {file = "uc_micro_py-1.0.3-py3-none-any.whl", hash = "sha256:db1dffff340817673d7b466ec86114a9dc0e9d4d9b5ba229d9d60e5c12600cd5"},
+]
+
+[package.extras]
+test = ["coverage", "pytest", "pytest-cov"]
+
+[[package]]
 name = "urllib3"
 version = "1.26.20"
 description = "HTTP library with thread-safe connection pooling, file post, and more."
@@ -3510,4 +3516,4 @@ testing = ["coverage[toml]", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.9,<4"
-content-hash = "afbe51e07b1eebf0d479a53337fea85ccece703fc8cd6374a008fd22c920abba"
+content-hash = "58c698f93bf65093a30e23edb14b377a9abef0ea61354a3940a954b972d6596f"
