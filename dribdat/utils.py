@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """Helper utilities and decorators."""
-from flask import flash, current_app
+from flask import flash, current_app, Markup
 from urllib.parse import quote
 from math import floor
 from os import path
@@ -23,7 +23,7 @@ md = MarkdownIt()
 
 def markdownit(content):
     """ Converts a value to Markdown """
-    return md.render(content)
+    return Markup(md.render(content))
 
 def strtobool(text):
     """Truthy conversion as per PEP 632."""

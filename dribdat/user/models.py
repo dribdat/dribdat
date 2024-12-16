@@ -215,7 +215,7 @@ class User(UserMixin, PkModel):
             if vtype in vvdata and len(vvdata[vtype]) > 0:
                 for vv in vvdata[vtype]:
                     if not vtype in vvlist:
-                        vvlist[vtype] = []   
+                        vvlist[vtype] = []
                     vvlist[vtype].append({
                         'date': get_any_key(vv, ['startDate', 'date']),
                         'name': get_any_key(vv, ['name', 'institution', 'organization', 'language']),
