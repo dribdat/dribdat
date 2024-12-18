@@ -644,7 +644,7 @@ class Project(PkModel):
     download_url = Column(db.String(2048), nullable=True)
 
     is_hidden = Column(db.Boolean(), default=False)
-    is_webembed = Column(db.Boolean(), default=False)
+    is_webembed = Column(db.Boolean(), default=True)
     # remotely managed (by bot)
     is_autoupdate = Column(db.Boolean(), default=True)
 

@@ -70,11 +70,11 @@ class ProjectForm(FlaskForm):
         description="Markdown supported. Put a link"
         + " to supported sites (SpeakerDeck, YouTube,..) on a line for a preview."
         + " No copypasta - use the 'Upload Image' button.")
+    is_webembed = BooleanField(u'Embed Presentation, or show Pitch as slide deck')
     webpage_url = URLField(
         u'Presentation', [length(max=2048)],
         description="URL to a live demo, presentation, or a link to get "
         + "more information.")
-    is_webembed = BooleanField(u'Embed the Presentation link, or show the Pitch as a slide deck')
     autotext_url = URLField(
         u'Readme link', [length(max=255)],
         description="URL to a code repository, document, or wiki to Sync with. 💡 Tips: dribdat.cc/sync")
