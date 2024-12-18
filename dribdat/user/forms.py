@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """User account forms."""
 
-from flask_wtf import FlaskForm
+from flask_wtf import FlaskForm, RecaptchaField
 from wtforms import (
     SubmitField,
     PasswordField,
@@ -70,6 +70,7 @@ class RegisterForm(FlaskForm):
                                 'password',
                                 message='Passwords must match')])
     webpage_url = URLField(u'Online profile')
+    recaptcha = RecaptchaField()
 
     def __init__(self, *args, **kwargs):
         """Create instance."""
@@ -100,6 +101,7 @@ class EmailForm(FlaskForm):
                        validators=[
                             DataRequired(), Email(), Length(min=6, max=40)])
     submit = SubmitField(u'Continue')
+    recaptcha = RecaptchaField()
 
 
 class UserForm(FlaskForm):

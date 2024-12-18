@@ -45,6 +45,11 @@
             {{form.confirm.label}}
             {{form.confirm(placeholder="Password (again)", class_="form-control")}}
         </div>
+        {% if config.RECAPTCHA_PUBLIC_KEY %}
+            <div class="form-group text-center">
+                {{ form.recaptcha }}
+            </div>
+        {% endif %}
         <div class="form-actions">
             <input class="btn btn-primary btn-lg btn-submit" type="submit" value="Register">
         </div>

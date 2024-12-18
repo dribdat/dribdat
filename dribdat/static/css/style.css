@@ -1644,6 +1644,9 @@ nav .nav-login {
 .userform .form-group input {
     margin-right: 0.5em;
 }
+.form-group .g-recaptcha > div {
+    display: inline-block;
+}
 .userform .form-actions {
     clear: both;
     display: block;
