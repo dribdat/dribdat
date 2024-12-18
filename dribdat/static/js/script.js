@@ -272,14 +272,14 @@
   $('.project-longtext, .project-autotext, .timeline .content').each(function() {
     $(this).find('img').each(function() {
       const imgtag = $(this);
-      if (imgtag.width() < 260 || imgtag.height() < 260) { return; }
+      //if (imgtag.width() < 260 || imgtag.height() < 260) { return; }
       const mysrc = imgtag.attr('src');
       if (imgtag.parent().tagName !== 'A') {
-        imgtag.wrap('<a href="' + mysrc + '"></a>');
+        imgtag.wrap('<a title="🔍" href="' + mysrc + '"></a>');
         imgtag.parent().addClass('lightboxed');
+        hasLightbox = true;
       }
     });
-    hasLightbox = true;
   });
   if (hasLightbox) {
     let gallery = new SimpleLightbox('.lightboxed');

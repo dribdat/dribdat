@@ -207,13 +207,15 @@
       <div class="win-size-grip"></div>
     </div>
   {% elif project.is_webembed and '---' in project.longtext %}
-    <div class="reveal">
-      <div class="slides">
-        <section data-markdown>
-          <script type="text/template">
-            {{ project.longtext|safe }}
-          </script>
-        </section>
+    <div class="project-webembed resizable">
+      <div class="reveal">
+        <div class="slides">
+          <section data-markdown>
+            <script type="text/template">
+              {{ project.longtext|safe }}
+            </script>
+          </section>
+        </div>
       </div>
     </div>
   {% endif %}

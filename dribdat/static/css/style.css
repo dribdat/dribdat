@@ -1135,13 +1135,13 @@ nav .nav-login {
     clear: both;
     display: block;
 }
-.project-page .lightboxed:hover:before {
+/*.project-page .lightboxed:hover:before {
     content: "🔍";
     font-size: 2rem;
     position: absolute;
     vertical-align: top;
     margin-left: 0.4rem;
-}
+}*/
 .project-page .project-autotext .card,
 .project-page .project-longtext .card {
     background: none;
