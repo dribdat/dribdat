@@ -206,7 +206,7 @@
       {% if project.webpage_url %}
         {{ project.webembed|safe }}
         <div class="win-size-grip"></div>
-      {% else %}
+      {% elif '---' in project.longtext or '***' in project.longtext %}
         <div class="reveal">
           <div class="slides">
             <section data-markdown>
