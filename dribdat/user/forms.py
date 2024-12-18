@@ -26,6 +26,7 @@ class LoginForm(FlaskForm):
 
     username = StringField('Username', validators=[DataRequired()])
     password = PasswordField('Password', validators=[DataRequired()])
+    recaptcha = RecaptchaField()
 
     def __init__(self, *args, **kwargs):
         """Create instance."""

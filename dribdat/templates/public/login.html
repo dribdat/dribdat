@@ -12,10 +12,6 @@
     <p>
       {{ config.DRIBDAT_HELP_REGISTER|markdown }}
     </p>
-  {% elif oauth_type %}
-    <p>
-      Use this button to use your {{ oauth_type|capitalize }} account:
-    </p>
   {% endif %}
 
   {% if oauth_type == 'slack' %}
@@ -87,6 +83,12 @@
         {{ form.password(placeholder="password", class_="form-control") }}
         <button type="submit" class="btn btn-default btn-primary btn-submit">Verify me</button>
       </div>
+      
+      {% if config.RECAPTCHA_PUBLIC_KEY %}
+          <div class="form-group text-center">
+              {{ form.recaptcha }}
+          </div>
+      {% endif %}
     </form>
     <br>
     <p>
