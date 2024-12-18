@@ -23,18 +23,19 @@
             {{form.username(placeholder="Name", class_="form-control")}}
         </div>
         <div class="form-group">
-            {{form.email.label}}
-            <p><i>For a profile image, create a
-                <a href="https://gravatar.com" target="_blank">Gravatar</a>
-                with this address.
-            </i></p>
-            {{form.email(placeholder="Email", class_="form-control")}}
-        </div>
-        <div class="form-group">
             {{form.webpage_url.label}}
-            <p><i>URL to your homepage or GitHub, Twitter, ... account.
+            <p><i>URL to your homepage or social media account:
             </i></p>
             {{form.webpage_url(placeholder="https://", class_="form-control")}}
+        </div>
+        <div class="form-group">
+            {{form.email.label}}
+            <p><i>Your profile image will be the
+                <a href="https://gravatar.com" target="_blank">Gravatar</a>
+                of this address, or imported
+                <br>from the above account (GitHub, GitLab, LinkedIn, StackOverflow):
+            </i></p>
+            {{form.email(placeholder="Email", class_="form-control")}}
         </div>
         <div class="form-group">
             {{form.password.label}}

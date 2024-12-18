@@ -2154,6 +2154,7 @@ a.go-up {
     font-family: monospace;
     font-size: 120%;
     padding: 1em 1em 0.1em;
+    margin-bottom: 1.5em;
     border-left: 1px solid rgba(0, 0, 0, 0.3);
     border-top: 1px solid rgba(0, 0, 0, 0.3);
     border-radius: 0.5em;

@@ -45,9 +45,7 @@
     <div class="col-md-3 socialwall">
         <div id="activities"></div>
 
-      {% if with_social_wall == 'twitter' %}
-        <a class="twitter-timeline" data-width="340" data-height="900" data-dnt="true" data-theme="light" data-link-color="#E95F28" href="{{ current_event.community_url }}">Tweets</a> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
-      {% elif with_social_wall == 'mastodon' %}
+      {% if with_social_wall == 'mastodon' %}
         <iframe allowfullscreen sandbox="allow-top-navigation allow-scripts allow-popups allow-popups-to-escape-sandbox" width="100%" height="67%" src="https://www.mastofeed.com/apiv2/feed?userurl={{ wall_url }}&theme=light&size=100&header=false&replies=false&boosts=true" frameborder="0"></iframe>
       {% endif %}
     </div>

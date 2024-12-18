@@ -38,12 +38,8 @@ def dashboard():
     if not event:
         return 'No current event'
     wall_url = wall = None
-    social_domains = ['twitter.com']
     host = urlparse(event.community_url).hostname
-    if host == 'twitter.com' or host == 'mobile.twitter.com':
-        wall = 'twitter'
-        wall_url = event.community_url + '?ref_src=twsrc%5Etfw'
-    elif host == 'mastodon.social': # TODO: configure custom Mastodon provider via ENV-variable
+    if host == 'mastodon.social': # TODO: configure custom Mastodon provider via ENV-variable
         wall = 'mastodon'
         userpart = event.community_url.split('/@')[-1]
         wall_url = 'https%3A%2F%2F%40' + userpart + '%40' + host + '%2Fusers%2F' + userpart.lower()
