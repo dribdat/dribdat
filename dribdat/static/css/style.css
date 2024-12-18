@@ -959,6 +959,7 @@ nav .nav-login {
 
 /* --- Progress bars on projects --- */
 
+/*
 .project .progress {
     z-index: 999;
     opacity: 0;
@@ -976,6 +977,7 @@ nav .nav-login {
 .project:hover .progress {
     opacity: 0.8;
 }
+*/
 .project .progress .progress-bar {
     background-color: #aaa;
 }
@@ -2121,9 +2123,9 @@ a.go-up {
 .profile-projects .card:hover {
     box-shadow: 3px 3px 3px lightblue;
 }
-.profile-projects .card .project-image {
-    height: 100%;
-    max-width: 40%;
+.profile-projects .card .card-img-left {
+    max-height: 200px;
+    max-width: 200px;
     padding: 0px;
     margin-right: 1em;
     float: left;

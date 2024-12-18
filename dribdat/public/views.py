@@ -294,8 +294,11 @@ def event_stages(event_id):
     for s in steps:
         if 'projects' not in s:
             s['projects'] = []
-        project_list = [p.data for p in projects.filter_by(
-            progress=s['id']).all()]
+        project_list = []
+        for p in projects.filter_by(progress=s['id']).all():
+            pp = p.data
+            pp['stats'] = p.get_stats()
+            project_list.append(pp)
         s['projects'].extend(project_list)
     return render_template("public/eventstages.html",
                            current_event=event, steps=steps, active="stages")
