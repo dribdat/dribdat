@@ -34,15 +34,17 @@
   {% block page_meta %}{% endblock %}
 
   {% if config.ENV == 'prod' %}
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@4/dist/{{ config.DRIBDAT_THEME }}/bootstrap.min.css" alt-href="https://cdn.jsdelivr.net/npm/bootswatch@4/dist/darkly/bootstrap.min.css" id="css-bootswatch"/>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@5/dist/{{ config.DRIBDAT_THEME }}/bootstrap.min.css" alt-href="https://cdn.jsdelivr.net/npm/bootswatch@5/dist/darkly/bootstrap.min.css" id="css-bootswatch"/>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flipdown@0/dist/flipdown.min.css"/>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4/css/font-awesome.min.css"/>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simplelightbox@2/dist/simple-lightbox.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5/dist/reveal.min.css">
   {% else %}
   <link rel="stylesheet" href="{{ url_for('static', filename='libs/bootswatch/' + config.DRIBDAT_THEME + '/bootstrap.css')}}" alt-href="{{ url_for('static', filename='libs/bootswatch/darkly/bootstrap.css')}}" id="css-bootswatch"/>
   <link rel="stylesheet" href="{{ url_for('static', filename='libs/flipdown/flipdown.css')}}"/>
   <link rel="stylesheet" href="{{ url_for('static', filename='libs/font-awesome/css/font-awesome.css')}}"/>
   <link rel="stylesheet" href="{{ url_for('static', filename='libs/simplelightbox/simple-lightbox.css')}}"/>
+  <link rel="stylesheet" href="{{ url_for('static', filename='libs/reveal/dist/reveal.css')}}"/>
   {% endif %}
 
   {% assets "css_all" %}
@@ -102,9 +104,11 @@
   <script src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/jquery-resizable-dom@0/dist/jquery-resizable.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/flipdown@0/dist/flipdown.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1/qrcode.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/simplelightbox@2/dist/simple-lightbox.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5/dist/reveal.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5/plugin/markdown/markdown.js"></script>
 {% else %}
   <script src="{{ url_for('static', filename='libs/jquery/jquery.js')}}"></script>
   <script src="{{ url_for('static', filename='libs/jquery-resizable/jquery-resizable.js') }}"></script>
@@ -112,6 +116,8 @@
   <script src="{{ url_for('static', filename='libs/bootstrap/bootstrap.bundle.js')}}"></script>
   <script src="{{ url_for('static', filename='libs/qrcodejs/qrcode.js')}}"></script>
   <script src="{{ url_for('static', filename='libs/simplelightbox/simple-lightbox.js')}}"></script>
+  <script src="{{ url_for('static', filename='libs/reveal/dist/reveal.js')}}"></script>
+  <script src="{{ url_for('static', filename='libs/reveal/plugin/markdown/markdown.js')}}"></script>
 {% endif %}
 {% assets "js_all" %}
   <script type="text/javascript" src="{{ ASSET_URL }}"></script>

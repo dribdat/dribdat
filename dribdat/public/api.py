@@ -392,7 +392,7 @@ def event_push_csv(filedata, dry_run=False):
 @blueprint.route('/event/current/get/status', methods=["GET"])
 def event_get_status():
     """Get current event status."""
-    event = get_current_event()
+    event = Event.query.filter_by(is_current=True).first() # ignore 404
     if not event:
         return jsonify(status='')
     return jsonify(status=event.status_text or '')

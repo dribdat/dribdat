@@ -61,10 +61,10 @@
       {% endif %}
 
       {% if step.projects %}
-      <div class="profile-projects honeycomb mt-5">
+      <div class="profile-projects honeycomb mt-2">
           <div class="row ibws-fix">
           {% for project in step.projects %}
-              {{ misc.render_project_hexagon(project) }}
+              {{ misc.render_project_card(project) }}
           {% endfor %}
           </div>
       </div><!-- /profile-projects -->
