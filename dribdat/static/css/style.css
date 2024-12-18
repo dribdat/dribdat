@@ -1269,6 +1269,7 @@ nav .nav-login {
 .timeline-card .close {
     margin: 0.4em;
     color: black;
+    text-decoration: none;
 }
 .timeline-card.timeline-content {
     overflow: hidden;
