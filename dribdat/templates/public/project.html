@@ -201,22 +201,20 @@
 
 <div class="tab-content clear-both" id="project-content">
 
-  {% if project.is_webembed %}
+  {% if project.is_webembed and project.webpage_url %}
     <div class="project-webembed resizable">
-      {% if project.webpage_url %}
-        {{ project.webembed|safe }}
-        <div class="win-size-grip"></div>
-      {% elif '---' in project.longtext %}
-        <div class="reveal">
-          <div class="slides">
-            <section data-markdown>
-              <script type="text/template">
-                {{ project.longtext|safe }}
-              </script>
-            </section>
-          </div>
-        </div>
-      {% endif %}
+      {{ project.webembed|safe }}
+      <div class="win-size-grip"></div>
+    </div>
+  {% elif project.is_webembed and '---' in project.longtext %}
+    <div class="reveal">
+      <div class="slides">
+        <section data-markdown>
+          <script type="text/template">
+            {{ project.longtext|safe }}
+          </script>
+        </section>
+      </div>
     </div>
   {% endif %}
 
