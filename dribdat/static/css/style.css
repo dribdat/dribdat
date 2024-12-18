@@ -2588,6 +2588,10 @@ SlackIn button
     margin-bottom: 1em;
 }
 
+#loginForm {
+    max-width: 32em;
+}
+
 .account-register a {
     margin-left: 3.5em;
     font-size: 125%;
