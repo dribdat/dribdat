@@ -165,10 +165,6 @@ class User(UserMixin, PkModel):
         elif host == 'gitlab.com':
             self.cardtype = 'gitlab'
             self.carddata = FetchGitlabAvatar(self.email)
-        elif host == 'twitter.com':
-            self.cardtype = 'twitter-square'
-            # username = self.webpage_url.strip('/').split('/')[-1]
-            # self.carddata = FetchTwitterAvatar(username)
         elif host == 'linkedin.com':
             self.cardtype = 'linkedin-square'
         elif host and host.endswith('stackoverflow.com'):
@@ -648,7 +644,7 @@ class Project(PkModel):
     download_url = Column(db.String(2048), nullable=True)
 
     is_hidden = Column(db.Boolean(), default=False)
-    is_webembed = Column(db.Boolean(), default=False)
+    is_webembed = Column(db.Boolean(), default=True)
     # remotely managed (by bot)
     is_autoupdate = Column(db.Boolean(), default=True)
 
