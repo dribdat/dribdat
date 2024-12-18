@@ -3,13 +3,11 @@
 
 from flask import Flask, render_template
 from flask_cors import CORS
-from flask_misaka import Misaka
 from flask_mailman import Mail
 from flask_talisman import Talisman
 from werkzeug.middleware.proxy_fix import ProxyFix
 from micawber.providers import bootstrap_basic
 from whitenoise import WhiteNoise
-from datetime import datetime
 from urllib.parse import quote_plus
 from dribdat import commands, public, admin
 from dribdat.assets import assets  # noqa: I005
@@ -22,7 +20,7 @@ from dribdat.extensions import (
     migrate,
 )
 from dribdat.settings import ProdConfig  # noqa: I005
-from dribdat.utils import timesince
+from dribdat.utils import timesince, markdownit
 from dribdat.onebox import make_oembedplus
 from pytz import timezone
 
@@ -147,8 +145,11 @@ def register_filters(app):
     """Register filters for templates."""
     #
     # Conversion of Markdown to HTML
-    Misaka(app, autolink=True, fenced_code=True,
-           strikethrough=True, tables=True)
+    @app.template_filter()
+    def markdown(value):
+        return markdownit(value)
+
+    #Misaka(app, autolink=True, fenced_code=True, strikethrough=True, tables=True)
 
     # Registration of handlers for micawber
     app.oembed_providers = bootstrap_basic()

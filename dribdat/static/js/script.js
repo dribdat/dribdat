@@ -272,14 +272,14 @@
   $('.project-longtext, .project-autotext, .timeline .content').each(function() {
     $(this).find('img').each(function() {
       const imgtag = $(this);
-      if (imgtag.width() < 260 || imgtag.height() < 260) { return; }
+      //if (imgtag.width() < 260 || imgtag.height() < 260) { return; }
       const mysrc = imgtag.attr('src');
       if (imgtag.parent().tagName !== 'A') {
-        imgtag.wrap('<a href="' + mysrc + '"></a>');
+        imgtag.wrap('<a title="🔍" href="' + mysrc + '"></a>');
         imgtag.parent().addClass('lightboxed');
+        hasLightbox = true;
       }
     });
-    hasLightbox = true;
   });
   if (hasLightbox) {
     let gallery = new SimpleLightbox('.lightboxed');
@@ -324,6 +324,23 @@
       });
     });
   });
+
+
+  // Initialize slideshow
+  if ($('.reveal').length > 0) {
+    Reveal.initialize({
+      embedded: true,
+      keyboardCondition: 'focused', // only react to keys when focused
+      plugins: [ RevealMarkdown ],
+
+      dependencies: [
+        { src: '/static/libs/reveal/plugin/markdown/markdown.js', condition: () => {
+            return !!document.querySelector('[data-markdown]');
+        } }
+      ]
+    });
+    $('#project-md').hide();
+  }
 
 
   // Ye olde darke moude
@@ -371,7 +388,7 @@
     });
 
     // Initialise carousel
-    $('.carousel').carousel();
+    $('.carousel').each(function() { $(this).carousel(); });
   }
 
 

@@ -47,7 +47,7 @@ def oauth_type():
 @login_manager.unauthorized_handler
 def handle_needs_login():
     """Override default handler with next parameter."""
-    flash("You must be logged in to access this page.")
+    #flash("You must be logged in to access this page.")
     return redirect(url_for('auth.login', next=request.path))
 
 
@@ -71,6 +71,9 @@ def login():
         if not request.args.get('local') and oauth_type():
             return redirect(url_for(oauth_type() + '.login'))
     form = LoginForm(request.form)
+    # If Captcha is not configured, skip the validation
+    if not current_app.config['RECAPTCHA_PUBLIC_KEY']:
+        del form.recaptcha
     # Handle logging in
     if request.method == 'POST':
         if form.is_submitted() and form.validate():
@@ -103,6 +106,9 @@ def register():
         form.email.data = request.args.get('email')
     if request.args.get('web') and not form.webpage_url.data:
         form.webpage_url.data = request.args.get('web')
+    # If Captcha is not configured, skip the validation
+    if not current_app.config['RECAPTCHA_PUBLIC_KEY']:
+        del form.recaptcha
     if not (form.is_submitted() and form.validate()):
         flash_errors(form)
         logout_user()

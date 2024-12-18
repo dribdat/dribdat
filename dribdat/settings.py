@@ -97,6 +97,15 @@ class Config(object):
     S3_HTTPS = os_env.get('S3_HTTPS', None)
     S3_ENDPOINT = os_env.get('S3_ENDPOINT', None)
 
+    # Recaptcha support
+    RECAPTCHA_PUBLIC_KEY = os_env.get('RECAPTCHA_PUBLIC_KEY', None)
+    RECAPTCHA_PRIVATE_KEY = os_env.get('RECAPTCHA_PRIVATE_KEY', None)
+    RECAPTCHA_API_SERVER = os_env.get('RECAPTCHA_API_SERVER', None)
+    RECAPTCHA_PARAMETERS = os_env.get('RECAPTCHA_PARAMETERS', None)
+    RECAPTCHA_DATA_ATTRS = os_env.get('RECAPTCHA_DATA_ATTRS', {})
+    RECAPTCHA_VERIFY_SERVER = os_env.get('RECAPTCHA_VERIFY_SERVER', None)
+    RECAPTCHA_SCRIPT = os_env.get('RECAPTCHA_SCRIPT', None)
+
 
 class ProdConfig(Config):
     """Production configuration."""

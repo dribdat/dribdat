@@ -1,6 +1,10 @@
-Planning your next event? Here are tips for hackathon guru meditation. _[Skip this page](/event/new)_
+#### Planning your next event? Read these tips for hackathon guru meditation, or _[Skip this page](/event/new)_ to continue.
 
-## 🏁 Challenges
+---
+
+<center><h1>🏁</h1></center>
+
+## Challenges
 
 The starting point of [awesome hackathons](https://github.com/dribdat/awesome-hackathon?tab=readme-ov-file#awesome-hackathon):
 a short description of a problem, some initial ideas of solutions which can be realistically attempted during the time constraints of the event. Once you create your event page, you can attach challenges that the teams should respond to.
@@ -9,7 +13,11 @@ a short description of a problem, some initial ideas of solutions which can be r
 <label><input type="checkbox"> 2. Use the **Quickstart** section to share tips with challenge owners</label><br>
 <label><input type="checkbox"> 3. Create a **Template** event to make things easier here</label><br>
 
-## 👪 Team-building
+---
+
+<center><h1>👪</h1></center>
+
+## Team-building
 
 Some people like to hack on their own - for others, hackathons are all about collaboration and meeting new people. A team generally consists of 3 to 8 people. You can encourage your participants to set up a profile with roles that you can define in the _Presets_ menu to create a smooth team-building process.
 
@@ -17,7 +25,11 @@ Some people like to hack on their own - for others, hackathons are all about col
 <label><input type="checkbox"> 5. Encourage participants to create an online **Profile** here </label><br>
 <label><input type="checkbox"> 6. Facilitate team-building by having everyone try to **Join** a challenge </label><br>
 
-## 📦 Resources
+---
+
+<center><h1>📦</h1></center>
+
+## Resources
 
 When participants bring their own material (e.g. software or hardware), sharing is encouraged as long as the entire team can use them easily and legally. This is why we encourage the use of free, open source/open data, web-accessible. Try to help participants from a wide range experience levels to get started.
 
@@ -25,7 +37,11 @@ When participants bring their own material (e.g. software or hardware), sharing 
 <label><input type="checkbox"> 8. Set up a **Resources** area with tools and datasets recommended for each stage </label><br>
 <label><input type="checkbox"> 9. Customize the event **Stages** with your own hints and progression rules </label><br>
 
-## ☝️ Conduct
+---
+
+<center><h1>🏳️‍🌈</h1></center>
+
+## Conduct
 
 In the interest of creating a safe and inclusive environment, we strongly encourage applying clear terms and licenses to your event. We have provided an example at the bottom of every page, which you may modify, and also include a reference to in your opening presentation or e-mailed instructions.
 
@@ -33,4 +49,6 @@ In the interest of creating a safe and inclusive environment, we strongly encour
 <label><input type="checkbox"> B. Make sure that your organising team is ready to enforce the Code of Conduct, discuss your conditions with participants </label><br>
 <label><input type="checkbox"> C. Verify compliance during evaluation rounds, when issuing certificates, or other post-event analysis </label><br>
 
-_Disagree with something?_ Please raise [an issue](https://github.com/dribdat/dribdat/issues/new) or [Edit this page](https://github.com/dribdat/dribdat/blob/main/dribdat/templates/includes/eventstart.md).
+---
+
+_Disagree with something above?_ Please raise [an issue](https://github.com/dribdat/dribdat/issues/new) or [Edit this page](https://github.com/dribdat/dribdat/blob/main/dribdat/templates/includes/eventstart.md).

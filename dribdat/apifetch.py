@@ -7,7 +7,6 @@ import bleach
 import logging
 from pyquery import PyQuery as pq  # noqa: N813
 from base64 import b64decode
-from flask_misaka import markdown
 from bleach.sanitizer import ALLOWED_ATTRIBUTES
 from urllib.parse import quote_plus
 from .apievents import (
@@ -16,14 +15,13 @@ from .apievents import (
     fetch_commits_gitea,
 )
 from .utils import (
-    sanitize_url, load_presets, load_yaml_presets, fix_relative_links
+    sanitize_url, load_presets, load_yaml_presets, fix_relative_links, markdownit
 )
 from future.standard_library import install_aliases
 install_aliases()
 
 # In seconds, how long to wait for API response
 REQUEST_TIMEOUT = 10
-
 
 def FetchStageConfig(url, top_element='stages', by_col='name'):
     """Download a remote YAML stages configuration."""
@@ -421,7 +419,7 @@ def FetchWebCodiMD(text, url):
     obj = {}
     obj['type'] = 'Markdown'
     obj['name'] = ptitle.text()
-    obj['description'] = markdown(content)
+    obj['description'] = markdownit(content)
     obj['source_url'] = url
     obj['logo_icon'] = 'outdent'
     return obj

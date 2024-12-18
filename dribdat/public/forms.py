@@ -65,19 +65,19 @@ class ProjectForm(FlaskForm):
         u'Summary', [length(max=2048)],
         render_kw={'maxlength': 2048, 'rows': 3},
         description="A short, plain-text description of your topic.")
-    webpage_url = URLField(
-        u'Presentation', [length(max=2048)],
-        description="URL to a live demo, presentation, or a link to get "
-        + "more information.")
-    is_webembed = BooleanField(u'Embed the Presentation on page')
     longtext = TextAreaField(
         u'Pitch', [length(max=64000)],
         description="Markdown supported. Put a link"
         + " to supported sites (SpeakerDeck, YouTube,..) on a line for a preview."
         + " No copypasta - use the 'Upload Image' button.")
+    is_webembed = BooleanField(u'Embed Presentation, or show Pitch as slide deck')
+    webpage_url = URLField(
+        u'Presentation', [length(max=2048)],
+        description="URL to a live demo, presentation, or a link to get "
+        + "more information.")
     autotext_url = URLField(
         u'Readme link', [length(max=255)],
-        description="URL to a code repository, document, or wiki to Sync with. 💡 Tips: dribdat.cc/sync")
+        description="URL to a code repository, document, or wiki 💡 Tips: dribdat.cc/sync")
     note = TextAreaField(
         u'What changed?',
         [length(max=280)],
