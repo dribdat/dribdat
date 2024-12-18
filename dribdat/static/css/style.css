@@ -1589,7 +1589,7 @@ nav .nav-login {
 .projectform form .autotext-indicator {
     display: block;
     margin-top: -4em;
-    height: 0px;
+    float: right;
 }
 .projectform form .autotext-indicator i {
     margin: 0px 1em;

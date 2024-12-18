@@ -77,7 +77,7 @@ class ProjectForm(FlaskForm):
         + "more information.")
     autotext_url = URLField(
         u'Readme link', [length(max=255)],
-        description="URL to a code repository, document, or wiki to Sync with. 💡 Tips: dribdat.cc/sync")
+        description="URL to a code repository, document, or wiki 💡 Tips: dribdat.cc/sync")
     note = TextAreaField(
         u'What changed?',
         [length(max=280)],
