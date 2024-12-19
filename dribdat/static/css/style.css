@@ -2142,8 +2142,8 @@ a.card {
     font-size: 10pt;
     color: #555;
 }
-.profile-projects .project-stats td {
-    width: 20%;
+.profile-projects .project-stats th {
+    width: 3em;
 }
 .profile-projects a:hover {
     text-decoration: none;
