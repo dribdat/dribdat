@@ -34,11 +34,6 @@
 					<i class="fa fa-users"></i>
 				{% endif %}
 			</div>
-		{% elif project.score and project.score > 0 %}
-			<div class="progress">
-				<div class="progress-bar" role="progressbar" aria-valuenow="{{project.score}}" aria-valuemin="0" aria-valuemax="70" style="width:{{project.score}}%">
-				</div>
-			</div>
 		{% endif %}
 	</a>
 {% endmacro %}
@@ -131,30 +126,31 @@
 		{% endif %}
     
     <div class="card-block px-2 p-3">
+
 		 <div class="card-body">
 
+				<h5 class="card-title">{{ project.name }}</h5>
+				<div class="card-text">
+					<p class="project-summary">
+						{{ project.summary }}
+					</p>
+					<table class="project-stats">
+			    	<th>People</th><td>{{ project.stats.people }}</td>
+			    	<th>Total</th><td>{{ project.stats.total }}</td>
+			    	<th>Dribs</th><td>{{ project.stats.updates }}</td>
+			    	<th>Start</th><td>{{ project.created_at }}</td>
+				  </table>
+				</div>
+	
 				{% if project.score and not project.is_challenge %}
-				<div class="project-score float-right">
-					<div class="progress" title="Summary of progress" style="width:260px">
+				<div class="project-score">
+					<div class="progress" title="Summary of progress">
 						<div class="progress-bar" role="progressbar" style="width:{{project.score}}%">{{project.score}}</div>
 					</div>
 				</div>
 				{% endif %}
-
-				<h5 class="card-title">{{ project.name }}</h5>
-				<div style="font-size:10pt; color: black">
-					{{ project.summary }}
-
-					<p class="project-stats"><table>
-			    	<th>People</th><td>{{ project.stats.people }} &nbsp;</td>
-			    	<th>Total</th><td>{{ project.stats.total }} &nbsp;</td>
-			    	<th>Dribs</th><td>{{ project.stats.updates }} &nbsp;</td>
-			    	<th>Start</th><td>{{ project.created_at }} &nbsp;</td>
-			    </table>
-					</p>
-				</div>
-
 			</div>
+
 		</div>
 	</a>
 {% endmacro %}

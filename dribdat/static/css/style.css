@@ -2115,6 +2115,9 @@ a.go-up {
     background-color: white;
     border-left: 1px solid #ccc;
 }
+a.card {
+    text-decoration: none;
+}
 .profile-projects .card {
     background-size: auto 100%;
     background-repeat: no-repeat;
@@ -2136,17 +2139,20 @@ a.go-up {
     height: 100%;
 }
 .profile-projects .card-text {
-    font-size: 90%;
+    font-size: 10pt;
     color: #555;
+}
+.profile-projects .project-stats td {
+    width: 20%;
 }
 .profile-projects a:hover {
     text-decoration: none;
 }
 .profile-projects .project-score {
-    float: right;
     margin: 5px;
     text-align: center;
-    width: 100px;
+    width: 160px;
+    display: block;
 }
 .profile-projects center {
     margin-top: 5px;
