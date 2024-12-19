@@ -6,8 +6,8 @@ stages:
     id: 0
     name: CHALLENGE
     phase: Challenge
-    description: 🚧 Define questions to answer with data about issues that matter.
-    tip: Advance to the next stage by posting an update.
+    description: Define questions to answer with data about issues that matter.
+    tip: 🚧 Advance to the next stage by posting an update.
     conditions:
       validate:
         -
@@ -25,8 +25,8 @@ stages:
     id: 5
     name: PROJECT
     phase: Project
-    description: 👪 Collecting resources together in a shared space.
-    tip: Find examples and resources to inspire your team.
+    description: Collecting resources together in a shared space.
+    tip: 👪 Find examples and resources to inspire your team.
     conditions:
       validate:
         -
@@ -41,8 +41,8 @@ stages:
     id: 10
     name: RESEARCH
     phase: Research
-    description: ⚗️ Scoping of data collection and prototyping strategy.
-    tip: Write down what you are doing regularly to stay on track.
+    description: Scoping of data collection and prototyping strategy.
+    tip: ⚗️ Write down what you are doing regularly to stay on track.
     conditions:
       validate:
         -
@@ -56,8 +56,8 @@ stages:
     id: 20
     name: SKETCH
     phase: Sketching
-    description: 🎨 Evaluating and explaining to humans and machines.
-    tip: The more you share, the more feedback you will get.
+    description: Evaluating and explaining to humans and machines.
+    tip: 🎨 The more you share, the more feedback you will get.
     conditions:
       validate:
         -
@@ -71,8 +71,8 @@ stages:
     id: 30
     name: PROTOTYPE
     phase: Prototype
-    description: 🐣 Efforts to improve the quality of the output.
-    tip: There is no such thing as a stupid question. Just ask if you are stuck.
+    description: Efforts to improve the quality of the output.
+    tip: 🐣 There is no such thing as a stupid question. Just ask if you are stuck.
     conditions:
       validate:
         -
@@ -86,8 +86,8 @@ stages:
     id: 40
     name: LAUNCH
     phase: Launch
-    description: 🎈 Gaining insights on the problem defined in the beginning.
-    tip: Make sure to give credit to everyone involved and document all sources used.
+    description: Gaining insights on the problem defined in the beginning.
+    tip: 🎈 Make sure to give credit to everyone involved and document all sources used.
     conditions:
       validate:
         -
@@ -101,8 +101,8 @@ stages:
     id: 50
     name: LIVE
     phase: Share
-    description: 🚀 Thinking about audience and making the results public.
-    tip: Think of next steps and action points (take-aways) from your work.
+    description: Thinking about audience and making the results public.
+    tip: 🚀 Consider next steps and action points (take-aways) from your work.
     conditions:
       validate:
         -
