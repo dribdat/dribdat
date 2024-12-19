@@ -11,9 +11,9 @@
 {% block content %}
 
 {% if score_tip and current_user.id == user.id %}
-  <div class="alert alert-info"
+  <div class="alert alert-info alert-dismissible fade show"
        title="This tip is only visible to you">
-    <a class="close" title="Close" href="#" data-dismiss="alert">&times;</a>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     To improve your score, please
     <a href="{{ url_for('auth.user_profile') }}">
       complete your profile.
@@ -29,9 +29,8 @@
 {% endif %}
 
 {% if current_user and current_user.is_authenticated %}
-<div class="row">
 
-  <div class="col-sm text-right mt-2">
+  <div class="float-right mt-2">
   {% if current_user.id == user.id %}
 
     <div class="btn-group">
@@ -67,18 +66,17 @@
 
   {% endif %}
   </div>
-</div>
 
-{% if may_certify %}
-  <div class="float-right">
-    <br clear="all"/>
-    <a id="get-certified" class="btn btn-success btn-lg"
-      href="{{ url_for('public.user_cert') }}" download
-      title="Download a participation certificate">
-      Download&nbsp;Certificate
-    </a>
-  </div>
-{% endif %}
+  {% if may_certify %}
+    <div class="float-right">
+      <br clear="all"/>
+      <a id="get-certified" class="btn btn-success btn-lg"
+        href="{{ url_for('public.user_cert') }}" download
+        title="Download a participation certificate">
+        Download&nbsp;Certificate
+      </a>
+    </div>
+  {% endif %}
 
 {% endif %}
 
@@ -93,14 +91,14 @@
   </div>
 
   {% if user.fullname %}
-    <h1 class="col-sm text-left">
+    <h1 class="col-sm text-start">
       <span>
         {{ user.fullname }}
       </span>
       <br><tt class="text-secondary">{{ user.username }}</tt>
     </h1>
   {% else %}
-    <h1 class="col-sm text-left">
+    <h1 class="col-sm text-start">
       <tt>{{ user.username }}</tt>
     </h1>
   {% endif %}
@@ -206,7 +204,7 @@
 {% endif %}
 
 {% if events %}
-  <a name="events"><h2 class="mt-4 mb-2">Contributions</h2></a>
+  <a name="events"><h2 class="mt-4 mb-2">Sprints</h2></a>
   <div class="row profile-events">
     {% for event in events %}
       {{ misc.render_home_event(event, False) }}

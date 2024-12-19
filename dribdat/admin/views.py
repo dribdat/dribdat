@@ -39,12 +39,12 @@ def index():
     stats = [
         {
             'value': Event.query.count(),
-            'text': 'Events',
+            'text': 'Sprints',
             'icon': 'calendar',
             'height': 10
         }, {
             'value': User.query.count(),
-            'text': 'Users',
+            'text': 'Participants',
             'icon': 'user',
             'height': 11
         }, {

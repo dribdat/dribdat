@@ -125,9 +125,9 @@
 
   {% if current_event.countdown and not current_event.lock_resources %}
     <a href="{{ url_for('api.info_event_ical', event_id=current_event.id) }}" class="btn"
-        download="dribdat.ics" title="Download event into your calendar (ICS file)">
+        download="dribdat.ics" title="Download event for a reminder in your calendar (ICS file)">
       <i class="fa fa-calendar" aria-hidden="true"></i>
-      <span>Get a reminder</span>
+      <span>Add to calendar</span>
     </a>
 
     <a href="{{ url_for('public.dashboard') }}" class="btn"

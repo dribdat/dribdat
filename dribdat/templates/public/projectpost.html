@@ -9,10 +9,8 @@
 {% block content %}
 
   {% if (suggestions or stage) and project.progress and project.progress < 50 %}
-    <div class="alert float-right resource-list project-tips profile-projects">
-      <button type="button" class="close" data-dismiss="alert" aria-label="Dismiss" title="Hide">
-        <span aria-hidden="true">&times;</span>
-      </button>
+    <div class="alert float-right resource-list project-tips profile-projects alert-dismissible">
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 
       <div class="resource-list-suggestions container-fluid p-1">
         <h5 class="category-tip m-0 mb-2 clearfix"
@@ -107,7 +105,7 @@
 
   {% if config.S3_KEY %}
     <button type="button" class="btn btn-light post-image-btn" style="display:none"
-            title="Attach image" data-toggle="modal" data-target="#uploadImage">
+            title="Attach image" data-bs-toggle="modal" data-bs-target="#uploadImage">
       <i class="fa fa-image text-info" area-hidden="true"></i>
       Attach
     </button>

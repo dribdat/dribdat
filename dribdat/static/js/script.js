@@ -5,6 +5,14 @@
     $('#dribs-tab-md').click();
   }
 
+  // Enable popovers everywhere
+  $('[data-bs-toggle="popover"]').click(function (triggerEl) {
+    return new bootstrap.Popover(triggerEl)
+  });
+  $('[data-toggle="modal"]').click(function (triggerEl) {
+    return new bootstrap.Modal(triggerEl)
+  });
+
   // Ajaxify dribs pagination
   $('#next-dribs').click(function(e) {
     e.preventDefault(); e.stopPropagation();
@@ -314,23 +322,11 @@
     });
   }); // -issues-list
 
-  // Make embedded iframes resizable
-  $('.resizable').each(function() {
-    var $self = $(this);
-    // Yech. Because script loading order
-    // and this whole UI needs a refresh.
-    $(window).on('load', function() {
-      $self.resizable({
-        resizeWidth: false,
-        handleSelector: ".win-size-grip"
-      });
-    });
-  });
-
 
   // Initialize slideshow
   if ($('.reveal').length > 0) {
     Reveal.initialize({
+      width: 1224, height: 584,
       embedded: true,
       keyboardCondition: 'focused', // only react to keys when focused
       plugins: [ RevealMarkdown ],

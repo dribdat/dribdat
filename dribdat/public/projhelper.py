@@ -102,9 +102,6 @@ def project_edit_action(project_id, detail_view=False):
         else:
             is_minoredit = False
 
-        # Adjust Thematic Break format
-        form.longtext.data = form.longtext.data.replace('***', '---')
-
         del form.id
         form.populate_obj(project)
         project.update_now()

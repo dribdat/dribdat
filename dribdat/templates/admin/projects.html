@@ -24,9 +24,9 @@
       <h4 class="text-center font-weight-bold">{{ event.name }}</h4>
       <a href="{{ url_for('admin.event', event_id=event.id) }}" class="btn btn-light">
         <i class="fa fa-arrow-left" aria-hidden="true"></i>
-        Event</a>
+        Sprint</a>
     {% else %}
-      <span><b>Tip</b>: Manage the projects of a specific event for more options.</span>
+      <span><b>Tip</b>: Manage the projects of a sprint for more options.</span>
     {% endif %}
 
     {% if data %}

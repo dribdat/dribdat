@@ -9,13 +9,12 @@
   "dependencies": {
     "@barba/core": "^2.9.7",
     "@toast-ui/editor": "^3.2.2",
-    "bootstrap": "^5.3.3",
-    "bootswatch": "^4",
+    "bootstrap": "^5.3",
+    "bootswatch": "^5.3",
     "flipdown": "^0.3.2",
     "font-awesome": "^4",
     "jquery": "^3",
     "jquery-resizable-dom": "^0",
-    "popper.js": "^1",
     "reveal.js": "^5.1.0",
     "simplelightbox": "^2.14.3"
   }
