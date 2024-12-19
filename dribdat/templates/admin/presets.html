@@ -1,7 +1,11 @@
 {% extends "admin/layout.html" %}
 
 {% block content %}
+<h1 class="huge m-1">Presets</h2>
+    <hr>
+
 <div class="container admin-roles">
+
     <a href="{{ url_for('admin.role_new') }}" class="btn btn-success btn-lg">Add role</a>
     <h2>Roles</h2>
     <span>List of participant specialties.</span>
@@ -27,8 +31,8 @@
         {% endfor %}
     </table>
 </div>
-<hr />
-<div class="container admin-categories" id="categories">
+
+<div class="container admin-categories pt-5" id="categories">
     <a href="{{ url_for('admin.category_new') }}" class="btn btn-success btn-lg">Add category</a>
     <h2>Categories</h2>
     <span>Used as topics or challenges for reference in projects.</span>

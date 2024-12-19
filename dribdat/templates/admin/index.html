@@ -10,7 +10,7 @@
     {% if default_event %}
         <a href="{{ url_for('admin.event', event_id=default_event.id) }}" class="btn btn-lg btn-warning">
           <i class="fa fa-calendar" aria-hidden="true"></i>
-          Featured Event</a>
+          Featured</a>
         <a href="{{ url_for('admin.event_projects', event_id=default_event.id) }}" class="btn btn-lg btn-success">
           <i class="fa fa-star" aria-hidden="true"></i>
           Projects</a>
@@ -20,7 +20,7 @@
     {% else %}
         <a href="{{ url_for('public.event_start') }}" class="btn btn-lg btn-success">
           <i class="fa fa-calendar" aria-hidden="true"></i>
-          Start an event</a>
+          Start a sprint</a>
     {% endif %}
     </div>
     <div class="btn-group mb-2 text-center">
@@ -38,9 +38,9 @@
 
   <div class="mb-4 mt-5">
   {% for stat in stats %}
-    {% if stat.text == 'Events' %}
+    {% if stat.text == 'Sprints' %}
       <a href="{{ url_for('admin.events') }}"
-    {% elif stat.text == 'Users' %}
+    {% elif stat.text == 'Participants' %}
       <a href="{{ url_for('admin.users') }}"
     {% else %}
       <a href="{{ url_for('admin.projects') }}"

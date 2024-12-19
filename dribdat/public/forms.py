@@ -70,7 +70,7 @@ class ProjectForm(FlaskForm):
         description="Markdown supported. Put a link"
         + " to supported sites (SpeakerDeck, YouTube,..) on a line for a preview."
         + " No copypasta - use the 'Upload Image' button.")
-    is_webembed = BooleanField(u'Embed Presentation, or show Pitch as slide deck')
+    is_webembed = BooleanField(u'Embed Presentation, or the Pitch as a Markdown slide deck')
     webpage_url = URLField(
         u'Presentation', [length(max=2048)],
         description="URL to a live demo, presentation, or a link to get "

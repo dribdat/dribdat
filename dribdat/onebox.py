@@ -43,6 +43,20 @@ def format_webembed(url, project_id=None):
     return '<iframe src="%s"></iframe>' % url
 
 
+def format_webslides(longtext):
+    """Format a Reveal.js slide presentation"""
+    return '''
+      <div class="reveal">
+        <div class="slides">
+          <section data-markdown>
+            <script type="text/template">%s</script>
+          </section>
+        </div>
+      </div>
+      ''' % longtext.replace('\n***', '\n---')
+    # Adjusting for Thematic Break format
+
+
 def repl_onebox(mat=None, li=None):
     """Check for onebox application links."""
     if li is None:

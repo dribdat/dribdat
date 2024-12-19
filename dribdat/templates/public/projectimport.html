@@ -2,8 +2,8 @@
 block page_title %}Import project{% endblock %} {% block body_class
 %}projectform projectimport{% endblock %} {% block content %} {% if form %} {%
 if current_event.boilerplate %}
-<div class="jumbotron projectnew-boilerplate">
-    <a class="close" title="Close" href="#" data-dismiss="alert">&times;</a>
+<div class="jumbotron projectnew-boilerplate alert alert-dismissible">
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     <div class="container scroll-after-500">
         {{ current_event.boilerplate|markdown }}
     </div>

@@ -4,14 +4,15 @@
 {% block body_class %}admin{% endblock %}
 
 {% set tabs = [
-    ("events", url_for('admin.events')),
-    ("presets", url_for('admin.presets')),
+    ("sprints", url_for('admin.events')),
     ("projects", url_for('admin.projects')),
-    ("users", url_for('admin.users')),
+    ("participants", url_for('admin.users')),
+    ("presets", url_for('admin.presets')),
 ]%}
 
 {% block css %}
 <style type="text/css">
+.container > .btn-group:first-child,
 .container > a.btn:first-child { float:right; margin:1em 0 }
 </style>
 {% endblock %}

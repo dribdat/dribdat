@@ -23,7 +23,7 @@ from dribdat.user.constants import (
     getStageByProgress,
     getActivityByType,
 )
-from dribdat.onebox import format_webembed  # noqa: I005
+from dribdat.onebox import format_webembed, format_webslides  # noqa: I005
 from dribdat.utils import (
     format_date_range, format_date, parse_date, timesince, strtobool, get_any_key
 )
@@ -705,6 +705,13 @@ class Project(PkModel):
     @property
     def webembed(self):
         """Detect and return supported embed widgets."""
+        if not self.is_webembed:
+            return None
+        if not self.webpage_url.strip():
+            if '---' in self.longtext or '***' in self.longtext:
+                return format_webslides(self.longtext)
+            else:
+                return None
         return format_webembed(self.webpage_url, self.id)
 
     @property

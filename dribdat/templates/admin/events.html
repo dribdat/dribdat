@@ -2,15 +2,22 @@
 
 {% block content %}
 <div class="container admin-events">
-  <div class="btn-group float-right mb-2">
-    <a href="{{ url_for('public.event_new') }}" class="btn btn-light btn-lg">
-      <i class="fa fa-calendar mr-2" aria-hidden="true"></i>
-      Start an event</a>
-    <button type="button" class="btn btn-lg btn-dark" data-toggle="modal" data-target="#importEvent">
-      <i class="fa fa-arrow-up" aria-hidden="true"></i>
-      Import data</button>
-  </div>
-    <h2>Events</h2>
+
+    <div class="btn-group">
+      <a href="{{ url_for('public.event_new') }}" class="btn btn-success btn-lg">
+        <i class="fa fa-calendar mr-2" aria-hidden="true"></i>
+        New sprint</a>
+      <button type="button" class="btn btn-lg btn-dark" data-bs-toggle="modal" data-bs-target="#importEvent">
+          <i class="fa fa-arrow-up" aria-hidden="true"></i>
+          Import data</button>
+    </div>
+
+    <h2>Sprints</h2>
+
+    <span>Formerly known as Events, here we group together people and results.</span>
+
+      
+
     <table class='table table-hover'>
         <thead>
             <tr>
@@ -26,10 +33,10 @@
 
             <td>
                           <div class="dropdown">
-                            <button class="btn btn-light dropdown-toggle" type="button" id="evMenu{{ event.id }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <button class="btn btn-light dropdown-toggle" type="button" id="evMenu{{ event.id }}" aria-haspopup="true" aria-expanded="false" data-bs-toggle="dropdown">
                               &nbsp;⬣&nbsp;{{ event.project_count }}&nbsp;
                             </button>
-                            <div class="dropdown-menu" aria-labelledby="evMenu{{ event.id }}">
+                            <ul class="dropdown-menu" aria-labelledby="evMenu{{ event.id }}">
                               <a href="{{ url_for('public.event_challenges', event_id=event.id) }}" class="dropdown-item"
                                  title="Open Challenges view">
                                   <i class="fa fa-trophy" aria-hidden="true"></i>
@@ -39,11 +46,13 @@
                                   <i class="fa fa-print" aria-hidden="true"></i>
                                 Report
                               </a>
+                              <!--
                               <a href="{{ url_for('public.event', event_id=event.id, _external=True) }}" class="dropdown-item" id="embed-link"
                                   title="Get a link that you can use to embed the site in your CMS">
                                     <i class="fa fa-bars" aria-hidden="true"></i>
                                 Embed
                               </a>
+                              -->
                               <a href="{{ url_for('public.dashboard', event_id=event.id) }}" class="dropdown-item"
                                   title="Event live dashboard">
                                   <i class="fa fa-map-o" aria-hidden="true"></i>
@@ -75,7 +84,7 @@
                               <a href="{{ url_for('api.project_list_event_csv', event_id=event.id, moar=True) }}" class="dropdown-item">
                                 &#9660; projects<b>.csv</b>
                               </a>
-                            </div>
+                            </ul>
                           </div>
             </td>
 
@@ -129,9 +138,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="uploadFileLabel">Import</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
         <p class="upload-note mt-0 mb-2">
@@ -174,7 +181,7 @@
         </p>
         <div class="buttons">
           <input type="submit" value="Import" class="btn btn-primary">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-lg btn-default" data-bs-dismiss="modal">Cancel</button>
         </div>
       </div>
     </div>
