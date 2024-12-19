@@ -35,12 +35,8 @@
       {% if project.category_id %}
         <li>Category: <b>{{ project.category.name }}</b></li>
       {% endif %}
-      <li><a href="{{ url_for('project.project_view', project_id=project.id, _external=True) }}">Permalink</a></li>
+      <li class="no-print"><a href="{{ url_for('project.project_view', project_id=project.id, _external=True) }}">Permalink</a></li>
     </ul>
-
-    {% if project.image_url %}
-      <img align="right" hspace="10" class="project-image" width="128" src="{{project.image_url}}">
-    {% endif %}
 
     {% if project.hashtag %}
     <p class="project-hashtag m-0 p-0">{{project.hashtag}}</p>
@@ -99,13 +95,10 @@
 
 {% block content %}
 <div class="container" style="background:white; color: black">
-  <div class="float-right mr-3" style="margin-top:-6em">
-    <a href="https://dribdat.cc" target="_blank"><img src="{{ url_for('static', filename='img/logo/logo12_swi.png') }}" height="100" alt="All our hack are belong to us."></a>
-  </div>
-  <p class="float-right m-4"><i>
+  <p class="text-center pt-4 m-4"><i>
     Active projects and challenges as of {{ curdate }}.
   </i></p>
-  <p class="no-print pt-4">
+  <p class="no-print text-center">
     {% if not request.args.get('longtext') %}
       <a href="?longtext=1" class="btn btn-danger">Show full text</a>
     {% else %}
@@ -129,17 +122,16 @@
     <hr{% if request.args.get('longtext') %} style="clear: both; page-break-after: always;"{% endif %}>
   {% endfor %}
 
-  {% if projects %}
-    <hr style="page-break-after: always;">
+  {% if challenges.length %}
+    <a name="challenges" style="page-break-after: always;"></a>
+    <center><h1 class="m-5">Challenges</h1></center>
+
+    {% for project in challenges %}
+      {{ render_print_project(project) }}
+      <hr{% if request.args.get('longtext') %} style="clear: both; page-break-after: always;"{% endif %}>
+    {% endfor %}
+
   {% endif %}
-
-  <a name="challenges"></a>
-  <center><h1 class="m-5">Challenges</h1></center>
-
-  {% for project in challenges %}
-    {{ render_print_project(project) }}
-    <hr{% if request.args.get('longtext') %} style="clear: both; page-break-after: always;"{% endif %}>
-  {% endfor %}
 
 </div>
 {% endblock %}

@@ -161,6 +161,7 @@
   // $('.event-finished .nav-categories #challenges').parent().click();
 
   // Enable tooltips on hexagrid
+  /* TODO: deprecate, or use Popper.
   $('.honeycomb .hexagon[data-toggle="tooltip"]').each(function() {
     var content = (
         '<div>' + $(this).data('summary') + '</div>' +
@@ -176,6 +177,7 @@
       title: content
     });
   });
+  */
 
   /* Roll up categories if there is only one, and no projects
   if ($navCategories.length === 1) {
@@ -195,7 +197,7 @@
     var urlContent = $(this).val();
     $(this).parent().click(function(e) {
       e.preventDefault(); e.stopPropagation();
-      $(this).tooltip({'title':'Copied'}).show();
+      // TODO: use Toast. $(this).tooltip({'title':'Copied'}).show();
       if ('clipboard' in navigator) {
         return navigator.clipboard.writeText(urlContent);
       } else {
