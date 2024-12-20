@@ -134,21 +134,21 @@
     if ($longtext.length > 0) {
       $longtext.prepend($togglebtn.clone().show());
     } else {
-      $dialog.find("[data-bs-target='pitch']").hide();
+      $dialog.find("[data-target='pitch']").hide();
     }
     var $imageurl = $(".fld-image_url,.fld-logo_url");
     if ($imageurl.length > 0) {
       // Image url field
       $imageurl.append($togglebtn.clone().show());
     } else {
-      $dialog.find("[data-bs-target='cover']").hide();
+      $dialog.find("[data-target='cover']").hide();
     }
     var $postnote = $(".fld-note");
     if ($postnote.length > 0 && $("body").hasClass("projectpost")) {
       // Post note
       $postnote.prev().prepend($togglebtn.clone().show());
     } else {
-      $dialog.find("[data-bs-target='post']").hide();
+      $dialog.find("[data-target='post']").hide();
     }
     // Set up the file dialog
     var $inputfd = $dialog.find('input[type="file"]');
@@ -442,7 +442,7 @@
     $longtext.prepend($togglebtn.clone().show());
     // Set up the dialog
     var $inputfd = $dialog.find('input[type="url"]');
-    var $submitb = $dialog.find('button[data-bs-target="insert"');
+    var $submitb = $dialog.find('button[data-target="insert"');
     $submitb.click(function () {
       var theurl = $inputfd.val();
       if (theurl.indexOf("https://") !== 0) {
