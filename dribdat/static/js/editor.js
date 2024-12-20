@@ -128,27 +128,27 @@
   // Upload images
   $("#uploadImage").each(function () {
     var $dialog = $(this);
-    var $togglebtn = $('button[data-target="#uploadImage"]');
+    var $togglebtn = $('button[data-bs-target="#uploadImage"]');
     // Enable the available fields
     var $longtext = $(".fld-longtext");
     if ($longtext.length > 0) {
       $longtext.prepend($togglebtn.clone().show());
     } else {
-      $dialog.find("[data-target='pitch']").hide();
+      $dialog.find("[data-bs-target='pitch']").hide();
     }
     var $imageurl = $(".fld-image_url,.fld-logo_url");
     if ($imageurl.length > 0) {
       // Image url field
       $imageurl.append($togglebtn.clone().show());
     } else {
-      $dialog.find("[data-target='cover']").hide();
+      $dialog.find("[data-bs-target='cover']").hide();
     }
     var $postnote = $(".fld-note");
     if ($postnote.length > 0 && $("body").hasClass("projectpost")) {
       // Post note
       $postnote.prev().prepend($togglebtn.clone().show());
     } else {
-      $dialog.find("[data-target='post']").hide();
+      $dialog.find("[data-bs-target='post']").hide();
     }
     // Set up the file dialog
     var $inputfd = $dialog.find('input[type="file"]');
@@ -230,7 +230,7 @@
   // Upload a presentation file
   $("#uploadFile").each(function () {
     var $dialog = $(this);
-    var $togglebtn = $('button[data-target="#uploadFile"]');
+    var $togglebtn = $('button[data-bs-target="#uploadFile"]');
     // Enable the available fields
     var $webpageurl = $(".fld-webpage_url");
     // Append button to the editor
@@ -323,7 +323,7 @@
   // Upload a dataset file
   $("#uploadPackage").each(function () {
     var $dialog = $(this);
-    var $togglebtn = $('button[data-target="#uploadPackage"]');
+    var $togglebtn = $('button[data-bs-target="#uploadPackage"]');
     // Enable the available fields
     var $longtext = $(".fld-longtext");
     // Append button to the pitch editor
@@ -436,13 +436,13 @@
   // Media upload
   $("#uploadMedia").each(function () {
     var $dialog = $(this);
-    var $togglebtn = $('button[data-target="#uploadMedia"]');
+    var $togglebtn = $('button[data-bs-target="#uploadMedia"]');
     // Append button to the pitch editor
     var $longtext = $(".fld-longtext");
     $longtext.prepend($togglebtn.clone().show());
     // Set up the dialog
     var $inputfd = $dialog.find('input[type="url"]');
-    var $submitb = $dialog.find('button[data-target="insert"');
+    var $submitb = $dialog.find('button[data-bs-target="insert"');
     $submitb.click(function () {
       var theurl = $inputfd.val();
       if (theurl.indexOf("https://") !== 0) {

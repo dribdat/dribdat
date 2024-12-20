@@ -30,19 +30,19 @@
           <input name="url" disabled>
         </center>
         <center class="image-upload-confirm col hidden" id="img-confirm">
-          <button type="button" class="btn btn-info btn-lg" data-target="pitch">
+          <button type="button" class="btn btn-info btn-lg" data-bs-target="pitch">
             <i class="fa fa-plus-square-o"></i><br>
             Insert into Pitch
           </button>
-          <button type="button" class="btn btn-info btn-lg" data-target="post">
+          <button type="button" class="btn btn-info btn-lg" data-bs-target="post">
             <i class="fa fa-check-square"></i><br>
             Add to Post
           </button>
-          <button type="button" class="btn btn-warning btn-lg" data-target="cover">
+          <button type="button" class="btn btn-warning btn-lg" data-bs-target="cover">
             <i class="fa fa-image"></i><br>
             Use as Cover
           </button>
-          <button type="button" class="btn btn-light btn-lg" data-target="xclip">
+          <button type="button" class="btn btn-light btn-lg" data-bs-target="xclip">
             <i class="fa fa-clipboard"></i><br>
             Copy link
           </button>
@@ -94,11 +94,11 @@
           </table>
         </div>
         <center class="col hidden" style="margin-top:1em" id="file-confirm">
-          <button type="button" class="btn btn-warning btn-lg" data-target="weblink">
+          <button type="button" class="btn btn-warning btn-lg" data-bs-target="weblink">
             <i class="fa fa-desktop"></i><br>
             Use as Presentation
           </button>
-          <button type="button" class="btn btn-light btn-lg" data-target="xclip">
+          <button type="button" class="btn btn-light btn-lg" data-bs-target="xclip">
             <i class="fa fa-clipboard"></i><br>
             Copy link
           </button>
@@ -165,11 +165,11 @@
           </table>
         </div>
         <center class="col hidden" style="margin-top:1em" id="data-confirm">
-          <button type="button" class="btn btn-info btn-lg" data-target="pitch">
+          <button type="button" class="btn btn-info btn-lg" data-bs-target="pitch">
             <i class="fa fa-plus-square-o"></i><br>
             Insert into Pitch
           </button>
-          <button type="button" class="btn btn-light btn-lg" data-target="xclip">
+          <button type="button" class="btn btn-light btn-lg" data-bs-target="xclip">
             <i class="fa fa-clipboard"></i><br>
             Copy link
           </button>
@@ -249,11 +249,11 @@
         </ul>
         <div class="form-group">
           <label for="inputMediaLink">Link to your media clip:</label>
-          <input class="form-control" type="url" placeholder="https://..." aria-describedby>
+          <input id="inputMediaLink" class="form-control" type="url" placeholder="https://..." aria-describedby>
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-primary btn-lg" data-target="insert">
+        <button type="button" class="btn btn-primary btn-lg" data-bs-target="insert">
             Insert link
         </button>
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
