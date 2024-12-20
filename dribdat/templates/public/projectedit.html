@@ -47,25 +47,25 @@
   </h2>
 
   {% if not detail_view %}
-  <span id="activateEditor" class="btn-group">
+  <span id="activateEditor">
     <button data-do="activate" type="button" 
       class="btn btn-light btn-lg hidden mt-2 mb-1" aria-pressed="false"
       title="Click to activate a WYSIWYG editor">
       <i class="fa fa-pencil text-info" area-hidden="true"></i>
-      Editor: <b>off</b>
+      Assistant: <b>off</b>
     </button>
     <button data-do="reset" type="button" 
       class="btn btn-light btn-lg hidden mt-2 mb-1" aria-pressed="false"
       title="Click to use a plain text editor">
         <i class="fa fa-pencil text-info" area-hidden="true"></i>
-        Editor: <b>on</b>
+        Assistant: <b>on</b>
     </button>
     {%- if not project.is_challenge -%}
       <button data-do="clear" type="button" 
-        class="btn btn-light btn-lg hidden mt-2 mb-1" aria-pressed="false"
+        class="btn btn-light btn-lg hidden mt-2 mb-1 ms-2" aria-pressed="false"
         title="You can still Undo (Ctrl-Z), or view the previously saved version later">
           <i class="fa fa-circle-o text-info" area-hidden="true"></i>
-          Reset
+          Clear
       </button>
     {%- endif -%}
   </span>

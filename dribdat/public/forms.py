@@ -134,7 +134,7 @@ class ProjectPost(FlaskForm):
         'How are the vibes in your team right now?',
         [length(max=280), InputRequired()],
         render_kw={'maxlength': 280, 'minlength': 4},
-        description=u'A short note for your project log.')
+        description=u'A short note for your project log //')
     submit = SubmitField(u'Save post',
         render_kw={'data-toggle': "modal", 'data-target': "#pleasewaitModal"})
 

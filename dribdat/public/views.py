@@ -457,6 +457,6 @@ def dribs():
     page = int(request.args.get('page') or 1)
     per_page = int(request.args.get('limit') or 10)
     dribs = get_dribs_paginated(page, per_page, request.host_url)
-    return render_template("public/dribs.html",
+    return render_template("public/dribs.html", current_event=current_event(),
                            endpoint='public.dribs', active='dribs',
                            data=dribs)

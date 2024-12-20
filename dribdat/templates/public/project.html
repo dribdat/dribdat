@@ -526,16 +526,16 @@
     <i class="fa fa-arrow-left" aria-hidden="true"></i>
     {{go_nav.prev.name}}</a>
 
-  <a class="nav-projects-abs-prev btn btn-secondary border-primary" href="{{go_nav.prev.url}}" title="Previous project in queue">
+  <a class="nav-projects-abs-prev btn btn-light border-primary" href="{{go_nav.prev.url}}" title="Previous project in queue">
     <i class="fa fa-arrow-left" aria-hidden="true"></i></a>
 {% endif %}
 {% if not project.event.lock_resources %}
-  <a class="btn btn-dark" href="{{ url_for('public.event', event_id=project.event.id) }}"
+  <a class="btn btn-light" href="{{ url_for('public.event', event_id=project.event.id) }}"
      title="Return to the event page">
     <i class="fa fa-arrow-up" aria-hidden="true"></i>
     {{ project.event.name }}</a>
 {% else %}
-  <a class="btn btn-dark" href="javascript:history.back()" title="Return to previous page">
+  <a class="btn btn-light" href="javascript:history.back()" title="Return to previous page">
     <i class="fa fa-arrow-up" aria-hidden="true"></i>
     Go back</a>
 {% endif %}
@@ -544,7 +544,7 @@
     <i class="fa fa-arrow-right" aria-hidden="true"></i>
     {{go_nav.next.name}}</a>
 
-  <a class="nav-projects-abs-next btn btn-secondary border-primary" href="{{go_nav.next.url}}" title="Next project in queue">
+  <a class="nav-projects-abs-next btn btn-light border-primary" href="{{go_nav.next.url}}" title="Next project in queue">
     <i class="fa fa-arrow-right" aria-hidden="true"></i></a>
 {% endif %}
 </center>

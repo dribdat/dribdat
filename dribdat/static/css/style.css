@@ -39,7 +39,9 @@ sp {
     font-family: monospace;
 }
 
-.section-header a, .card-title a, .widget a, .timeline-item a, .project-category a, .project-name a {
+/* Navigation anchors */
+.section-header a, .card-title a, .widget a, .timeline-item a, 
+.project-score a, .project-category a, .project-name a {
     text-decoration: none;
 }
 
@@ -1112,6 +1114,12 @@ nav .nav-login {
 .jumbotron.projectnew-boilerplate {
     border: 10px solid lightseagreen;
 }
+a.media {
+    text-decoration: none;
+}
+.media .media-body {
+    display: inline-block;
+}
 .project-page img {
     max-width: 100%;
 }
@@ -2150,7 +2158,7 @@ a.card {
     color: #555;
 }
 .profile-projects .project-stats th {
-    width: 3em;
+    min-width: 3em;
 }
 .profile-projects a:hover {
     text-decoration: none;
@@ -2183,7 +2191,6 @@ a.card {
 .userprofile .profile-goals:after {
     content: "";
     position: absolute;
-    bottom: 0;
     left: 20%;
     width: 0;
     height: 0;

@@ -815,6 +815,13 @@ class Project(PkModel):
                 members.append(a.user)
         return members
 
+
+    @property
+    def stats(self):
+        """Collect some activity stats."""
+        return self.get_stats()
+
+
     def get_stats(self):
         """Collect some activity stats."""
         q = self.activities
