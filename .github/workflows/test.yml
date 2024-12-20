@@ -59,5 +59,3 @@ jobs:
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ./coverage.xml
-      - name: AI Code Reviewer for Pull Requests
-        uses: presubmit/ai-reviewer@v0
