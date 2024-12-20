@@ -23,7 +23,7 @@
 
     {% if not data.items %}
       <div class="nothing-here text-center mt-5">
-        Log in and write a <b>Post</b> to see your Dribs* (project updates) here
+        Log in and write a <b>Post</b> to see your Dribs* here.
       </div>
     {% else %}
     <section class="timeline">
@@ -87,11 +87,19 @@
 </center>
 
 {% if current_event %}
-<center class="mt-5">
-  <a class="btn btn-light btn-lg" href="{{ url_for('public.event', event_id=current_event.id) }}">
-    <i class="fa fa-arrow-left" aria-hidden="true"></i>
-    {{ current_event.name }}</a>
-</center>
+
+  <center class="mt-5">
+    <a class="btn btn-light btn-lg" href="{{ url_for('public.event', event_id=current_event.id) }}">
+      <i class="fa fa-arrow-left" aria-hidden="true"></i>
+      {{ current_event.name }}</a>
+  </center>
+
+  {% if config.DRIBDAT_SOCIAL_LINKS %}
+    <center class="event-footer">
+      {{ social.share_links(current_event.hashtags, url_for('public.event', event_id=current_event.id, _external=True)) }}
+    </center>
+  {% endif %}
+
 {% endif %}
 
 

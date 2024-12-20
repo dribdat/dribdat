@@ -115,7 +115,7 @@
 {% endmacro %}
 
 {% macro render_project_card(project) %}
-	<a class="card mr-4 flex-row flex-wrap {{ 'challenge' if project.is_challenge else 'project' }}"
+	<a class="card me-4 flex-row flex-wrap {{ 'challenge' if project.is_challenge else 'project' }}"
 		 href="{{ url_for('project.project_view', project_id=project.id) }}"
 		 style="width: 100%">
 
@@ -135,10 +135,10 @@
 						{{ project.summary }}
 					</p>
 					<table class="project-stats">
-			    	<td>People</td><th>{{ project.stats.people }}</th>
-			    	<td>Total</td><th>{{ project.stats.total }}</th>
-			    	<td>Dribs</td><th>{{ project.stats.updates }}</th>
-			    	<td>Start</td><th>{{ project.created_at }}</th>
+			    	<td>People:</td><th>{{ project.stats.people }}</th>
+			    	<td>Posts:</td><th>{{ project.stats.total }}</th>
+			    	<td>Dribs:</td><th>{{ project.stats.updates }}</th>
+			    	<td>Start:</td><th>{{ project.created_at }}</th>
 				  </table>
 				</div>
 	

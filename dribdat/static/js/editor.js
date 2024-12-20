@@ -21,7 +21,7 @@
       .parent()
       .prepend(
         '<span class="autotext-indicator float-right">' +
-          '<a title="Status" class="btn-disabled m-2"><i class="fa fa-circle-o"></i></a>' +
+          '<a title="Status" class="btn-disabled me-1"><i class="fa fa-circle-o"></i></a>' +
           '<button class="btn btn-light" type="button">Test</button>' +
           "</span>",
       )
@@ -128,7 +128,7 @@
   // Upload images
   $("#uploadImage").each(function () {
     var $dialog = $(this);
-    var $togglebtn = $('button[data-target="#uploadImage"]');
+    var $togglebtn = $('button[data-bs-target="#uploadImage"]');
     // Enable the available fields
     var $longtext = $(".fld-longtext");
     if ($longtext.length > 0) {
@@ -230,7 +230,7 @@
   // Upload a presentation file
   $("#uploadFile").each(function () {
     var $dialog = $(this);
-    var $togglebtn = $('button[data-target="#uploadFile"]');
+    var $togglebtn = $('button[data-bs-target="#uploadFile"]');
     // Enable the available fields
     var $webpageurl = $(".fld-webpage_url");
     // Append button to the editor
@@ -323,7 +323,7 @@
   // Upload a dataset file
   $("#uploadPackage").each(function () {
     var $dialog = $(this);
-    var $togglebtn = $('button[data-target="#uploadPackage"]');
+    var $togglebtn = $('button[data-bs-target="#uploadPackage"]');
     // Enable the available fields
     var $longtext = $(".fld-longtext");
     // Append button to the pitch editor
@@ -436,7 +436,7 @@
   // Media upload
   $("#uploadMedia").each(function () {
     var $dialog = $(this);
-    var $togglebtn = $('button[data-target="#uploadMedia"]');
+    var $togglebtn = $('button[data-bs-target="#uploadMedia"]');
     // Append button to the pitch editor
     var $longtext = $(".fld-longtext");
     $longtext.prepend($togglebtn.clone().show());
