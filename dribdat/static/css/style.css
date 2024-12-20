@@ -1605,7 +1605,7 @@ a.media {
 }
 .projectform form .autotext-indicator {
     display: block;
-    margin-top: -4em;
+    margin-top: -3em;
     float: right;
 }
 .projectform form .autotext-indicator i {
@@ -1618,6 +1618,13 @@ a.media {
 }
 .projectform .fld-longtext .help-inline .form-text {
     display: none;
+}
+.help-inline .text-muted {
+    margin-left: 1em;
+}
+.help-inline .text-muted::before {
+    content: '//';
+    opacity: 0.5;
 }
 
 /* General form styles */

@@ -67,9 +67,9 @@ class ProjectForm(FlaskForm):
         description="A short, plain-text description of your topic.")
     longtext = TextAreaField(
         u'Pitch', [length(max=64000)],
-        description="Markdown supported. Put a link"
-        + " to supported sites (SpeakerDeck, YouTube,..) on a line for a preview."
-        + " No copypasta - use the 'Upload Image' button.")
+        description="Links"
+        + " to supported sites on one line get previews."
+        + " No copypasta: use the 'Upload Image' button.")
     is_webembed = BooleanField(u'Embed Presentation, or the Pitch as a Markdown slide deck')
     webpage_url = URLField(
         u'Presentation', [length(max=2048)],
@@ -134,7 +134,7 @@ class ProjectPost(FlaskForm):
         'How are the vibes in your team right now?',
         [length(max=280), InputRequired()],
         render_kw={'maxlength': 280, 'minlength': 4},
-        description=u'A short note for your project log //')
+        description=u'A short note for your project log')
     submit = SubmitField(u'Save post',
         render_kw={'data-toggle': "modal", 'data-target': "#pleasewaitModal"})
 

@@ -21,7 +21,7 @@
       .parent()
       .prepend(
         '<span class="autotext-indicator float-right">' +
-          '<a title="Status" class="btn-disabled m-2"><i class="fa fa-circle-o"></i></a>' +
+          '<a title="Status" class="btn-disabled me-1"><i class="fa fa-circle-o"></i></a>' +
           '<button class="btn btn-light" type="button">Test</button>' +
           "</span>",
       )
