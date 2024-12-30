@@ -386,7 +386,7 @@
     });
 
     // Initialise carousel
-    $('.carousel').each(function() { $(this).carousel(); });
+    $('.carousel').each(function() { new bootstrap.Carousel($(this)); });
   }
 
 

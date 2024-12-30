@@ -2,6 +2,10 @@
 
   // Create a notification with the given title
   function createNotification() {
+    // If we are muted, don't check the status
+    if (localStorage.getItem('eventstatus-mute')) {
+      return;
+    }
     $.get('/api/event/current/get/status', function(result) {
       //console.log(result);
       if (result.status) {
@@ -26,9 +30,8 @@
             userOptOut = !window.confirm(eventStatus + 
               '\n\n(Cancel to opt out from future alerts)');
           }
-
+          // Stop showing prompts in the future if user has opted out
           if (userOptOut) {
-            // Stop showing prompts in the future
             localStorage.setItem('eventstatus-mute', 1);
           }
         }, 500);
@@ -36,8 +39,10 @@
     });
   };
 
-  // Check the location, ignore the Dashboard
-  if (location.href.indexOf('/dashboard')<0) {
+  // Check that we have a notification button
+  if ($('#notification-button').length>0) {
+
+    // Start the notifications "engine"
     createNotification();
     setInterval(createNotification, 60 * 1000); // check once a minute
 
