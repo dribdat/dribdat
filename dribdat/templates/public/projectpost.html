@@ -51,7 +51,7 @@
       </div><!-- /resource-list-suggestions -->
 
       {% if all_valid %}
-        <div class="form-project-confirm clearfix pl-2 ml-1" role="alert">
+        <div class="form-project-confirm clearfix pl-2 ms-1" role="alert">
           {% for item in stage.conditions.agree %}
             <span>
               <i class="fa fa-check-square-o"></i>&nbsp;
@@ -87,18 +87,10 @@
     {% endif %}
   {% endif %}
 
-  <h2 class="huge">
+  <h2 class="huge project-name">
     <i class="fa fa-comment text-sm"></i>
-    {% if stage %}
-      Post
-    {% else %}
-      Comment
-    {% endif %}
-  </h2>
-
-  <h4 class="project-name">
     <a href="{{ url_for('project.project_view', project_id=project.id) }}"
-       title="Back to project" target="_blank">
+       title="Back to project">
       {{project.name}}
     </a>
   </h4>

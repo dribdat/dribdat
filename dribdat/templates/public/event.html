@@ -115,12 +115,17 @@
   <a href="{{ url_for('public.event_stages', event_id=current_event.id) }}" class="btn"
      title="Show projects by Stage">
     <i class="fa fa-signal" aria-hidden="true"></i>
-    <span>By stage</span>
+    <span>Stages</span>
+  </a>
+  <a href="{{ url_for('public.event_challenges', event_id=current_event.id) }}" class="btn"
+     title="Show challenges">
+    <i class="fa fa-trophy" aria-hidden="true"></i>
+    <span>Challenges</span>
   </a>
   <a href="{{ url_for('public.event_participants', event_id=current_event.id) }}" class="btn"
      title="Show users who have joined projects here">
     <i class="fa fa-child" aria-hidden="true"></i>
-    <span>Meet contributors</span>
+    <span>Contributors</span>
   </a>
 
   {% if current_event.countdown and not current_event.lock_resources %}
@@ -220,12 +225,6 @@
     {{current_event.community_embed|safe}}
   </div>
 </div>
-{% endif %}
-
-{% if config.DRIBDAT_SOCIAL_LINKS %}
-  <center class="event-footer">
-    {{ social.share_links(current_event.hashtags, url_for('public.event', event_id=current_event.id, _external=True)) }}
-  </center>
 {% endif %}
 
 {% endblock %}

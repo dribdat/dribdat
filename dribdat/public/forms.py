@@ -67,17 +67,14 @@ class ProjectForm(FlaskForm):
         description="A short, plain-text description of your topic.")
     longtext = TextAreaField(
         u'Pitch', [length(max=64000)],
-        description="Markdown supported. Put a link"
-        + " to supported sites (SpeakerDeck, YouTube,..) on a line for a preview."
-        + " No copypasta - use the 'Upload Image' button.")
+        description="Links"
+        + " to supported sites on one line get previews."
+        + " No copypasta: use the 'Upload Image' button.")
     is_webembed = BooleanField(u'Embed Presentation, or the Pitch as a Markdown slide deck')
     webpage_url = URLField(
         u'Presentation', [length(max=2048)],
         description="URL to a live demo, presentation, or a link to get "
         + "more information.")
-    autotext_url = URLField(
-        u'Readme link', [length(max=255)],
-        description="URL to a code repository, document, or wiki 💡 Tips: dribdat.cc/sync")
     note = TextAreaField(
         u'What changed?',
         [length(max=280)],
@@ -96,9 +93,12 @@ class ProjectDetailForm(FlaskForm):
         [length(max=80), UniqueValidator(Project, 'name'), InputRequired()],
         render_kw={'maxlength': 80, 'required': 'required'},
         description="A short name for your project or challenge.")
+    autotext_url = URLField(
+        u'Readme link', [length(max=255)],
+        description="URL to a code repository, document, or wiki 💡 Tips: dribdat.cc/sync")
     source_url = URLField(
         u'Source', [length(max=255)],
-        description="Link to the original source code of your project.")
+        description="Link to the source code of your project - not necessarily same as your Readme.")
     # Note: contact_url could be an e-mail or room number -> StringField
     contact_url = StringField(
         u'Contact', [length(max=255)],
@@ -134,7 +134,7 @@ class ProjectPost(FlaskForm):
         'How are the vibes in your team right now?',
         [length(max=280), InputRequired()],
         render_kw={'maxlength': 280, 'minlength': 4},
-        description=u'A short note for your project log.')
+        description=u'A short note for your project log')
     submit = SubmitField(u'Save post',
         render_kw={'data-toggle': "modal", 'data-target': "#pleasewaitModal"})
 
