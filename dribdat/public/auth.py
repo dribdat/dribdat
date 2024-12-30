@@ -15,7 +15,7 @@ from dribdat.sso.mattermost import mattermost
 from dribdat.user.models import User, Event, Role
 from dribdat.extensions import login_manager  # noqa: I005
 from dribdat.utils import flash_errors, random_password, sanitize_input
-from dribdat.user.forms import RegisterForm, EmailForm, LoginForm, UserForm
+from dribdat.user.forms import RegisterForm, EmailForm, LoginForm, UserForm, StoryForm
 from dribdat.database import db
 from dribdat.mailer import user_activation
 from datetime import datetime
@@ -245,7 +245,6 @@ def user_profile():
               + 'this platform.', 'warning')
 
     form = UserForm(obj=user, next=request.args.get('next'))
-    form.roles.choices = [(r.id, r.name) for r in Role.query.order_by('name')]
 
     # Check conflicting PKs
     if form.email.data != user.email:
@@ -259,11 +258,6 @@ def user_profile():
 
     # Validation has passed
     if form.is_submitted() and form.validate() and user_is_valid:
-        # Assign roles
-        user.roles = [Role.query.filter_by(
-            id=r).first() for r in form.roles.data]
-        del form.roles
-
         # Sanitize username
         user.username = sanitize_input(form.username.data)
         del form.username
@@ -282,15 +276,50 @@ def user_profile():
         db.session.add(user)
         db.session.commit()
         user.socialize()
+
         flash('Profile updated.', 'success')
+        return redirect(url_for('public.user_profile', username=user.username))
+
+    return render_template('public/useredit.html',
+                           oauth_type=oauth_type(),
+                           user=user, form=form,
+                           active='profile')
+
+
+
+@blueprint.route('/user/story', methods=['GET', 'POST'])
+@login_required
+def user_story():
+    """Display or edit the current user goals."""
+    user = current_user
+    user_is_valid = True
+    if not user.active:
+        flash('This user account is under review.', 'warning')
+
+    form = StoryForm(obj=user, next=request.args.get('next'))
+    form.roles.choices = [(r.id, r.name) for r in Role.query.order_by('name')]
+
+    # Validation has passed
+    if form.is_submitted() and form.validate() and user_is_valid:
+        # Assign roles
+        user.roles = [Role.query.filter_by(
+            id=r).first() for r in form.roles.data]
+        del form.roles
+
+        form.populate_obj(user)
+        user.updated_at = datetime.now(UTC)
+        db.session.add(user)
+        db.session.commit()
+        user.socialize()
+
+        flash('Story updated.', 'success')
         return redirect(url_for('public.user_profile', username=user.username))
 
     if not form.roles.choices:
         del form.roles
     else:
         form.roles.data = [(r.id) for r in user.roles]
-    return render_template('public/useredit.html',
-                           oauth_type=oauth_type(),
+    return render_template('public/userstory.html',
                            user=user, form=form,
                            active='profile')
 

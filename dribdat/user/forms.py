@@ -113,19 +113,12 @@ class UserForm(FlaskForm):
         u'My goals',
         description="What brings you here? Share a few words about your "
         + "interests. This is at the top of your profile.")
-    roles = SelectMultipleField(
-        u'Roles', coerce=int,
-        description="Choose one or more team roles for yourself.")
     fullname = StringField(
         u'Display name', [Length(max=200)],
         description="Your full name, if you want it shown on your profile and certificate.")
     webpage_url = URLField(
         u'Online profile', [Length(max=128)],
         description="Link to your website or a social media profile.")
-    my_story = TextAreaField(
-        u'My story',
-        description="A brief bio and outline of the competencies you bring "
-        + "into the mix. The center of your profile.")
     username = StringField(
         u'Username', [Length(max=25), UniqueValidator(
             User, 'username'), DataRequired()],
@@ -136,4 +129,21 @@ class UserForm(FlaskForm):
     password = PasswordField(
         u'Change password', [Length(max=128)],
         description="Leave blank to keep your password as it is.")
+    submit = SubmitField(u'Save profile')
+
+
+class StoryForm(FlaskForm):
+    """User story form."""
+
+    id = HiddenField('id')
+    roles = SelectMultipleField(
+        u'Roles', coerce=int,
+        description="Choose one or more team roles for yourself.")
+    my_story = TextAreaField(
+        u'My story',
+        description="A brief summary of the competencies you bring "
+        + "into the team. The center of your profile.")
+    vitae = TextAreaField(
+        u'JSON resume', 
+        description=u'For more information see: jsonresume.org')
     submit = SubmitField(u'Save changes')
