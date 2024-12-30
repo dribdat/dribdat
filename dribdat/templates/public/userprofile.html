@@ -39,11 +39,16 @@
         Edit Profile
       </a>
 
+      <a href="{{ url_for('auth.user_story') }}" class="btn btn-primary btn-lg">
+        <i class="fa fa-child"></i>
+        My Story
+      </a>
+
       <a id="get-mydata" class="btn btn-light btn-lg"
         href="{{ url_for('api.current_user_hackathon_json') }}" download
         title="Download a snapshot of my contributions">
         <i class="fa fa-download"></i>
-        My data
+        My Data
       </a>
     </div>
 
@@ -148,38 +153,6 @@
 </div>
 {% endif %}
 
-{% if user.vitae %}
-<a name="vitae"></a>
-<h2 title="Edolare Vitae">Resume</h2>
-<div class="profile-vitae jumbotron" title="Hacker Vitae">
-    <table class="table bg-white"><tbody>
-    {% for vitatype in user.simple_resume() %}
-    <tr>
-      <th colspan="2" title="Type of career step" class="alert alert-info text-center"
-        data-toggle="collapse" href="#collapse-{{vitatype}}" role="button" aria-expanded="false">
-          {{ vitatype }}
-      </th>
-    </tr>
-      {% for vita in user.simple_resume()[vitatype] %}
-      <tr class="collapse" id="collapse-{{vitatype}}">
-        </td><th title="Title or position">
-            {{ vita.name }}
-        </th><td title="Summary">
-            {{ vita.summary }}
-        </td>
-      </tr>
-      {% endfor %}
-    {% endfor %}
-    </tbody></table>
-    <a id="get-myvitae" class="btn btn-light btn-sm"
-      href="{{ url_for('api.profile_user_resume_json', user_id=user.id) }}" download
-      title="Download my JSON resume">
-      <i class="fa fa-download"></i>
-      Download
-    </a>
-  </div>
-{% endif %}
-
 {% if not projects %}
   {% if current_user and current_user.id == user.id %}
     <div class="alert alert-success">
@@ -213,6 +186,40 @@
     {% endfor %}
   </div><!-- /.row -->
 {% endif %}
+
+
+{% if user.vitae %}
+<a name="vitae"></a>
+<h2 title="Edolare Vitae">Resume</h2>
+<div class="profile-vitae jumbotron" title="Hacker Vitae">
+    <table class="table bg-white"><tbody>
+    {% for vitatype in user.simple_resume() %}
+    <tr>
+      <th colspan="2" title="Type of career step" class="alert alert-info text-center"
+        data-bs-toggle="collapse" href="#collapse-{{vitatype}}" role="button" aria-expanded="false">
+          {{ vitatype }}
+      </th>
+    </tr>
+      {% for vita in user.simple_resume()[vitatype] %}
+      <tr class="collapse" id="collapse-{{vitatype}}">
+        </td><th title="Title or position">
+            {{ vita.name }}
+        </th><td title="Summary">
+            {{ vita.summary }}
+        </td>
+      </tr>
+      {% endfor %}
+    {% endfor %}
+    </tbody></table>
+    <a id="get-myvitae" class="btn btn-light btn-sm"
+      href="{{ url_for('api.profile_user_resume_json', user_id=user.id) }}" download
+      title="Download my JSON resume">
+      <i class="fa fa-download"></i>
+      Download
+    </a>
+  </div>
+{% endif %}
+
 
 <a name="timeline"><h2 class="mt-4 mb-2" onclick="this.innerHTML='Captain\'s Log, supplemental';console.log('To boldly go...')">Dribs</h2></a>
 <div class="jumbotron">

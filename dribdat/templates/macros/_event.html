@@ -1,5 +1,4 @@
 {% macro render_project_tooltip(project) %}
-	data-toggle="tooltip"
 	data-ident="{{ project.ident or '' }}"
 	data-status="{{ project.summary|truncate(140, True, '..') }}"
 	data-imageurl="{{ project.image_url|quote_plus }}"{#

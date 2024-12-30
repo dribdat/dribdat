@@ -47,7 +47,7 @@ class UserProfileForm(FlaskForm):
     webpage_url = URLField(u'Online profile', [length(max=128)])
     my_goals = StringField(u'My goals')
     my_story = TextAreaField(u'My story')
-    vitae = TextAreaField(u'JSON Resume', description=u'See jsonresume.org')
+    vitae = TextAreaField(u'JSON Resume')
     submit = SubmitField(u'Save')
 
 
