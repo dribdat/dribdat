@@ -116,7 +116,7 @@
 {% macro render_project_card(project) %}
 	<a class="card me-4 flex-row flex-wrap {{ 'challenge' if project.is_challenge else 'project' }}"
 		 href="{{ url_for('project.project_view', project_id=project.id) }}"
-		 style="width: 100%">
+		 style="max-width: 500px">
 
 		{% if project.image_url %}
 			<div class="card-header border-0">
@@ -128,19 +128,6 @@
 
 		 <div class="card-body">
 
-				<h5 class="card-title">{{ project.name }}</h5>
-				<div class="card-text">
-					<p class="project-summary">
-						{{ project.summary }}
-					</p>
-					<table class="project-stats">
-			    	<td>People:</td><th>{{ project.stats.people }}</th>
-			    	<td>Posts:</td><th>{{ project.stats.total }}</th>
-			    	<td>Dribs:</td><th>{{ project.stats.updates }}</th>
-			    	<td>Start:</td><th>{{ project.created_at }}</th>
-				  </table>
-				</div>
-	
 				{% if project.score and not project.is_challenge %}
 				<div class="project-score">
 					<div class="progress" title="Summary of progress">
@@ -148,6 +135,24 @@
 					</div>
 				</div>
 				{% endif %}
+
+				<h5 class="card-title">{{ project.name }}</h5>
+				<div class="card-text">
+					<p class="project-summary">
+						{{ project.summary }}
+					</p>
+					<table class="project-stats">
+			    	{% if project.stats and project.stats.people %}
+			    		<td>People:</td><th>{{ project.stats.people }}</th>
+				    	<td>Posts:</td><th>{{ project.stats.total }}</th>
+				    	<td>Dribs:</td><th>{{ project.stats.updates }}</th>
+						{% endif %}
+			    	{% if project.age %}
+			    		<td>Started:</td><th>{{ project.age|since_date }}</th>
+						{% endif %}
+				  </table>
+				</div>
+
 			</div>
 
 		</div>

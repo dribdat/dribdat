@@ -2113,10 +2113,6 @@ a.go-up {
 .profile-projects.honeycomb .hexagon {
     margin-bottom: 80px;
 }
-.profile-projects .row {
-    overflow-x: auto;
-    /*background-image: repeating-linear-gradient(125deg, #fcfcfc, #e9e9e9 5px, #eee 2px, transparent 30px);*/
-}
 .profile-projects .flex-row::-webkit-scrollbar {
     display: none;
 }
