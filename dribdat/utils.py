@@ -128,7 +128,7 @@ def format_date_range(starts_at, ends_at):
         if starts_at.day == ends_at.day:
             dayrange = starts_at.day
         else:
-            dayrange = "{0} - {1}".format(
+            dayrange = "{0} – {1}".format(
                 starts_at.day,
                 ends_at.day
             )
@@ -141,7 +141,7 @@ def format_date_range(starts_at, ends_at):
         starts_year = ""
         if starts_at.year != ends_at.year:
             starts_year = ", %d" % starts_at.year
-        return "{0} {1}{2} - {3} {4}, {5}".format(
+        return "{0} {1}{2} – {3} {4}, {5}".format(
             starts_at.strftime("%B"),
             starts_at.day,
             starts_year,

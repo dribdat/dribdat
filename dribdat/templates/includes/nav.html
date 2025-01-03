@@ -109,9 +109,9 @@
 <!-- Popup global alerts -->
 <div id="global-notifications-alert" class="hidden">
   <div class="alert alert-info">
+    <button type="button" class="btn-close float-right" data-bs-dismiss="alert" aria-label="Close"></button>
     <i class="fa fa-info-circle float-left" aria-hidden="true"></i>
     <span id="notifications-status-text"></span>
-    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
   </div>
 </div>
 
@@ -121,11 +121,9 @@
   <div class="profile-projects container-fluid mb-3">
     <div data-action="/api/project/search.json" id="search">
       <div class="content input-group">
-        <div class="input-group-prepend">
-          <span class="input-group-text">
-            <i class="fa fa-search" aria-hidden="true"></i>
-          </span>
-        </div>
+        <span class="input-group-text">
+          <i class="fa fa-search" aria-hidden="true"></i>
+        </span>
         <input type="text" class="form-control" name="q" aria-label="Search projects" placeholder="Start typing ..."  style="width:20em">
       </div>
     </div>
