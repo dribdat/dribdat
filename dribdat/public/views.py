@@ -298,6 +298,7 @@ def event_stages(event_id):
         for p in projects.filter_by(progress=s['id']).all():
             pp = p.data
             pp['stats'] = p.get_stats()
+            pp['age'] = p.created_at
             project_list.append(pp)
         s['projects'].extend(project_list)
     return render_template("public/eventstages.html",

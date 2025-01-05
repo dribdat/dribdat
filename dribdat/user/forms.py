@@ -112,7 +112,7 @@ class UserForm(FlaskForm):
     my_goals = StringField(
         u'My goals',
         description="What brings you here? Share a few words about your "
-        + "interests. This is at the top of your profile.")
+        + "interests for the top of your profile.")
     fullname = StringField(
         u'Display name', [Length(max=200)],
         description="Your full name, if you want it shown on your profile and certificate.")
@@ -144,6 +144,5 @@ class StoryForm(FlaskForm):
         description="A brief summary of the competencies you bring "
         + "into the team. The center of your profile.")
     vitae = TextAreaField(
-        u'JSON resume', 
-        description=u'For more information see: jsonresume.org')
+        u'JSON resume')
     submit = SubmitField(u'Save changes')

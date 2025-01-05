@@ -25,12 +25,12 @@
         On the event page you can learn about topics, datasets, and
         any other information the organisers have provided.
         To form a team, start a project, or build on an existing challenge.
-        <b>For more information</b>, please visit the
-        <a href="https://dribdat.cc/usage" target="_blank">User Guide</a>.</p>
-      <p>If you would like to use this platform for your event,
+        <b>More information is in the
+        <a href="https://dribdat.cc/usage" target="_blank">User Guide</a>.</b></p>
+      <p>To use this platform for your next event,
         visit our <a href="https://dribdat.cc" target="_blank">website</a>, fork the
         <a href="https://github.com/dribdat/dribdat" target="_blank">open source project</a>,
-        or talk to one of your site administrators:</p>
+        or talk to a site administrator:</p>
       <p class="organisers font-weight-bold">
       {% for user in orgs %}
         &nbsp;🕴️<a href="{{ url_for('public.user_profile', username=user.username) }}">{{ user.fullname or user.name }}</a>

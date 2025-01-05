@@ -8,20 +8,20 @@
       </div>
     {% endif %}
     <div class="section-header-content">
-      <a href="{{ url_for('public.event', event_id=event.id) }}">
-        <h2 class="event-name">{{ event.name }}</h2>
-      </a>
       {% if not event.lock_resources %}
         <div class="event-date">
           {{ event.date }}</div>
       {% endif %}
+      <a href="{{ url_for('public.event', event_id=event.id) }}">
+        <h2 class="event-name">{{ event.name }}</h2>
+      </a>
       {% if event.hostname %}
-        <div class="event-hostname">
+        <span class="event-hostname">
           <i class="fa fa-bank"></i>
-          {{ event.hostname }}</div>
+          {{ event.hostname }}</span>
       {% endif %}
       {% if event.location %}
-        <div class="event-location">
+        <span class="event-location">
           <i class="fa fa-map"></i>
           {% if event.location_lat and event.location_lon %}
           <a title="OpenStreetMap" href="https://www.openstreetmap.org/directions?from=&to={{ event.location_lat }}%2C{{ event.location_lon }}" target="_blank">
@@ -30,7 +30,7 @@
           {% else %}
             {{ event.location }}
           {% endif %}
-        </div>
+        </span>
       {% endif %}
     </div>
   </div>
