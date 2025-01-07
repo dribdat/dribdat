@@ -1746,7 +1746,9 @@ pre {
     padding: 1em;
     margin: 0.5em 0em;
 }
-
+.tab-content {
+    clear: both;
+}
 a.go-up {
     display: block;
     text-align: center;
@@ -2040,8 +2042,12 @@ a.go-up {
     transform: rotate(-240deg);
 }
 
-.profile-header span {
+.profile-header .user-name {
     font-size: 3rem;
+}
+.userprofile .user-score {
+  float: left;
+  margin-left: -4em;
 }
 
 .profile-social {

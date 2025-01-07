@@ -12,7 +12,7 @@
 {% block content %}
 
 {% if score_tip and current_user.id == user.id %}
-  <div class="alert alert-info alert-dismissible fade show"
+  <div class="alert alert-light alert-dismissible fade show"
        title="This tip is only visible to you">
     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     To improve your score, please
@@ -86,19 +86,19 @@
 
 {% endif %}
 
-<div class="row mt-2 profile-header">
+<div class="row mt-5 profile-header">
 
   <div class="col-3 text-center">
     {% if user.carddata %}
-      <div class="profile-picture">
+      <a href="{{ user.webpage_url }}" class="profile-picture">
         <img src="{{user.carddata}}"/>
-      </div>
+      </a>
     {% endif %}
   </div>
 
   {% if user.fullname %}
     <h1 class="col-sm text-start">
-      <span>
+      <span class="user-name">
         {{ user.fullname }}
       </span>
       {% if user.fullname != user.username %}
@@ -106,7 +106,7 @@
       {% endif %}
     </h1>
   {% else %}
-    <h1 class="col-sm text-start">
+    <h1 class="col-sm text-start user-name">
       <tt>{{ user.username }}</tt>
     </h1>
   {% endif %}
@@ -114,14 +114,9 @@
 </div>
 <div class="row mb-3">
 
-  <div class="col-3 text-center">
-    {% if score %}
-      <h5 title="Total score across all projects, adjusted by profile completeness">
-        <span class="user-score">{{ score }}</span>
-      </h5>
-    {% endif %}
+  <div class="col-3">
     {% if user.webpage_url %}
-      <div class="profile-social">
+      <div class="profile-social ps-5">
         <a href="{{ user.webpage_url }}" class="btn btn-lg" target="_blank" rel="noopener noreferrer">
         {% if not user.cardtype %}
           <i class="fa fa-globe"></i>&nbsp;Visit
@@ -134,6 +129,9 @@
   </div>
 
   <div class="col-sm">
+    {% if score %}
+      <div class="user-score" title="Total score across all projects, adjusted by profile completeness">{{ score }}</div>
+    {% endif %}
     <ul class="profile-roles">
     {% for role in user.roles %}
       <li>{{ role.name }}</li>
@@ -154,30 +152,6 @@
 </div>
 {% endif %}
 
-{% if not projects %}
-  {% if current_user and current_user.id == user.id %}
-    <div class="alert alert-success">
-    No projects here yet. Time to <b>Join</b> or <b>Start</b> something awesome!
-    </div>
-
-    {% if events_next %}
-    <div class="row events-next mt-4 mb-4">
-      {% for event in events_next %}
-        {{ evnt.render_home_event(event) }}
-      {% endfor %}
-    </div><!-- /.row events-next -->
-    {% endif %}
-  {% endif %}
-{% else %}
-  <a name="projects"></a>
-  <div class="profile-projects honeycomb">
-    <div class="row ibws-fix">
-    {% for project in projects %}
-      {{ proj.render_project_hexagon(project) }}
-    {% endfor %}
-    </div>
-  </div><!-- /profile-projects -->
-{% endif %}
 
 {% if events %}
   <a name="events"><h2 class="mt-4 mb-2">Sprints</h2></a>
@@ -186,6 +160,32 @@
       {{ evnt.render_home_event(event, False) }}
     {% endfor %}
   </div><!-- /.row -->
+{% endif %}
+
+
+{% if not projects %}
+  {% if current_user and current_user.id == user.id %}
+    <div class="alert alert-success">
+    No projects here yet. Time to <b>Join</b> or <b>Start</b> something awesome!
+    </div>
+
+    {% if events_next %}
+    <div class="row events-next mb-4">
+      {% for event in events_next %}
+        {{ evnt.render_home_event(event) }}
+      {% endfor %}
+    </div><!-- /.row events-next -->
+    {% endif %}
+  {% endif %}
+{% else %}
+  <a name="projects"></a>
+  <div class="profile-projects honeycomb mb-4">
+    <div class="row ibws-fix">
+    {% for project in projects %}
+      {{ proj.render_project_hexagon(project) }}
+    {% endfor %}
+    </div>
+  </div><!-- /profile-projects -->
 {% endif %}
 
 
