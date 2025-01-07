@@ -187,7 +187,7 @@ form input[type="checkbox"] {
     text-decoration: none;
 }
 .alert.project-tips {
-    border: 3px double orange;
+    border: 1px solid rgba(0,0,0,0.1);
     border-radius: 12px;
     margin-top: -1em;
 }
