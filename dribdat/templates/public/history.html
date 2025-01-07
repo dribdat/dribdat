@@ -1,5 +1,5 @@
 {% extends "layout.html" %}
-{% import "macros/_event.html" as misc %}
+{% import "macros/_event.html" as evnt %}
 
 {% block page_title %}Past events{% endblock %}
 
@@ -15,7 +15,7 @@
     <h2 class="mt-4">Past events</h2>
     <div class="row events-past">
       {% for event in events_past %}
-        {{ misc.render_home_event(event) }}
+        {{ evnt.render_home_event(event) }}
       {% endfor %}
     </div><!-- /.row events-past -->
   {% endif %}

@@ -1,5 +1,6 @@
 {% extends "layout.html" %}
-{% import "macros/_event.html" as misc %}
+{% import "macros/_event.html" as evnt %}
+{% import "macros/_project.html" as proj %}
 
 {% block page_title %}{{ user.username }}{% endblock %}
 {% block body_class %}userprofile{% endblock %}
@@ -162,7 +163,7 @@
     {% if events_next %}
     <div class="row events-next mt-4 mb-4">
       {% for event in events_next %}
-        {{ misc.render_home_event(event) }}
+        {{ evnt.render_home_event(event) }}
       {% endfor %}
     </div><!-- /.row events-next -->
     {% endif %}
@@ -172,7 +173,7 @@
   <div class="profile-projects honeycomb">
     <div class="row ibws-fix">
     {% for project in projects %}
-      {{ misc.render_project_hexagon(project) }}
+      {{ proj.render_project_hexagon(project) }}
     {% endfor %}
     </div>
   </div><!-- /profile-projects -->
@@ -182,7 +183,7 @@
   <a name="events"><h2 class="mt-4 mb-2">Sprints</h2></a>
   <div class="row profile-events">
     {% for event in events %}
-      {{ misc.render_home_event(event, False) }}
+      {{ evnt.render_home_event(event, False) }}
     {% endfor %}
   </div><!-- /.row -->
 {% endif %}

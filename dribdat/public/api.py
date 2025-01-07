@@ -398,11 +398,11 @@ def event_get_status():
     return jsonify(status=event.status_text or '')
 
 
-@blueprint.route('/event/<int:event_id>/push/status', methods=["PUT", "POST"])
+@blueprint.route('/event/current/push/status', methods=["PUT", "POST"])
 @admin_required
-def event_push_status(event_id):
+def event_push_status():
     """Update event status."""
-    event = Event.query.filter_by(id=event_id).first_or_404()
+    event = get_current_event()
     newstatus = request.form.get('text')
     if not request.form.get('text'):
         # Clear the status

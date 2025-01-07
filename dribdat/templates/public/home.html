@@ -1,5 +1,6 @@
 {% extends "layout.html" %}
-{% import "macros/_event.html" as misc %}
+{% import "macros/_event.html" as evnt %}
+{% import "macros/_project.html" as proj %}
 
 {% block page_title %}{{current_event.name}}{% endblock %}
 
@@ -11,7 +12,7 @@
   <meta property="og:image" content="{{current_event.logo_url}}"/>
   <meta property="og:description" content="{{current_event.summary or current_event.description|truncate(140)}}"/>
   <meta name="description" content="{{current_event.summary or current_event.description|truncate(140)}}"/>
-  <script type="application/ld+json">{{ current_event.get_schema(request.host_url)|safe }}</script>
+  <script type="application/ld+json">{{current_event.get_schema(request.host_url)|safe}}</script>
   <meta name="dribdat:event:id" content="{{current_event.id}}"/>
 {% endif %}
 {% endblock %}
@@ -43,16 +44,11 @@
 
     <div id="homeCarousel" class="carousel slide" data-ride="carousel">
   		<div class="carousel-inner">
-
-       {{ misc.render_featured_event(current_event, True) }}
-
        {% for event in events_featured %}
-         {{ misc.render_featured_event(event) }}
+         {{ evnt.render_featured_event(event, event == current_event) }}
        {% endfor %}
-
       </div>
-
-      {% if events_featured %}
+      {% if events_featured|length > 1 %}
         <button class="carousel-control-prev" type="button" data-bs-target="#homeCarousel" data-bs-slide="prev">
           <span class="carousel-control-prev-icon" aria-hidden="true"></span>
           <span class="visually-hidden">Previous</span>
@@ -83,7 +79,7 @@
     <div class="resource-list profile-projects honeycomb">
       <div class="row ibws-fix">
         {% for project in my_projects %}
-          {{ misc.render_project_hexagon(project) }}
+          {{ proj.render_project_hexagon(project) }}
         {% endfor %}
         </div>
       </div><!-- /profile-projects -->
@@ -95,7 +91,7 @@
   <a name="resources"></a>
   <div class="row events-tips mt-4">
     {% for event in events_tips %}
-      {{ misc.render_home_event(event) }}
+      {{ evnt.render_home_event(event) }}
     {% endfor %}
   </div><!-- /.row events-next -->
   {% endif %}
@@ -105,7 +101,7 @@
   <h1 class="m-5">Upcoming</h1>
   <div class="row events-next">
     {% for event in events_next %}
-      {{ misc.render_home_event(event) }}
+      {{ evnt.render_home_event(event) }}
     {% endfor %}
   </div><!-- /.row events-next -->
   {% endif %}
@@ -141,7 +137,7 @@
     <h1 class="m-5">History</h1>
     <div class="row events-past">
       {% for event in events_past %}
-        {{ misc.render_home_event(event) }}
+        {{ evnt.render_home_event(event) }}
       {% endfor %}
     </div><!-- /.row events-past -->
     {% if events_past_next %}

@@ -291,8 +291,8 @@ footer .dribdat-logo {
     float: left;
 }
 footer .dribdat-logo img {
-    height: 3em;
-    margin-top: -0.8em;
+    height: 1.4em;
+    margin-top: -0.2em;
 }
 footer .dribdat-logo:hover {
     -webkit-filter: invert(100%);
@@ -454,6 +454,9 @@ nav .nav-login {
 }
 .an-event-meta b {
     display: block;
+}
+.an-event-actions .btn:hover {
+    color: initial;
 }
 
 /* Customize the flipclock widget */
@@ -625,13 +628,13 @@ nav .nav-login {
 /* ---- Hexagonal hawtness ---- */
 
 .with-event .honeycomb {
-    width: 760px;
+    width: 780px;
     margin-top: 30px;
 }
 .hexagon.blank {
     display: none;
 }
-@media (max-width: 900px) {
+@media (max-width: 999px) {
     .with-event .honeycomb {
         margin-top: 0px;
         width: 600px;
@@ -1155,6 +1158,12 @@ a.media {
     max-width: 100%;
     max-height: 400px;
 }
+.theme-dark .sl-wrapper.simple-lightbox {
+    background: #aaa;
+}
+.sl-wrapper.simple-lightbox {
+    background: white;
+}
 .timeline .lightboxed {
     clear: both;
     display: block;
@@ -1350,7 +1359,6 @@ a.media {
     text-align: center;
     font-size: 140%;
     width: 6em;
-    background: rgba(255, 255, 255, 0.5);
 }
 .projectedit form .btn:hover,
 .project-buttons .btn:hover {
@@ -2081,6 +2089,9 @@ a.go-up {
     border-radius: 2em;
     padding: 0.4em;
 }
+.category-tip .user-score {
+    background: #fff;
+}
 .project-score .drib-count {
     font-size: 80%;
     margin-top: -0.5em;
@@ -2160,11 +2171,6 @@ a.card {
     margin-right: 1em;
     float: left;
 }
-.profile-projects .card-body {
-    padding: 10px;
-    background: white;
-    height: 100%;
-}
 .profile-projects .card-text {
     font-size: 10pt;
     color: #555;
@@ -2178,7 +2184,7 @@ a.card {
 .profile-projects .project-score {
     margin: 5px;
     text-align: center;
-    width: 160px;
+    width: 100px;
     display: block;
 }
 .profile-projects center {
@@ -2295,7 +2301,7 @@ a.card {
 @media only print {
     .no-print,
     footer {
-        display: none;
+        display: none !important;
     }
 }
 
@@ -2419,12 +2425,13 @@ Instruction page
 .list-stages .step .agree-list li {
     clear: both;
     list-style: disclosure-closed;
-    padding-right: 1.5em;
     font-size: 70%;
 }
+.list-stages .step .card-header, 
 .list-stages .step .card {
     background: white;
-    margin: 1px -1px;
+}
+.list-stages .step .card {
     min-height: 7em;
     min-width: 16em;
     vertical-align: top;

@@ -1,5 +1,5 @@
 {% extends "layout.html" %}
-{% import "macros/_event.html" as misc %}
+{% import "macros/_project.html" as proj %}
 
 {% block page_title %}Project stages{% endblock %}
 
@@ -8,27 +8,12 @@
 {% block content %}
 
   {% if not current_event.lock_resources %}
-    <p class="category-tip mt-3">
-      <span class="user-score" style="background:white">&#x1F4A1;</span>
-      Project requirements as they progress through stages of development.
-
-      See also:
-
-      <a href="{{ url_for('public.event_categories', event_id=current_event.id) }}" class="btn btn-sm btn-secondary"
-         title="By Category">
-        <i class="fa fa-bars" aria-hidden="true"></i>
-        <span>By Category</span>
-      </a>
-
-      <a href="{{ url_for('public.event_print', event_id=current_event.id) }}" class="btn btn-sm btn-secondary"
-         title="Event report for downloading and printing">
-        <i class="fa fa-print" aria-hidden="true"></i>
-        <span>Full Report</span>
-      </a>
-      <!--<br>Use the <b>Post</b> button when your project is ready to advance to the next level.-->
-    </p>
-
     <h1 class="huge">Stages</h1>
+
+    <p class="category-tip mt-3">
+      <span class="user-score">&#x1F4A1;</span>
+      Project requirements as they progress through stages of development.
+    </p>
   {% endif %}
 
   <a name="steps"></a>
@@ -61,13 +46,13 @@
       {% endif %}
 
       {% if step.projects %}
-      <div class="profile-projects mt-2">
-          <div class="row ibws-fix">
+      <div class="honeycomb mb-5 pb-5">
+          <div class="ibws-fix">
           {% for project in step.projects %}
-              {{ misc.render_project_card(project) }}
+              {{ proj.render_project_hexagon(project) }}
           {% endfor %}
           </div>
-      </div><!-- /profile-projects -->
+      </div><!-- /honeycomb -->
       {% endif %}
 
     </div>
@@ -78,7 +63,19 @@
   <center class="mt-5">
     <a class="btn btn-light btn-lg" href="{{ url_for('public.event', event_id=current_event.id) }}">
       <i class="fa fa-arrow-left" aria-hidden="true"></i>
-      {{ current_event.name }}</a>
+      <span>Return</span></a>
+
+    <a href="{{ url_for('public.event_categories', event_id=current_event.id) }}" class="btn btn-lg btn-secondary"
+       title="By Category">
+      <i class="fa fa-bars" aria-hidden="true"></i>
+      <span>By Category</span>
+    </a>
+
+    <a href="{{ url_for('public.event_print', event_id=current_event.id) }}" class="btn btn-lg btn-secondary"
+       title="Event report for downloading and printing">
+      <i class="fa fa-print" aria-hidden="true"></i>
+      <span>Full Report</span>
+    </a>
   </center>
 
 {% endblock %}

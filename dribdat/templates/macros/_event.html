@@ -1,76 +1,3 @@
-{% macro render_project_tooltip(project) %}
-	data-ident="{{ project.ident or '' }}"
-	data-status="{{ project.summary|truncate(140, True, '..') }}"
-	data-imageurl="{{ project.image_url|quote_plus }}"{#
-		> Status icons in tooltip:
-	#}data-summary="{{ project.phase }}"
-{% endmacro %}
-
-<!-- Based on Hexagon Tiles by Graham Pyne http://codepen.io/gpyne/pen/iElhp/ -->
-{% macro render_project_hexagon(project) %}
-	<a href="{{ url_for('project.project_view', project_id=project.id) }}"
-		 class="hexagon {{
-		 	'challenge' if project.is_challenge else 'project'
-		 }}{{
-		 	' stage-%d' % project.progress if project.progress
-		 }} category-highlight"
-		 {% if project.category_id %}
-		 	 category-id="{{ project.category_id }}"
-		 {% endif %}
-		 {% if project.logo_color %}
-		 	 style="border-bottom-color:{{ project.logo_color }}"
-		 {% endif %}
-		 {{ render_project_tooltip(project) }}
-		>
-		 {{ render_hexagontent(project) }}
-		{% if project.is_challenge %}
-			<div class="team-counter" title="Team size ({{ project.score }})">
-				{% if project.score == 1 %}
-					<i class="fa fa-user"></i>
-				{% elif project.score == 2 %}
-					<i class="fa fa-user"></i><i class="fa fa-user"></i>
-				{% elif project.score > 2 %}
-					<i class="fa fa-users"></i>
-				{% endif %}
-			</div>
-		{% endif %}
-	</a>
-{% endmacro %}
-
-{% macro render_challenge_hexagon(project) %}
-	<a href="{{ url_for('project.get_challenge', project_id=project.id) }}"
-		 class="hexagon challenge category-highlight"
-		 {% if project.category_id %}
-		 	 category-id="{{ project.category_id }}"
-		 {% endif %}
-		 {{ render_project_tooltip(project) }}
-		>
-		 {{ render_hexagontent(project) }}
-	</a>
-{% endmacro %}
-
-{% macro render_hexagontent(project) %}
-	<div class="hexagontent {{
-        'text-md' if 32 < project.name|length else 'text-sm' if 42 < project.name|length
-	}}{{ ' with-icon' if project.logo_icon or project.image_url }}">
-		{% if project.score and project.score > 90 %}
-			<span class="team-boost" title="Skyrocketing">🚀</span>
-		{% elif project.score and project.score > 69 %}
-			<span class="team-boost" title="Trending">🔥</span>
-		{% endif %}
-		<span class="project-name">{{ project.name|truncate(60, True, '..') }}</span>
-		{% if project.image_url or project.logo_icon or project.ident %}
-			<div class="hexaicon" style="{% if project.image_url %}background-color:{{project.logo_color or '#FFF'}};background-image:url('{{project.image_url|quote_plus}}'){% endif %}">
-				{% if project.ident %}
-					<span class="project-ident">{{ project.ident }}</span>
-				{% elif project.logo_icon %}
-					<i class="fa fa-{{project.logo_icon}}"></i>
-				{% endif %}
-			</div>
-		{% endif %}
-	</div>
-{% endmacro %}
-
 {% macro render_embed_event(event, projects, showNav=False) %}
 <div class="embed-event">
 	{% if showNav %}
@@ -91,7 +18,7 @@
 		 		 }}{{
 		 		 	' stage-%d' % project.progress if project.progress
 		 		 }}"
-		 		 {{ render_project_tooltip(project) }}>
+		 		 title="{{project.name}}">
         <div class="hexagontent">
           {% if project.logo_icon %}
           <i class="fa fa-{{project.logo_icon}}"></i>
@@ -105,58 +32,6 @@
     </div>
   </div>
 </div><!-- /.embed-event -->
-{% endmacro %}
-
-{% macro render_empty_hexagon() %}
-	<a class="hexagon challenge blank">
-		<div class="hexagontent"></div>
-	</a>
-{% endmacro %}
-
-{% macro render_project_card(project) %}
-	<a class="card me-4 flex-row flex-wrap {{ 'challenge' if project.is_challenge else 'project' }}"
-		 href="{{ url_for('project.project_view', project_id=project.id) }}"
-		 style="max-width: 500px">
-
-		{% if project.image_url %}
-			<div class="card-header border-0">
-				<img height="60" class="card-img-left" src="{{project.image_url}}">
-			</div>
-		{% endif %}
-    
-    <div class="card-block px-2 p-3">
-
-		 <div class="card-body">
-
-				{% if project.score and not project.is_challenge %}
-				<div class="project-score">
-					<div class="progress" title="Summary of progress">
-						<div class="progress-bar" role="progressbar" style="width:{{project.score}}%">{{project.score}}</div>
-					</div>
-				</div>
-				{% endif %}
-
-				<h5 class="card-title">{{ project.name }}</h5>
-				<div class="card-text">
-					<p class="project-summary">
-						{{ project.summary }}
-					</p>
-					<table class="project-stats">
-			    	{% if project.stats and project.stats.people %}
-			    		<td>People:</td><th>{{ project.stats.people }}</th>
-				    	<td>Posts:</td><th>{{ project.stats.total }}</th>
-				    	<td>Dribs:</td><th>{{ project.stats.updates }}</th>
-						{% endif %}
-			    	{% if project.age %}
-			    		<td>Started:</td><th>{{ project.age|since_date }}</th>
-						{% endif %}
-				  </table>
-				</div>
-
-			</div>
-
-		</div>
-	</a>
 {% endmacro %}
 
 {% macro render_home_event(event, details=True) %}
@@ -198,19 +73,16 @@
             </a>
           {% else %}
           	{% if event.project_count %}
-          		<a href="{{ url_for('public.event', event_id=event.id) }}" class="btn">
+          		<a href="{{ url_for('public.event', event_id=event.id) }}" class="btn btn-default">
 			          {% if event.has_finished %}
-			            <span>{{ event.project_count }}</span>
+			            <span title="Results">{{ event.project_count }}</span>
 			            <i class="fa fa-star" aria-hidden="true"></i>
-		              Results
 			          {% elif event.has_started %}
-			            <span>{{ event.project_count }}</span>
+			            <span title="Challenges">{{ event.project_count }}</span>
 			            <i class="fa fa-cube" aria-hidden="true"></i>
-		              Challenges
 			          {% else %}
-			            <span>{{ event.project_count }}</span>
+			            <span title="Projects">{{ event.project_count }}</span>
 			            <i class="fa fa-arrow-right" aria-hidden="true"></i>
-		              Projects
 			          {% endif %}
 	        		</a>
 			      {% endif %}

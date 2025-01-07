@@ -1,6 +1,6 @@
 {
   "name": "dribdat",
-  "version": "0.8.6",
+  "version": "0.8.7",
   "description": "Online platform for time-limited collaborative events",
   "repository": "https://codeberg.org/dribdat/dribdat",
   "author": "Dribdat Contributors <dribdat@datalets.ch>",
