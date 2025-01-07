@@ -182,6 +182,9 @@ def logout():
 def forgot():
     """Forgot password."""
     form = EmailForm(request.form)
+    # If Captcha is not configured, skip the validation
+    if not current_app.config['RECAPTCHA_PUBLIC_KEY']:
+        del form.recaptcha
     if not (form.is_submitted() and form.validate()):
         flash_errors(form)
     return render_template(
@@ -197,6 +200,9 @@ def passwordless():
         flash("Passwordless login currently not possible.", 'warning')
         return redirect(url_for("auth.login", local=1))
     form = EmailForm(request.form)
+    # If Captcha is not configured, skip the validation
+    if not current_app.config['RECAPTCHA_PUBLIC_KEY']:
+        del form.recaptcha
     if not (form.is_submitted() and form.validate()):
         flash_errors(form)
         return redirect(url_for('auth.forgot'))
