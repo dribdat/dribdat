@@ -114,29 +114,22 @@
 {% endmacro %}
 
 {% macro render_project_card(project) %}
-	<a class="card me-4 flex-row flex-wrap {{ 'challenge' if project.is_challenge else 'project' }}"
-		 href="{{ url_for('project.project_view', project_id=project.id) }}"
-		 style="max-width: 500px">
-
-		{% if project.image_url %}
-			<div class="card-header border-0">
-				<img height="60" class="card-img-left" src="{{project.image_url}}">
-			</div>
-		{% endif %}
-    
-    <div class="card-block px-2 p-3">
-
-		 <div class="card-body">
-
-				{% if project.score and not project.is_challenge %}
-				<div class="project-score">
-					<div class="progress" title="Summary of progress">
-						<div class="progress-bar" role="progressbar" style="width:{{project.score}}%">{{project.score}}</div>
-					</div>
-				</div>
+	<a class="card col-lg-4 mb-2 {{ 'challenge' if project.is_challenge else 'project' }}"
+		 href="{{ url_for('project.project_view', project_id=project.id) }}">
+			<div class="card-header w-100">
+				{% if project.image_url %}
+					<img height="60" class="card-img-left pe-3" src="{{project.image_url}}">
 				{% endif %}
-
 				<h5 class="card-title">{{ project.name }}</h5>
+				{% if project.score and not project.is_challenge %}
+					<div class="project-score">
+						<div class="progress" title="Summary of progress">
+							<div class="progress-bar" role="progressbar" style="width:{{project.score}}%">{{project.score}}</div>
+						</div>
+					</div>
+				{% endif %}
+			</div>
+		  <div class="card-body">
 				<div class="card-text">
 					<p class="project-summary">
 						{{ project.summary }}
@@ -152,10 +145,7 @@
 						{% endif %}
 				  </table>
 				</div>
-
 			</div>
-
-		</div>
 	</a>
 {% endmacro %}
 

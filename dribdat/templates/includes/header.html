@@ -9,7 +9,7 @@
     {% endif %}
     <div class="section-header-content">
       {% if not event.lock_resources %}
-        <div class="event-date">
+        <div class="event-date no-print">
           {{ event.date }}</div>
       {% endif %}
       <a href="{{ url_for('public.event', event_id=event.id) }}">
