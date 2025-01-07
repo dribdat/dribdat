@@ -350,11 +350,13 @@
       // Invert page colors
       $('body').addClass('theme-dark');
       $('nav.navbar').removeClass('navbar-light');
+      $('nav.navbar').addClass('navbar-dark');
       $('footer .darkmode span').html('Light');
       $css.attr('org-href', $css.attr('href'));
       $css.attr('href', $css.attr('alt-href'));
     } else {
       $('body').removeClass('theme-dark');
+      $('nav.navbar').removeClass('navbar-dark');
       $('nav.navbar').addClass('navbar-light');
       $('footer .darkmode span').html('Dark');
       $css.attr('href', $css.attr('org-href'));
