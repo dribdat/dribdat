@@ -3,7 +3,7 @@
 {% block content %}
 <div class="container admin-projects">
     <a href="{{ url_for('admin.project_new') }}" class="btn btn-success btn-lg">Add project</a>
-    <h2>Projects</h2>
+    <h2 class="huge">Challenges</h2>
 
     {% if category_name %}<h4>Category: <b>{{ category_name }}</b></h4>{% endif %}
 
@@ -26,7 +26,7 @@
         <i class="fa fa-arrow-left" aria-hidden="true"></i>
         Sprint</a>
     {% else %}
-      <span><b>Tip</b>: Manage the projects of a sprint for more options.</span>
+      <p class="mb-4"><b>Tip</b>: Manage the projects of a sprint for more options.</p>
     {% endif %}
 
     {% if data %}

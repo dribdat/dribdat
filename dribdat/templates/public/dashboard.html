@@ -1,6 +1,6 @@
 {% extends "layout.html" %}
 
-{% block page_title %}{{current_event.name}} dashboard{% endblock %}
+{% block page_title %}{{current_event.name}}{% endblock %}
 
 {% block body_class %}dashboard-page embed-view{% endblock %}
 
@@ -27,41 +27,33 @@
 
 <div id="dashboard-container">
 
-<div class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark" style="width: 380px;">
-  <a class="d-flex align-items-center flex-shrink-0 p-3 link-dark text-decoration-none border-bottom">
-    <svg class="bi me-2" width="30" height="24"><use xlink:href="#bootstrap"></use></svg>
-    <span class="fs-5 fw-semibold">Teams</span>
+<div class="d-flex flex-column flex-shrink-0 text-white bg-dark" style="width: 380px;">
+  <a class="d-flex align-items-center flex-shrink-0 p-3 text-decoration-none border-bottom">
+    <span class="fs-5 fw-semibold text-white"><tt>{{current_event.name}}</tt></span>
   </a>
-  <div class="list-group list-group-flush border-bottom scrollarea">
+  <div class="list-group list-group-flush scrollarea">
     <div id="projects"></div>
   </div>
 </div>
 
 <div class="d-flex align-items-stretch flex-fill">
-  <div class="container-countdown">
-    <div id="event-logo"><img src="{{ current_event.logo_url }}" width="100%"></div>
-    {% if current_event.countdown %}
-      <div id="clockDashboard" class="event-countdown flipdown" data-start="{{ current_event.countdown }}"></div>
-    {% endif %}
-  </div>
+  <img id="event-logo" class="hidden" src="{{ current_event.logo_url }}">
+  {% if current_event.countdown %}
+    <div id="clockDashboard" class="event-countdown flipdown" data-start="{{ current_event.countdown }}"></div>
+  {% endif %}
 </div>
 
 <div class="d-flex flex-column align-items-stretch flex-shrink-0 bg-white socialwall" style="width: 380px;">
   <a class="d-flex align-items-center flex-shrink-0 p-3 link-dark text-decoration-none border-bottom">
-    <svg class="bi me-2" width="30" height="24"><use xlink:href="#bootstrap"></use></svg>
-    <span class="fs-5 fw-semibold">Dribs</span>
+    <span class="fs-5 fw-semibold"><tt>DRIBDAT</tt></span>
   </a>
-  <div class="list-group list-group-flush border-bottom scrollarea">
+  <div class="list-group list-group-flush scrollarea">
     <div id="activities"></div>
   </div>
 </div>
 
 {% if with_social_wall == 'mastodon' %}
 <div class="d-flex flex-column align-items-stretch flex-shrink-0 bg-white socialwall" style="width: 380px;">
-  <a class="d-flex align-items-center flex-shrink-0 p-3 link-dark text-decoration-none border-bottom">
-    <svg class="bi me-2" width="30" height="24"><use xlink:href="#bootstrap"></use></svg>
-    <span class="fs-5 fw-semibold">Social Wall</span>
-  </a>
   <div class="list-group list-group-flush border-bottom scrollarea">
     <iframe allowfullscreen sandbox="allow-top-navigation allow-scripts allow-popups allow-popups-to-escape-sandbox" width="100%" height="67%" src="https://www.mastofeed.com/apiv2/feed?userurl={{ wall_url }}&theme=light&size=100&header=false&replies=false&boosts=true" frameborder="0"></iframe>
   </div>
@@ -128,16 +120,6 @@
     border-bottom: 2px solid white;
   }
 
-  .container-countdown {
-    padding-left: 265px;
-    text-align: center;
-  }
-  @media (min-width: 1000px) {
-    .container-countdown {
-      padding-left: 400px;
-    }
-  }
-
   .container-fluid .sidebar {
     height: 100%;
     padding: 0px;
@@ -152,12 +134,8 @@
   }
 
   #event-logo {
-    width: 50%;
-    margin-top: 100px;
-    position: fixed;
-  }
-  #event-logo img {
-    border-radius: 10px;
+    margin: 10px;
+    width: 100%;
   }
 
   #metrics {
@@ -216,8 +194,9 @@
 
   .event-countdown {
     position: fixed;
-    bottom: 25px;
-    margin-left: -3em;
+    bottom: 4em;
+    left: 50%;
+    margin-left: -17em;
   }
 
   #activities {
@@ -276,7 +255,7 @@ refreshProjects = function() {
       if (p.is_hidden) return;
       $pp.append('<div'+(p.logo_color?' style="background:'+p.logo_color+'"':'')+'>' +
         '<a href="/project/'+p.id+'" title="'+p.name+'">'+p.name+'</a>' +
-        '<sp style="width:'+p.score+'px">'+p.score+'</sp>' +
+        '<sp style="width:'+p.score*2+'px">'+p.score+'</sp>' +
       '</div>');
     });
   });

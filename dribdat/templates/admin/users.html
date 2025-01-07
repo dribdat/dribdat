@@ -4,9 +4,9 @@
 <div class="container admin-users">
     <a href="{{ url_for('admin.user_new') }}" class="btn btn-success btn-lg">Add user</a>
 
-    <h2 class="float-left">Participants</h2>
+    <h2 class="huge">People</h2>
 
-    <span>The use of dedicated user identity providers is <a href="https://dribdat.cc/deploy.html#authentication" target="_blank">recommended</a>.</span>
+    <p class="mb-4">The use of dedicated user identity providers is <a href="https://dribdat.cc/deploy.html#authentication" target="_blank">recommended</a>.</p>
 
     {% include "includes/search.html" %}
     {% include "includes/pagination.html" %}

@@ -3,35 +3,59 @@
 {% block content %}
 <div class="container">
 
-<div class="jumbotron admin-stats text-center" style="background:none; min-width: 600px;">
+<div class="w-100 text-center" style="min-width: 640px;">
+  {% for stat in stats %}
+    {% if stat.text == 'Sprints' %}
+      <a href="{{ url_for('admin.events') }}"
+    {% elif stat.text == 'People' %}
+      <a href="{{ url_for('admin.users') }}"
+    {% elif stat.text == 'Dribs' %}
+      <a href="{{ url_for('public.dribs') }}"
+    {% else %}
+      <a href="{{ url_for('admin.projects') }}"
+    {% endif %}
+       class="card stat" style="width: {{ 90/stats|length }}%; height: {{ stat.height }}em">
+      {% if stat.img %}
+        <img src="{{ stat.img }}" class="card-img-top">
+      {% endif %}
+        <div class="card-body" title="{{ stat.text }}">
+            <h5 class="card-title">{{ stat.value }}</h5>
+            <i class="fa fa-{{ stat.icon }}" aria-hidden="true"></i> {{ stat.text }}
+        </div>
+    </a>
+  {% endfor %}
+</div>
+
+<div class="jumbotron admin-stats text-center" style="background:#eee; color:#000; min-width: 640px;">
 
   <div class="chart-activities">
     <div class="btn-group mb-2 text-center">
-      <a href="{{ url_for('admin.events') }}" class="btn btn-lg btn-warning">
-          <i class="fa fa-calendar" aria-hidden="true"></i>
-          Sprints</a>
-    {% if default_event %}
-        <a href="{{ url_for('admin.event_projects', event_id=default_event.id) }}" class="btn btn-lg btn-success">
-          <i class="fa fa-star" aria-hidden="true"></i>
-          Projects</a>
-        <a href="{{ url_for('public.all_participants') }}" class="btn btn-lg btn-danger">
-          <i class="fa fa-child" aria-hidden="true"></i>
-          People</a>
-    {% else %}
-        <a href="{{ url_for('public.event_start') }}" class="btn btn-lg btn-success">
-          <i class="fa fa-calendar" aria-hidden="true"></i>
-          Start a sprint</a>
-    {% endif %}
+  {% if default_event %}
+      <a href="{{ url_for('public.dashboard') }}" class="btn btn-lg btn-dark">
+        <i class="fa fa-calendar" aria-hidden="true"></i>
+        Dashboard</a>
+      <a href="{{ url_for('admin.event', event_id=default_event.id) }}" class="btn btn-lg btn-primary">
+        <i class="fa fa-pencil" aria-hidden="true"></i>
+        Featured</a>
+      <a href="{{ url_for('admin.event_projects', event_id=default_event.id) }}" class="btn btn-lg btn-success">
+        <i class="fa fa-star" aria-hidden="true"></i>
+        Projects</a>
+  {% else %}
+      <a href="{{ url_for('public.event_start') }}" class="btn btn-lg btn-success">
+        <i class="fa fa-calendar" aria-hidden="true"></i>
+        Start a sprint</a>
       <a href="{{ url_for('admin.presets') }}" class="btn btn-lg btn-info">
         <i class="fa fa-pencil" aria-hidden="true"></i>
-        Categories</a>
+        Add roles &amp; categories</a>
+  {% endif %}
     </div>
 
-    <div id="announcements" class="m-4">
-      <textarea class="editable w-100 border-0 mb-2">{{ status_text }}</textarea>
-
+    <div id="announcements" class="mt-4">
+      <textarea class="editable w-100 mb-2" 
+                style="max-width: 740px; background: #ffd73e;">{{ status_text }}</textarea>
+      <br>
       <button class="btn btn-light"
-        title="Send the text above to everybody!"
+        title="Send a message to logged in users"
         >📣 Announce</button>
     </div>
   </div>
@@ -40,44 +64,10 @@
     <div id="activities"></div>
   </div>
 
-  <div class="mb-4">
-    <a href="{{ url_for('public.dashboard') }}" class="btn btn-dark">
-      <i class="fa fa-recycle" aria-hidden="true"></i>
-      Dashboard</a>
-
-    {% if default_event %}
-      <a href="{{ url_for('admin.event', event_id=default_event.id) }}" class="btn btn-warning">
-        <i class="fa fa-pencil" aria-hidden="true"></i>
-        Featured Sprint</a>
-    {% endif %}
-  </div>
-
-  <div class="mb-4 mt-5">
-  {% for stat in stats %}
-    {% if stat.text == 'Sprints' %}
-      <a href="{{ url_for('admin.events') }}"
-    {% elif stat.text == 'Participants' %}
-      <a href="{{ url_for('admin.users') }}"
-    {% else %}
-      <a href="{{ url_for('admin.projects') }}"
-    {% endif %}
-       class="card stat" style="width: {{ 90/stats|length }}%; height: {{ stat.height }}em">
-      {% if stat.img %}
-        <img src="{{ stat.img }}" class="card-img-top">
-      {% endif %}
-        <div class="card-body">
-            <h5 class="card-title">{{ stat.value }}</h5>
-            <p class="card-text">{{ stat.text }}</p>
-            <i class="fa fa-{{ stat.icon }}" aria-hidden="true"></i>
-        </div>
-    </a>
-  {% endfor %}
-  </div>
-
   <div class="mt-2" style="font-family:monospace; font-size:160%">
     <p>{{ timeinfo }}</p>
     <a href="{{ url_for('public.clear_cache') }}">Refresh</a> |
-    <b><a href="{{ url_for('public.about') }}">Documentation</a></b> |
+    <b><a href="{{ url_for('public.about') }}">Help</a></b> |
     <a href="mailto:dribdat@datalets.ch">Hotline</a>
   </div>
     

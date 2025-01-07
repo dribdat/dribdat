@@ -11,11 +11,11 @@
 <div class="event-challenges">
   {% if projects %}
     <div class="profile-projects mt-2" style="border:none">
-        <div class="row ibws-fix">
+      <div class="row ibws-fix">
         {% for project in projects %}
             {{ proj.render_project_card(project) }}
         {% endfor %}
-        </div>
+      </div>
     </div><!-- /profile-projects -->
   {% else %}
     <i>None have been posted yet.</i>

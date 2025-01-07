@@ -197,7 +197,7 @@
     e.preventDefault(); e.stopPropagation();
     var url = $(this).attr('href') + '?embed=1';
     var code = '<iframe src="' + url + '" style="width:100%;height:320px;background:transparent;border:none;overflow:hidden" scrolling="no"></iframe>';
-    window.prompt('Share the event link in social media, or copy and paste this HTML code to embed on your site. For even better embedding, visit github.com/dribdat/backboard', code);
+    window.prompt('Copy and paste this HTML code to embed challenges on your site. Visit dribdat/backboard for another option.', code);
   });
 
   // Helper to copy links
@@ -350,11 +350,13 @@
       // Invert page colors
       $('body').addClass('theme-dark');
       $('nav.navbar').removeClass('navbar-light');
+      $('nav.navbar').addClass('navbar-dark');
       $('footer .darkmode span').html('Light');
       $css.attr('org-href', $css.attr('href'));
       $css.attr('href', $css.attr('alt-href'));
     } else {
       $('body').removeClass('theme-dark');
+      $('nav.navbar').removeClass('navbar-dark');
       $('nav.navbar').addClass('navbar-light');
       $('footer .darkmode span').html('Dark');
       $css.attr('href', $css.attr('org-href'));

@@ -9,7 +9,7 @@
 {% block content %}
 
   {% if (suggestions or stage) and project.progress and project.progress < 50 %}
-    <div class="alert float-right resource-list project-tips profile-projects alert-dismissible">
+    <div class="alert float-right pe-5 resource-list project-tips profile-projects alert-dismissible">
       <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 
       <div class="resource-list-suggestions container-fluid p-1">
@@ -32,7 +32,7 @@
           {% endfor %}
         </div>
         {% if not all_valid %}
-          <p class="stage-conditions clearfix pl-2">
+          <p class="stage-conditions clearfix">
             {% for item in stage.conditions.validate %}
               {% if item.valid %}
                 <span class="mr-2 float-left stage-ok">

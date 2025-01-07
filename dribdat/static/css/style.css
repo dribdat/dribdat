@@ -187,7 +187,7 @@ form input[type="checkbox"] {
     text-decoration: none;
 }
 .alert.project-tips {
-    border: 3px double orange;
+    border: 1px solid rgba(0,0,0,0.1);
     border-radius: 12px;
     margin-top: -1em;
 }
@@ -226,9 +226,12 @@ form input[type="checkbox"] {
 .admin .card.stat {
     display: inline-block;
     vertical-align: bottom;
-    background: #922;
+    background: #999;
     color: #fff;
     text-decoration: none;
+    border-radius: 0px;
+    margin-bottom: -1px;
+    border-top-left-radius: 20px;
 }
 .admin .card.stat:hover {
     background: #f55;
@@ -1746,7 +1749,9 @@ pre {
     padding: 1em;
     margin: 0.5em 0em;
 }
-
+.tab-content {
+    clear: both;
+}
 a.go-up {
     display: block;
     text-align: center;
@@ -2040,8 +2045,12 @@ a.go-up {
     transform: rotate(-240deg);
 }
 
-.profile-header span {
+.profile-header .user-name {
     font-size: 3rem;
+}
+.userprofile .user-score {
+  float: left;
+  margin-left: -4em;
 }
 
 .profile-social {
