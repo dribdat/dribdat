@@ -1,6 +1,6 @@
 {% extends "layout.html" %}
 
-{% block page_title %}{{current_event.name}} dashboard{% endblock %}
+{% block page_title %}{{current_event.name}}{% endblock %}
 
 {% block body_class %}dashboard-page embed-view{% endblock %}
 
@@ -29,7 +29,7 @@
 
 <div class="d-flex flex-column flex-shrink-0 text-white bg-dark" style="width: 380px;">
   <a class="d-flex align-items-center flex-shrink-0 p-3 text-decoration-none border-bottom">
-    <span class="fs-5 fw-semibold text-white"><tt>TEAMS</tt></span>
+    <span class="fs-5 fw-semibold text-white"><tt>{{current_event.name}}</tt></span>
   </a>
   <div class="list-group list-group-flush scrollarea">
     <div id="projects"></div>
