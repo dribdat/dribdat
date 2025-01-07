@@ -45,9 +45,11 @@
       <i class="fa fa-recycle" aria-hidden="true"></i>
       Dashboard</a>
 
-    <a href="{{ url_for('admin.event', event_id=default_event.id) }}" class="btn btn-light">
-      <i class="fa fa-pencil" aria-hidden="true"></i>
-      Featured Sprint</a>
+    {% if default_event %}
+      <a href="{{ url_for('admin.event', event_id=default_event.id) }}" class="btn btn-warning">
+        <i class="fa fa-pencil" aria-hidden="true"></i>
+        Featured Sprint</a>
+    {% endif %}
   </div>
 
   <div class="mb-4 mt-5">
