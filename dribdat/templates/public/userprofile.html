@@ -1,5 +1,6 @@
 {% extends "layout.html" %}
 {% import "macros/_event.html" as misc %}
+{% import "macros/_project.html" as proj %}
 
 {% block page_title %}{{ user.username }}{% endblock %}
 {% block body_class %}userprofile{% endblock %}
@@ -172,7 +173,7 @@
   <div class="profile-projects honeycomb">
     <div class="row ibws-fix">
     {% for project in projects %}
-      {{ misc.render_project_hexagon(project) }}
+      {{ proj.render_project_hexagon(project) }}
     {% endfor %}
     </div>
   </div><!-- /profile-projects -->

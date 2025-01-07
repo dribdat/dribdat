@@ -1,5 +1,6 @@
 {% extends "layout.html" %}
 {% import "macros/_event.html" as misc %}
+{% import "macros/_project.html" as proj %}
 {% import "macros/_social.html" as social %}
 
 {% block page_title %}{{current_event.name}} / {% if current_event.has_finished %} Results {% elif current_event.has_started %} Project Board {% else %} Challenges {% endif %}{% endblock %}
@@ -45,7 +46,7 @@
   <a name="projects"></a>
   <div class="ibws-fix">
     {% for project in summaries %}
-      {{ misc.render_project_hexagon(project) }}
+      {{ proj.render_project_hexagon(project) }}
     {% endfor %}
     {% if current_user and current_user.active and current_event.can_start_project %}
       <a class="hexagon challenge new"

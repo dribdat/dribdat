@@ -1,5 +1,5 @@
 {% extends "layout.html" %}
-{% import "macros/_event.html" as misc %}
+{% import "macros/_project.html" as proj %}
 
 {% block page_title %}Project stages{% endblock %}
 
@@ -49,7 +49,7 @@
       <div class="honeycomb mb-5 pb-5">
           <div class="ibws-fix">
           {% for project in step.projects %}
-              {{ misc.render_project_hexagon(project) }}
+              {{ proj.render_project_hexagon(project) }}
           {% endfor %}
           </div>
       </div><!-- /honeycomb -->
