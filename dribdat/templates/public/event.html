@@ -1,7 +1,5 @@
 {% extends "layout.html" %}
-{% import "macros/_event.html" as misc %}
 {% import "macros/_project.html" as proj %}
-{% import "macros/_social.html" as social %}
 
 {% block page_title %}{{current_event.name}} / {% if current_event.has_finished %} Results {% elif current_event.has_started %} Project Board {% else %} Challenges {% endif %}{% endblock %}
 
@@ -62,7 +60,7 @@
         </div>
       </a>
     {% elif project_count % 2 != 0 %}
-      {{ misc.render_empty_hexagon() }}
+      {{ proj.render_empty_hexagon() }}
     {% endif %}
   </div>
 </div><!-- /honeycomb -->

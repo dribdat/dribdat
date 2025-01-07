@@ -1,5 +1,5 @@
 {% extends "layout.html" %}
-{% import "macros/_event.html" as misc %}
+{% import "macros/_project.html" as proj %}
 
 {% block page_title %}Challenges{% endblock %}
 
@@ -13,7 +13,7 @@
     <div class="profile-projects mt-2" style="border:none">
         <div class="row ibws-fix">
         {% for project in projects %}
-            {{ misc.render_project_card(project) }}
+            {{ proj.render_project_card(project) }}
         {% endfor %}
         </div>
     </div><!-- /profile-projects -->

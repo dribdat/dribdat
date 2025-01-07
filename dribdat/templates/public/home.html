@@ -1,5 +1,5 @@
 {% extends "layout.html" %}
-{% import "macros/_event.html" as misc %}
+{% import "macros/_event.html" as evnt %}
 {% import "macros/_project.html" as proj %}
 
 {% block page_title %}{{current_event.name}}{% endblock %}
@@ -45,10 +45,10 @@
     <div id="homeCarousel" class="carousel slide" data-ride="carousel">
   		<div class="carousel-inner">
 
-       {{ misc.render_featured_event(current_event, True) }}
+       {{ evnt.render_featured_event(current_event, True) }}
 
        {% for event in events_featured %}
-         {{ misc.render_featured_event(event) }}
+         {{ evnt.render_featured_event(event) }}
        {% endfor %}
 
       </div>
@@ -96,7 +96,7 @@
   <a name="resources"></a>
   <div class="row events-tips mt-4">
     {% for event in events_tips %}
-      {{ misc.render_home_event(event) }}
+      {{ evnt.render_home_event(event) }}
     {% endfor %}
   </div><!-- /.row events-next -->
   {% endif %}
@@ -106,7 +106,7 @@
   <h1 class="m-5">Upcoming</h1>
   <div class="row events-next">
     {% for event in events_next %}
-      {{ misc.render_home_event(event) }}
+      {{ evnt.render_home_event(event) }}
     {% endfor %}
   </div><!-- /.row events-next -->
   {% endif %}
@@ -142,7 +142,7 @@
     <h1 class="m-5">History</h1>
     <div class="row events-past">
       {% for event in events_past %}
-        {{ misc.render_home_event(event) }}
+        {{ evnt.render_home_event(event) }}
       {% endfor %}
     </div><!-- /.row events-past -->
     {% if events_past_next %}

@@ -1,5 +1,5 @@
 {% extends "layout.html" %}
-{% import "macros/_event.html" as misc %}
+{% import "macros/_project.html" as proj %}
 
 {% block page_title %}Projects by category{% endblock %}
 
@@ -33,7 +33,7 @@
       <div class="profile-projects mt-2">
           <div class="row ibws-fix">
             {% for project in category.event_projects(current_event.id) %}
-                {{ misc.render_project_card(project) }}
+                {{ proj.render_project_card(project) }}
             {% endfor %}
           </div>
       </div>
@@ -52,7 +52,7 @@
       <div class="profile-projects mt-2 p-0">
           <div class="row ibws-fix ms-2">
           {% for project in projects %}
-              {{ misc.render_project_card(project) }}
+              {{ proj.render_project_card(project) }}
           {% endfor %}
           </div>
       </div><!-- /profile-projects -->
