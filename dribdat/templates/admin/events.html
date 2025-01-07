@@ -29,56 +29,59 @@
         </thead>
         {% for event in events %}
         <tr>
-
-
             <td>
-                          <div class="dropdown">
-                            <button class="btn btn-light dropdown-toggle" type="button" id="evMenu{{ event.id }}" aria-haspopup="true" aria-expanded="false" data-bs-toggle="dropdown">
-                              &nbsp;⬣&nbsp;{{ event.project_count }}&nbsp;
-                            </button>
-                            <ul class="dropdown-menu" aria-labelledby="evMenu{{ event.id }}">
-                              <a href="{{ url_for('public.event_challenges', event_id=event.id) }}" class="dropdown-item">
-                                  <i class="fa fa-trophy" aria-hidden="true"></i>
-                                  Challenges
-                                </a>
-                              <a href="{{ url_for('public.event_print', event_id=event.id) }}" class="dropdown-item">
-                                  <i class="fa fa-print" aria-hidden="true"></i>
-                                Report
-                              </a>
-                              <a href="{{ url_for('public.event', event_id=event.id, _external=True) }}" 
-                                 class="dropdown-item" id="embed-link"
-                                 title="Get a link that you can use to embed the site in your CMS">
-                                 <i class="fa fa-bars" aria-hidden="true"></i>
-                                Embed
-                              </a>
-                              <a href="{{ url_for('admin.event', event_id=event.id) }}" class="dropdown-item">
-                                &#9734; Edit
-                              </a>
-                              <a href="{{ url_for('admin.event_projects', event_id=event.id) }}" class="dropdown-item">
-                                &#9734; Projects
-                              </a>
-                              <a href="{{ url_for('admin.event_copy', event_id=event.id) }}"
-                                 onclick="if(!window.confirm('Are you sure you wish to make a copy?')) return false"
-                                 class="dropdown-item" title="Duplicate this event">
-                                &#9734; Duplicate
-                              </a>
-                              <a href="{{ url_for('api.info_event_hackathon_json', event_id=event.id) }}" class="dropdown-item">
-                                &#9660; hackathon<b>.json</b>
-                              </a>
-                              <a href="{{ url_for('api.package_specific_event', event_id=event.id, format='json') }}" class="dropdown-item">
-                                &#9660; datapackage<b>.json</b>
-                              </a>
-                              <a href="{{ url_for('api.package_specific_event', event_id=event.id, format='zip') }}" class="dropdown-item">
-                                &#9660; datapackage<b>.zip</b>
-                              </a>
-                              <a href="{{ url_for('api.event_participants_csv', event_id=event.id) }}" class="dropdown-item">
-                                &#9660; participants<b>.csv</b>
-                              </a>
-                              <a href="{{ url_for('api.project_list_event_csv', event_id=event.id, moar=True) }}" class="dropdown-item">
-                                &#9660; projects<b>.csv</b>
-                              </a>
-                            </ul>
-                          </div>
+              <div class="dropdown">
+                <button class="btn btn-light dropdown-toggle" type="button" id="evMenu{{ event.id }}" aria-haspopup="true" aria-expanded="false" data-bs-toggle="dropdown">
+                  &nbsp;⬣&nbsp;{{ event.project_count }}&nbsp;
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="evMenu{{ event.id }}">
+                  <a href="{{ url_for('public.event_challenges', event_id=event.id) }}" class="dropdown-item">
+                      <i class="fa fa-trophy" aria-hidden="true"></i>
+                      Challenges
+                    </a>
+                  <a href="{{ url_for('public.event_print', event_id=event.id) }}" class="dropdown-item">
+                      <i class="fa fa-print" aria-hidden="true"></i>
+                    Report
+                  </a>
+                  <a href="{{ url_for('public.event', event_id=event.id, _external=True) }}" 
+                     class="dropdown-item" id="embed-link"
+                     title="Get a link that you can use to embed the site in your CMS">
+                     <i class="fa fa-bars" aria-hidden="true"></i>
+                    Embed
+                  </a>
+                  <a href="{{ url_for('admin.event', event_id=event.id) }}" class="dropdown-item">
+                    &#9734; Edit
+                  </a>
+                  <a href="{{ url_for('admin.event_projects', event_id=event.id) }}" class="dropdown-item">
+                    &#9734; Projects
+                  </a>
+                  <a href="{{ url_for('admin.event_feature', event_id=event.id) }}"
+                     onclick="if(!window.confirm('Make this the current featured event?')) return false"
+                     class="dropdown-item" title="Set this event as featured">
+                    &#9734; Feature
+                  </a>
+                  <a href="{{ url_for('admin.event_copy', event_id=event.id) }}"
+                     onclick="if(!window.confirm('Are you sure you wish to make a copy?')) return false"
+                     class="dropdown-item" title="Duplicate this event">
+                    &#9734; Duplicate
+                  </a>
+                  <a href="{{ url_for('api.info_event_hackathon_json', event_id=event.id) }}" class="dropdown-item">
+                    &#9660; hackathon<b>.json</b>
+                  </a>
+                  <a href="{{ url_for('api.package_specific_event', event_id=event.id, format='json') }}" class="dropdown-item">
+                    &#9660; datapackage<b>.json</b>
+                  </a>
+                  <a href="{{ url_for('api.package_specific_event', event_id=event.id, format='zip') }}" class="dropdown-item">
+                    &#9660; datapackage<b>.zip</b>
+                  </a>
+                  <a href="{{ url_for('api.event_participants_csv', event_id=event.id) }}" class="dropdown-item">
+                    &#9660; participants<b>.csv</b>
+                  </a>
+                  <a href="{{ url_for('api.project_list_event_csv', event_id=event.id, moar=True) }}" class="dropdown-item">
+                    &#9660; projects<b>.csv</b>
+                  </a>
+                </ul>
+              </div>
             </td>
 
             <td>

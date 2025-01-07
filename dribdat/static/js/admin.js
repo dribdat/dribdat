@@ -39,7 +39,9 @@ if (vegaEmbed) {
 $('#announcements button').click(function() {
   let $self = $(this);
   let message = $('#announcements textarea').val();
-  console.log(message);
+  if (message.length < 5) return false;
+  if(!window.confirm('Are you ready to send this message?\n-------------------------------------\n' + message)) return false;
+  //console.log(message);
   $.post('/api/event/current/push/status', {
     'text': message
   }, function(resp) {

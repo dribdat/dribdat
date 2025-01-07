@@ -226,9 +226,12 @@ form input[type="checkbox"] {
 .admin .card.stat {
     display: inline-block;
     vertical-align: bottom;
-    background: #922;
+    background: #999;
     color: #fff;
     text-decoration: none;
+    border-radius: 0px;
+    margin-bottom: -1px;
+    border-top-left-radius: 20px;
 }
 .admin .card.stat:hover {
     background: #f55;

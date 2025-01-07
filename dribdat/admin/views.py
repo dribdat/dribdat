@@ -41,27 +41,27 @@ def index():
             'value': Event.query.count(),
             'text': 'Sprints',
             'icon': 'calendar',
-            'height': 10
+            'height': 6
         }, {
             'value': User.query.count(),
             'text': 'Participants',
             'icon': 'user',
-            'height': 11
+            'height': 7
         }, {
             'value': Project.query.filter(Project.progress == 0).count(),
             'text': 'Challenges',
             'icon': 'trophy',
-            'height': 13
+            'height': 8
         }, {
             'value': Project.query.filter(Project.progress > 0).count(),
             'text': 'Projects',
             'icon': 'star',
-            'height': 16
+            'height': 9
         }, {
             'value': Activity.query.count(),
             'text': 'Dribs',
             'icon': 'comments',
-            'height': 16
+            'height': 10
         },
     ]
     if sum_hidden > 0:
@@ -116,7 +116,7 @@ def users(page=1):
             users = users.filter(User.username.ilike(q))
     userpages = users.paginate(page=page, per_page=20)
     return render_template('admin/users.html', sort_by=sort_by,
-                           data=userpages, endpoint='admin.users', active='users')
+                           data=userpages, endpoint='admin.users', active='participants')
 
 
 @blueprint.route('/user/<int:user_id>', methods=['GET', 'POST'])
@@ -289,7 +289,7 @@ def user_clearsso(user_id):
 @admin_required
 def events():
     events = Event.query.order_by(Event.starts_at.desc()).all()
-    return render_template('admin/events.html', events=events, active='events')
+    return render_template('admin/events.html', events=events, active='sprints')
 
 
 @blueprint.route('/event/<int:event_id>', methods=['GET', 'POST'])
@@ -356,6 +356,19 @@ def event_copy(event_id):
     return redirect(url_for("admin.event", event_id=new_event.id))
 
 
+@blueprint.route('/event/<int:event_id>/feature', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def event_feature(event_id):
+    for event in Event.query.filter_by(is_current=True).all():
+        event.is_current = False
+        event.save()
+    event = Event.query.filter_by(id=event_id).first_or_404()
+    event.is_current = True
+    event.save()
+    return redirect(url_for("admin.events"))
+
+
 @blueprint.route('/event/<int:event_id>/autosync', methods=['GET', 'POST'])
 @login_required
 @admin_required
@@ -395,7 +408,7 @@ def projects(page=1):
     projectpages = projects.paginate(page=page, per_page=10)
     return render_template('admin/projects.html',
                            data=projectpages, endpoint='admin.projects',
-                           active='projects')
+                           active='challenges')
 
 
 @blueprint.route('/category/<int:category_id>/projects')
@@ -607,7 +620,7 @@ def presets():
     roles = Role.query.all()
     categories = Category.query.order_by(Category.event_id.desc()).all()
     return render_template('admin/presets.html', categories=categories,
-                           roles=roles, active='roles')
+                           roles=roles, active='presets')
 
 
 @blueprint.route('/role/<int:role_id>', methods=['GET', 'POST'])
