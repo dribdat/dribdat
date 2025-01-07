@@ -197,7 +197,7 @@
     e.preventDefault(); e.stopPropagation();
     var url = $(this).attr('href') + '?embed=1';
     var code = '<iframe src="' + url + '" style="width:100%;height:320px;background:transparent;border:none;overflow:hidden" scrolling="no"></iframe>';
-    window.prompt('Share the event link in social media, or copy and paste this HTML code to embed on your site. For even better embedding, visit github.com/dribdat/backboard', code);
+    window.prompt('Copy and paste this HTML code to embed challenges on your site. Visit dribdat/backboard for another option.', code);
   });
 
   // Helper to copy links
