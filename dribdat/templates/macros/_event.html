@@ -73,19 +73,16 @@
             </a>
           {% else %}
           	{% if event.project_count %}
-          		<a href="{{ url_for('public.event', event_id=event.id) }}" class="btn">
+          		<a href="{{ url_for('public.event', event_id=event.id) }}" class="btn btn-default">
 			          {% if event.has_finished %}
-			            <span>{{ event.project_count }}</span>
+			            <span title="Results">{{ event.project_count }}</span>
 			            <i class="fa fa-star" aria-hidden="true"></i>
-		              Results
 			          {% elif event.has_started %}
-			            <span>{{ event.project_count }}</span>
+			            <span title="Challenges">{{ event.project_count }}</span>
 			            <i class="fa fa-cube" aria-hidden="true"></i>
-		              Challenges
 			          {% else %}
-			            <span>{{ event.project_count }}</span>
+			            <span title="Projects">{{ event.project_count }}</span>
 			            <i class="fa fa-arrow-right" aria-hidden="true"></i>
-		              Projects
 			          {% endif %}
 	        		</a>
 			      {% endif %}

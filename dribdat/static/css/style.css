@@ -455,6 +455,9 @@ nav .nav-login {
 .an-event-meta b {
     display: block;
 }
+.an-event-actions .btn:hover {
+    color: initial;
+}
 
 /* Customize the flipclock widget */
 .event-countdown {

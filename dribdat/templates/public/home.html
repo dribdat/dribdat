@@ -12,7 +12,7 @@
   <meta property="og:image" content="{{current_event.logo_url}}"/>
   <meta property="og:description" content="{{current_event.summary or current_event.description|truncate(140)}}"/>
   <meta name="description" content="{{current_event.summary or current_event.description|truncate(140)}}"/>
-  <script type="application/ld+json">{{ current_event.get_schema(request.host_url)|safe }}</script>
+  <script type="application/ld+json">{{current_event.get_schema(request.host_url)|safe}}</script>
   <meta name="dribdat:event:id" content="{{current_event.id}}"/>
 {% endif %}
 {% endblock %}
@@ -44,16 +44,11 @@
 
     <div id="homeCarousel" class="carousel slide" data-ride="carousel">
   		<div class="carousel-inner">
-
-       {{ evnt.render_featured_event(current_event, True) }}
-
        {% for event in events_featured %}
-         {{ evnt.render_featured_event(event) }}
+         {{ evnt.render_featured_event(event, event == current_event) }}
        {% endfor %}
-
       </div>
-
-      {% if events_featured %}
+      {% if events_featured|length > 1 %}
         <button class="carousel-control-prev" type="button" data-bs-target="#homeCarousel" data-bs-slide="prev">
           <span class="carousel-control-prev-icon" aria-hidden="true"></span>
           <span class="visually-hidden">Previous</span>

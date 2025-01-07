@@ -79,19 +79,16 @@ def favicon():
 def home():
     """Home page."""
     cur_event = current_event()
-    if cur_event is not None:
-        events = Event.query.filter(Event.id != cur_event.id)
-    else:
-        events = Event.query
+    events = Event.query
     # Skip any hidden events
     events = events.filter(Event.is_hidden.isnot(True))
     # Query upcoming and past events which are not resource-typed
     timed_events = events.filter(Event.lock_resources.isnot(
         True)).order_by(Event.starts_at.desc())
+    events_featured = timed_events.filter(Event.is_current)
     # Filter out by today's date
     today = datetime.now(UTC)
     events_next = timed_events.filter(Event.ends_at > today)
-    events_featured = events_next.filter(Event.is_current)
     events_past = timed_events.filter(Event.ends_at < today)
     # Select Resource-type events
     resource_events = events.filter(Event.lock_resources)

@@ -25,39 +25,67 @@
   <button type="button" class="show-announcements" title="Announcements (broadcast available to admin only)">📣</button>
 </div>
 
-<div class="container-fluid">
-  <div class="row">
+<div id="dashboard-container">
 
-    <nav class="col-md-2 sidebar {% if not current_event.has_started %}hidden{% endif %}">
-      <div id="projects"></div>
-    </nav>
-
-    <main role="main" class="container-countdown col-md-6 ms-sm-auto">
-      <div id="event-logo"><img src="{{ current_event.logo_url }}" width="100%"></div>
-      {% if current_event.countdown %}
-        <div id="clockDashboard" class="event-countdown flipdown" data-start="{{ current_event.countdown }}"></div>
-      {% endif %}
-    </main>
-
-    <div class="col-md-3">
-    </div>
-
-    <div class="col-md-3 socialwall">
-        <div id="activities"></div>
-
-      {% if with_social_wall == 'mastodon' %}
-        <iframe allowfullscreen sandbox="allow-top-navigation allow-scripts allow-popups allow-popups-to-escape-sandbox" width="100%" height="67%" src="https://www.mastofeed.com/apiv2/feed?userurl={{ wall_url }}&theme=light&size=100&header=false&replies=false&boosts=true" frameborder="0"></iframe>
-      {% endif %}
-    </div>
+<div class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark" style="width: 380px;">
+  <a class="d-flex align-items-center flex-shrink-0 p-3 link-dark text-decoration-none border-bottom">
+    <svg class="bi me-2" width="30" height="24"><use xlink:href="#bootstrap"></use></svg>
+    <span class="fs-5 fw-semibold">Teams</span>
+  </a>
+  <div class="list-group list-group-flush border-bottom scrollarea">
+    <div id="projects"></div>
   </div>
 </div>
 
+<div class="d-flex align-items-stretch flex-fill">
+  <div class="container-countdown">
+    <div id="event-logo"><img src="{{ current_event.logo_url }}" width="100%"></div>
+    {% if current_event.countdown %}
+      <div id="clockDashboard" class="event-countdown flipdown" data-start="{{ current_event.countdown }}"></div>
+    {% endif %}
+  </div>
+</div>
+
+<div class="d-flex flex-column align-items-stretch flex-shrink-0 bg-white socialwall" style="width: 380px;">
+  <a class="d-flex align-items-center flex-shrink-0 p-3 link-dark text-decoration-none border-bottom">
+    <svg class="bi me-2" width="30" height="24"><use xlink:href="#bootstrap"></use></svg>
+    <span class="fs-5 fw-semibold">Dribs</span>
+  </a>
+  <div class="list-group list-group-flush border-bottom scrollarea">
+    <div id="activities"></div>
+  </div>
+</div>
+
+{% if with_social_wall == 'mastodon' %}
+<div class="d-flex flex-column align-items-stretch flex-shrink-0 bg-white socialwall" style="width: 380px;">
+  <a class="d-flex align-items-center flex-shrink-0 p-3 link-dark text-decoration-none border-bottom">
+    <svg class="bi me-2" width="30" height="24"><use xlink:href="#bootstrap"></use></svg>
+    <span class="fs-5 fw-semibold">Social Wall</span>
+  </a>
+  <div class="list-group list-group-flush border-bottom scrollarea">
+    <iframe allowfullscreen sandbox="allow-top-navigation allow-scripts allow-popups allow-popups-to-escape-sandbox" width="100%" height="67%" src="https://www.mastofeed.com/apiv2/feed?userurl={{ wall_url }}&theme=light&size=100&header=false&replies=false&boosts=true" frameborder="0"></iframe>
+  </div>
+</div>
+{% endif %}
+
+</div><!-- /dashboard-container -->
+
 <div class="{% if not status_text %}hidden{% endif %}" id="announcements">
   <textarea class="editable">{{ status_text }}</textarea>
-  <button>📣 Send</button>
 </div>
 
 <style>
+
+#dashboard-container {
+  display: flex;
+  flex-wrap: nowrap;
+  height: 100vh;
+  height: -webkit-fill-available;
+  max-height: 100vh;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
   html, body, body > .container-fluid { width: 100%; height: 100%; }
   body.dashboard-page {
     overflow: hidden;
@@ -146,9 +174,9 @@
   #announcements {
     position: fixed;
     top: 26%;
-    left: 22%;
-    /*left: 50%;
-    margin-left: -15em;*/
+    left: 50%;
+    width: 30em;
+    margin-left: -30em;
     z-index: 999;
   }
 
@@ -283,24 +311,6 @@ $('.show-announcements').click(function() {
     $('#announcements').show();
   }
 });
-$('#announcements button').click(function() {
-  let $self = $(this);
-  let message = $('#announcements textarea').val();
-  console.log(message);
-  $.post('/api/event/{{ current_event.id }}/push/status', {
-    'text': message
-  }, function(resp) {
-    if (resp.status && resp.status == 'OK') {
-      $self.html('✅ Sent');
-      setTimeout(function() {
-        $self.html('📣 Send');
-      }, 5000);
-    } else {
-      console.error(resp);
-    }
-  });
-});
-
 
 </script>
 

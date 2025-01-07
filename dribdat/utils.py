@@ -70,9 +70,9 @@ def get_time_note():
     """Construct a time zone message."""
     tz = timezone(current_app.config["TIME_ZONE"])
     aware_time = datetime.now().astimezone(tz)
-    tzinfo = "Server time: %s." % aware_time.strftime('%H:%M%z')
+    tzinfo = "Server time: %s" % aware_time.strftime('%H:%M%z')
     if tz is not None:
-        return "%s Time zone: %s" % (tzinfo, tz)
+        return "%s (%s)" % (tzinfo, tz)
     return tzinfo
 
 
