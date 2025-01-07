@@ -259,7 +259,7 @@ def event_participants(event_id):
                            q=search_by,
                            cert_path=cert_path,
                            current_event=event, participants=usearch,
-                           usercount=usercount, active="participants")
+                           usercount=usercount, active="people")
 
 
 

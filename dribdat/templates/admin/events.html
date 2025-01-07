@@ -12,11 +12,13 @@
           Import data</button>
     </div>
 
-    <h2>Sprints</h2>
+    <h2 class="huge">Sprints</h2>
 
-    <span>Formerly known as Events, here we group together people and results.</span>
-
+    <p class="mb-4">Formerly known as Events, here we group together people and results.</p>
       
+    {% if data %}
+      {% include "includes/pagination.html" %}
+    {% endif %}
 
     <table class='table table-hover'>
         <thead>
@@ -27,7 +29,7 @@
               <th></th>
             </tr>
         </thead>
-        {% for event in events %}
+        {% for event in events or data.items %}
         <tr>
             <td>
               <div class="dropdown">
@@ -87,7 +89,7 @@
             <td>
               <a href="{{ url_for('admin.event', event_id=event.id) }}" style="float:right">
               {% if event.is_current %}
-                <span class="btn btn-success btn-sm">Current</span>
+                <span class="btn btn-primary btn-sm">Current</span>
               {% endif %}
               {% if event.lock_editing %}
                 <span title="Editing locked" class="btn btn-light btn-sm">Freeze</span>
@@ -124,6 +126,9 @@
         </tr>
         {% endfor %}
     </table>
+  {% if data %}
+    {% include "includes/pagination.html" %}
+  {% endif %}
 </div>
 
 <!-- Upload Event dialog -->

@@ -44,7 +44,7 @@ def index():
             'height': 6
         }, {
             'value': User.query.count(),
-            'text': 'Participants',
+            'text': 'People',
             'icon': 'user',
             'height': 7
         }, {
@@ -116,7 +116,7 @@ def users(page=1):
             users = users.filter(User.username.ilike(q))
     userpages = users.paginate(page=page, per_page=20)
     return render_template('admin/users.html', sort_by=sort_by,
-                           data=userpages, endpoint='admin.users', active='participants')
+                           data=userpages, endpoint='admin.users', active='people')
 
 
 @blueprint.route('/user/<int:user_id>', methods=['GET', 'POST'])
@@ -288,8 +288,12 @@ def user_clearsso(user_id):
 @login_required
 @admin_required
 def events():
-    events = Event.query.order_by(Event.starts_at.desc()).all()
-    return render_template('admin/events.html', events=events, active='sprints')
+    page = int(request.args.get('page', 1))
+    events = Event.query.order_by(Event.starts_at.desc())
+    eventpages = events.paginate(page=page, per_page=10)
+    return render_template('admin/events.html', 
+        data=eventpages, endpoint='admin.events',
+        active='sprints')
 
 
 @blueprint.route('/event/<int:event_id>', methods=['GET', 'POST'])
