@@ -4,20 +4,19 @@
 
 # Dribdat
 
-**Tooling for time-limited, team-based, open-by-default cooperation**
+**Tooling for time-limited, team-based, FAIR and open-by-default cooperation** that bundles together guidelines, timers, trackers, loggers, integrates with prototyping tools, group chat, code repositories, open data APIs, and more!
 
-`dribdat` is an open source web application that playfully assists teams collaborating on technical projects with data. Designed to support your [awesome hackathon](https://github.com/dribdat/awesome-hackathon), it is used as a versatile toolbox for civic tech events: bundling high quality guidelines, timers, trackers, loggers, integrating with prototyping tools, group chat, code repositories, open data APIs, and more!
-
-![Screenshot of a Dribdat instance](dribdat/static/img/screenshot_oll24.jpg)
-<br><small><i>A screenshot of a [Dribdat-powered event](https://challenges.openlegallab.ch/event/6).</i></small>
+`Dribdat` is an open source web application that playfully assists teams collaborating on technical projects with data.
+Designed to support your [awesome hackathon](https://github.com/dribdat/awesome-hackathon), it is used as a versatile toolbox for civic tech sprints:
+see [Tour de Hack](https://dribdat.cc/tour) for some examples, and [User handbook](https://dribdat.cc/usage) for screenshots.
 
 # Purpose
 
-The philosophy of this project, in a nutshell, is: 
+The philosophy of this project, in a nutshell, is:
 
 - **live and let live** (no tech religion, use whatever design / dev / doc tools you want as long as they are accessible to your team)
 - **commit sustainably** (aggregate outputs in standard web of data formats for optimal search and archiving)
-- **create in safe spaces** (embedded code of conduct, works offline, minimal privacy footprint). 
+- **create in safe spaces** (embedded code of conduct, works offline, minimal privacy footprint).
 
 [Install](https://dribdat.cc/deploy) the software, read our [Whitepaper](https://dribdat.cc/whitepaper), or try dribdat yourself at a [community](https://forum.opendata.ch/c/expeditions/hackathons/16/l/latest) hackathon.
 
@@ -27,7 +26,7 @@ For more background and references, see the [User Handbook](https://docs.dribdat
 
 # Quickstart
 
-The Dribdat project can be deployed to any server capable of serving [Python](https://python.org) applications, and is set up for fast deployment using [Ansible or Docker](https://dribdat.cc/deploy). The first user that registers becomes an admin, so don't delay! 
+The Dribdat project can be deployed to any server capable of serving [Python](https://python.org) applications, and is set up for fast deployment using [Ansible or Docker](https://dribdat.cc/deploy). The first user that registers becomes an admin, so don't delay!
 
 If you would like to run dribdat on any other cloud or local machine, there are additional instructions in the [Deployment guide](https://docs.dribdat.cc/deploy). Information on contributing and extending the code can be found in the [Contributors guide](https://docs.dribdat.cc/contribute), which includes API documentation, and other details.
 
@@ -41,7 +40,7 @@ This project is currently mantained by [@loleg](https://github.com/loleg). See [
 
 Special thanks to the [Open Data](https://hack.opendata.ch), [Open Networking](https://now.makezurich.ch/) and [Open Source](https://hacknight.dinacon.ch) communities in 🇨🇭 Switzerland for the many trials and feedbacks through over one hundred events. Connect with us for your next [Data Expedition](https://schoolofdata.ch)!
 
-This project is inspired by the work of many wonderful hackathonistas to the [East](https://meta.dribdat.cc/project/42), [West](https://meta.dribdat.cc/project/7), [North](https://meta.dribdat.cc/project/10), and [South](https://meta.dribdat.cc/project/41) of here. We are grateful to F. Wieser and M.-C. Gasser at [Swisscom](http://swisscom.com) for conceptual inputs and financial support at an early stage of this project. This application was based on Steven Loria's [cookiecutter-flask](https://github.com/sloria/cookiecutter-flask), a more modern version of which is [cookiecutter-flask-restful](https://github.com/karec/cookiecutter-flask-restful) - and could be a good basis for your own hackathon projects. 
+This project is inspired by the work of many wonderful hackathonistas to the [East](https://meta.dribdat.cc/project/42), [West](https://meta.dribdat.cc/project/7), [North](https://meta.dribdat.cc/project/10), and [South](https://meta.dribdat.cc/project/41) of here. We are grateful to F. Wieser and M.-C. Gasser at [Swisscom](http://swisscom.com) for conceptual inputs and financial support at an early stage of this project. This application was based on Steven Loria's [cookiecutter-flask](https://github.com/sloria/cookiecutter-flask), a more modern version of which is [cookiecutter-flask-restful](https://github.com/karec/cookiecutter-flask-restful) - and could be a good basis for your own hackathon projects.
 
 Additional and ♥-felt thanks for your contributions to: [Alexandre Cotting](https://github.com/Cotting), [Anthony Ritz](https://github.com/RitzAnthony), [Chris Mutel](https://github.com/cmutel), [Fabien Schwob](https://github.com/jibaku), [Gonzalo Casas](https://github.com/gonzalocasas), [Jonathan Schnyder](https://github.com/jonHESSO), [Jonathan Sobel](https://github.com/JonathanSOBEL), [Philip Shemella](https://github.com/philshem), [Thomas Amberg](https://github.com/tamberg), [Yusuf Khasbulatov](https://github.com/khashashin) .. and all the participants and organizers sending in bugs and requests! 🤗
 
