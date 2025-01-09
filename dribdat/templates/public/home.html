@@ -18,6 +18,7 @@
 {% endblock %}
 
 {% block body_class %}home{% endblock %}
+{% block content_class %}{% endblock %}
 
 {% block content %}
 
@@ -62,7 +63,8 @@
   </main>
 {% endif %}
 
-<div class="body-content">
+<div class="container">
+    <div class="body-content container">
 
   {% if current_event and current_event.countdown and 'down' in config.DRIBDAT_CLOCK %}
     <a class="container-countdown"
@@ -149,6 +151,7 @@
     {% endif %}
   {% endif %}
 
+    </div>
 </div>
 {% endcache %}
 {% endblock %}

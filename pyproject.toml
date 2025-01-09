@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "dribdat"
 version = "0.8.7"
-description = "Online platform for time-limited collaborative events"
+description = "Open tools for fair collaborative events"
 authors = ["Dribdat Contributors <dribdat@datalets.ch>"]
 package-mode = false
 
@@ -55,7 +55,7 @@ icalendar = "^6.0.1"
 markdown-it-py = "^3.0.0"
 linkify-it-py = "^2.0.3"
 
-[tool.poetry.dev-dependencies]
+[tool.poetry.group.dev.dependencies]
 factory-boy = "*"
 flake8 = "*"
 flake8-blind-except = "*"
