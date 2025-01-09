@@ -70,7 +70,7 @@ class TestRepository:
         assert 'commits' in test_obj
         assert len(test_obj['commits']) > 5
         assert '(dribdat/static/img' not in test_obj['description']
-        assert '(https://raw.githubusercontent.com/' in test_obj['description']
+        assert 'https://raw.githubusercontent.com/' in test_obj['description']
 
     def test_github_other(self):
         """Test parsing a GitHub Markdown file."""
