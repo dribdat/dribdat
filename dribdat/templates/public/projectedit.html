@@ -16,35 +16,23 @@
 {% endblock %}
 
 {% block content %}
-  <div class="float-right" style="z-index: 99; position: relative">
-    <div class="switch-editor">
-      <a href="{{ url_for('project.project_edit', project_id=project.id) }}" 
-         title="Switch to editing of project basic information" 
-         class="btn btn-lg btn-warning {% if not detail_view %}disabled hidden{% endif %}">
-        <i class="fa fa-arrow-left" aria-hidden="true"></i>
-        Basics</a>
-      <a href="{{ url_for('project.project_details', project_id=project.id) }}" 
-         title="Switch to editing of project details" 
-         class="btn btn-lg btn-warning {% if detail_view %}disabled hidden{% endif %}">
-        <i class="fa fa-arrow-right" aria-hidden="true"></i>
-        Details</a>
-    </div>
-  </div>
-
-  <h2 class="huge">
-    Edit
-    <a href="{{ url_for('project.project_view', project_id=project.id) }}" target="_blank" title="Back to project">
-      {%- if detail_view -%}
-      details
-      {%- elif project.event.lock_resources -%}
-      resource
-      {%- elif project.is_challenge -%}
-      challenge
-      {%- else -%}
-      project
-      {%- endif -%}
+  <div class="btn-group project-edit-buttons switch-editor" role="group" aria-label="Project tools">
+    <a href="{{ url_for('project.project_view', project_id=project.id) }}" 
+       target="_blank" title="Back to project" class="btn btn-lg btn-light">
+      <i class="fa fa-link" aria-hidden="true"></i>
+      Link
     </a>
-  </h2>
+    <a href="{{ url_for('project.project_edit', project_id=project.id) }}" 
+       title="Switch to editing of project basic information" 
+       class="btn btn-lg btn-warning {% if not detail_view %}disabled hidden{% endif %}">
+      <i class="fa fa-arrow-left" aria-hidden="true"></i>
+      Basics</a>
+    <a href="{{ url_for('project.project_details', project_id=project.id) }}" 
+       title="Switch to editing of project details" 
+       class="btn btn-lg btn-warning {% if detail_view %}disabled hidden{% endif %}">
+      <i class="fa fa-arrow-right" aria-hidden="true"></i>
+      Details</a>
+  </div><br clear="all">
 
   {% if not detail_view %}
   <span id="activateEditor">
@@ -113,6 +101,15 @@
 
   <div class="alert-warning text-center mt-4 p-2">
   {% if not detail_view %}
+    <ul style="text-align:left; "><li>
+      Your Presentation should link to an uploaded PDF, or to an embedded webpage.
+    </li><li>For example: insert the link from
+      <a href="https://knowledge.workspace.google.com/kb/publish-docs-sheets-slides-or-forms-as-web-pages-000008504" target="_blank" rel="nofollow">Publish to Web</a> mode in Google or 
+      <a href="https://support.microsoft.com/en-us/office/embed-a-presentation-in-a-web-page-or-blog-19668a1d-2299-4af3-91e1-ae57af723a60" target="_blank" rel="nofollow">Embed code</a> in Microsoft. 
+    </li><li>Or, leave the 
+      Presentation link blank and just use the Pitch area to write your slides using 
+      <a href="https://marpit.marp.app/markdown" target="_blank" rel="nofollow">Marpit Markdown</a>.
+    </ul>
       More links, contacts, change the title or cover image
       <i class="fa fa-arrow-right" aria-hidden="true"></i>
       <a href="{{ url_for('project.project_details', project_id=project.id) }}" target="_blank">

@@ -63,14 +63,14 @@ class ProjectForm(FlaskForm):
     id = HiddenField('id')
     summary = StringField(
         u'Summary', [length(max=2048)],
-        render_kw={'maxlength': 2048, 'rows': 3},
-        description="A short, plain-text description of your topic.")
+        render_kw={'maxlength': 2048, 'rows': 3})
+        #description="A short, plain-text description of your topic.")
     longtext = TextAreaField(
-        u'Pitch', [length(max=64000)],
-        description="Links"
-        + " to supported sites on one line get previews."
-        + " No copypasta: use the 'Upload Image' button.")
-    is_webembed = BooleanField(u'Embed Presentation, or the Pitch as a Markdown slide deck')
+        u'Pitch', [length(max=64000)])
+        #description=""
+        #+ " Links to supported sites on one line get previews."
+        #+ " No copypasta: use the 'Upload Image' button.")
+    is_webembed = BooleanField(u'Embed Presentation or Pitch*')
     webpage_url = URLField(
         u'Presentation', [length(max=2048)],
         description="URL to a live demo, presentation, or a link to get "
