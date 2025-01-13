@@ -771,12 +771,9 @@ nav .nav-login {
 }
 
 /* Fade out unapproved hexagons */
-.honeycomb .hexagon.challenge {
-    opacity: 1;
-}
 .honeycomb .hexagon.challenge.stage--1,
 .honeycomb .hexagon.challenge.stage--100 {
-    opacity: 0.8;
+    opacity: 0.6;
     border-bottom: 3px solid red;
 }
 
