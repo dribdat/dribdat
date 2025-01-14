@@ -288,7 +288,7 @@
         {{project.autotext|markdown}}
       </div>
 
-      {% if not project.event.lock_resources %}
+      {% if project.autotext_url and not project.event.lock_resources %}
         <div class="alert alert-light text-center mb-2 mt-2">
           This content is a preview from an
           <a href="{{ project.autotext_url }}" target="_blank" rel="noopener noreferrer" title="Source link">
