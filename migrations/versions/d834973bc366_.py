@@ -32,10 +32,6 @@ def upgrade():
                existing_type=sa.VARCHAR(length=80),
                nullable=True,
                autoincrement=False)
-        batch_op.alter_column('longtext',
-               existing_type=sa.TEXT(),
-               nullable=True,
-               autoincrement=False)
         batch_op.alter_column('created_at',
                existing_type=sa.DATETIME(),
                nullable=True,
@@ -57,10 +53,6 @@ def downgrade():
                autoincrement=False)
         batch_op.alter_column('created_at',
                existing_type=sa.DATETIME(),
-               nullable=False,
-               autoincrement=False)
-        batch_op.alter_column('longtext',
-               existing_type=sa.TEXT(),
                nullable=False,
                autoincrement=False)
         batch_op.alter_column('name',
