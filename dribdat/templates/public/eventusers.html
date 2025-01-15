@@ -6,17 +6,6 @@
 
 {% block content %}
 
-{% if cert_path %}
-<div class="get-certified float-right m-0" style="font-size:2rem">
-  <span>✔️</span>&nbsp;
-  <a href="{{ cert_path }}" download class="btn btn-info">
-    <i class="fa fa-download"></i>
-    Download Certificate
-  </a>
-</div>
-{% endif %}
-
-
 <h1 class="huge">Contributors</h1>
 
 <div data-action="/api/user/search.json" id="search-users" style="margin-bottom:1em; width:400px">

@@ -74,12 +74,11 @@
   </div>
 
   {% if may_certify %}
-    <div class="float-right">
-      <br clear="all"/>
+    <div>
       <a id="get-certified" class="btn btn-success btn-lg"
         href="{{ url_for('public.user_cert') }}" download
         title="Download a participation certificate">
-        Download&nbsp;Certificate
+        Get&nbsp;Certificate
       </a>
     </div>
   {% endif %}
