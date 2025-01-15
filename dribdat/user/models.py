@@ -642,6 +642,7 @@ class Project(PkModel):
     contact_url = Column(db.String(2048), nullable=True)
     autotext_url = Column(db.String(2048), nullable=True)
     download_url = Column(db.String(2048), nullable=True)
+    # How to put in more URLs, e.g. for the project tools?
 
     is_hidden = Column(db.Boolean(), default=False)
     is_webembed = Column(db.Boolean(), default=True)
@@ -649,7 +650,8 @@ class Project(PkModel):
     is_autoupdate = Column(db.Boolean(), default=True)
 
     autotext = Column(db.UnicodeText(), nullable=True, default=u"")
-    longtext = Column(db.UnicodeText(), nullable=False, default=u"")
+    longtext = Column(db.UnicodeText(), nullable=True, default=u"")
+    # How to save structured data, e.g. from a Data Package type Resource?
 
     logo_color = Column(db.String(7), nullable=True)
     logo_icon = Column(db.String(40), nullable=True)
