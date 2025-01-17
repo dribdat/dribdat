@@ -94,8 +94,8 @@
   {% endif %}
 
   {% if project.event.lock_resources %}
-  <a href="{{ url_for('public.event_stages', event_id=project.event.id) }}"
-     class="btn btn-light me-4 float-right">
+  <a href="{{ url_for('public.event_resources', event_id=project.event.id) }}"
+     class="me-4 float-right text-dark btn btn-default">
        <i class="fa fa-life-ring" aria-hidden="true"></i>
        Resource</a>
   {% elif project.score and not project.is_challenge %}

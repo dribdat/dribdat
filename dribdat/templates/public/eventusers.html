@@ -8,31 +8,31 @@
 
 <h1 class="huge">Contributors</h1>
 
-<div data-action="/api/user/search.json" id="search-users" style="margin-bottom:1em; width:400px">
-  <form method="get" action="participants">
-    <div class="content input-group">
-      <div class="input-group-prepend">
-        <span class="input-group-text">Search</span>
-      </div>
-      <input type="text" class="form-control" name="q" value="{{ q }}"
-        aria-label="Search users" 
-        placeholder="@user or free text in profile ..." 
-        style="width:20em; max-width:80%" />
-    </div>
-  </form>
-</div>
-
-<div class="event-participants">
 {% if participants %}
 
-  <div class="participant-box">
-  {% for user in participants %}
-    {{ misc.render_user_profile(user) }}
-  {% endfor %}
+  <div data-action="/api/user/search.json" id="search-users" style="margin-bottom:1em; width:400px">
+    <form method="get" action="participants">
+      <div class="content input-group">
+        <span class="input-group-text">
+          <i class="fa fa-search" aria-hidden="true"></i>
+        </span>
+        <input type="text" class="form-control" name="q" value="{{ q }}"
+          aria-label="Search users" 
+          placeholder="@user or free text in profile ..." 
+          style="width:20em; max-width:80%" />
+      </div>
+    </form>
   </div>
 
+  <div class="event-participants">
+    <div class="participant-box">
+    {% for user in participants %}
+      {{ misc.render_user_profile(user) }}
+    {% endfor %}
+    </div>
+  </div><!-- /event-participants -->
+
 {% endif %}
-</div><!-- /event-participants -->
 
 <div category-id="infobox" class="mt-5">
   {% if current_event and current_event.has_started and not current_event.has_finished and usercount %}
@@ -43,11 +43,11 @@
       <a href="{{ url_for('public.event', event_id=current_event.id) }}">
       this event</a> already</p></center>
   {% elif not usercount %}
-    <h4>😥 No matches - encourage everyone to create a profile and join a team.</h4>
+    <h4>🤷‍♀️ Encourage people to create a profile and join a team.</h4>
   {% else %}
     <center>
       <span class="user-score">{{ usercount }}</span>
-      users are here</center>
+    </center>
   {% endif %}
 </div>
 

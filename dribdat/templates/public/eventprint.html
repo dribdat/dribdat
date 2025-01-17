@@ -94,50 +94,48 @@
 {% endmacro %}
 
 {% block content %}
-<h1 class="huge no-print">Report</h1>
 
-{% if projects.count() > 3 %}
-<center class="m-2 no-print">
-  <a class="btn btn-light btn-lg" href="{{ url_for('public.event', event_id=current_event.id) }}">
-    <i class="fa fa-arrow-left" aria-hidden="true"></i>
-    <span>Return</span></a>
+<center class="m-2 no-print float-right">
+  <a class="btn btn-dark btn-lg" href="{{ url_for('public.event', event_id=current_event.id) }}"
+     title="Back to project overview">
+    <i class="fa fa-hexagon" aria-hidden="true">⬢</i>
+  </a>
 
   <a href="{{ url_for('public.event_challenges', event_id=current_event.id) }}" class="btn btn-lg btn-secondary"
-     title="Just the challenges">
+     title="Challenges">
     <i class="fa fa-trophy" aria-hidden="true"></i>
-    <span>Challenges</span>
   </a>
 
   <a href="{{ url_for('public.event_stages', event_id=current_event.id) }}" class="btn btn-lg btn-secondary"
-     title="By Category">
+     title="Stages">
     <i class="fa fa-signal" aria-hidden="true"></i>
-    <span>Stages</span>
   </a>
 
   <a href="{{ url_for('public.event_categories', event_id=current_event.id) }}" class="btn btn-lg btn-secondary"
-     title="By Category">
+     title="Categories">
     <i class="fa fa-bars" aria-hidden="true"></i>
-    <span>Categories</span>
   </a>
 </center>
-{% endif %}
+
+<h1 class="huge no-print">Report</h1>
 
 <p class="no-print text-center">
   {% if not request.args.get('longtext') %}
-    <a href="?longtext=1" class="btn btn-danger">Show full text</a>
+    <a href="?longtext=1" class="btn btn-danger">Full text</a>
   {% else %}
-    <a href="?" class="btn btn-danger">Hide full text</a>
+    <a href="?" class="btn btn-danger">Hide text</a>
   {% endif %}
+
+  <a href="{{ url_for('api.project_list_event_csv', event_id=current_event.id, moar=1)}}" class="btn btn-light text-dark" download>
+    <i class="fa fa-file" aria-hidden="true"></i>
+    CSV</a>
+  <a href="{{ url_for('api.package_specific_event', event_id=current_event.id, format='json')}}" class="btn btn-light text-dark" download>
+    <i class="fa fa-file" aria-hidden="true"></i>
+    Data Package</a>
 
   <a href="javascript:window.print()" class="ml-4 btn btn-info">
     <i class="fa fa-print" aria-hidden="true"></i>
     Print </a>
-  <a href="{{ url_for('api.project_list_event_csv', event_id=current_event.id, moar=1)}}" class="btn btn-light" download>
-    <i class="fa fa-file" aria-hidden="true"></i>
-    Download CSV</a>
-  <a href="{{ url_for('api.package_specific_event', event_id=current_event.id, format='json')}}" class="btn btn-light" download>
-    <i class="fa fa-file" aria-hidden="true"></i>
-    Data Package</a>
 </p>
 
 <div class="container" style="background:white; color: black">
