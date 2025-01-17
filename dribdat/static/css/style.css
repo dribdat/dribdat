@@ -1560,9 +1560,6 @@ a.media {
 .onebox.honeycomb .title {
     margin-top: 1em;
 }
-.onebox.honeycomb p {
-    opacity: 0.8;
-}
 
 /* Project entry form */
 .projectform .switch-editor .disabled i {
@@ -1752,11 +1749,12 @@ pre {
     clear: both;
 }
 a.go-up {
-    display: block;
-    text-align: center;
+    position: fixed;
+    display: inline-block;
     text-decoration: none;
-    margin: 1em;
     font-size: 125%;
+    top: 0.7em; right: 1em;
+    opacity: 0.5;
 }
 
 /* Badges */
