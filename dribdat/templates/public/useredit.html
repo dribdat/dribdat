@@ -31,7 +31,9 @@
   {% if user.sso_id %}
     <center class="m-4">
       &#x1f511; Single Sign-On&nbsp;<b>enabled</b>
-      &nbsp;(<u>{{oauth_type}}</u>)
+      {% if oauth_type %}
+        &nbsp;(<u>{{oauth_type}}</u>)
+      {% endif %}
     </center>
   {% endif %}
 

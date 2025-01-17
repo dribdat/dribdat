@@ -1,9 +1,9 @@
 (function($, window) {
 
-if (vegaEmbed) {
+if (typeof vegaEmbed !== 'undefined') {
 
   $.getJSON('/api/event/current/activity.json?limit=200', function(data) {
-    if (data.activities.length == 0) return; // $('.chart-activities').hide();
+    if (data.activities.length == 0) return;
     var yourVlSpec = {
       "width": "720",
       "$schema": "https://vega.github.io/schema/vega-lite/v2.0.json",

@@ -20,7 +20,7 @@ from .forms import (
 
 from datetime import datetime
 from dribdat.futures import UTC
-
+from random import randrange
 
 
 blueprint = Blueprint('admin', __name__, url_prefix='/admin')
@@ -64,12 +64,26 @@ def index():
             'height': 10
         },
     ]
+
+    ADMIN_WISDOM = [
+        "Welcome, Admin! Today's hack-weather is pleasantly warm with patches of cybershine.",
+        "A hacker's work is never done, but their motherboard is always on the fritz.",
+        "In a world of 1s and 0s, the only constant is rebooting your expectations.",
+        "The cloud is just someone else's computer, and it's always raining malware.",
+        "Code is like a joke: if you have to explain it, it's not working properly.",
+        "The only thing more abundant than bugs in the system is the number of users who think they're features.",
+    ]
+    motd = ADMIN_WISDOM.pop(randrange(len(ADMIN_WISDOM)))
+
+    msgs = []
     if sum_hidden > 0:
-        flash(('There are %d projects in the featured event ' % sum_hidden) + \
-              ' that are hidden and may need moderation.', 'secondary')
+        msgs.append('There are %d projects in the featured event ' % sum_hidden + \
+              ' that are hidden and may need moderation.')
+
     return render_template('admin/index.html',
-                           stats=stats, timeinfo=get_time_note(),
-                           default_event=current_event, active='index')
+                           stats=stats, motd=motd, msgs=' '.join(msgs),
+                           timeinfo=get_time_note(),
+                           event=current_event, active='index')
 
 
 @blueprint.route('/users')

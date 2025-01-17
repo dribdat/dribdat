@@ -336,6 +336,18 @@ def event_challenges(event_id):
                            active="challenges")
 
 
+@blueprint.route("/event/<int:event_id>/resources")
+def event_resources(event_id):
+    """Show the resources view of an event."""
+    event = Event.query.filter_by(id=event_id).first_or_404()
+    projects = Project.query.filter_by(event_id=event.id, is_hidden=False) \
+                            .order_by(Project.progress, Project.ident, Project.name)
+    return render_template("public/eventresources.html",
+                           current_event=event, projects=projects,
+                           project_count=projects.count(),
+                           active="resources")
+
+
 @blueprint.route('/event/<int:event_id>/print')
 def event_print(event_id):
     """Print the results of an event."""

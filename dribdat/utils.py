@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """Helper utilities and decorators."""
-from flask import flash, current_app, Markup
+from flask import flash, current_app
 from urllib.parse import quote
 from math import floor
 from os import path
@@ -9,6 +9,9 @@ from datetime import datetime
 from pytz import timezone
 from .futures import UTC
 
+from markupsafe import Markup
+from markdown_it import MarkdownIt
+
 from yaml import safe_load
 from json import loads
 from csv import DictReader
@@ -16,10 +19,9 @@ from random import SystemRandom
 
 import re, string
 
-from markdown_it import MarkdownIt
 
 # Instantiate Markdown parser
-md = MarkdownIt()
+md = MarkdownIt().enable('table')
 
 def markdownit(content):
     """ Converts a value to Markdown """

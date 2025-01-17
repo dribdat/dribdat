@@ -16,6 +16,17 @@
   <div class="collapse navbar-collapse" id="navbar-main-collapse">
     <ul class="navbar-nav navbar-left me-auto nav-fill">
 
+      {% if current_user and current_user.is_admin %}
+        <li class="nav-item admin-area">
+          <a class="nav-link{{ ' active' if active == 'index' }}"
+             title="The engine room"
+             href="{{ url_for('admin.index') }}">
+            <i class="fa fa-gear bg-danger text-white" aria-hidden="true"></i>
+            Admin
+          </a>
+        </li>
+      {% endif %}
+
       {% if tabs %}
         {% for tab, link in tabs %}
         <li class="nav-item">
@@ -51,36 +62,6 @@
               Profile
             </a>
           </li>
-          {% if current_user.is_admin %}
-            <li class="nav-item admin-area">
-              <a class="nav-link{{ ' active' if active == 'index' }}"
-                 title="The engine room"
-                 href="{{ url_for('admin.index') }}">
-                <i class="fa fa-gear bg-danger text-white" aria-hidden="true"></i>
-                Admin
-              </a>
-            </li>
-            {% if event %}
-              <li class="nav-item">
-                <a href="{{ url_for('admin.event_projects', event_id=current_event.id) }}"
-                    title="Administer event projects" class="nav-link">
-                  <i class="fa fa-check" aria-hidden="true"></i>
-                  Check</a>
-              </li>
-              <li class="nav-item">
-                <a href="{{ url_for('admin.event', event_id=event.id) }}"
-                   title="Edit event details" class="nav-link">
-                  <i class="fa fa-pencil" aria-hidden="true"></i>
-                  Edit</a>
-              </li>
-              <li class="nav-item">
-                <a href="{{ url_for('admin.project_new', event_id=event.id) }}"
-                   title="Add a project here" class="nav-link">
-                  <i class="fa fa-plus"></i>
-                  Add</a>
-              </li>
-            {% endif %}
-          {% endif %}
       {% else %}
         <li class="nav-item">
           <a class="nav-link nav-login"
@@ -96,7 +77,7 @@
         <a class="nav-link" id="navSearchButton"
            title="Search this dribdat site"
            href="{{ url_for('public.about') }}">
-          <i class="fa fa-search" aria-hidden="true"></i>
+          <i class="fa fa-search bg-light text-dark" aria-hidden="true"></i>
           Search
         </a>
       </li>
@@ -131,8 +112,7 @@
       <thead class="thead">
         <tr>
           <th scope="col">Team</th>
-          <th scope="col">Event</th>
-          <th scope="col">Updated</th>
+          <th scope="col">Sprint</th>
         </tr>
       </thead>
       <tbody id="search-results"></tbody>

@@ -3,23 +3,19 @@
 import pystache
 
 TEMPLATE_PROJECT = r"""
-<div class="onebox honeycomb">
-    <a href="{{link}}"
-       class="hexagon
-        {{#is_challenge}}challenge{{/is_challenge}}
-        {{^is_challenge}}project stage-{{progress}}{{/is_challenge}}">
-        <div class="hexagontent">
-    {{#image_url}}
-    <div class="hexaicon" style="background-image:url('{{image_url}}')"></div>
-    {{/image_url}}
+<div class="onebox honeycomb" title="{{summary}} ...">
+    <a href="{{link}}" class="hexagon"><div class="hexagontent">
+        {{#image_url}}
+        <div class="hexaicon" style="background-image:url('{{image_url}}')"></div>
+        {{/image_url}}
+    </div></a>
+    <div class="pt-3">
+        <a href="{{link}}" class="title fs-4">{{name}}</a>
+        <div class="event-detail">
+            <span>{{event_name}}</span>
+            <i class="phase">{{phase}}</i>
         </div>
-    </a>
-    <a href="{{link}}" class="title">{{name}}</a>
-    <div class="event-detail">
-        <span>{{event_name}}</span>
-        <i class="phase">{{phase}}</i>
     </div>
-    <p>{{summary}}</p>
 </div>
 """
 

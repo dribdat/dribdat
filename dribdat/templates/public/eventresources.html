@@ -1,0 +1,24 @@
+{% extends "layout.html" %}
+{% import "macros/_project.html" as proj %}
+
+{% block page_title %}Resources{% endblock %}
+
+{% block body_class %}eventresources-page{% endblock %}
+
+{% block content %}
+<h1 class="huge">Resources</h1>
+
+<div class="event-resources">
+  {% if projects %}
+    <div class="profile-projects mt-2" style="border:none">
+      <div class="row ibws-fix">
+        {% for project in projects %}
+            {{ proj.render_resource_card(project) }}
+        {% endfor %}
+      </div>
+    </div><!-- /profile-projects -->
+  {% else %}
+    <i>Add your datasets and suggested tools here.</i>
+  {% endif %}
+</div>
+{% endblock %}

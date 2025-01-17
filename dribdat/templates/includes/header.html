@@ -11,10 +11,14 @@
       {% if not event.lock_resources %}
         <div class="event-date no-print">
           {{ event.date }}</div>
+        <a href="{{ url_for('public.event', event_id=event.id) }}">
+          <h2 class="event-name">{{ event.name }}</h2>
+        </a>
+      {% else %}
+        <a href="{{ url_for('public.event_resources', event_id=event.id) }}">
+          <h2 class="event-name">{{ event.name }}</h2>
+        </a>
       {% endif %}
-      <a href="{{ url_for('public.event', event_id=event.id) }}">
-        <h2 class="event-name">{{ event.name }}</h2>
-      </a>
       {% if event.hostname %}
         <span class="event-hostname">
           <i class="fa fa-bank"></i>
