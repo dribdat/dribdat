@@ -638,14 +638,16 @@ class Project(PkModel):
 
     image_url = Column(db.String(2048), nullable=True)
     source_url = Column(db.String(2048), nullable=True)
-    webpage_url = Column(db.String(2048), nullable=True)
     contact_url = Column(db.String(2048), nullable=True)
-    autotext_url = Column(db.String(2048), nullable=True)
     download_url = Column(db.String(2048), nullable=True)
-    # How to put in more URLs, e.g. for the project tools?
+    autotext_url = Column(db.String(2048), nullable=True)
 
-    is_hidden = Column(db.Boolean(), default=False)
+    # How to put in more URLs, e.g. for the project tools?
+    webpage_url = Column(db.String(2048), nullable=True)
     is_webembed = Column(db.Boolean(), default=True)
+
+    # shown only in the admin
+    is_hidden = Column(db.Boolean(), default=False)
     # remotely managed (by bot)
     is_autoupdate = Column(db.Boolean(), default=True)
 

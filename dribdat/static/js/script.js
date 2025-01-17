@@ -109,8 +109,8 @@
         $ul.append(
           '<tr data-href="' + p.url + '">' +
             '<th scope="row">' + p.name + '<sm>' + p.summary + '</sm></th>' +
-            '<td>' + p.event_name + '</td>' +
-            '<td>' + dateFormat(p.updated_at) + '</td>' +
+            '<td><tt>' + p.event_name.substr(0,20) + '</tt>' +
+            '<br>' + dateFormat(p.updated_at) + '</td>' +
           '</tr>'
         );
       });

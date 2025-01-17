@@ -28,44 +28,48 @@
 
 <div class="jumbotron admin-stats text-center" style="background:#eee; color:#000; min-width: 640px;">
 
-  <div class="chart-activities">
-    <div class="btn-group mb-2 text-center">
-  {% if default_event %}
-      <a href="{{ url_for('public.dashboard') }}" class="btn btn-lg btn-dark">
-        <i class="fa fa-calendar" aria-hidden="true"></i>
-        Dashboard</a>
-      <a href="{{ url_for('admin.event', event_id=default_event.id) }}" class="btn btn-lg btn-primary">
-        <i class="fa fa-pencil" aria-hidden="true"></i>
-        Featured</a>
-      <a href="{{ url_for('admin.event_projects', event_id=default_event.id) }}" class="btn btn-lg btn-success">
-        <i class="fa fa-star" aria-hidden="true"></i>
-        Projects</a>
-  {% else %}
-      <a href="{{ url_for('public.event_start') }}" class="btn btn-lg btn-success">
-        <i class="fa fa-calendar" aria-hidden="true"></i>
-        Start a sprint</a>
-      <a href="{{ url_for('admin.presets') }}" class="btn btn-lg btn-info">
-        <i class="fa fa-pencil" aria-hidden="true"></i>
-        Add roles &amp; categories</a>
-  {% endif %}
-    </div>
+{% if event %}
+  <div class="clearfix text-left m-4">
+    {% include "includes/header.html" %}
+  </div>
 
-    <div id="announcements" class="mt-4">
-      <textarea class="editable w-100 mb-2" 
-                style="max-width: 740px; background: #ffd73e;">{{ status_text }}</textarea>
-      <br>
-      <button class="btn btn-light"
-        title="Send a message to logged in users"
-        >📣 Announce</button>
-    </div>
+  <div class="btn-group mb-2 text-center">
+    <a href="{{ url_for('public.dashboard') }}" class="btn btn-lg btn-dark">
+      <i class="fa fa-calendar" aria-hidden="true"></i>
+      Dashboard</a>
+    <a href="{{ url_for('admin.event', event_id=event.id) }}" class="btn btn-lg btn-secondary">
+      <i class="fa fa-pencil" aria-hidden="true"></i>
+      Edit</a>
+    <a href="{{ url_for('admin.event_projects', event_id=event.id) }}" class="btn btn-lg btn-success">
+      <i class="fa fa-star" aria-hidden="true"></i>
+      Projects</a>
+  </div>
+{% else %}
+  <div class="btn-group mb-2 text-center">
+    <a href="{{ url_for('public.event_start') }}" class="btn btn-lg btn-success">
+      <i class="fa fa-calendar" aria-hidden="true"></i>
+      Start a sprint</a>
+    <a href="{{ url_for('admin.presets') }}" class="btn btn-lg btn-info">
+      <i class="fa fa-pencil" aria-hidden="true"></i>
+      Add roles &amp; categories</a>
+  </div>
+{% endif %}
+
+  <div id="announcements" class="mt-4">
+    <textarea class="editable w-100 mb-2" 
+              style="max-width: 740px; background: #ffd73e;">{{ status_text }}</textarea>
+    <br>
+    <button class="btn btn-primary"
+      title="Send a message to logged in users"
+      >📣 Announce</button>
   </div>
 
   <div class="container">
-    <div id="activities"></div>
+    <div id="activities">Welcome to Dribdat Admin! Today's hack-weather is pleasantly warm with patches of cybershine.</div>
   </div>
 
-  <div class="mt-2" style="font-family:monospace; font-size:160%">
-    <p>{{ timeinfo }}</p>
+  <div class="mt-2 fs-4">
+    <p><tt>{{ timeinfo }}</tt></p>
     <a href="{{ url_for('public.clear_cache') }}">Refresh</a> |
     <b><a href="{{ url_for('public.about') }}">Help</a></b> |
     <a href="mailto:dribdat@datalets.ch">Hotline</a>

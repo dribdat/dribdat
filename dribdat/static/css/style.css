@@ -254,6 +254,9 @@ form input[type="checkbox"] {
 .nav-link.active {
     font-weight: bolder;
 }
+.nav-fill .nav-item .nav-link {
+    line-height: 2em;
+}
 /* footer */
 
 footer {

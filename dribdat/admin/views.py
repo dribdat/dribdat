@@ -69,7 +69,7 @@ def index():
               ' that are hidden and may need moderation.', 'secondary')
     return render_template('admin/index.html',
                            stats=stats, timeinfo=get_time_note(),
-                           default_event=current_event, active='index')
+                           event=current_event, active='index')
 
 
 @blueprint.route('/users')
