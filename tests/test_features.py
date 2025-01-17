@@ -107,27 +107,30 @@ EOF""" % (url, url)
     def test_participant_search(self, user, testapp):
         """Search for participants."""
         res = testapp.get('/participants')
-        form = res.forms[0]
-        # Search for a user that doesn't exist
-        form['q'] = '@ibraci'
-        res = form.submit()
         assert res.status_code == 200
-        assert 'No matches' in res
+        assert 'user-score' in res # user0 exists in the db
         # Create a user and search it
         user1 = UserFactory()
         user1.username = 'abracadabra'
         user1.save()
+        res = testapp.get('/participants')
         form = res.forms[0]
+        # Search for a user that doesn't exist
+        form['q'] = '@ibraci'
+        res = form.submit()
+        assert 'no-matches' in res
+        # Search for a user that exists
         form['q'] = '@abraca'
         res = form.submit()
         assert res.status_code == 200
         assert 'abracadabra' in res
+        assert 'user-score' in res
         # Try the same, with an event
         event = EventFactory()
         event.save()
         res = testapp.get('/event/%d/participants' % event.id)
         assert res.status_code == 200
-        assert 'No matches' in res
+        assert 'no-matches' in res
         project = ProjectFactory()
         project.event_id = event.id
         project.save()

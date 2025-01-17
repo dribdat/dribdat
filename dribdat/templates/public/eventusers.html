@@ -43,7 +43,7 @@
       <a href="{{ url_for('public.event', event_id=current_event.id) }}">
       this event</a> already</p></center>
   {% elif not usercount %}
-    <h4>🤷‍♀️ Encourage people to create a profile and join a team.</h4>
+    <h4 class="no-matches">🤷‍♀️ Encourage people to create a profile and join a team.</h4>
   {% else %}
     <center>
       <span class="user-score">{{ usercount }}</span>
