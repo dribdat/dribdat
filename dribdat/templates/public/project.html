@@ -202,12 +202,12 @@
 <div class="tab-content clear-both" id="project-content">
 
   {% if project.webembed %}
-    <div class="project-webembed resizable lightboxed">
+    <div class="project-webembed resizable">
       {{ project.webembed|safe }}
     </div>
     <a href="{{ project.webpage_url }}" class="btn btn-small btn-default float-right"
        target="_blank" rel="noopener noreferrer" title="See this in a new tab">
-       &#x2193;&nbsp;&nbsp;Open</a>
+       &#x2193;&nbsp;&nbsp;Open</a><br clear="all">
   {% endif %}
 
   {% if project.download_url %}
@@ -525,7 +525,7 @@
 {% if go_nav and go_nav.prev %}
   <a class="nav-projects btn btn-light text-center" href="{{go_nav.prev.url}}" title="Previous project in queue">
     <i class="fa fa-arrow-left" aria-hidden="true"></i><br>
-    {{go_nav.prev.name}}</a>
+    Previous</a>
 
   <a class="nav-projects-abs-prev btn btn-light border-primary" href="{{go_nav.prev.url}}" title="Previous project in queue">
     <i class="fa fa-arrow-left" aria-hidden="true"></i></a>
@@ -543,7 +543,7 @@
 {% if go_nav and go_nav.next %}
   <a class="nav-projects btn btn-light text-center" href="{{go_nav.next.url}}" title="Next project in queue">
     <i class="fa fa-arrow-right" aria-hidden="true"></i><br>
-    {{go_nav.next.name}}</a>
+    Next project</a>
 
   <a class="nav-projects-abs-next btn btn-light border-primary" href="{{go_nav.next.url}}" title="Next project in queue">
     <i class="fa fa-arrow-right" aria-hidden="true"></i></a>
