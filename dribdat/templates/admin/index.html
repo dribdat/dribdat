@@ -26,7 +26,7 @@
   {% endfor %}
 </div>
 
-<div class="jumbotron admin-stats text-center" style="background:#eee; color:#000; min-width: 640px;">
+<div class="jumbotron admin-stats text-center" style="min-width: 640px;">
 
 {% if event %}
   <div class="clearfix text-left m-4">
@@ -43,6 +43,9 @@
     <a href="{{ url_for('admin.event_projects', event_id=event.id) }}" class="btn btn-lg btn-success">
       <i class="fa fa-star" aria-hidden="true"></i>
       Projects</a>
+    <a href="{{ url_for('public.event_start') }}" class="btn btn-lg btn-light">
+      <i class="fa fa-check" aria-hidden="true"></i>
+      Checklist</a>
   </div>
 {% else %}
   <div class="btn-group mb-2 text-center">
@@ -55,6 +58,11 @@
   </div>
 {% endif %}
 
+  <div class="messages ps-5 pe-5 m-3">
+    <div id="msgs" class="fs-4">{{ msgs }}</div>
+    <div id="motd" class="fs-5 fst-italic">«{{ motd }}»</div>
+  </div>
+
   <div id="announcements" class="mt-4">
     <textarea class="editable w-100 mb-2" 
               style="max-width: 740px; background: #ffd73e;">{{ status_text }}</textarea>
@@ -64,8 +72,8 @@
       >📣 Announce</button>
   </div>
 
-  <div class="container">
-    <div id="activities">Welcome to Dribdat Admin! Today's hack-weather is pleasantly warm with patches of cybershine.</div>
+  <div class="container chart-container mt-4">
+    <div id="activities"></div>
   </div>
 
   <div class="mt-2 fs-4">
@@ -81,16 +89,19 @@
 {% endblock %}
 
 {% block js %}
+<!-- TODO: move to general loader -->
 <script src="https://cdn.jsdelivr.net/npm/vega@5/build/vega.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/vega-lite@5/build/vega-lite.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/vega-embed@6/build/vega-embed.min.js"></script>
 <style>
   #activities {
-    margin:2em; padding: 1em;
-    max-width:100%; overflow-x: auto;
+    margin: 2em; 
+    padding: 1em;
+    background: #fff;
+    max-width:100%; 
+    overflow-x: auto;
     clear: both;
     display: inline-block;
-    background: #fff;
   }
 </style>
 <script src="{{ url_for('static', filename='js/admin.js')}}"></script>

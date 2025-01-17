@@ -19,7 +19,7 @@ import re, string
 from markdown_it import MarkdownIt
 
 # Instantiate Markdown parser
-md = MarkdownIt()
+md = MarkdownIt().enable('table')
 
 def markdownit(content):
     """ Converts a value to Markdown """
