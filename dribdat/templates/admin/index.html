@@ -37,13 +37,13 @@
     <a href="{{ url_for('public.dashboard') }}" class="btn btn-lg btn-dark">
       <i class="fa fa-calendar" aria-hidden="true"></i>
       Dashboard</a>
-    <a href="{{ url_for('admin.event', event_id=event.id) }}" class="btn btn-lg btn-secondary">
+    <a href="{{ url_for('admin.event', event_id=event.id) }}" class="btn btn-lg btn-warning">
       <i class="fa fa-pencil" aria-hidden="true"></i>
       Edit</a>
     <a href="{{ url_for('admin.event_projects', event_id=event.id) }}" class="btn btn-lg btn-success">
       <i class="fa fa-star" aria-hidden="true"></i>
       Projects</a>
-    <a href="{{ url_for('public.event_start') }}" class="btn btn-lg btn-light">
+    <a href="{{ url_for('public.event_start') }}" class="btn btn-lg btn-secondary">
       <i class="fa fa-check" aria-hidden="true"></i>
       Checklist</a>
   </div>
