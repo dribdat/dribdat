@@ -6,10 +6,8 @@
 {% block body_class %}eventresources-page{% endblock %}
 
 {% block content %}
-<h1 class="huge">Resources</h1>
-
 <div class="event-resources">
-  {% if projects %}
+  {% if project_count %}
     <div class="profile-projects mt-2" style="border:none">
       <div class="row ibws-fix">
         {% for project in projects %}
@@ -20,5 +18,21 @@
   {% else %}
     <i>Add your datasets and suggested tools here.</i>
   {% endif %}
+
+  <div class="mt-4">
+    {% if not current_event.lock_starting %}
+      <a href="{{ url_for('project.project_new', event_id=current_event.id) }}" class="btn btn-success">
+        <i class="fa fa-life-ring"></i>
+        <span title="Add another resource here">Share a resource</span>
+      </a>
+    {% endif %}
+      
+    {% if current_user and current_user.active and current_user.is_admin %}
+        <a href="{{ url_for('admin.event', event_id=current_event.id) }}" class="btn btn-secondary"
+            title="Edit event details (admin view)">
+            <i class="fa fa-pencil" aria-hidden="true"></i>
+            Edit</a>
+    {% endif %}
+  </div>
 </div>
 {% endblock %}
