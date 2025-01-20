@@ -6,14 +6,19 @@
 {% block body_class %}eventform eventnew{% endblock %}
 
 {% block content %}
-    <h1>Plan a Sprint</h1>
+    <h2 class="huge">
+      Plan a Sprint
+    </h2>
+
     <p>
         <b>Tip:</b> Set your start and finish in the
         <u title="TIME_ZONE environment setting">{{ config.TIME_ZONE }}</u>
         time zone.
     </p>
 
-    {{ render_form(url_for('public.event_new'), form, formid='eventNew') }}
+    <div class="jumbotron">
+      {{ render_form(url_for('public.event_new'), form, formid='eventNew') }}
+    </div>
 
     {% if config.S3_KEY %}
       <button type="button" class="btn btn-light mt-2 m-1" style="display:none" data-bs-toggle="modal" data-bs-target="#uploadImage">

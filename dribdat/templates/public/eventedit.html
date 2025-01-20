@@ -10,6 +10,10 @@
     Edit event
   </h2>
 
+  <div class="jumbotron">
+    {{ render_form(url_for('public.event_edit', event_id=event.id), form, formid='eventEdit') }}
+  </div>
+
   {% if config.S3_KEY %}
   <button type="button" class="btn btn-light btn-lg mt-2 m-1" style="display:none" data-bs-toggle="modal" data-bs-target="#uploadImage">
     <i class="fa fa-image text-info" area-hidden="true"></i>
@@ -17,10 +21,6 @@
   </button>
   {% endif %}
 
-  <div class="jumbotron">
-    {{ render_form(url_for('public.event_edit', event_id=event.id), form, formid='eventEdit') }}
-  </div>
-
-{% include "includes/uploader.html" %}
+  {% include "includes/uploader.html" %}
 
 {% endblock %}

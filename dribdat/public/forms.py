@@ -183,16 +183,13 @@ class EventNew(FlaskForm):
     location = StringField(
         u'Located at', [length(max=255)],
         description=u'The event locale or virtual space')
-    hashtags = StringField(
-        u'Hashtags', [length(max=255)],
-        description=u'Social media hashtags for this event')
     description = TextAreaField(
         u'Description', description=u'Markdown and HTML supported')
     logo_url = URLField(
         u'Host logo link', [length(max=255)],
         description=u'Link to a small logo file (max 688x130)')
     gallery_url = URLField(
-        u'Gallery links',
+        u'Gallery link',
         [length(max=2048)],
         description=u'URL to large background image (max 1920x1080)')
     webpage_url = URLField(
@@ -201,6 +198,9 @@ class EventNew(FlaskForm):
     community_url = URLField(
         u'Community link', [length(max=255)],
         description=u'Link to connect to a community forum or hashtag')
+    hashtags = StringField(
+        u'Hashtags', [length(max=255)],
+        description=u'Social media hashtags for this event')
     submit = SubmitField(u'Save')
 
 
