@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
 """Application configuration."""
+
+# Documentation: https://dribdat.cc/deploy.html#features
+
 import os
 from dotenv import load_dotenv
 from .utils import strtobool
@@ -21,12 +24,12 @@ class Config(object):
     DRIBDAT_STAGE = os_env.get('DRIBDAT_STAGE', '')
 
     # Application options
-    DRIBDAT_ALLOW_LOGINS = os_env.get('DRIBDAT_ALLOW_LOGINS', 'True')
-    DRIBDAT_ALLOW_LOGINS = bool(strtobool(DRIBDAT_ALLOW_LOGINS))
     DRIBDAT_NOT_REGISTER = os_env.get('DRIBDAT_NOT_REGISTER', 'False')
     DRIBDAT_NOT_REGISTER = bool(strtobool(DRIBDAT_NOT_REGISTER))
     DRIBDAT_USER_APPROVE = os_env.get('DRIBDAT_USER_APPROVE', 'False')
     DRIBDAT_USER_APPROVE = bool(strtobool(DRIBDAT_USER_APPROVE))
+    DRIBDAT_ALLOW_LOGINS = os_env.get('DRIBDAT_ALLOW_LOGINS', 'True')
+    DRIBDAT_ALLOW_LOGINS = bool(strtobool(DRIBDAT_ALLOW_LOGINS))
     DRIBDAT_ALLOW_EVENTS = os_env.get('DRIBDAT_ALLOW_EVENTS', 'False')
     DRIBDAT_ALLOW_EVENTS = bool(strtobool(DRIBDAT_ALLOW_EVENTS))
     DRIBDAT_SOCIAL_LINKS = os_env.get('DRIBDAT_SOCIAL_LINKS', 'True')
@@ -124,11 +127,10 @@ class ProdConfig(Config):
     if CACHE_MEMCACHED_SERVERS:
         CACHE_TYPE = 'MemcachedCache'
     CACHE_DEFAULT_TIMEOUT = int(os_env.get('CACHE_DEFAULT_TIMEOUT', '300'))
-    SQLALCHEMY_DATABASE_URI = os_env.get(
-        'DATABASE_URL', 'postgresql://localhost/example')
-    if SQLALCHEMY_DATABASE_URI.startswith('postgres:'):
-        SQLALCHEMY_DATABASE_URI = SQLALCHEMY_DATABASE_URI.replace(
-            'postgres:', 'postgresql:')
+    DB_PATH = os.path.join(Config.PROJECT_ROOT, 'dribdat.db')
+    SQLALCHEMY_DATABASE_URI = os_env.get('DATABASE_URL', 'sqlite:///{0}'.format(DB_PATH))
+    # Compatibility with old-style postgres config
+    SQLALCHEMY_DATABASE_URI = SQLALCHEMY_DATABASE_URI.replace('postgres:/', 'postgresql:/')
 
 
 class DevConfig(Config):
@@ -136,10 +138,9 @@ class DevConfig(Config):
 
     ENV = 'dev'
     DEBUG = True
-    DB_NAME = 'dev.db'
     SERVER_NAME = '127.0.0.1:5000'
     # Put the db file in project root
-    DB_PATH = os.path.join(Config.PROJECT_ROOT, DB_NAME)
+    DB_PATH = os.path.join(Config.PROJECT_ROOT, 'dev.db')
     SQLALCHEMY_DATABASE_URI = 'sqlite:///{0}'.format(DB_PATH)
     CACHE_TYPE = 'NullCache' # Do not cache
     DEBUG_TB_ENABLED = True # Enable the Debug Toolbar

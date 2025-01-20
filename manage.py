@@ -23,22 +23,27 @@ def shell_context():
 
 def create_app(script_info=None):
     """Initialise the app object."""
-    if os.environ.get("DRIBDAT_ENV") == 'prod':
+    # Start Dribdat in dev mode by default
+    if os.environ.get("DRIBDAT_ENV", "dev") == 'prod':
         app = init_app(ProdConfig)
+        print("Dribdat is production ready")
     else:
         app = init_app(DevConfig)
+        print("Dribdat in development mode")
+    # Helpful info for maintainers
+    print(" * Database: " + app.config['SQLALCHEMY_DATABASE_URI'].split(':/')[0])
     # Enable debugger and profiler
     if bool(strtobool(os.environ.get("FLASK_DEBUG", "False"))):
         app.config['DEBUG_TB_PROFILER_ENABLED'] = True
         app.debug = True
-        #from flask_debugtoolbar import DebugToolbarExtension
-        #DebugToolbarExtension(app)
-        # from werkzeug.middleware.profiler import ProfilerMiddleware
-        # app.wsgi_app = ProfilerMiddleware(
-        #     app.wsgi_app,
-        #     restrictions=[5, 'public'],
-        #     profile_dir='./profile',
-        # )
+        from flask_debugtoolbar import DebugToolbarExtension
+        from werkzeug.middleware.profiler import ProfilerMiddleware
+        DebugToolbarExtension(app)
+        app.wsgi_app = ProfilerMiddleware(
+            app.wsgi_app,
+            restrictions=[5, 'public'],
+            profile_dir='./profile',
+        )
     # Pass through shell commands
     app.shell_context_processor(shell_context)
     return app
