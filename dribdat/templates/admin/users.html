@@ -6,8 +6,6 @@
 
     <h2 class="huge">People</h2>
 
-    <p class="mb-4">The use of dedicated user identity providers is <a href="https://dribdat.cc/deploy.html#authentication" target="_blank">recommended</a>.</p>
-
     {% include "includes/search.html" %}
     {% include "includes/pagination.html" %}
 
@@ -77,5 +75,8 @@
       {% endfor %}
     </table>
   {% include "includes/pagination.html" %}
+
+    <p class="mb-4">The use of SSO user identity providers is <a href="https://dribdat.cc/deploy.html#authentication" target="_blank">recommended</a></p>
+
 </div>
 {% endblock %}

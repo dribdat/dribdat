@@ -43,6 +43,9 @@
     <a href="{{ url_for('admin.event_projects', event_id=event.id) }}" class="btn btn-lg btn-success">
       <i class="fa fa-star" aria-hidden="true"></i>
       Projects</a>
+    <a href="{{ url_for('admin.event_resource_area') }}" class="btn btn-lg btn-light">
+      <i class="fa fa-life-ring" aria-hidden="true"></i>
+      Resources</a>
     <a href="{{ url_for('public.event_start') }}" class="btn btn-lg btn-secondary">
       <i class="fa fa-check" aria-hidden="true"></i>
       Checklist</a>
@@ -58,9 +61,8 @@
   </div>
 {% endif %}
 
-  <div class="messages ps-5 pe-5 m-3">
-    <div id="msgs" class="fs-4">{{ msgs }}</div>
-    <div id="motd" class="fs-5 fst-italic">«{{ motd }}»</div>
+  <div class="messages ps-5 pe-5 m-3 fs-5">
+    <div id="msgs">{{ msgs }}</div>
   </div>
 
   <div id="announcements" class="mt-4">
@@ -73,6 +75,7 @@
   </div>
 
   <div class="container chart-container mt-4">
+    <div id="motd" class="fst-italic">«{{ motd }}»</div>
     <div id="activities"></div>
   </div>
 

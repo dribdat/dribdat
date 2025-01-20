@@ -1,4 +1,4 @@
-#### Get some tips for pro hackathons, or bookmark this page and [tap here to continue](/event/new) ...
+#### Bookmark this page and [tap here when ready](/event/new) ➤
 
 ---
 

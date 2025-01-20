@@ -568,8 +568,8 @@ class Event(PkModel):
         """Return short online description."""
         ol = self.summary or self.description or ''
         ol = re.sub(r"\s+", " ", ol)
-        if len(ol) > 140:
-            ol = ol[:140] + '...'
+        if len(ol) > 280:
+            ol = ol[:280] + '...'
         return ol
 
     @property

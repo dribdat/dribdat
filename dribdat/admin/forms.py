@@ -56,9 +56,6 @@ class EventForm(FlaskForm):
 
     next = HiddenField()
     id = HiddenField('id')
-    name = StringField(
-        u'Title',
-        [length(max=80), UniqueValidator(Event, 'name'), DataRequired()])
     is_current = BooleanField(
         u'Featured', default=False,
         description=u'📣 Pin this event to the homepage.')
@@ -77,6 +74,9 @@ class EventForm(FlaskForm):
     lock_templates = BooleanField(
         u'Templates', default=False,
         description=u'💡 Contains templates, which can be used for new projects.')
+    name = StringField(
+        u'Title',
+        [length(max=80), UniqueValidator(Event, 'name'), DataRequired()])
     starts_date = DateField(
         u'Starting date', [event_date_check], default=datetime.now(UTC))
     starts_time = TimeField(
@@ -157,10 +157,12 @@ class ProjectForm(FlaskForm):
     next = HiddenField()
     id = HiddenField('id')
     progress = SelectField(
-        u'Progress', coerce=int, choices=projectProgressList())
+        u'Progress', coerce=int, choices=projectProgressList(),
+        description="Challenges appear with a blueprint-like outline")
     name = StringField(
         u'Title',
-        [length(max=80), UniqueValidator(Project, 'name'), DataRequired()])
+        [length(max=80), UniqueValidator(Project, 'name'), DataRequired()],
+        description="Try to keep it short and sweet")
     ident = StringField(
         u'Identifier', [length(max=10)],
         description="Typically used for numbering the projects")
@@ -168,7 +170,7 @@ class ProjectForm(FlaskForm):
     hashtag = StringField(
         u'Hashtags', [length(max=140)],
         description="Team channel, hashtag, organization")
-    longtext = TextAreaField(u'Description')
+    longtext = TextAreaField(u'Pitch')
     autotext_url = URLField(
         u'Readme', [length(max=2048)],
         description="Location from which to Sync content")

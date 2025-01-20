@@ -62,7 +62,7 @@
 	        {% endif %}
 	    	{% if details %}
 	        <p class="an-event-description">
-	          {{event.summary or event.description|truncate(300) or event.oneliner|markdown|striptags|truncate(300)}}
+	          {{ event.oneliner|striptags }}
 	        </p>
 	      </div>
 	      <div class="an-event-actions text-center">
