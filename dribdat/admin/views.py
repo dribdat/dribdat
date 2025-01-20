@@ -77,8 +77,8 @@ def index():
 
     msgs = []
     if sum_hidden > 0:
-        msgs.append('There are %d projects in the featured event ' % sum_hidden + \
-              ' that are hidden and may need moderation.')
+        msgs.append('%d hidden projects in the featured event ' % sum_hidden + \
+              ' may need moderation.')
 
     return render_template('admin/index.html',
                            stats=stats, motd=motd, msgs=' '.join(msgs),
@@ -385,6 +385,19 @@ def event_feature(event_id):
     event.is_current = True
     event.save()
     return redirect(url_for("admin.events"))
+
+
+@blueprint.route('/resource/area', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def event_resource_area():
+    event = Event.query.filter_by(lock_resources=True).first()
+    if event:
+        return redirect(url_for("admin.event_projects", event_id=event.id))
+    new_event = Event(name='Resources')
+    new_event.lock_resources = True
+    new_event.save()
+    return redirect(url_for("admin.event_projects", event_id=new_event.id))
 
 
 @blueprint.route('/event/<int:event_id>/autosync', methods=['GET', 'POST'])

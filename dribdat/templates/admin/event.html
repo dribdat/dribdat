@@ -4,7 +4,6 @@
 
 {% block content %}
 <div class="container">
-    <h1 class="huge">Edit sprint</h1>
 
     <div class="float-right btn-group">
       <a href="{{ url_for('public.event', event_id=event.id) }}" class="btn btn-light" target="_blank">
@@ -21,18 +20,22 @@
       </a>
     </div>
 
-    <small>
+    <h1 class="huge">Edit sprint</h1>
+    
+    <div class="mb-4 fs-xs">
       <i class="fa fa-arrow-down" aria-hidden="true"></i>
-      <b>
-        <a href="#starts_date">Schedule</a> |
-        <a href="#summary">Summary</a> |
-        <a href="#description">Description</a> |
-        <a href="#logo_url">Images</a> |
-        <a href="#instruction">Instructions</a> |
-        <a href="#community_embed">Terms</a> |
-        <a href="#custom_css">CSS</a>
-      </b>
-    </small>
+        <a href="#starts_date">Schedule</a> 
+      <i class="fa fa-arrow-down" aria-hidden="true"></i>
+        <a href="#summary">Summary</a>
+      <i class="fa fa-arrow-down" aria-hidden="true"></i>
+        <a href="#description">Description</a>
+      <i class="fa fa-arrow-down" aria-hidden="true"></i>
+        <a href="#logo_url">Images</a>
+      <i class="fa fa-arrow-down" aria-hidden="true"></i>
+        <a href="#instruction">Instructions</a>
+      <i class="fa fa-arrow-down" aria-hidden="true"></i>
+        <a href="#community_embed">Customize</a>
+    </div>
 
     {{ render_form(url_for('admin.event', event_id=event.id), form) }}
 

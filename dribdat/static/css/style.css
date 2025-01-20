@@ -1702,7 +1702,7 @@ a.media {
     min-width: 7em;
     font-size: 150%;
 }
-.container.with-event .form-actions input {
+.container .form-actions input.btn {
     margin-top: 1em;
     font-size: 150%;
     width: 100%;

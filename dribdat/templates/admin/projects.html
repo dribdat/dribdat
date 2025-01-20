@@ -2,8 +2,8 @@
 
 {% block content %}
 <div class="container admin-projects">
-    <a href="{{ url_for('admin.project_new') }}" class="btn btn-success btn-lg">Add project</a>
-    <h2 class="huge">Challenges</h2>
+    <a href="{{ url_for('admin.project_new') }}" class="btn btn-success btn-lg">New challenge</a>
+    <h2 class="huge">Projects</h2>
 
     {% if category_name %}<h4>Category: <b>{{ category_name }}</b></h4>{% endif %}
 
@@ -21,12 +21,11 @@
           <i class="fa fa-recycle" aria-hidden="true"></i>&nbsp;Sync all
         </a>
       </div>
-      <h4 class="text-center font-weight-bold">{{ event.name }}</h4>
-      <a href="{{ url_for('admin.event', event_id=event.id) }}" class="btn btn-light">
-        <i class="fa fa-arrow-left" aria-hidden="true"></i>
-        Sprint</a>
-    {% else %}
-      <p class="mb-4"><b>Tip</b>: Manage the projects of a sprint for more options.</p>
+      <a href="{{ url_for('admin.event', event_id=event.id) }}">
+        <h4 class="font-weight-bold">
+          <i class="fa fa-arrow-left" aria-hidden="true"></i>
+          {{ event.name }}</h4>
+      </a>
     {% endif %}
 
     {% if data %}
