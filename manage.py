@@ -34,16 +34,11 @@ def create_app(script_info=None):
     print(" * Database: " + app.config['SQLALCHEMY_DATABASE_URI'].split(':/')[0])
     # Enable debugger and profiler
     if bool(strtobool(os.environ.get("FLASK_DEBUG", "False"))):
-        app.config['DEBUG_TB_PROFILER_ENABLED'] = True
         app.debug = True
+        # You can still enable the profiler manually in the toolbar
+        app.config['DEBUG_TB_PROFILER_ENABLED'] = False
         from flask_debugtoolbar import DebugToolbarExtension
-        from werkzeug.middleware.profiler import ProfilerMiddleware
         DebugToolbarExtension(app)
-        app.wsgi_app = ProfilerMiddleware(
-            app.wsgi_app,
-            restrictions=[5, 'public'],
-            profile_dir='./profile',
-        )
     # Pass through shell commands
     app.shell_context_processor(shell_context)
     return app
