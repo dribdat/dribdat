@@ -152,6 +152,9 @@ form input[type="checkbox"] {
 }
 .admin .form-group .radio-inline {
     margin-right: 1em;
+    display: block;
+    border-bottom: 1px solid lightgrey;
+    padding: 0.3em;
 }
 .admin .form-group .help-inline {
     color: #555;
@@ -1730,6 +1733,9 @@ pre {
 }
 #project-md:not(.tab-pane)::before {
     content: "Pitch";
+}
+.resource-page #project-md:not(.tab-pane)::before {
+    display: none;
 }
 .phase-Challenge #project-md:not(.tab-pane)::before {
     content: "Challenge";

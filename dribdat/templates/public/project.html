@@ -89,7 +89,7 @@
 {% endif %}
 
 <!-- Main project content container -->
-<div class="jumbotron project-page phase-{{ project.phase }}" {% if project.logo_color %} style="border-color:{{project.logo_color}}"{% endif %}>
+<div class="jumbotron project-page phase-{{ project.phase }} {% if project.event.lock_resources %}resource-page{% endif %}" {% if project.logo_color %} style="border-color:{{project.logo_color}}"{% endif %}>
 
   {% if project.ident %}
     <div class="project-ident">{{ project.ident }}</div>
