@@ -510,12 +510,12 @@ def project_uploader():
     safe_filename = "".join(
         c for c in safe_filename
         if c.isalnum() or c in keepcharacters).rstrip()
-    if not safe_filename:
+    if not safe_filename or len(safe_filename) > 16:
         safe_filename = "".join([random_password(8), '.', ext])
     # use random subfolder inside user id folder
     filename = '/'.join([
                     str(current_user.id),
-                    random_password(24),
+                    random_password(5),
                     safe_filename
                 ])
     # with tempfile.TemporaryDirectory() as tmpdir:
