@@ -100,6 +100,11 @@ class Config(object):
     S3_HTTPS = os_env.get('S3_HTTPS', None)
     S3_ENDPOINT = os_env.get('S3_ENDPOINT', None)
 
+    # Default settings for AWS S3 integrity checks (see boto3 #4392)
+    if not os_env.get('AWS_REQUEST_CHECKSUM_CALCULATION', None):
+        os.environ['AWS_REQUEST_CHECKSUM_CALCULATION'] = 'WHEN_REQUIRED'
+        os.environ['AWS_RESPONSE_CHECKSUM_VALIDATION'] = 'WHEN_REQUIRED'
+
     # Recaptcha support
     RECAPTCHA_PUBLIC_KEY = os_env.get('RECAPTCHA_PUBLIC_KEY', None)
     RECAPTCHA_PRIVATE_KEY = os_env.get('RECAPTCHA_PRIVATE_KEY', None)

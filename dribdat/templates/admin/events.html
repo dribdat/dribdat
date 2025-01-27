@@ -138,23 +138,16 @@
           method="post" enctype="multipart/form-data">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="uploadFileLabel">Import</h5>
+        <h5 class="modal-title" id="uploadFileLabel">Import Sprint data</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <p class="upload-note mt-0 mb-2">
-          Expects a
-          <b><a href="https://frictionlessdata.io/field-guide/" target="_blank">datapackage.json</a></b> or
-          <b>projects.csv</b> exported from dribdat.
-          If an event, category or project has the same name on this server as one in the package, it will be skipped.
-          To export event data, tap the 'Action' drop-down next to an event listing.
-        </p>
         <div class="input-group mb-4">
-          <div class="input-group-prepend">
-            <span class="input-group-text" id="inputFileLabel">Upload</span>
+          <div class="custom-file">
+            <label class="form-label custom-file-label" for="inputImageFile">Choose file</label>
+            <input type="file" class="custom-file-input form-control form-control-lg" placeholder="https://..."
+              id="inputFile" name="file" aria-describedby="inputFileLabel">
           </div>
-          <input type="file" class="form-control" placeholder="https://..."
-            id="inputFile" name="file" aria-describedby="inputFileLabel">
         </div>
         <div class="form-group form-check">
           <input type="radio" name="import" value="none" checked class="form-check-input" id="importCheck1">
@@ -168,6 +161,14 @@
           <input type="radio" name="import" value="full" checked class="form-check-input" id="importCheck3">
           <label class="form-check-label" for="importCheck3">Include event, projects, users</label>
         </div>
+        <hr>
+        <p class="upload-note mt-2">
+          Expects a
+          <b><a href="https://frictionlessdata.io/field-guide/" target="_blank">datapackage.json</a></b> or
+          <b>projects.csv</b> exported from dribdat.
+          If an event, category or project has the same name on this server as one in the package, it will be skipped.
+          To export event data, tap the 'Action' drop-down next to an event listing.
+        </p>
       </div>
       <div class="modal-footer">
         <p class="message-loading hidden alert alert-warning">

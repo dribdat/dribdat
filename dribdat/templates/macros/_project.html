@@ -135,16 +135,6 @@
 					<p class="project-summary">
 						{{ project.summary }}
 					</p>
-					<table class="project-stats">
-			    	{% if project.stats and project.stats.people %}
-			    		<td>People:</td><th>{{ project.stats.people }}</th>
-				    	<td>Posts:</td><th>{{ project.stats.total }}</th>
-				    	<td>Dribs:</td><th>{{ project.stats.updates }}</th>
-						{% endif %}
-			    	{% if project.age %}
-			    		<td>Started:</td><th>{{ project.age|since_date }}</th>
-						{% endif %}
-				  </table>
 				</div>
 			</div>
 			<div class="card-footer">
@@ -163,7 +153,7 @@
 			  
 			  <a href="{{ url_for('project.project_view', project_id=project.id) }}" 
 			  	 class="float-right btn btn-sm btn-info">
-		   		Details</a>
+		   		 Details ...</a>
 			</div>
 	    </div>
 	</div>

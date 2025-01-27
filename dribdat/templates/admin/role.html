@@ -7,13 +7,15 @@
     <h2 class="huge">Update role</h2>
     {{ render_form(url_for('admin.role', role_id=role.id), form) }}
 
-    <ul>
-      {% for user in users %}
-        <a href="{{ url_for('admin.user_profile', user_id=user.id )}}">
-          <li>{{ user.username }}</li>
-        </a>
-      {% endfor %}
-    </ul>
+    <div class="container m-4">
+      <ul>
+        {% for user in users %}
+          <a href="{{ url_for('admin.user_profile', user_id=user.id )}}">
+            <li>{{ user.username }}</li>
+          </a>
+        {% endfor %}
+      </ul>
+    </div>
 
     <a href="{{ url_for('admin.role_delete', role_id=role.id) }}" class="btn btn-sm btn-danger"
       onclick="if(!window.confirm('Are you sure you wish to delete this role?')) return false">

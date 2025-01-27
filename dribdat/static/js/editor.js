@@ -95,7 +95,7 @@
 
   // Allow project progress on acknowledge
   if ($(".projectpost .stage-conditions .stage-no").length == 0) {
-    $('.form-project-post label[for="has_progress"] input').click();
+    $('.form-project-post label[for="has_progress"] input').attr('checked', true);
   } else {
     $('.form-project-post label[for="has_progress"]').parent().hide();
   }

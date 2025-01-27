@@ -105,6 +105,8 @@ form input[type="checkbox"] {
 .form-project-post .post-image-btn {
     float: left;
     margin-right: -15em;
+    position: relative;
+    top: -5px;
 }
 @media (max-width: 760px) {
     .form-project-post .post-image-btn {
@@ -152,6 +154,9 @@ form input[type="checkbox"] {
 }
 .admin .form-group .radio-inline {
     margin-right: 1em;
+    display: block;
+    border-bottom: 1px solid lightgrey;
+    padding: 0.3em;
 }
 .admin .form-group .help-inline {
     color: #555;
@@ -192,6 +197,8 @@ form input[type="checkbox"] {
     border: 1px solid rgba(0,0,0,0.1);
     border-radius: 12px;
     margin-top: -1em;
+    color: black;
+    background: lightyellow;
 }
 .alert.project-tips .close {
     position: relative;
@@ -1731,6 +1738,9 @@ pre {
 #project-md:not(.tab-pane)::before {
     content: "Pitch";
 }
+.resource-page #project-md:not(.tab-pane)::before {
+    display: none;
+}
 .phase-Challenge #project-md:not(.tab-pane)::before {
     content: "Challenge";
 }
@@ -2474,10 +2484,6 @@ Instruction page
 }
 .projectpost .form-project-post .checkbox {
     float: right;
-}
-.project-tips.alert:hover {
-    color: black;
-    background: lightyellow;
 }
 
 /* ------------

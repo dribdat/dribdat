@@ -89,7 +89,7 @@
 {% endif %}
 
 <!-- Main project content container -->
-<div class="jumbotron project-page phase-{{ project.phase }}" {% if project.logo_color %} style="border-color:{{project.logo_color}}"{% endif %}>
+<div class="jumbotron project-page phase-{{ project.phase }} {% if project.event.lock_resources %}resource-page{% endif %}" {% if project.logo_color %} style="border-color:{{project.logo_color}}"{% endif %}>
 
   {% if project.ident %}
     <div class="project-ident">{{ project.ident }}</div>
@@ -234,6 +234,16 @@
     </div><!-- /project-md -->
   {% endif %}
 
+  {% if project.stats %}
+    <table class="project-stats">
+        <td>People:</td><th>{{ project.stats.people }}</th>
+        <td>Posts:</td><th>{{ project.stats.total }}</th>
+        <td>Dribs:</td><th>{{ project.stats.updates }}</th>
+      {% if project.age %}
+        <td>Started:</td><th>{{ project.age|since_date }}</th>
+      {% endif %}
+    </table>
+  {% endif %}
 
   {% if project_team %}
     <div id="team-md" aria-labelledby="team-tab-md">

@@ -156,24 +156,21 @@ class ProjectForm(FlaskForm):
 
     next = HiddenField()
     id = HiddenField('id')
-    progress = SelectField(
-        u'Progress', coerce=int, choices=projectProgressList(),
-        description="Challenges appear with a blueprint-like outline")
-    name = StringField(
-        u'Title',
+    progress = RadioField(u'Progress', coerce=int, choices=projectProgressList(),
+        description="Challenges appear blueprint-like, then shaded relative to progress")
+    name = StringField(u'Title',
         [length(max=80), UniqueValidator(Project, 'name'), DataRequired()],
         description="Try to keep it short and sweet")
-    ident = StringField(
-        u'Identifier', [length(max=10)],
+    summary = StringField(u'Summary', [length(max=2048)],
+        description="A brief headline for the top of the page and social links")
+    ident = StringField(u'Identifier', [length(max=10)],
         description="Typically used for numbering the projects")
-    summary = StringField(u'Short summary', [length(max=2048)])
-    hashtag = StringField(
-        u'Hashtags', [length(max=140)],
+    hashtag = StringField(u'Hashtags', [length(max=140)],
         description="Team channel, hashtag, organization")
-    longtext = TextAreaField(u'Pitch')
-    autotext_url = URLField(
-        u'Readme', [length(max=2048)],
-        description="Location from which to Sync content")
+    longtext = TextAreaField(u'Pitch',
+        description="If the embedded Presentation has no link, the Pitch is rendered as Markdown slides")
+    autotext_url = URLField(u'Readme link', [length(max=2048)],
+        description="Location from which to Sync documentation content")
     autotext = TextAreaField(u'Readme content')
     webpage_url = URLField(u'Presentation link', [length(max=2048)])
     is_webembed = BooleanField(u'Embed presentation link', default=False)
@@ -186,8 +183,8 @@ class ProjectForm(FlaskForm):
         u'Custom icon',
         [length(max=20)],
         description='https://fontawesome.com/v4/cheatsheet')
-    event_id = SelectField(u'Event', coerce=int)
-    category_id = SelectField(u'Category', coerce=int)
+    event_id = IntegerField(u'Sprint ID', description='As in the URL of an event page')
+    category_id = SelectField(u'Category', coerce=int, description='Global or event-specific')
     user_name = StringField(u'Author', description='User who created this challenge')
     submit = SubmitField(u'Save')
 
