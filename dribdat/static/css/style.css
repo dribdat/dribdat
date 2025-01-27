@@ -197,6 +197,8 @@ form input[type="checkbox"] {
     border: 1px solid rgba(0,0,0,0.1);
     border-radius: 12px;
     margin-top: -1em;
+    color: black;
+    background: lightyellow;
 }
 .alert.project-tips .close {
     position: relative;
@@ -2482,10 +2484,6 @@ Instruction page
 }
 .projectpost .form-project-post .checkbox {
     float: right;
-}
-.project-tips.alert:hover {
-    color: black;
-    background: lightyellow;
 }
 
 /* ------------
