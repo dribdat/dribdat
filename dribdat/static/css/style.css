@@ -105,6 +105,8 @@ form input[type="checkbox"] {
 .form-project-post .post-image-btn {
     float: left;
     margin-right: -15em;
+    position: relative;
+    top: -5px;
 }
 @media (max-width: 760px) {
     .form-project-post .post-image-btn {

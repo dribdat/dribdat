@@ -12,14 +12,11 @@
           <br><b>Max file size: {{ (config.MAX_CONTENT_LENGTH/(1024*1024))|round(1) }} MB</b>
         </p>
         <div class="input-group" style="margin-top:1em">
-          <div class="input-group-prepend">
-            <span class="input-group-text" id="inputImageLabel">Select</span>
-          </div>
           <div class="custom-file">
-            <input type="file" class="custom-file-input" id="inputImageFile"
-              name="image" aria-describedby="inputImageLabel" accept="image/*"
+            <label class="form-label custom-file-label" for="inputImageFile">Choose file</label>
+            <input class="custom-file-input form-control form-control-lg" id="inputImageFile"
+              type="file" name="image" aria-describedby="inputImageLabel" accept="image/*"
               data-maxsize="{{ config.MAX_CONTENT_LENGTH }}">
-            <label class="custom-file-label" for="inputImageFile">Choose file</label>
           </div>
         </div>
         <hr>
@@ -73,14 +70,11 @@
           up to {{ (config.MAX_CONTENT_LENGTH/(1024*1024))|round(1) }} MB in size.
         </p>
         <div class="input-group mt-2">
-          <div class="input-group-prepend">
-            <span class="input-group-text" id="inputFileLabel">Select</span>
-          </div>
           <div class="custom-file">
-            <input type="file" class="custom-file-input" id="inputFile"
-              name="image" aria-describedby="inputFileLabel" accept=".pdf"
+            <label class="form-label custom-file-label" for="inputFile">Choose file</label>
+            <input class="custom-file-input form-control form-control-lg" id="inputFile"
+              type="file" name="image" aria-describedby="inputFileLabel" accept=".pdf"
               data-maxsize="{{ config.MAX_CONTENT_LENGTH }}">
-            <label class="custom-file-label" for="inputFile">Choose file</label>
           </div>
         </div>
         <div class="file-preview hidden mt-3">
@@ -133,14 +127,11 @@
           <br>(up to {{ (config.MAX_CONTENT_LENGTH/(1024*1024))|round(1) }} MB in size)
         </p>
         <div class="input-group mt-2">
-          <div class="input-group-prepend">
-            <span class="input-group-text" id="inputFileLabel">Select</span>
-          </div>
           <div class="custom-file">
-            <input type="file" class="custom-file-input" id="inputFile"
-              name="image" aria-describedby="inputFileLabel" accept="application/json,.geojson,.csv,.tsv,.pdf,application/vnd.oasis.opendocument.spreadsheet"
+            <label class="form-label custom-file-label" for="inputFile">Choose file</label>
+            <input class="custom-file-input form-control form-control-lg" id="inputFile"
+              type="file" name="image" aria-describedby="inputFileLabel" accept="application/json,.geojson,.csv,.tsv,.pdf,application/vnd.oasis.opendocument.spreadsheet"
               data-maxsize="{{ config.MAX_CONTENT_LENGTH }}">
-            <label class="custom-file-label" for="inputFile">Choose file</label>
           </div>
         </div>
         <div class="file-preview hidden mt-3">
