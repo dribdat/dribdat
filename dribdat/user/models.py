@@ -877,7 +877,7 @@ class Project(PkModel):
                     rollcall.append(r)
         return [r for r in get_roles if r not in rollcall and r.name]
 
-    def all_dribs(self, limit=50):
+    def all_dribs(self, limit=50, by_type=None):
         """Query which formats the project's timeline."""
         activities = Activity.query.filter_by(
                         project_id=self.id

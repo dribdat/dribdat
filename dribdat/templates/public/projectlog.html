@@ -1,0 +1,130 @@
+{% extends "layout.html" %}
+{% import "macros/_detail.html" as detail %}
+
+{% block page_title %}{{project.name}} - {{project.event.name}}{% endblock %}
+
+{% block page_meta %}
+  <meta property="og:type" content="website"/>
+  <meta property="og:url" content="{{ url_for('project.project_view', project_id=project.id, _external=True) }}"/>
+  <meta property="og:title" content="{{project.name}}"/>
+  <meta property="og:description" content="{% if project.summary %}{{project.summary}}{% else %}{{ project.longtext|striptags|truncate(120) }}{% endif %}"/>
+  <meta name="description" content="{{project.summary}}"/>
+  <meta name="author" content="{{project.user.username}}"/>
+  <meta name="dribdat:project:id" content="{{project.id}}"/>
+{% endblock %}
+
+{% block css %}
+<link href="{{ url_for('static', filename='css/rainbow/zenburnesque.css') }}" rel="stylesheet" type="text/css">
+{% endblock %}
+{% block js %}
+<script type="text/javascript" src="{{ url_for('static', filename='css/rainbow/rainbow-custom.min.js') }}"></script>
+{% endblock %}
+
+{% block body_class %}project-home{% endblock %}
+
+{% block content %}
+
+  {{ detail.render_project_head(project) }}
+
+  {% if project.stats %}
+    <table class="project-stats">
+        <td>People</td><th class="drib-count me-2">{{ project.stats.people }}</th>
+        <td>Posts</td><th class="drib-count me-2">{{ project.stats.total }}</th>
+        <td>Dribs</td><th class="drib-count me-2">{{ project.stats.updates }}</th>
+      {% if project.age %}
+        <td>Started</td><th class="drib-count me-2">{{ project.age|since_date }}</th>
+      {% endif %}
+    </table>
+  {% endif %}
+
+  <br clear="both" />
+
+  {% if project_dribs and not project.event.lock_resources %}
+  <a name="log"></a>
+  <div id="dribs-md" aria-labelledby="dribs-tab-md">
+
+    {% if allow_post %}
+      <center>
+        <div class="btn-group">
+          <a href="{{ url_for('project.project_post', project_id=project.id) }}"
+             class="btn btn-lg btn-success pr-3"
+             title="Write a progress update">
+            <i class="fa fa-clock-o" aria-hidden="true"></i>
+            Post
+          </a>
+          {% if config.LLM_API_KEY %}
+            <button data-bs-toggle="modal" data-bs-target="#autopostModal"
+               title="Get tips from an AI coach" class="btn pl-3 pr-4 btn-lg btn-dark">
+              &#x1F170;&#xFE0F;&#x2139;&#xFE0F;
+            </button>
+          {% endif %}
+        </div>
+      </center>
+    {% endif %}
+
+    <section class="timeline">
+      {% for s in project_dribs %}
+      <div class="timeline-item timeline-{{ s.name }} timeline-{{ s.icon }}">
+        <div class="timeline-img" title="{{ s.date|format_datetime }} ({{ s.name }})">
+          {% if s.icon %}
+            <i class="fa fa-{{ s.icon }}" aria-hidden="true"></i>
+          {% endif %}
+        </div>
+        <div class="timeline-content timeline-card js--fadeInBottom">
+          {% if s.title %}
+          <div class="timeline-img-header">
+            <h2>{{s.title}}</h2>
+          </div>
+          {% endif %}
+
+          {% if s.id and (allow_post or current_user.is_admin) %}
+            <a class="close delete" title="Delete post" href="{{ url_for('project.post_delete', project_id=project.id, activity_id=s.id) }}"
+              onclick="if(!window.confirm('Delete this post?')) return false">&times;</a>
+          {% endif %}
+          {% if s.id and s.icon == 'paperclip' %}
+            <a class="close revert" title="Show previous version" href="{{ url_for('project.post_preview', project_id=project.id, activity_id=s.id) }}">&#9100;</a>
+          {% endif %}
+
+          {% if s.text %}
+            <div class="content">
+              {{s.text|markdown|safe}}
+            </div>
+          {% endif %}
+
+          {% if not s.title %}
+            <div class="date">
+            {% if s.ref_url %}
+              <a href="{{ s.ref_url }}">
+            {% endif %}
+                <span title="{{ s.date }}">
+                  {{ s.timesince }}
+                </span>
+                {% if s.author %}
+                  ~
+                  <a class="userlink"
+                    href="{{ url_for('public.user_profile', username=s.author )}}">
+                    {{ s.author }}</a>
+                {% endif %}
+            {% if s.ref_url %}
+              </a>
+            {% endif %}
+            </div>
+          {% endif %}
+        </div><!-- /content -->
+      </div>
+      {% endfor %}
+
+    </section>
+
+  </div><!-- /dribs-md -->
+  {% endif %}
+
+</div><!-- /.jumbotron .project-page -->
+
+<div class="panel panel-default community-embed mt-5">
+  <div class="panel-body">
+    {{project.event.community_embed|safe}}
+  </div>
+</div>
+
+{% endblock %}

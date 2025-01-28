@@ -38,13 +38,6 @@ def project_view(project_id):
     return project_action(project_id, None)
 
 
-@blueprint.route('/<int:project_id>/log')
-def project_view_posted(project_id):
-    """Identical to the above."""
-    return redirect(url_for(
-        'project.project_view', project_id=project_id) + '#log')
-
-
 @blueprint.route('/s/<project_name>')
 def project_view_name(project_name):
     """Show a project matching by name."""
@@ -323,7 +316,6 @@ def get_challenge(project_id):
 def get_log(project_id):
     """Show project log and report."""
     project = Project.query.filter_by(id=project_id).first_or_404()
-    preview_at = challenge.id
     return render_template(
         'public/projectlog.html', active="projects",
         project=project, current_event=project.event,
