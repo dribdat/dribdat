@@ -4,25 +4,25 @@
 
 # Dribdat
 
-**Tooling for time-limited, team-based, FAIR and open-by-default cooperation** that bundles together guidelines, timers, trackers, loggers, integrates with prototyping tools, group chat, code repositories, open data APIs, and more!
+`Dribdat` is an open source web application that playfully assists your team in collaborating on technical design projects.
+Designed to bootstrap your [awesome hackathon](https://github.com/dribdat/awesome-hackathon), it can be used as a versatile toolbox for civic tech sprints:
+see [Tour de Hack](https://dribdat.cc/tour) for some examples, and our [User handbook](https://dribdat.cc/usage) for screenshots.
 
-`Dribdat` is an open source web application that playfully assists teams collaborating on technical projects with data.
-Designed to support your [awesome hackathon](https://github.com/dribdat/awesome-hackathon), it is used as a versatile toolbox for civic tech sprints:
-see [Tour de Hack](https://dribdat.cc/tour) for some examples, and [User handbook](https://dribdat.cc/usage) for screenshots.
+Please follow and support the project on [OpenCollective](https://opencollective.com/dribdat/updates):
+
+<a href="https://opencollective.com/dribdat/donate" target="_blank"><img src="https://opencollective.com/dribdat/donate/button@2x.png?color=blue" width=300 /></a>
 
 # Purpose
 
 The philosophy of this project, in a nutshell, is:
 
-- **live and let live** (no tech religion, use whatever design / dev / doc tools you want as long as they are accessible to your team)
-- **commit sustainably** (aggregate outputs in standard web of data formats for optimal search and archiving)
-- **create in safe spaces** (embedded code of conduct, works offline, minimal privacy footprint).
+- **Go live and let live**: quickly deploy design, dev, doc tools accessible to your entire team.
+- **Commit sustainably**: aggregate outputs in standard web data formats for search and archiving.
+- **Co-create in safe spaces**: with feedback loops, visible code of conduct, and maximum privacy.
 
 [Install](https://dribdat.cc/deploy) the software, read our [Whitepaper](https://dribdat.cc/whitepaper), or try dribdat yourself at a [community](https://forum.opendata.ch/c/expeditions/hackathons/16/l/latest) hackathon.
 
-For more background and references, see the [User Handbook](https://docs.dribdat.cc/usage). If you need help or advice in setting up your event, or would like to contribute to the project: please get in touch via [Discussions](https://github.com/orgs/dribdat/discussions) or [GitHub Issues](https://github.com/dribdat/dribdat/issues). You can follow and support the project on [OpenCollective](https://opencollective.com/dribdat/updates) or [Codeberg](https://codeberg.org/dribdat)
-
-<a href="https://opencollective.com/dribdat/donate" target="_blank"><img src="https://opencollective.com/dribdat/donate/button@2x.png?color=blue" width=300 /></a>
+For more background and references, see the [User Handbook](https://docs.dribdat.cc/usage). If you need help or advice in setting up your event, or would like to contribute to the project: please get in touch via [Discussions](https://github.com/orgs/dribdat/discussions) or [GitHub Issues](https://github.com/dribdat/dribdat/issues).  We keep an active mirror on [Codeberg](https://codeberg.org/dribdat).
 
 # Quickstart
 
