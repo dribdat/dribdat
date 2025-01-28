@@ -319,6 +319,21 @@ def get_challenge(project_id):
     )
 
 
+@blueprint.route('/<int:project_id>/log', methods=['GET'])
+def get_log(project_id):
+    """Show project log and report."""
+    project = Project.query.filter_by(id=project_id).first_or_404()
+    preview_at = challenge.id
+    return render_template(
+        'public/projectlog.html', active="projects",
+        project=project, current_event=project.event,
+        project_dribs=project.all_dribs(),
+        #allow_edit=allow_edit, allow_post=allow_post,
+        #lock_editing=lock_editing, missing_roles=missing_roles,
+        #share=share, active="projects"
+    )
+
+
 @blueprint.route('/<int:project_id>/star/me', methods=['GET', 'POST'])
 @login_required
 def project_star(project_id):
