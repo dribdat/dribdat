@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 {% import "macros/_project.html" as proj %}
 
-{% block page_title %}{{current_event.name}} / {% if current_event.has_finished %} Results {% elif current_event.has_started %} Project Board {% else %} Challenges {% endif %}{% endblock %}
+{% block page_title %}{{current_event.name}}{% endblock %}
 
 {% block page_meta %}
   <meta property="og:type" content="website"/>

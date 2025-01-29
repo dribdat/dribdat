@@ -9,7 +9,7 @@
 The starting point of [awesome hackathons](https://github.com/dribdat/awesome-hackathon?tab=readme-ov-file#awesome-hackathon):
 a short description of a problem, some initial ideas of solutions which can be realistically attempted during the time constraints of the event. Once you create your event page, you can attach challenges that the teams should respond to.
 
-<label><input type="checkbox" checked="checked"> 1. Create a series of **Challenges** (optionally organized in **Categories**)</label><br>
+<label><input type="checkbox" checked="checked"> 1. Create a series of **Challenges** under which **Ideas** are posted</label><br>
 <label><input type="checkbox" checked="checked"> 2. Use the **Quickstart** section to share tips with challenge owners</label><br>
 <label><input type="checkbox" checked="checked"> 3. Create a **Template** event to make things easier here</label><br>
 

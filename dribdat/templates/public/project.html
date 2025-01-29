@@ -27,6 +27,59 @@
 
 {% block content %}
 
+{% if project.score and project.score < 1 and allow_edit and current_event.aftersubmit %}
+  <div class="jumbotron projectnew-boilerplate alert alert-dismissible">
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    <div class="container scroll-after-500">
+      {{ current_event.aftersubmit|markdown }}
+    </div>
+  </div>
+{% endif %}
+
+<div class="btn-group project-edit-buttons" role="group" aria-label="Project tools">
+
+  {% if past_version and allow_revert %}
+    <a class="btn btn-lg btn-dark" title="Restore this version"
+       href="{{ url_for('project.post_revert', project_id=project.id, activity_id=past_version) }}"
+      onclick="if(!window.confirm('Are you sure you wish to restore this version of the project data?')) return false">&#9100; Restore</a>
+  {% endif %}
+
+  {% if allow_post %}
+     <a id="project-post" href="{{ url_for('project.project_post', project_id=project.id) }}"
+        title="Post to this project" class="btn btn-lg btn-success">
+       <i class="fa fa-clock-o" aria-hidden="true"></i>
+       Post
+     </a>
+  {% elif current_user and current_user.active and not project.event.lock_resources %}
+     <a id="project-comment" href="{{ url_for('project.project_comment', project_id=project.id) }}"
+        title="Write a public comment" class="btn btn-lg btn-info">
+       <i class="fa fa-clock-o" aria-hidden="true"></i>
+       Comment</a>
+  {% endif %}
+  {% if allow_edit %}
+    <a href="{{ url_for('project.project_edit', project_id=project.id) }}"
+       title="Edit project" class="btn btn-lg btn-warning">
+      <i class="fa fa-pencil" aria-hidden="true"></i>
+    </a>
+  {% endif %}
+
+  {% if not lock_editing and not project.event.has_finished and not project.event.lock_resources and not past_version %}
+    {% if project_starred %}
+      <a class="btn btn-lg btn-info" data-bs-toggle="modal" data-bs-target="#addUser"
+        title="Invite someone to this project">
+        <i class="fa fa-child" aria-hidden="true"></i>
+      </a>
+    {% else %}
+      <a href="{{ url_for('project.project_star', project_id=project.id) }}" class="btn btn-lg btn-success project-star"
+        title="{% if project.is_challenge %}Follow this challenge{% else %}Join the project{% endif %}">
+         <i class="fa fa-thumbs-up"></i>
+         Join
+      </a>
+    {% endif %}
+  {% endif %}
+
+</div><br clear="all"><!-- / project-tools -->
+
 {{ detail.render_project_head(project) }}
 
 <div class="tab-content clear-both" id="project-content">
@@ -93,10 +146,10 @@
       {% if not lock_editing and not project.event.has_finished and not project.event.lock_resources and not past_version %}
         <center class="team-invite-button">
           {% if project_starred %}
-            <a class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#addUser"
+            <a class="btn btn-info" data-bs-toggle="modal" data-bs-target="#addUser"
               title="Invite someone to this project">
-              <i class="fa fa-child" aria-hidden="true"></i>
-              Invite
+              <i class="fa fa-child" aria-hidden="true"></i><i class="fa fa-child" aria-hidden="true"></i>
+              Teambuilder
             </a>
           {% else %}
             <a href="{{ url_for('project.project_star', project_id=project.id) }}" class="btn btn-md btn-light project-star"

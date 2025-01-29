@@ -28,11 +28,11 @@
 
   {% if project.stats %}
     <table class="project-stats">
-        <td>People</td><th class="drib-count me-2">{{ project.stats.people }}</th>
-        <td>Posts</td><th class="drib-count me-2">{{ project.stats.total }}</th>
-        <td>Dribs</td><th class="drib-count me-2">{{ project.stats.updates }}</th>
+        <td>People</td><th class="drib-count m-2">{{ project.stats.people }}</th>
+        <td>Posts</td><th class="drib-count m-2">{{ project.stats.total }}</th>
+        <td>Dribs</td><th class="drib-count m-2">{{ project.stats.updates }}</th>
       {% if project.age %}
-        <td>Started</td><th class="drib-count me-2">{{ project.age|since_date }}</th>
+        <td>Started</td><th class="drib-count m-2">{{ project.age|since_date }}</th>
       {% endif %}
     </table>
   {% endif %}
