@@ -1346,7 +1346,7 @@ a.media {
 .timeline-boost .timeline-img-header {
     background: teal;
 }
-.project-page .badges .boost {
+.project-badges .boost {
     display: inline-block;
     width: 2em;
     height: 2em;

@@ -161,8 +161,7 @@ def project_action(project_id, of_type=None, as_view=True, then_redirect=False,
         missing_roles = None
     else:
         # Collect dribs and badges
-        # TODO: pass in boost as param
-        project_badge = [s for s in project.all_dribs() if s['name'] == 'boost']
+        project_badge = project.all_dribs(5, 'boost')
         # Obtain list of team members (performance!)
         project_team = project.get_team()
         # Suggest missing team roles
@@ -200,13 +199,13 @@ def project_action(project_id, of_type=None, as_view=True, then_redirect=False,
 
     # Dump all that data into a template
     return render_template(
-        'public/project.html', current_event=event, project=project,
+        'public/project.html', active="projects",
+        current_event=event, project=project,
         project_starred=starred, project_team=project_team,
-        project_badge=project_badge, 
-        project_image_url=project_image_url, go_nav=go_nav,
+        project_badge=project_badge, project_image_url=project_image_url, 
         allow_edit=allow_edit, allow_post=allow_post,
         lock_editing=lock_editing, missing_roles=missing_roles,
-        share=share, active="projects"
+        go_nav=go_nav, share=share,
     )
 
 
