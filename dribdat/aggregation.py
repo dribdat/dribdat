@@ -187,11 +187,11 @@ def IsProjectStarred(project, current_user):
     """Check if a project has been starred by the current user."""
     if not isUserActive(current_user):
         return False
-    return Activity.query.filter_by(
+    return bool(Activity.query.filter_by(
         name='star',
         project_id=project.id,
         user_id=current_user.id
-    ).one_or_none()
+    ).one_or_none())
 
 
 def GetProjectACLs(user, event, starred):

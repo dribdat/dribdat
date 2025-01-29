@@ -47,14 +47,14 @@ class TestPosting:
         res = testapp.get(url_for('project.project_post', project_id=project.id))
         form = res.forms['projectPost']
         form['note'] = 'Testing'
-        res = form.submit().follow().follow()
+        res = form.submit().follow()
         assert "Testing" in res.text
 
         # Post a comment
         res = testapp.get(url_for('project.project_comment', project_id=project.id))
         form = res.forms['projectPost']
         form['note'] = 'Commenting'
-        res = form.submit().follow().follow()
+        res = form.submit().follow()
         assert "Commenting" in res.text
 
         # Approve the project again to test reversion
