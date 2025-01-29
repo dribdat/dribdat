@@ -6,7 +6,7 @@
 
 `Dribdat` is an open source hackathon management application that playfully assists your team in collaborating on technical design projects. See [Tour de Hack](https://dribdat.cc/tour) for more examples, and our [User handbook](https://dribdat.cc/usage) for screenshots. 
 
-We aim to include people of all backgrounds in using this tool - no matter your age, gender, race, ability, or sexual identity. Visit the [HackIntegration Hackfinder](https://hackintegration.ch/hackfinder) to discover events connected to our ongoing research & development in this area.
+We aim to include people of all backgrounds in using and developing this tool - no matter your age, gender, race, ability, or sexual identity. See our [Contributor Covenant Code of Conduct](code_of_conduct.md), and visit the [HackIntegration Hackfinder](https://hackintegration.ch/hackfinder) to discover events connected to our ongoing research & development in this area.
 
 We keep an active mirror on [Codeberg](https://codeberg.org/dribdat) 🏔️ 
 Please support the project on [OpenCollective](https://opencollective.com/dribdat/updates) 🩵
@@ -19,7 +19,7 @@ Created in light of the [Hacker ethic](https://en.wikipedia.org/wiki/Hacker_ethi
 
 - **Go live and let live**: quickly deploy design, dev, doc tools accessible to your entire team.
 - **Commit sustainably**: aggregate results in standard web data formats for search and archiving.
-- **Co-create in safe spaces**: with feedback loops, visible code of conduct, and maximum privacy.
+- **Co-create in safe spaces**: with content and tools promoting safer conduct and increased privacy.
 
 Designed to bootstrap your [awesome hackathon](https://github.com/dribdat/awesome-hackathon), Dribdat's toolset can be used as a versatile toolbox for civic tech sprints. To get started, [install](#Quickstart) the software, or try it yourself at the next [community event](https://schoolofdata.ch). 
 
@@ -41,7 +41,7 @@ This application was based on [cookiecutter-flask](https://github.com/sloria/coo
 
 Currently mantained by [@loleg](https://github.com/loleg) and [Contributors](https://github.com/dribdat/dribdat/graphs/contributors) and [Forks](https://github.com/dribdat/dribdat/network/members) to find other users of this project ♡ Sincere thanks to the [Open Data](https://opendata.ch), [Open Networking](https://opennetworkinfrastructure.org/) and [Open Source](https://dinacon.ch) communities in 🇨🇭 Switzerland for the many trials and feedbacks through over three hundred events.
 
-Additional and ♥-felt thanks for your contributions to: F. Wieser and M.-C. Gasser at [Swisscom](http://swisscom.com) for support at an early stage of this project, to [Alexandre Cotting](https://github.com/Cotting), [Anthony Ritz](https://github.com/RitzAnthony), [Chris Mutel](https://github.com/cmutel), [Fabien Schwob](https://github.com/jibaku), [Gonzalo Casas](https://github.com/gonzalocasas), [Janik von Rotz](https://janikvonrotz.ch/), [Jonathan Schnyder](https://github.com/jonHESSO), [Jonathan Sobel](https://github.com/JonathanSOBEL), [Philip Shemella](https://github.com/philshem), [Thomas Amberg](https://github.com/tamberg), [Yusuf Khasbulatov](https://github.com/khashashin) .. and all of you participants and organizers sending in bugs and requests! 🤗 This humongous badge of honor is for you:
+Additional and ♥-felt thanks for your contributions to: F. Wieser and M.-C. Gasser at [Swisscom](http://swisscom.com) for support at an early stage of this project, to [Alexandre Cotting](https://github.com/Cotting), [Anthony Ritz](https://github.com/RitzAnthony), [Chris Mutel](https://github.com/cmutel), [Fabien Schwob](https://github.com/jibaku), [Gonzalo Casas](https://github.com/gonzalocasas), [Janik von Rotz](https://janikvonrotz.ch/), [Jonathan Schnyder](https://github.com/jonHESSO), [Jonathan Sobel](https://github.com/JonathanSOBEL), [Philip Shemella](https://github.com/philshem), [Thomas Amberg](https://github.com/tamberg), [Yusuf Khasbulatov](https://github.com/khashashin) .. and all participants and organizers sending in bugs and requests! 🤗 This humongous badge of honor is for you:
 
 ![](dribdat/static/img/logo/logo13.png)
 
@@ -49,4 +49,6 @@ Additional and ♥-felt thanks for your contributions to: F. Wieser and M.-C. Ga
 
 This project is open source under the [MIT License](LICENSE).
 
-Due to the use of the [boto3](https://github.com/boto/boto3/) library for S3 support, there is a dependency on OpenSSL via awscrt. If you use these features, please note that the product includes cryptographic software written by Eric Young (eay@cryptsoft.com) and Tim Hudson (tjh@cryptsoft.com).
+The [Contributor Covenant Code of Conduct](code_of_conduct.md) applies to interactions with the maintainers and support community of the project.
+
+Due to the use of the [boto3](https://github.com/boto/boto3/) library for optional S3 upload support, there is a dependency on OpenSSL via awscrt. If you use these features, please note that the product includes cryptographic software written by Eric Young (eay@cryptsoft.com) and Tim Hudson (tjh@cryptsoft.com).
