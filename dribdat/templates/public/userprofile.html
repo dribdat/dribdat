@@ -151,6 +151,27 @@
 </div>
 {% endif %}
 
+{% if user.my_skills %}
+<div class="row">
+  <div class="profile-skills col-12 bg-body">
+    <a name="skills"><h2 class="mt-5 text-center">💪 Skills</h2></a>
+      {% for s in user.my_skills %}
+      	<span class="skill">{{s}}</span>
+      {% endfor %}
+  </div>
+</div>
+{% endif %}
+
+{% if user.my_wishes %}
+<div class="row">
+  <div class="profile-wishes col-12 bg-body">
+    <a name="wishes"><h2 class="mt-5 text-center">🎋 Desired skills</h2></a>
+      {% for w in user.my_wishes %}
+      	<span class="wish">{{w}}</span>
+      {% endfor %}
+  </div>
+</div>
+{% endif %}
 
 {% if events %}
   <a name="events"><h2 class="mt-4 mb-2">Sprints</h2></a>

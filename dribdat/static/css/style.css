@@ -58,12 +58,18 @@ form input[type="checkbox"] {
 .form-passwordless {
     max-width: 33em;
 }
+
+.userform form > .form-group p {
+  max-width: 50em;
+  display: inline-block;
+}
+
 .form-register .form-control {
     position: relative;
     font-size: 16px;
     height: auto;
     padding: 10px;
-    max-width: 25em;
+    max-width: 50em;
     display: inline-block;
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
@@ -540,8 +546,9 @@ nav .nav-login {
 }
 .home-page .carousel-caption .event-header .section-header-content {
     text-align: left;
-    background: white;
-    box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.2);
+    color: initial;
+    background: rgba(255, 255, 255, 0.75);
+    box-shadow: 3px 3px 3px rgba(0,0,0,0.2);
     padding: 1em;
     width: 60%;
     left: 50%;
@@ -2063,6 +2070,28 @@ a.go-up {
 .userprofile .user-score {
   float: left;
   margin-left: -4em;
+}
+
+
+.profile-skills,
+.profile-wishes {
+  font-size: 125%;
+}
+
+.profile-skills .skill,
+.profile-wishes .wish {
+  margin: 3px 3px;
+  padding: 0px 8px;
+  border-radius: 8px;
+  display: inline-block;
+}
+
+.profile-skills .skill {
+  background-color: #d0e4d9;
+}
+
+.profile-wishes .wish {
+  background-color: #e8dab9;
 }
 
 .profile-social {
