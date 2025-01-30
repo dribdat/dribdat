@@ -135,4 +135,10 @@
 
   {% include "includes/pleasewait.html" %}
 
+  <div class="panel panel-default community-embed mt-5">
+    <div class="panel-body">
+      {{project.event.community_embed|safe}}
+    </div>
+  </div>
+
 {% endblock %}
