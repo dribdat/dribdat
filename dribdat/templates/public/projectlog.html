@@ -66,7 +66,7 @@
 
   <section class="timeline">
     {% for s in project_dribs %}
-    <div class="timeline-item timeline-{{ s.name }} timeline-{{ s.icon }}">
+    <div class="timeline-item timeline-{{ s.name }} timeline-{{ s.icon }}" id="log-{{ s.id }}">
       <div class="timeline-img" title="{{ s.date|format_datetime }} ({{ s.name }})">
         {% if s.icon %}
           <i class="fa fa-{{ s.icon }}" aria-hidden="true"></i>
