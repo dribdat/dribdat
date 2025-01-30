@@ -66,18 +66,19 @@
 
   {% if project.longtext %}
     <div id="project-md" aria-labelledby="project-tab-md">
+      <div class="project-longtext">
+        {{ project.longtext|onebox|markdown|safe }}
+      </div>
+
       {% if allow_edit %}
       <center class="project-edit-pitch">
         <a href="{{ url_for('project.project_edit', project_id=project.id) }}#is_webembed"
            title="Edit project pitch" class="btn btn-md btn-light">
           <i class="fa fa-pencil" aria-hidden="true"></i>
-          Edit</a>
+          Edit
+        </a>
       </center>
       {% endif %}
-
-      <div class="project-longtext">
-        {{ project.longtext|onebox|markdown|safe }}
-      </div>
     </div><!-- /project-md -->
   {% endif %}
 
@@ -119,9 +120,9 @@
             </a>
           {% else %}
             <a href="{{ url_for('project.project_star', project_id=project.id) }}" class="btn btn-md btn-light project-star"
-              title="{% if project.is_challenge %}Follow this challenge{% else %}Join the project{% endif %}">
-               Join the team
+              title="{% if project.is_challenge %}Follow this challenge{% else %}Contribute to the project{% endif %}">
                <i class="fa fa-thumbs-up"></i>
+               Join the team
             </a>
           {% endif %}
         </center>
