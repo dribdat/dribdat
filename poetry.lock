@@ -181,18 +181,18 @@ files = [
 
 [[package]]
 name = "boto3"
-version = "1.36.7"
+version = "1.36.9"
 description = "The AWS SDK for Python"
 optional = false
 python-versions = ">=3.8"
 groups = ["main"]
 files = [
-    {file = "boto3-1.36.7-py3-none-any.whl", hash = "sha256:ab501f75557863e2d2c9fa731e4fe25c45f35e0d92ea0ee11a4eaa63929d3ede"},
-    {file = "boto3-1.36.7.tar.gz", hash = "sha256:ae98634efa7b47ced1b0d7342e2940b32639eee913f33ab406590b8ed55ee94b"},
+    {file = "boto3-1.36.9-py3-none-any.whl", hash = "sha256:440d0b70990efb732f63b40fa16c663c86fee80347eb4bf3bcc08b593e8ac77f"},
+    {file = "boto3-1.36.9.tar.gz", hash = "sha256:035ed3868ff3b9afe05a49d0bde35582315bc438e60b5e76727a00b107567bfb"},
 ]
 
 [package.dependencies]
-botocore = ">=1.36.7,<1.37.0"
+botocore = ">=1.36.9,<1.37.0"
 jmespath = ">=0.7.1,<2.0.0"
 s3transfer = ">=0.11.0,<0.12.0"
 
@@ -201,14 +201,14 @@ crt = ["botocore[crt] (>=1.21.0,<2.0a0)"]
 
 [[package]]
 name = "botocore"
-version = "1.36.7"
+version = "1.36.9"
 description = "Low-level, data-driven core of boto 3."
 optional = false
 python-versions = ">=3.8"
 groups = ["main"]
 files = [
-    {file = "botocore-1.36.7-py3-none-any.whl", hash = "sha256:a6c6772d777af2957ac9975207fac1ccc4ce101408b85e9b5e3c5ba0bb949102"},
-    {file = "botocore-1.36.7.tar.gz", hash = "sha256:9abc64bde5e7d8f814ea91d6fc0a8142511fc96427c19fe9209677c20a0c9e6e"},
+    {file = "botocore-1.36.9-py3-none-any.whl", hash = "sha256:e31d206c7708300c541d0799df73b576bbe7d8bed011687d96323ed48763ffd2"},
+    {file = "botocore-1.36.9.tar.gz", hash = "sha256:cb3baefdb8326fdfae0750015e5868330e18d3a088a31da658df2cc8cba7ac73"},
 ]
 
 [package.dependencies]
@@ -779,20 +779,19 @@ pydocstyle = ">=2.1"
 
 [[package]]
 name = "flake8-isort"
-version = "3.0.0"
-description = "flake8 plugin that integrates isort ."
+version = "6.1.2"
+description = "flake8 plugin that integrates isort"
 optional = false
-python-versions = "*"
+python-versions = ">=3.9"
 groups = ["dev"]
 files = [
-    {file = "flake8-isort-3.0.0.tar.gz", hash = "sha256:3ce227b5c5342b6d63937d3863e8de8783ae21863cb035cf992cdb0ba5990aa3"},
-    {file = "flake8_isort-3.0.0-py2.py3-none-any.whl", hash = "sha256:f5322a85cea89998e0df954162fd35a1f1e5b5eb4fc0c79b5975aa2799106baa"},
+    {file = "flake8_isort-6.1.2-py3-none-any.whl", hash = "sha256:549197dedf0273502fb74f04c080beed9e62a7eb70244610413d27052e78bd3b"},
+    {file = "flake8_isort-6.1.2.tar.gz", hash = "sha256:9d0452acdf0e1cd6f2d6848e3605e66b54d920e73471fb4744eef0f93df62d5d"},
 ]
 
 [package.dependencies]
-flake8 = ">=3.2.1"
-isort = {version = ">=4.3.5", extras = ["pyproject"]}
-testfixtures = "*"
+flake8 = "*"
+isort = ">=5.0.0,<7"
 
 [package.extras]
 test = ["pytest"]
@@ -3260,23 +3259,6 @@ files = [
 
 [package.extras]
 widechars = ["wcwidth"]
-
-[[package]]
-name = "testfixtures"
-version = "8.3.0"
-description = "A collection of helpers and mock objects for unit tests and doc tests."
-optional = false
-python-versions = ">=3.7"
-groups = ["dev"]
-files = [
-    {file = "testfixtures-8.3.0-py3-none-any.whl", hash = "sha256:3d1e0e0005c4d6ac2a2ab27916704c6471047f0d2f78f2e54adf20abdacc7b10"},
-    {file = "testfixtures-8.3.0.tar.gz", hash = "sha256:d4c0b84af2f267610f908009b50d6f983a4e58ade22c67bab6787b5a402d59c0"},
-]
-
-[package.extras]
-build = ["setuptools-git", "twine", "wheel"]
-docs = ["django", "furo", "sphinx", "sybil (>=6)", "twisted"]
-test = ["django", "mypy", "pytest (>=7.1)", "pytest-cov", "pytest-django", "sybil (>=6)", "twisted"]
 
 [[package]]
 name = "text-unidecode"
