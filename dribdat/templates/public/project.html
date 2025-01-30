@@ -36,9 +36,24 @@
   </div>
 {% endif %}
 
-{{ detail.render_project_buttons(project, project_starred, past_version, allow_edit, lock_editing, allow_revert, allow_post, current_user) }}
+{{ detail.render_project_head(project, True) }}
 
-{{ detail.render_project_head(project) }}
+<div class="project-content-nav float-right mb-2">
+{% if project_team %}
+  <a class="btn btn-default" id="team-tab-md" href="#team-md"
+    title="Show team members">
+    <i class="fa fa-user m-2" aria-hidden="true"></i>
+    Team</a>
+{% endif %}
+{% if project.autotext %}
+  <a class="btn btn-default" id="readme-tab-md" href="{{ url_for('project.project_view', project_id=project.id) }}#readme-md"
+     title="Readme content">
+    <i class="fa fa-star m-2" aria-hidden="true"></i>
+    Readme</a>
+{% endif %}
+</div>
+
+{{ detail.render_project_buttons(project, project_starred, past_version, allow_edit, lock_editing, allow_revert, allow_post, current_user) }}
 
 <div class="project-badges float-left mb-2">
   {% for s in project_badge %}
@@ -57,27 +72,24 @@
     <a href="{{ project.webpage_url }}" class="btn btn-small btn-default float-right"
        target="_blank" rel="noopener noreferrer" title="See this in a new tab">
        &#x2193;&nbsp;&nbsp;Open</a>
+    <br clear="all" />
   {% endif %}
-  {% if project.download_url %}
-    <a href="{{ project.download_url }}" target="_blank" rel="noopener noreferrer"
-       class="project-download-link btn btn-lg btn-primary ms-2 font-bold" title="Download link"><span>&#x2728;</span> Demo</a>
-  {% endif %}
-  <br clear="all">
 
   {% if project.longtext %}
     <div id="project-md" aria-labelledby="project-tab-md">
+      <div class="project-longtext">
+        {{ project.longtext|onebox|markdown|safe }}
+      </div>
+
       {% if allow_edit %}
       <center class="project-edit-pitch">
         <a href="{{ url_for('project.project_edit', project_id=project.id) }}#is_webembed"
            title="Edit project pitch" class="btn btn-md btn-light">
           <i class="fa fa-pencil" aria-hidden="true"></i>
-          Edit</a>
+          Edit
+        </a>
       </center>
       {% endif %}
-
-      <div class="project-longtext">
-        {{ project.longtext|onebox|markdown|safe }}
-      </div>
     </div><!-- /project-md -->
   {% endif %}
 
@@ -119,9 +131,9 @@
             </a>
           {% else %}
             <a href="{{ url_for('project.project_star', project_id=project.id) }}" class="btn btn-md btn-light project-star"
-              title="{% if project.is_challenge %}Follow this challenge{% else %}Join the project{% endif %}">
-               Join the team
+              title="{% if project.is_challenge %}Follow this challenge{% else %}Contribute to the project{% endif %}">
                <i class="fa fa-thumbs-up"></i>
+               Join the team
             </a>
           {% endif %}
         </center>

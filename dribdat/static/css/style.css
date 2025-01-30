@@ -12,7 +12,7 @@ textarea {
 }
 
 .container.with-event {
-    margin-top: 1em;
+    margin-top: 2em;
     clear: both;
 }
 
@@ -1860,19 +1860,32 @@ a.go-up {
 .profile-projects .stage-conditions .stage-no .fa {
     color: orange;
 }
-.project-edit-buttons {
-    left: -1.5em;
-    float: right;
+.project-tab-buttons {
+    left: -3em;
+    height: 1.4em;
+    margin-top: -2.4em; 
+    display: block;
+    text-align: right;
+    width: 100%;
 }
-.project-edit-buttons * {
+.project-image-container {
+    background-color: grey;
+}
+.project-tab-buttons > * {
     border-bottom-left-radius: 0px;
     border-bottom-right-radius: 0px;
     box-shadow: none !important;
+    border-bottom: 1px solid transparent;
     opacity: 0.8;
 }
+.project-tab-buttons i {
+    padding: 0.5em;
+}
 @media only screen and (max-width: 460px) {
-    .project-edit-buttons {
-        margin: 1em;
+    .project-tab-buttons {
+        float: none;
+        margin-top: 1em;
+        left: 1em;
     }
     .container .jumbotron {
         padding: 0.3em;

@@ -24,9 +24,7 @@
 
 {% block content %}
 
-{{ detail.render_project_buttons(project, project_starred, past_version, allow_edit, lock_editing, allow_revert, allow_post, current_user) }}
-
-{{ detail.render_project_head(project) }}
+{{ detail.render_project_head(project, False) }}
 
 {% if project.stats %}
   <table class="project-stats">
@@ -66,7 +64,7 @@
 
   <section class="timeline">
     {% for s in project_dribs %}
-    <div class="timeline-item timeline-{{ s.name }} timeline-{{ s.icon }}">
+    <div class="timeline-item timeline-{{ s.name }} timeline-{{ s.icon }}" id="log-{{ s.id }}">
       <div class="timeline-img" title="{{ s.date|format_datetime }} ({{ s.name }})">
         {% if s.icon %}
           <i class="fa fa-{{ s.icon }}" aria-hidden="true"></i>

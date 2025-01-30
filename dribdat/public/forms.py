@@ -147,8 +147,7 @@ class ProjectComment(FlaskForm):
         u'Comments and reviews',
         [length(max=280), InputRequired()],
         render_kw={'maxlength': 280, 'minlength': 4},
-        description=u'A suggestion or constructive feedback for the team.'
-                    + ' Please note the Code of Conduct.')
+        description=u'A suggestion or constructive feedback for the team.')
     submit = SubmitField(u'Save comment',
         render_kw={'data-toggle': "modal", 'data-target': "#pleasewaitModal"})
 
