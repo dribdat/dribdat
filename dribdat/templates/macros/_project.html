@@ -52,7 +52,8 @@
 {% macro render_hexagontent(project) %}
 	<div class="hexagontent {{
         'text-md' if 32 < project.name|length else 'text-sm' if 42 < project.name|length
-	}}{{ ' with-icon' if project.logo_icon or project.image_url }}">
+	}}{{ ' with-icon' if project.logo_icon or project.image_url }}"
+		title="{{ project.summary|truncate(200, True, '..') }}">
 		{% if project.score and project.score > 90 %}
 			<span class="team-boost" title="Skyrocketing">🚀</span>
 		{% elif project.score and project.score > 69 %}

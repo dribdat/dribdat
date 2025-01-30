@@ -75,10 +75,10 @@
           	{% if event.project_count %}
           		<a href="{{ url_for('public.event', event_id=event.id) }}" class="btn btn-default">
 			          {% if event.has_finished %}
-			            <span title="Results">{{ event.project_count }}</span>
+			            <span title="Teams">{{ event.project_count }}</span>
 			            <i class="fa fa-star" aria-hidden="true"></i>
 			          {% elif event.has_started %}
-			            <span title="Challenges">{{ event.project_count }}</span>
+			            <span title="Ideas">{{ event.project_count }}</span>
 			            <i class="fa fa-cube" aria-hidden="true"></i>
 			          {% else %}
 			            <span title="Projects">{{ event.project_count }}</span>

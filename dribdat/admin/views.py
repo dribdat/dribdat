@@ -49,12 +49,12 @@ def index():
             'height': 7
         }, {
             'value': Project.query.filter(Project.progress == 0).count(),
-            'text': 'Challenges',
+            'text': 'Ideas',
             'icon': 'trophy',
             'height': 8
         }, {
             'value': Project.query.filter(Project.progress > 0).count(),
-            'text': 'Projects',
+            'text': 'Teams',
             'icon': 'star',
             'height': 9
         }, {

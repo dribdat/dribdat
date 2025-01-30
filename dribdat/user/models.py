@@ -877,19 +877,25 @@ class Project(PkModel):
                     rollcall.append(r)
         return [r for r in get_roles if r not in rollcall and r.name]
 
-    def all_dribs(self, limit=50):
-        """Query which formats the project's timeline."""
-        activities = Activity.query.filter_by(
-                        project_id=self.id
-                    ).order_by(Activity.timestamp.desc())
+    def latest_dribs(self, limit=50, by_name=None):
+        """Obtains a list of latest activities (Dribs)."""
+        activities = Activity.query.filter_by(project_id=self.id)
+        # Optionally filter by the name of the activity
+        if by_name:
+            activities = activities.filter_by(name=by_name)
+        # Order by age
+        activities = activities.order_by(Activity.timestamp.desc())
         if limit is not None:
             activities = activities.limit(limit)
-        activities_array = activities.all()
+        return activities.all()
+
+    def all_dribs(self, limit=50, by_name=None):
+        """Query which formats the project's timeline."""
         dribs = []
         only_active = False  # show dribs from inactive users
         prev = { 'progress': None, 'title': None, 'text': None }
-        # Iterate through the dribs
-        for a in activities_array:
+        # Iterate through the activities
+        for a in self.latest_dribs(limit, by_name):
             a_parsed = getActivityByType(a, only_active)
             if a_parsed is None:
                 continue
@@ -913,7 +919,7 @@ class Project(PkModel):
             }
             dribs.append(cur)
             # Show changes in progress
-            if a.project_progress and prev['progress'] != a.project_progress:
+            if not by_name and a.project_progress and prev['progress'] != a.project_progress:
                 proj_stage = getStageByProgress(a.project_progress)
                 if a.project_progress > 0 and proj_stage is not None:
                     dribs.append({
@@ -924,29 +930,22 @@ class Project(PkModel):
                     })
             prev = cur
 
-        # Start all logs at stage 0
-        if len(activities_array) > 0 and False:
-            dribs.append({
-                'title': getStageByProgress(0)['phase'],
-                'date': activities_array.pop().timestamp,
-                'icon': 'arrow-up',
-                'name': 'progress',
-            })
         # Add event start and finish to log
-        if self.event.has_started or self.event.has_finished:
-            dribs.append({
-                'title': "Start",
-                'date': self.event.starts_at,
-                'icon': 'calendar',
-                'name': 'start',
-            })
-        if self.event.has_finished:
-            dribs.append({
-                'title': "Event finish",
-                'date': self.event.ends_at,
-                'icon': 'bullhorn',
-                'name': 'finish',
-            })
+        if not by_name:
+            if self.event.has_started or self.event.has_finished:
+                dribs.append({
+                    'title': "Start",
+                    'date': self.event.starts_at,
+                    'icon': 'calendar',
+                    'name': 'start',
+                })
+            if self.event.has_finished:
+                dribs.append({
+                    'title': "Event finish",
+                    'date': self.event.ends_at,
+                    'icon': 'bullhorn',
+                    'name': 'finish',
+                })
         return sorted(dribs, key=lambda x: x['date'], reverse=True)
 
     def categories_all(self, event=None):

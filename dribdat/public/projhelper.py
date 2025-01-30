@@ -11,7 +11,7 @@ from dribdat.public.forms import (
     ProjectForm, ProjectDetailForm,
 )
 from dribdat.aggregation import (
-    ProjectActivity, IsProjectStarred,
+    ProjectActivity, IsProjectStarred, GetProjectACLs
 )
 from dribdat.user import (
     validateProjectData, isUserActive,
@@ -152,12 +152,7 @@ def project_action(project_id, of_type=None, as_view=True, then_redirect=False,
     # The next line seems rather inefficient
     starred = IsProjectStarred(project, for_user)
 
-    # Figure out permissions (hackybehack!)
-    allow_edit = not current_user.is_anonymous and current_user.is_admin
-    lock_editing = event.lock_editing
-    allow_post = starred and not event.lock_resources
-    allow_edit = allow_edit or event.lock_resources
-    allow_edit = (starred or allow_edit) and not lock_editing
+    allow_edit, allow_post, lock_editing = GetProjectACLs(current_user, event, starred)
 
     # Check type of project
     if event.lock_resources:
@@ -166,8 +161,7 @@ def project_action(project_id, of_type=None, as_view=True, then_redirect=False,
         missing_roles = None
     else:
         # Collect dribs and badges
-        project_dribs = project.all_dribs()
-        project_badge = [s for s in project_dribs if s['name'] == 'boost']
+        project_badge = project.all_dribs(5, 'boost')
         # Obtain list of team members (performance!)
         project_team = project.get_team()
         # Suggest missing team roles
@@ -205,13 +199,13 @@ def project_action(project_id, of_type=None, as_view=True, then_redirect=False,
 
     # Dump all that data into a template
     return render_template(
-        'public/project.html', current_event=event, project=project,
+        'public/project.html', active="projects",
+        current_event=event, project=project,
         project_starred=starred, project_team=project_team,
-        project_badge=project_badge, project_dribs=project_dribs,
-        project_image_url=project_image_url, go_nav=go_nav,
+        project_badge=project_badge, project_image_url=project_image_url, 
         allow_edit=allow_edit, allow_post=allow_post,
         lock_editing=lock_editing, missing_roles=missing_roles,
-        share=share, active="projects"
+        go_nav=go_nav, share=share,
     )
 
 

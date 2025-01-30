@@ -13,7 +13,7 @@ from dribdat.public.forms import (
     ProjectImport, ProjectNew, ProjectPost, ProjectBoost, ProjectComment
 )
 from dribdat.aggregation import (
-    SyncProjectData, GetProjectData, AllowProjectEdit
+    SyncProjectData, GetProjectData, AllowProjectEdit, IsProjectStarred, GetProjectACLs
 )
 from dribdat.user import (
     validateProjectData, stageProjectToNext, isUserActive,
@@ -36,13 +36,6 @@ blueprint = Blueprint('project', __name__,
 def project_view(project_id):
     """Show a project by id."""
     return project_action(project_id, None)
-
-
-@blueprint.route('/<int:project_id>/log')
-def project_view_posted(project_id):
-    """Identical to the above."""
-    return redirect(url_for(
-        'project.project_view', project_id=project_id) + '#log')
 
 
 @blueprint.route('/s/<project_name>')
@@ -184,7 +177,7 @@ def project_post(project_id):
         if project.is_syncable and check_update(project, 10):
             project_autoupdate(project.id)
         return redirect(url_for(
-            'project.project_view_posted', project_id=project.id))
+            'project.get_log', project_id=project.id))
 
     return render_template(
         'public/projectpost.html',
@@ -209,7 +202,7 @@ def project_comment(project_id):
 
         flash("Thanks for your feedback!", 'success')
         return redirect(url_for(
-            'project.project_view_posted', project_id=project.id))
+            'project.get_log', project_id=project.id))
 
     return render_template(
         'public/projectpost.html',
@@ -239,7 +232,7 @@ def project_autopost(project_id):
     project_action(project_id, 'review', action='post', text=autopost)
     flash("The robots have spoken", 'success')
     return redirect(url_for(
-        'project.project_view_posted', project_id=project.id))
+        'project.get_log', project_id=project.id))
 
 
 
@@ -248,7 +241,7 @@ def project_autopost(project_id):
 def post_delete(project_id, activity_id):
     """Delete a Post."""
     project = Project.query.filter_by(id=project_id).first_or_404()
-    purl = url_for('project.project_view_posted', project_id=project.id)
+    purl = url_for('project.get_log', project_id=project.id)
     activity = Activity.query.filter_by(id=activity_id).first_or_404()
     if not activity.may_delete(current_user):
         flash('No permission to delete.', 'warning')
@@ -285,7 +278,7 @@ def post_revert(project_id, activity_id):
 def post_preview(project_id, activity_id):
     """Preview project data at a previous version."""
     project = Project.query.filter_by(id=project_id).first_or_404()
-    purl = url_for('project.project_view_posted', project_id=project.id)
+    purl = url_for('project.get_log', project_id=project.id)
     activity = Activity.query.filter_by(id=activity_id).first_or_404()
     if not activity.project_version or activity.project_version == 0:
         flash('Could not preview.', 'warning')
@@ -303,7 +296,7 @@ def post_preview(project_id, activity_id):
 def get_challenge(project_id):
     """Preview project data at the previous version."""
     project = Project.query.filter_by(id=project_id).first_or_404()
-    purl = url_for('project.project_view_posted', project_id=project.id)
+    purl = url_for('project.get_log', project_id=project.id)
     challenge = project.as_challenge()
     if not challenge:
         flash('Could not find challenge data.', 'warning')
@@ -316,6 +309,22 @@ def get_challenge(project_id):
         'public/project.html',
         project=challenge, go_nav=go_nav, challenge_when=p_date,
         current_event=challenge.event, active="projects"
+    )
+
+
+@blueprint.route('/<int:project_id>/log', methods=['GET'])
+def get_log(project_id):
+    """Show project log and report."""
+    project = Project.query.filter_by(id=project_id).first_or_404()
+    project_dribs = project.all_dribs()
+    starred = IsProjectStarred(project, current_user)
+    allow_edit, allow_post, lock_editing = GetProjectACLs(current_user, project.event, starred)
+    return render_template(
+        'public/projectlog.html', active="projects",
+        project=project, current_event=project.event,
+        project_dribs=project_dribs, project_starred=starred,
+        allow_edit=allow_edit, allow_post=allow_post,
+        lock_editing=lock_editing,
     )
 
 

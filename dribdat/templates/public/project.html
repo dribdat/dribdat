@@ -1,6 +1,7 @@
 {% extends "layout.html" %}
 {% import "macros/_misc.html" as misc %}
 {% import "macros/_social.html" as social %}
+{% import "macros/_detail.html" as detail %}
 
 {% block page_title %}{{project.name}} - {{project.event.name}}{% endblock %}
 
@@ -35,171 +36,32 @@
   </div>
 {% endif %}
 
-<a href="#top" class="go-up text-info" title="Scroll up!"><i class="fa fa-thumbs-up" aria-hidden="true"></i>&nbsp;<i class="fa fa-thumbs-up" aria-hidden="true"></i></a>
+{{ detail.render_project_head(project, True) }}
 
-<div class="btn-group project-edit-buttons" role="group" aria-label="Project tools">
-
-  {% if past_version and allow_revert %}
-    <a class="btn btn-lg btn-dark" title="Restore this version"
-       href="{{ url_for('project.post_revert', project_id=project.id, activity_id=past_version) }}"
-      onclick="if(!window.confirm('Are you sure you wish to restore this version of the project data?')) return false">&#9100; Restore</a>
-  {% endif %}
-
-  {% if allow_post %}
-     <a id="project-post" href="{{ url_for('project.project_post', project_id=project.id) }}"
-        title="Post to this project" class="btn btn-lg btn-success">
-       <i class="fa fa-clock-o" aria-hidden="true"></i>
-       Post
-     </a>
-  {% elif current_user and current_user.active and not project.event.lock_resources %}
-     <a id="project-comment" href="{{ url_for('project.project_comment', project_id=project.id) }}"
-        title="Write a public comment" class="btn btn-lg btn-info">
-       <i class="fa fa-clock-o" aria-hidden="true"></i>
-       Comment</a>
-  {% endif %}
-  {% if allow_edit %}
-    <a href="{{ url_for('project.project_edit', project_id=project.id) }}"
-       title="Edit project" class="btn btn-lg btn-warning">
-      <i class="fa fa-pencil" aria-hidden="true"></i>
-    </a>
-  {% endif %}
-
-  {% if not lock_editing and not project.event.has_finished and not project.event.lock_resources and not past_version %}
-    {% if project_starred %}
-      <a class="btn btn-lg btn-info" data-bs-toggle="modal" data-bs-target="#addUser"
-        title="Invite someone to this project">
-        <i class="fa fa-child" aria-hidden="true"></i>
-      </a>
-    {% else %}
-      <a href="{{ url_for('project.project_star', project_id=project.id) }}" class="btn btn-lg btn-success project-star"
-        title="{% if project.is_challenge %}Follow this challenge{% else %}Join the project{% endif %}">
-         <i class="fa fa-thumbs-up"></i>
-         Join
-      </a>
-    {% endif %}
-  {% endif %}
-
-</div><br clear="all">
-
-{% if project.image_url %}
-  <div class="project-image-container"
-    style="background-image:url('{{project.image_url|quote_plus}}'); {% if project.logo_color %}background-color:{{project.logo_color}}; opacity:1.0{% endif %}"
-    data-href="{{project.image_url|quote_plus}}">
-  </div>
+<div class="project-content-nav float-right mb-2">
+{% if project_team %}
+  <a class="btn btn-default" id="team-tab-md" href="#team-md"
+    title="Show team members">
+    <i class="fa fa-user m-2" aria-hidden="true"></i>
+    Team</a>
 {% endif %}
+{% if project.autotext %}
+  <a class="btn btn-default" id="readme-tab-md" href="{{ url_for('project.project_view', project_id=project.id) }}#readme-md"
+     title="Readme content">
+    <i class="fa fa-star m-2" aria-hidden="true"></i>
+    Readme</a>
+{% endif %}
+</div>
 
-<!-- Main project content container -->
-<div class="jumbotron project-page phase-{{ project.phase }} {% if project.event.lock_resources %}resource-page{% endif %}" {% if project.logo_color %} style="border-color:{{project.logo_color}}"{% endif %}>
+{{ detail.render_project_buttons(project, project_starred, past_version, allow_edit, lock_editing, allow_revert, allow_post, current_user) }}
 
-  {% if project.ident %}
-    <div class="project-ident">{{ project.ident }}</div>
-  {% endif %}
-
-  {% if project.event.lock_resources %}
-  <a href="{{ url_for('public.event_resources', event_id=project.event.id) }}"
-     class="me-4 float-right text-dark btn btn-default">
-       <i class="fa fa-life-ring" aria-hidden="true"></i>
-       Resource</a>
-  {% elif project.score and not project.is_challenge %}
-    <div class="project-score">
-      <a href="{{ url_for('public.event_stages', event_id=project.event.id) }}#{{project.phase}}">
-        <div class="progress"
-          title="({{project.score}}) {{project.phase}}"
-          alt="A score based on profile completeness and voting results">
-          <div class="progress-bar" role="progressbar"
-               aria-valuenow="{{project.score}}" aria-valuemin="0" aria-valuemax="70"
-               style="width:{{project.score}}%">
-          </div>
-        </div>
-      </a>
-      <div class="preview-challenge mt-2 hidden">
-        <a title="Click to show the Challenge from which this project started"
-           href="{{ url_for('project.get_challenge', project_id=project.id) }}">
-             Challenge</a>
-        <i class="fa fa-trophy" aria-hidden="true"></i>
-        Project
-      </div>
-    </div>
-  {% elif challenge_when %}
-    <div class="project-score">
-      <div class="preview-challenge">
-        <h4>Challenge view</h4>
-        <a title="Go back to the current version of this Project"
-           href="{{ url_for('project.project_view', project_id=project.id) }}">
-          <i class="fa fa-arrow-left" aria-hidden="true"></i>
-           Back to Project</a>
-      </div>
-    </div>
-  {% endif %}
-
-  {% if project.category %}
-    <div class="project-category">
-      {% if project.category.logo_icon %}
-        <i class="fa fa-{{project.category.logo_icon}}"></i>
-      {% else %}
-        <span class="project-category-hexagon">⬣</span>
-      {% endif %}
-      <a href="#"
-         data-bs-toggle="modal" data-bs-target="#categoryModal" title="Show Category">
-          {{ project.category.name }}</a>
-    </div>
-  {% endif %}
-
-  <div class="project-headline">
-  {% if project.logo_icon %}
-      <i class="fa fa-{{project.logo_icon}}"{% if project.logo_color %} style="color:{{project.logo_color}}"{% endif %}></i>
-  {% endif %}
-    <h2 class="project-name">{{project.name}}</h2>
-
-  {% if project.summary %}
-    <p class="project-summary">
-      {{project.summary}}
-    </p>
-  {% endif %}
-
-  {% if project.hashtag %}
-    <p class="project-hashtag">
-      <a href="{{ project.event.community_url or '#' }}" target="_blank" rel="noopener noreferrer">
-        {{project.hashtag}}
-      </a>
-    </p>
-  {% endif %}
-
-  </div><!-- /.project-name -->
-
-  {% if not project.event.lock_resources %}
-    <div class="badges float-right">
-      {% for s in project_badge %}
-        <a class="boost float-left" href="#log" title="{{ s.title }}">
-          <i class="fa fa-{{ s.icon }}" aria-hidden="true"></i>
-        </a>
-      {% endfor %}
-      {% if project.autotext and project.longtext %}
-          <a class="btn" id="project-tab-md" href="#project-md"
-             title="Challenge pitch">
-            <i class="fa fa-book m-2" aria-hidden="true"></i>
-            Pitch</a>
-      {% endif %}
-      {% if project_team %}
-        <a class="btn" id="team-tab-md" href="#team-md"
-          title="Show team members">
-          <i class="fa fa-user m-2" aria-hidden="true"></i>
-          Team</a>
-      {% endif %}
-      {% if project.autotext %}
-        <a class="btn" id="readme-tab-md" href="#readme-md"
-           title="Readme content">
-          <i class="fa fa-book m-2" aria-hidden="true"></i>
-          Readme</a>
-      {% endif %}
-      {% if project_dribs %}
-        <a class="btn" id="dribs-tab-md" href="#log"
-           title="Play by play progress review">
-          <span class="drib-count me-2">{{ project_dribs|length }}</span>
-          Log</a>
-      {% endif %}
-    </div>
-  {% endif %}
+<div class="project-badges float-left mb-2">
+  {% for s in project_badge %}
+    <a class="boost float-left" href="{{ project.id }}/log#log" title="{{ s.title }}">
+      <i class="fa fa-{{ s.icon }}" aria-hidden="true"></i>
+    </a>
+  {% endfor %}
+</div>
 
 <div class="tab-content clear-both" id="project-content">
 
@@ -210,39 +72,25 @@
     <a href="{{ project.webpage_url }}" class="btn btn-small btn-default float-right"
        target="_blank" rel="noopener noreferrer" title="See this in a new tab">
        &#x2193;&nbsp;&nbsp;Open</a>
+    <br clear="all" />
   {% endif %}
-  {% if project.download_url %}
-    <a href="{{ project.download_url }}" target="_blank" rel="noopener noreferrer"
-       class="project-download-link btn btn-lg btn-primary ms-2 font-bold" title="Download link"><span>&#x2728;</span> Demo</a>
-  {% endif %}
-  <br clear="all">
 
   {% if project.longtext %}
     <div id="project-md" aria-labelledby="project-tab-md">
+      <div class="project-longtext">
+        {{ project.longtext|onebox|markdown|safe }}
+      </div>
+
       {% if allow_edit %}
       <center class="project-edit-pitch">
         <a href="{{ url_for('project.project_edit', project_id=project.id) }}#is_webembed"
            title="Edit project pitch" class="btn btn-md btn-light">
           <i class="fa fa-pencil" aria-hidden="true"></i>
-          Edit</a>
+          Edit
+        </a>
       </center>
       {% endif %}
-
-      <div class="project-longtext">
-        {{ project.longtext|onebox|markdown|safe }}
-      </div>
     </div><!-- /project-md -->
-  {% endif %}
-
-  {% if project.stats %}
-    <table class="project-stats">
-        <td>People:</td><th>{{ project.stats.people }}</th>
-        <td>Posts:</td><th>{{ project.stats.total }}</th>
-        <td>Dribs:</td><th>{{ project.stats.updates }}</th>
-      {% if project.age %}
-        <td>Started:</td><th>{{ project.age|since_date }}</th>
-      {% endif %}
-    </table>
   {% endif %}
 
   {% if project_team %}
@@ -276,16 +124,16 @@
       {% if not lock_editing and not project.event.has_finished and not project.event.lock_resources and not past_version %}
         <center class="team-invite-button">
           {% if project_starred %}
-            <a class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#addUser"
+            <a class="btn btn-info" data-bs-toggle="modal" data-bs-target="#addUser"
               title="Invite someone to this project">
-              <i class="fa fa-child" aria-hidden="true"></i>
-              Invite
+              <i class="fa fa-child" aria-hidden="true"></i><i class="fa fa-child" aria-hidden="true"></i>
+              Teambuilder
             </a>
           {% else %}
             <a href="{{ url_for('project.project_star', project_id=project.id) }}" class="btn btn-md btn-light project-star"
-              title="{% if project.is_challenge %}Follow this challenge{% else %}Join the project{% endif %}">
-               Join the team
+              title="{% if project.is_challenge %}Follow this challenge{% else %}Contribute to the project{% endif %}">
                <i class="fa fa-thumbs-up"></i>
+               Join the team
             </a>
           {% endif %}
         </center>
@@ -343,87 +191,7 @@
 
   </div><!-- /project-content -->
 
-  {% if project_dribs and not project.event.lock_resources %}
-  <a name="log"></a>
-  <div id="dribs-md" aria-labelledby="dribs-tab-md">
-
-    {% if allow_post %}
-      <center>
-        <div class="btn-group">
-          <a href="{{ url_for('project.project_post', project_id=project.id) }}"
-             class="btn btn-lg btn-success pr-3"
-             title="Write a progress update">
-            <i class="fa fa-clock-o" aria-hidden="true"></i>
-            Post
-          </a>
-          {% if config.LLM_API_KEY %}
-            <button data-bs-toggle="modal" data-bs-target="#autopostModal"
-               title="Get tips from an AI coach" class="btn pl-3 pr-4 btn-lg btn-dark">
-              &#x1F170;&#xFE0F;&#x2139;&#xFE0F;
-            </button>
-          {% endif %}
-        </div>
-      </center>
-    {% endif %}
-
-    <section class="timeline">
-      {% for s in project_dribs %}
-      <div class="timeline-item timeline-{{ s.name }} timeline-{{ s.icon }}">
-        <div class="timeline-img" title="{{ s.date|format_datetime }} ({{ s.name }})">
-          {% if s.icon %}
-            <i class="fa fa-{{ s.icon }}" aria-hidden="true"></i>
-          {% endif %}
-        </div>
-        <div class="timeline-content timeline-card js--fadeInBottom">
-          {% if s.title %}
-          <div class="timeline-img-header">
-            <h2>{{s.title}}</h2>
-          </div>
-          {% endif %}
-
-          {% if s.id and (allow_post or current_user.is_admin) %}
-            <a class="close delete" title="Delete post" href="{{ url_for('project.post_delete', project_id=project.id, activity_id=s.id) }}"
-              onclick="if(!window.confirm('Delete this post?')) return false">&times;</a>
-          {% endif %}
-          {% if s.id and s.icon == 'paperclip' %}
-            <a class="close revert" title="Show previous version" href="{{ url_for('project.post_preview', project_id=project.id, activity_id=s.id) }}">&#9100;</a>
-          {% endif %}
-
-          {% if s.text %}
-            <div class="content">
-              {{s.text|markdown|safe}}
-            </div>
-          {% endif %}
-
-          {% if not s.title %}
-            <div class="date">
-            {% if s.ref_url %}
-              <a href="{{ s.ref_url }}">
-            {% endif %}
-                <span title="{{ s.date }}">
-                  {{ s.timesince }}
-                </span>
-                {% if s.author %}
-                  ~
-                  <a class="userlink"
-                    href="{{ url_for('public.user_profile', username=s.author )}}">
-                    {{ s.author }}</a>
-                {% endif %}
-            {% if s.ref_url %}
-              </a>
-            {% endif %}
-            </div>
-          {% endif %}
-        </div><!-- /content -->
-      </div>
-      {% endfor %}
-
-    </section>
-
-  </div><!-- /dribs-md -->
-  {% endif %}
-
-
+  
   {% if project.user %}
     <div class="widget started-at">
       Contributed
