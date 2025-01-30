@@ -2,23 +2,24 @@
 [![codecov status](https://codecov.io/gh/dribdat/dribdat/branch/main/graph/badge.svg?token=Ccd1vTxRXg)](https://codecov.io/gh/dribdat/dribdat)
 [![FOSSA status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Floleg%2Fdribdat.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Floleg%2Fdribdat?ref=badge_shield)
 
-# d}}BD{t
+# Dribdat
 
-`Dribdat` is an open source hackathon management application that playfully assists your team in collaborating on technical design projects. See [Tour de Hack](https://dribdat.cc/tour) for more examples, and our [User handbook](https://dribdat.cc/usage) for screenshots. 
+**An open source hackathon management application that playfully assists your team in crowdsourcing technical designs. See [Tour de Hack](https://dribdat.cc/tour) for more examples, and our [User handbook](https://dribdat.cc/usage) for screenshots.**
 
-We aim to include people of all backgrounds in using and developing this tool - no matter your age, gender, race, ability, or sexual identity. See our [Contributor Covenant Code of Conduct](code_of_conduct.md), and visit the [HackIntegration Hackfinder](https://hackintegration.ch/hackfinder) to discover events connected to our ongoing research & development in this area.
+🏳️‍🌈 We aim to include people of all backgrounds in using and developing this tool - no matter your age, gender, race, ability, or sexual identity. See our [Contributor Covenant Code of Conduct](code_of_conduct.md), and visit the [HackIntegration Hackfinder](https://hackintegration.ch/hackfinder) to discover events connected to our ongoing research & development in this area.
 
-We keep an active mirror on [Codeberg](https://codeberg.org/dribdat) 🏔️ 
-Please support the project on [OpenCollective](https://opencollective.com/dribdat/updates) 🩵
+🏔️ We keep an active mirror on [Codeberg](https://codeberg.org/dribdat) 
+
+🩵 Please support the project on [OpenCollective](https://opencollective.com/dribdat/updates) 
 
 <a href="https://opencollective.com/dribdat/donate" target="_blank"><img src="https://opencollective.com/dribdat/donate/button@2x.png?color=blue" width=300 /></a>
 
 # Purpose
 
-Created in light of the [Hacker ethic](https://en.wikipedia.org/wiki/Hacker_ethic), the philosophy of this project is (in a nutshell):
+Created in light of the [Hacker ethic](https://en.wikipedia.org/wiki/Hacker_ethic), the philosophy of `d}}BD{t` is (in a nutshell):
 
-- **Go live and let live**: quickly deploy design, dev, doc tools accessible to your entire team.
 - **Commit sustainably**: aggregate results in standard web data formats for search and archiving.
+- **Go live and let live**: efficiently deploy designs, dev envs, docs accessible to your entire team.
 - **Co-create in safe spaces**: with content and tools promoting safer conduct and increased privacy.
 
 Designed to bootstrap your [awesome hackathon](https://github.com/dribdat/awesome-hackathon), Dribdat's toolset can be used as a versatile toolbox for civic tech sprints. To get started, [install](#Quickstart) the software, or try it yourself at the next [community event](https://schoolofdata.ch). 
