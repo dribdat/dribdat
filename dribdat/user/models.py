@@ -153,8 +153,8 @@ class User(UserMixin, PkModel):
             'carddata': self.carddata,
             'my_story': self.my_story,
             'my_goals': self.my_goals,
-            'my_skills': pack_csvlist(self.my_skills),
-            'my_wishes': pack_csvlist(self.my_wishes),
+            'my_skills': self._my_skills,
+            'my_wishes': self._my_wishes,
             'webpage_url': self.webpage_url,
             'vitae': dumps(self.vitae),
             'roles': ",".join([r.name for r in self.roles]),
@@ -171,8 +171,10 @@ class User(UserMixin, PkModel):
         else:
             self.email = data['email']
         self.updated_at = datetime.now(UTC)
-        self.my_skills = [s.strip() for s in data["my_skills"].split(",")]
-        self.my_wishes = [s.strip() for s in data["my_wishes"].split(",")]
+        if 'my_skills' in data:
+            self.my_skills = [s.strip() for s in data["my_skills"].split(",")]
+        if 'my_wishes' in data:
+            self.my_wishes = [s.strip() for s in data["my_wishes"].split(",")]
 
     def socialize(self):
         """Parse the user's web profile."""
