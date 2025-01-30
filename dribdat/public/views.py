@@ -161,7 +161,7 @@ def user_profile(username):
     ))
     events_next = events_next.order_by(Event.starts_at.desc())
     if events_next.count() == 0: events_next = None
-    score_tip = user.get_profile_percent() < 1
+    score_tip = int(user.get_profile_percent() * 100)
     # Filter out by today's date
     return render_template("public/userprofile.html", active="profile",
                            user=user, projects=projects, posts=posts,

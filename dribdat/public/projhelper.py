@@ -195,7 +195,7 @@ def project_action(project_id, of_type=None, as_view=True, then_redirect=False,
         flash('This project is hidden, and needs moderation from an organizer.', 'dark')
     # Send a warning for unapproved challenges
     if project.progress is not None and project.progress < 0:
-        flash('This challenge is awaiting approval from an organizer.', 'dark')
+        flash('This challenge is awaiting approval from an organizer.', 'light')
 
     # Dump all that data into a template
     return render_template(

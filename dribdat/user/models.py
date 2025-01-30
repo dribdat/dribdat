@@ -121,7 +121,6 @@ class User(UserMixin, PkModel):
     @property
     def my_skills(self):
         return unpack_csvlist(self._my_skills)
-
     @my_skills.setter
     def my_skills(self, value):
         self._my_skills = pack_csvlist(value)
@@ -130,7 +129,6 @@ class User(UserMixin, PkModel):
     @property
     def my_wishes(self):
         return unpack_csvlist(self._my_wishes)
-
     @my_wishes.setter
     def my_wishes(self, value):
         self._my_wishes = pack_csvlist(value)
@@ -249,7 +247,7 @@ class User(UserMixin, PkModel):
         p_score = 0
         MAX_SCORE = 5
         # Add to the score for every complete documentation field
-        if self.fullname and len(self.fullname) > 3:
+        if self.fullname and len(self.fullname) > 2:
             p_score = p_score + 1
         if self.webpage_url and len(self.webpage_url) > 6:
             p_score = p_score + 1
@@ -676,7 +674,14 @@ class Project(PkModel):
 
     autotext = Column(db.UnicodeText(), nullable=True, default=u"")
     longtext = Column(db.UnicodeText(), nullable=True, default=u"")
-    # How to save structured data, e.g. from a Data Package type Resource?
+    
+    #_technai = Column(db.UnicodeText(1024), nullable=True)
+    #@property
+    #def technai(self):
+    #    return unpack_csvlist(self._technai)
+    #@technai.setter
+    #def technai(self, value):
+    #    self._technai = pack_csvlist(value)
 
     logo_color = Column(db.String(7), nullable=True)
     logo_icon = Column(db.String(40), nullable=True)
