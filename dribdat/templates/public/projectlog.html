@@ -24,9 +24,7 @@
 
 {% block content %}
 
-{{ detail.render_project_buttons(project, project_starred, past_version, allow_edit, lock_editing, allow_revert, allow_post, current_user) }}
-
-{{ detail.render_project_head(project) }}
+{{ detail.render_project_head(project, False) }}
 
 {% if project.stats %}
   <table class="project-stats">

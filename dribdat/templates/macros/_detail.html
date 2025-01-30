@@ -1,5 +1,14 @@
 {% macro render_project_buttons(project, project_starred, past_version, allow_edit, lock_editing, allow_revert, allow_post, current_user) %}
-<div class="btn-group project-edit-buttons" role="group" aria-label="Project tools">
+
+{% if project.download_url %}
+  <a href="{{ project.download_url }}" target="_blank" rel="noopener noreferrer"
+     class="project-download-link btn btn-lg btn-dark ms-2 font-bold float-left" 
+     title="Download link">
+      <span>&#x2728;</span> Demo
+  </a>
+{% endif %}
+
+<div class="btn-group" role="group" aria-label="Project tools">
 
   {% if past_version and allow_revert %}
     <a class="btn btn-lg btn-dark" title="Restore this version"
@@ -14,10 +23,11 @@
        Post
      </a>
   {% elif current_user and current_user.active and not project.event.lock_resources %}
-     <a id="project-comment" href="{{ url_for('project.project_comment', project_id=project.id) }}"
+    <a id="project-comment" href="{{ url_for('project.project_comment', project_id=project.id) }}"
         title="Write a public comment" class="btn btn-lg btn-info">
        <i class="fa fa-clock-o" aria-hidden="true"></i>
-       Comment</a>
+       Comment
+    </a>
   {% endif %}
   {% if allow_edit %}
     <a href="{{ url_for('project.project_edit', project_id=project.id) }}"
@@ -42,10 +52,11 @@
   {% endif %}
 
 </div><br clear="all"><!-- / project-tools -->
+
 {% endmacro %}
 
 
-{% macro render_project_head(project) %}
+{% macro render_project_head(project, main_view) %}
 
 <a href="#top" class="go-up text-info" title="Scroll up!"><i class="fa fa-thumbs-up" aria-hidden="true"></i>&nbsp;<i class="fa fa-thumbs-up" aria-hidden="true"></i></a>
 
@@ -54,6 +65,22 @@
     style="background-image:url('{{project.image_url|quote_plus}}'); {% if project.logo_color %}background-color:{{project.logo_color}}; opacity:1.0{% endif %}"
     data-href="{{project.image_url|quote_plus}}">
   </div>
+{% endif %}
+
+{% if not project.event.lock_resources and not project.is_challenge %}
+  <div class="btn-group project-tab-buttons" role="group" aria-label="Switch view">
+
+    <a class="btn btn-light{% if main_view %} active{% endif %}" id="project-tab-md" href="{{ url_for('project.project_view', project_id=project.id) }}"
+       title="Go to the Pitch">
+      <i class="fa fa-book" aria-hidden="true"></i>
+      Pitch</a>
+
+    <a class="btn btn-light{% if not main_view %} active{% endif %}" id="dribs-tab-md" href="{{ url_for('project.get_log', project_id=project.id) }}"
+       title="Log and progress review">
+      <i class="fa fa-life-ring" aria-hidden="true"></i>
+      Report</a>
+
+  </div><br clear="all" />
 {% endif %}
 
 <!-- Main project content container -->
@@ -134,30 +161,4 @@
   {% endif %}
 
   </div><!-- /.project-name -->
-
-  {% if not project.event.lock_resources %}
-    <div class="project-tabs float-right">
-      <a class="btn" id="project-tab-md" href="{{ url_for('project.project_view', project_id=project.id) }}"
-         title="Go to the Pitch">
-        <i class="fa fa-book m-2" aria-hidden="true"></i>
-        Pitch</a>
-      {% if project_team %}
-        <a class="btn" id="team-tab-md" href="#team-md"
-          title="Show team members">
-          <i class="fa fa-user m-2" aria-hidden="true"></i>
-          Team</a>
-      {% endif %}
-      {% if project.autotext %}
-        <a class="btn" id="readme-tab-md" href="{{ url_for('project.project_view', project_id=project.id) }}#readme-md"
-           title="Readme content">
-          <i class="fa fa-star m-2" aria-hidden="true"></i>
-          Readme</a>
-      {% endif %}
-      <a class="btn" id="dribs-tab-md" href="{{ url_for('project.get_log', project_id=project.id) }}"
-         title="Log and progress review">
-        <i class="fa fa-life-ring m-2" aria-hidden="true"></i>
-        Report</a>
-    </div>
-  {% endif %}
-
 {% endmacro %}
