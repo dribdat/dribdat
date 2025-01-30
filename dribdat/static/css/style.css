@@ -1868,6 +1868,7 @@ a.go-up {
     border-bottom-left-radius: 0px;
     border-bottom-right-radius: 0px;
     box-shadow: none !important;
+    border-bottom: 1px solid transparent;
     opacity: 0.8;
 }
 .project-tab-buttons i {
