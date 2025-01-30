@@ -69,10 +69,12 @@ def validate_skillslist(field, maxchars=100):
 
 class RegisterForm(FlaskForm):
     """Ye olde user registration form."""
-
-    username = common_user_related_fields["username"]
-    email    = common_user_related_fields["email"]
-
+    
+    username = StringField('Username',
+                           validators=[DataRequired(), Length(min=3, max=25)])
+    email = EmailField('Email',
+                       validators=[
+                          DataRequired(), Email(), Length(min=6, max=40)])
     password = PasswordField('Password',
                              validators=[
                                 DataRequired(), Length(min=6, max=40)])
