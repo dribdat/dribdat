@@ -36,9 +36,11 @@
   </div>
 {% endif %}
 
-{{ detail.render_project_buttons(project, project_starred, past_version, allow_edit, lock_editing, allow_revert, allow_post, current_user) }}
+{{ detail.render_project_image(project) }}
 
-{{ detail.render_project_head(project, True) }}
+{{ detail.render_project_buttons(project, project_starred, past_version, allow_edit, lock_editing, allow_revert, allow_post, current_user, True) }}
+
+{{ detail.render_project_head(project) }}
 
 <div class="project-content-nav float-right mb-2">
 {% if project_team %}
@@ -55,21 +57,21 @@
 {% endif %}
 </div>
 
+<span class="project-badges">
+  {% for s in project_badge %}
+    <a class="boost float-left" href="{{ url_for('project.get_log', project_id=project.id) }}#log" title="{{ s.title }}">
+      <i class="fa fa-{{ s.icon }}" aria-hidden="true"></i>
+    </a>
+  {% endfor %}
+</span>
+
 {% if project.download_url %}
   <a href="{{ project.download_url }}" target="_blank" rel="noopener noreferrer"
-     class="project-download-link btn btn-lg btn-dark ms-2 font-bold float-left" 
+     class="project-download-link btn btn-lg btn-dark ms-2 font-bold" 
      title="Download link">
       <span>&#x2728;</span> Demo
   </a>
 {% endif %}
-
-<div class="project-badges float-left mb-2">
-  {% for s in project_badge %}
-    <a class="boost float-left" href="{{ project.id }}/log#log" title="{{ s.title }}">
-      <i class="fa fa-{{ s.icon }}" aria-hidden="true"></i>
-    </a>
-  {% endfor %}
-</div>
 
 <div class="tab-content clear-both" id="project-content">
 
@@ -92,7 +94,7 @@
       {% if allow_edit %}
       <center class="project-edit-pitch">
         <a href="{{ url_for('project.project_edit', project_id=project.id) }}#is_webembed"
-           title="Edit project pitch" class="btn btn-md btn-light">
+           title="Edit project pitch" class="btn btn-md btn-default">
           <i class="fa fa-pencil" aria-hidden="true"></i>
           Edit
         </a>
@@ -100,6 +102,56 @@
       {% endif %}
     </div><!-- /project-md -->
   {% endif %}
+
+
+  {% if project.autotext %}
+    <div id="readme-md" aria-labelledby="readme-tab-md">
+      <div class="project-autotext scroll-after-500"><div class="cover"></div>
+        {{project.autotext|markdown}}
+      </div>
+
+      {% if project.autotext_url and not project.event.lock_resources %}
+        <div class="alert alert-light text-center mb-2 mt-2">
+          This content is a preview from an
+          <a href="{{ project.autotext_url }}" target="_blank" rel="noopener noreferrer" title="Source link">
+            external site</a>.
+        </div>
+      {% endif %}
+
+      {% if allow_edit and project.is_syncable %}
+        <div class="text-center m-0">
+          <a href="{{ url_for('project.project_autoupdate', project_id=project.id) }}"
+             title="Sync external Readme data" class="btn btn-md btn-default">
+            <i class="fa fa-refresh" aria-hidden="true"></i>
+            Refresh</a>
+        </div>
+      {% endif %}
+    </div>
+  {% endif %}
+
+
+  <div class="project-buttons mb-5" role="group" aria-label="Project links">
+    {% if project.contact_url %}
+      {% if project.contact_url.startswith('http') or project.contact_url.startswith('mailto:') %}
+        <a href="{{ project.contact_url }}" target="_blank" rel="noopener noreferrer" class="btn btn-lg" title="Contact the team"><span>&#x1f44b;</span> Contact</a>
+      {% elif '@' in project.contact_url %}
+        <a href="mailto:{{ project.contact_url }}" target="_blank" rel="noopener noreferrer" class="btn btn-lg" title="Contact the team"><span>&#x1f44b;</span> E-mail</a>
+      {% else %}
+        <div class="btn btn-lg" title="Contact the team"><span>&#x1f44b;</span> {{ project.contact_url }}</div>
+      {% endif %}
+    {% endif %}
+    {% if project.webpage_url and not project.is_webembed %}
+      <a href="{{ project.webpage_url }}" class="btn btn-lg" target="_blank" rel="noopener noreferrer" title="Project web link"><span>&#x1f310;</span> Open</a>
+    {% endif %}
+    {% if project.download_url %}
+      <a href="{{ project.download_url }}" target="_blank" rel="noopener noreferrer" class="btn btn-lg" title="Download link"><span>&#x2728;</span> Demo</a>
+    {% endif %}
+    {% if project.source_url %}
+      <a href="{{ project.source_url }}" class="btn btn-lg" target="_blank" rel="noopener noreferrer" title="Source code"><span>&#x1f4bb;</span> Source</a>
+    {% endif %}
+  </div>
+
+
 
   {% if project_team %}
     <div id="team-md" aria-labelledby="team-tab-md">
@@ -132,16 +184,17 @@
       {% if not lock_editing and not project.event.has_finished and not project.event.lock_resources and not past_version %}
         <center class="team-invite-button">
           {% if project_starred %}
-            <a class="btn btn-info" data-bs-toggle="modal" data-bs-target="#addUser"
-              title="Invite someone to this project">
-              <i class="fa fa-child" aria-hidden="true"></i><i class="fa fa-child" aria-hidden="true"></i>
-              Teambuilder
+            <a class="btn btn-info btn-md" data-bs-toggle="modal" data-bs-target="#addUser"
+               title="Invite someone to this project">
+                <i class="fa fa-child" aria-hidden="true"></i><i class="fa fa-child" aria-hidden="true"></i>
+                Team-builder
             </a>
           {% else %}
-            <a href="{{ url_for('project.project_star', project_id=project.id) }}" class="btn btn-md btn-light project-star"
-              title="{% if project.is_challenge %}Follow this challenge{% else %}Contribute to the project{% endif %}">
-               <i class="fa fa-thumbs-up"></i>
-               Join the team
+            <a class="btn btn-lg btn-success project-star"
+               href="{{ url_for('project.project_star', project_id=project.id) }}" 
+               title="{% if project.is_challenge %}Follow this challenge{% else %}Contribute to the project{% endif %}">
+                 <i class="fa fa-thumbs-up"></i>
+                 Join the team
             </a>
           {% endif %}
         </center>
@@ -149,52 +202,6 @@
       
     </div>
   {% endif %}
-
-  {% if project.autotext %}
-    <div id="readme-md" aria-labelledby="readme-tab-md">
-      <div class="project-autotext scroll-after-500"><div class="cover"></div>
-        {{project.autotext|markdown}}
-      </div>
-
-      {% if project.autotext_url and not project.event.lock_resources %}
-        <div class="alert alert-light text-center mb-2 mt-2">
-          This content is a preview from an
-          <a href="{{ project.autotext_url }}" target="_blank" rel="noopener noreferrer" title="Source link">
-            external site</a>.
-        </div>
-      {% endif %}
-
-      {% if allow_edit and project.is_syncable %}
-        <div class="text-center m-0">
-          <a href="{{ url_for('project.project_autoupdate', project_id=project.id) }}"
-             title="Sync external Readme data" class="btn btn-md btn-light">
-            <i class="fa fa-refresh" aria-hidden="true"></i>
-            Refresh</a>
-        </div>
-      {% endif %}
-    </div>
-  {% endif %}
-
-  <div class="project-buttons mb-5" role="group" aria-label="Project links">
-    {% if project.contact_url %}
-      {% if project.contact_url.startswith('http') or project.contact_url.startswith('mailto:') %}
-        <a href="{{ project.contact_url }}" target="_blank" rel="noopener noreferrer" class="btn btn-lg" title="Contact the team"><span>&#x1f44b;</span> Contact</a>
-      {% elif '@' in project.contact_url %}
-        <a href="mailto:{{ project.contact_url }}" target="_blank" rel="noopener noreferrer" class="btn btn-lg" title="Contact the team"><span>&#x1f44b;</span> E-mail</a>
-      {% else %}
-        <div class="btn btn-lg" title="Contact the team"><span>&#x1f44b;</span> {{ project.contact_url }}</div>
-      {% endif %}
-    {% endif %}
-    {% if project.webpage_url and not project.is_webembed %}
-      <a href="{{ project.webpage_url }}" class="btn btn-lg" target="_blank" rel="noopener noreferrer" title="Project web link"><span>&#x1f310;</span> Open</a>
-    {% endif %}
-    {% if project.download_url %}
-      <a href="{{ project.download_url }}" target="_blank" rel="noopener noreferrer" class="btn btn-lg" title="Download link"><span>&#x2728;</span> Demo</a>
-    {% endif %}
-    {% if project.source_url %}
-      <a href="{{ project.source_url }}" class="btn btn-lg" target="_blank" rel="noopener noreferrer" title="Source code"><span>&#x1f4bb;</span> Source</a>
-    {% endif %}
-  </div>
 
 
   </div><!-- /project-content -->
@@ -252,18 +259,14 @@
 </div><!-- / .project-controls -->
 
 {% if allow_edit %}
-  <div role="group" aria-label="Team controls" class="ml-3 btn-group project-controls">
-    <a class="btn btn-lg btn-info" data-bs-toggle="modal" data-bs-target="#addUser"
-      title="Share an invite link to this team">
-      <i class="fa fa-child" aria-hidden="true"></i>
-      Invite</a>
   {% if config.LLM_API_KEY %}
+  <div role="group" aria-label="Team controls" class="ml-3 btn-group project-controls">
     <button data-bs-toggle="modal" data-bs-target="#autopostModal"
        title="Get tips from an AI coach" class="btn btn-lg btn-dark">
       &#x1F170;&#xFE0F;&#x2139;&#xFE0F;
     </button>
+  </div>
   {% endif %}
-  </div><!-- /.project-controls -->
 
   {% include "includes/projectdialogs.html" %}
 {% endif %}
@@ -289,10 +292,15 @@
       Approve
     </a>
 
-    <a href="{{ url_for('project.project_boost', project_id=project.id) }}" class="btn btn-lg btn-info project-boost"
+    <a href="{{ url_for('project.project_boost', project_id=project.id) }}" class="btn btn-lg btn-success project-boost"
       title="Boost this project">
       <i class="fa fa-trophy" aria-hidden="true"></i>
     <!--  Boost--></a>
+
+    <a class="btn btn-info btn-lg" data-bs-toggle="modal" data-bs-target="#addUser"
+       title="Invite someone to this project">
+        <i class="fa fa-child" aria-hidden="true"></i><i class="fa fa-child" aria-hidden="true"></i>
+    </a>
 
     <a href="{{ url_for('admin.project_toggle', project_id=project.id) }}"
        title="Toggle visibility of this project" class="btn btn-lg btn-dark">

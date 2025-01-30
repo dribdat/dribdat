@@ -1,4 +1,21 @@
-{% macro render_project_buttons(project, project_starred, past_version, allow_edit, lock_editing, allow_revert, allow_post, current_user) %}
+{% macro render_project_buttons(project, project_starred, past_version, allow_edit, lock_editing, allow_revert, allow_post, current_user, main_view) %}
+
+{% if not project.event.lock_resources and not project.is_challenge %}
+  <div class="btn-group project-tab-buttons" role="group" aria-label="Switch view">
+
+    <a class="btn btn-light{% if main_view %} active{% endif %}" id="project-tab-md" href="{{ url_for('project.project_view', project_id=project.id) }}"
+       title="Go to the Pitch">
+      <i class="fa fa-book" aria-hidden="true"></i>
+      {% if not main_view %} Pitch{% endif %}
+    </a>
+    <a class="btn btn-light{% if not main_view %} active{% endif %}" id="dribs-tab-md" href="{{ url_for('project.get_log', project_id=project.id) }}"
+       title="Log and progress review">
+      <i class="fa fa-life-ring" aria-hidden="true"></i>
+      {% if main_view %} Log{% endif %}
+    </a>
+
+  </div>
+{% endif %}
 
 <div class="btn-group project-edit-buttons" role="group" aria-label="Project tools">
 
@@ -48,7 +65,7 @@
 {% endmacro %}
 
 
-{% macro render_project_head(project, main_view) %}
+{% macro render_project_image(project) %}
 
 <a href="#top" class="go-up text-info" title="Scroll up!"><i class="fa fa-thumbs-up" aria-hidden="true"></i>&nbsp;<i class="fa fa-thumbs-up" aria-hidden="true"></i></a>
 
@@ -57,24 +74,13 @@
     style="background-image:url('{{project.image_url|quote_plus}}'); {% if project.logo_color %}background-color:{{project.logo_color}}; opacity:1.0{% endif %}"
     data-href="{{project.image_url|quote_plus}}">
   </div>
+<br clear="all" />
 {% endif %}
 
-{% if not project.event.lock_resources and not project.is_challenge %}
-  <div class="btn-group project-tab-buttons" role="group" aria-label="Switch view">
+{% endmacro %}
 
-    <a class="btn btn-light{% if main_view %} active{% endif %}" id="project-tab-md" href="{{ url_for('project.project_view', project_id=project.id) }}"
-       title="Go to the Pitch">
-      <i class="fa fa-book" aria-hidden="true"></i>
-      {% if not main_view %} Pitch{% endif %}
-    </a>
-    <a class="btn btn-light{% if not main_view %} active{% endif %}" id="dribs-tab-md" href="{{ url_for('project.get_log', project_id=project.id) }}"
-       title="Log and progress review">
-      <i class="fa fa-life-ring" aria-hidden="true"></i>
-      {% if main_view %} Log{% endif %}
-    </a>
 
-  </div>
-{% endif %}
+{% macro render_project_head(project) %}
 
 <br clear="all" />
 <!-- Main project content container -->
