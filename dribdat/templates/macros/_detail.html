@@ -61,9 +61,8 @@
   {% endif %}
 
 </div><!-- / project-tools -->
-
+<br clear="all" />
 {% endmacro %}
-
 
 {% macro render_project_image(project) %}
 
@@ -74,15 +73,12 @@
     style="background-image:url('{{project.image_url|quote_plus}}'); {% if project.logo_color %}background-color:{{project.logo_color}}; opacity:1.0{% endif %}"
     data-href="{{project.image_url|quote_plus}}">
   </div>
-<br clear="all" />
 {% endif %}
 
 {% endmacro %}
 
-
 {% macro render_project_head(project) %}
 
-<br clear="all" />
 <!-- Main project content container -->
 <div class="jumbotron project-page phase-{{ project.phase }} {% if project.event.lock_resources %}resource-page{% endif %}" {% if project.logo_color %} style="border-color:{{project.logo_color}}"{% endif %}>
 
