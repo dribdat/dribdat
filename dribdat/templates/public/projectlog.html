@@ -24,10 +24,8 @@
 
 {% block content %}
 
-{{ detail.render_project_image(project) }}
-
 {{ detail.render_project_buttons(project, project_starred, past_version, allow_edit, lock_editing, allow_revert, allow_post, current_user, False) }}
-
+{{ detail.render_project_image(project) }}
 {{ detail.render_project_head(project) }}
 
 {% if project.stats %}
