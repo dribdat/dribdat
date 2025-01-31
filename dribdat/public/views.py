@@ -148,19 +148,24 @@ def user_profile(username):
         may_certify = current_user and not current_user.is_anonymous \
                       and current_user.id == user.id and user.may_certify()[0]
     projects = user.joined_projects(True)
-    events = []
-    for p in projects:
-        if p.event not in events:
-            events.append(p.event)
     posts = user.latest_posts(20)
     today = datetime.now(UTC)
-    events_next = Event.query.filter(and_(
-        Event.is_hidden.isnot(True),
-        Event.lock_resources.isnot(True),
-        Event.ends_at > today
-    ))
-    events_next = events_next.order_by(Event.starts_at.desc())
-    if events_next.count() == 0: events_next = None
+    # Collect events
+    events = []
+    events_next = None
+    if not projects:
+        events_next = Event.query.filter(and_(
+            Event.is_hidden.isnot(True),
+            Event.lock_resources.isnot(True),
+            Event.ends_at > today
+        ))
+        events_next = events_next.order_by(Event.starts_at.desc())
+        if events_next.count() == 0: events_next = None
+    else:
+        for p in projects:
+            if p.event not in events:
+                events.append(p.event)
+    # Calculate score
     score_tip = int(user.get_profile_percent() * 100)
     # Filter out by today's date
     return render_template("public/userprofile.html", active="profile",

@@ -469,9 +469,9 @@ nav .nav-login {
 .home .an-event .card-img-top.gallery-img {
     background-size: cover;
 }
-.an-event-meta {
-    font-size: 90%;
-    color: #777;
+.section-header-content h2,
+.section-header-content .an-event-meta {
+    color: #000;
 }
 .an-event-meta b {
     display: block;
@@ -546,10 +546,10 @@ nav .nav-login {
 }
 .home-page .carousel-caption .event-header .section-header-content {
     text-align: left;
-    color: initial;
-    background: rgba(255, 255, 255, 0.75);
+    background: rgba(255, 255, 255, 0.67);
     box-shadow: 3px 3px 3px rgba(0,0,0,0.2);
-    padding: 1em;
+    border-radius: 10px;
+    padding: 1em 0 1em 2em;
     width: 60%;
     left: 50%;
     position: relative;
@@ -586,8 +586,8 @@ nav .nav-login {
     display: inline;
 }
 @media (max-width: 600px) {
-    .home-page .carousel-item {
-        height: 25rem;
+    .home-page .carousel-caption {
+        top: 0px;
     }
     .home-page .carousel-caption .section-header-logo {
         position: relative;
@@ -2328,7 +2328,7 @@ a.card {
 }
 .embed-event {
     text-align: center;
-    background: #fed;
+    background: transparent;
     padding-top: 10px;
 }
 .embed-view,
@@ -2339,9 +2339,9 @@ a.card {
     background: none;
 }
 .embed-view .honeycomb {
-    transform: scale(0.32);
+    transform: scale(0.52);
     transform-origin: top left;
-    padding-left: 50%;
+    padding-left: 20%;
     margin-top: 0px !important;
 }
 .embed-event .event-countdown {
