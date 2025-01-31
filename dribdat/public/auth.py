@@ -163,11 +163,9 @@ def activate(userid, userhash):
         login_user(a_user, remember=True)
         flash("Welcome! Your user account has been activated.", 'success')
         return redirect(url_for('auth.user_profile'))
-    elif a_user.active:
-        flash("Your user account is active.", 'success')
     else:
         flash("Activation not found, or has expired." \
-            + "Please try again or ask an organizer.", 'warning')
+            + "Please try again, or ask an organizer for help.", 'warning')
         logout_user()
     return redirect(url_for('public.home'))
 
