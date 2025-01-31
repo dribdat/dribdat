@@ -70,7 +70,7 @@ class ProjectForm(FlaskForm):
         #description=""
         #+ " Links to supported sites on one line get previews."
         #+ " No copypasta: use the 'Upload Image' button.")
-    is_webembed = BooleanField(u'Embed Presentation or Pitch*')
+    is_webembed = BooleanField(u'Enable slide mode')
     webpage_url = URLField(
         u'Presentation', [length(max=2048)],
         description="URL to a live demo, presentation, or a link to get "
