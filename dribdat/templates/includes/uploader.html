@@ -242,3 +242,67 @@
     </div>
   </div>
 </div><!-- / Upload Media -->
+
+
+<!-- Tool suggestions dialog -->
+<div class="modal fade uploader" id="suggestTool" tabindex="-1" role="dialog" aria-labelledby="suggestToolLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="suggestToolLabel">Suggest a Tool</h5>
+        <button type="button" class="btn-close float-right" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p class="upload-note mt-0">
+          Here is a selection of open, web-based collaborative tools for you to use in your project.
+          Feel free to suggest <a href="https://github.com/orgs/dribdat/discussions/17">others here</a>.
+        </p>
+        <ul class="list-unstyled container">
+         <div class="row m-4">
+          
+          <div class="tool-tip">
+            <a href="https://hackmd.io/" target="_blank" class="media col-sm text-default">
+              <img src="https://hackmd.io/logo.svg" height="50">
+              <div class="media-body">
+                <h5 class="mt-0 mb-1">HackMD</h5>
+              </div>
+            </a>
+            <p class="mt-2">Real-time Markdown text editor to get everyone on the same page. Create an account, then click Share > Write > Everyone on your note before pasting the link here. See also the open source alternative, <a href="https://hedgedoc.org/" target="_blank">HedgeDoc</a>.</p>
+          </div>
+
+          <div class="tool-tip">
+            <a href="https://excalidraw.com/" target="_blank" class="media col-sm text-default">
+              <img src="https://framalibre.org/images/logo/Excalidraw.png" height="60">
+              <div class="media-body">
+                <h5 class="mt-0 mb-1">Excalidraw</h5>
+              </div>
+            </a>
+            <p>Real-time whiteboarding and sketching. Start a Live Session in the top menu, to get a shared link for use with your team.</p>
+          </div>
+
+          <div class="tool-tip">
+            <a href="https://framacalc.org/abc/en/" target="_blank" class="media col-sm text-default">
+              <img src="https://framacalc.org/abc/img/icons/calc.svg" height="60">
+              <div class="media-body">
+                <h5 class="mt-0 mb-1">Ethercalc</h5>
+              </div>
+            </a>
+            <p>Hosted by Framasoft, this is a no-frills online spreadsheet. Create a Calc and copy the link.</p>
+          </div>
+
+         </div>
+        </ul>
+        <div class="form-group">
+          <label for="inputSharedLink">Paste your link here:</label>
+          <input id="inputSharedLink" class="form-control" type="url" placeholder="https://..." aria-describedby>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary btn-lg" data-target="insert">
+            Done
+        </button>
+        <button type="button" class="btn btn-default" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div><!-- / Upload Media -->

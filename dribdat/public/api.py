@@ -270,10 +270,9 @@ def project_info_json(project_id):
     data = {
         'project': project.data,
         'phase': project.phase,
-        'pitch': project.webembed,
-        'is_webembed': project.is_webembed,
         'event': project.event.data,
         'stats': project.get_stats(),
+        'is_webembed': project.is_webembed,
         'team': team
     }
     if is_full:

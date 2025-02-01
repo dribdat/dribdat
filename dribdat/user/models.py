@@ -735,15 +735,17 @@ class Project(PkModel):
         return self.autotext_url and self.autotext_url.strip()
 
     @property
-    def webembed(self):
-        """Detect and return supported embed widgets."""
+    def embed_longtext(self):
+        """Detect and return embedded format of pitch."""
         if not self.is_webembed:
             return None
-        if not self.webpage_url.strip():
-            if '---' in self.longtext or '***' in self.longtext:
-                return format_webslides(self.longtext)
-            else:
-                return None
+        if '---' in self.longtext or '***' in self.longtext:
+            return format_webslides(self.longtext)
+        return None
+
+    @property
+    def embed_webpage(self):
+        """Return embedded format of webpage link."""
         return format_webembed(self.webpage_url, self.id)
 
     @property

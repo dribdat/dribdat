@@ -18,21 +18,26 @@
 {% block content %}
 
   {% if config.S3_KEY %}
-  <button type="button" class="btn btn-light btn-lg mt-2 m-1" style="display:none" data-bs-toggle="modal" data-bs-target="#uploadImage">
-    <i class="fa fa-image text-info" area-hidden="true"></i>
-    Upload Image
-  </button>
+    <button type="button" class="btn btn-light btn-lg mt-2 m-1" style="display:none" data-bs-toggle="modal" data-bs-target="#uploadImage">
+      <i class="fa fa-image text-info" area-hidden="true"></i>
+      Upload Image
+    </button>
 
-  <button type="button" class="btn btn-light btn-lg mt-2 m-1" style="display:none" data-bs-toggle="modal" data-bs-target="#uploadFile">
-    <i class="fa fa-paperclip text-info" area-hidden="true"></i>
-    Attach PDF
-  </button>
-  
-  <button type="button" class="btn btn-light btn-lg mt-2 m-1" style="display:none" data-bs-toggle="modal" data-bs-target="#uploadPackage">
-    <i class="fa fa-paperclip text-info" area-hidden="true"></i>
-    Attach Data
-  </button>
+    <button type="button" class="btn btn-light btn-lg mt-2 m-1" style="display:none" data-bs-toggle="modal" data-bs-target="#uploadFile">
+      <i class="fa fa-paperclip text-info" area-hidden="true"></i>
+      Attach PDF
+    </button>
+    
+    <button type="button" class="btn btn-light btn-lg mt-2 m-1" style="display:none" data-bs-toggle="modal" data-bs-target="#uploadPackage">
+      <i class="fa fa-paperclip text-info" area-hidden="true"></i>
+      Attach Data
+    </button>
   {% endif %}
+
+  <button type="button" class="btn btn-light btn-lg mt-2 m-1" style="display:none" data-bs-toggle="modal" data-bs-target="#suggestTool">
+    <i class="fa fa-rocket text-info" area-hidden="true"></i>
+    Use a Tool
+  </button>
 
   <button type="button" class="btn btn-light btn-lg mt-2 m-1" style="display:none" data-bs-toggle="modal" data-bs-target="#uploadMedia">
     <i class="fa fa-tv text-info" area-hidden="true"></i>
@@ -123,7 +128,7 @@
       </button>
     {%- endif -%}
 
-    <a href="{{ url_for('project.project_details', project_id=project.id) }}" class="btn btn-md btn-warning">
+    <a href="{{ url_for('project.project_details', project_id=project.id) }}" class="btn btn-md btn-warning ms-4">
       <i class="fa fa-arrow-right" aria-hidden="true"></i>
       Details</a>
   </center>
