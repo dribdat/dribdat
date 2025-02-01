@@ -24,7 +24,9 @@
 
 {% block content %}
 
-{{ detail.render_project_head(project, False) }}
+{{ detail.render_project_buttons(project, project_starred, past_version, allow_edit, lock_editing, allow_revert, allow_post, current_user, False) }}
+{{ detail.render_project_image(project) }}
+{{ detail.render_project_head(project) }}
 
 {% if project.stats %}
   <table class="project-stats">
@@ -70,11 +72,14 @@
           <i class="fa fa-{{ s.icon }}" aria-hidden="true"></i>
         {% endif %}
       </div>
-      <div class="timeline-content timeline-card js--fadeInBottom">
-        {% if s.title %}
-        <div class="timeline-img-header">
-          <h2>{{s.title}}</h2>
-        </div>
+      <div class="timeline-content timeline-card {% if not s.text %}timeline-notext{% endif %} js--fadeInBottom">
+
+        {% if s.title and not s.text %}
+          <h1>{{s.title}}</h1>
+        {% elif s.title %}
+          <div class="timeline-img-header">
+            <h2>{{s.title}}</h2>
+          </div>
         {% endif %}
 
         {% if s.id and (allow_post or current_user.is_admin) %}

@@ -14,7 +14,10 @@ from dribdat.sso.mattermost import mattermost
 # Dribdat modules
 from dribdat.user.models import User, Event, Role
 from dribdat.extensions import login_manager  # noqa: I005
-from dribdat.utils import flash_errors, random_password, sanitize_input
+from dribdat.utils import (
+    unpack_csvlist, pack_csvlist,
+    flash_errors, random_password, sanitize_input
+)
 from dribdat.user.forms import RegisterForm, EmailForm, LoginForm, UserForm, StoryForm
 from dribdat.database import db
 from dribdat.mailer import user_activation
@@ -160,11 +163,9 @@ def activate(userid, userhash):
         login_user(a_user, remember=True)
         flash("Welcome! Your user account has been activated.", 'success')
         return redirect(url_for('auth.user_profile'))
-    elif a_user.active:
-        flash("Your user account is active.", 'success')
     else:
         flash("Activation not found, or has expired." \
-            + "Please try again or ask an organizer.", 'warning')
+            + "Please try again, or ask an organizer for help.", 'warning')
         logout_user()
     return redirect(url_for('public.home'))
 
@@ -305,9 +306,6 @@ def user_story():
     form = StoryForm(obj=user, next=request.args.get('next'))
     # Load roles
     form.roles.choices = [(r.id, r.name) for r in Role.query.order_by('name')]
-    # Load skills
-    form.my_skills.data = pack_csvlist(user.my_skills, ", ")
-    form.my_wishes.data = pack_csvlist(user.my_wishes, ", ")
 
     # Validation has passed
     if form.is_submitted() and form.validate() and user_is_valid:
@@ -332,10 +330,17 @@ def user_story():
         flash('Story updated.', 'success')
         return redirect(url_for('public.user_profile', username=user.username))
 
+
+    # Load skills
+    form.my_skills.data = pack_csvlist(user.my_skills, ", ")
+    form.my_wishes.data = pack_csvlist(user.my_wishes, ", ")
+    
+    # Load roles
     if not form.roles.choices:
         del form.roles
     else:
         form.roles.data = [(r.id) for r in user.roles]
+
     return render_template('public/userstory.html',
                            user=user, form=form,
                            active='profile')

@@ -35,7 +35,7 @@ class TestEditing:
         res2 = testapp.get('/project/new/1')
         form2 = res2.forms[0]
         form2['name'] = 'Sync Project'
-        res2 = form2.submit()
+        res2 = form2.submit().follow()
         assert res2.status_code == 200
         # Fills out the create project form
         res3 = testapp.get('/project/new/1?create=1')

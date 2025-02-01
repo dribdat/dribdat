@@ -1,14 +1,23 @@
-{% macro render_project_buttons(project, project_starred, past_version, allow_edit, lock_editing, allow_revert, allow_post, current_user) %}
+{% macro render_project_buttons(project, project_starred, past_version, allow_edit, lock_editing, allow_revert, allow_post, current_user, main_view) %}
 
-{% if project.download_url %}
-  <a href="{{ project.download_url }}" target="_blank" rel="noopener noreferrer"
-     class="project-download-link btn btn-lg btn-dark ms-2 font-bold float-left" 
-     title="Download link">
-      <span>&#x2728;</span> Demo
-  </a>
+{% if not project.event.lock_resources and not project.is_challenge %}
+  <div class="btn-group project-tab-buttons" role="group" aria-label="Switch view">
+
+    <a class="btn btn-light{% if main_view %} active{% endif %}" id="project-tab-md" href="{{ url_for('project.project_view', project_id=project.id) }}"
+       title="Go to the Pitch">
+      <i class="fa fa-book" aria-hidden="true"></i>
+      {% if not main_view %} Pitch{% endif %}
+    </a>
+    <a class="btn btn-light{% if not main_view %} active{% endif %}" id="dribs-tab-md" href="{{ url_for('project.get_log', project_id=project.id) }}"
+       title="Log and progress review">
+      <i class="fa fa-life-ring" aria-hidden="true"></i>
+      {% if main_view %} Log{% endif %}
+    </a>
+
+  </div>
 {% endif %}
 
-<div class="btn-group" role="group" aria-label="Project tools">
+<div class="btn-group project-edit-buttons" role="group" aria-label="Project tools">
 
   {% if past_version and allow_revert %}
     <a class="btn btn-lg btn-dark" title="Restore this version"
@@ -25,7 +34,7 @@
   {% elif current_user and current_user.active and not project.event.lock_resources %}
     <a id="project-comment" href="{{ url_for('project.project_comment', project_id=project.id) }}"
         title="Write a public comment" class="btn btn-lg btn-info">
-       <i class="fa fa-clock-o" aria-hidden="true"></i>
+       <i class="fa fa-comment" aria-hidden="true"></i>
        Comment
     </a>
   {% endif %}
@@ -51,12 +60,11 @@
     {% endif %}
   {% endif %}
 
-</div><br clear="all"><!-- / project-tools -->
-
+</div><!-- / project-tools -->
+<br clear="all" />
 {% endmacro %}
 
-
-{% macro render_project_head(project, main_view) %}
+{% macro render_project_image(project) %}
 
 <a href="#top" class="go-up text-info" title="Scroll up!"><i class="fa fa-thumbs-up" aria-hidden="true"></i>&nbsp;<i class="fa fa-thumbs-up" aria-hidden="true"></i></a>
 
@@ -67,22 +75,9 @@
   </div>
 {% endif %}
 
-{% if not project.event.lock_resources and not project.is_challenge %}
-  <div class="btn-group project-tab-buttons" role="group" aria-label="Switch view">
+{% endmacro %}
 
-    <a class="btn btn-light{% if main_view %} active{% endif %}" id="project-tab-md" href="{{ url_for('project.project_view', project_id=project.id) }}"
-       title="Go to the Pitch">
-      <i class="fa fa-book" aria-hidden="true"></i>
-      {% if not main_view %} Pitch{% endif %}
-    </a>
-    <a class="btn btn-light{% if not main_view %} active{% endif %}" id="dribs-tab-md" href="{{ url_for('project.get_log', project_id=project.id) }}"
-       title="Log and progress review">
-      <i class="fa fa-life-ring" aria-hidden="true"></i>
-      {% if main_view %} Log{% endif %}
-    </a>
-
-  </div><br clear="all" />
-{% endif %}
+{% macro render_project_head(project) %}
 
 <!-- Main project content container -->
 <div class="jumbotron project-page phase-{{ project.phase }} {% if project.event.lock_resources %}resource-page{% endif %}" {% if project.logo_color %} style="border-color:{{project.logo_color}}"{% endif %}>

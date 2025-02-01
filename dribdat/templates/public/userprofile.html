@@ -11,14 +11,13 @@
 
 {% block content %}
 
-{% if score_tip and current_user.id == user.id %}
+{% if score_tip < 100 and current_user.id == user.id %}
   <div class="alert alert-light alert-dismissible fade show"
        title="This tip is only visible to you">
     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    To improve your score, please
-    <a href="{{ url_for('auth.user_profile') }}">
-      complete your profile.
-    </a>
+    To improve your score
+      ({{ score_tip }}%),
+    try to Edit a complete profile and share your Story. 
   </div>
 {% endif %}
 
@@ -37,21 +36,21 @@
     <div class="btn-group">
       <a href="{{ url_for('auth.user_profile') }}" class="btn btn-warning btn-lg">
         <i class="fa fa-child"></i>
-        Edit Profile
+        Edit
       </a>
 
       <a href="{{ url_for('auth.user_story') }}" class="btn btn-primary btn-lg">
         <i class="fa fa-child"></i>
         My Story
       </a>
-
-      <a id="get-mydata" class="btn btn-light btn-lg"
-        href="{{ url_for('api.current_user_hackathon_json') }}" download
-        title="Download a snapshot of my contributions">
-        <i class="fa fa-download"></i>
-        My Data
-      </a>
     </div>
+
+    <a id="get-mydata" class="btn btn-light btn-lg"
+      href="{{ url_for('api.current_user_hackathon_json') }}" download
+      title="Download a snapshot of my contributions">
+      <i class="fa fa-download"></i>
+      My Data
+    </a>
 
   {% elif current_user.is_admin %}
 
@@ -152,9 +151,9 @@
 {% endif %}
 
 {% if user.my_skills %}
-<div class="row">
-  <div class="profile-skills col-12 bg-body">
-    <a name="skills"><h2 class="mt-5 text-center">💪 Skills</h2></a>
+<div class="row m-3">
+  <div class="col-2 fs-3" id="skills">🦾 Skills</div>
+  <div class="profile-skills col-10 bg-body">
       {% for s in user.my_skills %}
       	<span class="skill">{{s}}</span>
       {% endfor %}
@@ -163,9 +162,9 @@
 {% endif %}
 
 {% if user.my_wishes %}
-<div class="row">
-  <div class="profile-wishes col-12 bg-body">
-    <a name="wishes"><h2 class="mt-5 text-center">🎋 Desired skills</h2></a>
+<div class="row m-3">
+  <div class="col-2 fs-3" id="wishes">🎋 Aims</div>
+  <div class="profile-wishes col-10 bg-body">
       {% for w in user.my_wishes %}
       	<span class="wish">{{w}}</span>
       {% endfor %}
@@ -173,15 +172,7 @@
 </div>
 {% endif %}
 
-{% if events %}
-  <a name="events"><h2 class="mt-4 mb-2">Sprints</h2></a>
-  <div class="row profile-events">
-    {% for event in events %}
-      {{ evnt.render_home_event(event, False) }}
-    {% endfor %}
-  </div><!-- /.row -->
-{% endif %}
-
+<a name="events"><h2 class="mt-5 mb-2">Experience</h2></a>
 
 {% if not projects %}
   {% if current_user and current_user.id == user.id %}
@@ -208,6 +199,16 @@
   </div><!-- /profile-projects -->
 {% endif %}
 
+{% if events %}
+  <ul class="row profile-events mb-4">
+    {% for event in events %}
+      <li>
+        <a href="{{ url_for('public.event', event_id=event.id) }}">
+          {{ event.name }}</a>
+      </li>
+    {% endfor %}
+  </ul><!-- /.row -->
+{% endif %}
 
 {% if user.vitae %}
 <a name="vitae"></a>

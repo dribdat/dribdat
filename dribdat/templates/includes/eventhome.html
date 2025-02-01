@@ -15,9 +15,8 @@
           <span>{{ event.date }}</span>
           {% if event.hostname %}
             <i class="fa fa-bank ms-2"></i>
-            <span>{{ event.hostname }}</span>
-          {% endif %}
-          {% if event.location %}
+            <span>{{ event.hostname }}</span><br>
+          {% elif event.location %}
             <i class="fa fa-map ms-2"></i>
             <span>{{ event.location }}</span>
           {% endif %}
@@ -33,18 +32,18 @@
           {{ render_embed_event(event, event.projects, False) }}
         </div>
       {% endif %}
-      <div class="an-event-actions text-center mt-2">
+      <div class="an-event-actions text-center mt-2 clearfix">
         {% if event.project_count %}
-          <a href="{{ url_for('public.event', event_id=event.id) }}" class="btn btn-default btn-lg">
+          <a href="{{ url_for('public.event', event_id=event.id) }}" class="btn btn-default btn-lg float-right fs-4">
           {% if event.has_finished %}
-            <span title="Results">{{ event.project_count }}</span>
             <i class="fa fa-star" aria-hidden="true"></i>
+            <span title="Results">{{ event.project_count }}</span>
           {% elif event.has_started %}
-            <span title="Challenges">{{ event.project_count }}</span>
             <i class="fa fa-cube" aria-hidden="true"></i>
+            <span title="Challenges">{{ event.project_count }}</span>
           {% else %}
-            <span title="Projects">{{ event.project_count }}</span>
             <i class="fa fa-arrow-right" aria-hidden="true"></i>
+            <span title="Projects">{{ event.project_count }}</span>
           {% endif %}
           </a>
         {% elif event.can_start_project %}

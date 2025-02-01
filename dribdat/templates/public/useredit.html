@@ -7,20 +7,27 @@
 
 {% block content %}
   <div class="row">
-    <h2 class="huge col">
+    <h2 class="huge col-5">
       Edit
       <a href="{{ url_for('public.user_profile', username=user.username) }}">
         profile</a>
     </h2>
-    <div class="profile-header col float-right">
+    <div class="profile-header col-7">
+      <div class="btn-group float-right">
+        <a href="{{ url_for('auth.user_story') }}" class="btn btn-primary btn-lg">
+          <i class="fa fa-arrow-right"></i>
+          My Story
+        </a>
+      </div>
+
       {% if user.carddata %}
-        <img src="{{user.carddata}}"/>
+        <img align="left" hspace="56" src="{{user.carddata}}"/>
       {% endif %}
-    </div>
-    <div class="col font-small pt-4">
-      To change picture: link your online profile to GitHub or GitLab - or sign up to
-      <a href="https://gravatar.com/connect/?source=_signup" target="_blank" rel="noopener noreferrer nofollow">
-        Gravatar</a> with your e-mail address.
+      <p>
+        To change picture: link your online profile to a supported service - GitHub, GitLab, LinkedIn - or sign up to
+        <a href="https://gravatar.com/connect/?source=_signup" target="_blank" rel="noopener noreferrer nofollow">
+          Gravatar</a> with your e-mail address.
+      </p>
     </div>
   </div>
 

@@ -35,13 +35,19 @@
 {% endmacro %}
 
 {% macro render_home_event(event, details=True) %}
-	<div class="col-lg-4 an-event mb-1"><div class="card">
+	<div class="col-lg-4 an-event mb-1"><div class="card {% if event.lock_resources %}text-bg-info{% endif %}">
 			<div title="{{ event.hostname }}"
 				{% if event.gallery_url %}
 				  class="card-img-top gallery-img" style="background-image: url('{{ event.gallery_url }}')"
 		    {% elif event.logo_url %}
 		      class="card-img-top" style="background-image: url('{{ event.logo_url }}')"
 		    {% endif %}>
+	        {% if not event.lock_resources %}
+		        <a href="{{ url_for('public.event', event_id=event.id) }}" 
+		           class="an-event-meta btn btn-sm btn-secondary float-right">
+              <span>{{ event.date }}</span>
+            </a>
+	        {% endif %}
 			</div>
 	    <div class="card-body">
 	      {% if not event.lock_resources %}
@@ -51,15 +57,6 @@
 		      </h3>
 				{% endif %}
 	      <div class="card-text">
-	        {% if not event.lock_resources %}
-            <p class="an-event-meta">
-              <span>{{ event.date }}</span>
-              {% if event.location %}
-	            <i class="fa fa-map"></i>
-	            <span>{{ event.location }}</span>
-	          {% endif %}
-            </p>
-	        {% endif %}
 	    	{% if details %}
 	        <p class="an-event-description">
 	          {{ event.oneliner|striptags }}
