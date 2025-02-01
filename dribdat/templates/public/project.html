@@ -74,21 +74,21 @@
 <div class="tab-content clear-both" id="project-content">
 
   {% if project.is_webembed or project.webpage_url %}
-    {% if project.embed_longtext %}
-      <div class="project-webembed resizable">
-        {{ project.embed_longtext|safe }}
-      </div>
-    {% endif %}
-    {% if project.webpage_url %}
-      {% if project.embed_longtext %}
-        <h2 class="text-center m-5">Presentation</h2>
-      {% endif %}
+    {% if project.embed_webpage %}
       <div class="project-webembed resizable">
         {{ project.embed_webpage|safe }}
       </div>
       <a href="{{ project.webpage_url }}" class="btn btn-small btn-default float-right"
          target="_blank" rel="noopener noreferrer" title="See presentation in a new tab">
          &#x2193;&nbsp;&nbsp;Open</a>
+    {% endif %}
+    {% if project.embed_longtext %}
+      {% if project.embed_webpage %}
+        <h2 class="text-center m-5">Presentation</h2>
+      {% endif %}
+      <div class="project-webembed resizable">
+        {{ project.embed_longtext|safe }}
+      </div>
     {% endif %}
   {% endif %}
   <br clear="all" />
