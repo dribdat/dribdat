@@ -20,3 +20,4 @@ services:
       - POSTGRES_DB=dribdat
       - POSTGRES_USER=dribdat_user
       - POSTGRES_PASSWORD=changeme
+

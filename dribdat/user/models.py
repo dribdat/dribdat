@@ -25,7 +25,8 @@ from dribdat.user.constants import (
 )
 from dribdat.onebox import format_webembed, format_webslides  # noqa: I005
 from dribdat.utils import (
-    format_date_range, format_date, parse_date, timesince, strtobool, get_any_key
+    format_date_range, format_date, parse_date, timesince, strtobool,
+    unpack_csvlist, pack_csvlist, get_any_key
 )
 from dribdat.database import (
     db,
@@ -116,6 +117,24 @@ class User(UserMixin, PkModel):
     my_story = Column(db.UnicodeText(), nullable=True)
     my_goals = Column(db.UnicodeText(), nullable=True)
 
+    _my_skills = Column(db.UnicodeText(512), nullable=True)
+    @property
+    def my_skills(self):
+        return unpack_csvlist(self._my_skills)
+
+    @my_skills.setter
+    def my_skills(self, value):
+        self._my_skills = pack_csvlist(value)
+
+    _my_wishes = Column(db.UnicodeText(512), nullable=True)
+    @property
+    def my_wishes(self):
+        return unpack_csvlist(self._my_wishes)
+
+    @my_wishes.setter
+    def my_wishes(self, value):
+        self._my_wishes = pack_csvlist(value)
+
     # JSON blob of Curriculum Vitae
     vitae = Column(db.UnicodeText(), nullable=True)
 
@@ -134,6 +153,8 @@ class User(UserMixin, PkModel):
             'carddata': self.carddata,
             'my_story': self.my_story,
             'my_goals': self.my_goals,
+            'my_skills': pack_csvlist(self.my_skills),
+            'my_wishes': pack_csvlist(self.my_wishes),
             'webpage_url': self.webpage_url,
             'vitae': dumps(self.vitae),
             'roles': ",".join([r.name for r in self.roles]),
@@ -150,6 +171,8 @@ class User(UserMixin, PkModel):
         else:
             self.email = data['email']
         self.updated_at = datetime.now(UTC)
+        self.my_skills = [s.strip() for s in data["my_skills"].split(",")]
+        self.my_wishes = [s.strip() for s in data["my_wishes"].split(",")]
 
     def socialize(self):
         """Parse the user's web profile."""
@@ -236,7 +259,6 @@ class User(UserMixin, PkModel):
             p_score = p_score + 1
         return p_score / MAX_SCORE
 
-
     def get_score(self):
         """Calculate my personal score, based on profile completeness and projects."""
         # See def calculate_score(self) below
@@ -247,7 +269,6 @@ class User(UserMixin, PkModel):
         if user_score > 0:
             project_total = project_total + 10
         return round(project_total * user_score)
-
 
     def posted_challenges(self):
         """Retrieve all challenges user has posted."""

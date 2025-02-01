@@ -19,6 +19,7 @@ from wtforms.validators import (
 from sqlalchemy import func
 from ..user.validators import UniqueValidator
 from dribdat.utils import sanitize_input  # noqa: I005
+from dribdat.utils import unpack_csvlist, pack_csvlist
 from .models import User
 
 class LoginForm(FlaskForm):
@@ -53,6 +54,36 @@ class LoginForm(FlaskForm):
             return False
         # Inactive users are allowed to log in, but not much else.
         return True
+
+def validate_skillslist(field, maxchars=100):
+    message = f"Individual skills shouldn't be empty or very long (more than {maxchars} chars), maybe, you forgot that this is a comma-separated list? Maybe, split one large skill into a few?"
+    skills = unpack_csvlist(field.data)
+    for s in skills:
+        if len(s) > maxchars or len(s) == 0:
+            field.errors = list(field.errors)
+            field.errors.append(message)
+            return False
+    return True
+
+common_user_related_fields = dict(
+    skills = TextAreaField(
+        u'My skills',
+        validators=[Length(max=512)],
+        description="A comma-separated list of things you have experience with."),
+    wishes = TextAreaField(
+        u'Skills wanted',
+        validators=[Length(max=512)],
+        description="A comma-separated list of skills you wished you had or would like to improve"),
+    goals = TextAreaField(
+        u'My goals',
+        description=(
+            "What would you like to get out of this experience? "
+            "What ideas do you have for the programme? "
+            "What activities would you like to see? "
+            "What brings you here? Share a few words about your interests for the top of your profile."
+        )
+    )
+)
 
 
 class RegisterForm(FlaskForm):
@@ -109,10 +140,11 @@ class UserForm(FlaskForm):
     """User profile form."""
 
     id = HiddenField('id')
-    my_goals = StringField(
-        u'My goals',
-        description="What brings you here? Share a few words about your "
-        + "interests for the top of your profile.")
+
+    my_skills = common_user_related_fields["skills"]
+    my_wishes = common_user_related_fields["wishes"]
+    my_goals  = common_user_related_fields["goals"]
+
     fullname = StringField(
         u'Display name', [Length(max=200)],
         description="Your full name, if you want it shown on your profile and certificate.")
@@ -130,6 +162,16 @@ class UserForm(FlaskForm):
         u'Change password', [Length(max=128)],
         description="Leave blank to keep your password as it is.")
     submit = SubmitField(u'Save profile')
+
+    def validate(self):
+        """Validate the form."""
+        
+        if not validate_skillslist(self.my_skills):
+            return False
+        if not validate_skillslist(self.my_wishes):
+            return False
+
+        return True
 
 
 class StoryForm(FlaskForm):
