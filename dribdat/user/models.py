@@ -121,7 +121,6 @@ class User(UserMixin, PkModel):
     @property
     def my_skills(self):
         return unpack_csvlist(self._my_skills)
-
     @my_skills.setter
     def my_skills(self, value):
         self._my_skills = pack_csvlist(value)
@@ -130,7 +129,6 @@ class User(UserMixin, PkModel):
     @property
     def my_wishes(self):
         return unpack_csvlist(self._my_wishes)
-
     @my_wishes.setter
     def my_wishes(self, value):
         self._my_wishes = pack_csvlist(value)
@@ -153,8 +151,8 @@ class User(UserMixin, PkModel):
             'carddata': self.carddata,
             'my_story': self.my_story,
             'my_goals': self.my_goals,
-            'my_skills': pack_csvlist(self.my_skills),
-            'my_wishes': pack_csvlist(self.my_wishes),
+            'my_skills': self._my_skills,
+            'my_wishes': self._my_wishes,
             'webpage_url': self.webpage_url,
             'vitae': dumps(self.vitae),
             'roles': ",".join([r.name for r in self.roles]),
@@ -171,8 +169,10 @@ class User(UserMixin, PkModel):
         else:
             self.email = data['email']
         self.updated_at = datetime.now(UTC)
-        self.my_skills = [s.strip() for s in data["my_skills"].split(",")]
-        self.my_wishes = [s.strip() for s in data["my_wishes"].split(",")]
+        if 'my_skills' in data:
+            self.my_skills = [s.strip() for s in data["my_skills"].split(",")]
+        if 'my_wishes' in data:
+            self.my_wishes = [s.strip() for s in data["my_wishes"].split(",")]
 
     def socialize(self):
         """Parse the user's web profile."""
@@ -247,7 +247,7 @@ class User(UserMixin, PkModel):
         p_score = 0
         MAX_SCORE = 5
         # Add to the score for every complete documentation field
-        if self.fullname and len(self.fullname) > 3:
+        if self.fullname and len(self.fullname) > 2:
             p_score = p_score + 1
         if self.webpage_url and len(self.webpage_url) > 6:
             p_score = p_score + 1
@@ -674,7 +674,14 @@ class Project(PkModel):
 
     autotext = Column(db.UnicodeText(), nullable=True, default=u"")
     longtext = Column(db.UnicodeText(), nullable=True, default=u"")
-    # How to save structured data, e.g. from a Data Package type Resource?
+    
+    #_technai = Column(db.UnicodeText(1024), nullable=True)
+    #@property
+    #def technai(self):
+    #    return unpack_csvlist(self._technai)
+    #@technai.setter
+    #def technai(self, value):
+    #    self._technai = pack_csvlist(value)
 
     logo_color = Column(db.String(7), nullable=True)
     logo_icon = Column(db.String(40), nullable=True)
@@ -728,15 +735,17 @@ class Project(PkModel):
         return self.autotext_url and self.autotext_url.strip()
 
     @property
-    def webembed(self):
-        """Detect and return supported embed widgets."""
+    def embed_longtext(self):
+        """Detect and return embedded format of pitch."""
         if not self.is_webembed:
             return None
-        if not self.webpage_url.strip():
-            if '---' in self.longtext or '***' in self.longtext:
-                return format_webslides(self.longtext)
-            else:
-                return None
+        if '---' in self.longtext or '***' in self.longtext:
+            return format_webslides(self.longtext)
+        return None
+
+    @property
+    def embed_webpage(self):
+        """Return embedded format of webpage link."""
         return format_webembed(self.webpage_url, self.id)
 
     @property

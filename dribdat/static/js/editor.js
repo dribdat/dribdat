@@ -461,6 +461,27 @@
     });
   }); // -#uploadMedia
 
+  // Tool suggestions
+  $("#suggestTool").each(function () {
+    var $dialog = $(this);
+    var $togglebtn = $('button[data-bs-target="#suggestTool"]');
+    // Append button to the pitch editor
+    var $targetfld = $(".fld-webpage_url");
+    $targetfld.prepend($togglebtn.clone().show());
+    // Set up the dialog
+    var $inputfd = $dialog.find('input[type="url"]');
+    var $submitb = $dialog.find('button[data-target="insert"');
+    $submitb.click(function () {
+      var theurl = $inputfd.val();
+      if (theurl.indexOf("https://") !== 0) {
+        return window.alert("Invalid address");
+      }
+      // Replace url
+      $("input", $targetfld).val(theurl);
+      $dialog.modal("hide");
+    });
+  }); // -#uploadMedia
+
   // Admin button tips
   $(".admin-defaults button").click(function () {
     $("input#name").val($(this).text());
@@ -595,7 +616,7 @@
     const $longtext = $("#longtext");
 
     // Move button to editing area
-    $longtext.first().before($activateEditor);
+    //$longtext.first().before($activateEditor);
 
     // Handle activation button
     $activateEditor

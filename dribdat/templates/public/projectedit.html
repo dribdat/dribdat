@@ -17,66 +17,46 @@
 
 {% block content %}
 
-  {% if not detail_view %}
-  <span id="activateEditor">
-    <button data-do="activate" type="button" 
-      class="btn btn-light btn-lg hidden mt-2 mb-1" aria-pressed="false"
-      title="Click to activate a WYSIWYG editor">
-      <i class="fa fa-pencil text-info" area-hidden="true"></i>
-      Assistant: <b>off</b>
-    </button>
-    <button data-do="reset" type="button" 
-      class="btn btn-light btn-lg hidden mt-2 mb-1" aria-pressed="false"
-      title="Click to use a plain text editor">
-        <i class="fa fa-pencil text-info" area-hidden="true"></i>
-        Assistant: <b>on</b>
-    </button>
-    {%- if not project.is_challenge -%}
-      <button data-do="clear" type="button" 
-        class="btn btn-light btn-lg hidden mt-2 mb-1 ms-2" aria-pressed="false"
-        title="You can still Undo (Ctrl-Z), or view the previously saved version later">
-          <i class="fa fa-circle-o text-info" area-hidden="true"></i>
-          Clear
-      </button>
-    {%- endif -%}
-  </span>
-  {% endif %}
-
   {% if config.S3_KEY %}
-  <button type="button" class="btn btn-light btn-lg mt-2 m-1" style="display:none" data-bs-toggle="modal" data-bs-target="#uploadImage">
-    <i class="fa fa-image text-info" area-hidden="true"></i>
-    Upload Image
-  </button>
+    <button type="button" class="btn btn-light btn-lg mt-2 m-1" style="display:none" data-bs-toggle="modal" data-bs-target="#uploadImage">
+      <i class="fa fa-image text-info" area-hidden="true"></i>
+      Image
+    </button>
 
-  <button type="button" class="btn btn-light btn-lg mt-2 m-1" style="display:none" data-bs-toggle="modal" data-bs-target="#uploadFile">
-    <i class="fa fa-paperclip text-info" area-hidden="true"></i>
-    Attach PDF
-  </button>
-  
-  <button type="button" class="btn btn-light btn-lg mt-2 m-1" style="display:none" data-bs-toggle="modal" data-bs-target="#uploadPackage">
-    <i class="fa fa-paperclip text-info" area-hidden="true"></i>
-    Attach Data
-  </button>
+    <button type="button" class="btn btn-light btn-lg mt-2 m-1" style="display:none" data-bs-toggle="modal" data-bs-target="#uploadFile">
+      <i class="fa fa-paperclip text-info" area-hidden="true"></i>
+      Slides
+    </button>
+    
+    <button type="button" class="btn btn-light btn-lg mt-2 m-1" style="display:none" data-bs-toggle="modal" data-bs-target="#uploadPackage">
+      <i class="fa fa-paperclip text-info" area-hidden="true"></i>
+      Data
+    </button>
   {% endif %}
+
+  <button type="button" class="btn btn-light btn-lg mt-2 m-1" style="display:none" data-bs-toggle="modal" data-bs-target="#suggestTool">
+    <i class="fa fa-rocket text-info" area-hidden="true"></i>
+    Tools
+  </button>
 
   <button type="button" class="btn btn-light btn-lg mt-2 m-1" style="display:none" data-bs-toggle="modal" data-bs-target="#uploadMedia">
     <i class="fa fa-tv text-info" area-hidden="true"></i>
-    Insert Media
+    Media
   </button>
 
-  <div class="btn-group project-tab-buttons switch-editor" role="group" aria-label="Project tools">
+  <div class="btn-group project-edit-buttons switch-editor" role="group" aria-label="Project tools">
     <a href="{{ url_for('project.project_view', project_id=project.id) }}" 
-       target="_blank" title="Link to project view" class="btn btn-light">
+       class="btn btn-lg btn-light" target="_blank" title="Link to project view">
       <i class="fa fa-link" aria-hidden="true"></i>
     </a>
     <a href="{{ url_for('project.project_edit', project_id=project.id) }}" 
        title="Switch to editing of project basic information" 
-       class="btn btn-warning {% if not detail_view %}disabled hidden{% endif %}">
+       class="btn btn-lg btn-warning {% if not detail_view %}disabled hidden{% endif %}">
       <i class="fa fa-arrow-left" aria-hidden="true"></i>
       Basics</a>
     <a href="{{ url_for('project.project_details', project_id=project.id) }}" 
        title="Switch to editing of project details" 
-       class="btn btn-warning {% if detail_view %}disabled hidden{% endif %}">
+       class="btn btn-lg btn-warning {% if detail_view %}disabled hidden{% endif %}">
       <i class="fa fa-arrow-right" aria-hidden="true"></i>
       Details</a>
   </div><br clear="all">
@@ -101,19 +81,16 @@
 
   <div class="alert-warning text-center mt-4 p-2">
   {% if not detail_view %}
-    <ul style="text-align:left; "><li>
-      Your Presentation should link to an uploaded PDF, or to an embedded webpage.
-    </li><li>For example: insert the link from
-      <a href="https://knowledge.workspace.google.com/kb/publish-docs-sheets-slides-or-forms-as-web-pages-000008504" target="_blank" rel="nofollow">Publish to Web</a> mode in Google or 
-      <a href="https://support.microsoft.com/en-us/office/embed-a-presentation-in-a-web-page-or-blog-19668a1d-2299-4af3-91e1-ae57af723a60" target="_blank" rel="nofollow">Embed code</a> in Microsoft. 
-    </li><li>Or, leave the 
-      Presentation link blank and just use the Pitch area to write your slides using 
-      <a href="https://marpit.marp.app/markdown" target="_blank" rel="nofollow">Marpit Markdown</a>.
-    </ul>
-      More links, contacts, change the title or cover image
-      <i class="fa fa-arrow-right" aria-hidden="true"></i>
-      <a href="{{ url_for('project.project_details', project_id=project.id) }}" target="_blank">
-        Edit Project Details</a>
+    <p><b>Tips:</b>
+      Link to a website (look for a 
+      <a href="https://knowledge.workspace.google.com/kb/publish-docs-sheets-slides-or-forms-as-web-pages-000008504" target="_blank" rel="nofollow">Publish to Web</a>
+      or 
+      <a href="https://support.microsoft.com/en-us/office/embed-a-presentation-in-a-web-page-or-blog-19668a1d-2299-4af3-91e1-ae57af723a60" target="_blank" rel="nofollow">Embed code</a>) 
+      or upload a PDF to present it at the top of your project. 
+      <br>
+      If you're feeling hacky, use the Pitch to publish your presentation using 
+      <a href="https://marpit.marp.app/markdown" target="_blank" rel="nofollow">Marpit Markdown</a>, then ✓ Enable slide mode.
+    </p>
   {% elif project.is_hidden %}
     <a href="{{ url_for('project.project_toggle', project_id=project.id) }}"
        class="btn btn-light">
@@ -128,6 +105,37 @@
   {% endif %}
   </div>
 
+  {% if not detail_view %}
+  <center id="activateEditor">
+    <button data-do="activate" type="button" 
+      class="btn btn-light btn-md hidden mt-2 mb-1" aria-pressed="false"
+      title="Click to activate a WYSIWYG editor">
+      <i class="fa fa-pencil text-info" area-hidden="true"></i>
+      Editor: <b>text</b>
+    </button>
+    <button data-do="reset" type="button" 
+      class="btn btn-light btn-md hidden mt-2 mb-1" aria-pressed="false"
+      title="Click to use a plain text editor">
+        <i class="fa fa-pencil text-info" area-hidden="true"></i>
+        Editor: <b>advanced</b>
+    </button>
+    {%- if not project.is_challenge -%}
+      <button data-do="clear" type="button" 
+        class="btn btn-light btn-md hidden mt-2 mb-1 ms-2" aria-pressed="false"
+        title="You can still Undo (Ctrl-Z), or view the previously saved version later">
+          <i class="fa fa-circle-o text-info" area-hidden="true"></i>
+          Clear
+      </button>
+    {%- endif -%}
+
+    <a href="{{ url_for('project.project_details', project_id=project.id) }}" class="btn btn-md btn-warning ms-4">
+      <i class="fa fa-arrow-right" aria-hidden="true"></i>
+      Details</a>
+  </center>
+  {% endif %}
+
 {% include "includes/uploader.html" %}
+
+{% include "includes/recommender.html" %}
 
 {% endblock %}

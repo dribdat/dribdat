@@ -61,20 +61,15 @@ class ProjectForm(FlaskForm):
     """Edit a project form."""
 
     id = HiddenField('id')
-    summary = StringField(
-        u'Summary', [length(max=2048)],
-        render_kw={'maxlength': 2048, 'rows': 3})
-        #description="A short, plain-text description of your topic.")
+    webpage_url = URLField(
+        u'Presentation', [length(max=2048)],
+        description="Link to a shared tool, live demo, or presentation.")
     longtext = TextAreaField(
         u'Pitch', [length(max=64000)])
         #description=""
         #+ " Links to supported sites on one line get previews."
         #+ " No copypasta: use the 'Upload Image' button.")
-    is_webembed = BooleanField(u'Embed Presentation or Pitch*')
-    webpage_url = URLField(
-        u'Presentation', [length(max=2048)],
-        description="URL to a live demo, presentation, or a link to get "
-        + "more information.")
+    is_webembed = BooleanField(u'Enable slide mode')
     note = TextAreaField(
         u'What changed?',
         [length(max=280)],
@@ -88,14 +83,21 @@ class ProjectDetailForm(FlaskForm):
     """Edit a project detail form."""
 
     id = HiddenField('id')
+    autotext_url = URLField(
+        u'Readme', [length(max=255)],
+        description="URL to a code repository, document, or wiki 💡 Tips: dribdat.cc/sync")
     name = StringField(
         u'Title',
         [length(max=80), UniqueValidator(Project, 'name'), InputRequired()],
         render_kw={'maxlength': 80, 'required': 'required'},
         description="A short name for your project or challenge.")
-    autotext_url = URLField(
-        u'Readme link', [length(max=255)],
-        description="URL to a code repository, document, or wiki 💡 Tips: dribdat.cc/sync")
+    summary = TextAreaField(
+        u'Summary', [length(max=2048)],
+        render_kw={'maxlength': 2048, 'rows': 3})
+        #description="A short, plain-text description of your topic.")
+    download_url = URLField(
+        u'Demo', [length(max=255)],
+        description="Link to online demo or download area for this project.")
     source_url = URLField(
         u'Source', [length(max=255)],
         description="Link to the source code of your project - not necessarily same as your Readme.")
@@ -103,19 +105,16 @@ class ProjectDetailForm(FlaskForm):
     contact_url = StringField(
         u'Contact', [length(max=255)],
         description="How to reach you via website or e-mail.")
-    download_url = URLField(
-        u'Demo', [length(max=255)],
-        description="Link to online demo or download area for this project.")
     hashtag = StringField(
         u'Affiliation', [length(max=140)],
         description="Your organization, channel, or social media hashtag.")
     # Note: relative links allowed in image_url -> StringField
-    image_url = StringField(
-        u'Cover image', [length(max=255)],
-        description="Link to an image showing in the project overview and at the top of the page.")
     logo_color = StringField(
         u'Outline color',
         description="Customize the color scheme of your project page.")
+    image_url = StringField(
+        u'Cover image', [length(max=255)],
+        description="Link to an image showing in the project overview and at the top of the page.")
     logo_icon = StringField(
         u'Named icon',
         [length(max=20)], description='Select an icon from FontAwesome'

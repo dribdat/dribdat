@@ -572,7 +572,8 @@ def project_autoupdate(project_id):
     """Sync remote project data."""
     project = Project.query.filter_by(id=project_id).first_or_404()
     if not project.is_syncable:
-        return project_action(project_id)
+        flash('This project is not syncable.', 'warning')
+        return redirect(url_for('project.project_view', project_id=project_id))
 
     # Check user permissions
     if not AllowProjectEdit(project, current_user):
@@ -599,15 +600,17 @@ def project_autoupdate(project_id):
     SyncProjectData(project, data)
 
     # Confirmation messages
-    if not has_autotext:
-        if project.autotext and len(project.autotext) > 1:
-            project_action(project.id, 'update', action='sync',
-                           text=str(len(project.autotext)) + ' bytes')
+    if project.autotext and len(project.autotext) > 1:
+        project_action(project.id, 'update', action='sync',
+                       text=str(len(project.autotext)) + ' bytes')
+        if not has_autotext:
             flash("The latest data from %s has been synced." % data['type'], 'success')
         else:
-            flash("Could not sync: remote README is empty.", 'warning')
-    return redirect(url_for(
-        'project.project_view', project_id=project_id))
+            flash("Data from %s has been refreshed." % data['type'], 'success')
+    else:
+        flash("Could not sync: remote README is empty.", 'warning')
+
+    return redirect(url_for('project.project_view', project_id=project_id))
 
 
 @blueprint.route('/<int:project_id>/toggle', methods=['GET', 'POST'])

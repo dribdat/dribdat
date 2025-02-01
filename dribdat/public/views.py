@@ -147,21 +147,26 @@ def user_profile(username):
     else:
         may_certify = current_user and not current_user.is_anonymous \
                       and current_user.id == user.id and user.may_certify()[0]
-    projects = user.joined_projects(True)
-    events = []
-    for p in projects:
-        if p.event not in events:
-            events.append(p.event)
+    projects = user.joined_projects(False)
     posts = user.latest_posts(20)
     today = datetime.now(UTC)
-    events_next = Event.query.filter(and_(
-        Event.is_hidden.isnot(True),
-        Event.lock_resources.isnot(True),
-        Event.ends_at > today
-    ))
-    events_next = events_next.order_by(Event.starts_at.desc())
-    if events_next.count() == 0: events_next = None
-    score_tip = user.get_profile_percent() < 1
+    # Collect events
+    events = []
+    events_next = None
+    if not projects:
+        events_next = Event.query.filter(and_(
+            Event.is_hidden.isnot(True),
+            Event.lock_resources.isnot(True),
+            Event.ends_at > today
+        ))
+        events_next = events_next.order_by(Event.starts_at.desc())
+        if events_next.count() == 0: events_next = None
+    else:
+        for p in projects:
+            if p.event not in events:
+                events.append(p.event)
+    # Calculate score
+    score_tip = int(user.get_profile_percent() * 100)
     # Filter out by today's date
     return render_template("public/userprofile.html", active="profile",
                            user=user, projects=projects, posts=posts,
@@ -223,8 +228,8 @@ def event(event_id):
         if current_user.is_admin:
             sum_hidden = len(event.projects) - projects.count()
             if sum_hidden > 0:
-                flash(('There are %d hidden projects in this event ' % sum_hidden) + \
-                    ' that may need moderation: check the Admin.', 'secondary')
+                flash(('%d hidden projects ' % sum_hidden) + \
+                    ' may need moderation: check the Admin.', 'secondary')
     # Embedding view
     if request.args.get('embed'):
         return render_template("public/embed.html",
