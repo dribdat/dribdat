@@ -114,26 +114,31 @@
 
   {% if project.autotext %}
     <div id="readme-md" aria-labelledby="readme-tab-md">
-      <div class="project-autotext scroll-after-500"><div class="cover"></div>
+
+      <div class="project-autotext scroll-after-500">
         {{project.autotext|markdown}}
+        <div title="Expand the Readme" class="cover">
+          <i class="fa fa-arrow-down" aria-hidden="true"></i>
+        </div>
       </div>
 
-      {% if project.autotext_url and not project.event.lock_resources %}
-        <div class="alert alert-light text-center mb-2 mt-2">
-          This content is a preview from an
-          <a href="{{ project.autotext_url }}" target="_blank" rel="noopener noreferrer" title="Source link">
-            external site</a>.
-        </div>
-      {% endif %}
+      <div class="m-2">
+        {% if project.autotext_url and not project.event.lock_resources %}
+          <span style="line-height:2.5em">
+            <i class="fa fa-asterisk" aria-hidden="true"></i>
+            Preview of
+            <a href="{{ project.autotext_url }}" target="_blank" rel="noopener noreferrer" title="Source link">
+              external content</a>.</span>
+        {% endif %}
 
-      {% if allow_edit and project.is_syncable %}
-        <div class="text-center m-0">
+        {% if allow_edit and project.is_syncable %}
           <a href="{{ url_for('project.project_autoupdate', project_id=project.id) }}"
-             title="Sync external Readme data" class="btn btn-md btn-default">
+             title="Sync external Readme data" class="btn btn-md btn-default float-right">
             <i class="fa fa-refresh" aria-hidden="true"></i>
             Refresh</a>
-        </div>
-      {% endif %}
+        {% endif %}
+      </div>
+
     </div>
   {% endif %}
 
@@ -191,8 +196,9 @@
           {% if project_starred %}
             <a class="btn btn-info btn-md" data-bs-toggle="modal" data-bs-target="#addUser"
                title="Invite someone to this project">
+                Team 
                 <i class="fa fa-child" aria-hidden="true"></i><i class="fa fa-child" aria-hidden="true"></i>
-                Team-builder
+                builder
             </a>
           {% else %}
             <a class="btn btn-lg btn-success project-star"
