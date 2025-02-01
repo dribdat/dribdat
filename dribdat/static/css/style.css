@@ -476,6 +476,17 @@ nav .nav-login {
 .an-event-meta b {
     display: block;
 }
+.card .an-event-meta {
+    color: black;
+    text-shadow: -1px 1px 1px white;
+    background: rgba(255,255,255,0.7);
+    border-radius: 5px;
+    margin-top: 3px;
+    padding: 1px 4px;
+    right: 3px;
+    font-size: 90%;
+    text-decoration: none;
+}
 
 /* Customize the flipclock widget */
 .event-countdown {
@@ -546,7 +557,7 @@ nav .nav-login {
 }
 .home-page .carousel-caption .event-header .section-header-content {
     text-align: left;
-    background: rgba(255, 255, 255, 0.67);
+    background: rgba(255, 255, 255, 0.9);
     box-shadow: 3px 3px 3px rgba(0,0,0,0.2);
     border-radius: 10px;
     padding: 1em 0 1em 2em;
@@ -2240,8 +2251,9 @@ div.project-edit-buttons {
     background-color: white;
     border-left: 1px solid #ccc;
 }
-a.card {
+a.card, .card > a {
     text-decoration: none;
+    color: initial;
 }
 .profile-projects .card {
     background-size: auto 100%;
