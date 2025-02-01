@@ -32,9 +32,9 @@
           {{ render_embed_event(event, event.projects, False) }}
         </div>
       {% endif %}
-      <div class="an-event-actions text-center mt-2">
+      <div class="an-event-actions text-center mt-2 clearfix">
         {% if event.project_count %}
-          <a href="{{ url_for('public.event', event_id=event.id) }}" class="btn btn-default btn-lg float-right fs-4 mb-3">
+          <a href="{{ url_for('public.event', event_id=event.id) }}" class="btn btn-default btn-lg float-right fs-4">
           {% if event.has_finished %}
             <i class="fa fa-star" aria-hidden="true"></i>
             <span title="Results">{{ event.project_count }}</span>

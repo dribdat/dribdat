@@ -147,7 +147,7 @@ def user_profile(username):
     else:
         may_certify = current_user and not current_user.is_anonymous \
                       and current_user.id == user.id and user.may_certify()[0]
-    projects = user.joined_projects(True)
+    projects = user.joined_projects(False)
     posts = user.latest_posts(20)
     today = datetime.now(UTC)
     # Collect events
@@ -228,8 +228,8 @@ def event(event_id):
         if current_user.is_admin:
             sum_hidden = len(event.projects) - projects.count()
             if sum_hidden > 0:
-                flash(('There are %d hidden projects in this event ' % sum_hidden) + \
-                    ' that may need moderation: check the Admin.', 'secondary')
+                flash(('%d hidden projects ' % sum_hidden) + \
+                    ' may need moderation: check the Admin.', 'secondary')
     # Embedding view
     if request.args.get('embed'):
         return render_template("public/embed.html",

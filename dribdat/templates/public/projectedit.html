@@ -20,43 +20,43 @@
   {% if config.S3_KEY %}
     <button type="button" class="btn btn-light btn-lg mt-2 m-1" style="display:none" data-bs-toggle="modal" data-bs-target="#uploadImage">
       <i class="fa fa-image text-info" area-hidden="true"></i>
-      Upload Image
+      Image
     </button>
 
     <button type="button" class="btn btn-light btn-lg mt-2 m-1" style="display:none" data-bs-toggle="modal" data-bs-target="#uploadFile">
       <i class="fa fa-paperclip text-info" area-hidden="true"></i>
-      Attach PDF
+      Slides
     </button>
     
     <button type="button" class="btn btn-light btn-lg mt-2 m-1" style="display:none" data-bs-toggle="modal" data-bs-target="#uploadPackage">
       <i class="fa fa-paperclip text-info" area-hidden="true"></i>
-      Attach Data
+      Data
     </button>
   {% endif %}
 
   <button type="button" class="btn btn-light btn-lg mt-2 m-1" style="display:none" data-bs-toggle="modal" data-bs-target="#suggestTool">
     <i class="fa fa-rocket text-info" area-hidden="true"></i>
-    Use a Tool
+    Tools
   </button>
 
   <button type="button" class="btn btn-light btn-lg mt-2 m-1" style="display:none" data-bs-toggle="modal" data-bs-target="#uploadMedia">
     <i class="fa fa-tv text-info" area-hidden="true"></i>
-    Insert Media
+    Media
   </button>
 
   <div class="btn-group project-edit-buttons switch-editor" role="group" aria-label="Project tools">
     <a href="{{ url_for('project.project_view', project_id=project.id) }}" 
-       target="_blank" title="Link to project view" class="btn btn-light">
+       class="btn btn-lg btn-light" target="_blank" title="Link to project view">
       <i class="fa fa-link" aria-hidden="true"></i>
     </a>
     <a href="{{ url_for('project.project_edit', project_id=project.id) }}" 
        title="Switch to editing of project basic information" 
-       class="btn btn-warning {% if not detail_view %}disabled hidden{% endif %}">
+       class="btn btn-lg btn-warning {% if not detail_view %}disabled hidden{% endif %}">
       <i class="fa fa-arrow-left" aria-hidden="true"></i>
       Basics</a>
     <a href="{{ url_for('project.project_details', project_id=project.id) }}" 
        title="Switch to editing of project details" 
-       class="btn btn-warning {% if detail_view %}disabled hidden{% endif %}">
+       class="btn btn-lg btn-warning {% if detail_view %}disabled hidden{% endif %}">
       <i class="fa fa-arrow-right" aria-hidden="true"></i>
       Details</a>
   </div><br clear="all">
@@ -135,5 +135,7 @@
   {% endif %}
 
 {% include "includes/uploader.html" %}
+
+{% include "includes/recommender.html" %}
 
 {% endblock %}
