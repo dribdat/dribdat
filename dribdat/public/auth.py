@@ -303,7 +303,11 @@ def user_story():
         flash('This user account is under review.', 'warning')
 
     form = StoryForm(obj=user, next=request.args.get('next'))
+    # Load roles
     form.roles.choices = [(r.id, r.name) for r in Role.query.order_by('name')]
+    # Load skills
+    form.my_skills.data = pack_csvlist(user.my_skills, ", ")
+    form.my_wishes.data = pack_csvlist(user.my_wishes, ", ")
 
     # Validation has passed
     if form.is_submitted() and form.validate() and user_is_valid:
@@ -311,6 +315,13 @@ def user_story():
         user.roles = [Role.query.filter_by(
             id=r).first() for r in form.roles.data]
         del form.roles
+
+        # Assign skills manually
+        user.my_skills = unpack_csvlist(form.my_skills.data)
+        del form.my_skills # avoid setting it again
+        user.my_wishes = unpack_csvlist(form.my_wishes.data)
+        del form.my_wishes # avoid setting it again
+
 
         form.populate_obj(user)
         user.updated_at = datetime.now(UTC)

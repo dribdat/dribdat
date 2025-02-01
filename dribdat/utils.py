@@ -52,6 +52,19 @@ def sanitize_url(url):
     """Ensures a URL is just a URL."""
     return quote(url, safe='/:?&')
 
+def unpack_csvlist(packed, sep=","):
+    result = []
+    if packed:
+        for s in packed.split(sep):
+            result.append(s.strip())
+    return result
+
+def pack_csvlist(ls, sep=","):
+    if ls:
+        return sep.join(ls)
+    else:
+        return None
+
 
 def random_password(pwdlen=20):
     """Provide a strongly secure random string."""

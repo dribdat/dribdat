@@ -49,13 +49,15 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='libs/reveal/dist/theme/black.css')}}"/>
   {% endif %}
 
+  <link rel="shortcut icon" href="{{ url_for('static', filename='img/branding/favicon.png')}}" media="(prefers-color-scheme: light)"/>
   {% assets "css_all" %}
     <link rel="stylesheet" href="{{ ASSET_URL }}"/>
   {% endassets %}
   {% if config.DRIBDAT_STYLE %}
     <link rel="stylesheet" href="{{ config.DRIBDAT_STYLE }}"/>
   {% endif %}
-  <link rel="shortcut icon" href="{{ url_for('static', filename='img/favicon.ico')}}"/>
+  <link rel="shortcut icon" href="{{ url_for('static', filename='img/branding/favicon.png')}}" media="(prefers-color-scheme: light)"/>
+  <link rel="shortcut icon" href="{{ url_for('static', filename='img/branding/favicon_inverted.png')}}" media="(prefers-color-scheme: dark)"/>
   <link rel="alternate" type="application/rss+xml" title="RSS: Latest dribs" href="/feeds/dribs.xml">
 
 </head>
