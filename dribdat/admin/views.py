@@ -477,7 +477,7 @@ def project_view(project_id):
     form.category_id.choices.insert(0, (-1, ''))
     # Check event in range
     if form.event_id.data not in [e.id for e in Event.query.all()]:
-        flash('You must set the Sprint ID to a valid number', 'error')
+        flash('You must set the Sprint ID to a valid number', 'danger')
 
     # Standard validation
     elif form.is_submitted() and form.validate():
