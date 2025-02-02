@@ -136,7 +136,9 @@
 							{{ project.summary }}
 						</p>
 					{% else %}
-						{{ project.longtext or project.autotext|truncate(120) }}
+						<p class="project-longtext">
+							{{ project.longtext|truncate(120) }}
+						</p>
 					{% endif %}
 				</div>
 			</div>
