@@ -118,44 +118,50 @@
 
 {% macro render_resource_card(project) %}
 	<div class="col-lg-4 mb-4">
+	  <a href="{{ url_for('project.project_view', project_id=project.id) }}">
 	    <div class="card challenge">
-			<div class="card-header w-100">
+			<div class="card-header w-100 clearfix">
 				{% if project.image_url %}
 					<img height="60" class="card-img-left pe-3" src="{{project.image_url}}">
 				{% endif %}
 				<h5 class="card-title">{{ project.name }}</h5>
-				<div class="project-score">
-					<div class="progress" title="Summary of progress">
-						<div class="progress-bar" style="visibility:hidden;width:0px"></div>
-						{{project.phase}}
-					</div>
-				</div>
+				<span class="float-right m-1 ps-2 pe-2 progress" title="Project stage">
+					{{project.phase}}
+				</span>
 			</div>
 		    <div class="card-body">
 				<div class="card-text">
-					<p class="project-summary">
-						{{ project.summary }}
-					</p>
+					{% if project.summary %}
+						<p class="project-summary">
+							{{ project.summary }}
+						</p>
+					{% else %}
+						<p class="project-longtext">
+							{{ project.longtext|truncate(120) }}
+						</p>
+					{% endif %}
 				</div>
 			</div>
 			<div class="card-footer">
-
 			  {% if project.download_url %}
 			    <a href="{{ project.download_url }}" target="_blank" rel="noopener noreferrer"
-			       class="btn btn-sm btn-light text-dark">
-			   		Download</a>
+			       class="btn btn-sm text-dark" title="Download">
+					<i class="fa fa-arrow-down"></i>
+			   	 </a>
 			  {% endif %}
 
 			  {% if project.source_url %}
 			    <a href="{{ project.source_url }}" target="_blank" rel="noopener noreferrer"
-			       class="btn btn-sm btn-light text-dark">
-			   		Source</a>
+			       class="btn btn-sm text-dark" title="Source available">
+					<i class="fa fa-github"></i>
+			   	  </a>
 			  {% endif %}
 			  
 			  <a href="{{ url_for('project.project_view', project_id=project.id) }}" 
 			  	 class="float-right btn btn-sm btn-info">
-		   		 Details ...</a>
+		   		 Open</a>
 			</div>
 	    </div>
+	  </a>
 	</div>
 {% endmacro %}

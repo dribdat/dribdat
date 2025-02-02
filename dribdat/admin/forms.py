@@ -169,22 +169,24 @@ class ProjectForm(FlaskForm):
         description="Typically used for numbering the projects")
     hashtag = StringField(u'Hashtags', [length(max=140)],
         description="Team channel, hashtag, organization")
-    longtext = TextAreaField(u'Pitch',
-        description="If the embedded Presentation has no link, the Pitch is rendered as Markdown slides")
+    webpage_url = URLField(u'Presentation link', [length(max=2048)],
+        description="This is embedded at the top of the page")
+    download_url = URLField(u'Demo link', [length(max=2048)],
+        description="A link shown prominently at the top and bottom")
+    longtext = TextAreaField(u'Pitch')
+    is_webembed = BooleanField(u'Slide mode', default=False,
+        description="With this option, the Pitch is rendered as Markdown slides")
     autotext_url = URLField(u'Readme link', [length(max=2048)],
         description="Location from which to Sync documentation content")
     autotext = TextAreaField(u'Readme content')
-    webpage_url = URLField(u'Presentation link', [length(max=2048)])
-    is_webembed = BooleanField(u'Embed presentation link', default=False)
     contact_url = URLField(u'Contact link', [length(max=2048)])
     source_url = URLField(u'Source link', [length(max=2048)])
-    download_url = URLField(u'Demo link', [length(max=2048)])
     image_url = URLField(u'Image link', [length(max=255)])
-    logo_color = StringField(u'Custom color')
     logo_icon = StringField(
         u'Custom icon',
         [length(max=20)],
         description='https://fontawesome.com/v4/cheatsheet')
+    logo_color = StringField(u'Custom color')
     event_id = IntegerField(u'Sprint ID', description='As in the URL of an event page')
     category_id = SelectField(u'Category', coerce=int, description='Global or event-specific')
     user_name = StringField(u'Author', description='User who created this challenge')

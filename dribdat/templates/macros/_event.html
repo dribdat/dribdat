@@ -44,7 +44,7 @@
 		    {% endif %}>
 	        {% if not event.lock_resources %}
 		        <a href="{{ url_for('public.event', event_id=event.id) }}" 
-		           class="an-event-meta btn btn-sm btn-secondary float-right">
+		           class="an-event-meta float-right">
               <span>{{ event.date }}</span>
             </a>
 	        {% endif %}

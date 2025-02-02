@@ -470,12 +470,17 @@ def event_projects(event_id):
 def project_view(project_id):
     project = Project.query.filter_by(id=project_id).first_or_404()
     form = ProjectForm(obj=project, next=request.args.get('next'))
-    form.event_id.choices = [(e.id, e.name)
-                             for e in Event.query.order_by(Event.id.desc())]
+    #form.event_id.choices = [(e.id, e.name)
+    #                         for e in Event.query.order_by(Event.id.desc())]
     form.category_id.choices = [(c.id, c.name)
                                 for c in project.categories_all()]
     form.category_id.choices.insert(0, (-1, ''))
-    if form.is_submitted() and form.validate():
+    # Check event in range
+    if form.event_id.data not in [e.id for e in Event.query.all()]:
+        flash('You must set the Sprint ID to a valid number', 'danger')
+
+    # Standard validation
+    elif form.is_submitted() and form.validate():
         del form.id
         form.populate_obj(project)
         # Ensure project category remains blank
