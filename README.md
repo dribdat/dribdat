@@ -4,11 +4,11 @@
 
 # Dribdat
 
-**An open source hackathon management application that playfully assists your team in crowdsourcing technical designs. See [Tour de Hack](https://dribdat.cc/tour) for more examples, and our [User handbook](https://dribdat.cc/usage) for screenshots.**
+**An open source hackathon management application that playfully assists your team in crowdsourcing technical designs. See [Tour de Hack](https://dribdat.cc/tour) for more examples, and [User handbook](https://dribdat.cc/usage) for screenshots.**
 
-🏳️‍🌈 We aim to include people of all backgrounds in using and developing this tool - no matter your age, gender, race, ability, or sexual identity. See our [Contributor Covenant Code of Conduct](code_of_conduct.md), and visit the [HackIntegration Hackfinder](https://hackintegration.ch/hackfinder) to discover events connected to our ongoing research & development in this area.
+🏳️‍🌈 We aim to include people of all backgrounds in using and developing this tool - no matter your age, gender, race, ability, or sexual identity. See our [Contributor Covenant Code of Conduct](code_of_conduct.md), and visit the [HackIntegration Hackfinder](https://hackintegration.ch/hackfinder) to discover events connected to ongoing research & development in this area.
 
-🏔️ We keep an active mirror on [Codeberg](https://codeberg.org/dribdat) 
+🏔️ There are mirrors on [Codeberg](https://codeberg.org/dribdat/dribdat) and [GitHub](https://github.com/dribdat/dribdat)
 
 🩵 Please support the project on [OpenCollective](https://opencollective.com/dribdat/updates) 
 
