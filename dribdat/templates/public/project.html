@@ -57,7 +57,7 @@
 
 <span class="project-badges">
   {% for s in project_badge %}
-    <a class="boost float-left" href="{{ url_for('project.get_log', project_id=project.id) }}#log" title="{{ s.title }}">
+    <a class="boost float-left me-2" href="{{ url_for('project.get_log', project_id=project.id) }}#log" title="{{ s.title }}">
       <i class="fa fa-{{ s.icon }}" aria-hidden="true"></i>
     </a>
   {% endfor %}
@@ -65,13 +65,13 @@
 
 {% if project.download_url %}
   <a href="{{ project.download_url }}" target="_blank" rel="noopener noreferrer"
-     class="project-download-link btn btn-lg btn-dark ms-2 font-bold" 
+     class="project-download-link btn btn-lg border border-info fw-bolder" 
      title="Download link">
       <span>&#x2728;</span> Demo
   </a>
 {% endif %}
 
-<div class="tab-content clear-both" id="project-content">
+<div class="tab-content clear-both mt-2" id="project-content">
 
   {% if project.is_webembed or project.webpage_url %}
     {% if project.embed_webpage %}
