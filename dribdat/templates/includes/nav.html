@@ -77,7 +77,7 @@
         <a class="nav-link" id="navSearchButton"
            title="Search this dribdat site"
            href="{{ url_for('public.about') }}">
-          <i class="fa fa-search bg-light text-dark" aria-hidden="true"></i>
+          <i class="fa fa-search bg-dark text-white" aria-hidden="true"></i>
           Search
         </a>
       </li>
@@ -100,7 +100,7 @@
 <div class="hidden container nav-search" id="navSearch"
      tabindex="-1" role="dialog" aria-labelledby="searchLabel" aria-hidden="true">
   <div class="profile-projects container-fluid mb-3">
-    <div data-action="/api/project/search.json" id="search">
+    <div data-action="{{ url_for('api.project_search_json') }}" id="search">
       <div class="content input-group">
         <span class="input-group-text">
           <i class="fa fa-search" aria-hidden="true"></i>
@@ -108,7 +108,7 @@
         <input type="text" class="form-control" name="q" aria-label="Search projects" placeholder="Start typing ..."  style="width:20em">
       </div>
     </div>
-    <table class="table">
+    <table class="table mt-3">
       <thead class="thead">
         <tr>
           <th scope="col">Team</th>

@@ -316,10 +316,10 @@ def project_search_json():
     projects = Project.query \
         .filter(Project.is_hidden==False) \
         .filter(or_(
-            Project.name.like(q),
-            Project.summary.like(q),
-            Project.longtext.like(q),
-            Project.autotext.like(q),
+            Project.name.ilike(q),
+            Project.summary.ilike(q),
+            Project.longtext.ilike(q),
+            Project.autotext.ilike(q),
         )).limit(limit).all()
     projects = expand_project_urls(
         [p.data for p in projects],
