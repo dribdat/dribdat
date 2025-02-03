@@ -31,7 +31,7 @@ tests
 **/PACKAGE.txt
 **/.pyup.yml
 **/app.json
-**/deploy-stackscript.sh
 **/package.json
 **/Procfile
-**/publish-docker.sh
+**/deploy-stackscript.sh
+**/publish-docker*

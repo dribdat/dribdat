@@ -28,6 +28,13 @@
 {{ detail.render_project_image(project) }}
 {{ detail.render_project_head(project) }}
 
+{% if project.is_challenge %}
+  <a title="Go back to the main page" class="preview-challenge float-right btn btn-light btn-lg"
+     href="{{ url_for('project.project_view', project_id=project.id) }}">
+    <i class="fa fa-arrow-left" aria-hidden="true"></i>
+     Back to Challenge</a>
+{% endif %}
+
 {% if project.stats %}
   <table class="project-stats">
       <td>People</td><th class="drib-count m-2">{{ project.stats.people }}</th>

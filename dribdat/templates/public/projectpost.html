@@ -117,6 +117,10 @@
        title="Cancel" class="btn btn-light">
       <i class="fa fa-arrow-left" aria-hidden="true"></i> Project
     </a>
+    <a href="{{ url_for('project.get_log', project_id=project.id) }}"
+       title="Log and progress review" class="btn btn-light">
+      <i class="fa fa-life-ring" aria-hidden="true"></i> Log
+    </a>
     {% if stage %}
       <div class="btn-group">
         <a href="{{ url_for('project.project_edit', project_id=project.id) }}" class="btn btn-light"
