@@ -1,10 +1,12 @@
 services:
   dribdat:
     image: dribdat/dribdat
+    container_name: dribdat-web
+    restart: unless-stopped
     ports:
-      - 5000:5000
+      - 5123:5000
     environment:
-      - SERVER_URL=localhost.changeme:5000
+      - SERVER_URL=localhost.changeme:5123
       - DATABASE_URL=postgres://dribdat_user:changeme@db:5432/dribdat
       - DRIBDAT_ENV=prod
       - DRIBDAT_SECRET=changeme
