@@ -33,6 +33,25 @@
         </div>
       {% endif %}
       <div class="an-event-actions text-center mt-2 clearfix">
+        <div class="btn-group">
+          {% if not event.has_finished %}
+            {% if event.webpage_url %}
+              <a href="{{ event.webpage_url }}"
+                  title="Visit this page to sign up"
+                  class="btn btn-dark btn-lg" target="_blank">
+                  <i class="fa fa-ticket" aria-hidden="true"></i>
+                  
+              </a>
+            {% endif %}
+          {% endif %}
+          {% if event.community_url %}
+            <a href="{{ event.community_url }}" 
+               title="More information about this event"
+               target="community" class="btn btn-lg btn-info">
+              <i class="fa fa-comment" aria-hidden="true"></i>
+              </a>
+          {% endif %}
+        </div>
         {% if event.project_count %}
           <a href="{{ url_for('public.event', event_id=event.id) }}" class="btn btn-default btn-lg float-right fs-4">
           {% if event.has_finished %}
@@ -53,17 +72,6 @@
             <i class="fa fa-plus"></i>
             Challenge
           </a>
-        {% endif %}
-
-        {% if not event.has_finished %}
-            {% if event.webpage_url %}
-            <a href="{{ event.webpage_url }}"
-                title="Visit this page for more information and to sign up"
-                class="btn btn-dark btn-lg" target="_blank">
-                <i class="fa fa-ticket" aria-hidden="true"></i>
-                Register
-            </a>
-            {% endif %}
         {% endif %}
       </div><!-- /.an-event-actions -->
     </div><!-- /.header-content -->

@@ -194,7 +194,7 @@
             <i class="fa fa-plus"></i>
             Add</a>
       </div>
-    {% elsif may_edit %}
+    {% elif may_edit %}
       <a class="btn btn-lg btn-warning"
           href="{{ url_for('public.event_edit', event_id=current_event.id) }}"
           title="Manage details of this sprint">
