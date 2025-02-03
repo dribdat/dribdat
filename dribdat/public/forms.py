@@ -210,16 +210,19 @@ class EventEdit(FlaskForm):
     name = StringField(
         u'Title',
         [length(max=80), UniqueValidator(Event, 'name'), DataRequired()])
+    summary = StringField(
+        u'Summary',
+        [length(max=140)],
+        description=u'A short tagline of the event, in max 140 characters')
     starts_date = DateField(
         u'Starting date', [event_date_check], default=datetime.now(UTC))
     starts_time = TimeField(
         u'Starting time', [event_time_check], default=time(9, 0, 0))
     ends_date = DateField(u'Finish date', default=datetime.now(UTC))
     ends_time = TimeField(u'Finish time', default=time(16, 0, 0))
-    summary = StringField(
-        u'Summary',
-        [length(max=140)],
-        description=u'A short tagline of the event, in max 140 characters')
+    description = TextAreaField(
+        u'Description',
+        description=u'Markdown and HTML supported')
     hostname = StringField(
         u'Hosted by',
         [length(max=80)],
@@ -228,13 +231,6 @@ class EventEdit(FlaskForm):
         u'Located at',
         [length(max=255)],
         description=u'The event locale or virtual space')
-    hashtags = StringField(
-        u'Hashtags',
-        [length(max=255)],
-        description=u'Social media hashtags for this event')
-    description = TextAreaField(
-        u'Description',
-        description=u'Markdown and HTML supported')
     instruction = TextAreaField(
         u'Instructions',
         description=u'Shown to registered participants only - '
@@ -259,4 +255,8 @@ class EventEdit(FlaskForm):
         u'Community link',
         [length(max=255)],
         description=u'To find others on a community forum or social media')
+    hashtags = StringField(
+        u'Hashtags',
+        [length(max=255)],
+        description=u'Social media hashtags for this event')
     submit = SubmitField(u'Save')
