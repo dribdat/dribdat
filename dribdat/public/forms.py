@@ -143,11 +143,11 @@ class ProjectComment(FlaskForm):
 
     id = HiddenField('id')
     note = TextAreaField(
-        u'Comments and reviews',
+        u'My question or comment:',
         [length(max=280), InputRequired()],
         render_kw={'maxlength': 280, 'minlength': 4},
-        description=u'A suggestion or constructive feedback for the team.')
-    submit = SubmitField(u'Save comment',
+        description=u'Write a suggestion or some constructive feedback for the team.')
+    submit = SubmitField(u'Send comment',
         render_kw={'data-toggle': "modal", 'data-target': "#pleasewaitModal"})
 
 
