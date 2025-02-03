@@ -7,7 +7,7 @@ services:
     ports:
       - 5000:5000
     environment:
-      - SERVER_URL=localhost.changeme:5000
+      - SERVER_URL=localhost:5000
       - DATABASE_URL=postgres://dribdat_user:changeme@db:5432/dribdat
       - DRIBDAT_ENV=prod
       - DRIBDAT_SECRET=changeme
@@ -18,7 +18,7 @@ services:
   db:
     image: postgres
     volumes:
-      - ./.db:/var/lib/postgresql/data
+      - ./data/.db:/var/lib/postgresql/data
     environment:
       - POSTGRES_DB=dribdat
       - POSTGRES_USER=dribdat_user
