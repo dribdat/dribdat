@@ -244,7 +244,7 @@
        <i class="fa fa-clock-o" aria-hidden="true"></i>
        Post
      </a>
-  {% elif current_user and current_user.active and not project.event.lock_resources %}
+  {% elif current_user and current_user.active and not project.event.lock_resources and not project.is_challenge %}
     <a id="project-comment" href="{{ url_for('project.project_comment', project_id=project.id) }}"
         title="Write a public comment" class="btn btn-lg btn-info">
        <i class="fa fa-comment" aria-hidden="true"></i>
