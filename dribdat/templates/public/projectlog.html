@@ -139,4 +139,8 @@
   </div>
 </div>
 
+{% if allow_edit %}
+  {% include "includes/projectdialogs.html" %}
+{% endif %}
+
 {% endblock %}

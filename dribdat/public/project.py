@@ -223,16 +223,20 @@ def project_autoprompt(project_id):
 @login_required
 def project_autopost(project_id):
     """Try to generate a project post."""
-    project = Project.query.filter_by(id=project_id).first_or_404()
-    autopost = gen_project_post(project)
+    p = Project.query.filter_by(id=project_id).first_or_404()
+    lastact = p.activities[-1]
+    if '🅰️ℹ️' in lastact.content:
+        flash("Please write an update or commit before asking AI for more help.", 'info')
+        return redirect(url_for('project.get_log', project_id=p.id))
+    autopost = gen_project_post(p)
     if not autopost:
         flash("AI service is currently not available.", 'warning')
-        return redirect(url_for(
-            'project.project_view', project_id=project.id))
-    project_action(project_id, 'review', action='post', text=autopost)
+        return redirect(url_for('project.get_log', project_id=p.id))
+    # Save the new content in the project log
+    project_action(p.id, 'review', action='post', text=autopost)
     flash("The robots have spoken", 'success')
     return redirect(url_for(
-        'project.get_log', project_id=project.id))
+        'project.get_log', project_id=p.id))
 
 
 
@@ -604,9 +608,9 @@ def project_autoupdate(project_id):
         project_action(project.id, 'update', action='sync',
                        text=str(len(project.autotext)) + ' bytes')
         if not has_autotext:
-            flash("The latest data from %s has been synced." % data['type'], 'success')
+            flash("The latest data from %s has been synced." % data['type'], 'dark')
         else:
-            flash("Data from %s has been refreshed." % data['type'], 'success')
+            flash("Data from %s has been refreshed." % data['type'], 'dark')
     else:
         flash("Could not sync: remote README is empty.", 'warning')
 
