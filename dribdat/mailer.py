@@ -22,7 +22,7 @@ def user_activation_message(user, act_hash):
         + "Thank you for signing up at %s\n\n" % fqdn \
         + "Tap here to activate and log into your account:\n%s\n\n" % act_url \
         + "If you did not expect this e-mail, please change your password.\n\n" \
-        + "-- d}}BD{t"
+        + "-- D}}BD{T --"
 
     logging.debug(act_url)
     return msg
@@ -54,13 +54,13 @@ def user_invitation_message(project):
         _external=True)
     from_email = current_app.config['MAIL_DEFAULT_SENDER']
     msg = EmailMessage(from_email=from_email)
-    msg.subject = 'Join the [%s] team on dribdat' % project.name
+    msg.subject = 'Join our team: %s' % project.name
     msg.body = \
-        "You are invited - please join us!\n" \
+        "You are invited - please join us!\n\n" \
         + "1. Login to dribdat at: %s\n\n" % login_url \
-        + "2. Tap here to join your team: %s\n\n" % act_url \
+        + "2. Tap here to join the team: %s\n\n" % act_url \
         + "3. Contribute to %s\n\n" % project.name \
-        + "-- d}}BD{t"
+        + "-- D}}BD{T --"
     return msg
 
 

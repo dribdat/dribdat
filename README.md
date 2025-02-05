@@ -4,19 +4,17 @@
 
 # Dribdat
 
-**An open source hackathon management application that playfully assists your team in crowdsourcing technical designs. See [Tour de Hack](https://dribdat.cc/tour) for more examples, and [User handbook](https://dribdat.cc/usage) for screenshots.**
+**An open source hackathon management application that playfully assists your team in crowdsourcing technical designs.** 
 
-🏳️‍🌈 We aim to include people of all backgrounds in using and developing this tool - no matter your age, gender, race, ability, or sexual identity. See our [Contributor Covenant Code of Conduct](code_of_conduct.md), and visit the [HackIntegration Hackfinder](https://hackintegration.ch/hackfinder) to discover events connected to ongoing research & development in this area.
+🚲 See [Tour de Hack](https://dribdat.cc/tour) for examples, and [User handbook](https://dribdat.cc/usage) for screenshots. 📝 Visit the [Hackfinder](https://hackintegration.ch/hackfinder) to find opportunites to connect to events and the [research project](https://hackintegration.ch) supporting our work. 🏳️‍🌈 We aim to include people of all backgrounds in using and developing this tool - no matter your age, gender, race, ability, or sexual identity: see our [Code of Conduct](code_of_conduct.md). 
 
-🏔️ There are mirrors on [Codeberg](https://codeberg.org/dribdat/dribdat) and [GitHub](https://github.com/dribdat/dribdat)
-
-🩵 Please support the project on [OpenCollective](https://opencollective.com/dribdat/updates) 
+🏔️ There are mirrors on [Codeberg](https://codeberg.org/dribdat/dribdat) and [GitHub](https://github.com/dribdat/dribdat) 🩵 Please support the project on [OpenCollective](https://opencollective.com/dribdat/updates) 
 
 <a href="https://opencollective.com/dribdat/donate" target="_blank"><img src="https://opencollective.com/dribdat/donate/button@2x.png?color=blue" width=300 /></a>
 
 # Purpose
 
-Created in light of the [Hacker ethic](https://en.wikipedia.org/wiki/Hacker_ethic), the philosophy of `d}}BD{t` is (in a nutshell):
+Created in light of the [Hacker ethic](https://en.wikipedia.org/wiki/Hacker_ethic), the philosophy of Dribdat is (in a nutshell):
 
 - **Commit sustainably**: aggregate results in standard web data formats for search and archiving.
 - **Go live and let live**: efficiently deploy designs, dev envs, docs accessible to your entire team.
@@ -30,7 +28,7 @@ For more background and references, see the [User Handbook](https://docs.dribdat
 
 The Dribdat project can be deployed to any server capable of serving [Python](https://python.org) applications, and is set up for fast deployment using [Ansible or Docker](https://dribdat.cc/deploy). The first user that registers becomes an admin, so don't delay!
 
-If you would like to run dribdat on any other cloud or local machine, there are additional instructions in the [Deployment guide](https://docs.dribdat.cc/deploy). Information on contributing and extending the code can be found in the [Contributors guide](https://docs.dribdat.cc/contribute), which includes API documentation, and other details.
+If you would like to run this application on any other cloud or local machine, there are additional instructions in the [Deployment guide](https://docs.dribdat.cc/deploy). Information on contributing and extending the code can be found in the [Contributors guide](https://docs.dribdat.cc/contribute), which includes API documentation, and other details.
 
 See also **[backboard](https://github.com/dribdat/backboard)**: a responsive, modern alternative frontend, and our **[dridbot](https://github.com/dribdat/dridbot)** chat client. Both demonstrate reuse of the dribdat API.
 
