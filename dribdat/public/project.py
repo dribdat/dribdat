@@ -101,6 +101,24 @@ def project_boost(project_id):
     )
 
 
+@blueprint.route('/<int:project_id>/autoboost', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def project_autoboost(project_id):
+    """Add automatic evaluation to a project."""
+    p = Project.query.filter_by(id=project_id).first_or_404()
+    # Go whizz up some content based on project data
+    autopost = gen_project_post(p, True)
+    if not autopost:
+        flash("AI service is currently not available.", 'warning')
+        return redirect(url_for('project.get_log', project_id=p.id))
+    # Save the new content in the project log
+    project_action(p.id, 'boost', action='Autoeval', text=autopost)
+    flash("The robots have judged", 'success')
+    return redirect(url_for(
+        'project.get_log', project_id=p.id))
+
+
 @blueprint.route('/<int:project_id>/approve', methods=['GET', 'POST'])
 @login_required
 @admin_required
@@ -223,16 +241,23 @@ def project_autoprompt(project_id):
 @login_required
 def project_autopost(project_id):
     """Try to generate a project post."""
-    project = Project.query.filter_by(id=project_id).first_or_404()
-    autopost = gen_project_post(project)
+    p = Project.query.filter_by(id=project_id).first_or_404()
+    # Check if we've had some human contact, first
+    # TODO: we may want to restrict this by time elapsed as well
+    lastact = p.activities[-1]
+    if lastact.content and '🅰️ℹ️' in lastact.content:
+        flash("Please write an update or commit before asking AI for more help.", 'info')
+        return redirect(url_for('project.get_log', project_id=p.id))
+    # Go whizz up some content based on project data
+    autopost = gen_project_post(p)
     if not autopost:
         flash("AI service is currently not available.", 'warning')
-        return redirect(url_for(
-            'project.project_view', project_id=project.id))
-    project_action(project_id, 'review', action='post', text=autopost)
+        return redirect(url_for('project.get_log', project_id=p.id))
+    # Save the new content in the project log
+    project_action(p.id, 'review', action='post', text=autopost)
     flash("The robots have spoken", 'success')
     return redirect(url_for(
-        'project.get_log', project_id=project.id))
+        'project.get_log', project_id=p.id))
 
 
 
@@ -604,9 +629,9 @@ def project_autoupdate(project_id):
         project_action(project.id, 'update', action='sync',
                        text=str(len(project.autotext)) + ' bytes')
         if not has_autotext:
-            flash("The latest data from %s has been synced." % data['type'], 'success')
+            flash("The latest data from %s has been synced." % data['type'], 'dark')
         else:
-            flash("Data from %s has been refreshed." % data['type'], 'success')
+            flash("Data from %s has been refreshed." % data['type'], 'dark')
     else:
         flash("Could not sync: remote README is empty.", 'warning')
 

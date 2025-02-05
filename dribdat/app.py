@@ -188,11 +188,15 @@ def register_filters(app):
 
 def register_loggers(app):
     """Initialize and configure logging."""
-    if 'DEBUG' in app.config and not app.config['DEBUG']:
-        import logging
-        stream_handler = logging.StreamHandler()
-        app.logger.addHandler(stream_handler)
-        app.logger.setLevel(logging.INFO)
+    import logging
+    stream_handler = logging.StreamHandler()
+    app.logger.addHandler(stream_handler)
+    if 'DEBUG' in app.config and app.config['DEBUG']:
+        app.logger.setLevel(logging.DEBUG)
+        print("Setting logger level to DEBUG")
+    else:
+        app.logger.setLevel(logging.ERROR)
+        print("Setting logger level to ERROR")
 
 
 def register_caching(app):

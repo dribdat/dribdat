@@ -131,6 +131,22 @@
   </div><!-- /dribs-md -->
   {% endif %}
 
+
+  {% if project.user %}
+    <div class="widget started-at">
+      Posted
+      <span title="{{ project.created_at }}">{{ project.created_at|until_date }}</span>
+      by
+      <a href="{{ url_for('public.user_profile', username=project.user) }}">
+        <b>{{ project.user.username }}</b>
+      </a>
+      for
+      <a href="{{ url_for('public.event', event_id=project.event.id) }}">
+        <b>{{ project.event.name }}</b>
+      </a>
+    </div>
+  {% endif %}
+
 </div><!-- /.jumbotron .project-page -->
 
 <div class="panel panel-default community-embed mt-5">
@@ -138,5 +154,9 @@
     {{project.event.community_embed|safe}}
   </div>
 </div>
+
+{% if allow_edit %}
+  {% include "includes/projectdialogs.html" %}
+{% endif %}
 
 {% endblock %}

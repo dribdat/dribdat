@@ -13,7 +13,7 @@ from dribdat.mailer import (
     user_invitation_message,
 )
 
-from .factories import UserFactory, ProjectFactory
+from .factories import UserFactory, ProjectFactory, EventFactory
 
 
 class TestLoggingIn:
@@ -180,7 +180,9 @@ class TestActivation:
 
         # Check if the user can be invited by e-mail
         user.email = 'test@dribdat.cc'
+        event = EventFactory()
         project = ProjectFactory()
+        project.event = event
         project.user = user
         project.save()
         # Mail is not configured in the test environment

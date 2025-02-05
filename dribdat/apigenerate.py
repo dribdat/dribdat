@@ -44,17 +44,40 @@ def prompt_ideas(project: Project):
     """Form a prompt that is used to generate posts."""
     title = project.name
     topic = project.summary
-    summary = project.longtext or project.autotext
-    return "Generate a short (100 words or less) suggestion as a next step " +\
-        'in a hackathon project, with title "%s" on the topic of "%s". ' % (title, topic) +\
+    # Collect project contents, preferring the pitch
+    summary = project.longtext + '\n# README\n' + project.autotext
+    summary = summary.replace('\n\n','\n').replace('  ', ' ')
+    # Collect stage advice
+    stage_advice = 'Be excellent to each other'
+    if project.stage and 'tip' in project.stage:
+        stage_advice = project.stage['tip'] + ' '
+        if 'conditions' in project.stage:
+            cc = []
+            psc = project.stage['conditions']
+            if 'validate' in psc and 'help' in psc['validate']:
+                cc.append(psc['validate']['help'])
+            if 'agree' in psc:
+                cc.extend(psc['agree'])
+            stage_advice = stage_advice + ' '.join(cc)
+    # Generate the prompt
+    return 'The project title is "%s", on the topic of "%s". ' % (title, topic) +\
         'Do not include the word "Suggestion" or repeat the title. ' +\
-        "Note that so far the following has been worked on, so propose something else: \n" +\
+        'Consider that the team at this stage should ensure the following:\n%s\n' % (stage_advice) +\
+        'Note that the following results have already been documented in the project: \n' +\
         summary
 
 
-def gen_project_post(project: Project):
+def gen_project_post(project: Project, as_boost: bool=False):
     """Returns results from a prompt that is used to generate posts."""
     prompt = prompt_ideas(project)
+    if as_boost:
+        # Use an evaluation type prompt
+        prompt = 'You are a judge in a hackathon. Generate a short (100 words or less)' +\
+                 ' evaluation of a project, focusing on clarity and sustainability. ' + prompt
+    else:
+        # Use the standard recommendation prompt
+        prompt = 'Generate a short (100 words or less) suggestion as a next' +\
+                 ' step in a hackathon project.' + prompt
     return gen_openai(prompt)
 
 
@@ -97,11 +120,19 @@ def gen_openai(prompt: str):
     except openai.APIConnectionError as e:
         logging.error('No LLM connection')
         return None
+    except openai.RateLimitError as e:
+        logging.error('Show me the money!')
+        return None
+    except Exception as e:
+        logging.error(e)
+        return None
 
     # Return the obtained result
     if len(completion.choices) > 0:
+        mymodel = current_app.config['LLM_MODEL'].upper()
         content = completion.choices[0].message.content
-        return "> 🅰️ℹ️ " + content.replace("\n", "\n> ")
+        content = content.replace("\n", "\n> ")
+        return "🅰️ℹ️ `Generated with %s`\n\n%s" % (mymodel, content)
     else:
         logging.error('No LLM data in response')
         return None
