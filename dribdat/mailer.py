@@ -18,10 +18,11 @@ def user_activation_message(user, act_hash):
     msg.subject = 'Your dribdat account'
     fqdn = base_url.replace('https://', '').replace('/', '')
     msg.body = \
-        "Hello %s\n\n" % user.name \
-        + "Thank you for signing up at %s\n\n" % fqdn \
-        + "Tap here to activate and log into your account:\n%s\n\n" % act_url \
-        + "If you did not expect this e-mail, please change your password.\n\n" \
+        "Hello %s\n" % user.name \
+        + "🗝️ You are one click away from signing into Dribdat\n\n" \
+        + "Log in here: %s\n\n" % act_url \
+        + "🏀 Thank you for signing up at %s\n" % fqdn \
+        + "💡 If you did not expect this e-mail, please change your password!\n\n" \
         + "-- D}}BD{T --"
 
     logging.debug(act_url)
@@ -54,12 +55,11 @@ def user_invitation_message(project):
         _external=True)
     from_email = current_app.config['MAIL_DEFAULT_SENDER']
     msg = EmailMessage(from_email=from_email)
-    msg.subject = 'Join our team: %s' % project.name
+    msg.subject = 'Invitation from event: %s' % project.event.name
     msg.body = \
-        "You are invited - please join us!\n\n" \
-        + "1. Login to dribdat at: %s\n\n" % login_url \
-        + "2. Tap here to join the team: %s\n\n" % act_url \
-        + "3. Contribute to %s\n\n" % project.name \
+        "You are personally invited - please join us!\n\n" \
+        + "🏀 We are interested in your contributions to '%s'.\n\n" % project.name \
+        + "🤼 Tap here to join the team: %s\n\n" % act_url \
         + "-- D}}BD{T --"
     return msg
 
