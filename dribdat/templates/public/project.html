@@ -93,7 +93,7 @@
   {% endif %}
   <br clear="all" />
 
-  {% if project.longtext and not project.is_webembed %}
+  {% if project.longtext and not project.embed_longtext %}
     <div id="project-md" aria-labelledby="project-tab-md">
       <div class="project-longtext">
         {{ project.longtext|onebox|markdown|safe }}
@@ -216,27 +216,10 @@
 
 
   </div><!-- /project-content -->
-
-  
-  {% if project.user %}
-    <div class="widget started-at">
-      Contributed
-      <span title="{{ project.created_at }}">{{ project.created_at|until_date }}</span>
-      by
-      <a href="{{ url_for('public.user_profile', username=project.user) }}">
-        <b>{{ project.user.username }}</b>
-      </a>
-      for
-      <a href="{{ url_for('public.event', event_id=project.event.id) }}">
-        <b>{{ project.event.name }}</b>
-      </a>
-    </div>
-  {% endif %}
-
 </div><!-- /.jumbotron .project-page -->
 
 <center class="project-footer-controls mt-5">
-
+  
 <div role="group" aria-label="Project controls" class="btn-group project-controls">
   {% if allow_post %}
      <a id="project-post" href="{{ url_for('project.project_post', project_id=project.id) }}"
@@ -276,6 +259,13 @@
        title="Get tips from an AI coach" class="btn btn-lg btn-dark">
       &#x1F170;&#xFE0F;&#x2139;&#xFE0F;
     </button>
+    
+    {% if current_user.is_admin %}
+      <a href="{{ url_for('project.project_autoboost', project_id=project.id) }}" class="btn btn-lg btn-primary project-autoboost"
+        title="Generate an automatic evaluation of this project">
+        <i class="fa fa-calendar-check-o" aria-hidden="true"></i>
+      <!--  Autoboost--></a>
+    {% endif %}
   </div>
   {% endif %}
 
