@@ -60,17 +60,24 @@ def prompt_ideas(project: Project):
                 cc.extend(psc['agree'])
             stage_advice = stage_advice + ' '.join(cc)
     # Generate the prompt
-    return "Generate a short (100 words or less) suggestion as a next step " +\
-        'in a hackathon project. The project title is "%s", on the topic of "%s". ' % (title, topic) +\
+    return 'The project title is "%s", on the topic of "%s". ' % (title, topic) +\
         'Do not include the word "Suggestion" or repeat the title. ' +\
         'Consider that the team at this stage should ensure the following:\n%s\n' % (stage_advice) +\
-        "Note that the following results have already been documented in the project: \n" +\
+        'Note that the following results have already been documented in the project: \n' +\
         summary
 
 
-def gen_project_post(project: Project):
+def gen_project_post(project: Project, as_boost: bool=False):
     """Returns results from a prompt that is used to generate posts."""
     prompt = prompt_ideas(project)
+    if as_boost:
+        # Use an evaluation type prompt
+        prompt = 'You are a judge in a hackathon. Generate a short (100 words or less)' +\
+                 ' evaluation of a project, focusing on clarity and sustainability. ' + prompt
+    else:
+        # Use the standard recommendation prompt
+        prompt = 'Generate a short (100 words or less) suggestion as a next' +\
+                 ' step in a hackathon project.' + prompt
     return gen_openai(prompt)
 
 

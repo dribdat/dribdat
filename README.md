@@ -20,7 +20,7 @@ Created in light of the [Hacker ethic](https://en.wikipedia.org/wiki/Hacker_ethi
 - **Go live and let live**: efficiently deploy designs, dev envs, docs accessible to your entire team.
 - **Co-create in safe spaces**: with content and tools promoting safer conduct and increased privacy.
 
-Designed to bootstrap your [awesome hackathon](https://github.com/dribdat/awesome-hackathon), Dribdat's toolset can be used as a versatile toolbox for civic tech sprints. To get started, [install](#Quickstart) the software, or try it yourself at the next [community event](https://schoolofdata.ch). 
+Designed to bootstrap your [awesome hackathon](https://github.com/dribdat/awesome-hackathon), Dribdat's toolset can be used as a versatile toolbox for civic tech sprints. To get started, [install](#Quickstart) the software, or make your play on `D}}BD{T` in the next [community event](https://schoolofdata.ch). 
 
 For more background and references, see the [User Handbook](https://docs.dribdat.cc/usage), or read the [Whitepaper](https://dribdat.cc/whitepaper). If you need help or advice in setting up your site, or would like to contribute to the project: please get in touch via [Discussions](https://github.com/orgs/dribdat/discussions) or [GitHub Issues](https://github.com/dribdat/dribdat/issues).
 
