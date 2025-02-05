@@ -55,7 +55,7 @@ def user_invitation_message(project):
         _external=True)
     from_email = current_app.config['MAIL_DEFAULT_SENDER']
     msg = EmailMessage(from_email=from_email)
-    msg.subject = 'Invitation from event: %s' % project.event.name
+    msg.subject = 'Invitation: %s' % project.event.name
     msg.body = \
         "You are personally invited - please join us!\n\n" \
         + "🏀 We are interested in your contributions to '%s'.\n\n" % project.name \
