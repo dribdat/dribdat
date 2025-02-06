@@ -66,6 +66,7 @@ docs/_build
 env/
 debug.sh
 .db/
+data/
 
 # JavaScript
 node_modules
