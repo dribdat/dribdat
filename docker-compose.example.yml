@@ -13,13 +13,21 @@ services:
       - DRIBDAT_APIKEY=changeme
       - TIME_ZONE=Europe/Zurich
     depends_on:
-      - db
+      db:
+        condition: service_healthy
+
   db:
     image: postgres
+    container_name: dribdat-db
+    restart: unless-stopped
     volumes:
       - ./.db:/var/lib/postgresql/data
     environment:
       - POSTGRES_DB=dribdat
       - POSTGRES_USER=dribdat_user
       - POSTGRES_PASSWORD=changeme
-
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}']
+      interval: 20s
+      timeout: 5s
+      retries: 5
