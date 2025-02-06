@@ -17,6 +17,7 @@
             &#x1F170;&#xFE0F;&#x2139;&#xFE0F;
             Log an automated suggestion
           </button>
+        </p>
         <p>
           Or tap here to use the prompt in a tool of your choice:
         </p>
@@ -25,6 +26,19 @@
              data-api="{{ url_for('project.project_autoprompt', project_id=project.id) }}"
              class="btn btn-light btn-md">📋 Prompt my clipboard</button>
         </p>
+        {% if current_user.is_admin %}
+        <hr>
+        <p class="text-center mt-4">
+          <small>Admins only:</small>
+          <button 
+            onclick="this.disabled=1; this.innerHTML='Please wait...'; location.href='{{ url_for('project.project_autoboost', project_id=project.id) }}'" 
+            class="btn btn-lg btn-dark project-autoboost"
+            title="Generate an automatic evaluation of this project">
+          <i class="fa fa-calendar-check-o" aria-hidden="true"></i>
+            Run automated evaluation
+          </button>
+        </p>
+        {% endif %}
         <hr>
         <p>
           If you are looking for help with Dribdat, visit the
