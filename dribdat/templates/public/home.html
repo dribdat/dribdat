@@ -75,36 +75,30 @@
     </a>
   {% endif %}
 
-  {% if my_projects %}
-  {% cache 300, 'home-user-%d' % current_user.id %}
-    <h1 class="m-5">My teams</h1>
-    <div class="resource-list profile-projects honeycomb">
-      <div class="row ibws-fix">
-        {% for project in my_projects %}
-          {{ proj.render_project_hexagon(project) }}
-        {% endfor %}
-        </div>
-      </div><!-- /profile-projects -->
-    </div>
-  {% endcache %}
-  {% endif %}
 
   {% if events_tips or events_next %}
   <a name="upcoming"></a>
-  <h1 class="m-5">Next</h1>
-  <div class="row mt-4">
+  <div class="row mt-5">
     {% if events_tips %}
       {% for event in events_tips %}
         {{ evnt.render_home_event(event) }}
       {% endfor %}
     {% endif %}
-    {% if events_next %}
-      {% for event in events_next %}
-        {{ evnt.render_home_event(event) }}
-      {% endfor %}
-    {% endif %}
+  {% if my_projects %}
+  {% cache 300, 'home-user-%d' % current_user.id %}
+    <div class="col-lg-4">
+      <h1 class="fs-4">My teams</h1>
+      <div class="ps-4 resource-list profile-projects honeycomb">
+        {% for project in my_projects %}
+          {{ proj.render_project_hexagon(project) }}
+        {% endfor %}
+      </div>
+    </div>
+  {% endcache %}
+  {% endif %}
   </div><!-- /.row events-next -->
   {% endif %}
+
 
   {% if events_past %}
     <a name="past"></a>
