@@ -12,4 +12,4 @@ services:
       - DRIBDAT_ALLOW_EVENTS=1
       - DRIBDAT_SOCIAL_LINKS=0
     volumes:
-      - ./data/:/opt
+      - ./data/:/opt:rw
