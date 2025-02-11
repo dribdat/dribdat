@@ -445,8 +445,9 @@ def project_new(event_id):
         flash('Projects may not be started in this event.', 'error')
         return redirect(url_for('public.event', event_id=event.id))
     # Checks passed, continue ...
-    if request.args.get('create'):
+    if is_anonymous or request.args.get('create'):
         return create_new_project(event, is_anonymous)
+    # Only authenticated users can import due to autofill restrictions
     return import_new_project(event, is_anonymous)
 
 
@@ -466,7 +467,11 @@ def import_new_project(event, is_anonymous=False):
 
     if form.is_submitted() and not form.validate():
         print(form.errors)
-        flash('Make sure to "Test" first before importing', 'warning')
+        if 'name' in form.errors and 'unique' in form.errors['name'][0]:
+            flash('There is already a project with this name here. Please pick a new name, and add the Readme later.', 'danger')
+            return redirect(url_for('project.project_new', event_id=event.id) + '?create=1')
+        else:
+            flash('Please use a supported site. Or just click the green button to skip this step.', 'warning')
 
     if not (form.is_submitted() and form.validate()):
         return render_template(
@@ -526,6 +531,10 @@ def create_new_project(event, is_anonymous=False):
         form.category_id.choices.insert(0, (-1, ''))
     else:
         del form.category_id
+
+    # If Captcha is not configured, skip the validation
+    if not is_anonymous or not current_app.config['RECAPTCHA_PUBLIC_KEY']:
+        del form.recaptcha
 
     # Check if LLM support is configured
     if not current_app.config['LLM_API_KEY']:

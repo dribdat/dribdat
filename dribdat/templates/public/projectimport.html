@@ -10,17 +10,26 @@ if current_event.boilerplate %}
 </div>
 {% endif %}
 
-<div class="container import-note mt-3">
+<div class="container import-note mt-3 hidden">
     <p>
-        You can use the <b>Readme</b> function to fetch content from one of the
-        <a href="https://dribdat.cc/sync" target="_blank">supported</a>
-        open repositories - or
+        Fetch content from one of the
+        <a href="https://dribdat.cc/usage#sync-your-stuff" target="_blank">supported sites</a>
+        shown below to sync it
+        - or just
         <a
             href="{{ url_for('project.project_new', event_id=current_event.id) }}?create=1"
             >skip this page</a
         >
-        to create a project from scratch:
+        to create a blank project.
     </p>
+</div>
+
+<div class="container">
+    {{ render_form(url_for('project.project_new', event_id=current_event.id),
+    form, formid="projectImport") }}
+</div>
+
+<div class="container mt-3">
     <ul class="list-unstyled container">
         <div class="row m-4">
             <a
@@ -121,17 +130,13 @@ if current_event.boilerplate %}
     </ul>
 </div>
 
-<div class="container">
-    {{ render_form(url_for('project.project_new', event_id=current_event.id),
-    form, formid="projectImport") }}
-</div>
 
 <div class="container mt-4 text-center">
     <a
         class="btn btn-lg btn-success"
         href="{{ url_for('project.project_new', event_id=current_event.id) }}?create=1"
     >
-        Skip this step ...
+        Continue without import ...
     </a>
 </div>
 
