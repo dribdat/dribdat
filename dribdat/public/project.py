@@ -445,8 +445,9 @@ def project_new(event_id):
         flash('Projects may not be started in this event.', 'error')
         return redirect(url_for('public.event', event_id=event.id))
     # Checks passed, continue ...
-    if request.args.get('create'):
+    if is_anonymous or request.args.get('create'):
         return create_new_project(event, is_anonymous)
+    # Only authenticated users can import due to autofill restrictions
     return import_new_project(event, is_anonymous)
 
 
@@ -463,10 +464,6 @@ def import_new_project(event, is_anonymous=False):
         project.is_hidden = True
 
     form = ProjectImport(obj=project, next=request.args.get('next'))
-
-    # If Captcha is not configured, skip the validation
-    if not is_anonymous or not current_app.config['RECAPTCHA_PUBLIC_KEY']:
-        del form.recaptcha
 
     if form.is_submitted() and not form.validate():
         print(form.errors)

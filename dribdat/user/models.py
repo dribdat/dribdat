@@ -1303,3 +1303,7 @@ class Activity(PkModel):
 
     def __repr__(self):  # noqa: D105
         return '<Activity({name})>'.format(name=self.name)
+
+
+class Availability(PkModel):
+    """Agree when do we drib."""
