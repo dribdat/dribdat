@@ -8,7 +8,7 @@
       $ind
         .find("i")
         .removeClass("fa-circle-o fa-check-circle-o")
-        .addClass("fa-check-circle-o")
+        .addClass("fa-circle-o")
         .css("color", "red");
       $("#is_autoupdate").click(function () {
         if ($(this).is(":checked"))
@@ -26,6 +26,8 @@
           "</span>",
       )
       .find(".autotext-indicator");
+    var $inputbutton = $indicator.find("button");
+
     // Get remote data
     var runAutofill = function ($button, url) {
       // Put UI in waiting mode
@@ -35,20 +37,17 @@
       $.getJSON("/api/project/autofill?url=" + url, function (data) {
         $button.removeAttr("disabled");
         if (!data || typeof data.name === "undefined" || data.name === "") {
-          if (
-            window.confirm(
-              "Enter a valid link to sync from a supported site. Would you like to get some help with this?",
-            )
-          ) {
-            window.open("https://dribdat.cc/sync");
-          }
+          $("div.import-note").removeClass('hidden');
           $("#is_autoupdate").prop("checked", false);
           $indicator.find("i").css("color", "red");
           $button.html("Retry");
           return;
         }
         $button.html("Ready");
-        $indicator.find("i").css("color", "green");
+        $indicator.find("i")
+          .removeClass("fa-circle-o fa-check-circle-o")
+          .addClass("fa-check-circle-o")
+          .css("color", "green");
         // Set form values
         if (!$("input#name").val()) $("input#name").val(data.name);
         if (!$("input#summary").val()) $("input#summary").val(data.summary);
@@ -82,14 +81,24 @@
       $(".template-select label input").prop("checked", false);
     });
 
+    // On change
+    const ms_timeout = 1000;
+    $inputfield.on("input", function (e) {
+      e.preventDefault(); e.stopPropagation();
+      $inputfield.data('updated', new Date().getTime());
+      setTimeout(() => { 
+        if (new Date().getTime() - ms_timeout >= $inputfield.data('updated')) {
+          var url = $inputfield.val();
+          runAutofill($inputbutton, url);
+        }
+      }, ms_timeout);
+    });
+
     // Update button
-    $indicator.find("button").click(function (e) {
-      e.preventDefault();
-      e.stopPropagation();
+    $inputbutton.click(function (e) {
+      e.preventDefault(); e.stopPropagation();
       var url = $inputfield.val();
-      var $button = $(this);
-      runAutofill($button, url);
-      return true;
+      runAutofill($inputbutton, url);
     });
   }); // -autotext_url each
 
