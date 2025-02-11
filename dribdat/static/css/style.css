@@ -2115,11 +2115,6 @@ div.project-edit-buttons {
 .profile-header .user-name {
     font-size: 3rem;
 }
-.userprofile .user-score {
-  float: left;
-  margin-left: -4em;
-}
-
 
 .profile-skills,
 .profile-wishes {
@@ -2158,6 +2153,7 @@ div.project-edit-buttons {
 .profile-roles {
     margin: 0;
     padding: 0;
+    min-width: 10em;
 }
 .profile-roles li {
     list-style: none;
@@ -2295,6 +2291,8 @@ a.card, .card > a {
     box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.2);
 }
 .userprofile .profile-goals {
+    min-width: 13em;
+    display: inline-block;
     font-family: monospace;
     font-size: 120%;
     padding: 1em 1em 0.1em;
