@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """Public facing forms."""
 
-from flask_wtf import FlaskForm
+from flask_wtf import FlaskForm, RecaptchaField
 from wtforms import (
     SubmitField, BooleanField,
     StringField, TextAreaField,
@@ -55,6 +55,7 @@ class ProjectNew(FlaskForm):
         description="Your channel, room, or contact address.")
     template = HiddenField('template')
     submit = SubmitField(u'Save')
+    recaptcha = RecaptchaField()
 
 
 class ProjectForm(FlaskForm):
