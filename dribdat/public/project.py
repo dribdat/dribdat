@@ -464,6 +464,10 @@ def import_new_project(event, is_anonymous=False):
 
     form = ProjectImport(obj=project, next=request.args.get('next'))
 
+    # If Captcha is not configured, skip the validation
+    if not is_anonymous or not current_app.config['RECAPTCHA_PUBLIC_KEY']:
+        del form.recaptcha
+
     if form.is_submitted() and not form.validate():
         print(form.errors)
         if 'name' in form.errors and 'unique' in form.errors['name'][0]:
@@ -532,7 +536,7 @@ def create_new_project(event, is_anonymous=False):
         del form.category_id
 
     # If Captcha is not configured, skip the validation
-    if not current_app.config['RECAPTCHA_PUBLIC_KEY']:
+    if not is_anonymous or not current_app.config['RECAPTCHA_PUBLIC_KEY']:
         del form.recaptcha
 
     # Check if LLM support is configured
