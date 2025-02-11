@@ -1305,5 +1305,5 @@ class Activity(PkModel):
         return '<Activity({name})>'.format(name=self.name)
 
 
-class Availability(PkModel):
-    """Agree when do we drib."""
+#class Availability(PkModel):
+#    """Agree when do we drib."""

@@ -60,12 +60,6 @@
         {{ render_form(url_for('project.project_new', event_id=current_event.id) +
         '?create=1', form, formid="projectNew") }}
     </div>
-
-    {% if config.RECAPTCHA_PUBLIC_KEY %}
-    <div class="form-group">
-      {{ form.recaptcha }}
-    </div>
-    {% endif %}
 {% else %}
     <div class="alert alert-info">
         Please <b><a href="{{ url_for('auth.login') }}">log in</a></b>
