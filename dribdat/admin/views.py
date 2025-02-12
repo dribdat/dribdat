@@ -6,7 +6,11 @@ from flask import (
 )
 from flask_login import login_required
 
-from ..utils import sanitize_input, get_time_note, get_random_alphanumeric_string
+from ..utils import (
+    unpack_csvlist, pack_csvlist,
+    sanitize_input, get_time_note, 
+    get_random_alphanumeric_string
+)
 from ..extensions import db, cache
 from ..decorators import admin_required
 from ..aggregation import GetProjectData, SyncProjectData
@@ -486,6 +490,9 @@ def project_view(project_id):
         # Ensure project category remains blank
         if project.category_id == -1:
             project.category_id = None
+        # Assign technai from CSV
+        project.technai = unpack_csvlist(form.technai.data)
+        del form.technai # avoid setting it again
         # Assign owner if selected
         project.user = get_user_by_name(form.user_name.data)
         project.update_now()
@@ -494,6 +501,10 @@ def project_view(project_id):
         flash('Project updated.', 'success')
         return redirect(url_for("project.project_view",
                                 project_id=project.id))
+
+    # Populate CSV fields
+    if 'technai' in dir(form):
+        form.technai.data = pack_csvlist(project.technai, ", ")
 
     if project.user:
         form.user_name.data = project.user.username

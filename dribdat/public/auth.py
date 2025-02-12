@@ -320,7 +320,6 @@ def user_story():
         user.my_wishes = unpack_csvlist(form.my_wishes.data)
         del form.my_wishes # avoid setting it again
 
-
         form.populate_obj(user)
         user.updated_at = datetime.now(UTC)
         db.session.add(user)

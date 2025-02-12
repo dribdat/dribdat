@@ -620,6 +620,8 @@ def get_user_data(current_user):
         'roles':        cdata['roles'],
         'my_story':     cdata['my_story'],
         'my_goals':     cdata['my_goals'],
+        'my_skills':    cdata['my_skills'],
+        'my_wishes':    cdata['my_wishes'],
         'created_at':   cdata['created_at'],
         'updated_at':   cdata['updated_at'],
         'score':        current_user.get_score()

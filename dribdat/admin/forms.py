@@ -169,6 +169,8 @@ class ProjectForm(FlaskForm):
         description="Typically used for numbering the projects")
     hashtag = StringField(u'Hashtags', [length(max=140)],
         description="Team channel, hashtag, organization")
+    technai = StringField(u'Technai', [length(max=1024)],
+        description="Comma-separated list of skills and technologies involved")
     webpage_url = URLField(u'Presentation link', [length(max=2048)],
         description="This is embedded at the top of the page")
     download_url = URLField(u'Demo link', [length(max=2048)],

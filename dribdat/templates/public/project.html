@@ -161,7 +161,15 @@
     {% endif %}
   </div>
 
-
+  {% if project.technai %}
+    <div id="technai-md" class="row m-3" title="Tech and skills used in this project">
+      <div class="profile-skills col-12 text-center">
+        {% for s in project.technai %}
+          <span class="skill">{{s}}</span>
+        {% endfor %}
+      </div>
+    </div>
+  {% endif %}
 
   {% if project_team %}
     <div id="team-md" aria-labelledby="team-tab-md">
