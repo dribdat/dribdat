@@ -55,8 +55,10 @@ def sanitize_url(url):
 def unpack_csvlist(packed, sep=","):
     result = []
     if packed:
-        for s in packed.split(sep):
-            result.append(s.strip())
+        for elem in packed.split(sep):
+            s = elem.strip()
+            if not s in result:
+                result.append(s)
     return result
 
 def pack_csvlist(ls, sep=","):

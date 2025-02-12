@@ -19,7 +19,8 @@ from dribdat.user import (
     validateProjectData, stageProjectToNext, isUserActive,
 )
 from dribdat.public.projhelper import (
-    project_action, project_edit_action, templates_from_event,
+    project_action, project_edit_action, 
+    templates_from_event, resources_by_stage,
     revert_project_by_activity, navigate_around_project, check_update,
 )
 from dribdat.apigenerate import gen_project_pitch, gen_project_post, prompt_ideas
@@ -342,14 +343,18 @@ def get_log(project_id):
     """Show project log and report."""
     project = Project.query.filter_by(id=project_id).first_or_404()
     project_dribs = project.all_dribs()
+    # Get access settings
     starred = IsProjectStarred(project, current_user)
     allow_edit, allow_post, lock_editing = GetProjectACLs(current_user, project.event, starred)
+    # Collect resource tips (from projects in a Template Event)
+    suggestions = resources_by_stage(project.progress)
+    # Render the result
     return render_template(
         'public/projectlog.html', active="projects",
         project=project, current_event=project.event,
         project_dribs=project_dribs, project_starred=starred,
         allow_edit=allow_edit, allow_post=allow_post,
-        lock_editing=lock_editing,
+        lock_editing=lock_editing, suggestions=suggestions
     )
 
 

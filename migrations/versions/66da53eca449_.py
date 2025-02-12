@@ -23,11 +23,19 @@ def upgrade():
 
     with op.batch_alter_table('projects') as batch_op:
         batch_op.alter_column('longtext', existing_type=sa.TEXT(), nullable=True)
+        batch_op.add_column(sa.Column('_technai', sa.UnicodeText(), nullable=True))
+
+    with op.batch_alter_table('projects_version') as batch_op:
+        batch_op.add_column(sa.Column('_technai', sa.UnicodeText(), nullable=True))
 
 def downgrade():
-    with op.batch_alter_table('users') as batch_op:
+    with op.batch_alter_table('users', schema=None) as batch_op:
         batch_op.drop_column('_my_wishes')
         batch_op.drop_column('_my_skills')
 
     with op.batch_alter_table('projects') as batch_op:
         batch_op.alter_column('longtext', existing_type=sa.TEXT(), nullable=False)
+        batch_op.drop_column('_technai')
+
+    with op.batch_alter_table('projects_version') as batch_op:
+        batch_op.drop_column('_technai')
