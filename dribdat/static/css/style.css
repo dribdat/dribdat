@@ -1767,6 +1767,9 @@ pre {
 #suggest-md::before {
     content: "💡 Stage";
 }
+#technai-md::before {
+    content: "Technai";
+}
 #readme-md::before {
     content: "Readme";
 }
@@ -1782,6 +1785,7 @@ pre {
 #team-md::before,
 #dribs-md::before,
 #readme-md::before,
+#technai-md::before,
 #suggest-md::before,
 #project-md::before {
     width: 100%;

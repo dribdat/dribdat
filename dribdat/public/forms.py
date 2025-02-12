@@ -97,7 +97,7 @@ class ProjectDetailForm(FlaskForm):
         render_kw={'maxlength': 2048, 'rows': 3})
         #description="A short, plain-text description of your topic.")
     technai = StringField(u'Technai', [length(max=1024)],
-        description="Comma-separated list of skills and technologies involved")
+        description="Comma,separated,list of skills or technologies involved.")
     download_url = URLField(
         u'Demo', [length(max=255)],
         description="Link to online demo or download area for this project.")
