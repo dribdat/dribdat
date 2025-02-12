@@ -538,6 +538,9 @@ def project_new():
     form = ProjectForm(obj=project, next=request.args.get('next'))
     form.event_id.choices = [(e.id, e.name)
                              for e in Event.query.order_by(Event.id.desc())]
+    current_event = Event.query.filter_by(is_current=True).first()
+    if current_event and not form.event_id.data:
+        form.event_id.data = current_event.id
     form.category_id.choices = [(c.id, c.name)
                                 for c in project.categories_all()]
     form.category_id.choices.insert(0, (-1, ''))
