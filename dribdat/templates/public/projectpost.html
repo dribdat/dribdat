@@ -17,36 +17,22 @@
             title="This tip is only visible to you and your team">
           {{stage.tip}}
         </h5>
-        <div class="row flex-row flex-nowrap">
-          {% for project in suggestions %}
-            <a class="col-md-5 ms-auto card project"
-              {%- if project.image_url %}
-                style="background-image:url('{{project.image_url}}'); padding-left:100px"
-              {%- endif %}
-               href="{{ url_for('project.project_view', project_id=project.id) }}">
-              <div class="card-body">
-                <h5 class="card-title">{{ project.name }}</h5>
-                <p class="card-text">{{ project.summary }}</p>
-              </div>
-            </a>
-          {% endfor %}
-        </div>
         {% if not all_valid %}
-          <p class="stage-conditions clearfix">
+          <div class="stage-conditions clearfix">
             {% for item in stage.conditions.validate %}
               {% if item.valid %}
-                <span class="mr-2 float-left stage-ok">
+                <p class="m-0 stage-ok">
                   <i class="fa fa-thumbs-up"></i>&nbsp;
                   {{ item.help }}
-                </span>
+                </p>
               {% else %}
-                <span class="mr-2 float-left stage-no">
+                <p class="m-0 stage-no">
                   <i class="fa fa-paw"></i>&nbsp;
                   {{ item.help }}
-                </span>
+                </p>
               {% endif %}
             {% endfor %}
-          </p>
+          </div>
         {% endif %}
       </div><!-- /resource-list-suggestions -->
 

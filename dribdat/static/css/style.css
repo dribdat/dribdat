@@ -1758,28 +1758,32 @@ pre {
 }
 
 /* Inline "README" */
-#team-md:not(.tab-pane)::before {
+#team-md::before {
     content: "Team";
 }
-#dribs-md:not(.tab-pane)::before {
+#dribs-md::before {
     content: "Log";
 }
-#readme-md:not(.tab-pane)::before {
+#suggest-md::before {
+    content: "💡 Stage";
+}
+#readme-md::before {
     content: "Readme";
 }
-#project-md:not(.tab-pane)::before {
+#project-md::before {
     content: "Pitch";
 }
-.resource-page #project-md:not(.tab-pane)::before {
+.resource-page #project-md::before {
     display: none;
 }
-.phase-Challenge #project-md:not(.tab-pane)::before {
+.phase-Challenge #project-md::before {
     content: "Challenge";
 }
-#team-md:not(.tab-pane)::before,
-#dribs-md:not(.tab-pane)::before,
-#readme-md:not(.tab-pane)::before,
-#project-md:not(.tab-pane)::before {
+#team-md::before,
+#dribs-md::before,
+#readme-md::before,
+#suggest-md::before,
+#project-md::before {
     width: 100%;
     display: block;
     text-align: center;
@@ -2195,8 +2199,7 @@ div.project-edit-buttons {
 .project-tips {
     margin-top: -4em;
 }
-.project-tips,
-.profile-projects {
+.project-tips {
     margin-top: 1em;
     padding: 1em 1.4em;
     border-radius: 0px;
@@ -2252,12 +2255,16 @@ a.card, .card > a {
     color: initial;
 }
 .profile-projects .card {
-    background-size: auto 100%;
+    background-size: 120px auto;
     background-repeat: no-repeat;
-    background-position: 0 0;
+    background-position: 0 3px;
+    border-color: transparent;
+    background-color: transparent;
 }
 .profile-projects .card:hover {
     box-shadow: 3px 3px 3px lightblue;
+    border-color: orange;
+    z-index: 1;
 }
 .profile-projects .card .card-img-left {
     max-height: 200px;
@@ -2323,6 +2330,7 @@ a.card, .card > a {
     }
     .profile-projects .card {
         padding-left: 0px !important;
+        background-image: none !important;
     }
     .profile-projects.honeycomb .row {
         min-height: 240px;
