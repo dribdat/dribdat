@@ -2499,19 +2499,26 @@ Instruction page
     margin-left: -3pt;
     margin-top: 30pt;
 }
+.list-stages .step .emoji {
+    position: absolute;
+    margin-left: -2em;
+    font-size: 300%;
+    opacity: 0.5;
+}
+.list-stages .step:hover .emoji,
+.list-stages .step:hover .number,
 .list-stages .step:hover .title {
     opacity: 1;
 }
 .list-stages .step.active .title {
-    color: blue;
+    font-weight: bold;
 }
 .list-stages .step .number {
     font-size: 3rem;
     position: absolute;
     z-index: 0;
     margin-top: -1rem;
-    color: burlywood;
-    font-weight: bold;
+    opacity: 0.5;
 }
 .list-stages .step .agree-list,
 .list-stages .step .subtitle {
