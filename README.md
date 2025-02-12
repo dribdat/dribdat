@@ -6,9 +6,11 @@
 
 **An open source hackathon management application that playfully assists your team in crowdsourcing technical designs.** 
 
-**We aim to include people of all backgrounds in using + developing this tool - no matter your age, gender, race, ability, or sexual identity.** 🏳️‍🌈 Please read our [Code of Conduct](code_of_conduct.md). 🚲 See [Tour de Hack](https://dribdat.cc/tour) for examples, and [User handbook](https://dribdat.cc/usage) for screenshots. 🏔️ There are mirrors on [Codeberg](https://codeberg.org/dribdat/dribdat) and [GitHub](https://github.com/dribdat/dribdat). 🩵 Support us on [OpenCollective](https://opencollective.com/dribdat/updates)
+🚲 See [Tour de Hack](https://dribdat.cc/tour) for examples, and [User handbook](https://dribdat.cc/usage) for screenshots. 🏔️ There are mirrors on [Codeberg](https://codeberg.org/dribdat/dribdat) and [GitHub](https://github.com/dribdat/dribdat). 🩵 Support us on [OpenCollective](https://opencollective.com/dribdat/updates)
 
 <a href="https://opencollective.com/dribdat/donate" target="_blank"><img src="https://opencollective.com/dribdat/donate/button@2x.png?color=blue" width=300 /></a>
+
+We aim to include people of all backgrounds in using + developing this tool - no matter your age, gender, race, ability, or sexual identity 🏳️‍🌈 Please read our [Code of Conduct](code_of_conduct.md) if you have questions.
 
 # Purpose
 
