@@ -8,12 +8,12 @@
   {% endif %}
 
     <div class="section-header-content">
-      <h2 class="event-name">
+      <h2 class="event-name text-dark">
         <span>{{ event.name }}</span>
       </h2>
 
       {% if not event.lock_resources %}
-        <p class="an-event-meta">
+        <p class="an-event-meta text-dark">
           <span>{{ event.date }}</span>
           {% if event.hostname %}
             <i class="fa fa-bank ms-2"></i>
