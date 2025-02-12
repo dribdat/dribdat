@@ -12,7 +12,7 @@
         <div class="event-date no-print">
           {{ event.date }}</div>
         <a href="{{ url_for('public.event', event_id=event.id) }}">
-          <h2 class="event-name">{{ event.name }}</h2>
+          <h2 class="event-name text-body">{{ event.name }}</h2>
         </a>
       {% else %}
         <a href="{{ url_for('public.event_resources', event_id=event.id) }}">

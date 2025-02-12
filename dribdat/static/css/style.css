@@ -165,7 +165,6 @@ form input[type="checkbox"] {
     padding: 0.3em;
 }
 .admin .form-group .help-inline {
-    color: #555;
     margin: 0.5em 0em;
     display: block;
 }
@@ -277,8 +276,6 @@ form input[type="checkbox"] {
 footer {
     margin-top: 45px;
     padding-top: 5px;
-    /*border-top: 1px solid #eaeaea;*/
-    /*color: #999999;*/
 }
 footer a {
     color: #555;
@@ -339,7 +336,6 @@ ul.help-block {
     margin-top: 1em;
 }
 .section-header .section-header-content span {
-    /* color: initial; */
     display: inline-block;
     margin-right: 1em;
     opacity: 0.8;
@@ -425,7 +421,6 @@ nav .nav-login {
 /* Home page titles */
 
 .home .body-content h2 {
-    color: grey;
     text-align: center;
     padding-bottom: 0.3rem;
     margin-bottom: 1.6rem;
@@ -468,10 +463,6 @@ nav .nav-login {
 }
 .home .an-event .card-img-top.gallery-img {
     background-size: cover;
-}
-.section-header-content h2,
-.section-header-content .an-event-meta {
-    color: #000;
 }
 .an-event-meta b {
     display: block;
