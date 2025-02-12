@@ -2256,7 +2256,6 @@ div.project-edit-buttons {
 }
 a.card, .card > a {
     text-decoration: none;
-    color: initial;
 }
 .profile-projects .card {
     background-size: 120px auto;
