@@ -2025,6 +2025,9 @@ div.project-edit-buttons {
     text-align: left;
     text-decoration: none;
 }
+.theme-dark .team-gravatar {
+    color: white;
+}
 .team-gravatar:hover {
     border: 1px solid white;
     box-shadow: 2px 2px 2px rgba(0, 0, 200, 0.5);
