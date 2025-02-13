@@ -675,13 +675,13 @@ class Project(PkModel):
     autotext = Column(db.UnicodeText(), nullable=True, default=u"")
     longtext = Column(db.UnicodeText(), nullable=True, default=u"")
     
-    #_technai = Column(db.UnicodeText(1024), nullable=True)
-    #@property
-    #def technai(self):
-    #    return unpack_csvlist(self._technai)
-    #@technai.setter
-    #def technai(self, value):
-    #    self._technai = pack_csvlist(value)
+    _technai = Column(db.UnicodeText(1024), nullable=True, default=u"")
+    @property
+    def technai(self):
+        return unpack_csvlist(self._technai)
+    @technai.setter
+    def technai(self, value):
+        self._technai = pack_csvlist(value)
 
     logo_color = Column(db.String(7), nullable=True)
     logo_icon = Column(db.String(40), nullable=True)
@@ -1303,3 +1303,7 @@ class Activity(PkModel):
 
     def __repr__(self):  # noqa: D105
         return '<Activity({name})>'.format(name=self.name)
+
+
+#class Availability(PkModel):
+#    """Agree when do we drib."""

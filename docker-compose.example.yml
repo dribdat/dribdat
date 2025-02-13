@@ -1,23 +1,33 @@
 services:
   dribdat:
     image: dribdat/dribdat
+    container_name: dribdat-web
+    restart: unless-stopped
     ports:
-      - 5000:5000
+      - 5123:5000
     environment:
-      - SERVER_URL=localhost.changeme:5000
+      - SERVER_URL=localhost.changeme:5123
       - DATABASE_URL=postgres://dribdat_user:changeme@db:5432/dribdat
       - DRIBDAT_ENV=prod
       - DRIBDAT_SECRET=changeme
       - DRIBDAT_APIKEY=changeme
       - TIME_ZONE=Europe/Zurich
     depends_on:
-      - db
+      db:
+        condition: service_healthy
+
   db:
     image: postgres
+    container_name: dribdat-db
+    restart: unless-stopped
     volumes:
       - ./.db:/var/lib/postgresql/data
     environment:
       - POSTGRES_DB=dribdat
       - POSTGRES_USER=dribdat_user
       - POSTGRES_PASSWORD=changeme
-
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}']
+      interval: 20s
+      timeout: 5s
+      retries: 5

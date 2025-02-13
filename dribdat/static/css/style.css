@@ -165,7 +165,6 @@ form input[type="checkbox"] {
     padding: 0.3em;
 }
 .admin .form-group .help-inline {
-    color: #555;
     margin: 0.5em 0em;
     display: block;
 }
@@ -277,8 +276,6 @@ form input[type="checkbox"] {
 footer {
     margin-top: 45px;
     padding-top: 5px;
-    /*border-top: 1px solid #eaeaea;*/
-    /*color: #999999;*/
 }
 footer a {
     color: #555;
@@ -339,7 +336,6 @@ ul.help-block {
     margin-top: 1em;
 }
 .section-header .section-header-content span {
-    /* color: initial; */
     display: inline-block;
     margin-right: 1em;
     opacity: 0.8;
@@ -425,7 +421,6 @@ nav .nav-login {
 /* Home page titles */
 
 .home .body-content h2 {
-    color: grey;
     text-align: center;
     padding-bottom: 0.3rem;
     margin-bottom: 1.6rem;
@@ -468,10 +463,6 @@ nav .nav-login {
 }
 .home .an-event .card-img-top.gallery-img {
     background-size: cover;
-}
-.section-header-content h2,
-.section-header-content .an-event-meta {
-    color: #000;
 }
 .an-event-meta b {
     display: block;
@@ -1758,28 +1749,32 @@ pre {
 }
 
 /* Inline "README" */
-#team-md:not(.tab-pane)::before {
+#team-md::before {
     content: "Team";
 }
-#dribs-md:not(.tab-pane)::before {
+#dribs-md::before {
     content: "Log";
 }
-#readme-md:not(.tab-pane)::before {
+#suggest-md::before {
+    content: "💡 Stage";
+}
+#readme-md::before {
     content: "Readme";
 }
-#project-md:not(.tab-pane)::before {
+#project-md::before {
     content: "Pitch";
 }
-.resource-page #project-md:not(.tab-pane)::before {
+.resource-page #project-md::before {
     display: none;
 }
-.phase-Challenge #project-md:not(.tab-pane)::before {
+.phase-Challenge #project-md::before {
     content: "Challenge";
 }
-#team-md:not(.tab-pane)::before,
-#dribs-md:not(.tab-pane)::before,
-#readme-md:not(.tab-pane)::before,
-#project-md:not(.tab-pane)::before {
+#team-md::before,
+#dribs-md::before,
+#readme-md::before,
+#suggest-md::before,
+#project-md::before {
     width: 100%;
     display: block;
     text-align: center;
@@ -2015,17 +2010,23 @@ div.project-edit-buttons {
     padding-left: 0.2em;
 }
 .team-gravatar {
-    width: 200px;
+    color: initial;
+    width: 14em;
     height: 5em;
+    font-size: 125%;
     display: inline-block;
-    background: rgba(255, 255, 255, 0.5);
-    border: 1px solid rgba(0, 0, 0, 0.1);
+    border: 1px solid transparent;
+    border-bottom-color: rgba(0, 0, 0, 0.1);
+    border-right-color: rgba(0, 0, 0, 0.1);
     border-radius: 10px;
     padding: 0.5em;
     margin-right: 5px;
     overflow: hidden;
     text-align: left;
     text-decoration: none;
+}
+.theme-dark .team-gravatar {
+    color: white;
 }
 .team-gravatar:hover {
     border: 1px solid white;
@@ -2115,11 +2116,6 @@ div.project-edit-buttons {
 .profile-header .user-name {
     font-size: 3rem;
 }
-.userprofile .user-score {
-  float: left;
-  margin-left: -4em;
-}
-
 
 .profile-skills,
 .profile-wishes {
@@ -2132,6 +2128,7 @@ div.project-edit-buttons {
   padding: 0px 8px;
   border-radius: 8px;
   display: inline-block;
+  color: black;
 }
 
 .profile-skills .skill {
@@ -2158,6 +2155,7 @@ div.project-edit-buttons {
 .profile-roles {
     margin: 0;
     padding: 0;
+    min-width: 10em;
 }
 .profile-roles li {
     list-style: none;
@@ -2199,8 +2197,7 @@ div.project-edit-buttons {
 .project-tips {
     margin-top: -4em;
 }
-.project-tips,
-.profile-projects {
+.project-tips {
     margin-top: 1em;
     padding: 1em 1.4em;
     border-radius: 0px;
@@ -2253,15 +2250,18 @@ div.project-edit-buttons {
 }
 a.card, .card > a {
     text-decoration: none;
-    color: initial;
 }
 .profile-projects .card {
-    background-size: auto 100%;
+    background-size: 120px auto;
     background-repeat: no-repeat;
-    background-position: 0 0;
+    background-position: 0 3px;
+    border-color: transparent;
+    background-color: transparent;
 }
 .profile-projects .card:hover {
     box-shadow: 3px 3px 3px lightblue;
+    border-color: orange;
+    z-index: 1;
 }
 .profile-projects .card .card-img-left {
     max-height: 200px;
@@ -2295,6 +2295,8 @@ a.card, .card > a {
     box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.2);
 }
 .userprofile .profile-goals {
+    min-width: 13em;
+    display: inline-block;
     font-family: monospace;
     font-size: 120%;
     padding: 1em 1em 0.1em;
@@ -2308,14 +2310,12 @@ a.card, .card > a {
 .userprofile .profile-goals:after {
     content: "";
     position: absolute;
-    left: 20%;
     width: 0;
     height: 0;
     border: 20px solid transparent;
     border-top-color: #eed;
     border-bottom: 0;
     border-left: 0;
-    margin-left: -10px;
     margin-bottom: -20px;
 }
 @media (max-width: 760px) {
@@ -2325,6 +2325,7 @@ a.card, .card > a {
     }
     .profile-projects .card {
         padding-left: 0px !important;
+        background-image: none !important;
     }
     .profile-projects.honeycomb .row {
         min-height: 240px;
@@ -2501,19 +2502,26 @@ Instruction page
     margin-left: -3pt;
     margin-top: 30pt;
 }
+.list-stages .step .emoji {
+    position: absolute;
+    margin-left: -2em;
+    font-size: 300%;
+    opacity: 0.5;
+}
+.list-stages .step:hover .emoji,
+.list-stages .step:hover .number,
 .list-stages .step:hover .title {
     opacity: 1;
 }
 .list-stages .step.active .title {
-    color: blue;
+    font-weight: bold;
 }
 .list-stages .step .number {
     font-size: 3rem;
     position: absolute;
     z-index: 0;
     margin-top: -1rem;
-    color: burlywood;
-    font-weight: bold;
+    opacity: 0.5;
 }
 .list-stages .step .agree-list,
 .list-stages .step .subtitle {

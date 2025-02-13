@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """Public facing forms."""
 
-from flask_wtf import FlaskForm
+from flask_wtf import FlaskForm, RecaptchaField
 from wtforms import (
     SubmitField, BooleanField,
     StringField, TextAreaField,
@@ -55,6 +55,7 @@ class ProjectNew(FlaskForm):
         description="Your channel, room, or contact address.")
     template = HiddenField('template')
     submit = SubmitField(u'Save')
+    recaptcha = RecaptchaField()
 
 
 class ProjectForm(FlaskForm):
@@ -95,6 +96,8 @@ class ProjectDetailForm(FlaskForm):
         u'Summary', [length(max=2048)],
         render_kw={'maxlength': 2048, 'rows': 3})
         #description="A short, plain-text description of your topic.")
+    technai = StringField(u'Technai', [length(max=1024)],
+        description="Comma,separated,list of skills or technologies involved.")
     download_url = URLField(
         u'Demo', [length(max=255)],
         description="Link to online demo or download area for this project.")

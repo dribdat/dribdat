@@ -16,6 +16,9 @@ from dribdat.aggregation import (
 from dribdat.user import (
     validateProjectData, isUserActive,
 )
+from dribdat.utils import (
+    unpack_csvlist, pack_csvlist,
+)
 from dribdat.database import db
 from dribdat.extensions import cache
 from dribdat.futures import UTC
@@ -33,10 +36,9 @@ def check_update(obj, minutes=5):
     return td < timedelta(minutes=minutes)
 
 
-def resources_by_stage(progress, resource_event=False):
+def resources_by_stage(progress=None):
     """Get all projects which are published in a resource-type event."""
-    if resource_event:
-        # No need to make suggestions in a Resource event
+    if progress is None:
         return []
     project_list = []
     resource_events = [e.id for e in Event.query.filter_by(
@@ -102,6 +104,11 @@ def project_edit_action(project_id, detail_view=False):
         else:
             is_minoredit = False
 
+        # Assign technai
+        if 'technai' in dir(form):
+            project.technai = unpack_csvlist(form.technai.data)
+            del form.technai # avoid setting it again
+
         del form.id
         form.populate_obj(project)
         project.update_now()
@@ -126,6 +133,11 @@ def project_edit_action(project_id, detail_view=False):
                 'project.project_autoupdate', project_id=project.id))
         return redirect(url_for(
             'project.project_view', project_id=project.id))
+
+
+    # Populate CSV fields
+    if 'technai' in dir(form):
+        form.technai.data = pack_csvlist(project.technai, ", ")
 
     return render_template(
         'public/projectedit.html', detail_view=detail_view,

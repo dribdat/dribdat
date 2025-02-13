@@ -8,8 +8,7 @@ secure_scheme_headers = {
 }
 
 port = str(os_env.get('PORT', 5000))
-bind = ['0.0.0.0:%s' % port]
-# doesn't work inside docker: '[::1]:%s' % port]
+bind = ['0.0.0.0:%s' % port, '[::1]:%s' % port]
 
 worker_class = 'gevent'
 workers = os_env.get('WORKERS', 2)

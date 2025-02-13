@@ -33,6 +33,10 @@
         <h3 class="title">{{ step.phase }}</h3>
       {% endif %}
 
+      {% if step.emoji %}
+        <h4 class="emoji">{{ step.emoji }}</h4>
+      {% endif %}
+
       {% if step.index > 0 and not current_event.lock_resources and step.description %}
         <p class="subtitle">{{ step.description }}</p>
       {% endif %}

@@ -21,13 +21,6 @@
   </div>
 {% endif %}
 
-{% if user.my_goals %}
-  <div class="profile-goals col-6" title="My Goals">
-    <a name="goals"></a>
-      {{ user.my_goals|markdown }}
-  </div>
-{% endif %}
-
 {% if current_user and current_user.is_authenticated %}
 
   <div class="float-right mt-2">
@@ -82,17 +75,27 @@
     </div>
   {% endif %}
 
+  <br clear="all" />
 {% endif %}
 
-<div class="row mt-5 profile-header">
+{% if user.my_goals %}
+  <div class="col-6 mt-3" title="My Goals">
+    <a name="goals"></a>
+    <div class="profile-goals">
+      {{ user.my_goals|markdown }}
+    </div>
+  </div>
+{% endif %}
 
-  <div class="col-3 text-center">
-    {% if user.carddata %}
+<div class="row profile-header">
+
+  {% if user.carddata %}
+    <div class="col-3">
       <a href="{{ user.webpage_url }}" class="profile-picture">
         <img src="{{user.carddata}}"/>
       </a>
-    {% endif %}
-  </div>
+    </div>
+  {% endif %}
 
   {% if user.fullname %}
     <h1 class="col-sm text-start">
@@ -112,9 +115,9 @@
 </div>
 <div class="row mb-3">
 
-  <div class="col-3">
+  <div class="col-sm">
     {% if user.webpage_url %}
-      <div class="profile-social ps-5">
+      <div class="profile-social m-0">
         <a href="{{ user.webpage_url }}" class="btn btn-lg" target="_blank" rel="noopener noreferrer">
         {% if not user.cardtype %}
           <i class="fa fa-globe"></i>&nbsp;Visit
@@ -126,10 +129,7 @@
     {% endif %}
   </div>
 
-  <div class="col-sm">
-    {% if score %}
-      <div class="user-score" title="Total score across all projects, adjusted by profile completeness">{{ score }}</div>
-    {% endif %}
+  <div class="col-3">
     <ul class="profile-roles">
     {% for role in user.roles %}
       <li>{{ role.name }}</li>
@@ -137,11 +137,16 @@
     </ul>
   </div>
 
+  {% if score %}
+  <div class="col-sm text-center">
+    <div class="user-score fs-3" title="Total score across all projects, adjusted by profile completeness">{{ score }}</div>
+  </div>
+  {% endif %}
 </div>
 
 {% if user.my_story %}
 <div class="row">
-  <div class="profile-story col-9 bg-body" title="My story">
+  <div class="profile-story col-11 bg-body" title="My story">
     <a name="story"></a>
     <blockquote class="profile-text">
       {{ user.my_story|markdown }}
