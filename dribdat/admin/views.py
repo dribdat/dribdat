@@ -187,6 +187,13 @@ def user_profile(user_id):
         user.roles = [Role.query.filter_by(
             id=r).first() for r in form.roles.data]
         del form.roles
+        
+        # Assign CSV data
+        user.my_wishes = unpack_csvlist(form.my_wishes.data)
+        user.my_skills = unpack_csvlist(form.my_skills.data)
+        del form.my_wishes # avoid setting it again
+        del form.my_skills # avoid setting it again
+
         form.populate_obj(user)
         user.updated_at = datetime.now(UTC)
         db.session.add(user)
@@ -196,6 +203,9 @@ def user_profile(user_id):
         flash('User updated.', 'success')
         return redirect(url_for("admin.user", user_id=user_id))
 
+    if 'my_skills' in dir(form):
+        form.my_skills.data = pack_csvlist(user.my_skills, ", ")
+        form.my_wishes.data = pack_csvlist(user.my_wishes, ", ")
     if not form.roles.choices:
         del form.roles
     else:
@@ -505,9 +515,9 @@ def project_view(project_id):
     # Populate CSV fields
     if 'technai' in dir(form):
         form.technai.data = pack_csvlist(project.technai, ", ")
-
     if project.user:
         form.user_name.data = project.user.username
+
     return render_template('admin/project.html', project=project, form=form)
 
 

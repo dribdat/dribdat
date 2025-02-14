@@ -2721,13 +2721,13 @@ SlackIn button
     color: red;
 }
 .sso-login .btn {
-    height: 50px;
+    height: 2.2em;
     width: 100%;
     max-width: 460px;
     font-weight: bold;
     font-size: 125%;
     text-align: left;
-    background-position: 14em;
+    background-position: 100%;
     background-size: contain;
     background-repeat: no-repeat;
     margin-bottom: 1em;

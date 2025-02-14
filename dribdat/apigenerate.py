@@ -81,8 +81,10 @@ def gen_project_post(project: Project, as_boost: bool=False):
     return gen_openai(prompt)
 
 
+CHAT_TEMPLATE_1 = "{% if messages[0]['role'] == 'system' %}{% set loop_messages = messages[1:] %}{% set system_message = messages[0]['content'] %}{% else %}{% set loop_messages = messages %}{% set system_message = false %}{% endif %}{% for message in loop_messages %}{% if (message['role'] == 'user') != (loop.index0 % 2 == 0) %}{{ raise_exception('Conversation roles must alternate user/assistant/user/assistant/...') }}{% endif %}{% if loop.index0 == 0 and system_message != false %}{% set content = '<<SYS>>\n' + system_message + '\n<</SYS>>\n\n' + message['content'] %}{% else %}{% set content = message['content'] %}{% endif %}{% if message['role'] == 'user' %}{{ bos_token + '[INST] ' + content + ' [/INST]' }}{% elif message['role'] == 'assistant' %}{{ ' '  + content + ' ' + eos_token }}{% endif %}{% endfor %}"
+
 def gen_openai(prompt: str):
-    """Request data from an OpenAI API."""
+    """Request data from a text-completion API."""
     if not current_app.config['LLM_API_KEY']:
         logging.error('Missing ChatGPT configuration (LLM_API_KEY)')
         return None
@@ -107,11 +109,12 @@ def gen_openai(prompt: str):
         completion = ai_client.chat.completions.create(
             model=current_app.config['LLM_MODEL'], 
             timeout=REQUEST_TIMEOUT,
+            #chat_template=CHAT_TEMPLATE_1,
             messages = [
                 {
-                    "role": "user", "content": prompt
+                    "role": "user", "content": prompt.strip()
                 },{
-                    "role": "system", "content": SYSTEM_PROMPT
+                    "role": "system", "content": SYSTEM_PROMPT.strip()
                 }
             ])
     except openai.InternalServerError as e:
