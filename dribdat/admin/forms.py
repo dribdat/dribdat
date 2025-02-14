@@ -27,14 +27,14 @@ class UserForm(FlaskForm):
 
     next = HiddenField()
     id = HiddenField('id')
+    active = BooleanField(u"Active", default=True, description=f"(the user is allowed to log in)")
+    is_admin = BooleanField(u"Admin", default=False, description=f"(great power = great responsibility)")
     username = StringField(
         u'Username',
         [length(max=80), UniqueValidator(User, 'username'), DataRequired()])
     email = EmailField(u'E-mail address', [length(max=80), DataRequired()])
     fullname = StringField(u'Display name (optional)', [length(max=200)])
     password = PasswordField(u'New password (optional)', [length(max=128)])
-    is_admin = BooleanField(u"Administrator", default=False)
-    active = BooleanField(u"Active", default=True)
     submit = SubmitField(u'Save')
 
 
