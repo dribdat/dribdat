@@ -426,14 +426,9 @@ nav .nav-login {
     margin-bottom: 1.6rem;
     border-bottom: 1px solid lightgrey;
 }
-.home-page h1,
 .home-page .home-nav {
     display: block;
     text-align: center;
-}
-.home h1 {
-    opacity: 0.5;
-    font-style: italic;
 }
 .home-page .home-description p:only-child {
     margin: 0px;
@@ -1756,7 +1751,7 @@ pre {
     content: "Log";
 }
 #suggest-md::before {
-    content: "💡 Stage";
+    content: "Stage";
 }
 #readme-md::before {
     content: "Readme";
@@ -2128,6 +2123,7 @@ div.project-edit-buttons {
   padding: 0px 8px;
   border-radius: 8px;
   display: inline-block;
+  text-decoration: none;
   color: black;
 }
 
@@ -2257,6 +2253,7 @@ a.card, .card > a {
     background-position: 0 3px;
     border-color: transparent;
     background-color: transparent;
+    border:1px solid #ccc;
 }
 .profile-projects .card:hover {
     box-shadow: 3px 3px 3px lightblue;
@@ -2721,13 +2718,13 @@ SlackIn button
     color: red;
 }
 .sso-login .btn {
-    height: 50px;
+    height: 2.2em;
     width: 100%;
     max-width: 460px;
     font-weight: bold;
     font-size: 125%;
     text-align: left;
-    background-position: 14em;
+    background-position: 100%;
     background-size: contain;
     background-repeat: no-repeat;
     margin-bottom: 1em;

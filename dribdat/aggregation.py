@@ -213,11 +213,14 @@ def AllowProjectEdit(project, current_user):
     if not project or project.is_hidden:
         # Hidden projects are not editable
         return False
+    if project.user_id == current_user.id:
+        # The project owner can always edit
+        return True
     if project.event.lock_resources:
         # In a Resource area, everyone can edit
         return True
-    if project.user_id == current_user.id:
-        # The project owner can always edit
+    if project.event.user_id == current_user.id:
+        # The event owner can always edit
         return True
     if current_user.is_admin:
         # Admins rule the world

@@ -58,22 +58,9 @@
     </p>
   {% endif %}
 
-  {% if config.MAIL_SERVER %}
-    <p>Enter your e-mail address to get a login link:</p>
-    <div class="form-passwordless mb-5">
-      <form id="passwordlessForm" method="POST" action="{{ url_for('auth.passwordless', next=request.args.get('next')) }}" role="login" class="navbar-form form-inline">
-        {{ form.hidden_tag() }}
-        <div class="form-group">
-          {{ form.username(placeholder="e-mail @", class_="form-control") }}
-          <button type="submit" class="btn btn-default btn-primary btn-submit">Login</button>
-        </div>
-      </form>
-    </div>
-  {% endif %}
-
   {% if config.DRIBDAT_ALLOW_LOGINS %}
     {% if oauth_type or config.MAIL_SERVER %}
-        <p>Or log in with your Dribdat credentials here:</p>
+        <p>Use your Dribdat account credentials here:</p>
     {% endif %}
 
     <form id="loginForm" method="POST" action="{{ url_for('auth.login', next=request.args.get('next')) }}" role="login" class="navbar-form form-inline">
@@ -93,7 +80,8 @@
     <br>
     <p>
       <i class="fa fa-arrow-right" aria-hidden="true"></i>
-      <a href="{{ url_for('auth.forgot') }}">Recover my login</a>
+      <a href="{{ url_for('auth.forgot') }}">Sign in by e-mail</a>
+      if you do not know your password.
     </p>
   {% endif %}
   {% if not config.DRIBDAT_NOT_REGISTER %}

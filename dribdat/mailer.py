@@ -47,20 +47,40 @@ def user_activation(user):
     return act_hash
 
 
-def user_invitation_message(project):
+def user_registration(user_email):
+    """Send an invitation by e-mail."""
+    msg = user_invitation_message()
+    if "mailman" not in current_app.extensions:
+        logging.warning("E-mail extension has not been configured")
+        return
+    msg.to = [user_email]
+    logging.info("Sending registration mail")
+    msg.send(fail_silently=True)
+
+
+def user_invitation_message(project=None):
     """Craft an invitation message."""
     # base_url = url_for("public.home", _external=True)
     # login_url = url_for("auth.login", _external=True)
-    act_url = url_for("project.project_star", project_id=project.id, _external=True)
     from_email = current_app.config["MAIL_DEFAULT_SENDER"]
     msg = EmailMessage(from_email=from_email)
-    msg.subject = "Invitation: %s" % project.event.name
-    msg.body = (
-        "You are personally invited - please join us at %s!\n\n" % project.event.name
-        + "🏀 We are interested in your contributions to '%s'.\n" % project.name
-        + "🤼 Tap here to join the team: %s\n\n" % act_url
-        + "-- D}}BD{T --"
-    )
+    if project:
+        act_url = url_for("project.project_star", project_id=project.id, _external=True)
+        msg.subject = "Invitation: %s" % project.event.name
+        msg.body = (
+            "You are personally invited - please join us at %s!\n\n" % project.event.name
+            + "🏀 We are interested in your contributions to '%s'.\n" % project.name
+            + "🤼 Tap here to join the team: %s\n\n" % act_url
+            + "-- D}}BD{T --"
+        )
+    else:
+        act_url = url_for("auth.register", _external=True)
+        msg.subject = "Invitation to Dribdat"
+        msg.body = (
+            "You are invited to make a contribution to our sprint!\n\n"
+            + "🏀 Tap here to create an account: %s\n\n" % act_url
+            + "-- D}}BD{T --"
+        )
     return msg
 
 

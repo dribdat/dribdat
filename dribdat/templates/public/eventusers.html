@@ -8,8 +8,6 @@
 
 <h1 class="huge">Contributors</h1>
 
-{% if participants %}
-
   <div data-action="/api/user/search.json" id="search-users" style="margin-bottom:1em; width:400px">
     <form method="get" action="participants">
       <div class="content input-group">
@@ -23,6 +21,8 @@
       </div>
     </form>
   </div>
+
+{% if participants %}
 
   <div class="event-participants">
     <div class="participant-box">

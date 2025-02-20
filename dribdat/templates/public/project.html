@@ -165,13 +165,15 @@
     <div id="technai-md" class="row m-3" title="Tech and skills used in this project">
       <div class="profile-skills col-12 text-center">
         {% for s in project.technai %}
-          <span class="skill">{{s}}</span>
+          <a href="{{ url_for('public.all_participants') }}?q=*{{s}}" class="skill">
+            {{s}}
+          </a>
         {% endfor %}
       </div>
     </div>
   {% endif %}
 
-  {% if project_team %}
+  {% if project_team or missing_roles %}
     <div id="team-md" aria-labelledby="team-tab-md">
 
       <div class="widget widget-team m-4">
@@ -191,7 +193,7 @@
         <div class="missing-roles" title="This role is not yet filled. Try to find another team member!">
           {% for role in missing_roles %}
             <a class="role" data-id="{{ role.id }}"
-               href="{{ url_for('public.event_participants', event_id=current_event.id) }}?r={{ role.name }}">
+               href="{{ url_for('public.all_participants') }}?q=~{{ role.name }}">
               <span>{{ role.name }}</span>
             </a>
           {% endfor %}
@@ -235,12 +237,21 @@
        <i class="fa fa-clock-o" aria-hidden="true"></i>
        Post
      </a>
-  {% elif current_user and current_user.active and not project.event.lock_resources %}
-    <a id="project-comment" href="{{ url_for('project.project_comment', project_id=project.id) }}"
-        title="Write a public comment" class="btn btn-lg btn-info">
-       <i class="fa fa-comment" aria-hidden="true"></i>
-       Comment
-    </a>
+  {% elif current_user and current_user.active %}
+    {% if not project.event.lock_resources %}
+      <a id="project-comment" href="{{ url_for('project.project_comment', project_id=project.id) }}"
+          title="Write a public comment" class="btn btn-lg btn-info">
+         <i class="fa fa-comment" aria-hidden="true"></i>
+         Comment
+      </a>
+    {% endif %}
+    {% if project.event.user == current_user %}
+      <a href="{{ url_for('project.project_approve', project_id=project.id) }}" class="btn btn-lg btn-primary project-approve"
+        title="Promote to next project level">
+        <i class="fa fa-rocket" aria-hidden="true"></i>
+        Approve
+      </a>
+    {% endif %}
   {% endif %}
   {% if allow_edit %}
     <a href="{{ url_for('project.project_edit', project_id=project.id) }}" class="btn btn-lg btn-warning"
@@ -287,12 +298,6 @@
       <!--Show--></a>
 
   {% else %}
-    <a href="{{ url_for('project.project_approve', project_id=project.id) }}" class="btn btn-lg btn-primary project-approve"
-      title="Promote to next project level">
-      <i class="fa fa-rocket" aria-hidden="true"></i>
-      Approve
-    </a>
-
     <a href="{{ url_for('project.project_boost', project_id=project.id) }}" class="btn btn-lg btn-success project-boost"
       title="Boost this project">
       <i class="fa fa-trophy" aria-hidden="true"></i>

@@ -47,8 +47,6 @@ jobs:
         run: poetry run pip install -U pip
       - name: Install setuptools
         run: poetry run pip install -U setuptools
-      - name: Lock the dependencies
-        run: poetry lock --no-update
       - name: Install dependencies
         run: poetry install --no-interaction --no-root
       - name: Install local library

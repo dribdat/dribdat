@@ -181,9 +181,6 @@
 
 {% if not projects %}
   {% if current_user and current_user.id == user.id %}
-    <div class="alert alert-success">
-    No projects here yet. Time to <b>Join</b> or <b>Start</b> something awesome!
-    </div>
 
     {% if events_next %}
     <div class="row events-next mb-4">
@@ -192,6 +189,11 @@
       {% endfor %}
     </div><!-- /.row events-next -->
     {% endif %}
+
+    <div class="alert alert-light">
+      No projects here yet. <b>Join</b> an event and start something awesome!
+    </div>
+
   {% endif %}
 {% else %}
   <a name="projects"></a>

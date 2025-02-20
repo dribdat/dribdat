@@ -122,10 +122,14 @@ def project_autoboost(project_id):
 
 @blueprint.route('/<int:project_id>/approve', methods=['GET', 'POST'])
 @login_required
-@admin_required
 def project_approve(project_id):
     """Approve a challenge or promote project to next level."""
     project = Project.query.filter_by(id=project_id).first_or_404()
+    if not current_user.is_admin:
+        if not current_user == project.event.user:
+            flash("Permission denied", 'danger')
+            return redirect(url_for('public.event', event_id=project.event.id))
+
     # Update project
     if stageProjectToNext(project):
         project.update_now()

@@ -7,7 +7,14 @@
 
 {% block content %}
 <div class="container-narrow">
-  <h1>Log in</h1>
+  <h1>Sign in</h1>
+  <br/>
+
+  {% if config.DRIBDAT_HELP_REGISTER %}
+    <p>
+      {{ config.DRIBDAT_HELP_REGISTER|markdown }}
+    </p>
+  {% endif %}
   
   {% if oauth_type %}
     <p>This site has Single Sign On, so you can try to &#x1f511;
@@ -20,6 +27,12 @@
     <div class="form-passwordless">
       {{ render_form(url_for('auth.passwordless'), form) }}
     </div>
+    {% if config.DRIBDAT_ALLOW_LOGINS %}
+      <p class="fs-5 mt-5">
+        <i class="fa fa-arrow-right" aria-hidden="true"></i>
+        Or log in <a href="{{ url_for('auth.login') }}">with a password</a>.
+      </p>
+    {% endif %}
   
   {% elif config.DRIBDAT_NOT_REGISTER %}
     <h5>Registration is currently unavailable</h5>
