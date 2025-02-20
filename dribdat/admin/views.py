@@ -355,7 +355,8 @@ def event(event_id):
     form.starts_time.data = event.starts_at
     form.ends_date.data = event.ends_at
     form.ends_time.data = event.ends_at
-    form.user_name.data = event.user.username
+    if event.user:
+        form.user_name.data = event.user.username
     return render_template('admin/event.html', event=event, form=form)
 
 
