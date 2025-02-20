@@ -18,9 +18,9 @@ def get_users_by_search(search_by, MAX_COUNT=200):
     """Collects all users."""
     users = User.query.filter_by(active=True)
     if search_by and len(search_by) > 2:
-        q = search_by.replace('@', '').replace('#', '').replace('~', '')
+        q = search_by.replace('@', '').replace('*', '').replace('~', '')
         q = "%%%s%%" % q.lower()
-        if search_by.startswith('#'):
+        if search_by.startswith('*'):
             # We are looking for a skill
             users = users.filter(or_(
                 User._my_skills.ilike(q),
@@ -58,18 +58,9 @@ def get_users_by_search(search_by, MAX_COUNT=200):
     return []
 
 
-def filter_users_by_search(users, search_by=None, role_call=None):
+def filter_users_by_search(users, search_by=None):
     """Collects the participating users."""
     if not users: return [], ''
-    # Quick (actually, rather slow..) search filter:
-    if role_call and len(role_call) > 2:
-        usearch = []
-        for u in users:
-            for r in u.roles:
-                if role_call in str(r):
-                    usearch.append(u)
-                    search_by = role_call
-                    break
     elif search_by and len(search_by) > 2:
         usearch = []
         qq = search_by.replace('@', '').lower()

@@ -165,13 +165,15 @@
     <div id="technai-md" class="row m-3" title="Tech and skills used in this project">
       <div class="profile-skills col-12 text-center">
         {% for s in project.technai %}
-          <span class="skill">{{s}}</span>
+          <a href="{{ url_for('public.all_participants') }}?q=*{{s}}" class="skill">
+            {{s}}
+          </a>
         {% endfor %}
       </div>
     </div>
   {% endif %}
 
-  {% if project_team %}
+  {% if project_team or missing_roles %}
     <div id="team-md" aria-labelledby="team-tab-md">
 
       <div class="widget widget-team m-4">
@@ -191,7 +193,7 @@
         <div class="missing-roles" title="This role is not yet filled. Try to find another team member!">
           {% for role in missing_roles %}
             <a class="role" data-id="{{ role.id }}"
-               href="{{ url_for('public.event_participants', event_id=current_event.id) }}?r={{ role.name }}">
+               href="{{ url_for('public.all_participants') }}?q=~{{ role.name }}">
               <span>{{ role.name }}</span>
             </a>
           {% endfor %}

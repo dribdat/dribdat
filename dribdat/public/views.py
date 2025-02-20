@@ -306,8 +306,7 @@ def event_participants(event_id):
     event = Event.query.filter_by(id=event_id).first_or_404()
     users = GetEventUsers(event)
     search_by = request.args.get("q") or ""
-    role_call = request.args.get("r") or ""
-    usearch, search_by = filter_users_by_search(users, search_by, role_call)
+    usearch, search_by = filter_users_by_search(users, search_by)
     # Provide certificate if available
     cert_path = None
     if current_user and not current_user.is_anonymous:
