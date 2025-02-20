@@ -52,12 +52,13 @@
   <div id="suggest-md" title="Tips from the organizers for this project stage">
     <div class="row flex-row profile-projects">
     {% for project in suggestions %}
-      <a class="col-md-4 ms-auto card project"
+      <a class="col align-self-center ms-1 me-1 card project border border-info"
         {%- if project.image_url %}
           style="background-image:url('{{project.image_url}}'); padding-left: 120px"
         {%- endif %}
          href="{{ url_for('project.project_view', project_id=project.id) }}">
         <div class="card-body">
+          <i class="fa fa-life-ring float-right" aria-hidden="true"></i>
           <h5 class="card-title">{{ project.name }}</h5>
           <p class="card-text">{{ project.summary|truncate(65) }}</p>
         </div>

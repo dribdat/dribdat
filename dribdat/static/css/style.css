@@ -1751,7 +1751,7 @@ pre {
     content: "Log";
 }
 #suggest-md::before {
-    content: "💡 Stage";
+    content: "Stage";
 }
 #readme-md::before {
     content: "Readme";
