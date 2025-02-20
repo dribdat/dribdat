@@ -157,10 +157,12 @@
 
 {% if user.my_skills %}
 <div class="row m-3">
-  <div class="col-2 fs-3" id="skills">🦾 Skills</div>
+  <div class="col-2 fs-4 text-end" id="skills">🦾 Skills</div>
   <div class="profile-skills col-10 bg-body">
       {% for s in user.my_skills %}
-      	<span class="skill">{{s}}</span>
+        <a href="{{ url_for('public.all_participants') }}?q=*{{s}}" class="skill">
+      	 {{s}}
+        </a>
       {% endfor %}
   </div>
 </div>
@@ -168,16 +170,16 @@
 
 {% if user.my_wishes %}
 <div class="row m-3">
-  <div class="col-2 fs-3" id="wishes">🎋 Aims</div>
+  <div class="col-2 fs-4 text-end" id="wishes">🎋 Aims</div>
   <div class="profile-wishes col-10 bg-body">
       {% for w in user.my_wishes %}
-      	<span class="wish">{{w}}</span>
+        <a href="{{ url_for('public.all_participants') }}?q=*{{w}}" class="wish">
+         {{w}}
+        </a>
       {% endfor %}
   </div>
 </div>
 {% endif %}
-
-<a name="events"><h2 class="mt-5 mb-2">Experience</h2></a>
 
 {% if not projects %}
   {% if is_current_user %}
@@ -196,6 +198,20 @@
 
   {% endif %}
 {% else %}
+  <h2 class="mt-5 mb-2">Experience</h2>
+
+  {% if events %}
+    <a name="events"></a>
+    <ul class="row profile-events mb-4">
+      {% for event in events %}
+        <li>
+          <a href="{{ url_for('public.event', event_id=event.id) }}">
+            {{ event.name }}</a>
+        </li>
+      {% endfor %}
+    </ul><!-- /.row -->
+  {% endif %}
+
   <a name="projects"></a>
   <div class="profile-projects honeycomb mb-4">
     <div class="row ibws-fix">
@@ -204,17 +220,6 @@
     {% endfor %}
     </div>
   </div><!-- /profile-projects -->
-{% endif %}
-
-{% if events %}
-  <ul class="row profile-events mb-4">
-    {% for event in events %}
-      <li>
-        <a href="{{ url_for('public.event', event_id=event.id) }}">
-          {{ event.name }}</a>
-      </li>
-    {% endfor %}
-  </ul><!-- /.row -->
 {% endif %}
 
 {% if user.vitae %}
@@ -296,4 +301,6 @@
   {% endfor %}
   </section>
 </div>
+{% endif %}
+
 {% endblock %}
