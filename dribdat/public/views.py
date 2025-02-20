@@ -124,6 +124,9 @@ def home():
     MAX_PAST_EVENTS = 6
     events_past_next = events_past.count() > MAX_PAST_EVENTS
     events_past = events_past.limit(MAX_PAST_EVENTS)
+    # Do not show featured event twice if it is alone
+    if events_featured.count() == 1:
+        events_next = events_next.filter(Event.id.isnot(events_featured.first().id))
     # Send to template
     return render_template(
         "public/home.html",

@@ -76,33 +76,47 @@
   {% endif %}
 
 
-  {% if events_tips or events_next %}
-  <a name="upcoming"></a>
-  <div class="row mt-5">
-    {% if events_tips %}
-      {% for event in events_tips %}
-        {{ evnt.render_home_event(event) }}
-      {% endfor %}
-    {% endif %}
   {% if my_projects %}
   {% cache 300, 'home-user-%d' % current_user.id %}
-    <div class="col-lg-4">
-      <h1 class="fs-4">My teams</h1>
-      <div class="ps-4 resource-list profile-projects honeycomb">
+    <center title="My teams">
+      <div class="ps-5 mb-5 resource-list profile-projects col-md-4 ">
+        <div class="honeycomb w-100">
         {% for project in my_projects %}
           {{ proj.render_project_hexagon(project) }}
         {% endfor %}
-      </div>
-    </div>
+        </div>
+      </div><br clear="all"/>
+    </center>
   {% endcache %}
   {% endif %}
-  </div><!-- /.row events-next -->
+  {% if events_tips %}
+    <a name="tips"></a>
+    <div class="row events-tips mt-5">
+      {% for event in events_tips %}
+        {{ evnt.render_home_event(event, False) }}
+      {% endfor %}
+    </div><!-- /.row events-tips -->
+  {% endif %}
+
+
+  {% if events_next %}
+    <a name="upcoming"></a>
+    <h2 class="m-5 display-2 text-body-secondary" title="Next Sprints">
+      <i class="fa fa-forward" aria-hidden="true"></i>
+    </h2>
+    <div class="row events-next">
+      {% for event in events_next %}
+        {{ evnt.render_home_event(event) }}
+      {% endfor %}
+    </div><!-- /.row events-next -->
   {% endif %}
 
 
   {% if events_past %}
     <a name="past"></a>
-    <h1 class="m-5">History</h1>
+    <h2 class="m-5 display-2 text-body-secondary" title="Past Results">
+      <i class="fa fa-step-backward" aria-hidden="true"></i>
+    </h2>
     <div class="row events-past">
       {% for event in events_past %}
         {{ evnt.render_home_event(event) }}

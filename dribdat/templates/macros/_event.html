@@ -35,13 +35,9 @@
 {% endmacro %}
 
 {% macro render_home_event(event, details=True) %}
-	<div class="col-lg-4 an-event mb-1"><div class="card {% if event.lock_resources %}text-bg-info{% endif %}">
-		{% if not event.lock_resources %}
-			<a href="{{ url_for('public.event', event_id=event.id) }}">
-		{% else %}
-      <a href="{{ url_for('public.event_resources', event_id=event.id) }}">
-		{% endif %}
-				<div title="{{ event.hostname }}"
+	<div class="col-lg-4 an-event mb-1">
+		<div class="card{% if event.lock_resources %} border border-info{% endif %}">
+			<div title="{{ event.hostname }}"
 					{% if event.gallery_url %}
 					  class="card-img-top gallery-img" style="background-image: url('{{ event.gallery_url }}')"
 			    {% elif event.logo_url %}
@@ -52,28 +48,26 @@
 	              <span>{{ event.date }}</span>
 	            </div>
 		        {% endif %}
-				</div>
-			</a>
+			</div>
 	    <div class="card-body">
-	      {% if not event.lock_resources %}
-		      <h3 class="card-title">
+		    <h3 class="card-title">
+	      	{% if not event.lock_resources %}
 		        <a href="{{ url_for('public.event', event_id=event.id) }}">
 		          {{ event.name }}</a>
-		      </h3>
-				{% endif %}
+			    {% else %}
+			    	<a href="{{ url_for('public.event_resources', event_id=event.id) }}">
+		 				  <i class="fa fa-life-ring float-right" aria-hidden="true"></i>
+	            	{{ event.name }}
+	          </a>
+					{% endif %}
+		    </h3>
 	      <div class="card-text">
-	    	{% if details %}
 	        <p class="an-event-description">
 	          {{ event.oneliner|striptags }}
 	        </p>
 	      </div>
-	      <div class="an-event-actions text-center">
-	        {% if event.lock_resources %}
-            <a href="{{ url_for('public.event_resources', event_id=event.id) }}" class="btn btn-info">
-			 				  <i class="fa fa-life-ring" aria-hidden="true"></i>
-                {{ event.name }}
-            </a>
-          {% else %}
+	    	{% if details %}
+	      	<div class="an-event-actions text-center">
 			      <span class="btn-group">
 				      {% if event.webpage_url and not event.has_finished %}
 						  	<a href="{{ event.webpage_url }}" class="btn btn-light" target="_blank">
@@ -82,8 +76,8 @@
 						    </a>
 						  {% endif %}
 						</span>
-          	{% if event.project_count %}
-          		<a href="{{ url_for('public.event', event_id=event.id) }}" class="btn btn-default">
+	        	{% if event.project_count %}
+	        		<a href="{{ url_for('public.event', event_id=event.id) }}" class="btn btn-default">
 			          {% if event.has_finished %}
 			            <span title="Teams">{{ event.project_count }}</span>
 			            <i class="fa fa-star" aria-hidden="true"></i>
@@ -96,9 +90,8 @@
 			          {% endif %}
 	        		</a>
 			      {% endif %}
-		      {% endif %}
-		  	{% endif %}
-	      </div>
+	      	</div>
+			  {% endif %}
 	    </div><!-- /.card-body -->
 	</div></div>
 {% endmacro %}
