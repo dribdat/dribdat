@@ -567,6 +567,8 @@ def project_new():
     form.category_id.choices = [(c.id, c.name)
                                 for c in project.categories_all()]
     form.category_id.choices.insert(0, (-1, ''))
+    form.technai.data = ""
+
     if form.is_submitted() and form.validate():
         del form.id
         form.populate_obj(project)

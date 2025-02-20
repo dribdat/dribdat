@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 """Helper functions for user lists."""
 
-from dribdat.user.models import User, Activity
+from dribdat.user.models import User, Activity, Role
 from urllib.parse import quote, quote_plus
 from flask import flash
 
-from sqlalchemy import or_
+from sqlalchemy import or_, and_
 
 import re
 
@@ -18,24 +18,42 @@ def get_users_by_search(search_by, MAX_COUNT=200):
     """Collects all users."""
     users = User.query.filter_by(active=True)
     if search_by and len(search_by) > 2:
-        q = search_by.replace('@', '').lower()
-        q = "%%%s%%" % q
-        if '@' in search_by:
+        q = search_by.replace('@', '').replace('#', '').replace('~', '')
+        q = "%%%s%%" % q.lower()
+        if search_by.startswith('#'):
+            # We are looking for a skill
+            users = users.filter(or_(
+                User._my_skills.ilike(q),
+                User._my_wishes.ilike(q)
+            ))
+        elif search_by.startswith('~'):
+            # We are looking for a role
+            a_role = Role.query.filter(and_(
+                Role.name.ilike(q),
+                User.active
+            )).first()
+            if a_role:
+                users = a_role.users
+                return sorted(users, key=lambda x: x.username)
+            users = None
+        elif '@' in search_by:
+            # Looking for a username or email
             users = users.filter(or_(
                 User.email.ilike(q),
                 User.username.ilike(q)
             ))
         else:
+            # General search
             users = users.filter(or_(
                 User.my_story.ilike(q),
                 User.my_goals.ilike(q),
+                User.username.ilike(q),
             ))
-    # TODO: pagination!
-    if users.count() > MAX_COUNT:
-        # Only the first 200 participants are shown
-        users = users.limit(MAX_COUNT)
     # Provide certificate if available
     if users:
+        if users.count() > MAX_COUNT:
+            # Only the first participants are shown
+            users = users.limit(MAX_COUNT)
         return sorted(users.all(), key=lambda x: x.username)
     return []
 
