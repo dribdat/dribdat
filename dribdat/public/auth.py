@@ -20,7 +20,7 @@ from dribdat.utils import (
 )
 from dribdat.user.forms import RegisterForm, EmailForm, LoginForm, UserForm, StoryForm
 from dribdat.database import db
-from dribdat.mailer import user_activation
+from dribdat.mailer import user_activation, user_registration
 from datetime import datetime
 from dribdat.futures import UTC
 # noqa: I005
@@ -64,6 +64,15 @@ def redirect_dest(fallback):
     except:
         return redirect(fallback)
     return redirect(dest_url)
+
+
+@blueprint.route("/enter/", methods=["GET"])
+def enter():
+    """Reroute login depending on config."""
+    if current_app.config['MAIL_SERVER'] and not oauth_type():
+        return redirect(url_for('auth.forgot'))
+    return redirect(url_for('auth.login'))
+
 
 
 @blueprint.route("/login/", methods=["GET", "POST"])
@@ -217,6 +226,9 @@ def passwordless():
     if a_user:
         # Continue with reset
         user_activation(a_user)
+    elif not current_app.config['DRIBDAT_NOT_REGISTER']:
+        # Continue with invite
+        user_registration(form.username.data)
     else:
         current_app.logger.warn('User not found: %s' % form.username.data)
     # Don't let people spy on your address
