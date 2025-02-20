@@ -976,6 +976,8 @@ class Project(PkModel):
                     'icon': 'bullhorn',
                     'name': 'finish',
                 })
+
+        # Sort by reverse date
         return sorted(dribs, key=lambda x: x['date'], reverse=True)
 
     def categories_all(self, event=None):
