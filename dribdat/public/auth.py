@@ -154,11 +154,10 @@ def register():
                   + "Please update your profile and await activation.",
                   'warning')
     else:
-        flash(
-            "You can now log in and submit projects.", 'info')
+        flash("You can now log in and submit projects.", 'info')
     # New user created: start session and continue
     login_user(new_user, remember=True)
-    return redirect_dest(fallback=url_for('public.home'))
+    return redirect_dest(fallback=url_for('auth.user_profile'))
 
 
 @blueprint.route("/activate/<userid>/<userhash>", methods=['GET'])
@@ -167,10 +166,13 @@ def activate(userid, userhash):
     a_user = User.query.filter_by(id=userid).first_or_404()
     if a_user.check_hashword(userhash):
         a_user.hashword = None
-        a_user.active = True
+        if not a_user.active:
+            flash("Your user account has been activated.", 'success')
+            a_user.active = True
+        else:
+            flash("Welcome! You are now logged in.", 'success')
         a_user.save()
         login_user(a_user, remember=True)
-        flash("Welcome! Your user account has been activated.", 'success')
         return redirect(url_for('auth.user_profile'))
     else:
         flash("Activation not found, or has expired." \

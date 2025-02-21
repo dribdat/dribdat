@@ -21,7 +21,7 @@
       in this application.</p>
   {% endif %}
 
-  {{ render_form(url_for('auth.register'), form) }}
+  {{ render_form(url_for('auth.register'), form, formid='registerForm') }}
 
     <p class="mt-4"><i>Note: Your profile image will be the
         <a href="https://gravatar.com" target="_blank">Gravatar</a>
