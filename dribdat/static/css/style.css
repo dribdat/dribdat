@@ -2718,7 +2718,7 @@ SlackIn button
     color: red;
 }
 .sso-login .btn {
-    height: 2.2em;
+    height: 50px;
     width: 100%;
     max-width: 460px;
     font-weight: bold;
@@ -2739,6 +2739,7 @@ SlackIn button
     font-size: 125%;
 }
 
+.sso-login::after,
 .account-register::before {
     content: "or";
     display: block;

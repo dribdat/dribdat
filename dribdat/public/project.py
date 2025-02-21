@@ -202,10 +202,13 @@ def project_post(project_id):
         return redirect(url_for(
             'project.get_log', project_id=project.id))
 
+    # Get latest written posts
+    posts = project.all_dribs(12, None, True)
+
     return render_template(
         'public/projectpost.html',
         current_event=event, project=project, form=form,
-        stage=stage, all_valid=all_valid,
+        stage=stage, all_valid=all_valid, posts=posts,
         active="post"
     )
 
@@ -227,9 +230,12 @@ def project_comment(project_id):
         return redirect(url_for(
             'project.get_log', project_id=project.id))
 
+    # Get latest written posts
+    posts = project.all_dribs(12, None, True)
+
     return render_template(
         'public/projectpost.html',
-        current_event=event, project=project, form=form,
+        current_event=event, project=project, form=form, posts=posts,
         active="dribs"
     )
 

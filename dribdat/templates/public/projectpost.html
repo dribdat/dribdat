@@ -105,7 +105,7 @@
     </a>
     <a href="{{ url_for('project.get_log', project_id=project.id) }}"
        title="Log and progress review" class="btn btn-light">
-      <i class="fa fa-life-ring" aria-hidden="true"></i> Log
+      <i class="fa fa-paperclip" aria-hidden="true"></i> Log
     </a>
     {% if stage %}
       <div class="btn-group">
@@ -113,13 +113,36 @@
           title="Edit basic project data">
           <i class="fa fa-pencil" aria-hidden="true"></i>
           Edit</a>
-        <a href="{{ url_for('project.project_details', project_id=project.id) }}" class="btn btn-light"
-          title="Edit project details" style="opacity:0.9">
-          <i class="fa fa-magic" aria-hidden="true"></i>
-          Details</a>
       </div>
     {% endif %}
   </center>
+
+  {% if posts %}
+  <div class="jumbotron mt-5">
+    <section class="timeline">
+    {% for s in posts %}
+    <div class="timeline-item timeline-{{ s.name }} timeline-{{ s.icon }}">
+      <div class="timeline-img">
+        <i class="fa fa-{{ s.icon }}" aria-hidden="true"></i>
+      </div>
+      <div class="timeline-content timeline-card js--fadeInBottom">
+        <div class="content">
+          {{s.text|markdown|safe}}
+        </div>
+        <div class="date">
+          <span title="{{s.date}}">{{s.timesince}}</span>
+          {% if s.author %} ~
+            <a class="userlink" 
+               href="{{ url_for('public.user_profile', username=s.author )}}">
+              {{ s.author }}</a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+    </section>
+  </div>
+  {% endif %}
 
   {% include "includes/uploader.html" %}
 
