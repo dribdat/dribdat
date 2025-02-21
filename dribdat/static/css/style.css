@@ -2739,7 +2739,7 @@ SlackIn button
     font-size: 125%;
 }
 
-.sso-login .btn::after,
+.sso-login::after,
 .account-register::before {
     content: "or";
     display: block;
