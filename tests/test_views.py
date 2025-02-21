@@ -3,7 +3,7 @@
 
 See: http://webtest.readthedocs.org/
 """
-from .factories import ProjectFactory, EventFactory, UserFactory
+from .factories import ProjectFactory, EventFactory, UserFactory, RoleFactory
 from dribdat.public import views, userhelper
 from dribdat.aggregation import ProjectActivity, GetEventUsers
 from datetime import datetime
@@ -80,8 +80,19 @@ class TestViews:
 
         user = UserFactory()
         user.username = 'Bob'
+        user.fullname = 'The Builder'
+        user.my_story = 'Knight of Can-A-Lot'
+        user._my_skills = 'hammer,time'
         user.save()
         assert user in userhelper.get_users_by_search('@bob')
+        assert user in userhelper.get_users_by_search('@builder')
+        assert user in userhelper.get_users_by_search('knight')
+        assert user in userhelper.get_users_by_search('*hammer')
+
+        role = RoleFactory()
+        user.roles.append(role)
+        user.save()
+        assert user in userhelper.get_users_by_search('~' + role.name)
 
         user2 = UserFactory()
         user2.username = 'Bobby'
@@ -89,7 +100,7 @@ class TestViews:
         assert len(userhelper.get_users_by_search('@bob', 2)) == 2
         assert len(userhelper.get_users_by_search('@bob', 1)) == 1
         
-        user_view = testapp.get('/participants')
+        user_view = testapp.get('/participants?q=bob')
         assert user.username in user_view
         assert user2.username in user_view
 
@@ -102,5 +113,3 @@ class TestViews:
         assert project in user.joined_projects()
         users = GetEventUsers(event)
         assert user in users
-        assert user in userhelper.filter_users_by_search(users, '@bob')[0]
-        

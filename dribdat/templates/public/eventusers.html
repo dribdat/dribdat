@@ -8,8 +8,8 @@
 
 <h1 class="huge">Contributors</h1>
 
-  <div data-action="/api/user/search.json" id="search-users" style="margin-bottom:1em; width:400px">
-    <form method="get" action="participants">
+  <div id="search-users" style="margin-bottom:1em; width:400px">
+    <form method="get" action="{{ url_for('public.all_participants') }}">
       <div class="content input-group">
         <span class="input-group-text">
           <i class="fa fa-search" aria-hidden="true"></i>
@@ -21,6 +21,17 @@
       </div>
     </form>
   </div>
+
+{% if preset_roles %}
+  <div class="missing-roles">
+    {% for role in preset_roles %}
+      <a class="role" data-id="{{ role.id }}"
+         href="{{ url_for('public.all_participants') }}?q=~{{ role.name }}">
+        <span>{{ role.name }}</span>
+      </a>
+    {% endfor %}
+  </div>
+{% endif %}
 
 {% if participants %}
 

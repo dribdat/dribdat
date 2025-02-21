@@ -12,12 +12,11 @@ from flask import (
     current_app,
 )
 from flask_login import login_required, current_user
-from dribdat.user.models import User, Event, Project, Activity
+from dribdat.user.models import User, Event, Project, Activity, Role
 from dribdat.public.forms import EventNew, EventEdit
 from dribdat.public.userhelper import (
     get_user_by_name,
     get_users_by_search,
-    filter_users_by_search,
     get_dribs_paginated,
 )
 from dribdat.public.projhelper import current_event
@@ -309,21 +308,16 @@ def event_participants(event_id):
     """Show list of participants of an event."""
     event = Event.query.filter_by(id=event_id).first_or_404()
     users = GetEventUsers(event)
-    search_by = request.args.get("q") or ""
-    usearch, search_by = filter_users_by_search(users, search_by)
     # Provide certificate if available
     cert_path = None
     if current_user and not current_user.is_anonymous:
         cert_path = current_user.get_cert_path(event)
-    usercount = len(usearch) if usearch else 0
+    usercount = len(users) if users else 0
     return render_template(
         "public/eventusers.html",
-        q=search_by,
-        cert_path=cert_path,
-        current_event=event,
-        participants=usearch,
-        usercount=usercount,
-        active="people",
+        cert_path=cert_path, current_event=event,
+        participants=users, usercount=usercount,
+        active="participants",
     )
 
 
@@ -332,14 +326,15 @@ def all_participants():
     """Show list of participants of an event."""
     MAX_COUNT = 100
     search_by = request.args.get("q") or ""
+    preset_roles = Role.query.all()
     users = get_users_by_search(search_by, MAX_COUNT)
     if len(users) == MAX_COUNT:
         flash("Only the first %d participants are shown." % MAX_COUNT, "info")
+    usercount = len(users) if users else 0
     return render_template(
         "public/eventusers.html",
-        q=search_by,
-        participants=users,
-        usercount=len(users),
+        q=search_by, preset_roles=preset_roles,
+        participants=users, usercount=usercount,
         active="participants",
     )
 
