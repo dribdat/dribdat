@@ -120,17 +120,17 @@
 	<div class="col-lg-4 mb-4">
 	  <a href="{{ url_for('project.project_view', project_id=project.id) }}">
 	    <div class="card challenge">
-			<div class="card-header w-100 clearfix">
+			<div class="card-header w-100 clearfix bg-light">
 				{% if project.image_url %}
 					<img height="60" class="card-img-left pe-3" src="{{project.image_url}}">
 				{% endif %}
-				<h5 class="card-title">{{ project.name }}</h5>
+				<h5 class="card-title text-black">{{ project.name }}</h5>
 				<span class="float-right m-1 ps-2 pe-2 progress" title="Project stage">
 					{{project.phase}}
 				</span>
 			</div>
 		    <div class="card-body">
-				<div class="card-text">
+				<div class="card-text text-body">
 					{% if project.summary %}
 						<p class="project-summary">
 							{{ project.summary }}

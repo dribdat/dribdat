@@ -357,7 +357,7 @@ def get_log(project_id):
     starred = IsProjectStarred(project, current_user)
     allow_edit, allow_post, lock_editing = GetProjectACLs(current_user, project.event, starred)
     # Collect resource tips (from projects in a Template Event)
-    suggestions = resources_by_stage(project.progress)
+    suggestions = resources_by_stage(project.progress, 3)
     # Render the result
     return render_template(
         'public/projectlog.html', active="projects",
@@ -586,7 +586,7 @@ def create_new_project(event, is_anonymous=False):
     # Start as unapproved challenge
     project.progress = -1
     # Unless the event has started
-    if event.has_started:
+    if event.has_started or event.lock_resources:
         project.progress = 0
 
     # Update the project
@@ -602,7 +602,9 @@ def create_new_project(event, is_anonymous=False):
     cache.clear()
 
     if is_anonymous:
-        flash('Thanks for your submission - login and Join to make changes', 'success')
+        flash('Thanks for your submission - log in and Join to make changes.', 'success')
+    elif event.lock_resources:
+        flash('Thanks for sharing a resource here!', 'success')
     else:
         flash('Invite your team to Join this page and contribute!', 'success')
         project_action(project.id, 'create', False)

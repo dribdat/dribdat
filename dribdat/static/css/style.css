@@ -2268,8 +2268,7 @@ a.card, .card > a {
     float: left;
 }
 .profile-projects .card-text {
-    font-size: 10pt;
-    color: #555;
+    font-size: 12pt;
 }
 .profile-projects .project-stats th {
     min-width: 3em;
@@ -2598,7 +2597,7 @@ Search engine
     cursor: pointer;
 }
 #search-results tr:hover {
-    background: lightyellow; color: black;
+    filter: invert(100%);
 }
 
 /* ------------

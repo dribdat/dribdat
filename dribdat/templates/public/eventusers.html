@@ -6,21 +6,46 @@
 
 {% block content %}
 
-<h1 class="huge">Contributors</h1>
+{% if current_user and current_user.is_authenticated %}
+  <div class="float-right">
+    <a class="btn btn-lg btn-primary"
+       title="Go to my user profile"
+       href="{{ url_for('public.user_current') }}">
+      <i class="fa fa-user bg-primary text-white" aria-hidden="true"></i>
+      My Profile
+    </a>
+  </div>
+{% endif %}
 
-  <div data-action="/api/user/search.json" id="search-users" style="margin-bottom:1em; width:400px">
-    <form method="get" action="participants">
+<h1 class="huge">
+  {% if u %}`{{ u }}`
+  {% else %}Contributors
+  {% endif %}
+</h1>
+
+  <div id="search-users" class="mb-2">
+    <form method="get" action="{{ url_for('public.all_participants') }}">
       <div class="content input-group">
         <span class="input-group-text">
           <i class="fa fa-search" aria-hidden="true"></i>
         </span>
-        <input type="text" class="form-control" name="q" value="{{ q }}"
-          aria-label="Search users" 
-          placeholder="@user or free text in profile ..." 
-          style="width:20em; max-width:80%" />
+        <input type="text" class="form-control" name="u"
+          title="Use @username *skill or ~role to refine your search."
+          aria-label="Search users" placeholder="Search ...">
       </div>
     </form>
   </div>
+
+{% if preset_roles %}
+  <div class="missing-roles">
+    {% for role in preset_roles %}
+      <a class="role" data-id="{{ role.id }}"
+         href="{{ url_for('public.all_participants') }}?u=~{{ role.name }}">
+        <span>{{ role.name }}</span>
+      </a>
+    {% endfor %}
+  </div>
+{% endif %}
 
 {% if participants %}
 
@@ -43,7 +68,7 @@
       <a href="{{ url_for('public.event', event_id=current_event.id) }}">
       this event</a> already</p></center>
   {% elif not usercount %}
-    <h4 class="no-matches">🤷‍♀️ Encourage people to create a profile and join a team.</h4>
+    <h4 class="no-matches">🤷‍♀️ Encourage people to create a profile, choose a role, and join a team.</h4>
   {% else %}
     <center>
       <span class="user-score">{{ usercount }}</span>

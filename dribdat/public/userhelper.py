@@ -16,64 +16,43 @@ RE_NO_TAGS = re.compile(r'\!\[[^\]]*\]\([^\)]+\)|\[|\]|<[^>]+>')
 
 def get_users_by_search(search_by, MAX_COUNT=200):
     """Collects all users."""
+    if not search_by or len(search_by) < 3:
+        return []
     users = User.query.filter_by(active=True)
-    if search_by and len(search_by) > 2:
-        q = search_by.replace('@', '').replace('*', '').replace('~', '')
-        q = "%%%s%%" % q.lower()
-        if search_by.startswith('*'):
-            # We are looking for a skill
-            users = users.filter(or_(
-                User._my_skills.ilike(q),
-                User._my_wishes.ilike(q)
-            ))
-        elif search_by.startswith('~'):
-            # We are looking for a role
-            a_role = Role.query.filter(and_(
-                Role.name.ilike(q),
-                User.active
-            )).first()
-            if a_role:
-                users = a_role.users
-                return sorted(users, key=lambda x: x.username)
-            users = None
-        elif '@' in search_by:
-            # Looking for a username or email
-            users = users.filter(or_(
-                User.email.ilike(q),
-                User.username.ilike(q)
-            ))
-        else:
-            # General search
-            users = users.filter(or_(
-                User.my_story.ilike(q),
-                User.my_goals.ilike(q),
-                User.username.ilike(q),
-            ))
-    # Provide certificate if available
-    if users:
-        if users.count() > MAX_COUNT:
-            # Only the first participants are shown
-            users = users.limit(MAX_COUNT)
-        return sorted(users.all(), key=lambda x: x.username)
-    return []
-
-
-def filter_users_by_search(users, search_by=None):
-    """Collects the participating users."""
-    if not users: return [], ''
-    elif search_by and len(search_by) > 2:
-        usearch = []
-        qq = search_by.replace('@', '').lower()
-        for u in users:
-            if qq in u.username.lower() or qq in u.email.lower():
-                usearch.append(u)
-            elif (u.my_story and qq in u.my_story.lower()) or \
-                 (u.my_goals and qq in u.my_goals.lower()):
-                usearch.append(u)
+    q = search_by.replace('@', '').replace('*', '').replace('~', '')
+    q = "%%%s%%" % q.lower()
+    if search_by.startswith('*'):
+        # We are looking for a skill
+        users = users.filter(or_(
+            User._my_skills.ilike(q),
+            User._my_wishes.ilike(q)
+        ))
+    elif search_by.startswith('~'):
+        # We are looking for a role
+        a_role = Role.query.filter(Role.name.ilike(q)).first()
+        if not a_role:
+            return []
+        users = users.filter(User.roles.contains(a_role))
+    elif '@' in search_by:
+        # Looking for a username or email
+        users = users.filter(or_(
+            User.email.ilike(q),
+            User.username.ilike(q),
+            User.fullname.ilike(q),
+        ))
     else:
-        usearch = users
-        search_by = ''
-    return usearch, search_by
+        # General search
+        users = users.filter(or_(
+            User.my_story.ilike(q),
+            User.my_goals.ilike(q),
+            User.username.ilike(q),
+            User.fullname.ilike(q),
+        ))
+    if not users:
+        return []
+    # Filter to active, limit, sort
+    users = users.limit(MAX_COUNT).all()
+    return sorted(users, key=lambda x: x.username)
 
 
 def get_dribs_paginated(page=1, per_page=10, host_url=''):
