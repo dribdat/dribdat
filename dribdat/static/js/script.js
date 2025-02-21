@@ -98,9 +98,7 @@
       if (projects.length > 0) {
         $ul.parent().removeClass('hidden');
         $sm.html(
-          '<span class="user-score">' + (projects.length) + '</span> ' +
-          'matches' +
-          (projects.length > 3 ? '<i class="float-right">&#9654;&#9654;</i>' : '')
+          '<span class="user-score">' + (projects.length) + '</span> matches'
         ).removeClass('hidden');
       } else {
         $ul.parent().addClass('hidden');

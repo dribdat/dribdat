@@ -2597,7 +2597,7 @@ Search engine
     cursor: pointer;
 }
 #search-results tr:hover {
-    background: lightyellow; color: black;
+    filter: invert(100%);
 }
 
 /* ------------
