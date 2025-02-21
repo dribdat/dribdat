@@ -115,7 +115,7 @@ EOF""" % (url, url)
 
     def test_participant_search(self, user, testapp):
         """Search for participants."""
-        res = testapp.get('/participants')
+        res = testapp.get('/participants?u=@user')
         assert res.status_code == 200
         assert 'user-score' in res # user0 exists in the db
         # Create a user and search it
@@ -125,11 +125,11 @@ EOF""" % (url, url)
         res = testapp.get('/participants')
         form = res.forms[0]
         # Search for a user that doesn't exist
-        form['q'] = '@ibraci'
+        form['u'] = '@ibraci'
         res = form.submit()
         assert 'no-matches' in res
         # Search for a user that exists
-        form['q'] = '@abraca'
+        form['u'] = '@abraca'
         res = form.submit()
         assert res.status_code == 200
         assert 'abracadabra' in res
