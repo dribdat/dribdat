@@ -180,8 +180,10 @@ def user_profile(username):
             and current_user.id == user.id
             and user.may_certify()[0]
         )
-        # Check permissions
-        is_current_user = current_user and current_user.id == user.id
+        # Check permissions ..
+        is_current_user = current_user and \
+            not current_user.is_anonymous and \
+            current_user.id == user.id
     # Collect user data
     projects = user.joined_projects(False)
     posts = user.latest_posts(20)

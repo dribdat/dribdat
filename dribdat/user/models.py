@@ -919,7 +919,7 @@ class Project(PkModel):
             activities = activities.limit(limit)
         return activities.all()
 
-    def all_dribs(self, limit=50, by_name=None):
+    def all_dribs(self, limit=50, by_name=None, only_posts=False):
         """Query which formats the project's timeline."""
         dribs = []
         only_active = False  # show dribs from inactive users
@@ -935,6 +935,10 @@ class Project(PkModel):
                 if prev['title'] == title and prev['text'] == text:
                     # if prev['date']-a.timestamp).total_seconds() < 120:
                     continue
+            if only_posts:
+                # Skip anything but a post or comment
+                if not text or icon == 'paperclip':
+                    continue
             cur = {
                 'icon': icon,
                 'title': title,
@@ -949,19 +953,20 @@ class Project(PkModel):
             }
             dribs.append(cur)
             # Show changes in progress
-            if not by_name and a.project_progress and prev['progress'] != a.project_progress:
-                proj_stage = getStageByProgress(a.project_progress)
-                if a.project_progress > 0 and proj_stage is not None:
-                    dribs.append({
-                        'title': proj_stage['phase'],
-                        'date': a.timestamp,
-                        'icon': 'arrow-up',
-                        'name': 'progress',
-                    })
+            if not by_name and not only_posts:
+                if a.project_progress and prev['progress'] != a.project_progress:
+                    proj_stage = getStageByProgress(a.project_progress)
+                    if a.project_progress > 0 and proj_stage is not None:
+                        dribs.append({
+                            'title': proj_stage['phase'],
+                            'date': a.timestamp,
+                            'icon': 'arrow-up',
+                            'name': 'progress',
+                        })
             prev = cur
 
         # Add event start and finish to log
-        if not by_name:
+        if not by_name and not only_posts:
             if self.event.has_started or self.event.has_finished:
                 dribs.append({
                     'title': "Start",

@@ -203,11 +203,7 @@ def project_post(project_id):
             'project.get_log', project_id=project.id))
 
     # Get latest written posts
-    posts = []
-    # TODO: move to query
-    for s in project.all_dribs(10):
-        if s.text and s.icon != 'paperclip':
-            posts.append(s)
+    posts = project.all_dribs(12, None, True)
 
     return render_template(
         'public/projectpost.html',
@@ -235,12 +231,8 @@ def project_comment(project_id):
             'project.get_log', project_id=project.id))
 
     # Get latest written posts
-    posts = []
-    # TODO: move to query
-    for s in project.all_dribs(10):
-        if s.text and s.icon != 'paperclip':
-            posts.append(s)
-            
+    posts = project.all_dribs(12, None, True)
+
     return render_template(
         'public/projectpost.html',
         current_event=event, project=project, form=form, posts=posts,
