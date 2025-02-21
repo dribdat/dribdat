@@ -6,6 +6,17 @@
 
 {% block content %}
 
+{% if current_user and current_user.is_authenticated %}
+  <div class="float-right">
+    <a class="btn btn-lg btn-primary"
+       title="Go to my user profile"
+       href="{{ url_for('public.user_current') }}">
+      <i class="fa fa-user bg-primary text-white" aria-hidden="true"></i>
+      My Profile
+    </a>
+  </div>
+{% endif %}
+
 <h1 class="huge">Contributors</h1>
 
   <div id="search-users" style="margin-bottom:1em; width:400px">
@@ -16,7 +27,8 @@
         </span>
         <input type="text" class="form-control" name="q" value="{{ q }}"
           aria-label="Search users" 
-          placeholder="@user or free text in profile ..." 
+          title="Use @username *skill or ~role to refine your search."
+          placeholder="Search ..." 
           style="width:20em; max-width:80%" />
       </div>
     </form>
@@ -54,7 +66,7 @@
       <a href="{{ url_for('public.event', event_id=current_event.id) }}">
       this event</a> already</p></center>
   {% elif not usercount %}
-    <h4 class="no-matches">🤷‍♀️ Encourage people to create a profile and join a team.</h4>
+    <h4 class="no-matches">🤷‍♀️ Encourage people to create a profile, choose a role, and join a team.</h4>
   {% else %}
     <center>
       <span class="user-score">{{ usercount }}</span>

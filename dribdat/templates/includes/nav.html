@@ -54,14 +54,6 @@
               Post
             </a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link{{ ' active' if active == 'profile' }}"
-               title="Take me to my profile"
-               href="{{ url_for('public.user_current') }}" title="My User Profile">
-              <i class="fa fa-user bg-primary text-white" aria-hidden="true"></i>
-              Profile
-            </a>
-          </li>
       {% else %}
         <li class="nav-item">
           <a class="nav-link nav-login"
@@ -72,6 +64,15 @@
           </a>
         </li>
       {% endif %}
+
+      <li class="nav-item">
+        <a class="nav-link{{ ' active' if active == 'people' or active == 'profile' }}"
+           title="List and search for participants"
+           href="{{ url_for('public.all_participants') }}">
+          <i class="fa fa-user bg-primary text-white" aria-hidden="true"></i>
+          People
+        </a>
+      </li>
 
       <li class="nav-item">
         <a class="nav-link" id="navSearchButton"

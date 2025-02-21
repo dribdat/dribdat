@@ -308,16 +308,13 @@ def event_participants(event_id):
     """Show list of participants of an event."""
     event = Event.query.filter_by(id=event_id).first_or_404()
     users = GetEventUsers(event)
-    # Provide certificate if available
-    cert_path = None
-    if current_user and not current_user.is_anonymous:
-        cert_path = current_user.get_cert_path(event)
+    preset_roles = Role.query.all()
     usercount = len(users) if users else 0
     return render_template(
         "public/eventusers.html",
-        cert_path=cert_path, current_event=event,
+        preset_roles=preset_roles, current_event=event,
         participants=users, usercount=usercount,
-        active="participants",
+        active="people",
     )
 
 
@@ -335,7 +332,7 @@ def all_participants():
         "public/eventusers.html",
         q=search_by, preset_roles=preset_roles,
         participants=users, usercount=usercount,
-        active="participants",
+        active="people",
     )
 
 
