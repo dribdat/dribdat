@@ -26,7 +26,6 @@ from dribdat.futures import UTC
 
 def current_event():
     """Return currently featured event."""
-    # TODO: allow multiple featurettes?
     return Event.query.filter_by(is_current=True).first()
 
 
@@ -36,7 +35,7 @@ def check_update(obj, minutes=5):
     return td < timedelta(minutes=minutes)
 
 
-def resources_by_stage(progress=None):
+def resources_by_stage(progress=None, limit=None):
     """Get all projects which are published in a resource-type event."""
     if progress is None:
         return []
@@ -47,6 +46,8 @@ def resources_by_stage(progress=None):
         projects = Project.query.filter_by(
             event_id=eid, is_hidden=False, progress=progress)
         project_list.extend([p.data for p in projects.all()])
+    if limit is not None:
+        return project_list[:limit]
     return project_list
 
 
