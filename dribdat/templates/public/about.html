@@ -42,9 +42,8 @@
     </div>
     <center>
       <div class="m-3">
-        <a href="https://dribdat.cc/usage" class="btn btn-success btn-lg">📖 Handbook</a>
-        <a href="https://github.com/dribdat/dribdat/issues" class="btn btn-secondary btn-lg">🐛 Issues</a>
-        <a href="https://opencollective.com/dribdat/updates" class="btn btn-primary btn-lg">🗞️ News</a>
+        <a href="https://dribdat.cc/usage" class="btn btn-success btn-lg">📖 User Handbook</a>
+        <a href="https://github.com/dribdat/dribdat/releases" class="btn btn-info btn-lg">🗞️ What's New?</a>
       {% if config.DRIBDAT_ALLOW_EVENTS %}
         <a href="{{ url_for('public.event_start') }}" class="btn btn-info btn-lg">
           <i class="fa fa-calendar me-2" aria-hidden="true"></i>
@@ -58,8 +57,9 @@
     <div class="row" id="api">
       <div class="content">
         <p>
-          You can use the <b>My Data</b> button on your profile to download a summary of your contributions. More details are in the <a href="https://dribdat.cc/contribute.html#api-guide">Dribdat API Guide</a>.
-          <br>There is a simple open API for accessing data from this site in machine-readable form over the Web:
+          You can use the <b>My Data</b> button on your profile to download a summary of your contributions. 
+          There is a simple open API for accessing data from this site in machine-readable form over the Web.
+          More details are in the <a href="https://dribdat.cc/contribute.html#api-guide">Dribdat API Guide</a>.
         </p>
       </div>
       <table class="api-table mt-2 ms-2" style="width:100%">
@@ -132,13 +132,14 @@
     </div><!-- /api -->
     <div class="row">
       <p>
-        To use this platform for your next event, visit our 
-        <a href="https://dribdat.cc" target="_blank">website</a> for installation instructions.
+      <a href="https://github.com/dribdat/dribdat/issues" class="btn btn-secondary float-right btn-lg">Wishes + 🐛ssues</a>
+        To use this platform for your next event, visit 
+        <a href="https://dribdat.cc" target="_blank">dribdat.cc</a> for installation instructions.
         <br>Feel free to fork the open source project on
         <a href="https://codeberg.org/dribdat/dribdat" target="_blank">Codeberg</a> or
         <a href="https://github.com/dribdat/dribdat" target="_blank">GitHub</a>.
         Have a nice day!
-      </p>
+      </p>      
     </div>
   </div>
 </div>
