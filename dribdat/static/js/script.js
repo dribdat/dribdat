@@ -102,7 +102,7 @@
         ).removeClass('hidden');
       } else {
         $ul.parent().addClass('hidden');
-        $sm.html('No results for "' + q + '".').removeClass('hidden');
+        $sm.html('Zero cool projects found :(').removeClass('hidden');
       }
       // Create project cards
       projects.forEach(function(p) {
