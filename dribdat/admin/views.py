@@ -48,7 +48,7 @@ def index():
             'height': 6
         }, {
             'value': User.query.count(),
-            'text': 'People',
+            'text': 'Users',
             'icon': 'user',
             'height': 7
         }, {
@@ -134,7 +134,7 @@ def users(page=1):
             users = users.filter(User.username.ilike(q))
     userpages = users.paginate(page=page, per_page=20)
     return render_template('admin/users.html', sort_by=sort_by,
-                           data=userpages, endpoint='admin.users', active='people')
+                           data=userpages, endpoint='admin.users', active='users')
 
 
 @blueprint.route('/user/<int:user_id>', methods=['GET', 'POST'])
@@ -455,7 +455,7 @@ def projects(page=1):
     projectpages = projects.paginate(page=page, per_page=10)
     return render_template('admin/projects.html',
                            data=projectpages, endpoint='admin.projects',
-                           active='challenges')
+                           active='projects')
 
 
 @blueprint.route('/category/<int:category_id>/projects')

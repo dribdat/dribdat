@@ -7,7 +7,7 @@
   {% for stat in stats %}
     {% if stat.text == 'Sprints' %}
       <a href="{{ url_for('admin.events') }}"
-    {% elif stat.text == 'People' %}
+    {% elif stat.text == 'Users' %}
       <a href="{{ url_for('admin.users') }}"
     {% elif stat.text == 'Dribs' %}
       <a href="{{ url_for('public.dribs') }}"

@@ -161,6 +161,7 @@ form input[type="checkbox"] {
 .admin .form-group .radio-inline {
     margin-right: 1em;
     display: block;
+    text-align: left;
     border-bottom: 1px solid lightgrey;
     padding: 0.3em;
 }
@@ -1674,60 +1675,48 @@ a.media {
 }
 
 /* General form styles */
-.userform form label,
-.userform form .control-label,
-.eventform form .control-label,
-.projectpost form .control-label,
-.projectform form .control-label {
+main form .control-label {
     font-weight: 400;
     font-size: 140%;
     display: block;
     text-align: center;
     margin-top: 2em;
+    clear: both;
 }
-.projectform form > .checkbox {
-    margin-top: 1rem;
+main form .form-group .checkbox {
+    text-align: left;
 }
-.userform form > .form-group,
-.eventform form > .form-group,
-.projectpost form > .form-group,
-.projectform form > .form-group {
+main form > .form-group {
     margin-top: 1rem;
     margin-bottom: 0px;
     text-align: center;
 }
-.userform form .help-inline,
-.eventform form .help-inline,
-.projectpost form .help-inline,
-.projectform form .help-inline {
+main form .help-inline {
     color: #555;
     display: block;
     margin-top: 1em;
 }
-.userform form .form-control,
-.eventform form .form-control,
-.projectpost form .form-control,
-.projectform form .form-control {
+main form .form-group .form-control {
     font-size: 125%;
     box-shadow: 5px 5px 5px #ccc;
 }
-.userform .form-group input {
+main form input[type="date"] {
+    font-size: 150%;
+}
+.userform main .form-group input {
     margin-right: 0.5em;
 }
-.form-group .g-recaptcha > div {
-    display: inline-block;
-}
-.userform .form-actions {
+.userform main .form-actions {
     clear: both;
     display: block;
     margin-top: 1em;
     text-align: center;
 }
-.userform #submit {
+.userform main #submit {
     min-width: 7em;
     font-size: 150%;
 }
-.container .form-actions input.btn {
+main .form-actions input.btn {
     margin-top: 1em;
     font-size: 150%;
     width: 100%;
@@ -1735,6 +1724,9 @@ a.media {
 .with-event .form-group label.required::after {
     color: #ff0000;
     content: " *";
+}
+.form-group .g-recaptcha > div {
+    display: inline-block;
 }
 
 /* Code blocks */
