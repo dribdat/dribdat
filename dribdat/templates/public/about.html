@@ -10,9 +10,6 @@
   <div class="container">
 
     <div class="row font-monospace">
-      <a href="https://github.com/dribdat/dribdat/releases" target="_blank">
-        <small style="color:initial">v{{ ver }}</small>
-      </a>
       <h1>
         ? help dribdat
       </h1>
@@ -34,7 +31,6 @@
         {% endfor %}
       </p>
     </div><!-- /organiser -->
-
 
     <div class="float-right ms-3">
       <a href="https://dribdat.cc" target="_blank">
@@ -62,6 +58,7 @@
           More details are in the <a href="https://dribdat.cc/contribute.html#api-guide">Dribdat API Guide</a>.
         </p>
       </div>
+
       <table class="api-table mt-2 ms-2" style="width:100%">
         <thead>
           <td>Type</td><td>Link</td><td>Format</td>
@@ -130,7 +127,12 @@
         </tbody>
       </table>
     </div><!-- /api -->
-    <div class="row">
+
+    <a href="https://github.com/dribdat/dribdat/releases/tag/v{{ ver }}" target="_blank">
+      <small style="color:initial">v{{ ver }}</small>
+    </a>
+
+    <div class="row mt-2">
       <p>
       <a href="https://github.com/dribdat/dribdat/issues" class="btn btn-secondary float-right btn-lg">Wishes + 🐛ssues</a>
         To use this platform for your next event, visit 
@@ -141,6 +143,7 @@
         Have a nice day!
       </p>      
     </div>
+
   </div>
 </div>
 
