@@ -160,7 +160,7 @@
   <div class="col-2 fs-4 text-end" id="skills">🦾 Skills</div>
   <div class="profile-skills col-10 bg-body">
       {% for s in user.my_skills %}
-        <a href="{{ url_for('public.all_participants') }}?q=*{{s}}" class="skill">
+        <a href="{{ url_for('public.all_participants') }}?u=*{{s}}" class="skill">
       	 {{s}}
         </a>
       {% endfor %}
@@ -173,7 +173,7 @@
   <div class="col-2 fs-4 text-end" id="wishes">🎋 Aims</div>
   <div class="profile-wishes col-10 bg-body">
       {% for w in user.my_wishes %}
-        <a href="{{ url_for('public.all_participants') }}?q=*{{w}}" class="wish">
+        <a href="{{ url_for('public.all_participants') }}?u=*{{w}}" class="wish">
          {{w}}
         </a>
       {% endfor %}

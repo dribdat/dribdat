@@ -17,19 +17,21 @@
   </div>
 {% endif %}
 
-<h1 class="huge">Contributors</h1>
+<h1 class="huge">
+  {% if u %}`{{ u }}`
+  {% else %}Contributors
+  {% endif %}
+</h1>
 
-  <div id="search-users" style="margin-bottom:1em; width:400px">
+  <div id="search-users" class="mb-2">
     <form method="get" action="{{ url_for('public.all_participants') }}">
       <div class="content input-group">
         <span class="input-group-text">
           <i class="fa fa-search" aria-hidden="true"></i>
         </span>
-        <input type="text" class="form-control" name="q" value="{{ q }}"
-          aria-label="Search users" 
+        <input type="text" class="form-control" name="u"
           title="Use @username *skill or ~role to refine your search."
-          placeholder="Search ..." 
-          style="width:20em; max-width:80%" />
+          aria-label="Search users" placeholder="Search ...">
       </div>
     </form>
   </div>
@@ -38,7 +40,7 @@
   <div class="missing-roles">
     {% for role in preset_roles %}
       <a class="role" data-id="{{ role.id }}"
-         href="{{ url_for('public.all_participants') }}?q=~{{ role.name }}">
+         href="{{ url_for('public.all_participants') }}?u=~{{ role.name }}">
         <span>{{ role.name }}</span>
       </a>
     {% endfor %}

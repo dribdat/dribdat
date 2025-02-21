@@ -96,13 +96,15 @@
       $sm = $('#search-matches').empty();
       // Search count indicator
       if (projects.length > 0) {
+        $ul.parent().removeClass('hidden');
         $sm.html(
           '<span class="user-score">' + (projects.length) + '</span> ' +
           'matches' +
           (projects.length > 3 ? '<i class="float-right">&#9654;&#9654;</i>' : '')
         );
       } else {
-        $sm.html('Zero, zilch, zip, nada.')
+        $ul.parent().addClass('hidden');
+        $sm.html('No results for "' + q + '".')
       }
       // Create project cards
       projects.forEach(function(p) {

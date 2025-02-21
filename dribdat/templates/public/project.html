@@ -165,7 +165,7 @@
     <div id="technai-md" class="row m-3" title="Tech and skills used in this project">
       <div class="profile-skills col-12 text-center">
         {% for s in project.technai %}
-          <a href="{{ url_for('public.all_participants') }}?q=*{{s}}" class="skill">
+          <a href="{{ url_for('public.all_participants') }}?u=*{{s}}" class="skill">
             {{s}}
           </a>
         {% endfor %}
@@ -193,7 +193,7 @@
         <div class="missing-roles" title="This role is not yet filled. Try to find another team member!">
           {% for role in missing_roles %}
             <a class="role" data-id="{{ role.id }}"
-               href="{{ url_for('public.all_participants') }}?q=~{{ role.name }}">
+               href="{{ url_for('public.all_participants') }}?u=~{{ role.name }}">
               <span>{{ role.name }}</span>
             </a>
           {% endfor %}
