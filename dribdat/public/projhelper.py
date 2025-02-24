@@ -203,12 +203,13 @@ def project_action(project_id, of_type=None, as_view=True, then_redirect=False,
     # Get navigation
     go_nav = navigate_around_project(project)
 
-    # Send a warning for hidden projects
-    if project.is_hidden:
-        flash('This project is hidden, and needs moderation from an organizer.', 'dark')
-    # Send a warning for unapproved challenges
-    if project.progress is not None and project.progress < 0:
-        flash('This challenge is awaiting approval from an organizer.', 'light')
+    if not event.lock_resources:
+        if project.is_hidden:
+            # Send a warning for hidden projects
+            flash('This project is hidden, and needs moderation from an organizer.', 'dark')
+        elif project.progress is not None and project.progress < 0:
+            # Send a warning for unapproved challenges
+            flash('This challenge is awaiting approval from an organizer.', 'light')
 
     # Dump all that data into a template
     return render_template(
