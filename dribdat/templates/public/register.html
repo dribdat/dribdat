@@ -1,3 +1,5 @@
+{% from "macros/_form.html" import render_form %}
+
 {% extends "layout.html" %}
 
 {% block page_title %}Registration{% endblock %}
@@ -6,7 +8,10 @@
 {% block content %}
 <div class="container-narrow">
     <h1>Register</h1>
-    <p>Already registered? <a href="{{ url_for('auth.login', next=request.args.get('next')) }}">Log in here</a>.</p>
+    <p>Already registered? 
+      <i class="fa fa-arrow-right" aria-hidden="true"></i>
+      <b><a href="{{ url_for('auth.login', next=request.args.get('next')) }}">Log in here</a></b>
+    </p>
     <br/>
 
   {% if oauth_type %}
@@ -16,43 +21,13 @@
       in this application.</p>
   {% endif %}
 
-    <form id="registerForm" class="form form-register" method="POST" action="{{ url_for('auth.register', next=request.args.get('next')) }}" role="form">
-        {{ form.hidden_tag() }}
-        <div class="form-group">
-            {{form.username.label}}
-            {{form.username(placeholder="Name", class_="form-control")}}
-        </div>
-        <div class="form-group">
-            {{form.webpage_url.label}}
-            <p><i>URL to your homepage or social media account:
-            </i></p>
-            {{form.webpage_url(placeholder="https://", class_="form-control")}}
-        </div>
-        <div class="form-group">
-            {{form.email.label}}
-            <p><i>Your profile image will be the
-                <a href="https://gravatar.com" target="_blank">Gravatar</a>
-                of this address, or imported
-                <br>from the above account (GitHub, GitLab, LinkedIn, StackOverflow):
-            </i></p>
-            {{form.email(placeholder="Email", class_="form-control")}}
-        </div>
-        <div class="form-group">
-            {{form.password.label}}
-            {{form.password(placeholder="Password", class_="form-control")}}
-        </div>
-        <div class="form-group">
-            {{form.confirm.label}}
-            {{form.confirm(placeholder="Password (again)", class_="form-control")}}
-        </div>
-        {% if config.RECAPTCHA_PUBLIC_KEY %}
-            <div class="form-group text-center">
-                {{ form.recaptcha }}
-            </div>
-        {% endif %}
-        <div class="form-actions">
-            <input class="btn btn-primary btn-lg btn-submit" type="submit" value="Register">
-        </div>
-    </form>
+  {{ render_form(url_for('auth.register'), form, formid='registerForm') }}
+
+    <p class="mt-4"><i>Note: Your profile image will be the
+        <a href="https://gravatar.com" target="_blank">Gravatar</a>
+        of the e-mail address, or imported
+        from the online profile (GitHub, GitLab, LinkedIn, StackOverflow)
+    </i></p>
+
 </div>
 {% endblock %}

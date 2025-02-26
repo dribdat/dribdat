@@ -4,7 +4,7 @@ from factory import PostGenerationMethodCall, Sequence
 from factory.alchemy import SQLAlchemyModelFactory
 
 from dribdat.database import db
-from dribdat.user.models import User, Project, Event, Activity
+from dribdat.user.models import User, Project, Event, Activity, Role
 from datetime import datetime, timedelta, timezone
 from dribdat.futures import UTC
 
@@ -62,3 +62,12 @@ class ActivityFactory(BaseFactory):
 
     class Meta:  # noqa: D106
         model = Activity
+
+
+class RoleFactory(BaseFactory):
+    """Role factory."""
+
+    name = Sequence(lambda n: 'Role {0}'.format(n))
+
+    class Meta:  # noqa: D106
+        model = Role

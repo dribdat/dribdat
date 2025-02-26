@@ -93,16 +93,16 @@
       }
       // Reset search containers
       $ul = $('#search-results').empty();
-      $sm = $('#search-matches').empty();
+      $sm = $('#search-matches').empty().addClass('hidden');
       // Search count indicator
       if (projects.length > 0) {
+        $ul.parent().removeClass('hidden');
         $sm.html(
-          '<span class="user-score">' + (projects.length) + '</span> ' +
-          'matches' +
-          (projects.length > 3 ? '<i class="float-right">&#9654;&#9654;</i>' : '')
-        );
+          '<span class="user-score">' + (projects.length) + '</span> matches'
+        ).removeClass('hidden');
       } else {
-        $sm.html('Zero, zilch, zip, nada.')
+        $ul.parent().addClass('hidden');
+        $sm.html('Zero cool projects found :(').removeClass('hidden');
       }
       // Create project cards
       projects.forEach(function(p) {

@@ -14,7 +14,7 @@
 
   <!-- Collect the nav links, forms, and other content for toggling -->
   <div class="collapse navbar-collapse" id="navbar-main-collapse">
-    <ul class="navbar-nav navbar-left me-auto nav-fill">
+    <ul class="navbar-nav navbar-left nav-fill">
 
       {% if current_user and current_user.is_admin %}
         <li class="nav-item admin-area">
@@ -54,14 +54,6 @@
               Post
             </a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link{{ ' active' if active == 'profile' }}"
-               title="Take me to my profile"
-               href="{{ url_for('public.user_current') }}" title="My User Profile">
-              <i class="fa fa-user bg-primary text-white" aria-hidden="true"></i>
-              Profile
-            </a>
-          </li>
       {% else %}
         <li class="nav-item">
           <a class="nav-link nav-login"
@@ -74,18 +66,47 @@
       {% endif %}
 
       <li class="nav-item">
-        <a class="nav-link" id="navSearchButton"
-           title="Search this dribdat site"
-           href="{{ url_for('public.about') }}">
-          <i class="fa fa-search bg-dark text-white" aria-hidden="true"></i>
-          Search
+        <a class="nav-link{{ ' active' if active == 'people' or active == 'profile' }}"
+           title="List and search for participants"
+           href="{{ url_for('public.all_participants') }}">
+          <i class="fa fa-user bg-primary text-white" aria-hidden="true"></i>
+          People
         </a>
       </li>
 
+      <li class="nav-item me-0 pe-0">
+        <a class="nav-link pe-0" title="Search this dribdat site"
+           href="{{ url_for('public.about') }}">
+          <i class="fa fa-search bg-dark text-white" aria-hidden="true"></i>
+        </a>
+      </li>
     </ul>
+
+    <span data-action="{{ url_for('api.project_search_json') }}" 
+          id="search" class="form-inline ms-0 my-2 my-lg-0 me-auto">
+      <input class="form-control mr-sm-2 ms-0 ms-sm-2" type="search" name="q" 
+             aria-label="Search projects" placeholder="Find">
+    </span>
 
   </div><!-- /.navbar-collapse -->
 </nav>
+
+<!-- Popup search results -->
+<div class="container nav-search mt-0 mb-0" id="navSearch"
+     tabindex="-1" role="dialog" aria-labelledby="searchLabel" aria-hidden="true">
+  <div class="profile-projects container-fluid">
+    <table class="table mt-4 hidden">
+      <thead class="thead">
+        <tr>
+          <th scope="col">Team</th>
+          <th scope="col" width="33%">Sprint</th>
+        </tr>
+      </thead>
+      <tbody id="search-results"></tbody>
+    </table>
+    <div class="text-center mb-3 hidden" id="search-matches"></div>
+  </div>
+</div>
 
 <!-- Popup global alerts -->
 <div id="global-notifications-alert" class="hidden">
@@ -93,30 +114,5 @@
     <button type="button" class="btn-close float-right" data-bs-dismiss="alert" aria-label="Close"></button>
     <i class="fa fa-info-circle float-left" aria-hidden="true"></i>
     <span id="notifications-status-text"></span>
-  </div>
-</div>
-
-<!-- Popup search results -->
-<div class="hidden container nav-search" id="navSearch"
-     tabindex="-1" role="dialog" aria-labelledby="searchLabel" aria-hidden="true">
-  <div class="profile-projects container-fluid mb-3">
-    <div data-action="{{ url_for('api.project_search_json') }}" id="search">
-      <div class="content input-group">
-        <span class="input-group-text">
-          <i class="fa fa-search" aria-hidden="true"></i>
-        </span>
-        <input type="text" class="form-control" name="q" aria-label="Search projects" placeholder="Start typing ..."  style="width:20em">
-      </div>
-    </div>
-    <table class="table mt-3">
-      <thead class="thead">
-        <tr>
-          <th scope="col">Team</th>
-          <th scope="col">Sprint</th>
-        </tr>
-      </thead>
-      <tbody id="search-results"></tbody>
-    </table>
-    <div class="text-center mb-2" id="search-matches"></div>
   </div>
 </div>

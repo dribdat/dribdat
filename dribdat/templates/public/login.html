@@ -5,7 +5,7 @@
 
 {% block content %}
 <div class="container-narrow">
-  <h1>Log in</h1>
+  <h1 class="huge">Log in</h1>
   <br/>
 
   {% if config.DRIBDAT_HELP_REGISTER %}
@@ -66,9 +66,9 @@
     <form id="loginForm" method="POST" action="{{ url_for('auth.login', next=request.args.get('next')) }}" role="login" class="navbar-form form-inline">
       {{ form.hidden_tag() }}
       <div class="form-group">
-        {{ form.username(placeholder="username", class_="form-control") }}
-        {{ form.password(placeholder="password", class_="form-control") }}
-        <button type="submit" class="btn btn-default btn-primary btn-submit">Verify me</button>
+        {{ form.username(placeholder="username", class_="form-control w-100") }}
+        {{ form.password(placeholder="password", class_="form-control w-100") }}
+        <button type="submit" class="btn btn-default btn-primary btn-submit mt-2 w-100">Verify me</button>
       </div>
 
       {% if config.RECAPTCHA_PUBLIC_KEY %}
@@ -78,11 +78,13 @@
       {% endif %}
     </form>
     <br>
-    <p>
-      <i class="fa fa-arrow-right" aria-hidden="true"></i>
-      <a href="{{ url_for('auth.forgot') }}">Sign in by e-mail</a>
-      if you do not know your password.
-    </p>
+    {% if config.MAIL_SERVER %}
+      <p>
+        <i class="fa fa-arrow-right" aria-hidden="true"></i>
+        <b><a href="{{ url_for('auth.forgot') }}">Sign in by e-mail</a></b>
+        if you do not know your password.
+      </p>
+    {% endif %}
   {% endif %}
   {% if not config.DRIBDAT_NOT_REGISTER %}
     <p class="account-register">

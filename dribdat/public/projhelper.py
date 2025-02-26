@@ -26,7 +26,6 @@ from dribdat.futures import UTC
 
 def current_event():
     """Return currently featured event."""
-    # TODO: allow multiple featurettes?
     return Event.query.filter_by(is_current=True).first()
 
 
@@ -36,7 +35,7 @@ def check_update(obj, minutes=5):
     return td < timedelta(minutes=minutes)
 
 
-def resources_by_stage(progress=None):
+def resources_by_stage(progress=None, limit=None):
     """Get all projects which are published in a resource-type event."""
     if progress is None:
         return []
@@ -47,6 +46,8 @@ def resources_by_stage(progress=None):
         projects = Project.query.filter_by(
             event_id=eid, is_hidden=False, progress=progress)
         project_list.extend([p.data for p in projects.all()])
+    if limit is not None:
+        return project_list[:limit]
     return project_list
 
 
@@ -202,12 +203,13 @@ def project_action(project_id, of_type=None, as_view=True, then_redirect=False,
     # Get navigation
     go_nav = navigate_around_project(project)
 
-    # Send a warning for hidden projects
-    if project.is_hidden:
-        flash('This project is hidden, and needs moderation from an organizer.', 'dark')
-    # Send a warning for unapproved challenges
-    if project.progress is not None and project.progress < 0:
-        flash('This challenge is awaiting approval from an organizer.', 'light')
+    if not event.lock_resources:
+        if project.is_hidden:
+            # Send a warning for hidden projects
+            flash('This project is hidden, and needs moderation from an organizer.', 'dark')
+        elif project.progress is not None and project.progress < 0:
+            # Send a warning for unapproved challenges
+            flash('This challenge is awaiting approval from an organizer.', 'light')
 
     # Dump all that data into a template
     return render_template(

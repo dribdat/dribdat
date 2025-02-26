@@ -187,7 +187,7 @@ def getActivityByType(a, only_active=True):  # noqa: C901
 
     # Based on action, populate activity fields
     if a.action == 'sync':
-        text = "Repository updated"
+        text = "`SYNCED`"
         icon = 'code'
     elif a.action == 'post' and a.name == 'review' and a.content is not None:
         text = a.content
@@ -196,21 +196,21 @@ def getActivityByType(a, only_active=True):  # noqa: C901
         text = a.content
         icon = 'pencil'
     elif a.name == 'star':
-        text = "Joined the team"
+        text = "`JOINED`"
         icon = 'thumbs-up'
     elif a.name == 'update' and a.action == 'commit':
         text = a.content
         author = None
         icon = 'random'
     elif a.name == 'revert':
-        text = "Reverted to"
+        text = "`REVERTED`"
         if a.project_version:
-            text += " version %d" % a.project_version
+            text += " v. %d" % a.project_version
         icon = 'paperclip'
     elif a.name == 'update':
-        text = "Edited"
+        text = "`EDITED`"
         if a.project_version:
-            text += " (version %d)" % a.project_version
+            text += " v. %d" % a.project_version
         icon = 'paperclip'
     # elif a.name == 'revert':
     #     text = "Reverted content"

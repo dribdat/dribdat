@@ -83,6 +83,7 @@ class RegisterForm(FlaskForm):
                                 'password',
                                 message='Passwords must match')])
     webpage_url = URLField(u'Online profile')
+    submit = SubmitField(u'Continue')
     recaptcha = RecaptchaField()
 
     def __init__(self, *args, **kwargs):

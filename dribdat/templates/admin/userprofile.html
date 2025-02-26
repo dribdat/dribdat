@@ -11,7 +11,7 @@
         <a href="{{ url_for('admin.user', user_id=user.id )}}" class="btn btn-warning">Edit account</a>
     </p>
 
-    {{ render_form(url_for('admin.user_profile', user_id=user.id), form) }}
+    {{ render_form(url_for('admin.user_profile', user_id=user.id), form, formid='userProfile') }}
 
 </div>
 {% endblock %}
