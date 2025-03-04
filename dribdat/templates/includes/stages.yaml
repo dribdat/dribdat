@@ -7,8 +7,9 @@ stages:
     name: CHALLENGE
     phase: Challenge
     description: Define questions to answer with data about issues that matter 
-    emoji: 🚧
     tip: Advance to the next stage by posting an update.
+    emoji: 🚧
+    prompt: 
     conditions:
       validate:
         -
@@ -27,8 +28,9 @@ stages:
     name: PROJECT
     phase: Project
     description: Collecting resources together in a shared space 
-    emoji: 👪
     tip: Find examples and resources to inspire your team.
+    emoji: 👪
+    prompt: 
     conditions:
       validate:
         -
@@ -44,8 +46,9 @@ stages:
     name: RESEARCH
     phase: Research
     description: Scoping of data collection and prototyping strategy 
-    emoji: ⚗️
     tip: Write down what you are doing regularly to stay on track.
+    emoji: 🥽
+    prompt: 
     conditions:
       validate:
         -
@@ -60,8 +63,9 @@ stages:
     name: SKETCH
     phase: Sketching
     description: Evaluating and explaining to humans and machines 
-    emoji: 🎨
     tip: The more you share, the more feedback you will get.
+    emoji: 🎨
+    prompt: 
     conditions:
       validate:
         -
@@ -76,8 +80,9 @@ stages:
     name: PROTOTYPE
     phase: Prototype
     description: Efforts to improve the quality of the output 
-    emoji: 🐣
     tip: There is no such thing as a stupid question. Just ask if you are stuck.
+    emoji: 🐣
+    prompt: 
     conditions:
       validate:
         -
@@ -92,8 +97,9 @@ stages:
     name: LAUNCH
     phase: Launch
     description: Gaining insights on the problem defined in the beginning 
-    emoji: 🎈
     tip: Make sure to give credit to everyone involved and document all sources used.
+    emoji: 🎈
+    prompt: 
     conditions:
       validate:
         -
@@ -108,8 +114,9 @@ stages:
     name: LIVE
     phase: Share
     description: Thinking about audience and making the results public 
-    emoji: 🚀
     tip: Consider next steps and action points (take-aways) from your work.
+    emoji: 🚀
+    prompt: 
     conditions:
       validate:
         -
