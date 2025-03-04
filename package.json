@@ -1,7 +1,7 @@
 {
   "name": "dribdat",
-  "version": "0.8.8",
-  "description": "Online platform for time-limited collaborative events",
+  "version": "0.8.9",
+  "description": "Open tools for fair collaborative events",
   "repository": "https://codeberg.org/dribdat/dribdat",
   "author": "Dribdat Contributors <dribdat@datalets.ch>",
   "license": "MIT",
