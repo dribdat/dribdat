@@ -9,7 +9,7 @@ stages:
     description: Define questions to answer with data about issues that matter 
     tip: Advance to the next stage by posting an update.
     emoji: 🚧
-    prompt: 
+    prompt: Include a short, funny story about clowns.
     conditions:
       validate:
         -

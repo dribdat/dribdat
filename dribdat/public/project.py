@@ -555,7 +555,7 @@ def create_new_project(event, is_anonymous=False):
     if not current_app.config['LLM_API_KEY']:
         del form.generate_pitch
     else:
-        form.generate_pitch.label.text += " (using " + current_app.config['LLM_MODEL'].upper() + ")"
+        form.generate_pitch.label.text += " using " + current_app.config['LLM_MODEL'].upper()
 
     if not (form.is_submitted() and form.validate()):
         return render_template(

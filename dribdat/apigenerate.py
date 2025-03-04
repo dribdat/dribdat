@@ -20,7 +20,13 @@ SYSTEM_PROMPT = (
 )
 
 # Default challenge prompts
-INITIAL_CHALLENGE_PROMPT = "Write a challenge statement for a hackathon project."
+INITIAL_CHALLENGE_PROMPT = (
+    "Write a challenge statement for a collaborative hackathon project. " +
+    "Include a section with a basic introduction and first steps. " +
+    "Describe in a second section some example datasets and resources. " +
+    "The last section should explain what kind of skills are involved. " +
+    "Use dashes (---) to separate the sections."
+)
 INITIAL_PROJECT_PROMPT = (
     "Suggest one clear and concise next step for a hackathon project."
 )
@@ -64,12 +70,6 @@ def prompt_initial(project: Project):
     )
 
 
-def gen_project_pitch(project: Project):
-    """Returns results from a prompt used for a seed pitch in a project."""
-    prompt = prompt_initial(project)
-    return gen_openai(prompt)
-
-
 def prompt_ideas(project: Project):
     """Form a prompt that is used to generate posts."""
     basep = prompt_initial(project)
@@ -94,12 +94,18 @@ def prompt_ideas(project: Project):
             if "agree" in psc:
                 cc.extend(psc["agree"])
             stage_advice = stage_advice + " ".join(cc)
+    if summary:
+        summary = "Improve upon the following prior results:\n%s" % (summary)
+
     # Generate the prompt
     return (
-        basep
-        + "At this stage, the team should ensure that they:\n%s\n\n" % (stage_advice)
-        + "Improve on the following results already done here:\n%s" % (summary)
+        basep + "\n\n%s\n\n%s" % (stage_advice, summary)
     )
+
+
+def gen_project_pitch(project: Project):
+    """Returns results from a prompt used for a seed pitch in a project."""
+    return gen_project_post(project, False)
 
 
 def gen_project_post(project: Project, as_boost: bool = False):
@@ -108,9 +114,13 @@ def gen_project_post(project: Project, as_boost: bool = False):
     if as_boost:
         # Use an evaluation type prompt
         prompt = DEFAULT_EVALUATION_PROMPT + prompt
+    elif project.is_challenge:
+        # The challenge prompt will be applied later
+        pass
     else:
         # Use the standard recommendation prompt
         prompt = DEFAULT_RECOMMENDATION_PROMPT + prompt
+    #print(prompt)
     return gen_openai(prompt)
 
 
@@ -164,7 +174,7 @@ def gen_openai(prompt: str):
     if len(completion.choices) > 0:
         mymodel = current_app.config["LLM_MODEL"].upper()
         content = completion.choices[0].message.content or ""
-        content = content.replace("\n", "\n> ")
+        #content = content.replace("\n", "\n> ")
         return "🅰️ℹ️ `Generated with %s`\n\n%s" % (mymodel, content)
     else:
         logging.error("No LLM data in response")
