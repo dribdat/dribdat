@@ -74,7 +74,9 @@ def prompt_ideas(project: Project):
     """Form a prompt that is used to generate posts."""
     basep = prompt_initial(project)
     # Collect project contents, preferring the pitch
-    summary = project.longtext
+    summary = ''
+    if project.longtext:
+        summary = project.longtext
     if project.autotext:
         summary = summary + "\n\n# README\n" + project.autotext
     summary = summary.replace("\n\n", "\n").replace("  ", " ")
