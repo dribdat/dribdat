@@ -122,7 +122,12 @@
           <sp>ODS</sp>
           <sp>JSON</sp>
           <sp>GeoJSON</sp>
-          <br>(up to {{ (config.MAX_CONTENT_LENGTH/(1024*1024))|round(1) }} MB in size)
+          <br>(up to {{ (config.MAX_CONTENT_LENGTH/(1024*1024))|round(1) }} MB)
+
+          &#x1F4A1; Consider using
+          <a href="https://frictionlessdata.io/" target="_blank">Frictionless Data</a> 
+          standards to share an open data package made
+          <a href="https://frictionlessdata.io/projects/#which-software-is-right-for-me" target="_blank">with tools</a> or <a href="https://github.com/schoolofdata-ch/datapackage-template" target="_blank">a template</a>.
         </p>
         <div class="input-group mt-2">
           <div class="custom-file">
@@ -157,12 +162,6 @@
             Copy link
           </button>
         </center>
-        <hr>
-        <p class="upload-note mt-4">
-          &#x1F4A1; According to <a href="https://frictionlessdata.io/" target="_blank">Frictionless Data</a> standards, we
-          recommend sharing metadata with a <sp>datapackage.json</sp> generated
-          <a href="https://frictionlessdata.io/projects/#visual-interfaces" target="_blank">with tools</a> or copied from <a href="https://github.com/schoolofdata-ch/datapackage-template" target="_blank">a template</a>.
-        </p>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-bs-dismiss="modal">Close</button>

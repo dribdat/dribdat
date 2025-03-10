@@ -272,7 +272,7 @@
 </div><!-- / .project-controls -->
 
 {% if allow_edit %}
-  {% if config.LLM_API_KEY %}
+  {% if config.LLM_API_KEY and not project.is_challenge and not project.event.lock_resources %}
   <div role="group" aria-label="Team controls" class="ml-3 btn-group project-controls">
     <button data-bs-toggle="modal" data-bs-target="#autopostModal"
        title="Get tips from an AI coach" class="btn btn-lg btn-dark">
