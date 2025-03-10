@@ -76,7 +76,7 @@
 
       <li class="nav-item me-0 pe-0">
         <a class="nav-link pe-0" title="Search this dribdat site"
-           href="{{ url_for('public.about') }}">
+           onclick="$('#search input').focus()">
           <i class="fa fa-search bg-dark text-white" aria-hidden="true"></i>
         </a>
       </li>
@@ -84,7 +84,7 @@
 
     <span data-action="{{ url_for('api.project_search_json') }}" 
           id="search" class="form-inline ms-0 my-2 my-lg-0 me-auto">
-      <input class="form-control mr-sm-2 ms-0 ms-sm-2" type="search" name="q" 
+      <input class="form-control ms-0" type="search" name="q" 
              aria-label="Search projects" placeholder="Find">
     </span>
 

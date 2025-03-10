@@ -13,7 +13,7 @@
         </p>
         <div class="input-group" style="margin-top:1em">
           <div class="custom-file">
-            <label class="form-label custom-file-label" for="inputImageFile">Choose file</label>
+            <label class="form-label custom-file-label hidden" for="inputImageFile">Choose file</label>
             <input class="custom-file-input form-control form-control-lg" id="inputImageFile"
               type="file" name="image" aria-describedby="inputImageLabel" accept="image/*"
               data-maxsize="{{ config.MAX_CONTENT_LENGTH }}">
@@ -64,12 +64,16 @@
       </div>
       <div class="modal-body">
         <p class="upload-note mt-0">
-          You can upload a <sp>PDF</sp> export of your presentation here,
+          You can upload a <sp>PDF</sp> of your presentation here,
           up to {{ (config.MAX_CONTENT_LENGTH/(1024*1024))|round(1) }} MB in size.
+        </p><p class="upload-note mt-2">
+          Use the <i>Export to PDF</i> function in your presentation, or an 
+          <a href="https://www.adobe.com/acrobat/online/ppt-to-pdf.html" target="_blank">online converter</a> to prepare your file.
+          Too big? Try <a href="https://tools.pdf24.org/compress-pdf" target="_blank">compressing your PDF</a>.
         </p>
         <div class="input-group mt-2">
           <div class="custom-file">
-            <label class="form-label custom-file-label" for="inputFile">Choose file</label>
+            <label class="form-label custom-file-label hidden" for="inputFile">Choose file</label>
             <input class="custom-file-input form-control form-control-lg" id="inputFile"
               type="file" name="image" aria-describedby="inputFileLabel" accept=".pdf"
               data-maxsize="{{ config.MAX_CONTENT_LENGTH }}">
@@ -92,9 +96,8 @@
           </button>
         </center>
         <p class="upload-note mt-4">
-          <b>Tip:</b> 
-          Use the <i>Export to PDF</i> function in your presentation, or an <a href="https://www.adobe.com/acrobat/online/ppt-to-pdf.html" target="_blank">online converter</a> to prepare your file.
-          Too big? Try <a href="https://tools.pdf24.org/compress-pdf" target="_blank">compressing your PDF</a> before uploading.
+          &#x1F4A1; <b>Slide mode</b> lets you make a simple presentation right in the <b>Pitch</b> area.
+          Just use the <b>Line</b> tool (<tt>***</tt>) to separate the slides.
         </p>
       </div>
       <div class="modal-footer">
@@ -131,7 +134,7 @@
         </p>
         <div class="input-group mt-2">
           <div class="custom-file">
-            <label class="form-label custom-file-label" for="inputFile">Choose file</label>
+            <label class="form-label custom-file-label hidden" for="inputFile">Choose file</label>
             <input class="custom-file-input form-control form-control-lg" id="inputFile"
               type="file" name="image" aria-describedby="inputFileLabel" accept="application/json,.geojson,.csv,.tsv,.pdf,application/vnd.oasis.opendocument.spreadsheet"
               data-maxsize="{{ config.MAX_CONTENT_LENGTH }}">

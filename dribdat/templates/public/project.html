@@ -245,13 +245,6 @@
         Comment
       </a>
     {% endif %}
-    {% if project.event.user == current_user or current_user.is_admin %}
-      <a href="{{ url_for('project.project_approve', project_id=project.id) }}" class="btn btn-lg btn-primary project-approve"
-        title="Promote to next project level">
-        <i class="fa fa-rocket" aria-hidden="true"></i>
-        Approve
-      </a>
-    {% endif %}
     {% if allow_edit %}
       <a href="{{ url_for('project.project_edit', project_id=project.id) }}" class="btn btn-lg btn-warning"
         title="Edit basic project data">
@@ -268,12 +261,19 @@
           Sync</a>
       {% endif %}
     {% endif %}
+    {% if project.event.user == current_user or current_user.is_admin %}
+      <a href="{{ url_for('project.project_approve', project_id=project.id) }}" class="btn btn-lg btn-primary project-approve"
+        title="Promote to next project level">
+        <i class="fa fa-rocket" aria-hidden="true"></i>
+        Approve
+      </a>
+    {% endif %}
   {% endif %}
 </div><!-- / .project-controls -->
 
 {% if allow_edit %}
   {% if config.LLM_API_KEY and not project.is_challenge and not project.event.lock_resources %}
-  <div role="group" aria-label="Team controls" class="ml-3 btn-group project-controls">
+  <div role="group" aria-label="Team controls" class="ms-3 me-3 btn-group project-controls">
     <button data-bs-toggle="modal" data-bs-target="#autopostModal"
        title="Get tips from an AI coach" class="btn btn-lg btn-dark">
       &#x1F170;&#xFE0F;&#x2139;&#xFE0F;
