@@ -21,7 +21,7 @@ import re, string
 
 
 # Instantiate Markdown parser
-md = MarkdownIt().enable('table')
+md = MarkdownIt('gfm-like').enable('table')
 
 def markdownit(content):
     """ Converts a value to Markdown """
