@@ -9,7 +9,6 @@ stages:
     description: Define questions to answer with data about issues that matter 
     tip: Advance to the next stage by posting an update.
     emoji: 🚧
-    prompt: Include a short, funny story about clowns.
     conditions:
       validate:
         -
@@ -30,7 +29,6 @@ stages:
     description: Collecting resources together in a shared space 
     tip: Find examples and resources to inspire your team.
     emoji: 👪
-    prompt: 
     conditions:
       validate:
         -
@@ -48,7 +46,6 @@ stages:
     description: Scoping of data collection and prototyping strategy 
     tip: Write down what you are doing regularly to stay on track.
     emoji: 🥽
-    prompt: 
     conditions:
       validate:
         -
@@ -65,7 +62,6 @@ stages:
     description: Evaluating and explaining to humans and machines 
     tip: The more you share, the more feedback you will get.
     emoji: 🎨
-    prompt: 
     conditions:
       validate:
         -
@@ -82,7 +78,6 @@ stages:
     description: Efforts to improve the quality of the output 
     tip: There is no such thing as a stupid question. Just ask if you are stuck.
     emoji: 🐣
-    prompt: 
     conditions:
       validate:
         -
@@ -99,7 +94,6 @@ stages:
     description: Gaining insights on the problem defined in the beginning 
     tip: Make sure to give credit to everyone involved and document all sources used.
     emoji: 🎈
-    prompt: 
     conditions:
       validate:
         -
@@ -116,7 +110,6 @@ stages:
     description: Thinking about audience and making the results public 
     tip: Consider next steps and action points (take-aways) from your work.
     emoji: 🚀
-    prompt: 
     conditions:
       validate:
         -

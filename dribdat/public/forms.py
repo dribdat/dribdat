@@ -134,11 +134,9 @@ class ProjectPost(FlaskForm):
     has_progress = BooleanField(u"Level up")
     note = TextAreaField(
         'How are the vibes in your team right now?',
-        [length(max=280), InputRequired()],
-        render_kw={'maxlength': 280, 'minlength': 4},
+        [length(max=280)], render_kw={'maxlength': 280, 'minlength': 4},
         description=u'A short note for your project log')
-    submit = SubmitField(u'Save post',
-        render_kw={'data-toggle': "modal", 'data-target': "#pleasewaitModal"})
+    submit = SubmitField(u'Send')
 
 
 class ProjectComment(FlaskForm):
@@ -147,11 +145,9 @@ class ProjectComment(FlaskForm):
     id = HiddenField('id')
     note = TextAreaField(
         u'My question or comment:',
-        [length(max=280), InputRequired()],
-        render_kw={'maxlength': 280, 'minlength': 4},
+        [length(max=280)], render_kw={'maxlength': 280, 'minlength': 4},
         description=u'Write a suggestion or some constructive feedback for the team.')
-    submit = SubmitField(u'Send comment',
-        render_kw={'data-toggle': "modal", 'data-target': "#pleasewaitModal"})
+    submit = SubmitField(u'Send comment')
 
 
 class ProjectBoost(FlaskForm):

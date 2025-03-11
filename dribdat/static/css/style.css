@@ -1241,7 +1241,6 @@ a.media {
 
 .project-page .project-longtext {
     margin: 1em 0em;
-    font-size: 125%;
 }
 .project-page .project-autotext {
     margin: 0em;
@@ -1277,6 +1276,7 @@ a.media {
     line-height: 1.5em;
     overflow: hidden;
     text-align: left;
+    z-index: -1;
 }
 
 /* -- Timeline (dribs) -- */
@@ -1727,12 +1727,6 @@ main .form-actions input.btn {
 }
 .form-group .g-recaptcha > div {
     display: inline-block;
-}
-
-/* Code blocks */
-pre {
-    color: #333;
-    background: white;
 }
 
 /* Inline "README" */
@@ -2521,10 +2515,6 @@ Instruction page
     clear: both;
     list-style: disclosure-closed;
     font-size: 70%;
-}
-.list-stages .step .card-header, 
-.list-stages .step .card {
-    background: white;
 }
 .list-stages .step .card {
     min-height: 7em;

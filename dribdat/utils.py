@@ -21,7 +21,7 @@ import re, string
 
 
 # Instantiate Markdown parser
-md = MarkdownIt().enable('table')
+md = MarkdownIt('gfm-like').enable('table')
 
 def markdownit(content):
     """ Converts a value to Markdown """
@@ -91,6 +91,16 @@ def get_time_note():
     if tz is not None:
         return "%s (%s)" % (tzinfo, tz)
     return tzinfo
+
+
+def timelimit(dtsince, seconds=30):
+    """Check how much time has elapsed."""
+    if dtsince is None:
+        return False
+    dt_now = datetime.now(UTC)
+    dt = dtsince.astimezone(UTC)
+    elapsed = (dt_now - dt).seconds
+    return elapsed < seconds
 
 
 def timesince(dtsince, default="just now", until=False):

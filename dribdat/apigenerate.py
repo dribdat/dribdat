@@ -84,8 +84,8 @@ def prompt_ideas(project: Project):
     stage_advice = DEFAULT_STAGE_ADVICE
     if not project.stage:
         pass
-    elif "prompt" in project.stage and project.stage["prompt"]:
-        stage_advice = project.stage["prompt"]
+    elif "description" in project.stage and project.stage["description"]:
+        stage_advice = project.stage["description"]
     elif "tip" in project.stage and project.stage["tip"]:
         stage_advice = project.stage["tip"] + " "
         if "conditions" in project.stage:

@@ -8,7 +8,7 @@ from dribdat.user.models import Event, Project, Activity, User
 from dribdat.user.constants import drib_question
 from dribdat.database import db
 from dribdat.extensions import cache
-from dribdat.utils import timesince
+from dribdat.utils import timesince, timelimit
 from dribdat.public.forms import (
     ProjectImport, ProjectNew, ProjectPost, ProjectBoost, ProjectComment
 )
@@ -173,18 +173,23 @@ def project_post(project_id):
     # Apply random questions
     form.note.label.text = drib_question()
 
-    # Process form
-    if form.is_submitted() and form.validate():
-        if form.has_progress.data:
-            # Check and update progress
-            if all_valid:
-                if stageProjectToNext(project):
-                    flash("Level up! You are at stage '%s'" %
-                        project.phase, 'info')
+    # Quick hammer protection 
+    # TODO: currently OFF due to a TZ issue
+    thelastact = project.activities[-1].timestamp
+    if form.is_submitted() and timelimit(thelastact) and False:
+        flash("Please wait a minute before posting", 'warning')
+
+    elif form.is_submitted() and form.validate():
+        # Check and update progress
+        if form.has_progress.data and all_valid:
+            if stageProjectToNext(project):
+                flash("Level up! You are at stage '%s'" %
+                    project.phase, 'info')
 
         # Update project data
         del form.id
         del form.has_progress
+        # Process form
         form.populate_obj(project)
         project.update_now()
         db.session.add(project)
@@ -269,7 +274,6 @@ def project_autopost(project_id):
     flash("The robots have spoken", 'success')
     return redirect(url_for(
         'project.get_log', project_id=p.id))
-
 
 
 @blueprint.route('/<int:project_id>/unpost/<int:activity_id>', methods=['GET'])

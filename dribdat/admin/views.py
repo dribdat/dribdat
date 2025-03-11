@@ -562,16 +562,25 @@ def project_new():
     form.event_id.choices = [(e.id, e.name)
                              for e in Event.query.order_by(Event.id.desc())]
     current_event = Event.query.filter_by(is_current=True).first()
+
+    # Set defaults and categories
     if current_event and not form.event_id.data:
         form.event_id.data = current_event.id
+    if not form.technai.data:
+        form.technai.data = ""
     form.category_id.choices = [(c.id, c.name)
                                 for c in project.categories_all()]
     form.category_id.choices.insert(0, (-1, ''))
-    form.technai.data = ""
 
     if form.is_submitted() and form.validate():
         del form.id
         form.populate_obj(project)
+        # TODO: this code is duplicated in project_edit
+        # Ensure project category remains blank
+        if project.category_id == -1:
+            project.category_id = None
+        # Assign technai from CSV
+        project.technai = unpack_csvlist(form.technai.data)
         # Assign owner if selected
         project.user = get_user_by_name(form.user_name.data)
         project.update_now()
