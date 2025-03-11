@@ -195,6 +195,9 @@ def getActivityByType(a, only_active=True):  # noqa: C901
     elif a.action == 'post' and a.content is not None:
         text = a.content
         icon = 'pencil'
+    elif a.action == 'auto':
+        text = a.content
+        icon = 'diamond'
     elif a.name == 'star':
         text = "`JOINED`"
         icon = 'thumbs-up'
