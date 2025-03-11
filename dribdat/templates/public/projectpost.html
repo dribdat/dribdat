@@ -8,11 +8,11 @@
 
 {% block js %}
   {% if config.ENV == 'prod' %}
-    <script src="{{ url_for('static', filename='libs/toastui-all/toastui-editor-all.min.js')}}"></script>
-    <link href="{{ url_for('static', filename='libs/toastui-all/toastui-editor.min.css')}}" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/easymde@2/dist/easymde.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/easymde@2/dist/easymde.min.css">
   {% else %}
-    <script src="{{ url_for('static', filename='libs/toastui-all/toastui-editor-all.min.js')}}"></script>
-    <link href="{{ url_for('static', filename='libs/toastui-all/toastui-editor.min.css')}}" rel="stylesheet">
+    <script src="{{ url_for('static', filename='libs/easymde/easymde.min.js')}}"></script>
+    <link href="{{ url_for('static', filename='libs/easymde/easymde.min.css')}}" rel="stylesheet">
   {% endif %}
 {% endblock %}
 
