@@ -93,13 +93,14 @@ def get_time_note():
     return tzinfo
 
 
-def timecheck(dtsince, seconds=5):
+def timelimit(dtsince, seconds=30):
     """Check how much time has elapsed."""
     if dtsince is None:
         return False
-    dt = dtsince.astimezone(UTC)
     dt_now = datetime.now(UTC)
-    return (dt_now - dt).seconds < seconds
+    dt = dtsince.astimezone(UTC)
+    elapsed = (dt_now - dt).seconds
+    return elapsed < seconds
 
 
 def timesince(dtsince, default="just now", until=False):

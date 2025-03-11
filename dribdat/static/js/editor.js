@@ -197,16 +197,23 @@
                 $dialog.modal("hide");
               } else if ($(this).data("target") == "post") {
                 // Append to post
-                var imglink = "![  ](" + response + ")";
-                $("#note").val(imglink + " " + $("#note").val());
+                if (typeof window.toasteditor !== "undefined") {
+                  // As an image
+                  window.toasteditor.exec("addImage", {
+                    imageUrl: response, altText: '',
+                  });
+                } else {
+                  var imglink = "![](" + response + ")";
+                  $("#note").val(imglink + " " + $("#note").val());
+                }
                 $dialog.modal("hide");
               } else if ($(this).data("target") == "pitch") {
                 // Append to pitch
-                var filename = response
-                  .split(/(\\|\/)/g)
-                  .pop()
-                  .replaceAll("_", " ");
                 if (typeof window.toasteditor !== "undefined") {
+                  // Generate a cleaner filename
+                  var filename = response
+                    .split(/(\\|\/)/g).pop()
+                    .replaceAll("_", " ");
                   // As an image
                   window.toasteditor.exec("addImage", {
                     imageUrl: response,
@@ -535,7 +542,7 @@
   function activate_editor() {
     if (typeof toastui !== "object") return;
     const Editor = toastui.Editor;
-    const $longtext = $("#longtext").first(); //,#note
+    const $longtext = $("#longtext,#note").first();
     if (!$longtext.length) return;
     $longtext.after('<div id="mdeditor" style="text-align:left"></div>');
 
@@ -600,9 +607,9 @@
           .find(".form-text");
     // Switch to the singular if there's exactly 1 character remaining
     if (counter !== 1) {
-      helper.text(counter + " characters remaining");
+      helper.text(counter + " bytes");
     } else {
-      helper.text(counter + " character remaining");
+      helper.text("All out of bytes!");
     }
     // Make it red if there are 0 characters remaining
     if (counter === 0) {
