@@ -8,7 +8,7 @@ from dribdat.user.models import Event, Project, Activity, User
 from dribdat.user.constants import drib_question
 from dribdat.database import db
 from dribdat.extensions import cache
-from dribdat.utils import timesince
+from dribdat.utils import timesince, timecheck
 from dribdat.public.forms import (
     ProjectImport, ProjectNew, ProjectPost, ProjectBoost, ProjectComment
 )
@@ -173,8 +173,13 @@ def project_post(project_id):
     # Apply random questions
     form.note.label.text = drib_question()
 
-    # Process form
-    if form.is_submitted() and form.validate():
+    # Quick hammer protection
+    if form.is_submitted() and not timecheck(project.updated_at, 30):
+        flash("Please wait a minute before posting", 'warning')
+
+    elif form.is_submitted() and form.validate():
+        # Process form
+
         if form.has_progress.data:
             # Check and update progress
             if all_valid:

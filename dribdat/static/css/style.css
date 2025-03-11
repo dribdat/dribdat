@@ -1729,12 +1729,6 @@ main .form-actions input.btn {
     display: inline-block;
 }
 
-/* Code blocks */
-pre {
-    color: #333;
-    background: white;
-}
-
 /* Inline "README" */
 #team-md::before {
     content: "Team";
@@ -2521,10 +2515,6 @@ Instruction page
     clear: both;
     list-style: disclosure-closed;
     font-size: 70%;
-}
-.list-stages .step .card-header, 
-.list-stages .step .card {
-    background: white;
 }
 .list-stages .step .card {
     min-height: 7em;

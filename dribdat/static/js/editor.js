@@ -512,7 +512,7 @@
       data: $form.serialize(),
       success: function (data) {
         // Handle response
-        console.log(data);
+        //console.log(data);
         $form.find(".buttons").show();
         $form.find(".message-loading").hide();
         if (data.status == "Error") {
@@ -535,7 +535,7 @@
   function activate_editor() {
     if (typeof toastui !== "object") return;
     const Editor = toastui.Editor;
-    const $longtext = $("#longtext");
+    const $longtext = $("#longtext").first(); //,#note
     if (!$longtext.length) return;
     $longtext.after('<div id="mdeditor" style="text-align:left"></div>');
 

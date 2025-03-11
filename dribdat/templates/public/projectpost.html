@@ -6,6 +6,16 @@
 {% block page_title %}🖄 {{project.name}}{% endblock %}
 {% block body_class %}projectpost{% endblock %}
 
+{% block js %}
+  {% if config.ENV == 'prod' %}
+    <script src="https://cdn.jsdelivr.net/npm/@toast-ui/editor@3/dist/toastui-editor.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@toast-ui/editor@3/dist/toastui-editor.min.css">
+  {% else %}
+    <script src="{{ url_for('static', filename='libs/toastui-all/toastui-editor-all.min.js')}}"></script>
+    <link href="{{ url_for('static', filename='libs/toastui-all/toastui-editor.min.css')}}" rel="stylesheet">
+  {% endif %}
+{% endblock %}
+
 {% block content %}
 
   {% if (suggestions or stage) and project.progress and project.progress < 50 %}
@@ -51,7 +61,7 @@
 
   {% if stage %}
     {% if all_valid and stage['name'] == 'LIVE' %}
-      <div class="alert alert-success mt-1" role="alert">
+      <div class="hidden alert alert-success mt-1" role="alert">
         <i class="fa fa-thumbs-up"></i>
         Your project is ready for action!
       </div>
