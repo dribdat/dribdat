@@ -93,6 +93,15 @@ def get_time_note():
     return tzinfo
 
 
+def timecheck(dtsince, seconds=5):
+    """Check how much time has elapsed."""
+    if dtsince is None:
+        return False
+    dt = dtsince.astimezone(UTC)
+    dt_now = datetime.now(UTC)
+    return (dt_now - dt).seconds < seconds
+
+
 def timesince(dtsince, default="just now", until=False):
     """Return a string representing 'time since'."""
     """E.g.: 3 days ago, 5 hours ago etc.
