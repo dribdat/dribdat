@@ -1275,7 +1275,6 @@ a.media {
     line-height: 1.5em;
     overflow: hidden;
     text-align: left;
-    z-index: -1;
 }
 
 /* -- Timeline (dribs) -- */
