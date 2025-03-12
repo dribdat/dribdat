@@ -8,9 +8,9 @@
   "private": false,
   "dependencies": {
     "@barba/core": "^2.9.7",
-    "@toast-ui/editor": "^3.2.2",
     "bootstrap": "^5.3",
     "bootswatch": "^5.3",
+    "easymde": "^2.20.0",
     "flipdown": "^0.3.2",
     "font-awesome": "^4",
     "jquery": "^3",

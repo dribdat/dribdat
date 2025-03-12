@@ -27,9 +27,9 @@ textarea {
     opacity: 0.6;
 }
 .float-right {
-    z-index: 9;
     float: right;
-    position: relative; 
+    position: relative;
+    z-index: 1;
 }
 
 sp {
@@ -116,7 +116,7 @@ form input[type="checkbox"] {
 }
 @media (max-width: 760px) {
     .form-project-post .post-image-btn {
-        margin-right: -2em;
+        margin-right: 0em;
     }
 }
 .template-select .card-body .fa {
@@ -1276,7 +1276,6 @@ a.media {
     line-height: 1.5em;
     overflow: hidden;
     text-align: left;
-    z-index: -1;
 }
 
 /* -- Timeline (dribs) -- */
@@ -1659,10 +1658,6 @@ a.media {
     margin: 0px 1em;
     color: red;
 }
-.projectform #mdeditor {
-    background: white;
-    color: black;
-}
 .projectform .fld-longtext .help-inline .form-text {
     display: none;
 }
@@ -1672,6 +1667,17 @@ a.media {
 .help-inline .text-muted::before {
     content: '//';
     opacity: 0.5;
+}
+
+/* Editor styles */
+form .EasyMDEContainer .editor-toolbar {
+    background: white;
+}
+form .EasyMDEContainer {
+    text-align: left;
+}
+form .EasyMDEContainer .editor-preview-side {
+    width: 51%;
 }
 
 /* General form styles */

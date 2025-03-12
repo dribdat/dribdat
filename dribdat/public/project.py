@@ -114,7 +114,7 @@ def project_autoboost(project_id):
         flash("AI service is currently not available.", 'warning')
         return redirect(url_for('project.get_log', project_id=p.id))
     # Save the new content in the project log
-    project_action(p.id, 'boost', action='Autoeval', text=autopost)
+    project_action(p.id, 'review', action='auto', text=autopost)
     flash("The robots have judged", 'success')
     return redirect(url_for(
         'project.get_log', project_id=p.id))
@@ -270,7 +270,7 @@ def project_autopost(project_id):
         flash("AI service is currently not available.", 'warning')
         return redirect(url_for('project.get_log', project_id=p.id))
     # Save the new content in the project log
-    project_action(p.id, 'review', action='post', text=autopost)
+    project_action(p.id, 'review', action='auto', text=autopost)
     flash("The robots have spoken", 'success')
     return redirect(url_for(
         'project.get_log', project_id=p.id))

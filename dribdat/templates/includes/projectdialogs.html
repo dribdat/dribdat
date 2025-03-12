@@ -8,37 +8,24 @@
           <b>{{ config.LLM_MODEL|upper }}</b>
           - an automated service.
           Data from your project page will be uploaded for processing,
-          and an AI comment will appear in your log shortly.
+          then an AI-generated comment with suggestions will appear in your log.
         </p>
         <p class="text-center">
           <button
              onclick="this.disabled=1; this.innerHTML='Please wait...'; location.href='{{ url_for('project.project_autopost', project_id=project.id) }}'"
              title="Get a tip from an AI coach" class="btn btn-lg btn-success">
             &#x1F170;&#xFE0F;&#x2139;&#xFE0F;
-            Log an automated suggestion
+            Coach me!
           </button>
         </p>
         <p>
-          Or tap here to use the prompt in a tool of your choice:
+          Or tap here to use the prompt in another tool of your choice:
         </p>
         <p class="auto-prompt text-center">
           <button id="autoprompt"
              data-api="{{ url_for('project.project_autoprompt', project_id=project.id) }}"
              class="btn btn-light btn-md">📋 Prompt my clipboard</button>
         </p>
-        {% if current_user.is_admin %}
-        <hr>
-        <p class="text-center mt-4">
-          <small>Admins only:</small>
-          <button 
-            onclick="this.disabled=1; this.innerHTML='Please wait...'; location.href='{{ url_for('project.project_autoboost', project_id=project.id) }}'" 
-            class="btn btn-lg btn-dark project-autoboost"
-            title="Generate an automatic evaluation of this project">
-          <i class="fa fa-calendar-check-o" aria-hidden="true"></i>
-            Run automated evaluation
-          </button>
-        </p>
-        {% endif %}
         <hr>
         <p>
           If you are looking for help with Dribdat, visit the
@@ -46,6 +33,15 @@
         </p>
       </div>
       <div class="modal-footer">
+        {% if current_user.is_admin %}
+          <button 
+            onclick="this.disabled=1; this.innerHTML='Please wait...'; location.href='{{ url_for('project.project_autoboost', project_id=project.id) }}'" 
+            class="btn btn-lg btn-light project-autoboost"
+            title="Admins only - not limited">
+          <i class="fa fa-calendar-check-o" aria-hidden="true"></i>
+            Run automated evaluation
+          </button>
+        {% endif %}
         <button class="btn btn-lg btn-dark" type="button" data-bs-dismiss="modal" aria-label="Close">
           Close
         </button>

@@ -183,13 +183,14 @@
   margin-top: -1.5em;
 }
 
-.timeline-item .timeline-content p {
-  margin: 1em 0px;
-  padding-bottom: 0px;
-}
-
 .timeline-item .timeline-content {
   float: left;
+}
+.timeline-item .timeline-content .content {
+  padding: 20px;
+}
+.timeline-item .timeline-content .content p {
+  padding: 0px;
 }
 
 @media screen and (max-width: 400px) {

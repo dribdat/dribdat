@@ -197,30 +197,25 @@
                 $dialog.modal("hide");
               } else if ($(this).data("target") == "post") {
                 // Append to post
-                if (typeof window.toasteditor !== "undefined") {
+                var imglink = "![](" + response + ")";
+                if (typeof window.Editor !== "undefined") {
                   // As an image
-                  window.toasteditor.exec("addImage", {
-                    imageUrl: response, altText: '',
-                  });
+                  window.Editor.codemirror.replaceRange(imglink, {line: Infinity});
                 } else {
-                  var imglink = "![](" + response + ")";
                   $("#note").val(imglink + " " + $("#note").val());
                 }
                 $dialog.modal("hide");
               } else if ($(this).data("target") == "pitch") {
-                // Append to pitch
-                if (typeof window.toasteditor !== "undefined") {
-                  // Generate a cleaner filename
-                  var filename = response
-                    .split(/(\\|\/)/g).pop()
-                    .replaceAll("_", " ");
+                // Generate a cleaner filename
+                var filename = response
+                  .split(/(\\|\/)/g).pop()
+                  .replaceAll("_", " ");
+                var imglink = "![" + filename + "](" + response + ")";
+                if (typeof window.Editor !== "undefined") {
                   // As an image
-                  window.toasteditor.exec("addImage", {
-                    imageUrl: response,
-                    altText: filename,
-                  });
+                  window.Editor.codemirror.replaceRange(imglink, {line: Infinity});
                 } else {
-                  var imglink = "![" + filename + "](" + response + ")";
+                  // Append to pitch
                   $("#longtext").val($("#longtext").val() + "\n\n" + imglink);
                 }
                 $dialog.modal("hide");
@@ -412,14 +407,12 @@
                 //fileExt = (fileExt.length > 1) ? fileExt[fileExt.length - 1] : '?';
                 // ... ' (' + fileExt.toUpperCase() + ')';
                 // Append to pitch
-                if (typeof window.toasteditor !== "undefined") {
+                if (typeof window.Editor !== "undefined") {
                   if (isDataPackage) {
-                    window.toasteditor.insertText(response);
+                    window.Editor.codemirror.replaceRange(response, {line: Infinity});
                   } else {
-                    window.toasteditor.exec("addLink", {
-                      linkUrl: response,
-                      linkText: filename,
-                    });
+                    var linkmd = '[' + filename + '](' + response + ')';
+                    window.Editor.codemirror.replaceRange(linkmd, {line: Infinity});
                   }
                 } else {
                   // Create Markdown link with a paperclip emoji
@@ -467,8 +460,8 @@
       // Add some spaces
       theurl = "\n" + theurl + "\n";
       // Append to pitch
-      if (typeof window.toasteditor !== "undefined") {
-        window.toasteditor.insertText(theurl);
+      if (typeof window.Editor !== "undefined") {
+        window.Editor.codemirror.replaceRange(theurl, {line: Infinity});
       } else {
         theurl = "\n" + theurl + "\n"; // More spaces
         $("#longtext").val($("#longtext").val() + theurl);
@@ -540,31 +533,18 @@
 
   // Initialize rich editor for Markdown
   function activate_editor() {
-    if (typeof toastui !== "object") return;
-    const Editor = toastui.Editor;
+    if (typeof EasyMDE !== "function") return;
     const $longtext = $("#longtext,#note").first();
     if (!$longtext.length) return;
-    $longtext.after('<div id="mdeditor" style="text-align:left"></div>');
+    const is_note = $longtext.attr('id') == 'note';
 
-    const toasteditor = (window.toasteditor = new Editor({
-      el: document.querySelector("#mdeditor"),
-      height: "500px",
-      previewStyle: "tab",
-      initialEditType: "wysiwyg",
-      initialValue: $longtext.hide().text(),
-      usageStatistics: false,
-      toolbarItems: [
-        ["heading", "bold", "italic"],
-        ["hr", "quote", "strike"],
-        ["ul", "ol"],
-        ["table", "link"],
-        ["code", "codeblock"],
-      ],
-    }));
-
-    // Handle form submission
-    $longtext.parents("form").submit(function () {
-      $longtext.val(toasteditor.getMarkdown());
+    // Configure the WYSIWYG mode
+    const Editor = new EasyMDE({
+      element: $longtext[0],
+      autofocus: is_note,
+      minHeight: is_note ? "100px" : "500px",
+      spellChecker: false,
+      sideBySideFullscreen: false
     });
 
     // Save settings
@@ -581,6 +561,7 @@
         }
       });
 
+    window.Editor = Editor;
     console.info("editor ready.");
   }
 
@@ -639,17 +620,6 @@
       .find('[data-do="activate"]')
       .show()
       .on("click", activate_editor);
-
-    // Clear button
-    $activateEditor
-      .find('[data-do="clear"]')
-      .show()
-      .click(function () {
-        $longtext.val("");
-        if (window.toasteditor) {
-          window.toasteditor.reset();
-        }
-      });
 
     // Enable by default
     if (localStorage.getItem("markdownhelper") === null) {

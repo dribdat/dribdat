@@ -7,11 +7,11 @@
 
 {% block js %}
   {% if config.ENV == 'prod' %}
-    <script src="{{ url_for('static', filename='libs/toastui-all/toastui-editor-all.min.js')}}"></script>
-    <link href="{{ url_for('static', filename='libs/toastui-all/toastui-editor.min.css')}}" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/easymde@2/dist/easymde.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/easymde@2/dist/easymde.min.css">
   {% else %}
-    <script src="{{ url_for('static', filename='libs/toastui-all/toastui-editor-all.min.js')}}"></script>
-    <link href="{{ url_for('static', filename='libs/toastui-all/toastui-editor.min.css')}}" rel="stylesheet">
+    <script src="{{ url_for('static', filename='libs/easymde/easymde.min.js')}}"></script>
+    <link href="{{ url_for('static', filename='libs/easymde/easymde.min.css')}}" rel="stylesheet">
   {% endif %}
 {% endblock %}
 
@@ -79,58 +79,27 @@
   {% endif %}
   </div>
 
-  <div class="alert-warning text-center mt-4 p-2">
   {% if not detail_view %}
-    <p><b>Tips:</b>
-      Link to a website (look for a 
-      <a href="https://knowledge.workspace.google.com/kb/publish-docs-sheets-slides-or-forms-as-web-pages-000008504" target="_blank" rel="nofollow">Publish to Web</a>
-      or 
-      <a href="https://support.microsoft.com/en-us/office/embed-a-presentation-in-a-web-page-or-blog-19668a1d-2299-4af3-91e1-ae57af723a60" target="_blank" rel="nofollow">Embed code</a>) 
-      or upload a PDF to present it at the top of your project. 
-      <br>
-      If you're feeling hacky, use the Pitch to publish your presentation using 
-      <a href="https://marpit.marp.app/markdown" target="_blank" rel="nofollow">Marpit Markdown</a>, then ✓ Enable slide mode.
-    </p>
-  {% elif project.is_hidden %}
-    <a href="{{ url_for('project.project_toggle', project_id=project.id) }}"
-       class="btn btn-light">
-      <i class="fa fa-eye" aria-hidden="true"></i>
-      Show project</a>
-  {% else %}
-    <a href="{{ url_for('project.project_toggle', project_id=project.id) }}"
-       class="btn btn-light"
-       onclick="if(!window.confirm('Are you sure you wish to hide this project from view?')) return false">
-      <i class="fa fa-eye" aria-hidden="true"></i>
-      Hide project</a>
-  {% endif %}
-  </div>
+  <center id="activateEditor" class="mt-4">
+    <button href="{{ url_for('project.project_details', project_id=project.id) }}" 
+      class="btn btn-md btn-warning mt-2 mb-1 me-4"
+      title="Open the project details">
+      <i class="fa fa-arrow-right" aria-hidden="true"></i>
+      Edit Details
+    </button>
 
-  {% if not detail_view %}
-  <center id="activateEditor">
     <button data-do="activate" type="button" 
       class="btn btn-light btn-md hidden mt-2 mb-1" aria-pressed="false"
-      title="Click to activate a WYSIWYG editor">
+      title="Activate a WYSIWYG text editor">
       <i class="fa fa-pencil text-info" area-hidden="true"></i>
-      Editor: <b>text</b>
+      Editor: <b>Text</b>
     </button>
     <button data-do="reset" type="button" 
       class="btn btn-light btn-md hidden mt-2 mb-1" aria-pressed="false"
-      title="Click to use a plain text editor">
+      title="Switch to a plain text editor">
         <i class="fa fa-pencil text-info" area-hidden="true"></i>
-        Editor: <b>advanced</b>
+        Editor: <b>EasyMDE</b>
     </button>
-    {%- if not project.is_challenge -%}
-      <button data-do="clear" type="button" 
-        class="btn btn-light btn-md hidden mt-2 mb-1 ms-2" aria-pressed="false"
-        title="You can still Undo (Ctrl-Z), or view the previously saved version later">
-          <i class="fa fa-circle-o text-info" area-hidden="true"></i>
-          Clear
-      </button>
-    {%- endif -%}
-
-    <a href="{{ url_for('project.project_details', project_id=project.id) }}" class="btn btn-md btn-warning ms-4">
-      <i class="fa fa-arrow-right" aria-hidden="true"></i>
-      Details</a>
   </center>
   {% endif %}
 
