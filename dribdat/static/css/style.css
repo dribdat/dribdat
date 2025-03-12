@@ -2572,10 +2572,11 @@ Search engine
 
 .navbar .form-inline .form-control {
     background-color: transparent;
-    border-color: rgba(0, 0, 0, 0.1);
+    border-color: transparent;
 }
 .navbar .form-inline .form-control:focus {
     background-color: white;
+    color: black;
 }
 
 #search-results .card-image {
