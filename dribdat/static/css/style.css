@@ -354,6 +354,7 @@ ul.help-block {
     font-size: 125%;
     margin-top: -1em;
     margin-right: 0.5em;
+    margin-bottom: 0.5em;
 }
 
 @media (max-width: 760px) {
@@ -666,6 +667,7 @@ nav .nav-login {
     opacity: 0.8;
     border: none;
     background: none;
+    box-shadow: none;
 }
 .hexagon.challenge.new .hexagontent i {
     color: green;
@@ -1934,16 +1936,15 @@ div.project-edit-buttons {
     }
 }
 .category-info {
-    margin-top: 6em;
-    padding: 0 1em;
+    padding: 0 10%;
     text-align: left;
 }
 .category-info img {
     max-width: 100%;
 }
-.category-container {
-    margin-top: 15px;
-    padding-top: 10px;
+.category-container .card-header {
+    text-align: center;
+    font-size: 125%;
 }
 .category-tip {
     opacity: 0.8;
