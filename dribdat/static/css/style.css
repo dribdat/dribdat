@@ -28,7 +28,8 @@ textarea {
 }
 .float-right {
     float: right;
-    position: relative; 
+    position: relative;
+    z-index: 1;
 }
 
 sp {
