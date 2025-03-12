@@ -57,12 +57,12 @@ common_user_related_fields = dict(
         ),
     ),
     skills=StringField(
-        "&#x1F9BE; my, skills",
+        "🦾 my, skills",
         validators=[Length(max=512)],
         description="A comma-separated list of things you have experience with.",
     ),
     wishes=StringField(
-        "&#x1F38B; my, aims",
+        "🎋 my, aims",
         validators=[Length(max=512)],
         description="A comma-separated list of skills you wished you had, or would like to improve.",
     ),
