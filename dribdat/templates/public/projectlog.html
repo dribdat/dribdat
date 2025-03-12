@@ -142,12 +142,14 @@
 
   </section>
 
+  {% include "includes/projectnav.html" %}
+
   </div><!-- /dribs-md -->
   {% endif %}
 
 {% if project.is_challenge %}
   <center>
-    <a title="Go back to the main page" class="preview-challenge btn btn-light btn-lg"
+    <a title="Go back to the main page" class="preview-challenge btn btn-default btn-lg"
        href="{{ url_for('project.project_view', project_id=project.id) }}">
        <i class="fa fa-arrow-left" aria-hidden="true"></i>
         Challenge</a>

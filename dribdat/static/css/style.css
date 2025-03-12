@@ -1332,14 +1332,6 @@ a.media {
     overflow: hidden;
 }
 /* Other project timeline customizations */
-.project-page .timeline-review .timeline-content {
-    background: #f2fef2;
-    border-top: none;
-}
-.project-page .timeline-pencil .timeline-content {
-    background: #ffc;
-    border-top: none;
-}
 .project-page .timeline-finish .timeline-content,
 .project-page .timeline-start .timeline-content {
     background: #aaa;
@@ -1360,6 +1352,24 @@ a.media {
 .timeline-boost .timeline-img-header {
     background: teal;
 }
+.timeline-review .timeline-content {
+    background: #f2fef2;
+    border-top: none;
+}
+.timeline-pencil .timeline-content {
+    background: #ffc;
+    border-top: none;
+}
+.timeline-diamond .content {
+    font-family: monospace;
+    font-size: 80%;
+    line-height: 1.7em;
+    border-bottom: 3px white dashed;
+    margin-bottom: 14px;
+    background: aliceblue;
+}
+
+/* List of badges on project page */
 .project-badges .boost {
     display: inline-block;
     width: 2em;
