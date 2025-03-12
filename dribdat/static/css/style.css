@@ -2257,6 +2257,7 @@ a.card, .card > a {
     border-color: transparent;
     background-color: transparent;
     border:1px solid #ccc;
+    padding-right: 0px;
 }
 .profile-projects .card:hover {
     box-shadow: 3px 3px 3px lightblue;
