@@ -69,17 +69,27 @@
 
 <div class="category-info clearfix">
   {% for category in current_event.categories_for_event() %}
-  <div category-id="{{category.id}}" class="category-container"
-       style="border-top:5px solid {{category.logo_color}}; display:none">
-    {% if current_user and current_user.active and current_user.is_admin %}
-      <a href="{{ url_for('admin.category', category_id=category.id) }}"
-         class="btn btn-info btn-sm float-right">
-        <i class="fa fa-pencil" aria-hidden="true"></i>
-        Edit</a>
-    {% endif %}
-    <h3>{{ category.name }}</h3>
-    {{ category.description|onebox|markdown|safe }}
-  </div>
+
+    <div category-id="{{category.id}}" 
+        class="category-container card card-border-secondary" style="display:none">
+      <div class="card-header"
+          style="border-bottom:5px solid {{category.logo_color}}">
+
+        {% if current_user and current_user.active and current_user.is_admin %}
+          <a href="{{ url_for('admin.category', category_id=category.id) }}"
+            class="btn btn-info btn-sm float-right">
+            <i class="fa fa-pencil" aria-hidden="true"></i>
+            Edit
+          </a>
+        {% endif %}
+
+        <span class="category-name">{{ category.name }}</span>
+      </div>
+      <div class="card-body">
+        {{ category.description|onebox|markdown|safe }}
+      </div>
+    </div>
+
   {% endfor %}
 </div><!-- /category-info -->
 

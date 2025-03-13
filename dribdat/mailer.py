@@ -22,9 +22,10 @@ def user_activation_message(user, act_hash):
         "👋🏾 Hello %s\n\n" % user.name
         + "🗝️ You are 1 click away from signing into Dribdat:"
         + "\n\n%s\n\n" % act_url
-        + "🏀 Thank you for using the service at %s\n" % fqdn
-        + "💡 If you did not expect this e-mail, please change your password!\n\n"
-        + "-- D}}BD{T --"
+        + "🚥 Is the link not working? Try to copy and paste it into your browser.\n"
+        + "💡 If you did not expect this e-mail, please change your password!\n"
+        + "🏀 Thank you for using the service at %s\n\n" % fqdn
+        + "d}}BD{t_0.8.9"
     )
     # --------------------
     logging.debug(act_url)
