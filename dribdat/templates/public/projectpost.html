@@ -125,7 +125,7 @@
 
   {% if posts %}
   <div class="jumbotron mt-5">
-    {% if config.LLM_API_KEY %}
+    {% if config.LLM_API_KEY and not project.is_challenge %}
       <center>
         <button data-bs-toggle="modal" data-bs-target="#autopostModal"
           title="Get tips from an AI coach" class="btn pl-3 pr-4 btn-lg btn-dark">
