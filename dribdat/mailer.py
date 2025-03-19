@@ -25,7 +25,7 @@ def user_activation_message(user, act_hash):
         + "🚥 Is the link not working? Try to copy and paste it into your browser.\n"
         + "💡 If you did not expect this e-mail, please change your password!\n"
         + "🏀 Thank you for using the service at %s\n\n" % fqdn
-        + "d}}BD{t_0.8.9"
+        + "d}}BD{t"
     )
     # --------------------
     logging.debug(act_url)
@@ -69,7 +69,8 @@ def user_invitation_message(project=None):
         act_url = url_for("project.project_star", project_id=project.id, _external=True)
         msg.subject = "Invitation: %s" % project.event.name
         msg.body = (
-            "You are personally invited - please join us at %s!\n\n" % project.event.name
+            "You are personally invited - please join us at %s!\n\n"
+            % project.event.name
             + "🏀 We are interested in your contributions to '%s'.\n" % project.name
             + "🤼 Tap here to join the team: %s\n\n" % act_url
             + "-- D}}BD{T --"
