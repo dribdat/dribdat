@@ -1208,19 +1208,21 @@ class Project(PkModel):
 
     def set_auto_image(self):
         """Get an image if available."""
-        if self.image_url and len(self.image_url) > 1 and "##" not in self.image_url:
-            return
-        latest_dribs = Activity.query.filter_by(project_id=self.id, name="review")
-        latest_dribs = latest_dribs.order_by(Activity.timestamp.desc())
-        latest_dribs = latest_dribs.limit(5)
+        # if self.image_url and len(self.image_url) > 1 and "##" not in self.image_url:
+        #    return
+        topdribs = (
+            Activity.query.filter_by(project_id=self.id, name="update")
+            .order_by(Activity.id.desc())
+            .limit(5)
+        )
         url = None
-        for d in latest_dribs:
-            if "![" in d.content:
+        for d in topdribs:
+            if d.content and "![" in d.content:
                 for rs in d.content.split("("):
                     if ")" in rs and rs.startswith("http"):
                         url = rs.split(")")[0]
                         if url and url not in self.image_url:
-                            self.image_url = url + "##"
+                            self.image_url = url
                             self.save()
                             return
 
@@ -1406,4 +1408,3 @@ class Activity(PkModel):
 
 # class Availability(PkModel):
 #    """Agree when do we drib."""
-

@@ -295,7 +295,8 @@ def ProjectActivity(project, of_type, user, action=None, comments=None):
             return False
     activity.project_score = project.score
     activity.save()
-    if "![" in activity.content:
+    # In case of an image, update the post
+    if activity.content and "![" in activity.content:
         project.set_auto_image()
     return True
 
