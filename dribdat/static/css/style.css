@@ -354,6 +354,7 @@ ul.help-block {
     font-size: 125%;
     margin-top: -1em;
     margin-right: 0.5em;
+    margin-bottom: 0.5em;
 }
 
 @media (max-width: 760px) {
@@ -666,6 +667,7 @@ nav .nav-login {
     opacity: 0.8;
     border: none;
     background: none;
+    box-shadow: none;
 }
 .hexagon.challenge.new .hexagontent i {
     color: green;
@@ -1332,14 +1334,6 @@ a.media {
     overflow: hidden;
 }
 /* Other project timeline customizations */
-.project-page .timeline-review .timeline-content {
-    background: #f2fef2;
-    border-top: none;
-}
-.project-page .timeline-pencil .timeline-content {
-    background: #ffc;
-    border-top: none;
-}
 .project-page .timeline-finish .timeline-content,
 .project-page .timeline-start .timeline-content {
     background: #aaa;
@@ -1360,6 +1354,24 @@ a.media {
 .timeline-boost .timeline-img-header {
     background: teal;
 }
+.timeline-review .timeline-content {
+    background: #f2fef2;
+    border-top: none;
+}
+.timeline-pencil .timeline-content {
+    background: #ffc;
+    border-top: none;
+}
+.timeline-diamond .content {
+    font-family: monospace;
+    font-size: 80%;
+    line-height: 1.7em;
+    border-bottom: 3px white dashed;
+    margin-bottom: 14px;
+    background: aliceblue;
+}
+
+/* List of badges on project page */
 .project-badges .boost {
     display: inline-block;
     width: 2em;
@@ -1924,16 +1936,15 @@ div.project-edit-buttons {
     }
 }
 .category-info {
-    margin-top: 6em;
-    padding: 0 1em;
+    padding: 0 10%;
     text-align: left;
 }
 .category-info img {
     max-width: 100%;
 }
-.category-container {
-    margin-top: 15px;
-    padding-top: 10px;
+.category-container .card-header {
+    text-align: center;
+    font-size: 125%;
 }
 .category-tip {
     opacity: 0.8;
@@ -2246,6 +2257,7 @@ a.card, .card > a {
     border-color: transparent;
     background-color: transparent;
     border:1px solid #ccc;
+    padding-right: 0px;
 }
 .profile-projects .card:hover {
     box-shadow: 3px 3px 3px lightblue;
@@ -2562,10 +2574,11 @@ Search engine
 
 .navbar .form-inline .form-control {
     background-color: transparent;
-    border-color: rgba(0, 0, 0, 0.1);
+    border-color: transparent;
 }
 .navbar .form-inline .form-control:focus {
     background-color: white;
+    color: black;
 }
 
 #search-results .card-image {

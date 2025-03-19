@@ -108,17 +108,6 @@
   } else {
     $('.form-project-post label[for="has_progress"]').parent().hide();
   }
-  /*each(function() {
-    /*
-    var vparent = $(this).parent().parent().hide();
-    var vinput = $(this).parent().find('input')[0];
-    vinput.checked = false;
-    $('.form-project-confirm input[type="checkbox"]').click(function() {
-      vparent.show();
-      all_checked = $('.form-project-confirm input[type="checkbox"]:not(:checked)').length === 0;
-      vinput.checked = all_checked;
-    });
-  });*/
 
   // Make the custom color field HTML5 compatible
   $("input#logo_color[type=text]").attr("type", "color");
@@ -537,6 +526,12 @@
     const $longtext = $("#longtext,#note").first();
     if (!$longtext.length) return;
     const is_note = $longtext.attr('id') == 'note';
+
+    // Handle form submission
+    $longtext.parents("form").submit(function () {
+      $('#submit', this).addClass('disabled')
+        .attr('disabled', 'disabled');
+    });
 
     // Configure the WYSIWYG mode
     const Editor = new EasyMDE({

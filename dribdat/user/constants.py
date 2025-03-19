@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 """Constants for user functions."""
+
 from os import environ as os_env
 from ..utils import load_yaml_presets
 from ..apifetch import FetchStageConfig
@@ -10,60 +11,63 @@ from random import random
 USER = 0
 ADMIN = 1
 USER_ROLE = {
-    ADMIN: 'admin',
-    USER: 'user',
+    ADMIN: "admin",
+    USER: "user",
 }
 
 # User status
 INACTIVE = 0
 ACTIVE = 1
 USER_STATUS = {
-    INACTIVE: 'inactive',
-    ACTIVE: 'active',
+    INACTIVE: "inactive",
+    ACTIVE: "active",
 }
-CLEAR_STATUS_AFTER = 10 # minutes
+CLEAR_STATUS_AFTER = 10  # minutes
 
 # Content length
 MAX_EXCERPT_LENGTH = 500
 
 # Containers for stage data
 PR_CHALLENGE = 0
-PR_STAGES = { 'PROGRESS': {}, 'STAGE': {} }
+PR_STAGES = {"PROGRESS": {}, "STAGE": {}}
 
 # Random questions for drib post
 DRIB_QUESTIONS = [
-        'Tell us about your latest work',
-        'What was the last thing you did here?',
-        'Share a recent activity in your project',
-        'How are the vibes in your team right now?',
-        'Could you share what you just completed?',
-        'What is your current task, and next move?',
-        'Describe your current challenge',
-    ]
+    "Tell us about your latest work",
+    "What was the last thing you did here?",
+    "Share a recent activity in your project",
+    "How are the vibes in your team right now?",
+    "Could you share what you just completed?",
+    "What is your current task, and next move?",
+    "Describe your current challenge",
+]
 
 
 def load_project_stages():
     """Initialize progress stages from file."""
-    if not PR_STAGES['PROGRESS'] == {}: return
-    DRIBDAT_STAGE = os_env.get('DRIBDAT_STAGE', None)
+    if not PR_STAGES["PROGRESS"] == {}:
+        return
+    DRIBDAT_STAGE = os_env.get("DRIBDAT_STAGE", None)
     if DRIBDAT_STAGE:
         project_stages = FetchStageConfig(DRIBDAT_STAGE)
     else:
-        project_stages = load_yaml_presets('stages', 'name')
+        project_stages = load_yaml_presets("stages", "name")
     for ps in project_stages:
-        pid = int(project_stages[ps]['id'])
-        PR_STAGES['PROGRESS'][pid] = project_stages[ps]['description']
-        PR_STAGES['STAGE'][pid] = project_stages[ps]
+        pid = int(project_stages[ps]["id"])
+        PR_STAGES["PROGRESS"][pid] = project_stages[ps]["description"]
+        PR_STAGES["STAGE"][pid] = project_stages[ps]
 
 
 def projectProgressList(All=True, WithEmpty=True):
     """Return sorted progress list."""
     if not All:
-        return [(PR_CHALLENGE, PR_STAGES['PROGRESS'][PR_CHALLENGE])]
-    all_stages = PR_STAGES['PROGRESS']
-    pl = [(g, PR_STAGES['STAGE'][g]['name'] + ' / ' + all_stages[g]) for g in all_stages]
+        return [(PR_CHALLENGE, PR_STAGES["PROGRESS"][PR_CHALLENGE])]
+    all_stages = PR_STAGES["PROGRESS"]
+    pl = [
+        (g, PR_STAGES["STAGE"][g]["name"] + " / " + all_stages[g]) for g in all_stages
+    ]
     if WithEmpty:
-        pl.append((-100, ''))
+        pl.append((-100, ""))
     return sorted(pl, key=lambda x: x[0])
 
 
@@ -75,25 +79,24 @@ def stageProjectToNext(project):
         return True
     found_next = False
     # TODO: Check that we have not auto-promoted in the past hour
-    #for act in project.activities.order_by(Activity.id.desc()):
+    # for act in project.activities.order_by(Activity.id.desc()):
     #    if act.type == ''
     # Promote to next stage in progress list
     for a in projectProgressList(True, False):
         if found_next:
             project.progress = a[0]
             break
-        if a[0] == project.progress or \
-            not project.progress:
+        if a[0] == project.progress or not project.progress:
             found_next = True
     return found_next
-    
+
 
 def getProjectStages():
     """Return sorted stages list."""
     pl = []
-    for ix, g in enumerate(sorted(PR_STAGES['PROGRESS'])):
-        stage = PR_STAGES['STAGE'][g]
-        stage['index'] = ix + 1
+    for ix, g in enumerate(sorted(PR_STAGES["PROGRESS"])):
+        stage = PR_STAGES["STAGE"][g]
+        stage["index"] = ix + 1
         pl.append(stage)
     return pl
 
@@ -102,15 +105,16 @@ def getStageByProgress(progress):
     """Return progress detail for a progress level."""
     if progress is None:
         return None
-    if progress not in PR_STAGES['STAGE']:
-        if PR_CHALLENGE in PR_STAGES['STAGE']:
-            return PR_STAGES['STAGE'][PR_CHALLENGE]
+    if progress not in PR_STAGES["STAGE"]:
+        if PR_CHALLENGE in PR_STAGES["STAGE"]:
+            return PR_STAGES["STAGE"][PR_CHALLENGE]
         else:
             return None
-    return PR_STAGES['STAGE'][progress]
+    return PR_STAGES["STAGE"][progress]
 
 
 # TODO: move to progress.py
+
 
 def getProjectPhase(project):
     """Return progress phase for a project."""
@@ -119,12 +123,12 @@ def getProjectPhase(project):
     stage = getStageByProgress(project.progress)
     if stage is None:
         return ""
-    return stage['phase']
+    return stage["phase"]
 
 
 def isUserActive(user):
     """Check if a user is active."""
-    if not user or 'active' not in user.__dir__():
+    if not user or "active" not in user.__dir__():
         return False
     return user.active
 
@@ -136,21 +140,18 @@ def validateProjectData(project):
     # Collect project data
     project_data = project.data
     # Iterate through the stage conditions
-    for v in stage['conditions']['validate']:
-        v['valid'] = False
-        vf = v['field']
+    for v in stage["conditions"]["validate"]:
+        v["valid"] = False
+        vf = v["field"]
         if vf in project_data:
             pdvf = project_data[vf]
             if (
-                ('min' in v and len(pdvf) >= v['min'])
-                or ('max' in v and v['min'] <= len(pdvf) <= v['max'])
-                or (
-                    'test' in v and v['test'] == 'validurl'
-                    and pdvf.startswith('http')
-                )
+                ("min" in v and len(pdvf) >= v["min"])
+                or ("max" in v and v["min"] <= len(pdvf) <= v["max"])
+                or ("test" in v and v["test"] == "validurl" and pdvf.startswith("http"))
             ):
-                v['valid'] = True
-        if not v['valid']:
+                v["valid"] = True
+        if not v["valid"]:
             all_valid = False
     return stage, all_valid
 
@@ -186,47 +187,51 @@ def getActivityByType(a, only_active=True):  # noqa: C901
     # }
 
     # Based on action, populate activity fields
-    if a.action == 'sync':
-        text = "`SYNCED`"
-        icon = 'code'
-    elif a.action == 'post' and a.name == 'review' and a.content is not None:
+    if a.action == "post" and a.content is not None:
+        if a.name == "review":
+            text = a.content
+            icon = "comment"
+        else:
+            text = a.content
+            icon = "pencil"
+    elif a.action == "auto":
         text = a.content
-        icon = 'comment'
-    elif a.action == 'post' and a.content is not None:
-        text = a.content
-        icon = 'pencil'
-    elif a.action == 'auto':
-        text = a.content
-        icon = 'diamond'
-    elif a.name == 'star':
+        icon = "diamond"
+    elif a.name == "star":
         text = "`JOINED`"
-        icon = 'thumbs-up'
-    elif a.name == 'update' and a.action == 'commit':
+        icon = "thumbs-up"
+    elif a.name == "update" and a.action == "commit":
         text = a.content
         author = None
-        icon = 'random'
-    elif a.name == 'revert':
+        icon = "random"
+    elif a.name == "revert":
         text = "`REVERTED`"
         if a.project_version:
             text += " v. %d" % a.project_version
-        icon = 'paperclip'
-    elif a.name == 'update':
+        icon = "paperclip"
+    elif a.name == "update":
         text = "`EDITED`"
         if a.project_version:
             text += " v. %d" % a.project_version
-        icon = 'paperclip'
-    # elif a.name == 'revert':
-    #     text = "Reverted content"
-    #     if a.project_version:
-    #         text += " version %d" % a.project_version
-    #     icon = 'undo'
-    elif a.name == 'create':
-        text = "<a class='challenge-posted' href='/%s/challenge'>Challenge shared</a><br>Tap here to review." % a.project.url
-        icon = 'flag-checkered'
-    elif a.name == 'boost':
+        icon = "paperclip"
+    elif a.name == "create":
+        text = (
+            "<a class='challenge-posted' href='/%s/challenge'>Challenge shared</a><br>Tap here to review."
+            % a.project.url
+        )
+        icon = "flag-checkered"
+    elif a.name == "boost":
         title = a.action
         text = a.content
-        icon = 'trophy'
+        icon = "trophy"
+    # elif a.action == 'sync':
+    #    text = "`SYNCED`"
+    #    icon = 'code'
+    # elif a.name == 'revert':
+    #    text = "Reverted content"
+    #    if a.project_version:
+    #        text += " version %d" % a.project_version
+    #    icon = 'undo'
     else:
         return None
     return (author, title, text, icon)
@@ -234,7 +239,7 @@ def getActivityByType(a, only_active=True):  # noqa: C901
 
 def drib_question():
     q = DRIB_QUESTIONS
-    return q[round(random()*(len(q)-1))]
+    return q[round(random() * (len(q) - 1))]
 
 
 # TODO: make this happen in app.py

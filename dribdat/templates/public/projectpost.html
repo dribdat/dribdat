@@ -113,10 +113,6 @@
        title="Cancel" class="btn btn-light">
       <i class="fa fa-arrow-left" aria-hidden="true"></i> Project
     </a>
-    <a href="{{ url_for('project.get_log', project_id=project.id) }}"
-       title="Log and progress review" class="btn btn-light">
-      <i class="fa fa-paperclip" aria-hidden="true"></i> Log
-    </a>
     {% if stage %}
       <div class="btn-group">
         <a href="{{ url_for('project.project_edit', project_id=project.id) }}" class="btn btn-light"
@@ -129,6 +125,15 @@
 
   {% if posts %}
   <div class="jumbotron mt-5">
+    {% if config.LLM_API_KEY and not project.is_challenge %}
+      <center>
+        <button data-bs-toggle="modal" data-bs-target="#autopostModal"
+          title="Get tips from an AI coach" class="btn pl-3 pr-4 btn-lg btn-dark">
+          &#x1F170;&#xFE0F;&#x2139;&#xFE0F;
+        </button>
+      </center>
+      {% include "includes/projectdialogs.html" %}
+    {% endif %}
     <section class="timeline">
     {% for s in posts %}
     <div class="timeline-item timeline-{{ s.name }} timeline-{{ s.icon }}">
@@ -151,6 +156,13 @@
     </div>
     {% endfor %}
     </section>
+
+    <center>
+      <a href="{{ url_for('project.get_log', project_id=project.id) }}#log"
+          title="Log and progress review" class="btn btn-light btn-lg">
+        <i class="fa fa-paperclip" aria-hidden="true"></i> Log
+      </a>
+    </center>
   </div>
   {% endif %}
 
