@@ -40,7 +40,7 @@ common_user_related_fields = dict(
     ),
     username=StringField(
         "Username",
-        [Length(max=25), UniqueValidator(User, "username"), DataRequired()],
+        [Length(max=40), UniqueValidator(User, "username"), DataRequired()],
         description="Short and sweet.",
     ),
     email=EmailField(
@@ -84,13 +84,13 @@ class RegisterForm(FlaskForm):
     """Ye olde user registration form."""
 
     username = StringField(
-        "Username", validators=[DataRequired(), Length(min=3, max=25)]
+        "Username", validators=[DataRequired(), Length(min=3, max=40)]
     )
     email = EmailField(
-        "Email", validators=[DataRequired(), Email(), Length(min=6, max=40)]
+        "Email", validators=[DataRequired(), Email(), Length(min=6, max=80)]
     )
     password = PasswordField(
-        "Password", validators=[DataRequired(), Length(min=6, max=40)]
+        "Password", validators=[DataRequired(), Length(min=6, max=100)]
     )
     confirm = PasswordField(
         "Verify password",
@@ -160,7 +160,7 @@ class EmailForm(FlaskForm):
     """Just the e-mail, please."""
 
     username = EmailField(
-        "Email", validators=[DataRequired(), Email(), Length(min=6, max=40)]
+        "Email", validators=[DataRequired(), Email(), Length(min=6, max=80)]
     )
     submit = SubmitField("Continue")
     recaptcha = RecaptchaField()
