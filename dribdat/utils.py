@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 """Helper utilities and decorators."""
+
 from flask import flash, current_app
 from urllib.parse import quote
 from math import floor
@@ -17,49 +18,56 @@ from json import loads
 from csv import DictReader
 from random import SystemRandom
 
-import re, string
+import re
+import string
 
 
 # Instantiate Markdown parser
-md = MarkdownIt('gfm-like').enable('table')
+md = MarkdownIt("gfm-like").enable("table")
+
 
 def markdownit(content):
-    """ Converts a value to Markdown """
+    """Converts a value to Markdown"""
     return Markup(md.render(content))
+
 
 def strtobool(text):
     """Truthy conversion as per PEP 632."""
     tls = str(text).lower().strip()
-    if tls in ['y', 'yes', 't', 'true', 'on', '1']:
+    if tls in ["y", "yes", "t", "true", "on", "1"]:
         return True
-    if tls in ['n', 'no', 'f', 'false', 'off', '0']:
+    if tls in ["n", "no", "f", "false", "off", "0"]:
         return False
     raise ValueError("{} is not convertable to boolean".format(tls))
 
-def get_any_key(obj, keys=[], default=''):
+
+def get_any_key(obj, keys=[], default=""):
     """Returns the value of a dict of any key, else default"""
     for k in keys:
         if k in obj:
             return obj[k]
     return default
 
+
 def sanitize_input(text):
     """Remove unsavoury characters."""
-    return re.sub(r"[^a-zA-Z0-9_]+", '', text)
+    return re.sub(r"[^a-zA-Z0-9_]+", "", text)
 
 
 def sanitize_url(url):
     """Ensures a URL is just a URL."""
-    return quote(url, safe='/:?&')
+    return quote(url, safe="/:?&")
+
 
 def unpack_csvlist(packed, sep=","):
     result = []
     if packed:
         for elem in packed.split(sep):
             s = elem.strip()
-            if not s in result:
+            if s not in result:
                 result.append(s)
     return result
+
 
 def pack_csvlist(ls, sep=","):
     if ls:
@@ -70,24 +78,36 @@ def pack_csvlist(ls, sep=","):
 
 def random_password(pwdlen=20):
     """Provide a strongly secure random string."""
-    return ''.join(SystemRandom()
-                   .choice(string.ascii_uppercase + string.digits)
-                   for _ in range(pwdlen))
+    return "".join(
+        SystemRandom().choice(string.ascii_uppercase + string.digits)
+        for _ in range(pwdlen)
+    )
 
 
-def flash_errors(form, category='warning'):
+def check_error_str(err):
+    if err == "The response parameter is missing.":
+        return "Please use the CAPTCHA below"
+    return err
+
+
+def flash_errors(form, category="warning"):
     """Flash all errors for a form."""
     for field, errors in form.errors.items():
         for error in errors:
-            flash('{0} - {1}'.format(
-                getattr(form, field).label.text, error), category)
+            errortext = getattr(form, field).label.text
+            if errortext:
+                errortext = "{0} - {1}".format(errortext, error)
+            else:
+                errortext = check_error_str(error)
+            if errortext:
+                flash(errortext, category)
 
 
 def get_time_note():
     """Construct a time zone message."""
     tz = timezone(current_app.config["TIME_ZONE"])
     aware_time = datetime.now().astimezone(tz)
-    tzinfo = "Server time: %s" % aware_time.strftime('%H:%M%z')
+    tzinfo = "Server time: %s" % aware_time.strftime("%H:%M%z")
     if tz is not None:
         return "%s (%s)" % (tzinfo, tz)
     return tzinfo
@@ -116,7 +136,7 @@ def timesince(dtsince, default="just now", until=False):
         return ""
     if until and dt > dt_now:
         diff = dt - dt_now
-        suffix = "" # "to go"
+        suffix = ""  # "to go"
     else:
         diff = dt_now - dt
         suffix = "ago"
@@ -132,20 +152,22 @@ def timesince(dtsince, default="just now", until=False):
     for period, singular, plural in periods:
         if floor(period) > 0:
             return "%d %s %s" % (
-                period, singular if int(period) == 1
-                else plural, suffix
+                period,
+                singular if int(period) == 1 else plural,
+                suffix,
             )
     return default
 
 
-def format_date(value, format='%Y-%m-%dT%H:%M'):
+def format_date(value, format="%Y-%m-%dT%H:%M"):
     """Return a standard format of a date."""
     return value.strftime(format)
 
 
-def parse_date(value, format='%Y-%m-%dT%H:%M'):
+def parse_date(value, format="%Y-%m-%dT%H:%M"):
     """Parse a standard format of a date from a string."""
-    if not isinstance(value, str): return value
+    if not isinstance(value, str):
+        return value
     return datetime.strptime(value, format)
 
 
@@ -155,10 +177,7 @@ def format_date_range(starts_at, ends_at):
         if starts_at.day == ends_at.day:
             dayrange = starts_at.day
         else:
-            dayrange = "{0} – {1}".format(
-                starts_at.day,
-                ends_at.day
-            )
+            dayrange = "{0} – {1}".format(starts_at.day, ends_at.day)
         return "{0} {1}, {2}".format(
             starts_at.strftime("%B"),
             dayrange,
@@ -181,34 +200,37 @@ def format_date_range(starts_at, ends_at):
 def load_event_presets():
     """Load event preset content."""
     event_preset = {
-        'terms': '',
-        'eventstart': '',
-        'quickstart': '',
-        'codeofconduct': '',
+        "terms": "",
+        "eventstart": "",
+        "quickstart": "",
+        "codeofconduct": "",
     }
     for pr in event_preset.keys():
-        fn = path.join(path.join(path.join(
-            path.dirname(__file__),
-            'templates'), 'includes'), pr + '.md')
-        with open(fn, mode='r') as file:
+        fn = path.join(
+            path.join(path.join(path.dirname(__file__), "templates"), "includes"),
+            pr + ".md",
+        )
+        with open(fn, mode="r") as file:
             event_preset[pr] = file.read()
     return event_preset
 
 
-def load_csv_presets(filename, by_col='name'):
+def load_csv_presets(filename, by_col="name"):
     """Load structured settings from a CSV file."""
     # Expects filename to *not* have a .csv extension
-    fn = path.join(path.join(path.join(
-        path.dirname(__file__), 'templates'), 'includes'), filename + '.csv')
+    fn = path.join(
+        path.join(path.join(path.dirname(__file__), "templates"), "includes"),
+        filename + ".csv",
+    )
     settings_dict = {}
-    with open(fn, mode='r') as file:
-        csvreader = DictReader(file, delimiter=';')
+    with open(fn, mode="r") as file:
+        csvreader = DictReader(file, delimiter=";")
         for row in csvreader:
             settings_dict[row[by_col]] = row
     return settings_dict
 
 
-def load_presets(stagedata, top_element='stages', by_col='name'):
+def load_presets(stagedata, top_element="stages", by_col="name"):
     """Load presets as a dictionary."""
     settings_dict = {}
     stages = safe_load(stagedata)
@@ -217,25 +239,31 @@ def load_presets(stagedata, top_element='stages', by_col='name'):
     return settings_dict
 
 
-def load_yaml_presets(filename, by_col='name', filepath=None):
+def load_yaml_presets(filename, by_col="name", filepath=None):
     """Load structured settings from a YAML file."""
     original_filename = filename
-    if not (filename.endswith('.yaml') or filename.endswith('.yml')):
-        filename = filename + '.yaml'
-    fn = path.join(filepath or path.join(path.join(
-        path.dirname(__file__), 'templates'), 'includes'), filename)
-    with open(fn, mode='r') as file:
+    if not (filename.endswith(".yaml") or filename.endswith(".yml")):
+        filename = filename + ".yaml"
+    fn = path.join(
+        filepath
+        or path.join(path.join(path.dirname(__file__), "templates"), "includes"),
+        filename,
+    )
+    with open(fn, mode="r") as file:
         config = load_presets(file, original_filename, by_col)
     return config
 
 
 def load_json_presets(filename, filepath=None):
     """Load structured settings from a JSON file."""
-    if not (filename.endswith('.json')):
-        filename = filename + '.json'
-    fn = path.join(filepath or path.join(path.join(
-        path.dirname(__file__), 'templates'), 'includes'), filename)
-    with open(fn, mode='r') as file:
+    if not (filename.endswith(".json")):
+        filename = filename + ".json"
+    fn = path.join(
+        filepath
+        or path.join(path.join(path.dirname(__file__), "templates"), "includes"),
+        filename,
+    )
+    with open(fn, mode="r") as file:
         config = loads(file.read())
     return config
 
@@ -244,20 +272,23 @@ def fix_relative_links(readme, imgroot, repo_full_name, default_branch):
     """Ensures that images in Markdown are absolute."""
     readme = re.sub(
         r" src=\"(?!http)",
-        " src=\"%s/%s/%s/" % (imgroot, repo_full_name, default_branch),
-        readme
+        ' src="%s/%s/%s/' % (imgroot, repo_full_name, default_branch),
+        readme,
     )
     readme = re.sub(
         r"\!\[(.*)\]\((?!http)",
         # Pass named group to include full path in the image URL
         r"![\g<1>](%s/%s/%s/" % (imgroot, repo_full_name, default_branch),
-        readme
+        readme,
     )
     return readme
 
 
 def get_random_alphanumeric_string(length=24):
-    """ Get a reasonably secure password """
-    return ''.join(
-        (SystemRandom().choice(string.ascii_letters + string.digits)
-         for i in range(length)))
+    """Get a reasonably secure password"""
+    return "".join(
+        (
+            SystemRandom().choice(string.ascii_letters + string.digits)
+            for i in range(length)
+        )
+    )

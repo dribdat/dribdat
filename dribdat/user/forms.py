@@ -23,24 +23,23 @@ from wtforms.validators import (
 from sqlalchemy import func
 from ..user.validators import UniqueValidator
 from dribdat.utils import sanitize_input  # noqa: I005
-from dribdat.utils import unpack_csvlist, pack_csvlist
 from .models import User
 
 
 common_user_related_fields = dict(
-    webpage_url=URLField(
-        "Online profile",
-        [Length(max=128)],
-        description="Link to your website or a social media profile.",
-    ),
     fullname=StringField(
         "Display name",
         [Length(max=200)],
         description="Your full name, if you want it shown on your profile and certificate.",
     ),
+    webpage_url=URLField(
+        "Online profile",
+        [Length(max=128)],
+        description="Link to your website or a social media profile.",
+    ),
     username=StringField(
         "Username",
-        [Length(max=25), UniqueValidator(User, "username"), DataRequired()],
+        [Length(max=40), UniqueValidator(User, "username"), DataRequired()],
         description="Short and sweet.",
     ),
     email=EmailField(
@@ -69,28 +68,17 @@ common_user_related_fields = dict(
 )
 
 
-def validate_skillslist(field, maxchars=100):
-    message = f"Individual skills should not be empty or very long (more than {maxchars} chars). Remember, this is a comma-separated list. Try to split one large skill into a few."
-    skills = unpack_csvlist(field.data)
-    for s in skills:
-        if len(s) > maxchars or len(s) == 0:
-            field.errors = list(field.errors)
-            field.errors.append(message)
-            return False
-    return True
-
-
 class RegisterForm(FlaskForm):
     """Ye olde user registration form."""
 
     username = StringField(
-        "Username", validators=[DataRequired(), Length(min=3, max=25)]
+        "Username", validators=[DataRequired(), Length(min=3, max=40)]
     )
     email = EmailField(
-        "Email", validators=[DataRequired(), Email(), Length(min=6, max=40)]
+        "Email", validators=[DataRequired(), Email(), Length(min=6, max=80)]
     )
     password = PasswordField(
-        "Password", validators=[DataRequired(), Length(min=6, max=40)]
+        "Password", validators=[DataRequired(), Length(min=6, max=100)]
     )
     confirm = PasswordField(
         "Verify password",
@@ -105,7 +93,7 @@ class RegisterForm(FlaskForm):
         super(RegisterForm, self).__init__(*args, **kwargs)
         self.user = None
 
-    def validate(self):
+    def validate(self):  # pyright: ignore
         """Validate the form."""
         initial_validation = super(RegisterForm, self).validate()
         if not initial_validation:
@@ -113,11 +101,11 @@ class RegisterForm(FlaskForm):
         sane_username = sanitize_input(self.username.data)
         user = User.query.filter_by(username=sane_username).first()
         if user:
-            self.username.errors.append("A user with this name already exists")
+            self.username.errors.append("A user with this name already exists")  # pyright: ignore
             return False
         user = User.query.filter_by(email=self.email.data).first()
         if user:
-            self.email.errors.append("Email already registered")
+            self.email.errors.append("Email already registered")  # pyright: ignore
             return False
         return True
 
@@ -128,13 +116,14 @@ class LoginForm(FlaskForm):
     username = StringField("Username", validators=[DataRequired()])
     password = PasswordField("Password", validators=[DataRequired()])
     recaptcha = RecaptchaField()
+    submit = SubmitField("Continue")
 
     def __init__(self, *args, **kwargs):
         """Create instance."""
         super(LoginForm, self).__init__(*args, **kwargs)
         self.user = None
 
-    def validate(self):
+    def validate(self):  # pyright: ignore
         """Validate the form."""
         initial_validation = super(LoginForm, self).validate()
         if not initial_validation:
@@ -147,10 +136,10 @@ class LoginForm(FlaskForm):
                 func.lower(User.username) == func.lower(self.username.data)
             ).first()
         if not self.user:
-            self.username.errors.append("Could not find your user account")
+            self.username.errors.append("Could not find your user account")  # pyright: ignore
             return False
         if not self.user.check_password(self.password.data):
-            self.password.errors.append("Invalid password")
+            self.password.errors.append("Invalid password")  # pyright: ignore
             return False
         # Inactive users are allowed to log in, but not much else.
         return True
@@ -160,10 +149,10 @@ class EmailForm(FlaskForm):
     """Just the e-mail, please."""
 
     username = EmailField(
-        "Email", validators=[DataRequired(), Email(), Length(min=6, max=40)]
+        "Email", validators=[DataRequired(), Email(), Length(min=6, max=80)]
     )
-    submit = SubmitField("Continue")
     recaptcha = RecaptchaField()
+    submit = SubmitField("Continue")
 
 
 class UserForm(FlaskForm):
@@ -201,15 +190,5 @@ class StoryForm(FlaskForm):
     my_skills = common_user_related_fields["skills"]
     my_wishes = common_user_related_fields["wishes"]
     my_goals = common_user_related_fields["goals"]
-
-    def validate(self):
-        """Validate the form."""
-
-        if not validate_skillslist(self.my_skills):
-            return False
-        if not validate_skillslist(self.my_wishes):
-            return False
-
-        return True
 
     submit = SubmitField("Save changes")

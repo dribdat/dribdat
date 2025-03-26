@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-""" Importing event data from a package """
+"""Importing event data from a package"""
 
 import logging
 import requests
@@ -24,71 +24,89 @@ from dribdat.futures import UTC
 REQUEST_TIMEOUT = 10
 
 
-def event_to_data_package(event, author=None, host_url='', full_content=False):
+def event_to_data_package(event, author=None, host_url="", full_content=False):
     """Create a Data Package from the data of an event."""
     # Define the author, if available
     contributors = []
     if author and not author.is_anonymous:
-        contributors.append({
-            "title": author.name,
-            "path": author.webpage_url or '',
-            "role": "author"
-        })
+        contributors.append(
+            {"title": author.name, "path": author.webpage_url or "", "role": "author"}
+        )
     else:
         # Disallow anon access to full data
         full_content = False
 
+    # Compose hashtags
+    if event.hashtags:
+        keywords = event.hashtags.replace("#", "").split(" ")
+    else:
+        keywords = (["dribdat", "hackathon", "co-creation"],)
+
     # Set up a data package object
     package = Package(
-        name='event-%d' % event.id,
+        name="event-%d" % event.id,
         title=event.name,
         description=event.summary or event.description,
-        keywords=["dribdat", "hackathon", "co-creation"],
-        sources=[{"title": "dribdat", "path": "https://dribdat.cc"}],
-        licenses=[{
-            "name": "ODC-PDDL-1.0",
-            "path": "http://opendatacommons.org/licenses/pddl/",
-            "title": "Open Data Commons Public Domain Dedication & License 1.0"
-        }],
+        keywords=keywords,
+        sources=[{"title": "dribdat", "path": host_url}],
+        licenses=[
+            {
+                "name": "ODC-PDDL-1.0",
+                "path": "http://opendatacommons.org/licenses/pddl/",
+                "title": "Open Data Commons Public Domain Dedication & License 1.0",
+            }
+        ],
         contributors=contributors,
-        homepage=event.webpage_url or '',
+        homepage=event.webpage_url or "",
         created=format_date(datetime.now(UTC)),
-        version="0.2.0",
+        version="0.9.0",
     )
 
     # Generate resources
 
     # print("Generating in-memory JSON of event")
-    package.add_resource(Resource(
-            name='events',
+    package.add_resource(
+        Resource(
+            name="events",
             data=[event.get_full_data()],
-        ))
+        )
+    )
     # print("Generating in-memory JSON of projects")
-    package.add_resource(Resource(
-            name='projects',
+    package.add_resource(
+        Resource(
+            name="projects",
             data=get_project_list(event.id, host_url, True),
-        ))
+        )
+    )
     if full_content:
         # print("Generating in-memory JSON of participants")
-        package.add_resource(Resource(
-                name='users',
+        package.add_resource(
+            Resource(
+                name="users",
                 data=get_event_users(event, full_content),
-            ))
+            )
+        )
         # print("Generating in-memory JSON of activities")
-        package.add_resource(Resource(
-                name='activities',
+        package.add_resource(
+            Resource(
+                name="activities",
                 data=get_event_activities(event.id, 500),
-            ))
+            )
+        )
         # print("Generating in-memory JSON of categories")
-        package.add_resource(Resource(
-                name='categories',
+        package.add_resource(
+            Resource(
+                name="categories",
                 data=get_event_categories(event.id),
-            ))
+            )
+        )
         # print("Adding supplementary README")
-        package.add_resource(Resource(
-                name='readme',
-                path='PACKAGE.txt',
-            ))
+        package.add_resource(
+            Resource(
+                name="readme",
+                path="PACKAGE.txt",
+            )
+        )
 
     return package
 
@@ -97,13 +115,13 @@ def import_events_data(data, dry_run=False):
     """Collect data of a list of events."""
     updates = []
     for evt in data:
-        name = evt['name']
+        name = evt["name"]
         event = Event.query.filter_by(name=name).first()
         if not event:
-            logging.info('Creating event: %s' % name)
+            logging.info("Creating event: %s" % name)
             event = Event()
         else:
-            logging.info('Updating event: %s' % name)
+            logging.info("Updating event: %s" % name)
         event.set_from_data(evt)
         if not dry_run:
             event.save()
@@ -115,13 +133,13 @@ def import_categories_data(data, dry_run=False):
     """Collect data of a list of categories."""
     updates = []
     for ctg in data:
-        name = ctg['name']
+        name = ctg["name"]
         category = Category.query.filter_by(name=name).first()
         if not category:
-            logging.info('Creating category: %s' % name)
+            logging.info("Creating category: %s" % name)
             category = Category()
         else:
-            logging.info('Updating category: %s' % name)
+            logging.info("Updating category: %s" % name)
         category.set_from_data(ctg)
         if not dry_run:
             category.save()
@@ -133,19 +151,21 @@ def import_users_data(data, dry_run=False):
     """Collect data of a list of users."""
     updates = []
     for usr in data:
-        name = usr['username']
+        name = usr["username"]
         if name is None or len(name) < 4:
             continue
-        email = usr['email'] if 'email' in usr else ''
-        if User.query.filter_by(username=name).first() or \
-           User.query.filter_by(email=email).first():
+        email = usr["email"] if "email" in usr else ""
+        if (
+            User.query.filter_by(username=name).first()
+            or User.query.filter_by(email=email).first()
+        ):
             # Do not update existing user data
-            logging.info('Skipping user: %s' % name)
+            logging.info("Skipping user: %s" % name)
             continue
-        logging.info('Creating user: %s' % name)
+        logging.info("Creating user: %s" % name)
         user = User()
         user.set_from_data(usr)
-        import_user_roles(user, usr['roles'], dry_run)
+        import_user_roles(user, usr["roles"], dry_run)
         if not dry_run:
             user.save()
         updates.append(user.data)
@@ -156,7 +176,7 @@ def import_user_roles(user, new_roles, dry_run=False):
     """Collect data of a list of roles."""
     updates = []
     my_roles = [r.name for r in user.roles]
-    for r in new_roles.split(','):
+    for r in new_roles.split(","):
         if r in my_roles:
             continue
         # Check that role is a new one
@@ -176,31 +196,31 @@ def import_project_data(data, dry_run=False, event=None):
     updates = []
     for pjt in data:
         # Skip empty rows
-        if not 'name' in pjt:
-            logging.warning('Skipping empty row')
+        if not "name" in pjt:
+            logging.warning("Skipping empty row")
             logging.debug(pjt)
             continue
         # Get project name and content
-        name = pjt['name']
-        if not 'longtext' in pjt and 'excerpt' in pjt:
-            logging.warning('Importing excerpt as longtext')
-            pjt['longtext'] = pjt.pop('excerpt')
+        name = pjt["name"]
+        if not "longtext" in pjt and "excerpt" in pjt:
+            logging.warning("Importing excerpt as longtext")
+            pjt["longtext"] = pjt.pop("excerpt")
         # Search for event
         event_name = None
-        if 'event_name' in pjt:
-            event_name = pjt['event_name']
+        if "event_name" in pjt:
+            event_name = pjt["event_name"]
         if event_name and (not event or event.name != event_name):
             event = Event.query.filter_by(name=event_name).first()
         if not event:
-            logging.warning('Skip [%s], event not found: %s' % (name, event_name))
+            logging.warning("Skip [%s], event not found: %s" % (name, event_name))
             continue
         # Search for project
         project = Project.query.filter_by(name=name).first()
         if not project:
-            logging.info('Creating project: %s' % name)
+            logging.info("Creating project: %s" % name)
             project = Project()
         else:
-            logging.info('Updating project: %s' % name)
+            logging.info("Updating project: %s" % name)
         project.set_from_data(pjt)
         project.update_null_fields()
         project.event_id = event.id
@@ -216,20 +236,19 @@ def import_activities(data, dry_run=False):
     proj = None
     pname = ""
     for act in data:
-        aname = act['name']
-        tstamp = datetime.utcfromtimestamp(act['time'])
-        activity = Activity.query.filter_by(name=aname,
-                                            timestamp=tstamp).first()
+        aname = act["name"]
+        tstamp = datetime.utcfromtimestamp(act["time"])
+        activity = Activity.query.filter_by(name=aname, timestamp=tstamp).first()
         if activity:
-            logging.info('Skipping activity: %s', tstamp)
+            logging.info("Skipping activity: %s", tstamp)
             continue
-        logging.info('Creating activity: %s', tstamp)
-        if act['project_name'] != pname:
-            pname = act['project_name']
+        logging.info("Creating activity: %s", tstamp)
+        if act["project_name"] != pname:
+            pname = act["project_name"]
             # TODO: unreliable; rather use a map of project_id to new id
             proj = Project.query.filter_by(name=pname).first()
         if not proj:
-            logging.warning('Error! Project not found: %s' % pname)
+            logging.warning("Error! Project not found: %s" % pname)
             continue
         activity = Activity(aname, proj.id)
         activity.set_from_data(act)
@@ -241,27 +260,27 @@ def import_activities(data, dry_run=False):
 
 def import_event_package(data, dry_run=False, all_data=False):
     """Import an event from a Data Package."""
-    if 'sources' not in data or data['sources'][0]['title'] != 'dribdat':
-        return {'errors': ['Invalid source']}
+    if "sources" not in data or data["sources"][0]["title"] != "dribdat":
+        return {"errors": ["Invalid source"]}
     updates = {}
     # Import in stages
     for stg in [1, 2, 3]:
-        for res in data['resources']:
+        for res in data["resources"]:
             # Import events
-            if stg == 1 and res['name'] == 'events':
-                updates['events'] = import_events_data(res['data'], dry_run)
+            if stg == 1 and res["name"] == "events":
+                updates["events"] = import_events_data(res["data"], dry_run)
             # Import categories
-            elif stg == 1 and res['name'] == 'categories' and all_data:
-                updates['categories'] = import_categories_data(res['data'], dry_run)
+            elif stg == 1 and res["name"] == "categories" and all_data:
+                updates["categories"] = import_categories_data(res["data"], dry_run)
             # Import user accounts
-            elif stg == 1 and res['name'] == 'users' and all_data:
-                updates['users'] = import_users_data(res['data'], dry_run)
+            elif stg == 1 and res["name"] == "users" and all_data:
+                updates["users"] = import_users_data(res["data"], dry_run)
             # Projects follow users
-            if stg == 2 and res['name'] == 'projects' and all_data:
-                updates['projects'] = import_project_data(res['data'], dry_run)
+            if stg == 2 and res["name"] == "projects" and all_data:
+                updates["projects"] = import_project_data(res["data"], dry_run)
             # Activities always last
-            if stg == 3 and res['name'] == 'activities' and all_data:
-                updates['activities'] = import_activities(res['data'], dry_run)
+            if stg == 3 and res["name"] == "activities" and all_data:
+                updates["activities"] = import_activities(res["data"], dry_run)
     # Return summary object
     return updates
 
@@ -270,14 +289,14 @@ def fetch_datapackage(url, dry_run=False, all_data=False):
     """Get event data from a URL."""
     # For security, can only be used from CLI.
     # In the future, we can add a subscription setting on the server side.
-    if not url.endswith('datapackage.json'):
+    if not url.endswith("datapackage.json"):
         logging.error("Invalid URL: %s", url)
         return {}
     try:
         data = requests.get(url, timeout=REQUEST_TIMEOUT).json()
         return import_event_package(data, dry_run, all_data)
     except json.decoder.JSONDecodeError:
-        return {'errors': ['Could not load package due to JSON error']}
+        return {"errors": ["Could not load package due to JSON error"]}
     except requests.exceptions.RequestException:
         logging.error("Could not connect to %s" % url)
         return {}
@@ -285,9 +304,9 @@ def fetch_datapackage(url, dry_run=False, all_data=False):
 
 def import_datapackage(filedata, dry_run=True, all_data=False):
     """Save a temporary file and provide details."""
-    ext = filedata.filename.split('.')[-1].lower()
-    if ext not in ['json']:
-        return {'errors': ['Invalid format (allowed: JSON)']}
+    ext = filedata.filename.split(".")[-1].lower()
+    if ext not in ["json"]:
+        return {"errors": ["Invalid format (allowed: JSON)"]}
     with tempfile.TemporaryDirectory() as tmpdir:
         filepath = path.join(tmpdir, secure_filename(filedata.filename))
         filedata.save(filepath)
@@ -297,25 +316,25 @@ def import_datapackage(filedata, dry_run=True, all_data=False):
 def load_file_datapackage(filepath, dry_run=True, all_data=False):
     """Get event data from a file."""
     try:
-        with open(filepath, mode='rb') as file:
+        with open(filepath, mode="rb") as file:
             data = json.load(file)
         return import_event_package(data, dry_run, all_data)
     except json.decoder.JSONDecodeError:
-        return {'errors': ['Could not load package due to JSON error']}
+        return {"errors": ["Could not load package due to JSON error"]}
 
 
 def import_projects_csv(filedata, event=None, dry_run=True):
     """Save a temporary CSV file and import project data to event."""
-    ext = filedata.filename.split('.')[-1].lower()
-    if ext not in ['csv']:
-        return {'errors': ['Invalid format (allowed: CSV)']}
+    ext = filedata.filename.split(".")[-1].lower()
+    if ext not in ["csv"]:
+        return {"errors": ["Invalid format (allowed: CSV)"]}
     with tempfile.TemporaryDirectory() as tmpdir:
         filepath = path.join(tmpdir, secure_filename(filedata.filename))
         filedata.save(filepath)
-        with open(filepath, mode='r') as csvfile:
+        with open(filepath, mode="r") as csvfile:
             csvreader = csv.DictReader(csvfile)
-            projdata = [ deepcopy(row) for row in csvreader ]
-            return { 'projects': import_project_data(projdata, dry_run, event) }
+            projdata = [deepcopy(row) for row in csvreader]
+            return {"projects": import_project_data(projdata, dry_run, event)}
 
 
 def import_users_csv(filedata, dry_run=True):
