@@ -68,7 +68,6 @@
       <div class="form-group">
         {{ form.username(placeholder="username", class_="form-control w-100") }}
         {{ form.password(placeholder="password", class_="form-control w-100") }}
-        <button type="submit" class="btn btn-default btn-primary btn-submit mt-2 w-100">Verify me</button>
       </div>
 
       {% if config.RECAPTCHA_PUBLIC_KEY %}
@@ -76,6 +75,10 @@
               {{ form.recaptcha }}
           </div>
       {% endif %}
+
+      <div class="form-group">
+        <button type="submit" class="btn btn-default btn-primary btn-submit mt-2 w-100">Verify me</button>
+      </div>
     </form>
     <br>
     {% if config.MAIL_SERVER %}

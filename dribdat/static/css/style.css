@@ -279,7 +279,6 @@ footer {
     padding-top: 5px;
 }
 footer a {
-    color: #555;
     text-decoration: none;
     margin-left: 1em;
 }
@@ -394,10 +393,6 @@ nav.navbar .navbar-brand:hover i:nth-child(even) {
     text-shadow: 1px 1px 10px yellow;
     box-shadow: 0px 0px 20px orange;
     border-radius: 30px;
-    color: blue;
-}
-.theme-dark nav.navbar .navbar-brand:hover i:nth-child(even) {
-    color: white;
 }
 nav .navbar-nav .fa {
     margin-left: 0.2em;
@@ -1698,7 +1693,7 @@ main form .control-label {
     font-size: 140%;
     display: block;
     text-align: center;
-    margin-top: 2em;
+    margin-top: 1em;
     clear: both;
 }
 main form .form-group .checkbox {
@@ -2212,6 +2207,7 @@ div.project-edit-buttons {
 .theme-dark .profile-projects {
     border-color: rgba(255, 255, 255, 0.5);
 }
+.theme-dark .bg-white a,
 .theme-dark .bg-white {
     color: black;
 }

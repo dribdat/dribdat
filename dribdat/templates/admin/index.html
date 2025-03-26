@@ -40,6 +40,11 @@
     <a href="{{ url_for('admin.event_projects', event_id=event.id) }}" class="btn btn-lg btn-success">
       <i class="fa fa-star" aria-hidden="true"></i>
       Projects</a>
+    {% if config.BACKBOARD_URL %}
+    <a href="{{ url_for('public.backboard') }}" class="btn btn-lg btn-dark">
+      <i class="fa fa-star" aria-hidden="true"></i>
+      Backboard</a>
+    {% endif %}
     <a href="{{ url_for('public.dashboard') }}" class="btn btn-lg btn-dark">
       <i class="fa fa-calendar" aria-hidden="true"></i>
       Dashboard</a>

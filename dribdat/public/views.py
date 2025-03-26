@@ -12,10 +12,9 @@ from flask import (
     current_app,
 )
 from flask_login import login_required, current_user
-from dribdat.user.models import User, Event, Project, Activity, Role
+from dribdat.user.models import User, Event, Project, Role
 from dribdat.public.forms import EventNew, EventEdit
 from dribdat.public.userhelper import (
-    get_user_by_name,
     get_users_by_search,
     get_dribs_paginated,
 )
@@ -30,12 +29,29 @@ from datetime import datetime, timedelta
 from dribdat.futures import UTC
 
 # Set project version
-VERSION = "0.8.9"
+VERSION = "0.9.0"
 
 blueprint = Blueprint("public", __name__, static_folder="../static")
 
 # Loads confiuration for events
 EVENT_PRESET = load_event_presets()
+
+
+@blueprint.route("/backboard/")
+def backboard():
+    """Render a static backboard. Better option."""
+    event = current_event()
+    if not event:
+        return "No current event"
+    if not current_app.config["BACKBOARD_URL"]:
+        return "No Backboard service configured"
+    url_event = url_for("api.package_current_event", format="json", _external=True)
+    url_bb = current_app.config["BACKBOARD_URL"]
+    if "?" in url_bb:
+        url_bb = url_bb + "&src="
+    else:
+        url_bb = url_bb + "?src="
+    return redirect(url_bb + url_event)
 
 
 @blueprint.route("/dashboard/")
@@ -180,9 +196,11 @@ def user_profile(username):
             and user.may_certify()[0]
         )
         # Check permissions ..
-        is_current_user = current_user and \
-            not current_user.is_anonymous and \
-            current_user.id == user.id
+        is_current_user = (
+            current_user
+            and not current_user.is_anonymous
+            and current_user.id == user.id
+        )
     # Collect user data
     projects = user.joined_projects(False)
     posts = user.latest_posts(20)
@@ -312,8 +330,10 @@ def event_participants(event_id):
     usercount = len(users) if users else 0
     return render_template(
         "public/eventusers.html",
-        preset_roles=preset_roles, current_event=event,
-        participants=users, usercount=usercount,
+        preset_roles=preset_roles,
+        current_event=event,
+        participants=users,
+        usercount=usercount,
         active="people",
     )
 
@@ -330,8 +350,10 @@ def all_participants():
     usercount = len(users) if users else 0
     return render_template(
         "public/eventusers.html",
-        u=search_by, preset_roles=preset_roles,
-        participants=users, usercount=usercount,
+        u=search_by,
+        preset_roles=preset_roles,
+        participants=users,
+        usercount=usercount,
         active="people",
     )
 
