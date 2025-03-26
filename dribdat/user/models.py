@@ -1208,10 +1208,11 @@ class Project(PkModel):
 
     def set_auto_image(self):
         """Get an image if available."""
-        # if self.image_url and len(self.image_url) > 1 and "##" not in self.image_url:
-        #    return
+        if self.image_url and len(self.image_url) > 1 and "#I" not in self.image_url:
+            # Ignore user-uploaded images
+            return None
         topdribs = (
-            Activity.query.filter_by(project_id=self.id, name="update")
+            Activity.query.filter_by(project_id=self.id)  # , name="update")
             .order_by(Activity.id.desc())
             .limit(5)
         )
@@ -1222,9 +1223,10 @@ class Project(PkModel):
                     if ")" in rs and rs.startswith("http"):
                         url = rs.split(")")[0]
                         if url and url not in self.image_url:
-                            self.image_url = url
+                            self.image_url = url + "#I"
                             self.save()
-                            return
+                            return self.image_url
+        return self.image_url
 
     def calculate_score(self):  # noqa: C901
         """Calculate score of a project based on base progress."""

@@ -6,6 +6,7 @@ See: http://webtest.readthedocs.org/
 
 from flask import url_for
 
+from dribdat.user.models import Project
 from .factories import UserFactory, ProjectFactory, EventFactory
 from dribdat.mailer import user_activation
 
@@ -64,13 +65,12 @@ class TestPosting:
         # Test auto-images
         project.image_url = ""
         project.save()
-        assert project.image_url == ""
         res = testapp.get(url_for("project.project_comment", project_id=project.id))
         form = res.forms["projectPost"]
-        form["note"] = "This ![](img.jpg) is a picture"
+        form["note"] = "This ![](http://img.jpg) is a picture"
+        assert project.image_url == ""
         res = form.submit().follow()
-        project.set_auto_image()
-        assert project.image_url == "img.jpg"
+        assert "img.jpg" in project.image_url
 
         # Approve the project again to test reversion
         # project.longtext = "Challenge"
@@ -84,4 +84,3 @@ class TestPosting:
         # assert "Challenge" in res.text
         # res = testapp.get(url_for('project.project_view', project_id=project.id))
         # assert "Blahblah" in res.text
-
