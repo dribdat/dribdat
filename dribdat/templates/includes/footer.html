@@ -1,24 +1,33 @@
 <footer id="footer">
-  <a href="{{ url_for('public.about') }}">
+  <a href="{{ url_for('public.about') }}" title="About this platform">
     <i class="fa fa-question ms-3" aria-hidden="true"></i>
     About
   </a>
 
-  <a href="{{ url_for('public.terms') }}">
+  <a href="{{ url_for('public.terms') }}" title="View the terms and conditions">
     <i class="fa fa-exclamation ms-3" aria-hidden="true"></i>
     Terms
   </a>
 
+  {% if config.ANALYTICS_HREF %}
+    <a href="{{ config.ANALYTICS_HREF }}" title="See our web analytics">
+      <i class="fa fa-bar-chart ms-3" aria-hidden="true"></i>
+      Analytics
+    </a>
+  {% endif %}
+
+  {% if current_user and current_user.is_admin %}
+    <a href="{{ url_for('admin.index') }}" class="font-bold">
+      <i class="fa fa-gear ms-3" aria-hidden="true"></i>
+      Admin
+    </a>
+  {% endif %}
+
   <ul class="footer-nav">
+    <li>
+      <a class="darkmode" href="#">&#127763;&nbsp;<span>Dark</span></a>
+    </li>
     {% if current_user and current_user.is_authenticated %}
-      {% if current_user.is_admin %}
-        <li>
-          <a href="{{ url_for('admin.index') }}" class="font-bold">
-            <i class="fa fa-gear" aria-hidden="true"></i>
-            Admin
-          </a>
-        </li>
-      {% endif %}
       <li>
         <a href="#top" id="notification-button" class="hidden" title="Toggle showing alert notifications">
           <i class="fa fa-bell" aria-hidden="true"></i>
@@ -26,33 +35,23 @@
         </a>
       </li>
       <li>
-        <a href="{{ url_for('public.dashboard') }}" title="A live dashboard of the current sprint">
-          <i class="fa fa-calendar" aria-hidden="true"></i>
-          Dash
+        <a href="{{ url_for('public.user_current') }}" title="Go to my user profile">
+          <i class="fa fa-user" aria-hidden="true"></i>
+          Profile
         </a>
       </li>
       <li>
-        <a href="{{ url_for('auth.logout') }}">
+        <a href="{{ url_for('auth.logout') }}" title="Log out">
           <i class="fa fa-sign-out" aria-hidden="true"></i>
-          Logout
         </a>
       </li>
     {% else %}
       <li>
-        <a href="{{ url_for('auth.enter') }}">
+        <a href="{{ url_for('auth.enter') }}" title="Log in">
           <i class="fa fa-sign-in" aria-hidden="true"></i>
           Log&nbsp;in
         </a>
       </li>
     {% endif %}
-    {% if config.ANALYTICS_HREF %}
-    <li>
-      <a href="{{ config.ANALYTICS_HREF }}">&#128200;&nbsp;Analytics</a>
-    </li>
-    {% endif %}
-
-    <li>
-      <a class="darkmode" href="#">&#127763;&nbsp;<span>Dark</span></a>
-    </li>
   </ul>
 </footer>

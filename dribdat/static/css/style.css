@@ -279,7 +279,6 @@ footer {
     padding-top: 5px;
 }
 footer a {
-    color: #555;
     text-decoration: none;
     margin-left: 1em;
 }
@@ -1698,7 +1697,7 @@ main form .control-label {
     font-size: 140%;
     display: block;
     text-align: center;
-    margin-top: 2em;
+    margin-top: 1em;
     clear: both;
 }
 main form .form-group .checkbox {
@@ -2212,6 +2211,7 @@ div.project-edit-buttons {
 .theme-dark .profile-projects {
     border-color: rgba(255, 255, 255, 0.5);
 }
+.theme-dark .bg-white a,
 .theme-dark .bg-white {
     color: black;
 }
