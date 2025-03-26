@@ -13,7 +13,7 @@ from json import dumps, loads
 # Time functions
 from time import mktime
 from dateutil.parser._parser import ParserError
-from datetime import datetime, timezone, timedelta
+from datetime import datetime, timedelta
 from dribdat.futures import UTC
 
 # Project local variables
@@ -78,7 +78,8 @@ class Role(PkModel):
 
     def __init__(self, name=None, **kwargs):
         """Create instance."""
-        super().__init__(name=name, **kwargs)
+        self.name = name
+        super().__init__(**kwargs)
 
     def __repr__(self):
         """Represent instance as a unique string."""
@@ -166,7 +167,7 @@ class User(UserMixin, PkModel):
             "my_wishes": self._my_wishes,
             "webpage_url": self.webpage_url,
             "vitae": dumps(self.vitae),
-            "roles": ",".join([r.name for r in self.roles]),
+            "roles": ",".join([r.name for r in self.roles]),  # pyright: ignore
         }
 
     def set_from_data(self, data):
@@ -175,7 +176,7 @@ class User(UserMixin, PkModel):
         self.username = data["username"]
         self.webpage_url = data["webpage_url"]
         if "email" not in data:
-            if not self.email or not "@" in self.email:
+            if not self.email or "@" not in self.email:
                 self.email = "%s@localhost.localdomain" % self.username
         else:
             self.email = data["email"]
@@ -217,7 +218,7 @@ class User(UserMixin, PkModel):
     def joined_projects(self, with_challenges=True, limit=-1, event=None):
         """Retrieve all projects user has joined."""
         activities = Activity.query.filter_by(user_id=self.id, name="star").order_by(
-            Activity.timestamp.desc()
+            Activity.timestamp.desc()  # pyright: ignore
         )
         if limit > 0:
             activities = activities.limit(limit)
@@ -257,7 +258,7 @@ class User(UserMixin, PkModel):
         for vtype in vvtypes:
             if vtype in vvdata and len(vvdata[vtype]) > 0:
                 for vv in vvdata[vtype]:
-                    if not vtype in vvlist:
+                    if vtype not in vvlist:
                         vvlist[vtype] = []
                     vvlist[vtype].append(
                         {
@@ -293,7 +294,7 @@ class User(UserMixin, PkModel):
             p_score = p_score + 1
         if self.my_goals and len(self.my_goals) > 6:
             p_score = p_score + 1
-        if self.roles and len(self.roles) > 0:
+        if self.roles and len(self.roles) > 0:  # pyright: ignore
             p_score = p_score + 1
         return p_score / MAX_SCORE
 
@@ -322,7 +323,7 @@ class User(UserMixin, PkModel):
         activities = Activity.query.filter_by(user_id=self.id)
         if only_posts:
             activities = activities.filter_by(action="post")
-        activities = activities.order_by(Activity.timestamp.desc())
+        activities = activities.order_by(Activity.timestamp.desc())  # pyright: ignore
         if max is not None:
             activities = activities.limit(max)
         posts = []
@@ -340,7 +341,7 @@ class User(UserMixin, PkModel):
         """Retrieve last user activity."""
         act = (
             Activity.query.filter_by(user_id=self.id)
-            .order_by(Activity.timestamp.desc())
+            .order_by(Activity.timestamp.desc())  # pyright: ignore
             .first()
         )
         if not act:
@@ -381,7 +382,9 @@ class User(UserMixin, PkModel):
     def __init__(self, username=None, email=None, password=None, **kwargs):
         """Create instance."""
         if username and email:
-            db.Model.__init__(self, username=username, email=email, **kwargs)
+            db.Model.__init__(self, **kwargs)
+            self.username = username
+            self.email = email
         if password:
             self.set_password(password)
 
@@ -625,12 +628,12 @@ class Event(PkModel):
     @property
     def ends_at_tz(self):
         """Extra property."""
-        return self.ends_at.replace(tzinfo=current_app.tz)
+        return self.ends_at.replace(tzinfo=current_app.tz)  # pyright: ignore
 
     @property
     def starts_at_tz(self):
         """Extra property."""
-        return self.starts_at.replace(tzinfo=current_app.tz)
+        return self.starts_at.replace(tzinfo=current_app.tz)  # pyright: ignore
 
     @property
     def countdown(self):
@@ -703,7 +706,7 @@ class Event(PkModel):
     def categories_for_event(self):
         """Event categories."""
         return Category.query.filter(
-            or_(Category.event_id == None, Category.event_id == self.id)
+            or_(Category.event_id is None, Category.event_id == self.id)
         ).order_by("name")
 
     @property
@@ -713,7 +716,8 @@ class Event(PkModel):
 
     def __init__(self, name=None, **kwargs):  # noqa: D107
         if name:
-            db.Model.__init__(self, name=name, **kwargs)
+            db.Model.__init__(self, **kwargs)
+            self.name = name
 
     def __repr__(self):  # noqa: D105
         return "<Event({name})>".format(name=self.name)
@@ -893,7 +897,7 @@ class Project(PkModel):
     def latest_activity(self, max=5):
         """Query for latest activity."""
         q = Activity.query.filter_by(project_id=self.id)
-        q = q.order_by(Activity.timestamp.desc())
+        q = q.order_by(Activity.timestamp.desc())  # pyright: ignore
         return q.limit(max)
 
     @property
@@ -982,7 +986,7 @@ class Project(PkModel):
         if by_name:
             activities = activities.filter_by(name=by_name)
         # Order by age
-        activities = activities.order_by(Activity.timestamp.desc())
+        activities = activities.order_by(Activity.timestamp.desc())  # pyright: ignore
         if limit is not None:
             activities = activities.limit(limit)
         return activities.all()
@@ -1082,7 +1086,7 @@ class Project(PkModel):
         # TODO: accurately detect project license based on component etc.
         if not self.event.community_embed:
             content_license = ""
-        elif "creativecommons" in self.event.community_embed:
+        elif "creativecommons" in str(self.event.community_embed):
             content_license = "https://creativecommons.org/licenses/by/4.0/"
         else:
             content_license = ""
@@ -1103,7 +1107,7 @@ class Project(PkModel):
 
     def set_from_data(self, data):
         """Update from JSON representation."""
-        if not "name" in data:
+        if "name" not in data:
             raise Exception("Missing project name!")
         self.name = data["name"]
         if "ident" in data:
@@ -1137,11 +1141,11 @@ class Project(PkModel):
         if "progress" in data:
             self.progress = int(data["progress"] or 0)
         try:
-            if not "created_at" in data or not "updated_at" in data:
+            if "created_at" not in data or "updated_at" not in data:
                 raise ParserError("Date values missing")
             self.created_at = parse_date(data["created_at"])
             self.updated_at = parse_date(data["updated_at"])
-        except ParserError as ex:
+        except ParserError:
             # Resetting dates to current time
             self.created_at = datetime.now(UTC)
             self.updated_at = datetime.now(UTC)
@@ -1264,7 +1268,8 @@ class Project(PkModel):
 
     def __init__(self, name=None, **kwargs):  # noqa: D107
         if name:
-            db.Model.__init__(self, name=name, **kwargs)
+            db.Model.__init__(self, **kwargs)
+            self.name = name
 
     def __repr__(self):  # noqa: D105
         return "<Project({name})>".format(name=self.name)
@@ -1330,7 +1335,8 @@ class Category(PkModel):
 
     def __init__(self, name=None, **kwargs):  # noqa: D107
         if name:
-            db.Model.__init__(self, name=name, **kwargs)
+            db.Model.__init__(self, **kwargs)
+            self.name = name
 
     def __repr__(self):  # noqa: D105
         return "<Category({name})>".format(name=self.name)
@@ -1361,7 +1367,7 @@ class Activity(PkModel):
     @property
     def data(self):
         """Get JSON representation."""
-        localtime = self.timestamp.replace(tzinfo=current_app.tz)
+        localtime = self.timestamp.replace(tzinfo=current_app.tz)  # pyright: ignore
         a = {
             "id": self.id,
             "time": int(mktime(self.timestamp.timetuple())),
@@ -1388,7 +1394,7 @@ class Activity(PkModel):
         self.action = data["action"]
         self.content = data["content"]
         self.ref_url = data["ref_url"]
-        self.timestamp = datetime.utcfromtimestamp(data["time"])
+        self.timestamp = datetime.fromtimestamp(data["time"], UTC)
         if "user_name" in data:
             uname = data["user_name"]
             user = User.query.filter_by(username=uname).first()
@@ -1402,7 +1408,9 @@ class Activity(PkModel):
 
     def __init__(self, name, project_id, **kwargs):  # noqa: D107
         if name:
-            db.Model.__init__(self, name=name, project_id=project_id, **kwargs)
+            db.Model.__init__(self, **kwargs)
+            self.name = name
+            self.project_id = project_id
 
     def __repr__(self):  # noqa: D105
         return "<Activity({name})>".format(name=self.name)
