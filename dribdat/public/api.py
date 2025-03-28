@@ -186,7 +186,7 @@ def event_activity_json(event_id):
 
 @blueprint.route('/event/current/activity.json')
 def event_activity_current_json():
-    """Output JSON of categories in the current event."""
+    """Output JSON of activities in the current event."""
     event = get_current_event()
     if not event:
         return jsonify(activities=[])
