@@ -6,7 +6,6 @@ See: http://webtest.readthedocs.org/
 
 from flask import url_for
 
-from dribdat.user.models import Project
 from .factories import UserFactory, ProjectFactory, EventFactory
 from dribdat.mailer import user_activation
 
@@ -71,16 +70,3 @@ class TestPosting:
         assert project.image_url == ""
         res = form.submit().follow()
         assert "img.jpg" in project.image_url
-
-        # Approve the project again to test reversion
-        # project.longtext = "Challenge"
-        # project.save()
-        # res = testapp.get(url_for('project.project_approve', project_id=project.id))
-        # assert res.status_code == 302
-        # assert project.progress > 1
-        # project.longtext = "Blahblah"
-        # project.save()
-        # res = testapp.get(url_for('project.get_challenge', project_id=project.id))
-        # assert "Challenge" in res.text
-        # res = testapp.get(url_for('project.project_view', project_id=project.id))
-        # assert "Blahblah" in res.text
