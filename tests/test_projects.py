@@ -2,19 +2,16 @@
 """Model unit tests."""
 
 import pytest
-import pytz
-from base64 import b64decode
 
-from dribdat.user.models import Role, User, Event
+from dribdat.user.models import Role
 from dribdat.user.constants import stageProjectToNext
-from dribdat.utils import timesince
-from dribdat.settings import Config
 from dribdat.aggregation import ProjectActivity
 from dribdat.boxout.dribdat import box_project
 
 from .factories import UserFactory, ProjectFactory, EventFactory
 
-@pytest.mark.usefixtures('db')
+
+@pytest.mark.usefixtures("db")
 class TestProject:
     """Project tests."""
 
@@ -27,7 +24,7 @@ class TestProject:
         assert bool(project.summary)
         assert bool(project.created_at)
         assert project.is_hidden is False
-        TEST_NAME = u'Updated name'
+        TEST_NAME = "Updated name"
         assert project.versions.count() == 1
         project.name = TEST_NAME
         db.session.commit()
@@ -41,14 +38,14 @@ class TestProject:
         """Test role factory."""
         project = ProjectFactory()
         project.save()
-        role1 = Role(name='a role')
+        role1 = Role(name="a role")
         role1.save()
-        role2 = Role(name='another role')
+        role2 = Role(name="another role")
         role2.save()
         user = UserFactory()
         user.roles.append(role1)
         user.save()
-        ProjectActivity(project, 'star', user)
+        ProjectActivity(project, "star", user)
         assert role2 in project.get_missing_roles()
 
     def tests_project_box(self, db):
@@ -67,18 +64,18 @@ class TestProject:
         assert project.score == 0
         user1 = UserFactory()
         user1.save()
-        ProjectActivity(project, 'star', user1)
+        ProjectActivity(project, "star", user1)
         project.update_now()
         assert project.score == 1
         user2 = UserFactory()
         user2.save()
-        ProjectActivity(project, 'star', user1)
+        ProjectActivity(project, "star", user1)
         project.update_now()
         assert project.score == 1
-        ProjectActivity(project, 'star', user2)
+        ProjectActivity(project, "star", user2)
         project.update_now()
         assert project.score == 2
-        ProjectActivity(project, 'unstar', user2)
+        ProjectActivity(project, "unstar", user2)
         project.update_now()
         assert project.score == 1
 
@@ -87,7 +84,7 @@ class TestProject:
         db.session.add(project)
         db.session.commit()
         assert project.is_challenge
-        TEST_NAME = u'Updated name'
+        TEST_NAME = "Updated name"
         project.name = TEST_NAME
         project.progress = 0
         stageProjectToNext(project)
@@ -107,11 +104,11 @@ class TestProject:
         project.event = event
         project.save()
         testdata = project.data
-        testdata['name'] = 'Testme'
+        testdata["name"] = "Testme"
         project2 = ProjectFactory()
         project2.set_from_data(testdata)
         project2.save()
-        assert project2.name == 'Testme'
+        assert project2.name == "Testme"
         assert project2.event == project.event
 
     def test_project_formatting(self):
