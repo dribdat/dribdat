@@ -1,0 +1,12 @@
+{% extends "layout.html" %}
+{% block body_class %}render slides{% endblock %}
+{% block content %}
+  {{ project.embed_longtext|safe }}
+
+<style>
+  body {
+    margin: 0; padding: 0; border: 0; overflow: hidden;
+  }
+</style>
+</html>
+{% endblock %}
