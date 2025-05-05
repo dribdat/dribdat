@@ -29,8 +29,12 @@
 
   // Initialize slideshow
   if ($('.reveal').length > 0) {
+    var outputScale = 1; //window.devicePixelRatio || 1;
+    var width = Math.floor(document.body.clientWidth * outputScale);
+    var height = Math.floor(document.body.parentElement.clientHeight * outputScale);
+    $('.reveal').css('height', height + 'px');
     Reveal.initialize({
-      width: 1224, height: 584,
+      width: width || 864, height: height || 480,
       embedded: true,
       keyboardCondition: 'focused', // only react to keys when focused
       plugins: [ RevealMarkdown ],
@@ -46,17 +50,12 @@
 </script>
 
 <style>
-  body {
+body {
     margin: 0; padding: 0; border: 0; overflow: hidden;
-  }
-/* Project embedded content */
+    width: 100%; height: 100%;
+}
 .reveal {
-    width: 100%;
-    height: 680px;
-    box-shadow: 5px 5px 10px #535353;
-    margin-bottom: 1em;
-    border: 1px silver;
-    border-radius: 4px;
+    width: 100%; height: 100%;
     overflow: hidden;
     position: sticky;
 }

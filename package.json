@@ -3,19 +3,19 @@
   "version": "0.9.0",
   "description": "Open tools for fair collaborative events",
   "repository": "https://codeberg.org/dribdat/dribdat",
-  "author": "Dribdat Contributors <dribdat@datalets.ch>",
+  "author": "Dribdat Collective <dribdat@datalets.ch>",
   "license": "MIT",
   "private": false,
   "dependencies": {
-    "@barba/core": "^2.9.7",
-    "bootstrap": "^5.3",
-    "bootswatch": "^5.3",
-    "easymde": "^2.20.0",
-    "flipdown": "^0.3.2",
+    "@barba/core": "^2",
+    "bootstrap": "^5",
+    "bootswatch": "^5",
+    "easymde": "^2",
+    "flipdown": "^0.3",
     "font-awesome": "^4",
     "jquery": "^3",
     "jquery-resizable-dom": "^0",
-    "reveal.js": "^5.1.0",
-    "simplelightbox": "^2.14.3"
+    "reveal.js": "^5",
+    "simplelightbox": "^2"
   }
 }

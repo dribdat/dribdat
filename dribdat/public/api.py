@@ -193,6 +193,22 @@ def event_activity_current_json():
     return event_activity_json(event.id)
 
 
+@blueprint.route('/event/<int:event_id>/posts.json')
+def event_posts_json(event_id):
+    """Output JSON of recent posts (activity) from an event."""
+    limit = request.args.get('limit') or 10
+    return jsonify(activities=get_event_activities(event_id, limit, None, "post"))
+
+
+@blueprint.route('/event/current/posts.json')
+def event_posts_current_json():
+    """Output JSON of recent posts (activity) from current event."""
+    event = get_current_event()
+    if not event:
+        return jsonify(activities=[])
+    return event_posts_json(event.id)
+
+
 @blueprint.route('/event/<int:event_id>/activity.csv')
 def event_activity_csv(event_id):
     """Output CSV of an event activity."""
@@ -218,7 +234,7 @@ def projects_activity_json():
 
 @blueprint.route('/project/posts.json')
 def projects_posts_json():
-    """Output JSON of recent posts (activity) across projects."""
+    """Output JSON of recent posts (a kind of activity) across projects."""
     limit = request.args.get('limit') or 10
     q = request.args.get('q') or None
     if q and len(q) < 3:

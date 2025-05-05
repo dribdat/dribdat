@@ -28,12 +28,14 @@
       <a class="darkmode" href="#">&#127763;&nbsp;<span>Dark</span></a>
     </li>
     {% if current_user and current_user.is_authenticated %}
-      <li>
-        <a href="#top" id="notification-button" class="hidden" title="Toggle showing alert notifications">
-          <i class="fa fa-bell" aria-hidden="true"></i>
-          Alerts
-        </a>
-      </li>
+      {% if current_event and current_event.has_started and not current_event.has_finished %}
+        <li>
+          <a href="#top" id="notification-button" class="hidden" title="Toggle showing alert notifications">
+            <i class="fa fa-bell" aria-hidden="true"></i>
+            Alerts
+          </a>
+        </li>
+      {% endif %}
       <li>
         <a href="{{ url_for('public.user_current') }}" title="Go to my user profile">
           <i class="fa fa-user" aria-hidden="true"></i>

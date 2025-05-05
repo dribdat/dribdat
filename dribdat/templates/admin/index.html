@@ -45,9 +45,6 @@
       <i class="fa fa-star" aria-hidden="true"></i>
       Backboard</a>
     {% endif %}
-    <a href="{{ url_for('public.dashboard') }}" class="btn btn-lg btn-dark">
-      <i class="fa fa-calendar" aria-hidden="true"></i>
-      Dashboard</a>
     <a href="{{ url_for('admin.event_resource_area') }}" class="btn btn-lg btn-light">
       <i class="fa fa-life-ring" aria-hidden="true"></i>
       Resources</a>
@@ -75,7 +72,7 @@
               style="max-width: 740px; background: #ffd73e;">{{ status_text }}</textarea>
     <button class="form-control btn btn-primary fs-5"
       title="Send a message to logged in users"
-      >📣 Announce</button>
+      >&nbsp;📣&nbsp;</button>
   </div>
 
   <div class="container chart-container mt-4">
