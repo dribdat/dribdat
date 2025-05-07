@@ -1,9 +1,9 @@
 """Boxout module for Data Packages."""
 
 import re
-import logging
 import pystache
 from datetime import datetime
+from flask import current_app
 from frictionless import Package
 
 TEMPLATE_PACKAGE = r"""
@@ -51,14 +51,14 @@ TEMPLATE_PACKAGE = r"""
 </div>
 """
 
-dpkg_url_re = re.compile(r'.*(http?s:\/\/.+datapackage\.json)\)*')
+dpkg_url_re = re.compile(r".*(http?s:\/\/.+datapackage\.json)\)*")
 
 
 def chk_datapackage(line):
     """Check the url matching dataset pattern."""
     return (
-        (line.startswith('http') and line.endswith('datapackage.json'))
-        or line.endswith('datapackage.json)'))
+        line.startswith("http") and line.endswith("datapackage.json")
+    ) or line.endswith("datapackage.json)")
 
 
 def box_datapackage(line, cache=None):
@@ -70,28 +70,27 @@ def box_datapackage(line, cache=None):
     if cache and cache.has(url):
         return cache.get(url)
     try:
-        logging.info("Fetching Data Package: <%s>" % url)
+        current_app.logger.info("Fetching Data Package: <%s>" % url)
         package = Package(url)
     except Exception:  # noqa: B902
-        logging.warning("Data Package not parsed: <%s>" % url)
+        current_app.logger.warning("Data Package not parsed: <%s>" % url)
         return None
     if package.created:
         dt = datetime.fromisoformat(package.created).strftime("%d.%m.%Y")
     else:
-        dt = ''
-    base_url = url.replace('/datapackage.json', '')
+        dt = ""
+    base_url = url.replace("/datapackage.json", "")
     # Adjust for absolute URLs
     for r in range(0, len(package.resources)):
-        if not 'path' in package.resources[r]:
+        if not "path" in package.resources[r]:
             continue
-        rp = package.resources[r]['path']
-        if rp and not rp.startswith('http'):
-            package.resources[r]['path'] = '/'.join([base_url, rp])
+        rp = package.resources[r]["path"]
+        if rp and not rp.startswith("http"):
+            package.resources[r]["path"] = "/".join([base_url, rp])
     # Render to template
-    box = pystache.render(
-        TEMPLATE_PACKAGE, {'url': url, 'dp': package, 'date': dt})
+    box = pystache.render(TEMPLATE_PACKAGE, {"url": url, "dp": package, "date": dt})
     if cache:
         cache.set(url, box)
     if cache and cache.has(url):
-        logging.debug("Cached Data Package: <%s>" % url)
+        current_app.logger.debug("Cached Data Package: <%s>" % url)
     return box
