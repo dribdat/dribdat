@@ -196,7 +196,7 @@ def activate(userid, userhash):
             flash("Welcome! You are now logged in.", "success")
         a_user.save()
         login_user(a_user, remember=True)
-        return redirect(url_for("auth.user_profile"))
+        return redirect(url_for("public.user_profile", username=a_user.username))
     # Activation has expired
     logout_user()
     if not a_user.hashword:
@@ -205,7 +205,7 @@ def activate(userid, userhash):
             + "Please try again, or ask an organizer for help.",
             "warning",
         )
-        return redirect(url_for("public.home"))
+        return redirect(url_for("auth.login"))
     # Continue to activation attempt form
     return redirect(url_for("auth.activation", userid=userid))
 
@@ -214,11 +214,14 @@ def activate(userid, userhash):
 def activation(userid):
     """Activate user with a form-based code."""
     form = ActivationForm(request.form)
-    if form.is_submitted:
+    if not current_app.config["RECAPTCHA_PUBLIC_KEY"]:
+        del form.recaptcha
+    if form.is_submitted():
         if form.validate():
+            flash("Attempting to log you in with a key.", "info")
             return activate(userid, form.code.data)
         flash_errors(form)
-    return render_template("public/activation.html", form=form)
+    return render_template("public/activation.html", form=form, userid=userid)
 
 
 @blueprint.route("/logout/")

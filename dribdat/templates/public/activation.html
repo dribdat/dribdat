@@ -15,9 +15,9 @@
 
     {{ render_form(url_for('auth.activation', userid=userid), form, formid='activationForm') }}
 
-    <p> 
+    <p><br> 
       <i class="fa fa-arrow-right" aria-hidden="true"></i>
-      <b><a href="{{ url_for('auth.login') }}">Start over</a></b>
+      Or, cancel and <b><a href="{{ url_for('auth.login') }}">Start over</a></b>
     </p>
 
 </div>
