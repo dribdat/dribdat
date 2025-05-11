@@ -6,6 +6,15 @@ from flask_mailman import EmailMessage
 from dribdat.utils import random_password  # noqa: I005
 
 
+EMAIL_SIGNATURE = """ 
+---\n
+Your e-mail was registered on our event platform (Dribdat).\n
+This is a system notification, not a subscription service.\n
+You can request that your account is deleted at any time.\n\n
+// / d}}BD{t
+"""
+
+
 def user_activation_message(user, act_hash):
     """Prepare a message to send to the user."""
     # base_url = url_for("public.home", _external=True)
@@ -21,10 +30,11 @@ def user_activation_message(user, act_hash):
         "👋🏾 Hello %s\n\n" % user.name
         + "🗝️ You are 1 click away from signing into Dribdat:"
         + "\n\n%s\n\n" % act_url
-        + "🚥 Is the link not working? Try to copy and paste it into your browser.\n"
+        + "🚥 Is the link not working? Try to copy and paste this code:"
+        + "\n\n  %s  \n\n" % act_hash
         + "💡 If you did not expect this e-mail, please change your password!\n"
         + "🏀 Thank you for using the service at %s\n\n" % fqdn
-        + "d}}BD{t"
+        + EMAIL_SIGNATURE
     )
     # --------------------
     current_app.logger.debug(act_url)
@@ -72,7 +82,7 @@ def user_invitation_message(project=None):
             % project.event.name
             + "🏀 We are interested in your contributions to '%s'.\n" % project.name
             + "🤼 Tap here to join the team: %s\n\n" % act_url
-            + "-- D}}BD{T --"
+            + EMAIL_SIGNATURE
         )
     else:
         act_url = url_for("auth.register", _external=True)
@@ -80,7 +90,7 @@ def user_invitation_message(project=None):
         msg.body = (
             "You are invited to make a contribution to our sprint!\n\n"
             + "🏀 Tap here to create an account: %s\n\n" % act_url
-            + "-- D}}BD{T --"
+            + EMAIL_SIGNATURE
         )
     return msg
 
