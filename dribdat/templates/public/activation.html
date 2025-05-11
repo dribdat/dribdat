@@ -8,12 +8,16 @@
 {% block content %}
 <div class="container-narrow">
     <h1>Authenticate</h1>
+    <p>
+      It looks like you are having trouble activating your account.
+      Try copy-pasting the code from your e-mail here:
+    </p>
 
     {{ render_form(url_for('auth.activation', userid=userid), form, formid='activationForm') }}
 
     <p> 
       <i class="fa fa-arrow-right" aria-hidden="true"></i>
-      <b><a href="{{ url_for('auth.login', next=request.args.get('next')) }}">Log in again</a></b>
+      <b><a href="{{ url_for('auth.login') }}">Start over</a></b>
     </p>
 
 </div>
