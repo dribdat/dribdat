@@ -6,6 +6,7 @@ from flask import (
     request,
     render_template,
     flash,
+    make_response,
     url_for,
     redirect,
     current_app,
@@ -168,10 +169,15 @@ def render(project_id):
     """Show the project slides only."""
     project = Project.query.filter_by(id=project_id).first_or_404()
     if project.has_embed_longtext():
-        return render_template("slides.html", project=project)
-    return render_template(
-        "render.html", current_event=project.event, render_src=project.webpage_url
-    )
+        tpl = render_template("slides.html", project=project)
+    else:
+        tpl = render_template(
+            "render.html", current_event=project.event,
+            render_src=project.webpage_url
+        )
+    resp = make_response(tpl)
+    resp.headers['Access-Control-Allow-Origin'] = '*'
+    return resp
 
 
 @blueprint.route("/<int:project_id>/post", methods=["GET", "POST"])
