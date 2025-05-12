@@ -713,7 +713,7 @@ class Event(PkModel):
     def categories_for_event(self):
         """Event categories."""
         return Category.query.filter(
-            or_(Category.event_id == None, Category.event_id == '', 
+            or_(Category.event_id == None,
                 Category.event_id == self.id)
         ).order_by("name")
 
