@@ -74,7 +74,15 @@
 <div class="tab-content clear-both mt-2" id="project-content">
 
   {% if project.is_webembed or project.webpage_url %}
-    {% if project.embed_webpage %}
+    {% if project.has_embed_longtext %}
+      <div class="project-webembed resizable">
+        <iframe src="{{ url_for('project.render', project_id=project.id) }}"></iframe>
+      </div>
+      <a href="{{ url_for('project.render', project_id=project.id) }}" 
+         class="btn btn-small btn-default float-right"
+         target="_blank" rel="noopener noreferrer" title="See presentation in a new tab">
+         &#x2193;&nbsp;&nbsp;Open</a>
+    {% elif project.embed_webpage %}
       <div class="project-webembed resizable">
         {{ project.embed_webpage|safe }}
       </div>
@@ -82,35 +90,26 @@
          target="_blank" rel="noopener noreferrer" title="See presentation in a new tab">
          &#x2193;&nbsp;&nbsp;Open</a>
     {% endif %}
-    {% if project.embed_longtext %}
-      {% if project.embed_webpage %}
-        <h2 class="text-center m-5">Presentation</h2>
-      {% endif %}
-      <div class="project-webembed resizable">
-        {{ project.embed_longtext|safe }}
-      </div>
-    {% endif %}
+    <br clear="all" />
   {% endif %}
-  <br clear="all" />
 
-  {% if project.longtext and not project.embed_longtext %}
+  {% if project.longtext %}
     <div id="project-md" aria-labelledby="project-tab-md">
       <div class="project-longtext">
         {{ project.longtext|onebox|markdown|safe }}
       </div>
-
-      {% if allow_edit %}
-      <center class="project-edit-pitch">
-        <a href="{{ url_for('project.project_edit', project_id=project.id) }}#is_webembed"
-           title="Edit project pitch" class="btn btn-md btn-default">
-          <i class="fa fa-pencil" aria-hidden="true"></i>
-          Edit
-        </a>
-      </center>
-      {% endif %}
     </div><!-- /project-md -->
   {% endif %}
 
+  {% if allow_edit %}
+  <center class="project-edit-pitch">
+    <a href="{{ url_for('project.project_edit', project_id=project.id) }}#is_webembed"
+        title="Edit project pitch" class="btn btn-md btn-default">
+      <i class="fa fa-pencil" aria-hidden="true"></i>
+      Edit
+    </a>
+  </center>
+  {% endif %}
 
   {% if project.autotext %}
     <div id="readme-md" aria-labelledby="readme-tab-md">

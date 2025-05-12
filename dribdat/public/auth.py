@@ -29,7 +29,14 @@ from dribdat.utils import (
     random_password,
     sanitize_input,
 )
-from dribdat.user.forms import RegisterForm, EmailForm, LoginForm, UserForm, StoryForm
+from dribdat.user.forms import (
+    ActivationForm,
+    RegisterForm,
+    EmailForm,
+    LoginForm,
+    UserForm,
+    StoryForm,
+)
 from dribdat.database import db
 from dribdat.mailer import user_activation, user_registration
 from datetime import datetime
@@ -189,15 +196,32 @@ def activate(userid, userhash):
             flash("Welcome! You are now logged in.", "success")
         a_user.save()
         login_user(a_user, remember=True)
-        return redirect(url_for("auth.user_profile"))
-    else:
+        return redirect(url_for("public.user_profile", username=a_user.username))
+    # Activation has expired
+    logout_user()
+    if not a_user.hashword:
         flash(
             "Activation not found, or has expired. "
             + "Please try again, or ask an organizer for help.",
             "warning",
         )
-        logout_user()
-    return redirect(url_for("public.home"))
+        return redirect(url_for("auth.login"))
+    # Continue to activation attempt form
+    return redirect(url_for("auth.activation", userid=userid))
+
+
+@blueprint.route("/activation/<userid>", methods=["GET", "POST"])
+def activation(userid):
+    """Activate user with a form-based code."""
+    form = ActivationForm(request.form)
+    if not current_app.config["RECAPTCHA_PUBLIC_KEY"]:
+        del form.recaptcha
+    if form.is_submitted():
+        if form.validate():
+            flash("Attempting to log you in with a key.", "info")
+            return activate(userid, form.code.data)
+        flash_errors(form)
+    return render_template("public/activation.html", form=form, userid=userid)
 
 
 @blueprint.route("/logout/")

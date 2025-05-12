@@ -4,7 +4,13 @@
 from flask import url_for, current_app
 from flask_mailman import EmailMessage
 from dribdat.utils import random_password  # noqa: I005
-import logging
+
+
+EMAIL_SIGNATURE = """ 
+---
+Your e-mail was registered on our event platform (Dribdat). You can delete your account any time by editing your profile.
+\n// / d}}BD{t
+"""
 
 
 def user_activation_message(user, act_hash):
@@ -20,15 +26,16 @@ def user_activation_message(user, act_hash):
     msg.subject = "Your dribdat account"
     msg.body = (
         "👋🏾 Hello %s\n\n" % user.name
-        + "🗝️ You are 1 click away from signing into Dribdat:"
+        + "🗝️ You are 1 click away from signing in:"
         + "\n\n%s\n\n" % act_url
-        + "🚥 Is the link not working? Try to copy and paste it into your browser.\n"
+        + "🚥 Is the link not working? Try to copy and paste this code:"
+        + "\n\n  %s  \n\n" % act_hash
         + "💡 If you did not expect this e-mail, please change your password!\n"
-        + "🏀 Thank you for using the service at %s\n\n" % fqdn
-        + "d}}BD{t"
+        + "🏀 Thank you for using the Dribdat service at %s\n\n" % fqdn
+        + EMAIL_SIGNATURE
     )
     # --------------------
-    logging.debug(act_url)
+    current_app.logger.debug(act_url)
     return msg
 
 
@@ -40,10 +47,10 @@ def user_activation(user):
     msg = user_activation_message(user, act_hash)
     # print(msg.body)
     if "mailman" not in current_app.extensions:
-        logging.warning("E-mail extension has not been configured")
+        current_app.logger.warning("E-mail extension has not been configured")
         return act_hash
     msg.to = [user.email]
-    logging.info("Sending activation mail to user %d" % user.id)
+    current_app.logger.info("Sending activation mail to user %d" % user.id)
     msg.send(fail_silently=True)
     return act_hash
 
@@ -52,17 +59,15 @@ def user_registration(user_email):
     """Send an invitation by e-mail."""
     msg = user_invitation_message()
     if "mailman" not in current_app.extensions:
-        logging.warning("E-mail extension has not been configured")
+        current_app.logger.warning("E-mail extension has not been configured")
         return
     msg.to = [user_email]
-    logging.info("Sending registration mail")
+    current_app.logger.info("Sending registration mail")
     msg.send(fail_silently=True)
 
 
 def user_invitation_message(project=None):
     """Craft an invitation message."""
-    # base_url = url_for("public.home", _external=True)
-    # login_url = url_for("auth.login", _external=True)
     from_email = current_app.config["MAIL_DEFAULT_SENDER"]
     msg = EmailMessage(from_email=from_email)
     if project:
@@ -73,7 +78,7 @@ def user_invitation_message(project=None):
             % project.event.name
             + "🏀 We are interested in your contributions to '%s'.\n" % project.name
             + "🤼 Tap here to join the team: %s\n\n" % act_url
-            + "-- D}}BD{T --"
+            + EMAIL_SIGNATURE
         )
     else:
         act_url = url_for("auth.register", _external=True)
@@ -81,7 +86,7 @@ def user_invitation_message(project=None):
         msg.body = (
             "You are invited to make a contribution to our sprint!\n\n"
             + "🏀 Tap here to create an account: %s\n\n" % act_url
-            + "-- D}}BD{T --"
+            + EMAIL_SIGNATURE
         )
     return msg
 
@@ -89,10 +94,10 @@ def user_invitation_message(project=None):
 def user_invitation(user_email, project):
     """Send an invitation by e-mail."""
     if "mailman" not in current_app.extensions:
-        logging.warning("E-mail extension has not been configured")
+        current_app.logger.warning("E-mail extension has not been configured")
         return False
     msg = user_invitation_message(project)
     msg.to = [user_email]
-    logging.info("Sending activation mail to %s" % user_email)
+    current_app.logger.info("Sending activation mail to %s" % user_email)
     msg.send(fail_silently=True)
     return True
