@@ -65,6 +65,9 @@ def event(db):
 @pytest.fixture
 def project(db):
     """A project for the tests."""
+    event = EventFactory(is_current=True)
     project = ProjectFactory()
+    project.event = event
     db.session.commit()
     return project
+

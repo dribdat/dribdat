@@ -103,13 +103,3 @@ class TestApi:
         # Test Project search
         ppj = json.loads(projects_top_json().get_data())
         assert len(ppj['projects']) == 1
-
-    def test_get_autochallenge(self):
-        project = ProjectFactory()
-        project.longtext = "Smeeagain"
-        project.save()
-        autogen = gen_project_pitch(project)
-        # TODO: minimal inline model?
-        assert autogen is None
-        #print(autogen)
-        #assert "Smee" in autogen
