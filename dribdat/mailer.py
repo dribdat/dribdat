@@ -4,7 +4,6 @@
 from flask import url_for, current_app
 from flask_mailman import EmailMessage
 from dribdat.utils import random_password  # noqa: I005
-import logging
 
 
 def user_activation_message(user, act_hash):
@@ -28,7 +27,7 @@ def user_activation_message(user, act_hash):
         + "d}}BD{t"
     )
     # --------------------
-    logging.debug(act_url)
+    current_app.logger.debug(act_url)
     return msg
 
 
@@ -40,10 +39,10 @@ def user_activation(user):
     msg = user_activation_message(user, act_hash)
     # print(msg.body)
     if "mailman" not in current_app.extensions:
-        logging.warning("E-mail extension has not been configured")
+        current_app.logger.warning("E-mail extension has not been configured")
         return act_hash
     msg.to = [user.email]
-    logging.info("Sending activation mail to user %d" % user.id)
+    current_app.logger.info("Sending activation mail to user %d" % user.id)
     msg.send(fail_silently=True)
     return act_hash
 
@@ -52,10 +51,10 @@ def user_registration(user_email):
     """Send an invitation by e-mail."""
     msg = user_invitation_message()
     if "mailman" not in current_app.extensions:
-        logging.warning("E-mail extension has not been configured")
+        current_app.logger.warning("E-mail extension has not been configured")
         return
     msg.to = [user_email]
-    logging.info("Sending registration mail")
+    current_app.logger.info("Sending registration mail")
     msg.send(fail_silently=True)
 
 
@@ -89,10 +88,10 @@ def user_invitation_message(project=None):
 def user_invitation(user_email, project):
     """Send an invitation by e-mail."""
     if "mailman" not in current_app.extensions:
-        logging.warning("E-mail extension has not been configured")
+        current_app.logger.warning("E-mail extension has not been configured")
         return False
     msg = user_invitation_message(project)
     msg.to = [user_email]
-    logging.info("Sending activation mail to %s" % user_email)
+    current_app.logger.info("Sending activation mail to %s" % user_email)
     msg.send(fail_silently=True)
     return True

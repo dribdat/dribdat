@@ -1,14 +1,15 @@
 # -*- coding: utf-8 -*-
 """Importing event data from a package"""
 
-import logging
 import requests
-import json, csv
+import json
+import csv
 import tempfile
 from os import path
 from copy import deepcopy
 from werkzeug.utils import secure_filename
 from datetime import datetime
+from flask import current_app
 from frictionless import Package, Resource
 from .user.models import Event, Project, Activity, Category, User, Role
 from .utils import format_date
@@ -118,10 +119,10 @@ def import_events_data(data, dry_run=False):
         name = evt["name"]
         event = Event.query.filter_by(name=name).first()
         if not event:
-            logging.info("Creating event: %s" % name)
+            current_app.logger.info("Creating event: %s" % name)
             event = Event()
         else:
-            logging.info("Updating event: %s" % name)
+            current_app.logger.info("Updating event: %s" % name)
         event.set_from_data(evt)
         if not dry_run:
             event.save()
@@ -136,10 +137,10 @@ def import_categories_data(data, dry_run=False):
         name = ctg["name"]
         category = Category.query.filter_by(name=name).first()
         if not category:
-            logging.info("Creating category: %s" % name)
+            current_app.logger.info("Creating category: %s" % name)
             category = Category()
         else:
-            logging.info("Updating category: %s" % name)
+            current_app.logger.info("Updating category: %s" % name)
         category.set_from_data(ctg)
         if not dry_run:
             category.save()
@@ -160,9 +161,9 @@ def import_users_data(data, dry_run=False):
             or User.query.filter_by(email=email).first()
         ):
             # Do not update existing user data
-            logging.info("Skipping user: %s" % name)
+            current_app.logger.info("Skipping user: %s" % name)
             continue
-        logging.info("Creating user: %s" % name)
+        current_app.logger.info("Creating user: %s" % name)
         user = User()
         user.set_from_data(usr)
         import_user_roles(user, usr["roles"], dry_run)
@@ -180,6 +181,8 @@ def import_user_roles(user, new_roles, dry_run=False):
         if r in my_roles:
             continue
         # Check that role is a new one
+        if not Role.name:
+            continue
         role = Role.query.filter(Role.name.ilike(r)).first()
         if not role:
             role = Role(r)
@@ -196,14 +199,14 @@ def import_project_data(data, dry_run=False, event=None):
     updates = []
     for pjt in data:
         # Skip empty rows
-        if not "name" in pjt:
-            logging.warning("Skipping empty row")
-            logging.debug(pjt)
+        if "name" not in pjt:
+            current_app.logger.warning("Skipping empty row")
+            current_app.logger.debug(pjt)
             continue
         # Get project name and content
         name = pjt["name"]
-        if not "longtext" in pjt and "excerpt" in pjt:
-            logging.warning("Importing excerpt as longtext")
+        if "longtext" not in pjt and "excerpt" in pjt:
+            current_app.logger.warning("Importing excerpt as longtext")
             pjt["longtext"] = pjt.pop("excerpt")
         # Search for event
         event_name = None
@@ -212,15 +215,17 @@ def import_project_data(data, dry_run=False, event=None):
         if event_name and (not event or event.name != event_name):
             event = Event.query.filter_by(name=event_name).first()
         if not event:
-            logging.warning("Skip [%s], event not found: %s" % (name, event_name))
+            current_app.logger.warning(
+                "Skip [%s], event not found: %s" % (name, event_name)
+            )
             continue
         # Search for project
         project = Project.query.filter_by(name=name).first()
         if not project:
-            logging.info("Creating project: %s" % name)
+            current_app.logger.info("Creating project: %s" % name)
             project = Project()
         else:
-            logging.info("Updating project: %s" % name)
+            current_app.logger.info("Updating project: %s" % name)
         project.set_from_data(pjt)
         project.update_null_fields()
         project.event_id = event.id
@@ -240,15 +245,15 @@ def import_activities(data, dry_run=False):
         tstamp = datetime.utcfromtimestamp(act["time"])
         activity = Activity.query.filter_by(name=aname, timestamp=tstamp).first()
         if activity:
-            logging.info("Skipping activity: %s", tstamp)
+            current_app.logger.info("Skipping activity: %s", tstamp)
             continue
-        logging.info("Creating activity: %s", tstamp)
+        current_app.logger.info("Creating activity: %s", tstamp)
         if act["project_name"] != pname:
             pname = act["project_name"]
             # TODO: unreliable; rather use a map of project_id to new id
             proj = Project.query.filter_by(name=pname).first()
         if not proj:
-            logging.warning("Error! Project not found: %s" % pname)
+            current_app.logger.warning("Error! Project not found: %s" % pname)
             continue
         activity = Activity(aname, proj.id)
         activity.set_from_data(act)
@@ -290,7 +295,7 @@ def fetch_datapackage(url, dry_run=False, all_data=False):
     # For security, can only be used from CLI.
     # In the future, we can add a subscription setting on the server side.
     if not url.endswith("datapackage.json"):
-        logging.error("Invalid URL: %s", url)
+        current_app.logger.error("Invalid URL: %s", url)
         return {}
     try:
         data = requests.get(url, timeout=REQUEST_TIMEOUT).json()
@@ -298,7 +303,7 @@ def fetch_datapackage(url, dry_run=False, all_data=False):
     except json.decoder.JSONDecodeError:
         return {"errors": ["Could not load package due to JSON error"]}
     except requests.exceptions.RequestException:
-        logging.error("Could not connect to %s" % url)
+        current_app.logger.error("Could not connect to %s" % url)
         return {}
 
 

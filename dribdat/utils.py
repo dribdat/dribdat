@@ -139,7 +139,7 @@ def timesince(dtsince, default="just now", until=False):
         suffix = ""  # "to go"
     else:
         diff = dt_now - dt
-        suffix = "ago"
+        suffix = " ago"
     periods = (
         (diff.days / 365, "year", "years"),
         (diff.days / 30, "month", "months"),
@@ -151,7 +151,7 @@ def timesince(dtsince, default="just now", until=False):
     )
     for period, singular, plural in periods:
         if floor(period) > 0:
-            return "%d %s %s" % (
+            return "%d %s%s" % (
                 period,
                 singular if int(period) == 1 else plural,
                 suffix,

@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 """Connect to generative A.I. tools."""
 
-import logging
 import openai
 
 from flask import current_app
@@ -21,11 +20,11 @@ SYSTEM_PROMPT = (
 
 # Default challenge prompts
 INITIAL_CHALLENGE_PROMPT = (
-    "Write a challenge statement for a collaborative hackathon project. " +
-    "Include a section with a basic introduction and first steps. " +
-    "Describe in a second section some example datasets and resources. " +
-    "The last section should explain what kind of skills are involved. " +
-    "Use dashes (---) to separate the sections."
+    "Write a challenge statement for a collaborative hackathon project. "
+    + "Include a section with a basic introduction and first steps. "
+    + "Describe in a second section some example datasets and resources. "
+    + "The last section should explain what kind of skills are involved. "
+    + "Use dashes (---) to separate the sections."
 )
 INITIAL_PROJECT_PROMPT = (
     "Suggest one clear and concise next step for a hackathon project."
@@ -74,7 +73,7 @@ def prompt_ideas(project: Project):
     """Form a prompt that is used to generate posts."""
     basep = prompt_initial(project)
     # Collect project contents, preferring the pitch
-    summary = ''
+    summary = ""
     if project.longtext:
         summary = project.longtext
     if project.autotext:
@@ -100,9 +99,7 @@ def prompt_ideas(project: Project):
         summary = "Improve upon the following prior results:\n%s" % (summary)
 
     # Generate the prompt
-    return (
-        basep + "\n\n%s\n\n%s" % (stage_advice, summary)
-    )
+    return basep + "\n\n%s\n\n%s" % (stage_advice, summary)
 
 
 def gen_project_pitch(project: Project):
@@ -122,18 +119,21 @@ def gen_project_post(project: Project, as_boost: bool = False):
     else:
         # Use the standard recommendation prompt
         prompt = DEFAULT_RECOMMENDATION_PROMPT + prompt
-    #print(prompt)
+    # print(prompt)
     return gen_openai(prompt)
 
 
 def gen_openai(prompt: str):
     """Request data from a text-completion API."""
+    logging = current_app.logger
+
     if not current_app.config["LLM_API_KEY"]:
         logging.error("Missing ChatGPT configuration (LLM_API_KEY)")
         return None
 
     # TODO: persist in app session
     if current_app.config["LLM_BASE_URL"]:
+        logging.info("Using custom LLM provider")
         ai_client = openai.OpenAI(
             api_key=current_app.config["LLM_API_KEY"],
             base_url=current_app.config["LLM_BASE_URL"],
@@ -149,6 +149,7 @@ def gen_openai(prompt: str):
 
     # Attempt to get an interaction started
     try:
+        logging.debug("Starting completions")
         completion = ai_client.chat.completions.create(
             model=current_app.config["LLM_MODEL"],
             timeout=REQUEST_TIMEOUT,
@@ -176,7 +177,7 @@ def gen_openai(prompt: str):
     if len(completion.choices) > 0:
         mymodel = current_app.config["LLM_MODEL"].upper()
         content = completion.choices[0].message.content or ""
-        #content = content.replace("\n", "\n> ")
+        # content = content.replace("\n", "\n> ")
         return "🅰️ℹ️ `Generated with %s`\n\n%s" % (mymodel, content)
     else:
         logging.error("No LLM data in response")

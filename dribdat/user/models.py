@@ -810,12 +810,18 @@ class Project(PkModel):
         """Return True if this project can be autoupdated."""
         return self.autotext_url and self.autotext_url.strip()
 
+    def has_embed_longtext(self):
+        """Detect if a pitch is renderable."""
+        if not self.is_webembed:
+            return False
+        if "---" in self.longtext or "***" in self.longtext:
+            return True
+        return False
+
     @property
     def embed_longtext(self):
         """Detect and return embedded format of pitch."""
-        if not self.is_webembed:
-            return None
-        if "---" in self.longtext or "***" in self.longtext:
+        if self.has_embed_longtext():
             return format_webslides(self.longtext)
         return None
 

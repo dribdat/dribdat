@@ -1,0 +1,63 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <!--<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">-->
+
+  <title>Dribdat</title>
+  
+{% if config.ENV == 'prod' %}
+  <script src="https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5/dist/reveal.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5/dist/theme/black.css">
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5/dist/reveal.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5/plugin/markdown/markdown.js"></script>
+{% else %}
+  <script src="{{ url_for('static', filename='libs/jquery/jquery.js')}}"></script>
+  <link rel="stylesheet" href="{{ url_for('static', filename='libs/reveal/dist/reveal.css')}}"/>
+  <link rel="stylesheet" href="{{ url_for('static', filename='libs/reveal/dist/theme/black.css')}}"/>
+  <script src="{{ url_for('static', filename='libs/reveal/dist/reveal.js')}}"></script>
+  <script src="{{ url_for('static', filename='libs/reveal/plugin/markdown/markdown.js')}}"></script>
+{% endif %}
+</head>
+
+<body>
+  {{ project.embed_longtext|safe }}
+</body>
+
+<script language="JavaScript">
+
+  // Initialize slideshow
+  if ($('.reveal').length > 0) {
+    var outputScale = 1; //window.devicePixelRatio || 1;
+    var width = Math.floor(document.body.clientWidth * outputScale);
+    var height = Math.floor(document.body.parentElement.clientHeight * outputScale);
+    $('.reveal').css('height', height + 'px');
+    Reveal.initialize({
+      width: width || 864, height: height || 480,
+      embedded: true,
+      keyboardCondition: 'focused', // only react to keys when focused
+      plugins: [ RevealMarkdown ],
+
+      dependencies: [
+        { src: '/static/libs/reveal/plugin/markdown/markdown.js', condition: () => {
+            return !!document.querySelector('[data-markdown]');
+        } }
+      ]
+    });
+  }
+
+</script>
+
+<style>
+body {
+    margin: 0; padding: 0; border: 0; overflow: hidden;
+    width: 100%; height: 100%;
+}
+.reveal {
+    width: 100%; height: 100%;
+    overflow: hidden;
+    position: sticky;
+}
+</style>
+</html>
