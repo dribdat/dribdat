@@ -7,11 +7,9 @@ from dribdat.utils import random_password  # noqa: I005
 
 
 EMAIL_SIGNATURE = """ 
----\n
-Your e-mail was registered on our event platform (Dribdat).\n
-This is a system notification, not a subscription service.\n
-You can request that your account is deleted at any time.\n\n
-// / d}}BD{t
+---
+Your e-mail was registered on our event platform (Dribdat). You can delete your account any time by editing your profile.
+\n// / d}}BD{t
 """
 
 
