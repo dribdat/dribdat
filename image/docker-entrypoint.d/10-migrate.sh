@@ -1,4 +1,3 @@
 #!/bin/sh
 
-APPDIR=/app /app/scripts/release.sh
-
+APPDIR=/app /app/release.sh
