@@ -2,15 +2,16 @@ Dribdat Data Package
 ====================
 
 This is an export of data about events, projects, participants and activities
-generated with the dribdat application for hackathons and other collaborative,
+generated with the Dribdat application for hackathons and other collaborative,
 time-bounded events.
 
 You can use this file to generate a static site using the backboard tool,
-available at: https://github.com/dribdat/backboard#usage
+available at: https://codeberg.org/dribdat/backboard
 
-The Data Package standard is explained at: https://frictionlessdata.io/standards
+Details about this file format are here: https://json.everyhack.day/
+For general information about Data Package: https://frictionlessdata.io/
 
-For more information and support on dribdat, please visit https://dribdat.cc
+For more information and support of Dribdat, please visit https://dribdat.cc
 
 This package is licensed under the Open Data Commons Public Domain Dedication
 and License v1.0 http://opendatacommons.org/licenses/pddl/

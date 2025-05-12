@@ -1,0 +1,3 @@
+ignore:
+  - "dribdat/admin/"
+  - "**/test_*.py"         # glob accepted
