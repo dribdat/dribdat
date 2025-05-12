@@ -322,25 +322,6 @@
     });
   }); // -issues-list
 
-
-  // Initialize slideshow
-  if ($('.reveal').length > 0) {
-    Reveal.initialize({
-      width: 1224, height: 584,
-      embedded: true,
-      keyboardCondition: 'focused', // only react to keys when focused
-      plugins: [ RevealMarkdown ],
-
-      dependencies: [
-        { src: '/static/libs/reveal/plugin/markdown/markdown.js', condition: () => {
-            return !!document.querySelector('[data-markdown]');
-        } }
-      ]
-    });
-    $('#project-md').hide();
-  }
-
-
   // Ye olde darke moude
   function setDarkMode(toggle) {
     dm = Boolean(window.darkmode);

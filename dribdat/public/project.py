@@ -165,8 +165,10 @@ def project_approve(project_id):
 
 @blueprint.route("/<int:project_id>/render", methods=["GET"])
 def render(project_id):
-    """Transform project detail link."""
+    """Show the project slides only."""
     project = Project.query.filter_by(id=project_id).first_or_404()
+    if project.has_embed_longtext():
+        return render_template("slides.html", project=project)
     return render_template(
         "render.html", current_event=project.event, render_src=project.webpage_url
     )

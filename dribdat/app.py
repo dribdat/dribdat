@@ -23,6 +23,7 @@ from dribdat.settings import ProdConfig  # noqa: I005
 from dribdat.utils import timesince, markdownit
 from dribdat.onebox import make_oembedplus
 from pytz import timezone
+import logging
 
 
 def init_app(config_object=ProdConfig):
@@ -36,18 +37,18 @@ def init_app(config_object=ProdConfig):
     app.config.from_object(config_object)
 
     # Set up cross-site access to the API
-    if app.config['SERVER_CORS']:
+    if app.config["SERVER_CORS"]:
         CORS(app, resources={r"/api/*": {"origins": "*"}})
-        app.config['CORS_HEADERS'] = 'Content-Type'
+        app.config["CORS_HEADERS"] = "Content-Type"
 
     # Set up using an external proxy/static server
-    if app.config['SERVER_PROXY']:
+    if app.config["SERVER_PROXY"]:
         app.wsgi_app = ProxyFix(app, x_for=1, x_proto=1, x_host=1)
     else:
         # Internally optimize static file hosting
-        app.wsgi_app = WhiteNoise(app.wsgi_app, prefix='static/')
-        for static in ('css', 'img', 'js', 'public'):
-            app.wsgi_app.add_files('dribdat/static/' + static)
+        app.wsgi_app = WhiteNoise(app.wsgi_app, prefix="static/")
+        for static in ("css", "img", "js", "public"):
+            app.wsgi_app.add_files("dribdat/static/" + static)
 
     register_extensions(app)
     register_blueprints(app)
@@ -76,9 +77,9 @@ def register_extensions(app):
 
 def init_mailman(app):
     """Initialize mailer support."""
-    if 'MAIL_SERVER' in app.config and app.config['MAIL_SERVER']:
-        if not app.config['MAIL_DEFAULT_SENDER']:
-            app.logger.warn('MAIL_DEFAULT_SENDER is required to send email')
+    if "MAIL_SERVER" in app.config and app.config["MAIL_SERVER"]:
+        if not app.config["MAIL_DEFAULT_SENDER"]:
+            app.logger.warn("MAIL_DEFAULT_SENDER is required to send email")
         else:
             mail = Mail()
             mail.init_app(app)
@@ -86,10 +87,12 @@ def init_mailman(app):
 
 def init_talisman(app):
     """Initialize Talisman support."""
-    if 'SERVER_SSL' in app.config and app.config['SERVER_SSL']:
-        Talisman(app,
-                 content_security_policy=app.config['CSP_DIRECTIVES'],
-                 frame_options_allow_from='*')
+    if "SERVER_SSL" in app.config and app.config["SERVER_SSL"]:
+        Talisman(
+            app,
+            content_security_policy=app.config["CSP_DIRECTIVES"],
+            frame_options_allow_from="*",
+        )
 
 
 def register_blueprints(app):
@@ -112,11 +115,13 @@ def register_oauthhandlers(app):
 
 def register_errorhandlers(app):
     """Register error handlers."""
+
     def render_error(error):
         """Render error template."""
         # If a HTTPException, pull the `code` attribute; default to 500
-        error_code = getattr(error, 'code', 500)
-        return render_template('{0}.html'.format(error_code)), error_code
+        error_code = getattr(error, "code", 500)
+        return render_template("{0}.html".format(error_code)), error_code
+
     for errcode in [401, 404, 500]:
         app.errorhandler(errcode)(render_error)
     return None
@@ -124,12 +129,12 @@ def register_errorhandlers(app):
 
 def register_shellcontext(app):
     """Register shell context objects."""
+
     def shell_context():
         """Shell context objects."""
         from dribdat.user.models import User
-        return {
-            'db': db,
-            'User': User}
+
+        return {"db": db, "User": User}
 
     app.shell_context_processor(shell_context)
 
@@ -143,28 +148,27 @@ def register_commands(app):
 
 def register_filters(app):
     """Register filters for templates."""
+
     #
     # Conversion of Markdown to HTML
     @app.template_filter()
     def markdown(value):
         return markdownit(value)
 
-    #Misaka(app, autolink=True, fenced_code=True, strikethrough=True, tables=True)
+    # Misaka(app, autolink=True, fenced_code=True, strikethrough=True, tables=True)
 
     # Registration of handlers for micawber
     app.oembed_providers = bootstrap_basic()
 
     @app.template_filter()
     def onebox(value):
-        return make_oembedplus(
-            value, app.oembed_providers, maxwidth=600, maxheight=400
-        )
+        return make_oembedplus(value, app.oembed_providers, maxwidth=600, maxheight=400)
 
     # Timezone helper
-    app.tz = timezone(app.config['TIME_ZONE'] or 'UTC')
+    app.tz = timezone(app.config["TIME_ZONE"] or "UTC")
 
     # Lambda filters for safe image_url's
-    app.jinja_env.filters['quote_plus'] = lambda u: quote_plus(u or '', ':/?&=')
+    app.jinja_env.filters["quote_plus"] = lambda u: quote_plus(u or "", ":/?&=")
 
     # Custom filters
     @app.template_filter()
@@ -176,35 +180,39 @@ def register_filters(app):
         return timesince(value, default="now!", until=True)
 
     @app.template_filter()
-    def format_date(value, format='%d.%m.%Y'):
-        if value is None: return ''
+    def format_date(value, format="%d.%m.%Y"):
+        if value is None:
+            return ""
         return value.strftime(format)
 
     @app.template_filter()
-    def format_datetime(value, format='%d.%m.%Y %H:%M'):
-        if value is None: return ''
+    def format_datetime(value, format="%d.%m.%Y %H:%M"):
+        if value is None:
+            return ""
         return value.strftime(format)
 
 
 def register_loggers(app):
     """Initialize and configure logging."""
-    import logging
     stream_handler = logging.StreamHandler()
     app.logger.addHandler(stream_handler)
-    if 'DEBUG' in app.config and app.config['DEBUG']:
+    if "DEBUG" in app.config and app.config["DEBUG"]:
         app.logger.setLevel(logging.DEBUG)
-        print("Setting logger level to DEBUG")
+        app.logger.info("Setting logger level to DEBUG")
     else:
         app.logger.setLevel(logging.ERROR)
-        print("Setting logger level to ERROR")
+        app.logger.info("Setting logger level to ERROR")
 
 
 def register_caching(app):
     """Prevent cached responses in debug."""
-    if 'DEBUG' in app.config and app.config['DEBUG']:
+    if "DEBUG" in app.config and app.config["DEBUG"]:
+
         @app.after_request
         def after_request(response):
-            response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate, public, max-age=0"
+            response.headers["Cache-Control"] = (
+                "no-cache, no-store, must-revalidate, public, max-age=0"
+            )
             response.headers["Expires"] = 0
             response.headers["Pragma"] = "no-cache"
             return response

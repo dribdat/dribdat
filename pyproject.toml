@@ -71,3 +71,6 @@ pyopenssl = "*"
 pytest = "*"
 WebTest = "*"
 coverage = "*"
+
+[tool.poetry.requires-plugins]
+poetry-plugin-export = ">=1.8"
