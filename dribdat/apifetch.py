@@ -156,7 +156,8 @@ def FetchGithubProject(project_url):
     if "content" not in readme:
         readme = ""
     else:
-        readme = b64decode(readme["content"]).decode("utf-8")
+        # Convert from base64
+        readme = b64decode(readme["content"]).decode("utf-8")  # type: ignore
         # Fix relative links in text
         imgroot = "https://raw.githubusercontent.com"
         readme = fix_relative_links(readme, imgroot, repo_full_name, default_branch)

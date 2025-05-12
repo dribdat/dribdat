@@ -6,7 +6,6 @@ from dribdat.aggregation import (
     SyncProjectData,
     TrimProjectData,
     FetchWebProject,
-    ProjectActivity,
 )
 from dribdat.utils import fix_relative_links
 from .factories import ProjectFactory
@@ -16,16 +15,25 @@ from .mock.project_data import project_data
 import random
 from string import ascii_uppercase
 
+
 class TestSync:
     """Testing sync and aggregation features."""
 
-    a_long_random_string = ''.join(random.choices(ascii_uppercase, k=5000))
+    a_long_random_string = "".join(random.choices(ascii_uppercase, k=5000))
 
     def test_data_sync(self, user, testapp):
         """Test sync from Data Package."""
         project = ProjectFactory()
         thedata = project_data
-        for o in ['name', 'summary', 'image_url', 'source_url', 'webpage_url', 'contact_url', 'download_url']:
+        for o in [
+            "name",
+            "summary",
+            "image_url",
+            "source_url",
+            "webpage_url",
+            "contact_url",
+            "download_url",
+        ]:
             thedata[o] = self.a_long_random_string
         SyncProjectData(project, thedata)
         # The data should not be overwritten, if it exists in the project
@@ -38,17 +46,27 @@ class TestSync:
         assert len(project.contact_url) == 2048
         assert len(project.download_url) == 2048
 
-
     def test_data_mapping(self, user, testapp):
         """Test mapping from Data Package."""
         project = ProjectFactory()
-        project.autotext_url = 'https://raw.githubusercontent.com/dribdat/dribdat/main/tests/mock/datapackage.json'
+        project.autotext_url = "https://raw.githubusercontent.com/dribdat/dribdat/main/tests/mock/datapackage.json"
         project.save()
         # Fetch from project configuration
         AddProjectDataFromAutotext(project)
-        assert 'Awesome' in project.summary
+        assert "Awesome" in project.summary
         thedata = project.data
-        for o in ['name', 'ident', 'summary', 'hashtag', 'image_url', 'source_url', 'webpage_url', 'contact_url', 'download_url', 'logo_icon']:
+        for o in [
+            "name",
+            "ident",
+            "summary",
+            "hashtag",
+            "image_url",
+            "source_url",
+            "webpage_url",
+            "contact_url",
+            "download_url",
+            "logo_icon",
+        ]:
             thedata[o] = self.a_long_random_string
         TrimProjectData(project, thedata)
         assert len(project.name) == 80
@@ -60,26 +78,23 @@ class TestSync:
         assert len(project.webpage_url) == 2048
         assert len(project.contact_url) == 2048
         assert len(project.download_url) == 2048
-        assert len(project.logo_icon) == 40 # not part of Sync
+        assert len(project.logo_icon) == 40  # not part of Sync
 
-
-    def test_dokuwiki(self):
+    def test_dokuwiki(self, user, testapp):
         """Test parsing a Dokuwiki."""
-        test_url = 'https://make.opendata.ch/wiki/information:rules'
+        test_url = "https://make.opendata.ch/wiki/information:rules"
         test_obj = FetchWebProject(test_url)
-        assert test_obj['type'] == 'DokuWiki'
-        assert test_obj['source_url'] == test_url
-        assert 'Guidelines' in test_obj['description']
+        assert test_obj["type"] == "DokuWiki"
+        assert test_obj["source_url"] == test_url
+        assert "Guidelines" in test_obj["description"]
 
-
-    def test_googledoc(self):
+    def test_googledoc(self, user, testapp):
         """Test parsing a Google Document."""
         # Handbook to Hackathons with Dribdat
-        test_url = 'https://docs.google.com/document/d/e/2PACX-1vR5Gv5NA3pkls0FRufC0dg-blkOhSo1LMX58pSNtj0FhZq1ImmLw0cIwmla_hiZaxtP8tnzJQQgZg94/pub'
+        test_url = "https://docs.google.com/document/d/e/2PACX-1vR5Gv5NA3pkls0FRufC0dg-blkOhSo1LMX58pSNtj0FhZq1ImmLw0cIwmla_hiZaxtP8tnzJQQgZg94/pub"
         test_obj = FetchWebProject(test_url)
-        assert 'description' in test_obj
-        assert 'Handbook' in test_obj['description']
-
+        assert "description" in test_obj
+        assert "Handbook" in test_obj["description"]
 
     def test_fix_relative_links(self):
         imgroot = "https://raw.githubusercontent.com"
@@ -88,16 +103,15 @@ class TestSync:
         readme = '![hello there](world.png) <img title="hello" src="again.jpg">'
         readme = fix_relative_links(readme, imgroot, repo_full_name, default_branch)
         assert imgroot in readme
-        assert not '(world.png)' in readme
+        assert not "(world.png)" in readme
         assert not '"again.jpg"' in readme
 
-
-    def test_pretalx(self):
-            """Test parsing a Pretalx page."""
-            test_url = 'https://pretalx.com/workshoptage-2024/talk/QKRVRA/'
-            test_obj = FetchWebProject(test_url)
-            assert test_obj['type'] == 'Pretalx'
-            assert test_obj['source_url'] == test_url
-            assert 'Open' in test_obj['name']
-            assert 'Grundlagen' in test_obj['summary']
-            assert 'Downstreaming' in test_obj['description']
+    def test_pretalx(self, user, testapp):
+        """Test parsing a Pretalx page."""
+        test_url = "https://pretalx.com/workshoptage-2024/talk/QKRVRA/"
+        test_obj = FetchWebProject(test_url)
+        assert test_obj["type"] == "Pretalx"
+        assert test_obj["source_url"] == test_url
+        assert "Open" in test_obj["name"]
+        assert "Grundlagen" in test_obj["summary"]
+        assert "Downstreaming" in test_obj["description"]

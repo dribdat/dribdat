@@ -155,6 +155,17 @@ class EmailForm(FlaskForm):
     submit = SubmitField("Continue")
 
 
+class ActivationForm(FlaskForm):
+    """Enter the secret code here."""
+
+    code = StringField(
+        validators=[DataRequired()],
+        description="Activation code from your e-mail",
+    )
+    recaptcha = RecaptchaField()
+    submit = SubmitField("Continue")
+
+
 class UserForm(FlaskForm):
     """User profile form."""
 
