@@ -20,8 +20,9 @@ def user_activation_message(user, act_hash):
         "auth.activate", userid=user.id, userhash=act_hash, _external=True
     )
     fqdn = current_app.config["SERVER_NAME"]
+    from_email = current_app.config["MAIL_DEFAULT_SENDER"]
     # Populate message object
-    msg = EmailMessage()
+    msg = EmailMessage(from_email=from_email)
     msg.subject = "Your dribdat account"
     msg.body = (
         "👋🏾 Hello %s\n\n" % user.name
@@ -67,7 +68,8 @@ def user_registration(user_email):
 
 def user_invitation_message(project=None):
     """Craft an invitation message."""
-    msg = EmailMessage()
+    from_email = current_app.config["MAIL_DEFAULT_SENDER"]
+    msg = EmailMessage(from_email=from_email)
     if project:
         act_url = url_for("project.project_star", project_id=project.id, _external=True)
         msg.subject = "Invitation: %s" % project.event.name
