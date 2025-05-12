@@ -669,6 +669,13 @@ class Event(PkModel):
             ol = ol[:280] + "..."
         return ol
 
+    def set_status(self, newstatus):
+        """Sets a timed status text."""
+        self.status = ';'.join([
+            str(datetime.now().timestamp()),
+            newstatus.replace(';', ':')
+        ])
+
     @property
     def status_text(self):
         """Returns a short status text."""
@@ -706,7 +713,8 @@ class Event(PkModel):
     def categories_for_event(self):
         """Event categories."""
         return Category.query.filter(
-            or_(Category.event_id is None, Category.event_id == self.id)
+            or_(Category.event_id == None, Category.event_id == '', 
+                Category.event_id == self.id)
         ).order_by("name")
 
     @property

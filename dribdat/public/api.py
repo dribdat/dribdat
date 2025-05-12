@@ -164,12 +164,22 @@ def project_list_all_events_csv():
                     headers=headers)
 
 
+# -------- CATEGORIES -----------
+
+@blueprint.route('/event/<int:event_id>/categories.json')
+def categories_list_json(event_id):
+    """Output JSON of categories in a specified event."""
+    event = Event.query.filter_by(id=event_id).first_or_404()
+    categories = [c.data for c in event.categories_for_event()]
+    return jsonify(categories=categories, event=event.data)
+
+
 @blueprint.route('/event/current/categories.json')
 def categories_list_current_json():
     """Output JSON of categories in the current event."""
     event = get_current_event()
-    categories = [c.data for c in event.categories_for_event()]
-    return jsonify(categories=categories, event=event.data)
+    return categories_list_json(event.id)
+
 
 # ------ ACTIVITY FEEDS ---------
 
@@ -421,11 +431,10 @@ def event_push_status():
     newstatus = request.form.get('text')
     if not request.form.get('text'):
         # Clear the status
-        event.status = None
+        event.set_status(None)
     else:
         # Update the status
-        event.status = str(datetime.now().timestamp()) + ';' \
-            + newstatus.replace(';', ':')
+        event.set_status(newstatus)
     event.save()
     return jsonify(status='OK')
 
