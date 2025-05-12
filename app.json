@@ -1,6 +1,6 @@
 {
   "name": "dribdat",
-  "logo": "https://raw.githubusercontent.com/hackathons-ftw/dribdat/main/dribdat/static/img/badge-black.png",
+  "logo": "https://codeberg.org/avatars/3b35f9c58b5db9abd9159e3ebf70e423",
   "description": "Open source platform for collaborative events",
   "keywords": [
     "teambuilding",
@@ -8,7 +8,7 @@
     "collaboration"
   ],
   "website": "https://dribdat.cc",
-  "repository": "https://github.com/dribdat/dribdat",
+  "repository": "https://codeberg.org/dribdat/dribdat",
   "success_url": "/admin",
   "scripts": {
   },
