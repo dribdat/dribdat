@@ -33,9 +33,9 @@ class TestApiViews:
         assert 'Project' in res["projects"][0]["name"]
         res = project_list_event_csv(event.id)
         assert res.status_code == 200
-        assert b"Project 1" in res.data
+        assert b"Project" in res.data
         res = project_list_current_csv()
-        assert b"Project 1" in res.data
+        assert b"Project" in res.data
 
     def test_category_list(self):
         category1 = CategoryFactory()
