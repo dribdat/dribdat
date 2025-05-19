@@ -136,13 +136,11 @@
 
     <a href="{{ url_for('api.info_event_ical', event_id=current_event.id) }}" class="btn"
         download="dribdat.ics" title="Download event for a reminder in your calendar (ICS file)">
+      <sup class="time-remaining">
+        {{ current_event.countdown|until_date }}
+      </sup>
       <i class="fa fa-calendar" aria-hidden="true"></i>
       <span>Add to calendar</span>
-    </a>
-
-    <a href="{{ url_for('public.dashboard') }}" class="btn"
-          title="See the event dashboard">
-        {{ current_event.countdown|until_date }}
     </a>
 
   {% elif current_event.has_finished %}
@@ -167,7 +165,6 @@
 {% endif %}
 
 <div class="event-nav m-4 text-center" role="group" aria-label="Event navigation">
-
 
     {% if current_event.can_start_project %}
     <a href="{{ url_for('project.project_new', event_id=current_event.id) }}" class="btn btn-lg btn-success">
@@ -224,7 +221,9 @@
 
 {% if current_event.countdown and not 'off' in config.DRIBDAT_CLOCK and not current_event.lock_resources %}
 <center class="container-countdown-bottom">
-  <a class="container-countdown" href="#top" title="{{ current_event.countdown }}">
+  <a class="container-countdown" 
+    href="{{ url_for('public.dashboard') }}"
+    title="{{ current_event.countdown }}">
     <div id="clockEvent" class="event-countdown flipdown" data-start="{{ current_event.countdown }}"></div>
   </a>
 </center>
