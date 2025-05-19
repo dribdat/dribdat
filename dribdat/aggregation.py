@@ -206,7 +206,7 @@ def GetProjectACLs(user, event, starred):
     """Figure out some basic permissions."""
     allow_edit = not user.is_anonymous and user.is_admin
     lock_editing = event.lock_editing
-    allow_post = starred and not event.lock_resources
+    allow_post = starred and not event.lock_resources and event.has_started
     allow_edit = allow_edit or event.lock_resources
     allow_edit = (starred or allow_edit) and not lock_editing
     return allow_edit, allow_post, lock_editing
