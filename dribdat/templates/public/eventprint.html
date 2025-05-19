@@ -95,6 +95,8 @@
 
 {% block content %}
 
+<h1 class="huge no-print">Report</h1>
+
 <center class="m-2 no-print float-right">
   <a class="btn btn-dark btn-lg" href="{{ url_for('public.event', event_id=current_event.id) }}"
      title="Back to project overview">
@@ -117,9 +119,13 @@
   </a>
 </center>
 
-<h1 class="huge no-print">Report</h1>
+  <p class="category-tip mt-3">
+      <span class="user-score">&#x1F4A1;</span>
+    Active projects and challenges as of {{ curdate }}.
+  </p>
 
-<p class="no-print text-center">
+<br clear="both">
+<p class="no-print text-center mb-5">
   {% if not request.args.get('longtext') %}
     <a href="?longtext=1" class="btn btn-danger">Full text</a>
   {% else %}
@@ -139,10 +145,6 @@
 </p>
 
 <div class="container" style="background:white; color: black">
-  <p class="text-center pt-4 m-4"><i>
-    Active projects and challenges as of {{ curdate }}.
-  </i></p>
-  <hr>
 
   {% for project in projects %}
     {{ render_print_project(project) }}

@@ -121,22 +121,17 @@
 
 <div class="event-nav m-4 text-center" role="group" aria-label="Event navigation">
 
-  <a href="{{ url_for('public.event_stages', event_id=current_event.id) }}" class="btn"
-     title="Show projects by Stage">
-    <i class="fa fa-signal" aria-hidden="true"></i>
-    <span>Stages</span>
-  </a>
-  <a href="{{ url_for('public.event_participants', event_id=current_event.id) }}" class="btn"
-     title="Show users who have joined projects here">
-    <i class="fa fa-child" aria-hidden="true"></i>
-    <span>Contributors</span>
-  </a>
-
   {% if current_event.countdown and not current_event.lock_resources %}
-    <a href="{{ url_for('public.event_challenges', event_id=current_event.id) }}" class="btn"
-       title="Show challenges">
-      <i class="fa fa-trophy" aria-hidden="true"></i>
-      <span>Challenges</span>
+    <a href="{{ url_for('public.event_stages', event_id=current_event.id) }}" class="btn"
+      title="Show projects by Stage">
+      <i class="fa fa-signal" aria-hidden="true"></i>
+      <span>Stages</span>
+    </a>
+
+    <a href="{{ url_for('public.event_participants', event_id=current_event.id) }}" class="btn"
+      title="Show users who have joined projects here">
+      <i class="fa fa-child" aria-hidden="true"></i>
+      <span>Contributors</span>
     </a>
 
     <a href="{{ url_for('api.info_event_ical', event_id=current_event.id) }}" class="btn"
