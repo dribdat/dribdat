@@ -47,7 +47,7 @@
   {% endif %}
   {% if not lock_editing and not project.event.has_finished and not project.event.lock_resources and not past_version %}
     {% if project_starred %}
-      <a class="btn btn-lg btn-info" data-bs-toggle="modal" data-bs-target="#addUser"
+      <a class="btn btn-lg btn-secondary" data-bs-toggle="modal" data-bs-target="#addUser"
         title="Invite someone to this project">
         <i class="fa fa-child" aria-hidden="true"></i>
       </a>
