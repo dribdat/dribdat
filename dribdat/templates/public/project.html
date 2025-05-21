@@ -217,6 +217,11 @@
                  Join the team
             </a>
           {% endif %}
+          <a class="btn btn-light" href="{{ url_for('project.get_log', project_id=project.id) }}"
+            title="Log and progress review">
+            <i class="fa fa-paperclip" aria-hidden="true"></i>
+            Log
+          </a>
         </center>
       {% endif %}
       
