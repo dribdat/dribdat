@@ -40,7 +40,7 @@ def format_webembed(url, project_id=None):
         url = url.replace("?t=", "?start=")
     # TODO: add more embeddables here
     # TODO: whitelist
-    return '<iframe src="%s"></iframe>' % url
+    return '<iframe src="%s" scrolling="no" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>' % url
 
 
 def format_webslides(longtext):

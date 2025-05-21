@@ -27,8 +27,8 @@ class UserForm(FlaskForm):
 
     next = HiddenField()
     id = HiddenField('id')
-    active = BooleanField(u"Active", default=True, description=f"(the user is allowed to log in)")
-    is_admin = BooleanField(u"Admin", default=False, description=f"(great power = great responsibility)")
+    active = BooleanField(u"Active", default=True, description=f"⼾ The user is allowed to log in")
+    is_admin = BooleanField(u"Admin", default=False, description=f"🖳  With great power comes great responsibility!")
     username = StringField(
         u'Username',
         [length(max=80), UniqueValidator(User, 'username'), DataRequired()])

@@ -171,7 +171,11 @@ form input[type="checkbox"] {
 }
 .admin .form-group .checkbox .help-inline {
     margin: 0em;
+    padding-left: 2em;
     display: inline-block;
+}
+.admin .form-group .checkbox {
+    text-align: left;
 }
 .admin .form-group .checkbox label {
     font-weight: bold;
@@ -1650,7 +1654,6 @@ a.media {
 }
 .projectform form .checkbox label[for="is_webembed"] {
     font-weight: bold;
-    display: block;
     margin-bottom: 1em;
 }
 .projectform form .checkbox label[for="is_webembed"] input {
@@ -1716,6 +1719,20 @@ main form .form-group .form-control {
 main form input[type="date"] {
     font-size: 150%;
 }
+main form .form-group .checkbox {
+    text-align: center;
+}
+main form .form-group .checkbox label  {
+    box-shadow: 5px 5px 5px #ccc;
+    display: inline-block;
+    padding: 10px 20px;
+    border-radius: 10px;
+}
+main form .form-group .checkbox label:hover {
+    background-color: lightyellow; color: black;
+    cursor: pointer;
+}
+
 .userform main .form-group input {
     margin-right: 0.5em;
 }

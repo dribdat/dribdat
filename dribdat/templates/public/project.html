@@ -75,7 +75,7 @@
 
   {% if project.is_webembed or project.webpage_url %}
     {% if project.has_embed_longtext %}
-      <div class="project-webembed resizable">
+      <div class="project-webembed resizable project-render">
         <iframe src="{{ url_for('project.render', project_id=project.id) }}"></iframe>
       </div>
       <a href="{{ url_for('project.render', project_id=project.id) }}" 
@@ -83,7 +83,7 @@
          target="_blank" rel="noopener noreferrer" title="See presentation in a new tab">
          &#x2193;&nbsp;&nbsp;Open</a>
     {% elif project.embed_webpage %}
-      <div class="project-webembed resizable">
+      <div class="project-webembed resizable project-embed">
         {{ project.embed_webpage|safe }}
       </div>
       <a href="{{ project.webpage_url }}" class="btn btn-small btn-default float-right"

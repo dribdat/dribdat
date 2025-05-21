@@ -749,7 +749,7 @@ class Project(PkModel):
 
     # How to put in more URLs, e.g. for the project tools?
     webpage_url = Column(db.String(2048), nullable=True)
-    is_webembed = Column(db.Boolean(), default=True)
+    is_webembed = Column(db.Boolean(), default=False)
 
     # shown only in the admin
     is_hidden = Column(db.Boolean(), default=False)
@@ -818,9 +818,10 @@ class Project(PkModel):
         """Return True if this project can be autoupdated."""
         return self.autotext_url and self.autotext_url.strip()
 
+    @property
     def has_embed_longtext(self):
         """Detect if a pitch is renderable."""
-        if not self.is_webembed:
+        if not self.is_webembed or not self.longtext:
             return False
         if "---" in self.longtext or "***" in self.longtext:
             return True
@@ -829,7 +830,7 @@ class Project(PkModel):
     @property
     def embed_longtext(self):
         """Detect and return embedded format of pitch."""
-        if self.has_embed_longtext():
+        if self.has_embed_longtext:
             return format_webslides(self.longtext)
         return None
 
