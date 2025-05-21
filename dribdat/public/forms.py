@@ -139,16 +139,16 @@ class ProjectDetailForm(FlaskForm):
     logo_color = StringField(
         "Outline color", description="🎨 Customize the color scheme of your project page."
     )
+    logo_icon = StringField(
+        "Project icon",
+        [length(max=20)],
+        description="🐧 Emoji or icon from FontAwesome "
+        + "➭ fontawesome.com/v4/cheatsheet",
+    )
     image_url = StringField(
         "Cover image",
         [length(max=255)],
         description="🖼️ Link to a top image for the project. Posts overwrite this.",
-    )
-    logo_icon = StringField(
-        "Named icon",
-        [length(max=20)],
-        description="🐧 Select an icon from FontAwesome "
-        + "➭ fontawesome.com/v4/cheatsheet",
     )
     category_id = SelectField(
         "Challenge category",

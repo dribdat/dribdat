@@ -137,9 +137,14 @@
   {% endif %}
 
   <div class="project-headline">
-  {% if project.logo_icon %}
-      <i class="fa fa-{{project.logo_icon}}"{% if project.logo_color %} style="color:{{project.logo_color}}"{% endif %}></i>
-  {% endif %}
+    {% if project.logo_icon %}
+      {% if project.logo_icon|length==1 %}
+        <span class="logo_icon">{{project.logo_icon}}</span>
+      {% else %}
+        <i class="fa fa-{{project.logo_icon}}"{% if project.logo_color %} style="color:{{project.logo_color}}"{% endif %}></i>
+      {% endif %}
+    {% endif %}
+
     <h2 class="project-name">{{project.name}}</h2>
 
   {% if project.summary %}

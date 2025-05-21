@@ -31,7 +31,11 @@
       <label class="btn btn-default">
         <input type="radio" name="category" id="{{category.id}}" autocomplete="off">
           {% if category.logo_icon %}
-            <i class="fa fa-{{category.logo_icon}}"></i><br>
+            {% if category.logo_icon|length==1 %}
+              <span class="logo_icon">{{category.logo_icon}}</span><br>
+            {% else %}
+              <i class="fa fa-{{category.logo_icon}}"></i><br>
+            {% endif %}
           {% endif %}
           <span>{{ category.name }}</span>
       </label>

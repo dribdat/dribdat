@@ -1067,11 +1067,11 @@ nav .nav-login {
     font-size: 250%;
     opacity: 0.6;
 }
+.project-home .project-headline .logo_icon,
 .project-home .project-headline i.fa {
     float: left;
-    font-size: 3.5rem;
+    font-size: 2.8rem;
     margin-right: 0.2em;
-    margin-left: -0.2em;
 }
 .project-home .project-image-container {
     margin-top: 0px;
