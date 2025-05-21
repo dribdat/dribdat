@@ -84,7 +84,7 @@ class ProjectForm(FlaskForm):
         "What changed?",
         [length(max=280)],
         render_kw={"maxlength": 280, "rows": 3},
-        description="(Optional) A short update for the project log",
+        description="A short update for the project log",
     )
     submit = SubmitField("Save changes")
     is_minoredit = BooleanField("This is a minor edit")  # No log entry if checked
@@ -165,9 +165,8 @@ class ProjectPost(FlaskForm):
     has_progress = BooleanField("Level up")
     note = TextAreaField(
         "How are the vibes in your team right now?",
-        [length(max=280)],
-        render_kw={"maxlength": 280, "minlength": 4},
-        description="A short note for your project log",
+        [length(max=1024)],
+        render_kw={"maxlength": 1024, "minlength": 4},
     )
     submit = SubmitField("Send")
 
