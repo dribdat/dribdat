@@ -523,8 +523,12 @@ def project_new(event_id):
 
 
 @blueprint.route("/import/<int:event_id>", methods=["GET", "POST"])
-def import_new_project(event, is_anonymous=False):
+def import_new_project(event_id, is_anonymous=False):
     """Proceed to import a new project."""
+    event = Event.query.filter_by(id=event_id).first_or_404()
+    if event.lock_starting:
+        flash("Projects may not be started in this event.", "error")
+        return redirect(url_for("public.event", event_id=event.id))
 
     form = None
     project = Project()

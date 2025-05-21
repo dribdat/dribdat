@@ -172,16 +172,21 @@
 
     {% if current_event.can_start_project %}
     <a href="{{ url_for('project.project_new', event_id=current_event.id) }}" class="btn btn-lg btn-success">
-        {% if current_event.lock_resources %}
+      {% if current_event.lock_resources %}
         <i class="fa fa-life-ring"></i>
         <span title="Add another resource here">Share a resource</span>
-        {% elif current_event.has_started %}
-        <i class="fa fa-plus"></i>
-        <span title="Add a project for your team">Start a team</span>
-        {% elif not current_event.has_finished %}
+      {% elif current_event.has_started %}
+          <i class="fa fa-plus"></i>
+          <span title="Add a project for your team">Start a team</span>
+        </a>
+        <a href="{{ url_for('project.import_new_project', event_id=current_event.id) }}" class="btn btn-lg btn-dark">
+          <i class="fa fa-plus"></i>
+          <span title="Import a project from repository">Import</span>
+        </a>
+      {% elif not current_event.has_finished %}
         <i class="fa fa-cube"></i>
         <span title="Write a challenge statement">Post a challenge</span>
-        {% endif %}
+      {% endif %}
     </a>
     {% endif %}
 
