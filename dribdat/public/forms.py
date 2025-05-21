@@ -79,7 +79,7 @@ class ProjectForm(FlaskForm):
     # description=""
     # + " Links to supported sites on one line get previews."
     # + " No copypasta: use the 'Upload Image' button.")
-    is_webembed = BooleanField("Show Pitch in slide mode")
+    is_webembed = BooleanField("📺 Show Pitch in slide mode")
     note = TextAreaField(
         "What changed?",
         [length(max=280)],
