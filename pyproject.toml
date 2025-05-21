@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "dribdat"
-version = "0.9.0"
+version = "0.9.1"
 description = "Open tools for fair collaborative events"
 authors = ["Dribdat Contributors <dribdat@datalets.ch>"]
 package-mode = false
