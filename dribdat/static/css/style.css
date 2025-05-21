@@ -106,7 +106,7 @@ form input[type="checkbox"] {
     position: absolute;
     font-size: 2em;
     margin-top: -0.36em;
-    z-index: -1;
+    z-index: 11;
 }
 .form-project-post .post-image-btn {
     float: left;
@@ -1708,9 +1708,13 @@ main form > .form-group {
     text-align: center;
 }
 main form .help-inline {
-    color: #555;
     display: block;
-    margin-top: 1em;
+    margin-top: 0.5em;
+    opacity: 0.4;
+    text-align: left;
+}
+main form .form-group:hover .help-inline {
+    opacity: 1.0;
 }
 main form .form-group .form-control {
     font-size: 125%;
@@ -1953,6 +1957,10 @@ div.project-edit-buttons {
 }
 .category-info img {
     max-width: 100%;
+}
+.event-home .category-info {
+    margin-top: 8em;
+    margin-bottom: -3em;
 }
 .category-container .card-header {
     text-align: center;
