@@ -177,8 +177,8 @@ class ProjectComment(FlaskForm):
     id = HiddenField("id")
     note = TextAreaField(
         "My question or comment:",
-        [length(max=280)],
-        render_kw={"maxlength": 280, "minlength": 4},
+        [length(max=1024)],
+        render_kw={"maxlength": 1024, "minlength": 4},
         description="Write a suggestion or some constructive feedback for the team.",
     )
     submit = SubmitField("Send comment")
