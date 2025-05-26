@@ -149,13 +149,10 @@ def register_commands(app):
 def register_filters(app):
     """Register filters for templates."""
 
-    #
     # Conversion of Markdown to HTML
     @app.template_filter()
     def markdown(value):
         return markdownit(value)
-
-    # Misaka(app, autolink=True, fenced_code=True, strikethrough=True, tables=True)
 
     # Registration of handlers for micawber
     app.oembed_providers = bootstrap_basic()
