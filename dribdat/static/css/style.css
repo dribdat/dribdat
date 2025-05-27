@@ -2232,6 +2232,7 @@ div.project-edit-buttons {
 .theme-dark .profile-projects {
     border-color: rgba(255, 255, 255, 0.5);
 }
+.theme-dark .btn-light,
 .theme-dark .bg-white a,
 .theme-dark .bg-white {
     color: black;

@@ -172,7 +172,7 @@
     </div>
   {% endif %}
 
-  {% if project_team or missing_roles %}
+  {% if project_team %}
     <div id="team-md" aria-labelledby="team-tab-md">
 
       <div class="widget widget-team m-4">
@@ -188,36 +188,26 @@
             >&times;</a>
         {% endif %}
       {% endfor %}
-      {% if missing_roles %}
-        <div class="missing-roles" title="This role is not yet filled. Try to find another team member!">
-          {% for role in missing_roles %}
-            <a class="role" data-id="{{ role.id }}"
-               href="{{ url_for('public.all_participants') }}?u=~{{ role.name }}">
-              <span>{{ role.name }}</span>
-            </a>
-          {% endfor %}
-        </div>
-      {% endif %}
       </div>
 
       {% if not lock_editing and not project.event.has_finished and not project.event.lock_resources and not past_version %}
         <center class="team-invite-button">
           {% if project_starred %}
-            <a class="btn btn-secondary btn-md" data-bs-toggle="modal" data-bs-target="#addUser"
+            <a class="btn btn-info btn-md" data-bs-toggle="modal" data-bs-target="#addUser"
                title="Invite someone to this project">
                 Team 
                 <i class="fa fa-child" aria-hidden="true"></i><i class="fa fa-child" aria-hidden="true"></i>
                 builder
             </a>
           {% else %}
-            <a class="btn btn-lg btn-success project-star"
+            <a class="btn btn-md btn-success project-star"
                href="{{ url_for('project.project_star', project_id=project.id) }}" 
                title="{% if project.is_challenge %}Follow this challenge{% else %}Contribute to the project{% endif %}">
                  <i class="fa fa-thumbs-up"></i>
                  Join the team
             </a>
           {% endif %}
-          <a class="btn btn-light" href="{{ url_for('project.get_log', project_id=project.id) }}"
+          <a class="btn btn-md btn-light" href="{{ url_for('project.get_log', project_id=project.id) }}"
             title="Log and progress review">
             <i class="fa fa-paperclip" aria-hidden="true"></i>
             Log
@@ -228,6 +218,14 @@
     </div>
   {% endif %}
 
+  {% if project.is_challenge %}
+    <center>
+      <a title="Go back to the main page" class="preview-challenge btn btn-default btn-lg"
+        href="{{ url_for('project.project_view', project_id=project.id) }}">
+        <i class="fa fa-arrow-left" aria-hidden="true"></i>
+          Back to Project</a>
+    </center>
+  {% endif %}
 
   </div><!-- /project-content -->
 </div><!-- /.jumbotron .project-page -->
@@ -254,10 +252,6 @@
         title="Edit basic project data">
         <i class="fa fa-pencil" aria-hidden="true"></i>
         Edit</a>
-      <a href="{{ url_for('project.project_details', project_id=project.id) }}" class="btn btn-lg btn-warning"
-        title="Edit project details" style="opacity:0.9">
-        <i class="fa fa-magic" aria-hidden="true"></i>
-        Details</a>
       {% if project.is_syncable %}
         <a href="{{ url_for('project.project_autoupdate', project_id=project.id) }}"
           title="Refresh external Readme data" class="btn btn-lg btn-dark">
@@ -265,6 +259,10 @@
           Sync</a>
       {% endif %}
     {% endif %}
+      <a href="{{ url_for('project.project_fork', project_id=project.id) }}" class="btn btn-lg btn-light"
+        title="Create another project with a reference to this one">
+        <i class="fa fa-copy" aria-hidden="true"></i>
+        Fork</a>
     {% if project.event.user == current_user or current_user.is_admin %}
       <a href="{{ url_for('project.project_approve', project_id=project.id) }}" class="btn btn-lg btn-primary project-approve"
         title="Promote to next project level">

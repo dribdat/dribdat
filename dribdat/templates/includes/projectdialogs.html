@@ -57,11 +57,22 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="addUserLabel">
+          Team
           <i class="fa fa-child" aria-hidden="true"></i><i class="fa fa-child" aria-hidden="true"></i>
-          Team-builder</h5>
+          builder</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
+      {% if missing_roles %}
+        <div class="missing-roles" title="This role is not yet filled. Try to find another team member!">
+          {% for role in missing_roles %}
+            <a class="role" data-id="{{ role.id }}"
+               href="{{ url_for('public.all_participants') }}?u=~{{ role.name }}">
+              <span>{{ role.name }}</span>
+            </a>
+          {% endfor %}
+        </div>
+      {% endif %}
         <p class="text-small text-start">
           Use the <a href="{{ url_for('public.all_participants')}}">participant list</a>
           to look up a username, share the QR code, or enter an e-mail address below to send out an invite.

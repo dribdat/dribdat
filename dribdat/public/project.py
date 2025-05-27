@@ -761,3 +761,18 @@ def project_toggle(project_id):
     else:
         flash('Project "%s" is now visible.' % project.name, "success")
     return redirect(purl)
+
+
+@blueprint.route("/<int:project_id>/fork", methods=["GET", "POST"])
+@login_required
+def project_fork(project_id):
+    """Create fork of a project."""
+    project = Project.query.filter_by(id=project_id).first_or_404()
+    # TODO: Check event frozen, user active
+    # TODO: Check project name
+    fork = Project(name=project.name + " (fork)", event=project.event)
+    fork.description = project.url
+    fork.save()
+    purl = url_for("project.project_view", project_id=fork.id)
+    flash('Project "%s" has been forked.' % project.name, "success")
+    return redirect(purl)
