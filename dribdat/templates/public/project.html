@@ -114,12 +114,18 @@
   {% if project.autotext %}
     <div id="readme-md" aria-labelledby="readme-tab-md">
 
+    {% if project.longtext %}
       <div class="project-autotext scroll-after-500">
         {{project.autotext|markdown}}
         <div title="Expand the Readme" class="cover">
           <i class="fa fa-arrow-down" aria-hidden="true"></i>
         </div>
       </div>
+    {% else %}
+      <div class="project-autotext">
+        {{project.autotext|markdown}}
+      </div>
+    {% endif %}
 
       <div class="m-2">
         {% if project.autotext_url and not project.event.lock_resources %}
