@@ -396,17 +396,19 @@ def FetchWebProject(project_url):
     elif project_url.startswith("https://www.instructables.com/"):
         return FetchWebInstructables(datatext, project_url)
     # Pretalx
-    elif datatext.find('<meta name="generator" content="pretalx">') > 0:
+    elif datatext.find('<meta name="generator" content="pretalx"') > 0:
         return FetchWebPretalx(datatext, project_url)
-    # CodiMD / HackMD
-    elif datatext.find('<div id="doc" ') > 0:
-        return FetchWebCodiMD(datatext, project_url)
     # DokuWiki
-    elif datatext.find('<meta name="generator" content="DokuWiki"/>') > 0:
+    elif datatext.find('<meta name="generator" content="DokuWiki"') > 0:
         return FetchWebDokuWiki(datatext, project_url)
     # Etherpad
     elif datatext.find("pad.importExport.exportetherpad") > 0:
         return FetchWebEtherpad(datatext, project_url)
+    # CodiMD / HackMD
+    elif datatext.find('<div id="doc" ') > 0:
+        return FetchWebCodiMD(datatext, project_url)
+    
+    return {}
 
 
 def FetchWebGoogleDoc(text, url):
@@ -466,12 +468,17 @@ def FetchWebCodiMD(text, url):
 def FetchWebDokuWiki(text, url):
     """Help extract data from DokuWiki."""
     doc = pq(text)
-    ptitle = doc("span.pageId")
+    ptitle = doc(".pageId")
     if len(ptitle) < 1:
         return {}
-    content = doc("div.dw-content")
-    if len(content) < 1:
+    title = str(ptitle.text()).replace("project:", "")
+    if len(ptitle) < 1:
         return {}
+    content = doc("#dokuwiki__content")
+    if len(content) < 1:
+        content = doc("div.dw-content")
+        if len(content) < 1:
+            return {}
     html_content = bleach.clean(
         str(content.html()).strip(),
         strip=True,
@@ -480,7 +487,7 @@ def FetchWebDokuWiki(text, url):
     )
     obj = {}
     obj["type"] = "DokuWiki"
-    obj["name"] = str(ptitle.text()).replace("project:", "")
+    obj["name"] = title
     obj["description"] = html_content
     obj["source_url"] = url
     obj["logo_icon"] = "list-ul"
