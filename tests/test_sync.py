@@ -84,6 +84,7 @@ class TestSync:
         """Test parsing a Dokuwiki."""
         test_url = "https://make.opendata.ch/wiki/information:rules"
         test_obj = FetchWebProject(test_url)
+        assert test_obj is not None
         assert test_obj["type"] == "DokuWiki"
         assert test_obj["source_url"] == test_url
         assert "Guidelines" in test_obj["description"]

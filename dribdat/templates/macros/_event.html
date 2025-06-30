@@ -21,7 +21,11 @@
 		 		 title="{{project.name}}">
         <div class="hexagontent">
           {% if project.logo_icon %}
-          <i class="fa fa-{{project.logo_icon}}"></i>
+            {% if project.logo_icon|length==1 %}
+              <span class="logo_icon">{{project.logo_icon}}</span>
+            {% else %}
+              <i class="fa fa-{{project.logo_icon}}"></i>
+            {% endif  %}
           {% endif %}
         </div>
       </a>

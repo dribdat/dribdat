@@ -27,7 +27,7 @@ class ProjectImport(FlaskForm):
     autotext_url = URLField(
         "Readme",
         [length(max=2048)],
-        description="Paste link to a code repository or document",
+        description="Paste link to a code repository or public document",
     )
     name = HiddenField(
         "Title", [length(max=80), UniqueValidator(Project, "name"), InputRequired()]
@@ -79,12 +79,12 @@ class ProjectForm(FlaskForm):
     # description=""
     # + " Links to supported sites on one line get previews."
     # + " No copypasta: use the 'Upload Image' button.")
-    is_webembed = BooleanField("Enable slide mode")
+    is_webembed = BooleanField("📺 Show Pitch in slide mode")
     note = TextAreaField(
         "What changed?",
         [length(max=280)],
         render_kw={"maxlength": 280, "rows": 3},
-        description="(Optional) A short update for the project log",
+        description="A short update for the project log",
     )
     submit = SubmitField("Save changes")
     is_minoredit = BooleanField("This is a minor edit")  # No log entry if checked
@@ -94,66 +94,66 @@ class ProjectDetailForm(FlaskForm):
     """Edit a project detail form."""
 
     id = HiddenField("id")
-    autotext_url = URLField(
-        "Readme",
-        [length(max=255)],
-        description="URL to a code repository, document, or wiki 💡 Tips: dribdat.cc/sync",
-    )
     name = StringField(
         "Title",
         [length(max=80), UniqueValidator(Project, "name"), InputRequired()],
         render_kw={"maxlength": 80, "required": "required"},
-        description="A short name for your project or challenge.",
+        description="🗞️ A short name for your project or challenge.",
     )
     summary = TextAreaField(
-        "Summary", [length(max=2048)], render_kw={"maxlength": 2048, "rows": 3}
+        "Summary", [length(max=2048)], render_kw={"maxlength": 2048, "rows": 3},
+        description="🍫 A short headline about your team or project."
     )
-    # description="A short, plain-text description of your topic.")
+    autotext_url = URLField(
+        "Readme",
+        [length(max=255)],
+        description="💡 URL to a code repository, document, wiki ➭ www.dribdat.cc/sync",
+    )
     technai = StringField(
         "Technai",
         [length(max=1024)],
-        description="Comma,separated,list of skills or technologies involved.",
+        description="🏀 Comma,separated,list of skills or technologies involved.",
     )
     download_url = URLField(
         "Demo",
         [length(max=255)],
-        description="Link to online demo or download area for this project.",
+        description="🧀 Link to online demo or download area for this project.",
     )
     source_url = URLField(
         "Source",
         [length(max=255)],
-        description="Link to the source code of your project - not necessarily same as your Readme.",
+        description="🗝️ Link to the source code of your project - not necessarily same as your Readme.",
     )
     # Note: contact_url could be an e-mail or room number -> StringField
     contact_url = StringField(
         "Contact",
         [length(max=255)],
-        description="How to reach you via website or e-mail.",
+        description="📩 How to reach you, e.g. via website or e-mail.",
     )
     hashtag = StringField(
         "Affiliation",
         [length(max=140)],
-        description="Your organization, channel, or social media hashtag.",
+        description="🧧 Your organization, channel, or social media hashtag.",
     )
     # Note: relative links allowed in image_url -> StringField
     logo_color = StringField(
-        "Outline color", description="Customize the color scheme of your project page."
+        "Outline color", description="🎨 Customize the color scheme of your project page."
+    )
+    logo_icon = StringField(
+        "Project icon",
+        [length(max=20)],
+        description="🐧 Emoji or icon from FontAwesome "
+        + "➭ fontawesome.com/v4/cheatsheet",
     )
     image_url = StringField(
         "Cover image",
         [length(max=255)],
-        description="Link to a top image for the project. Posts overwrite this.",
-    )
-    logo_icon = StringField(
-        "Named icon",
-        [length(max=20)],
-        description="Select an icon from FontAwesome"
-        + ": https://fontawesome.com/v4/cheatsheet",
+        description="🖼️ Link to a top image for the project. Posts overwrite this.",
     )
     category_id = SelectField(
         "Challenge category",
         coerce=int,
-        description="If available, which category does your project belong to?",
+        description="🎓 If available, which category does your project belong to?",
     )
     submit = SubmitField("Save changes")
 
@@ -165,9 +165,8 @@ class ProjectPost(FlaskForm):
     has_progress = BooleanField("Level up")
     note = TextAreaField(
         "How are the vibes in your team right now?",
-        [length(max=280)],
-        render_kw={"maxlength": 280, "minlength": 4},
-        description="A short note for your project log",
+        [length(max=1024)],
+        render_kw={"maxlength": 1024, "minlength": 4},
     )
     submit = SubmitField("Send")
 
@@ -178,8 +177,8 @@ class ProjectComment(FlaskForm):
     id = HiddenField("id")
     note = TextAreaField(
         "My question or comment:",
-        [length(max=280)],
-        render_kw={"maxlength": 280, "minlength": 4},
+        [length(max=1024)],
+        render_kw={"maxlength": 1024, "minlength": 4},
         description="Write a suggestion or some constructive feedback for the team.",
     )
     submit = SubmitField("Send comment")

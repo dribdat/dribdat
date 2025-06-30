@@ -119,6 +119,10 @@
           title="Edit basic project data">
           <i class="fa fa-pencil" aria-hidden="true"></i>
           Edit</a>
+        <a href="{{ url_for('project.project_details', project_id=project.id) }}" class="btn btn-light"
+          title="Edit basic project data">
+          <i class="fa fa-gear" aria-hidden="true"></i>
+          Details</a>
       </div>
     {% endif %}
   </center>

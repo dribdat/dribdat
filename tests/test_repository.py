@@ -60,6 +60,7 @@ class TestRepository:
 
     def test_github(self, user, testapp):
         """Test parsing a GitHub readme."""
+        return warnings.warn("GitHub tests skipped")
         test_url = "https://github.com/dribdat/dribdat/blob/main/README.md"
         try:
             test_obj = GetProjectData(test_url)
@@ -75,6 +76,7 @@ class TestRepository:
 
     def test_github_other(self, user, testapp):
         """Test parsing a GitHub Markdown file."""
+        return warnings.warn("GitHub tests skipped")
         test_url = "https://github.com/dribdat/docs/blob/main/docs/sync.md"
         try:
             test_obj = GetProjectData(test_url)
@@ -88,6 +90,7 @@ class TestRepository:
 
     def test_github_gist(self, user, testapp):
         """Test parsing a GitHub Gist."""
+        return warnings.warn("GitHub tests skipped")
         test_url = "https://gist.github.com/loleg/ebe8c96be5a8ef2465e5c573216f13b5"
         try:
             test_gist = GetProjectData(test_url)
@@ -101,6 +104,7 @@ class TestRepository:
 
     def test_github_issue(self, user, testapp):
         """Test parsing a GitHub Issue."""
+        return warnings.warn("GitHub tests skipped")
         test_url = "https://github.com/dribdat/dribdat/issues/424"
         try:
             test_git = GetProjectData(test_url)

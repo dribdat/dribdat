@@ -46,16 +46,12 @@
         </thead>
         {% for project in projects or data.items %}
         <tr data-href="{{ url_for('admin.project_view', project_id=project.id) }}"
-            {% if project.is_hidden %}style="background:salmon;color:black" title="Hidden"{% elif project.progress<0 %}style="background:orange;color:black" title="Awaiting approval"{% endif %}>
+            {% if project.is_hidden %}class="warning" title="Hidden"{% elif project.progress<0 %}class="light" title="Awaiting approval"{% endif %}>
             <td style="text-align:right">
-              <a href="{{ url_for('project.project_view', project_id=project.id) }}" title="Open">
-                <div class="btn btn-lg btn-light">
-                  {% if project.logo_icon %}
-                    <i class="fa fa-{{project.logo_icon}}"></i>
-                  {% else %}
-                    <i class="fa fa-link"></i>
-                  {% endif %}
-                </div>
+              <a href="{{ url_for('project.project_view', project_id=project.id) }}" title="Open"
+                 class="btn btn-lg btn-light p-2">
+                  ⬣
+              </a>
             </td>
             <td width="50%">
               <h5>{{ project.name }}</h5>

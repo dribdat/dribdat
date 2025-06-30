@@ -605,10 +605,6 @@
 
   function init_editor() {
     const $activateEditor = $("#activateEditor");
-    const $longtext = $("#longtext");
-
-    // Move button to editing area
-    //$longtext.first().before($activateEditor);
 
     // Handle activation button
     $activateEditor

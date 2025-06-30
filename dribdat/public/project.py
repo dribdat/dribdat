@@ -168,7 +168,7 @@ def project_approve(project_id):
 def render(project_id):
     """Show the project slides only."""
     project = Project.query.filter_by(id=project_id).first_or_404()
-    if project.has_embed_longtext():
+    if project.has_embed_longtext:
         tpl = render_template("slides.html", project=project)
     else:
         tpl = render_template(
@@ -519,14 +519,16 @@ def project_new(event_id):
         flash("Projects may not be started in this event.", "error")
         return redirect(url_for("public.event", event_id=event.id))
     # Checks passed, continue ...
-    if is_anonymous or request.args.get("create"):
-        return create_new_project(event, is_anonymous)
-    # Only authenticated users can import due to autofill restrictions
-    return import_new_project(event, is_anonymous)
+    return create_new_project(event, is_anonymous)
 
 
-def import_new_project(event, is_anonymous=False):
+@blueprint.route("/import/<int:event_id>", methods=["GET", "POST"])
+def import_new_project(event_id, is_anonymous=False):
     """Proceed to import a new project."""
+    event = Event.query.filter_by(id=event_id).first_or_404()
+    if event.lock_starting:
+        flash("Projects may not be started in this event.", "error")
+        return redirect(url_for("public.event", event_id=event.id))
 
     form = None
     project = Project()
@@ -758,4 +760,19 @@ def project_toggle(project_id):
         flash('Project "%s" is now hidden.' % project.name, "success")
     else:
         flash('Project "%s" is now visible.' % project.name, "success")
+    return redirect(purl)
+
+
+@blueprint.route("/<int:project_id>/fork", methods=["GET", "POST"])
+@login_required
+def project_fork(project_id):
+    """Create fork of a project."""
+    project = Project.query.filter_by(id=project_id).first_or_404()
+    # TODO: Check event frozen, user active
+    # TODO: Check project name
+    fork = Project(name=project.name + " (fork)", event=project.event)
+    fork.description = project.url
+    fork.save()
+    purl = url_for("project.project_view", project_id=fork.id)
+    flash('Project "%s" has been forked.' % project.name, "success")
     return redirect(purl)
