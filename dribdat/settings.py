@@ -45,6 +45,7 @@ class Config(object):
     OAUTH_USERINFO = os_env.get("OAUTH_USERINFO", None)
     OAUTH_TOKEN_URL = os_env.get("OAUTH_TOKEN_URL", None)
     OAUTH_AUTH_URL = os_env.get("OAUTH_AUTH_URL", None)
+    OAUTH_LOGO = os_env.get("OAUTH_LOGO", None)
 
     # (Optional) Go directly to external login screen
     OAUTH_SKIP_LOGIN = bool(strtobool(os_env.get("OAUTH_SKIP_LOGIN", "False")))

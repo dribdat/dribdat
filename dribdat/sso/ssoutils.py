@@ -57,6 +57,8 @@ def get_auth_blueprint(app):
                 scope='read_user'
             )
     elif app.config['OAUTH_TYPE'] == 'oauth2':
+        if not app.config['OAUTH_DOMAIN']:
+            raise Exception("Please specify an OAUTH_DOMAIN")
         blueprint = oauth2.make_oauth2_blueprint(
             client_id=app.config['OAUTH_ID'],
             secret=app.config['OAUTH_SECRET'],

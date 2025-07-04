@@ -40,7 +40,9 @@
     </p>
   {% elif oauth_type == 'oauth2' %}
     <p class="sso-login">
-      <a class="btn signin-oauth2" href="{{ url_for('oauth2.login', next=request.args.get('next')) }}" title="Click to sign in - OAuth 2.0">
+      <a class="btn signin-oauth2" 
+        {% if config.OAUTH_LOGO %}style="background-image:url('{{ config.OAUTH_LOGO }}'); background-size:contain; background-position:0%; color:transparent"{% endif %}
+        href="{{ url_for('oauth2.login', next=request.args.get('next')) }}" title="Click to sign in - OAuth 2.0">
         <span>&#x1f512; Sign in with OAuth</span>
       </a>
     </p>
