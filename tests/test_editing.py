@@ -174,6 +174,10 @@ class TestEditing:
         project_badge = [s for s in project_dribs if s['name'] == 'boost']
         assert len(project_badge) == 1
 
+        # Check that user is part of event
+        assert user.has_joined(event)
+        
+
     def test_create_project(self, db, testapp):
         """Test creating projects anonymously."""
         # Create an event

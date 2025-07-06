@@ -214,18 +214,21 @@
     {% endif %}
 </div>
 
-{% if current_event.instruction and current_user and current_user.active %}
-<div class="jumbotron event-instruction mt-4 mb-2">
-  <div class="content">
-    {{current_event.instruction|markdown}}
-  </div>
-</div>
+{% if current_user and current_user.active %}
+  {% if current_event.instruction %}
+    <div class="jumbotron event-instruction mt-4 mb-2">
+      <div class="content">
+        {{current_event.instruction|markdown}}
+      </div>
+    </div>
+  {% endif %}
+  {% if not current_event.has_finished and not current_user.has_joined(current_event) %}
+    {% include "includes/eventjoin.html" %}
+  {% endif %}
 {% elif current_event.has_started and not current_event.has_finished %}
-  {% if not current_user or not current_user.active %}
   <div category-id="infobox" class="category-container category-tip">
     <center><h4><i class="fa fa-lightbulb-o"></i> &nbsp;The event has started! Join any of the projects after you log in.</h4></center>
   </div>
-  {% endif %}
 {% endif %}
 
 {% if current_event.countdown and not 'off' in config.DRIBDAT_CLOCK and not current_event.lock_resources %}

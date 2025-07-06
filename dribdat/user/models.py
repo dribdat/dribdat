@@ -238,6 +238,14 @@ class User(UserMixin, PkModel):
                 project_ids.append(a.project_id)
         return projects
 
+    def has_joined(self, event):
+        """Check if the user has starred a team at this event."""
+        jp = self.joined_projects(True, -1, event)
+        for project in jp:
+            if project.event == event:
+                return True
+        return False
+
     def simple_resume(self):
         if not self.vitae:
             return None
