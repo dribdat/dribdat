@@ -65,7 +65,7 @@
 
 {% if project.download_url %}
   <a href="{{ project.download_url }}" target="_blank" rel="noopener noreferrer"
-     class="project-download-link btn btn-lg border border-info fw-bolder" 
+     class="project-download-link btn btn-lg border border-info fw-bolder"
      title="Download link">
       <span>&#x2728;</span> Demo
   </a>
@@ -78,7 +78,7 @@
       <div class="project-webembed resizable project-render">
         <iframe src="{{ url_for('project.render', project_id=project.id) }}"></iframe>
       </div>
-      <a href="{{ url_for('project.render', project_id=project.id) }}" 
+      <a href="{{ url_for('project.render', project_id=project.id) }}"
          class="btn btn-small btn-default float-right"
          target="_blank" rel="noopener noreferrer" title="See presentation in a new tab">
          &#x2193;&nbsp;&nbsp;Open</a>
@@ -201,13 +201,13 @@
           {% if project_starred %}
             <a class="btn btn-info btn-md" data-bs-toggle="modal" data-bs-target="#addUser"
                title="Invite someone to this project">
-                Team 
+                Team
                 <i class="fa fa-child" aria-hidden="true"></i><i class="fa fa-child" aria-hidden="true"></i>
                 builder
             </a>
-          {% else %}
+          {% elif project.progress >= 0 %}
             <a class="btn btn-md btn-success project-star"
-               href="{{ url_for('project.project_star', project_id=project.id) }}" 
+               href="{{ url_for('project.project_star', project_id=project.id) }}"
                title="{% if project.is_challenge %}Follow this challenge{% else %}Contribute to the project{% endif %}">
                  <i class="fa fa-thumbs-up"></i>
                  Join the team
@@ -220,24 +220,15 @@
           </a>
         </center>
       {% endif %}
-      
-    </div>
-  {% endif %}
 
-  {% if project.is_challenge %}
-    <center>
-      <a title="Go back to the main page" class="preview-challenge btn btn-default btn-lg"
-        href="{{ url_for('project.project_view', project_id=project.id) }}">
-        <i class="fa fa-arrow-left" aria-hidden="true"></i>
-          Back to Project</a>
-    </center>
+    </div>
   {% endif %}
 
   </div><!-- /project-content -->
 </div><!-- /.jumbotron .project-page -->
 
 <center class="project-footer-controls mt-5">
-  
+
 <div role="group" aria-label="Project controls" class="btn-group project-controls">
   {% if current_user and current_user.active %}
     {% if allow_post %}
@@ -316,7 +307,7 @@
       <i class="fa fa-eye" aria-hidden="true"></i>
     <!--  Hide--></a>
   {% endif %}
-  
+
   <a href="{{ url_for('admin.project_view', project_id=project.id) }}" class="btn btn-lg btn-warning"
      title="Edit full details (admin)">
     <i class="fa fa-pencil" aria-hidden="true"></i>

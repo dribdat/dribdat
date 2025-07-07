@@ -303,13 +303,19 @@ def event(event_id):
         return render_template(
             "public/embed.html", current_event=event, projects=projects
         )
+    # TODO: seems inefficient? We only need a subset of the data here:
+    summaries = [p.data for p in projects]
+    # Recommend projects
+    suggestions = []
+    for project in projects:
+        if project.needs_members:
+            suggestions.append(project)
     # Check for certificate
     may_certify = event.has_finished and event.certificate_path
     if may_certify:
         may_certify = current_user and not current_user.is_anonymous
         may_certify = may_certify and current_user.may_certify()[0]
-    # TODO: seems inefficient? We only need a subset of the data here:
-    summaries = [p.data for p in projects]
+    # Generate the page
     return render_template(
         "public/event.html",
         current_event=event,
@@ -317,6 +323,7 @@ def event(event_id):
         may_edit=editable,
         summaries=summaries,
         project_count=len(summaries),
+        suggestions=suggestions,
         active="projects",
     )
 

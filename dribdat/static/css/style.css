@@ -42,8 +42,13 @@ sp {
 }
 
 /* Navigation anchors */
-.section-header a, .card-title a, .widget a, .timeline-item a, 
-.project-score a, .project-category a, .project-name a {
+.section-header a,
+.card-title a,
+.widget a,
+.timeline-item a,
+.project-score a,
+.project-category a,
+.project-name a {
     text-decoration: none;
 }
 
@@ -60,8 +65,8 @@ form input[type="checkbox"] {
 }
 
 .userform form > .form-group p {
-  max-width: 50em;
-  display: inline-block;
+    max-width: 50em;
+    display: inline-block;
 }
 
 .form-register .form-control {
@@ -204,7 +209,7 @@ form input[type="checkbox"] {
     text-decoration: none;
 }
 .alert.project-tips {
-    border: 1px solid rgba(0,0,0,0.1);
+    border: 1px solid rgba(0, 0, 0, 0.1);
     border-radius: 12px;
     margin-top: -1em;
     color: black;
@@ -466,7 +471,7 @@ nav .nav-login {
 .card .an-event-meta {
     color: black;
     text-shadow: -1px 1px 1px white;
-    background: rgba(255,255,255,0.7);
+    background: rgba(255, 255, 255, 0.7);
     border-radius: 5px;
     margin-top: 3px;
     padding: 1px 4px;
@@ -545,7 +550,7 @@ nav .nav-login {
 .home-page .carousel-caption .event-header .section-header-content {
     text-align: left;
     background: rgba(255, 255, 255, 0.9);
-    box-shadow: 3px 3px 3px rgba(0,0,0,0.2);
+    box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.2);
     border-radius: 10px;
     padding: 1em 0 1em 2em;
     width: 60%;
@@ -669,7 +674,7 @@ nav .nav-login {
     box-shadow: none;
 }
 .hexagon.challenge.new .hexagontent i {
-    color: green;
+    color: orange;
 }
 @media (max-width: 560px) {
     .with-event .honeycomb {
@@ -1452,17 +1457,51 @@ a.media {
 }
 .project-page .project-autotext .cover {
     position: absolute;
-    top: 0px; left: 0px;
-    width: 100%; height: 100%;
-    cursor: pointer; cursor: hand;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+    cursor: hand;
 
-    background: rgba(255,255,255,0);
-    background: -moz-linear-gradient(top, rgba(255,255,255,0) 50%, rgba(255,255,255,1) 92%, rgba(255,255,255,1) 100%);
-    background: -webkit-gradient(left top, left bottom, color-stop(50%, rgba(255,255,255,0)), color-stop(92%, rgba(255,255,255,1)), color-stop(100%, rgba(255,255,255,1)));
-    background: -webkit-linear-gradient(top, rgba(255,255,255,0) 50%, rgba(255,255,255,1) 92%, rgba(255,255,255,1) 100%);
-    background: -o-linear-gradient(top, rgba(255,255,255,0) 50%, rgba(255,255,255,1) 92%, rgba(255,255,255,1) 100%);
-    background: -ms-linear-gradient(top, rgba(255,255,255,0) 50%, rgba(255,255,255,1) 92%, rgba(255,255,255,1) 100%);
-    background: linear-gradient(to bottom, rgba(255,255,255,0) 50%, rgba(255,255,255,1) 92%, rgba(255,255,255,1) 100%);
+    background: rgba(255, 255, 255, 0);
+    background: -moz-linear-gradient(
+        top,
+        rgba(255, 255, 255, 0) 50%,
+        rgba(255, 255, 255, 1) 92%,
+        rgba(255, 255, 255, 1) 100%
+    );
+    background: -webkit-gradient(
+        left top,
+        left bottom,
+        color-stop(50%, rgba(255, 255, 255, 0)),
+        color-stop(92%, rgba(255, 255, 255, 1)),
+        color-stop(100%, rgba(255, 255, 255, 1))
+    );
+    background: -webkit-linear-gradient(
+        top,
+        rgba(255, 255, 255, 0) 50%,
+        rgba(255, 255, 255, 1) 92%,
+        rgba(255, 255, 255, 1) 100%
+    );
+    background: -o-linear-gradient(
+        top,
+        rgba(255, 255, 255, 0) 50%,
+        rgba(255, 255, 255, 1) 92%,
+        rgba(255, 255, 255, 1) 100%
+    );
+    background: -ms-linear-gradient(
+        top,
+        rgba(255, 255, 255, 0) 50%,
+        rgba(255, 255, 255, 1) 92%,
+        rgba(255, 255, 255, 1) 100%
+    );
+    background: linear-gradient(
+        to bottom,
+        rgba(255, 255, 255, 0) 50%,
+        rgba(255, 255, 255, 1) 92%,
+        rgba(255, 255, 255, 1) 100%
+    );
 }
 .project-page .project-autotext .cover i {
     position: absolute;
@@ -1675,7 +1714,7 @@ a.media {
     margin-left: 1em;
 }
 .help-inline .text-muted::before {
-    content: '//';
+    content: "//";
     opacity: 0.5;
 }
 
@@ -1714,7 +1753,7 @@ main form .help-inline {
     text-align: left;
 }
 main form .form-group:hover .help-inline {
-    opacity: 1.0;
+    opacity: 1;
 }
 main form .form-group .form-control {
     font-size: 125%;
@@ -1726,14 +1765,15 @@ main form input[type="date"] {
 main form .form-group .checkbox {
     text-align: center;
 }
-main form .form-group .checkbox label  {
+main form .form-group .checkbox label {
     box-shadow: 5px 5px 5px #ccc;
     display: inline-block;
     padding: 10px 20px;
     border-radius: 10px;
 }
 main form .form-group .checkbox label:hover {
-    background-color: lightyellow; color: black;
+    background-color: lightyellow;
+    color: black;
     cursor: pointer;
 }
 
@@ -1810,7 +1850,8 @@ a.go-up {
     display: inline-block;
     text-decoration: none;
     font-size: 125%;
-    top: 0.7em; right: 1em;
+    top: 0.7em;
+    right: 1em;
     opacity: 0.5;
 }
 
@@ -1909,7 +1950,7 @@ div.project-edit-buttons {
     left: 3em;
     float: left;
     height: 3.3em;
-    margin-bottom: -.4em; 
+    margin-bottom: -0.4em;
 }
 .project-edit-buttons > *,
 .project-tab-buttons > * {
@@ -1926,7 +1967,7 @@ div.project-edit-buttons {
     div.project-edit-buttons,
     div.project-tab-buttons {
         float: none;
-        left: 0px; 
+        left: 0px;
         right: 0px;
         margin: 0px;
         width: auto;
@@ -2137,25 +2178,25 @@ div.project-edit-buttons {
 
 .profile-skills,
 .profile-wishes {
-  font-size: 125%;
+    font-size: 125%;
 }
 
 .profile-skills .skill,
 .profile-wishes .wish {
-  margin: 3px 3px;
-  padding: 0px 8px;
-  border-radius: 8px;
-  display: inline-block;
-  text-decoration: none;
-  color: black;
+    margin: 3px 3px;
+    padding: 0px 8px;
+    border-radius: 8px;
+    display: inline-block;
+    text-decoration: none;
+    color: black;
 }
 
 .profile-skills .skill {
-  background-color: #d0e4d9;
+    background-color: #d0e4d9;
 }
 
 .profile-wishes .wish {
-  background-color: #e8dab9;
+    background-color: #e8dab9;
 }
 
 .profile-social {
@@ -2269,7 +2310,8 @@ div.project-edit-buttons {
     background-color: white;
     border-left: 1px solid #ccc;
 }
-a.card, .card > a {
+a.card,
+.card > a {
     text-decoration: none;
 }
 .profile-projects .card {
@@ -2278,7 +2320,7 @@ a.card, .card > a {
     background-position: 0 3px;
     border-color: transparent;
     background-color: transparent;
-    border:1px solid #ccc;
+    border: 1px solid #ccc;
     padding-right: 0px;
 }
 .profile-projects .card:hover {

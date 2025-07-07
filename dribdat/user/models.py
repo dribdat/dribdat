@@ -822,6 +822,13 @@ class Project(PkModel):
         return self.progress <= PR_CHALLENGE
 
     @property
+    def needs_members(self):
+        """Return True if the team should grow."""
+        if self.progress >= 0 and self.team_count < 5:
+            return True
+        return False
+
+    @property
     def is_syncable(self):
         """Return True if this project can be autoupdated."""
         return self.autotext_url and self.autotext_url.strip()
