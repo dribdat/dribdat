@@ -8,7 +8,7 @@ from flask_login import login_required
 
 from ..utils import (
     unpack_csvlist, pack_csvlist,
-    sanitize_input, get_time_note, 
+    sanitize_input, get_time_note,
     get_random_alphanumeric_string
 )
 from ..extensions import db, cache
@@ -43,7 +43,7 @@ def index():
     stats = [
         {
             'value': Event.query.count(),
-            'text': 'Sprints',
+            'text': 'Events',
             'icon': 'calendar',
             'height': 6
         }, {
@@ -187,7 +187,7 @@ def user_profile(user_id):
         user.roles = [Role.query.filter_by(
             id=r).first() for r in form.roles.data]
         del form.roles
-        
+
         # Assign CSV data
         user.my_wishes = unpack_csvlist(form.my_wishes.data)
         user.my_skills = unpack_csvlist(form.my_skills.data)
@@ -319,9 +319,9 @@ def events():
     page = int(request.args.get('page', 1))
     events = Event.query.order_by(Event.starts_at.desc())
     eventpages = events.paginate(page=page, per_page=10)
-    return render_template('admin/events.html', 
+    return render_template('admin/events.html',
         data=eventpages, endpoint='admin.events',
-        active='sprints')
+        active='events')
 
 
 @blueprint.route('/event/<int:event_id>', methods=['GET', 'POST'])
@@ -493,7 +493,7 @@ def project_view(project_id):
     form.category_id.choices.insert(0, (-1, ''))
     # Check event in range
     if form.event_id.data not in [e.id for e in Event.query.all()]:
-        flash('You must set the Sprint ID to a valid number', 'danger')
+        flash('You must set the Event ID to a valid number', 'danger')
 
     # Standard validation
     elif form.is_submitted() and form.validate():

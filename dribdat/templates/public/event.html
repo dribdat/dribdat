@@ -32,8 +32,9 @@
     </div>
   {% endif %}
 {% elif current_event.has_started and not current_event.has_finished %}
-  <div category-id="infobox" class="category-container category-tip">
-    <center><h4><i class="fa fa-lightbulb-o"></i> &nbsp;The event has started! Join any of the projects after you log in.</h4></center>
+  <div category-id="infobox" class="category-container category-tip mb-5">
+    <center><h4><i class="fa fa-lightbulb-o"></i> &nbsp;The event has started! Join a team after
+        <a href="/enter">you log in</a>.</h4></center>
   </div>
 {% endif %}
 

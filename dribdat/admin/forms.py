@@ -189,7 +189,7 @@ class ProjectForm(FlaskForm):
         [length(max=20)],
         description='https://fontawesome.com/v4/cheatsheet')
     logo_color = StringField(u'Custom color')
-    event_id = IntegerField(u'Sprint ID', description='As in the URL of an event page')
+    event_id = IntegerField(u'Event ID', description='As in the URL of an event page')
     category_id = SelectField(u'Category', coerce=int, description='Global or event-specific')
     user_name = StringField(u'Author', description='User who created this challenge')
     submit = SubmitField(u'Save')

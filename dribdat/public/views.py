@@ -351,7 +351,10 @@ def all_participants():
     MAX_COUNT = 100
     search_by = request.args.get("u") or ""
     preset_roles = Role.query.all()
-    users = get_users_by_search(search_by, MAX_COUNT)
+    if len(search_by) < 3:
+        users = GetEventUsers(current_event())
+    else:
+        users = get_users_by_search(search_by, MAX_COUNT)
     if len(users) == MAX_COUNT:
         flash("Only the first %d participants are shown." % MAX_COUNT, "info")
     usercount = len(users) if users else 0
