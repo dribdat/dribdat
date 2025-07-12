@@ -120,6 +120,27 @@
 	</div>
 {% endmacro %}
 
+{% macro render_join_card(project) %}
+	<div class="col-lg-12 mb-1">
+	    <a class="card {{ 'challenge' if project.is_challenge else 'project' }}"
+			href="{{ url_for('project.project_view', project_id=project.id) }}" target="_blank">
+		<div class="card-header w-100">
+			  {% if project.image_url %}
+				<img height="60" class="card-img-left pe-3" src="{{project.image_url}}">
+			  {% endif %}
+			  <h5 class="card-title">{{ project.name }}</h5>
+					<!--
+			<button class="btn btn-md btn-success project-star"
+                href="{{ url_for('project.project_star', project_id=project.id) }}"
+                title="Contribute to the project">
+                    <i class="fa fa-thumbs-up"></i>
+                    Join
+                    </button>  -->
+		</div>
+		</a>
+	</div>
+{% endmacro %}
+
 {% macro render_resource_card(project) %}
 	<div class="col-lg-4 mb-4">
 	  <a href="{{ url_for('project.project_view', project_id=project.id) }}">
@@ -160,8 +181,8 @@
 					<i class="fa fa-github"></i>
 			   	  </a>
 			  {% endif %}
-			  
-			  <a href="{{ url_for('project.project_view', project_id=project.id) }}" 
+
+			  <a href="{{ url_for('project.project_view', project_id=project.id) }}"
 			  	 class="float-right btn btn-sm btn-info">
 		   		 Open</a>
 			</div>

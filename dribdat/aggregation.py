@@ -249,8 +249,8 @@ def ProjectsByProgress(progress=None, event=None):
 
 def GetEventUsers(event):
     """Fetch all active users that have a project in this event."""
-    if not event.projects:
-        return None
+    if not event or not event.projects:
+        return []
     users = []
     userlist = []
     projects = set([p.id for p in event.projects])

@@ -19,6 +19,25 @@
 {% block content %}
 {% cache 300, 'event-%d' % current_event.id %}
 
+{% if current_user and current_user.active %}
+  {% if not current_event.has_finished and not current_user.has_joined(current_event) %}
+    {% include "includes/eventjoin.html" %}
+  {% endif %}
+  {% if current_event.instruction %}
+    <div class="jumbotron event-instruction mt-2 mb-5 alert alert-dismissible">
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      <div class="container scroll-after-500 pe-4">
+        {{current_event.instruction|markdown}}
+      </div>
+    </div>
+  {% endif %}
+{% elif current_event.has_started and not current_event.has_finished %}
+  <div category-id="infobox" class="category-container category-tip mb-5">
+    <center><h4><i class="fa fa-lightbulb-o"></i> &nbsp;The event has started! Join a team after
+        <a href="/enter">you log in</a>.</h4></center>
+  </div>
+{% endif %}
+
 {% if current_event.has_categories %}
 <center class="nav-categories">
   <div class="btn-group" data-bs-toggle="buttons" role="group" aria-label="Filter by category">
@@ -74,7 +93,7 @@
 <div class="category-info clearfix">
   {% for category in current_event.categories_for_event() %}
 
-    <div category-id="{{category.id}}" 
+    <div category-id="{{category.id}}"
         class="category-container card card-border-secondary" style="display:none">
       <div class="card-header"
           style="border-bottom:5px solid {{category.logo_color}}">
@@ -171,26 +190,35 @@
 <div class="event-nav m-4 text-center" role="group" aria-label="Event navigation">
 
     {% if current_event.can_start_project %}
-    <a href="{{ url_for('project.project_new', event_id=current_event.id) }}" class="btn btn-lg btn-success">
-      {% if current_event.lock_resources %}
-        <i class="fa fa-life-ring"></i>
-        <span title="Add another resource here">Share a resource</span>
-      {% elif current_event.has_started %}
-          <i class="fa fa-plus"></i>
-          <span title="Add a project for your team">Start a team</span>
+    <div role="group" aria-label="Project creation" class="btn-group">
+      <a href="{{ url_for('project.project_new', event_id=current_event.id) }}" class="btn btn-lg btn-warning">
+        {% if current_event.lock_resources %}
+            <i class="fa fa-life-ring"></i>
+            <span title="Add another resource here">Share a resource</span>
+        {% elif current_event.has_started %}
+            <i class="fa fa-plus"></i>
+            <span title="Add a project for your team">Start project</span>
+        {% elif not current_event.has_finished %}
+            <i class="fa fa-cube"></i>
+            <span title="Write a challenge statement">Post a challenge</span>
+        {% endif %}
         </a>
         <a href="{{ url_for('project.import_new_project', event_id=current_event.id) }}" class="btn btn-lg btn-dark">
-          <i class="fa fa-plus"></i>
-          <span title="Import a project from repository">Import</span>
+            <i class="fa fa-plus"></i>
+            <span title="Import a project from repository">Import</span>
         </a>
-      {% elif not current_event.has_finished %}
-        <i class="fa fa-cube"></i>
-        <span title="Write a challenge statement">Post a challenge</span>
-      {% endif %}
-    </a>
+    </div>
     {% endif %}
 
-    {% if current_user and current_user.active and current_user.is_admin %}
+    {% if current_user and current_user.active %}
+      {% if may_edit %}
+        <a class="btn btn-lg btn-info"
+          href="{{ url_for('public.event_edit', event_id=current_event.id) }}"
+          title="Manage details of this event">
+          <i class="fa fa-pencil"></i>
+          Edit</a>
+      {% endif %}
+      {% if current_user.is_admin %}
       <div role="group" aria-label="Event administration" class="btn-group admin-area m-2 clear-both">
         <a href="{{ url_for('admin.event_projects', event_id=current_event.id) }}" class="btn btn-secondary"
             title="Administer event projects">
@@ -205,32 +233,13 @@
             <i class="fa fa-plus"></i>
             Add</a>
       </div>
-    {% elif may_edit %}
-      <a class="btn btn-lg btn-warning"
-          href="{{ url_for('public.event_edit', event_id=current_event.id) }}"
-          title="Manage details of this sprint">
-          <i class="fa fa-pencil"></i>
-          Edit</a>
+      {% endif %}
     {% endif %}
 </div>
 
-{% if current_event.instruction and current_user and current_user.active %}
-<div class="jumbotron event-instruction mt-4 mb-2">
-  <div class="content">
-    {{current_event.instruction|markdown}}
-  </div>
-</div>
-{% elif current_event.has_started and not current_event.has_finished %}
-  {% if not current_user or not current_user.active %}
-  <div category-id="infobox" class="category-container category-tip">
-    <center><h4><i class="fa fa-lightbulb-o"></i> &nbsp;The event has started! Join any of the projects after you log in.</h4></center>
-  </div>
-  {% endif %}
-{% endif %}
-
 {% if current_event.countdown and not 'off' in config.DRIBDAT_CLOCK and not current_event.lock_resources %}
 <center class="container-countdown-bottom">
-  <a class="container-countdown" 
+  <a class="container-countdown"
     href="{{ url_for('public.dashboard') }}"
     title="{{ current_event.countdown }}">
     <div id="clockEvent" class="event-countdown flipdown" data-start="{{ current_event.countdown }}"></div>

@@ -1,0 +1,38 @@
+{% import "macros/_misc.html" as misc %}
+
+<button type="button" class="btn btn-success btn-lg"
+        title="Participate in this event"
+        data-bs-toggle="modal" data-bs-target="#eventJoin">
+  <i class="fa fa-connectdevelop" aria-hidden="true"></i>
+  Join event
+</button>
+
+<div class="modal fade" id="eventJoin" role="dialog" tabindex="-1">
+  <div class="modal-dialog event-join">
+    <div class="modal-content">
+      <div class="modal-header text-center"><h3>
+          <i class="fa fa-connectdevelop" aria-hidden="true"></i>
+          Ready to join?
+    </h3></div>
+      <div class="modal-body">
+        <p>
+            Make sure that
+            <a href="{{ url_for('auth.user_story', user_id=current_user.id) }}" target="_blank">your story</a>
+            is complete and up-to-date:
+        </p>
+        {{ misc.render_user_profile(current_user) }}
+        <p class="mt-2">
+            Choose at least one team to participate with, review the challenge, and look for the
+            <button class="btn btn-success">Join</button> button:</p>
+
+        <div class="profile-projects mt-2" style="border:none">
+            <div class="row ibws-fix">
+            {% for project in suggestions %}
+                {{ proj.render_join_card(project) }}
+            {% endfor %}
+            </div>
+        </div><!-- /profile-projects -->
+      </div>
+    </div>
+  </div>
+</div><!-- /.modal -->

@@ -238,6 +238,14 @@ class User(UserMixin, PkModel):
                 project_ids.append(a.project_id)
         return projects
 
+    def has_joined(self, event):
+        """Check if the user has starred a team at this event."""
+        jp = self.joined_projects(True, -1, event)
+        for project in jp:
+            if project.event == event:
+                return True
+        return False
+
     def simple_resume(self):
         if not self.vitae:
             return None
@@ -812,6 +820,13 @@ class Project(PkModel):
         if self.progress is None:
             return False
         return self.progress <= PR_CHALLENGE
+
+    @property
+    def needs_members(self):
+        """Return True if the team should grow."""
+        if self.progress >= 0 and self.team_count < 5:
+            return True
+        return False
 
     @property
     def is_syncable(self):
