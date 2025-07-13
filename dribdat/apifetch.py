@@ -31,12 +31,15 @@ REQUEST_TIMEOUT = 10
 def FetchStageConfig(url, top_element="stages", by_col="name"):
     """Download a remote YAML stages configuration."""
     if not url.startswith("http:") and not url.startswith("https:"):
-        current_app.logger.info("Loading stages from file")
+        if current_app:
+            current_app.logger.info("Loading stages from file")
         return load_yaml_presets(top_element, by_col, url)
-    current_app.logger.info("Loading stages from URL")
+    if current_app:
+        current_app.logger.info("Loading stages from URL")
     data = requests.get(url, timeout=REQUEST_TIMEOUT)
     if data.text.find("stages:") < 0:
-        current_app.logger.debug("No stage data: %s", data.text)
+        if current_app:
+            current_app.logger.debug("No stage data: %s", data.text)
         return {}
     blob = data.text
     return load_presets(blob, top_element, by_col)
