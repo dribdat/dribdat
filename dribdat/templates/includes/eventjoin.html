@@ -21,17 +21,27 @@
             is complete and up-to-date:
         </p>
         {{ misc.render_user_profile(current_user) }}
-        <p class="mt-2">
+        {% if suggestions %}
+          <p class="mt-2">
             Choose at least one team to participate with, review the challenge, and look for the
-            <button class="btn btn-success">Join</button> button:</p>
-
-        <div class="profile-projects mt-2" style="border:none">
+            <button class="btn btn-success">Join</button> button:
+          </p>
+          <div class="profile-projects mt-2" style="border:none">
             <div class="row ibws-fix">
             {% for project in suggestions %}
                 {{ proj.render_join_card(project) }}
             {% endfor %}
             </div>
-        </div><!-- /profile-projects -->
+          </div><!-- /profile-projects -->
+        {% else %}
+          <p class="mt-2">
+            No projects listed yet. Why not start a team and invite your friends?
+          </p>
+          <a href="{{ url_for('project.project_new', event_id=current_event.id) }}" class="btn btn-lg btn-warning">
+            <i class="fa fa-cube"></i>
+            <span title="Add a team">Post a challenge</span>
+          </a>
+        {% endif %}
       </div>
     </div>
   </div>
