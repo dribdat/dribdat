@@ -17,7 +17,6 @@
 {% block body_class %}event-home event-{{ current_event.id }} event-{% if current_event.has_finished %}finished{% elif current_event.has_started %}started{% else %}prep{% endif %}{% endblock %}
 
 {% block content %}
-{% cache 300, 'event-%d' % current_event.id %}
 
 {% if current_user and current_user.active %}
   {% if not current_event.has_finished and not current_user.has_joined(current_event) %}
@@ -38,6 +37,7 @@
   </div>
 {% endif %}
 
+{% cache 300, 'event-%d' % current_event.id %}
 {% if current_event.has_categories %}
 <center class="nav-categories">
   <div class="btn-group" data-bs-toggle="buttons" role="group" aria-label="Filter by category">
