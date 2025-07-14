@@ -133,30 +133,29 @@
 
     </div>
 </div>
-{% endcache %}
-{% if current_user and current_user.active %}
-  <div class="row start-event">
-    <div class="col-lg-12 text-center">
-      {% if not current_event and not events_next and not events_past and not events_tips %}
-        <p class="m-5">Thank you for using Dribdat &#x1F3C0;
-          Read <a href="https://dribdat.cc/organiser" target="_blank">the docs</a> or
-          <a href="mailto:dribdat@datalets.ch">contact us</a> if you need help.
-        </p>
-        <a href="{{ url_for('public.event_start') }}" class="btn btn-lg btn-info">
-          &lt; Click here to get started &gt;
-        </a>
-        <h4 class="m-5">
-            We hope you have an
-            <a href="https://github.com/dribdat/awesome-hackathon?tab=readme-ov-file#awesome-hackathon" target="_blank">
-                awesome hackathon</a>!
-        </h4>
-      {% elif config.DRIBDAT_ALLOW_EVENTS %}
-        <a href="{{ url_for('public.event_start') }}" class="btn btn-lg btn-info ms-4">
-          <i class="fa fa-calendar me-3" aria-hidden="true"></i>
-          Share an event
-        </a>
-      {% endif %}
-    </div>
+
+<div class="row start-event">
+  <div class="col-lg-12 text-center">
+    {% if not current_event and not events_next and not events_past and not events_tips %}
+      <p class="m-5">Thank you for using Dribdat &#x1F3C0;
+        Read <a href="https://dribdat.cc/organiser" target="_blank">the docs</a> or
+        <a href="mailto:dribdat@datalets.ch">contact us</a> if you need help.
+      </p>
+      <a href="{{ url_for('public.event_start') }}" class="btn btn-lg btn-info">
+        &lt; Click here to get started &gt;
+      </a>
+      <h4 class="m-5">
+          We hope you have an
+          <a href="https://github.com/dribdat/awesome-hackathon?tab=readme-ov-file#awesome-hackathon" target="_blank">
+              awesome hackathon</a>!
+      </h4>
+    {% elif config.DRIBDAT_ALLOW_EVENTS and current_user and current_user.active %}
+      <a href="{{ url_for('public.event_start') }}" class="btn btn-lg btn-info ms-4">
+        <i class="fa fa-calendar me-3" aria-hidden="true"></i>
+        Share an event
+      </a>
+    {% endif %}
   </div>
-{% endif %}
+</div>
+{% endcache %}
 {% endblock %}

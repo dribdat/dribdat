@@ -219,3 +219,4 @@ class RoleForm(FlaskForm):
         u'Name',
         [length(max=80), UniqueValidator(Role, 'name'), DataRequired()])
     submit = SubmitField(u'Save')
+

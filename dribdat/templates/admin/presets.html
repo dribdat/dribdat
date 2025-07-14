@@ -1,7 +1,7 @@
 {% extends "admin/layout.html" %}
 
 {% block content %}
-<h1 class="huge m-1">Presets</h2>
+<h1 class="huge m-1">Presets</h1>
     <hr>
 
 <div class="container admin-roles">
@@ -62,4 +62,51 @@
         {% endfor %}
     </table>
 </div>
+
+<div class="container admin-stages pt-5" id="stages">
+  <h2>Stages</h2>
+  {% if not config.DRIBDAT_STAGE %}
+    To edit the stages, you can configure a link to a YAML file in the environment settings.
+    See the <a href="https://dribdat.cc/deploy.html#features" target="_blank">User Handbook</a> for details.
+  {% else %}
+    The following configuration is currently being loaded from:
+    <input style="width:100%" type="text" readonly="readonly" value="{{ config.DRIBDAT_STAGE }}">
+  {% endif %}
+  <hr />
+  <table>
+  {% for step in steps %}
+    <tr>
+      <td style="vertical-align:top; width:12em">
+        {% if step.index > 0 %}
+          <a id="{{ step.id }}" name="{{ step.phase }}"></a>
+          <span class="number">{{ step.index }}</span>
+        {% else %}
+          <a name="any"></a>
+          <span class="number">*</span>
+        {% endif %}
+        {% if step.emoji %}
+          <b class="emoji">{{ step.emoji }}</b>
+        {% endif %}
+        {% if step.index > 0 %}
+          <h3 class="title">{{ step.phase }}</h3>
+        {% endif %}
+      </td>
+      <td>
+        {% if step.index > 0 and step.description %}
+          <p class="subtitle">{{ step.description }}</p>
+        {% endif %}
+        {% if step.conditions %}
+        <ul class="agree-list" style="width:100%;">
+          {% for what in step.conditions.agree %}
+            <li>{{ what }}</li>
+          {% endfor %}
+        </ul>
+        {% endif %}
+      </td>
+    </tr>
+  {% endfor %}
+  </table><!-- /list-stages -->
+
+</div><!-- /-admin-stages -->
+
 {% endblock %}

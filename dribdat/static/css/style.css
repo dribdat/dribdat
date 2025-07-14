@@ -390,6 +390,9 @@ nav.navbar .navbar-brand {
     font-size: 150%;
     line-height: 0px;
 }
+nav.navbar .navbar-brand span {
+    font-size: 0px;
+}
 nav.navbar .navbar-brand:hover i:nth-child(1) {
     margin-left: 2px;
     margin-right: -2px;

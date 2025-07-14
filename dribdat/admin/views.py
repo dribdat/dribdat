@@ -15,6 +15,7 @@ from ..extensions import db, cache
 from ..decorators import admin_required
 from ..aggregation import GetProjectData, SyncProjectData
 from ..user.models import Role, User, Event, Activity, Project, Category
+from ..user import getProjectStages
 from ..public.userhelper import get_user_by_name
 from .forms import (
     RoleForm, CategoryForm,
@@ -692,8 +693,9 @@ def category_delete(category_id):
 def presets():
     roles = Role.query.all()
     categories = Category.query.order_by(Category.event_id.desc()).all()
+    steps = getProjectStages()
     return render_template('admin/presets.html', categories=categories,
-                           roles=roles, active='presets')
+                           roles=roles, active='presets', steps=steps)
 
 
 @blueprint.route('/role/<int:role_id>', methods=['GET', 'POST'])
