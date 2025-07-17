@@ -1099,7 +1099,6 @@ nav .nav-login {
     border: 4px solid transparent;
     margin-top: 0em; /* to overlap slightly with image */
     position: relative;
-    background: #fff;
 }
 .project-home .jumbotron.project-page.phase-Ask {
     border: 4px dotted #ccc;
@@ -1158,13 +1157,10 @@ a.media {
 .project-page img {
     max-width: 100%;
 }
-.theme-dark .project-page.jumbotron {
-    color: white;
-    background-color: black;
+.theme-dark .alert-light a {
+    color: initial;
 }
 .project-page.jumbotron {
-    background-color: white;
-    color: black;
     overflow-x: hidden;
     padding: 1rem;
 }
@@ -1451,12 +1447,6 @@ a.media {
 }
 .project-page .project-autotext.active .cover {
     display: none;
-}
-.project-page .project-autotext {
-    max-height: 500px;
-    overflow: hidden;
-    position: relative;
-    margin-bottom: 0;
 }
 .project-page .project-autotext .cover {
     position: absolute;
@@ -1953,14 +1943,13 @@ div.project-edit-buttons {
     left: 3em;
     float: left;
     height: 3.3em;
-    margin-bottom: -0.4em;
 }
 .project-edit-buttons > *,
 .project-tab-buttons > * {
     border-bottom-left-radius: 0px;
     border-bottom-right-radius: 0px;
     box-shadow: none !important;
-    border-bottom: 1px solid transparent;
+    border-bottom: 1px solid transparent !important;
     opacity: 0.8;
 }
 .project-tab-buttons i {

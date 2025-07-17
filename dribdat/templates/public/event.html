@@ -23,7 +23,7 @@
     {% include "includes/eventjoin.html" %}
   {% endif %}
   {% if current_event.instruction %}
-    <div class="jumbotron event-instruction mt-2 mb-5 alert alert-dismissible">
+    <div class="jumbotron event-instruction mt-2 mb-5 alert alert-light alert-dismissible">
       <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
       <div class="container scroll-after-500 pe-4">
         {{current_event.instruction|markdown}}

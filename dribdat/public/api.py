@@ -368,8 +368,8 @@ def event_upload_datapackage():
     # Check link
     if filedata.filename.endswith('.csv'):
         return event_push_csv(filedata, dry_run)
-    if 'datapackage.json' not in filedata.filename:
-        return jsonify(status='Error', errors=['Must be a datapackage.json'])
+    if not filedata.filename.endswith('.json'):
+        return jsonify(status='Error', errors=['Must be a Data Package in JSON format, i.e. datapackage.json'])
     # File handling
     results = import_datapackage(filedata, dry_run, all_data)
     event_names = ', '.join([r['name'] for r in results['events']])
