@@ -20,7 +20,7 @@ class Config(object):
     # Customization options
     DRIBDAT_CLOCK = os_env.get("DRIBDAT_CLOCK", "down")
     DRIBDAT_STYLE = os_env.get("DRIBDAT_STYLE", "")
-    DRIBDAT_THEME = os_env.get("DRIBDAT_THEME", "simplex")
+    DRIBDAT_THEME = os_env.get("DRIBDAT_THEME", "brite")
     DRIBDAT_STAGE = os_env.get("DRIBDAT_STAGE", "")
     BACKBOARD_URL = os_env.get("BACKBOARD_URL", None)
 
