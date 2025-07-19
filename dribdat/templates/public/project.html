@@ -42,16 +42,14 @@
 
 <div class="project-content-nav float-right mb-2">
 {% if project_team %}
-  <a class="btn btn-default" id="team-tab-md" href="#team-md"
+  <a id="team-tab-md" href="#team-md"
     title="Show team members">
-    <i class="fa fa-user m-2" aria-hidden="true"></i>
-    Team</a>
+    <i class="fa fa-user m-2" aria-hidden="true"></i>Team</a>
 {% endif %}
 {% if project.autotext %}
-  <a class="btn btn-default" id="readme-tab-md" href="{{ url_for('project.project_view', project_id=project.id) }}#readme-md"
+  <a id="readme-tab-md" href="{{ url_for('project.project_view', project_id=project.id) }}#readme-md"
      title="Readme content">
-    <i class="fa fa-star m-2" aria-hidden="true"></i>
-    Readme</a>
+    <i class="fa fa-star m-2" aria-hidden="true"></i>Readme</a>
 {% endif %}
 </div>
 
@@ -71,7 +69,7 @@
   </a>
 {% endif %}
 
-<div class="tab-content clear-both mt-2" id="project-content">
+<div class="clear-both mt-2" id="project-content">
 
   {% if project.is_webembed or project.webpage_url %}
     {% if project.has_embed_longtext %}
@@ -102,13 +100,13 @@
   {% endif %}
 
   {% if allow_edit %}
-  <center class="project-edit-pitch">
+  <div class="project-edit-pitch float-left">
     <a href="{{ url_for('project.project_edit', project_id=project.id) }}#is_webembed"
         title="Edit project pitch" class="btn btn-md btn-default">
       <i class="fa fa-pencil" aria-hidden="true"></i>
       Edit
     </a>
-  </center>
+  </div>
   {% endif %}
 
   {% if project.autotext %}

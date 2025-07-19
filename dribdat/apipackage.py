@@ -60,7 +60,7 @@ def event_to_data_package(event, author=None, host_url="", full_content=False):
         contributors=contributors,
         homepage=event.webpage_url or "",
         created=format_date(datetime.now(UTC)),
-        version="0.9.1",
+        version="0.9.2",
     )
 
     # Generate resources
