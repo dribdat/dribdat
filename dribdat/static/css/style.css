@@ -2221,10 +2221,11 @@ div.project-edit-buttons {
 #get-certified {
     background-image: url("/static/img/certificate.png");
     background-repeat: no-repeat;
-    background-size: contain;
-    padding-left: 5.4em;
-    padding-top: 1.2em;
-    height: 4em;
+    background-size: cover;
+    font-size: 0px;
+    height: 70px;
+    width: 80px;
+    margin: 10px;
 }
 .drib-count,
 .team-boost,

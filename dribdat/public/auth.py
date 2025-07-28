@@ -141,7 +141,10 @@ def register():
         flash_errors(form)
         logout_user()
         return render_template(
-            "public/register.html", form=form, oauth_type=oauth_type()
+            "public/register.html", 
+            current_event=current_event(),
+            oauth_type=oauth_type(),
+            form=form, 
         )
     # Double check username
     sane_username = sanitize_input(form.username.data)

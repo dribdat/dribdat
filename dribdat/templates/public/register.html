@@ -10,7 +10,9 @@
     <h1>Register</h1>
     <p>Already registered? 
       <i class="fa fa-arrow-right" aria-hidden="true"></i>
-      <b><a href="{{ url_for('auth.login', next=request.args.get('next')) }}">Log in here</a></b>
+      <a class="btn btn-warning btn-submit" 
+         href="{{ url_for('auth.login', next=request.args.get('next')) }}">
+          Log in here</a>
     </p>
     <br/>
 
@@ -23,10 +25,12 @@
 
   {{ render_form(url_for('auth.register'), form, formid='registerForm') }}
 
-    <p class="mt-4"><i>Note: Your profile image will be the
+    <p class="text-center mt-4">
+        Use
         <a href="https://gravatar.com" target="_blank">Gravatar</a>
-        of the e-mail address, or imported
-        from the online profile (GitHub, GitLab, LinkedIn, StackOverflow)
+        to upload a profile image based on your e-mail address, 
+        else it will be imported from the Online Profile
+        (GitHub, GitLab, LinkedIn, StackOverflow ...)
     </i></p>
 
 </div>
