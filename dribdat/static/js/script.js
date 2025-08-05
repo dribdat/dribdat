@@ -329,18 +329,20 @@
     $css = $('#css-bootswatch').first();
     if (dm) {
       // Invert page colors
+      $('html').attr('data-bs-theme', 'dark');
       $('body').addClass('theme-dark');
       $('nav.navbar').removeClass('navbar-light');
       $('nav.navbar').addClass('navbar-dark');
       $('footer .darkmode span').html('Light');
-      $css.attr('org-href', $css.attr('href'));
-      $css.attr('href', $css.attr('alt-href'));
+      //$css.attr('org-href', $css.attr('href'));
+      //$css.attr('href', $css.attr('alt-href'));
     } else {
+      $('html').removeAttr('data-bs-theme');
       $('body').removeClass('theme-dark');
       $('nav.navbar').removeClass('navbar-dark');
       $('nav.navbar').addClass('navbar-light');
       $('footer .darkmode span').html('Dark');
-      $css.attr('href', $css.attr('org-href'));
+      //$css.attr('href', $css.attr('org-href'));
       // Adjust clock theme
       // $('.flipdown').removeClass('flipdown__theme-dark').addClass('flipdown__theme-light');
     }

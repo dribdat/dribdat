@@ -34,12 +34,12 @@
   {% block page_meta %}{% endblock %}
 
   {% if config.ENV == 'prod' %}
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@5/dist/{{ config.DRIBDAT_THEME }}/bootstrap.min.css" alt-href="https://cdn.jsdelivr.net/npm/bootswatch@5/dist/darkly/bootstrap.min.css" id="css-bootswatch"/>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@5/dist/{{ config.DRIBDAT_THEME }}/bootstrap.min.css"/>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flipdown@0/dist/flipdown.min.css"/>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4/css/font-awesome.min.css"/>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simplelightbox@2/dist/simple-lightbox.min.css" />
   {% else %}
-  <link rel="stylesheet" href="{{ url_for('static', filename='libs/bootswatch/' + config.DRIBDAT_THEME + '/bootstrap.css')}}" alt-href="{{ url_for('static', filename='libs/bootswatch/darkly/bootstrap.css')}}" id="css-bootswatch"/>
+  <link rel="stylesheet" href="{{ url_for('static', filename='libs/bootswatch/' + config.DRIBDAT_THEME + '/bootstrap.css')}}"/>
   <link rel="stylesheet" href="{{ url_for('static', filename='libs/flipdown/flipdown.css')}}"/>
   <link rel="stylesheet" href="{{ url_for('static', filename='libs/font-awesome/css/font-awesome.css')}}"/>
   <link rel="stylesheet" href="{{ url_for('static', filename='libs/simplelightbox/simple-lightbox.css')}}"/>

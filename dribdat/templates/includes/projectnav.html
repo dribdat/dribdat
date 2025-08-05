@@ -8,7 +8,7 @@
     <i class="fa fa-arrow-left" aria-hidden="true"></i></a>
 {% endif %}
 {% if not project.event.lock_resources %}
-  <a class="btn btn-light text-center text-primary" href="{{ url_for('public.event', event_id=project.event.id) }}"
+  <a class="btn btn-light text-center" href="{{ url_for('public.event', event_id=project.event.id) }}"
      title="Return to the event page">
     <i class="fa fa-arrow-up" aria-hidden="true"></i><br>
     {{ project.event.name }}</a>
