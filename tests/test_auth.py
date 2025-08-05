@@ -191,3 +191,6 @@ class TestActivation:
         msg = user_invitation_message(project)
         assert 'invited' in msg.body
 
+    def test_admin_gets_notifcation(self):
+        assert False
+

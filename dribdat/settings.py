@@ -60,6 +60,7 @@ class Config(object):
     MAIL_DEFAULT_SENDER = os_env.get("MAIL_DEFAULT_SENDER", None)
     MAIL_USE_TLS = bool(strtobool(os_env.get("MAIL_USE_TLS", "False")))
     MAIL_USE_SSL = bool(strtobool(os_env.get("MAIL_USE_SSL", "False")))
+    MAIL_NOTIFY_ADMIN = os_env.get("MAIL_NOTIFY_ADMIN", None)
 
     # Application settings
     APP_DIR = os.path.abspath(os.path.dirname(__file__))  # This directory
