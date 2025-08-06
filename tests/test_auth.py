@@ -11,6 +11,8 @@ from dribdat.mailer import (
     user_activation_message, 
     user_invitation,
     user_invitation_message,
+    notify_admin,
+    notify_admin_message,
 )
 
 from .factories import UserFactory, ProjectFactory, EventFactory
@@ -191,6 +193,9 @@ class TestActivation:
         msg = user_invitation_message(project)
         assert 'invited' in msg.body
 
-    def test_admin_gets_notifcation(self):
-        assert False
+    def test_admin_gets_notification(self, user, testapp):
+        """Send admin some news."""
+        msg = notify_admin_message("Test message")
+        assert "Test" in msg.body
+        assert notify_admin() is False
 

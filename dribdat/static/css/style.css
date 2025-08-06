@@ -41,9 +41,9 @@ sp {
     font-family: monospace;
 }
 
-code {
+p > code {
     background: black;
-    padding: 3px;
+    padding: 3px 3px 0px 3px;
     border-radius: 3px;
 }
 
@@ -361,6 +361,7 @@ ul.help-block {
 }
 .section-header .event-name {
     font-size: 400%;
+    text-decoration: none;
 }
 .section-header .section-header-content .event-date {
     display: block;
@@ -1266,7 +1267,7 @@ a.media {
     visibility: hidden;
     position: absolute;
     height: 6em;
-    top: 16em;
+    top: 12em;
 }
 .nav-projects-abs-prev {
     left: 0px;
