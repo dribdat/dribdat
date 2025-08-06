@@ -1242,7 +1242,7 @@ class Project(PkModel):
 
     def set_auto_image(self):
         """Get an image if available."""
-        if self.image_url and len(self.image_url) > 1 and "#I" not in self.image_url:
+        if self.image_url and len(self.image_url) > 1 and not self.image_url.endswith("??"):
             # Ignore user-uploaded images
             return None
         topdribs = (
@@ -1257,7 +1257,9 @@ class Project(PkModel):
                     if ")" in rs and rs.startswith("http"):
                         url = rs.split(")")[0]
                         if url and url not in self.image_url:
-                            self.image_url = url + "#I"
+                            if "??" not in url:
+                                url = url + "??"
+                            self.image_url = url
                             self.save()
                             return self.image_url
         return self.image_url

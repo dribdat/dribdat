@@ -47,6 +47,10 @@ p > code {
     border-radius: 3px;
 }
 
+.btn-default {
+    color: inherit;
+}
+
 /* Navigation anchors */
 .section-header a,
 .card-title a,
