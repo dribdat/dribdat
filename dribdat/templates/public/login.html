@@ -91,15 +91,18 @@
       </p>
     {% endif %}
   {% endif %}
+
   {% if not config.DRIBDAT_NOT_REGISTER %}
     <p class="account-register">
-      <a class="btn btn-warning btn-submit" href="{{ url_for('auth.register', next=request.args.get('next')) }}">Create an account</a>
+      <a class="btn btn-success btn-submit" href="{{ url_for('auth.register', next=request.args.get('next')) }}">Create an account</a>
     </p>
   {% endif %}
+  
   {% if config.OAUTH_LINK_REGISTER %}
     <p class="account-register">
       <a class="btn btn-info btn-submit" href="{{ config.OAUTH_LINK_REGISTER }}">Register for an account</a>
     </p>
   {% endif %}
+
 </div>
 {% endblock %}
