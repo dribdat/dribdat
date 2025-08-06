@@ -80,7 +80,7 @@
 {% macro render_project_head(project) %}
 
 <!-- Main project content container -->
-<div class="jumbotron tab-content project-page phase-{{ project.phase }} {% if project.event.lock_resources %}resource-page{% endif %}" {% if project.logo_color %} style="border-color:{{project.logo_color}}"{% endif %}>
+<div class="jumbotron bg-light text-dark tab-content project-page phase-{{ project.phase }} {% if project.event.lock_resources %}resource-page{% endif %}" {% if project.logo_color %} style="border-color:{{project.logo_color}}"{% endif %}>
 
   {% if project.ident %}
     <div class="project-ident">{{ project.ident }}</div>
