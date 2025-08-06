@@ -55,16 +55,18 @@ class TestPosting:
         assert "Testing" in res.text
 
         # Post a comment
+        project.image_url = ""
+        project.save()
         res = testapp.get(url_for("project.project_comment", project_id=project.id))
         form = res.forms["projectPost"]
         form["note"] = "Commenting ![](img.jpg)"
         res = form.submit().follow()
         assert "Commenting" in res.text
+        # NO auto-images for a comment
+        assert project.image_url == ""
 
         # Test auto-images
-        project.image_url = ""
-        project.save()
-        res = testapp.get(url_for("project.project_comment", project_id=project.id))
+        res = testapp.get(url_for("project.project_post", project_id=project.id))
         form = res.forms["projectPost"]
         form["note"] = "This ![](http://img.jpg) is a picture"
         assert project.image_url == ""
