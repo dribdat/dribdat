@@ -126,7 +126,7 @@ def notify_admin(about=""):
         current_app.logger.warn("MAIL_NOTIFY_ADMIN must contain an e-mail address")
         return False
     current_app.logger.info("Sending admin a notification mail")
-    msg = admin_message(about)
+    msg = notify_admin_message(about)
     msg.send(fail_silently=True)
     return True
 
