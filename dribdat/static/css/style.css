@@ -41,6 +41,12 @@ sp {
     font-family: monospace;
 }
 
+code {
+    background: black;
+    padding: 3px;
+    border-radius: 3px;
+}
+
 /* Navigation anchors */
 .section-header a,
 .card-title a,
@@ -1365,6 +1371,11 @@ a.media {
     background: #ffc;
     border-top: none;
 }
+.timeline-content .date a,
+.timeline-content .content a {
+    color: #333;
+    border-bottom: 1px dotted #777;
+}
 .timeline-diamond .content {
     font-family: monospace;
     font-size: 80%;
@@ -1714,6 +1725,9 @@ a.media {
 /* Editor styles */
 form .EasyMDEContainer .editor-toolbar {
     background: white;
+}
+form .EasyMDEContainer .editor-toolbar .fa {
+    color: black;
 }
 form .EasyMDEContainer {
     text-align: left;

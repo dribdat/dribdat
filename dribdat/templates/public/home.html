@@ -33,6 +33,20 @@
   </div>
 {% endif %}
 
+{% if my_projects %}
+  {% cache 300, 'home-user-%d' % current_user.id %}
+    <center title="My teams">
+      <div class="mb-5 pb-4 resource-list profile-projects col-md-4 ">
+        <div class="honeycomb w-100">
+        {% for project in my_projects %}
+          {{ proj.render_project_hexagon(project) }}
+        {% endfor %}
+        </div>
+      </div><br clear="all"/>
+    </center>
+  {% endcache %}
+{% endif %}
+
 {% if current_event %}
   <main class="home-page">
     {% if current_event.countdown and 'up' in config.DRIBDAT_CLOCK %}
@@ -75,20 +89,6 @@
     </a>
   {% endif %}
 
-
-  {% if my_projects %}
-  {% cache 300, 'home-user-%d' % current_user.id %}
-    <center title="My teams">
-      <div class="ps-5 mb-5 resource-list profile-projects col-md-4 ">
-        <div class="honeycomb w-100">
-        {% for project in my_projects %}
-          {{ proj.render_project_hexagon(project) }}
-        {% endfor %}
-        </div>
-      </div><br clear="all"/>
-    </center>
-  {% endcache %}
-  {% endif %}
   {% if events_tips %}
     <a name="tips"></a>
     <div class="row events-tips mt-5">
@@ -97,7 +97,6 @@
       {% endfor %}
     </div><!-- /.row events-tips -->
   {% endif %}
-
 
   {% if events_next %}
     <a name="upcoming"></a>
