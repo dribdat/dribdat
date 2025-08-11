@@ -495,10 +495,11 @@ nav .nav-login {
 }
 @media (min-width: 600px) {
   .home .home-teams {
-      position: fixed;
+      position: absolute;
       z-index: 999;
       left: 50%;
       margin-left: -12em;
+      margin-top: -1em;
       width: 24em;
   }
 }
