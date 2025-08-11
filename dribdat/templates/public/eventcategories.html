@@ -6,7 +6,6 @@
 {% block body_class %}eventcategories-page{% endblock %}
 
 {% block content %}
-  <h1 class="huge float-left">Categories</h1>
 
 {% if not current_event.lock_resources %}
 
@@ -32,12 +31,10 @@
       </a>
     </center>
 
-
-  <p class="category-tip mt-3">
-    <span class="user-score">&#x1F4A1;</span>
-    This page shows projects by categories, if they were assigned.
-  </p>
 {% endif %}
+
+<h1 class="huge">Categories</h1>
+<br clear="all"/>
 
 <div class="event-categories">
   <a name="steps"></a>
