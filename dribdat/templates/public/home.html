@@ -2,18 +2,18 @@
 {% import "macros/_event.html" as evnt %}
 {% import "macros/_project.html" as proj %}
 
-{% block page_title %}{{current_event.name}}{% endblock %}
+{% block page_title %}{{featured_event.name}}{% endblock %}
 
 {% block page_meta %}
-{% if current_event %}
+{% if featured_event %}
   <meta property="og:type" content="website"/>
-  <meta property="og:url" content="{{ url_for('public.event', event_id=current_event.id, _external=True) }}"/>
-  <meta property="og:title" content="{{current_event.name}}"/>
-  <meta property="og:image" content="{{current_event.logo_url}}"/>
-  <meta property="og:description" content="{{current_event.summary or current_event.description|truncate(140)}}"/>
-  <meta name="description" content="{{current_event.summary or current_event.description|truncate(140)}}"/>
-  <script type="application/ld+json">{{current_event.get_schema(request.host_url)|safe}}</script>
-  <meta name="dribdat:event:id" content="{{current_event.id}}"/>
+  <meta property="og:url" content="{{ url_for('public.event', event_id=featured_event.id, _external=True) }}"/>
+  <meta property="og:title" content="{{featured_event.name}}"/>
+  <meta property="og:image" content="{{featured_event.logo_url}}"/>
+  <meta property="og:description" content="{{featured_event.summary or featured_event.description|truncate(140)}}"/>
+  <meta name="description" content="{{featured_event.summary or featured_event.description|truncate(140)}}"/>
+  <script type="application/ld+json">{{featured_event.get_schema(request.host_url)|safe}}</script>
+  <meta name="dribdat:event:id" content="{{featured_event.id}}"/>
 {% endif %}
 {% endblock %}
 
@@ -45,20 +45,20 @@
 {% endif %}
 
 {% cache 300, 'home-page' %}
-{% if current_event %}
+{% if featured_event %}
   <main class="home-page">
-    {% if current_event.countdown and 'up' in config.DRIBDAT_CLOCK %}
+    {% if featured_event.countdown and 'up' in config.DRIBDAT_CLOCK %}
       <a class="container-countdown"
         href="{{ url_for('public.dashboard') }}"
-        title="{{ current_event.countdown }}">
-        <div id="clockTop" class="event-countdown flipdown" data-start="{{ current_event.countdown }}"></div>
+        title="{{ featured_event.countdown }}">
+        <div id="clockTop" class="event-countdown flipdown" data-start="{{ featured_event.countdown }}"></div>
       </a>
     {% endif %}
 
     <div id="homeCarousel" class="carousel slide" data-ride="carousel">
   		<div class="carousel-inner">
        {% for event in events_featured %}
-         {{ evnt.render_featured_event(event, event == current_event) }}
+         {{ evnt.render_featured_event(event, event == featured_event) }}
        {% endfor %}
       </div>
       {% if events_featured|length > 1 %}
@@ -78,12 +78,12 @@
 <div class="container">
     <div class="body-content container">
 
-  {% if current_event and current_event.countdown and 'down' in config.DRIBDAT_CLOCK %}
+  {% if featured_event and featured_event.countdown and 'down' in config.DRIBDAT_CLOCK %}
     <a class="container-countdown"
        href="{{ url_for('public.dashboard') }}"
-       title="{{ current_event.countdown }}">
+       title="{{ featured_event.countdown }}">
       <div id="clockDown" class="event-countdown flipdown"
-           data-start="{{ current_event.countdown }}"></div>
+           data-start="{{ featured_event.countdown }}"></div>
     </a>
   {% endif %}
 
@@ -133,7 +133,7 @@
 
 <div class="row start-event">
   <div class="col-lg-12 text-center">
-    {% if not current_event and not events_next and not events_past and not events_tips %}
+    {% if not featured_event and not events_next and not events_past and not events_tips %}
       <p class="m-5">Thank you for using Dribdat &#x1F3C0;
         Read <a href="https://dribdat.cc/organiser" target="_blank">the docs</a> or
         <a href="mailto:dribdat@datalets.ch">contact us</a> if you need help.

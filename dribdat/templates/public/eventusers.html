@@ -65,20 +65,21 @@
 
 {% endif %}
 
-<div category-id="infobox" class="mt-5">
-  {% if current_event and current_event.has_started and not current_event.has_finished and usercount %}
-    <center><h4><i class="fa fa-lightbulb-o"></i> &nbsp;Join a project or
-      challenge to be listed here</h4>
-    <p>As
-      <span class="user-score">{{ usercount }}</span> have done in
-      <a href="{{ url_for('public.event', event_id=current_event.id) }}">
-      this event</a> already</p></center>
-  {% elif not usercount %}
+<div category-id="infobox" class="mt-5 text-center">
+  {% if not usercount %}
     <h5 class="no-matches">🤷‍♀️ Encourage people to create a profile, choose a role, and join a team.</h5>
   {% else %}
-    <center>
-      <span class="user-score">{{ usercount }}</span>
-    </center>
+    <div class="usercount mb-2">
+      <span class="user-score">{{ usercount }}</span> people
+    </div>
+  {% endif %}
+  {% if current_event %}
+    <a class="btn btn-light" href="{{ url_for('public.all_participants') }}">Site directory</a>
+  {% endif %}
+  {% if not usercount and current_event and current_event.has_started and not current_event.has_finished %}
+    <h4 class="mt-4"><i class="fa fa-lightbulb-o"></i> &nbsp;Remember to Join a team 
+      that you are working with.
+    </h4>
   {% endif %}
 </div>
 

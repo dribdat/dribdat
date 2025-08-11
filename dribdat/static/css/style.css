@@ -499,7 +499,7 @@ nav .nav-login {
       z-index: 999;
       left: 50%;
       margin-left: -12em;
-      margin-top: -1em;
+      margin-top: 1em;
       width: 24em;
   }
 }
@@ -2295,6 +2295,7 @@ div.project-edit-buttons {
 .theme-dark .profile-projects {
     border-color: rgba(255, 255, 255, 0.5);
 }
+.bg-light.text-dark a,
 .theme-dark .btn-light,
 .theme-dark .bg-white a,
 .theme-dark .bg-white {

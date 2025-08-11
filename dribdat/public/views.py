@@ -112,7 +112,7 @@ def favicon():
 
 @blueprint.route("/")
 def home():
-    """Home page."""
+    """Good old fashioned Home page."""
     cur_event = current_event()
     events = Event.query
     # Skip any hidden events
@@ -143,6 +143,7 @@ def home():
     return render_template(
         "public/home.html",
         active="home",
+        featured_event=cur_event,
         events_featured=events_featured.all(),
         events_tips=resource_events.all(),
         events_next=events_next.all(),
@@ -150,7 +151,6 @@ def home():
         events_past_next=events_past_next,
         my_projects=my_projects,
         may_certify=may_certify,
-        current_event=cur_event,
     )
 
 
@@ -353,12 +353,12 @@ def event_participants(event_id):
 
 @blueprint.route("/participants")
 def all_participants():
-    """Show list of participants of an event."""
+    """Search for participants across events."""
     MAX_COUNT = 100
     search_by = request.args.get("u") or ""
     preset_roles = Role.query.all()
     if len(search_by) < 3:
-        users = GetEventUsers(current_event())
+        users = User.query.filter_by(active=True).all()
     else:
         users = get_users_by_search(search_by, MAX_COUNT)
     if len(users) == MAX_COUNT:
