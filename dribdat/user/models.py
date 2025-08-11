@@ -858,14 +858,20 @@ class Project(PkModel):
         """Return embedded format of webpage link."""
         return format_webembed(self.webpage_url, self.id)
 
+    #@property
+    #def longhtml(self):
+    #    """Process project longtext and return HTML."""
+    #    if not self.longtext or len(self.longtext) < 3:
+    #        return self.longtext
+    #    # TODO: apply onebox filter
+    #    # TODO: apply markdown filter
+    #    return self.longtext
+
     @property
-    def longhtml(self):
-        """Process project longtext and return HTML."""
-        if not self.longtext or len(self.longtext) < 3:
-            return self.longtext
-        # TODO: apply onebox filter
-        # TODO: apply markdown filter
-        return self.longtext
+    def surl(self):
+        """A URL with a short name for readable links."""
+        nm = self.name.lower().strip().replace(' ', '-')
+        return "/project/_/%s" % nm
 
     @property
     def url(self):

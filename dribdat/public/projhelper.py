@@ -219,7 +219,7 @@ def project_action(project_id, of_type=None, as_view=True, then_redirect=False,
         project_badge=project_badge, project_image_url=project_image_url, 
         allow_edit=allow_edit, allow_post=allow_post,
         lock_editing=lock_editing, missing_roles=missing_roles,
-        go_nav=go_nav, share=share,
+        go_nav=go_nav, share=share, surl=project.surl,
     )
 
 
