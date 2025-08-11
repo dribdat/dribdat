@@ -282,15 +282,13 @@ def event(event_id):
     """Show an event."""
     event = Event.query.filter_by(id=event_id).first_or_404()
     # Sort visible projects by identity (if used), or alphabetically
-    projects = Project.query.filter_by(event_id=event_id, is_hidden=False).order_by(
-        Project.ident, Project.name
-    )
-    # The above must match projhelper->navigate_around_project
+    projects = Project.query.filter_by(event_id=event_id, is_hidden=False)
     # Admin messages
     editable = False
     if current_user and not current_user.is_anonymous:
         editable = current_user.is_admin or event.user == current_user
         if current_user.is_admin:
+            # Notify the admin about hidden projects
             sum_hidden = len(event.projects) - projects.count()
             if sum_hidden > 0:
                 flash(
@@ -298,6 +296,14 @@ def event(event_id):
                     + " may need moderation: check the Admin.",
                     "secondary",
                 )
+    else:
+        # Show unapproved projects only to logged-in users
+        projects = projects.filter(Project.progress >= 0)
+    # Order by ident then name
+    projects = projects.order_by(
+        Project.ident, Project.name
+    )
+    # NB: the above must match projhelper->navigate_around_project
     # Embedding view
     if request.args.get("embed"):
         return render_template(
@@ -423,6 +429,7 @@ def event_challenges(event_id):
     projects = Project.query.filter_by(event_id=event.id, is_hidden=False).order_by(
         Project.ident, Project.name
     )
+    # Only show approved challenges if you're not an admin
     if not current_user or current_user.is_anonymous or not current_user.is_admin:
         projects = projects.filter(Project.progress >= 0)
     challenges = [p.as_challenge() for p in projects]

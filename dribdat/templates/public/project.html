@@ -203,7 +203,7 @@
                 <i class="fa fa-child" aria-hidden="true"></i><i class="fa fa-child" aria-hidden="true"></i>
                 builder
             </a>
-          {% elif project.progress >= 0 %}
+          {% elif project.is_approved %}
             <a class="btn btn-md btn-success project-star"
                href="{{ url_for('project.project_star', project_id=project.id) }}"
                title="{% if project.is_challenge %}Follow this challenge{% else %}Contribute to the project{% endif %}">

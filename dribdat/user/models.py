@@ -822,9 +822,13 @@ class Project(PkModel):
         return self.progress <= PR_CHALLENGE
 
     @property
+    def is_approved(self):
+        return self.progress >= 0
+
+    @property
     def needs_members(self):
         """Return True if the team should grow."""
-        if self.progress >= 0 and self.team_count < 5:
+        if self.is_approved and self.team_count < 5:
             return True
         return False
 
@@ -1058,6 +1062,7 @@ class Project(PkModel):
             if not by_name and not only_posts:
                 if a.project_progress and prev["progress"] != a.project_progress:
                     proj_stage = getStageByProgress(a.project_progress)
+                    # Only if past challenge stage
                     if a.project_progress > 0 and proj_stage is not None:
                         dribs.append(
                             {
