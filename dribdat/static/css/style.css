@@ -493,6 +493,15 @@ nav .nav-login {
     font-size: 90%;
     text-decoration: none;
 }
+@media (min-width: 600px) {
+  .home .home-teams {
+      position: fixed;
+      z-index: 999;
+      left: 50%;
+      margin-left: -12em;
+      width: 24em;
+  }
+}
 
 /* Customize the flipclock widget */
 .event-countdown {
