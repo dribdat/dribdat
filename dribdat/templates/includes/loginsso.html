@@ -1,0 +1,45 @@
+  {% if oauth_type == 'slack' %}
+    <p class="sso-login">
+      <a class="btn signin-slack" href="{{ url_for('slack.login', next=request.args.get('next')) }}" title="Click to sign in - Slack">
+        <span>&#x1f512; Sign in with Slack</span>
+      </a>
+    </p>
+  {% elif oauth_type == 'azure' %}
+    <p class="sso-login">
+      <a class="btn signin-azure" href="{{ url_for('azure.login', next=request.args.get('next')) }}" title="Click to sign in - Teams">
+        <span>&#x1f512; Sign in with Teams</span>
+      </a>
+    </p>
+  {% elif oauth_type == 'github' %}
+    <p class="sso-login">
+      <a class="btn signin-github" href="{{ url_for('github.login', next=request.args.get('next')) }}" title="Click to sign in - GitHub">
+        <span>&#x1f512; Sign in with GitHub</span>
+      </a>
+    </p>
+  {% elif oauth_type == 'gitlab' %}
+    <p class="sso-login">
+      <a class="btn btn-lg btn-default signin-gitlab" href="{{ url_for('gitlab.login', next=request.args.get('next')) }}" title="Click to sign in - GitLab">
+        <span>&#x1f512; Sign in with GitLab</span>
+      </a>
+    </p>
+  {% elif oauth_type == 'oauth2' %}
+    <p class="sso-login">
+      <a class="btn signin-oauth2" 
+        {% if config.OAUTH_LOGO %}style="background-image:url('{{ config.OAUTH_LOGO }}'); background-size:contain; background-position:0%; color:transparent"{% endif %}
+        href="{{ url_for('oauth2.login', next=request.args.get('next')) }}" title="Click to sign in - OAuth 2.0">
+        <span>&#x1f512; Sign in with OAuth</span>
+      </a>
+    </p>
+  {% elif oauth_type == 'mattermost' %}
+    <p class="sso-login">
+      <a class="btn signin-mattermost" href="{{ url_for('mattermost.login', next=request.args.get('next')) }}" title="Click to sign in - Mattermost">
+        <span>&#x1f512; Sign in with Mattermost</span>
+      </a>
+    </p>
+  {% elif oauth_type == 'hitobito' %}
+    <p class="sso-login">
+      <a class="btn signin-hitobito" href="{{ url_for('hitobito.login', next=request.args.get('next')) }}" title="Click to sign in - Hitobito">
+        <span>&#x1f512; Sign in with Hitobito</span>
+      </a>
+    </p>
+  {% endif %}
