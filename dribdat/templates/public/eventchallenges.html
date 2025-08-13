@@ -6,7 +6,6 @@
 {% block body_class %}eventchallenges-page{% endblock %}
 
 {% block content %}
-<h1 class="huge">Challenges</h1>
 
 {% if not current_event.lock_resources %}
 
@@ -32,14 +31,10 @@
       </a>
     </center>
 
-
-  <p class="category-tip mt-3">
-    <span class="user-score">&#x1F4A1;</span>
-    Extra details on all the challenges provided at the start.
-  </p>
-
-  <br clear="all" />
 {% endif %}
+
+<h1 class="huge">Challenges</h1>
+<br clear="all" />
 
 <div class="event-challenges">
   {% if projects %}
@@ -51,7 +46,7 @@
       </div>
     </div><!-- /profile-projects -->
   {% else %}
-    <i>None have been posted yet.</i>
+    <i>None have been posted or approved yet.</i>
   {% endif %}
 </div>
 {% endblock %}

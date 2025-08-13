@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 """Factories to help in tests."""
-from factory import PostGenerationMethodCall, Sequence
 from factory.alchemy import SQLAlchemyModelFactory
+from factory.declarations import PostGenerationMethodCall, Sequence
 
 from dribdat.database import db
 from dribdat.user.models import User, Project, Event, Activity, Role, Category
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta
 from dribdat.futures import UTC
 
 class BaseFactory(SQLAlchemyModelFactory):
@@ -27,6 +27,14 @@ class UserFactory(BaseFactory):
 
     class Meta:  # noqa: D106
         model = User
+
+def log_me_in(testapp, user, password='myprecious'):
+    res = testapp.get('/login/')
+    form = res.forms['loginForm']
+    form['username'] = user.username
+    form['password'] = password
+    res = form.submit().follow()
+    return res
 
 
 class ProjectFactory(BaseFactory):
@@ -74,7 +82,7 @@ class RoleFactory(BaseFactory):
 
 class CategoryFactory(BaseFactory):
     """Category factory."""
-    
+
     name = Sequence(lambda n: 'Category {0}'.format(n))
 
     class Meta:  # noqa: D106

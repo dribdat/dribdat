@@ -206,10 +206,10 @@ def project_action(project_id, of_type=None, as_view=True, then_redirect=False,
     if not event.lock_resources:
         if project.is_hidden:
             # Send a warning for hidden projects
-            flash('This project is hidden, and needs moderation from an organizer.', 'dark')
+            flash('This project is hidden until it is moderated by an organizer.', 'dark')
         elif project.progress is not None and project.progress < 0:
             # Send a warning for unapproved challenges
-            flash('This challenge is awaiting approval from an organizer.', 'light')
+            flash('This challenge is only shown to signed-in users until it is approved.', 'light')
 
     # Dump all that data into a template
     return render_template(
@@ -219,7 +219,7 @@ def project_action(project_id, of_type=None, as_view=True, then_redirect=False,
         project_badge=project_badge, project_image_url=project_image_url, 
         allow_edit=allow_edit, allow_post=allow_post,
         lock_editing=lock_editing, missing_roles=missing_roles,
-        go_nav=go_nav, share=share,
+        go_nav=go_nav, share=share, surl=project.surl,
     )
 
 
@@ -240,8 +240,10 @@ def navigate_around_project(project, as_challenge=False):
     go_nav = {}
     # Sort visible projects by identity (if used), or alphabetically
     projects = Project.query \
-        .filter_by(event_id=project.event_id, is_hidden=False) \
-        .order_by(Project.ident, Project.name)
+        .filter_by(event_id=project.event_id, is_hidden=False)
+    if not current_user or current_user.is_anonymous:
+        projects = projects.filter(Project.progress >= 0)
+    projects = projects.order_by(Project.ident, Project.name)
         # The above must match views->event
     p_prev = p_next = p_found = None
     for p in projects:

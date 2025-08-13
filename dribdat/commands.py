@@ -40,14 +40,16 @@ def lint(fix_imports):
 
 @click.command()
 def clean():
-    """Remove *.pyc and *.pyo files recursively starting at current directory.
+    """Remove *.pyc *.pyo *.orig files recursively starting at current directory.
     """
+    extensions = ('pyc', 'pyo', 'orig')
     for dirpath, dirnames, filenames in os.walk('.'):
         for filename in filenames:
-            if filename.endswith('.pyc') or filename.endswith('.pyo'):
-                full_pathname = os.path.join(dirpath, filename)
-                click.echo('Removing {}'.format(full_pathname))
-                os.remove(full_pathname)
+            for e in extensions:
+                if filename.endswith('.' + e):
+                    full_pathname = os.path.join(dirpath, filename)
+                    click.echo('Removing {}'.format(full_pathname))
+                    os.remove(full_pathname)
 
 
 @click.command()

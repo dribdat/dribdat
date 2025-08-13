@@ -51,7 +51,7 @@
         title="Invite someone to this project">
         <i class="fa fa-child" aria-hidden="true"></i>
       </a>
-    {% elif project.progress >= 0 %}
+    {% elif project.is_approved %}
       <a href="{{ url_for('project.project_star', project_id=project.id) }}" class="btn btn-lg btn-success project-star"
         title="{% if project.is_challenge %}Follow this challenge{% else %}Join the project{% endif %}">
          <i class="fa fa-thumbs-up"></i>
@@ -80,7 +80,7 @@
 {% macro render_project_head(project) %}
 
 <!-- Main project content container -->
-<div class="jumbotron tab-content project-page phase-{{ project.phase }} {% if project.event.lock_resources %}resource-page{% endif %}" {% if project.logo_color %} style="border-color:{{project.logo_color}}"{% endif %}>
+<div class="jumbotron bg-light text-dark tab-content project-page phase-{{ project.phase }} {% if project.event.lock_resources %}resource-page{% endif %}" {% if project.logo_color %} style="border-color:{{project.logo_color}}"{% endif %}>
 
   {% if project.ident %}
     <div class="project-ident">{{ project.ident }}</div>

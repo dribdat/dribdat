@@ -25,6 +25,11 @@
         <i class="fa fa-life-ring"></i>
         <span title="Add another resource here">Share a resource</span>
       </a>
+
+      <a href="{{ url_for('project.import_new_project', event_id=current_event.id) }}" class="btn btn-lg btn-dark">
+        <i class="fa fa-plus"></i>
+        <span title="Import a project from repository">Import</span>
+      </a>
     {% endif %}
       
     {% if current_user and current_user.active and current_user.is_admin %}

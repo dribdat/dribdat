@@ -41,6 +41,16 @@ sp {
     font-family: monospace;
 }
 
+p > code {
+    background: black;
+    padding: 3px 3px 0px 3px;
+    border-radius: 3px;
+}
+
+.btn-default {
+    color: inherit;
+}
+
 /* Navigation anchors */
 .section-header a,
 .card-title a,
@@ -355,6 +365,7 @@ ul.help-block {
 }
 .section-header .event-name {
     font-size: 400%;
+    text-decoration: none;
 }
 .section-header .section-header-content .event-date {
     display: block;
@@ -481,6 +492,15 @@ nav .nav-login {
     right: 3px;
     font-size: 90%;
     text-decoration: none;
+}
+@media (min-width: 600px) {
+  .home .home-teams {
+      position: absolute;
+      z-index: 999;
+      left: 50%;
+      margin-left: -12em;
+      margin-top: 1em;
+  }
 }
 
 /* Customize the flipclock widget */
@@ -1260,7 +1280,7 @@ a.media {
     visibility: hidden;
     position: absolute;
     height: 6em;
-    top: 16em;
+    top: 12em;
 }
 .nav-projects-abs-prev {
     left: 0px;
@@ -1364,6 +1384,11 @@ a.media {
 .timeline-pencil .timeline-content {
     background: #ffc;
     border-top: none;
+}
+.timeline-content .date a,
+.timeline-content .content a {
+    color: #333;
+    border-bottom: 1px dotted #777;
 }
 .timeline-diamond .content {
     font-family: monospace;
@@ -1714,6 +1739,9 @@ a.media {
 /* Editor styles */
 form .EasyMDEContainer .editor-toolbar {
     background: white;
+}
+form .EasyMDEContainer .editor-toolbar .fa {
+    color: black;
 }
 form .EasyMDEContainer {
     text-align: left;
@@ -2266,6 +2294,7 @@ div.project-edit-buttons {
 .theme-dark .profile-projects {
     border-color: rgba(255, 255, 255, 0.5);
 }
+.bg-light.text-dark a,
 .theme-dark .btn-light,
 .theme-dark .bg-white a,
 .theme-dark .bg-white {
@@ -2795,8 +2824,8 @@ SlackIn button
     font-size: 125%;
 }
 
-.sso-login::after,
-.account-register::before {
+.login .sso-login::after,
+.login .account-register::before {
     content: "or";
     display: block;
     margin: 0.5em 5em;

@@ -62,9 +62,10 @@ def project_view(project_id):
     return project_action(project_id, None)
 
 
-@blueprint.route("/s/<project_name>")
+@blueprint.route("/_/<project_name>")
 def project_view_name(project_name):
     """Show a project matching by name."""
+    project_name = project_name.replace('-', ' ')
     project = Project.query.filter(Project.name.ilike(project_name)).first_or_404()
     return project_view(project.id)
 

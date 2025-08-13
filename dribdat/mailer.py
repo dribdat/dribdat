@@ -101,3 +101,32 @@ def user_invitation(user_email, project):
     current_app.logger.info("Sending activation mail to %s" % user_email)
     msg.send(fail_silently=True)
     return True
+
+
+def notify_admin_message(about=""):
+    fqdn = current_app.config["SERVER_NAME"]
+    mlto = current_app.config["MAIL_NOTIFY_ADMIN"]
+    mlfr = current_app.config["MAIL_DEFAULT_SENDER"]
+    # Create a message object with these settings
+    msg = EmailMessage(from_email=mlfr)
+    msg.to = [mlto]
+    msg.subject = "Notification from Dribdat"
+    msg.body = "A quick message from %s:\n\n%s" % (fqdn, about)
+    return msg
+
+
+def notify_admin(about=""):
+    """Send an admin some important message."""
+    if current_app.config["MAIL_NOTIFY_ADMIN"] is None:
+        # No e-mail address configured
+        return False
+    if "mailman" not in current_app.extensions:
+        return False
+    if "@" not in current_app.config["MAIL_NOTIFY_ADMIN"]:
+        current_app.logger.warn("MAIL_NOTIFY_ADMIN must contain an e-mail address")
+        return False
+    current_app.logger.info("Sending admin a notification mail")
+    msg = notify_admin_message(about)
+    msg.send(fail_silently=True)
+    return True
+

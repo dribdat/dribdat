@@ -69,7 +69,11 @@
       <li class="nav-item">
         <a class="nav-link{{ ' active' if active == 'people' or active == 'profile' }}"
            title="List and search for participants"
+        {% if current_event %}
+           href="{{ url_for('public.event_participants', event_id=current_event.id) }}">
+        {% else %}
            href="{{ url_for('public.all_participants') }}">
+        {% endif %}
           <i class="fa fa-user bg-primary text-white" aria-hidden="true"></i>
           People
         </a>

@@ -11,16 +11,20 @@ from datetime import datetime
 class TestViews:
     """Home views."""
 
-    def test_public_views(self, event, testapp):
-        """Check stage progression."""
-        event = EventFactory()
+    def test_event_views(self, event, testapp):
+        """Check rendering of events."""
+        event = EventFactory(name='Super Event')
         event.status = '99999999999;Hello Status'
         event.is_current = True
         event.save()
         project = ProjectFactory()
         project.event = event
         project.save()
-        
+
+        # Check the homepage status
+        view_html = testapp.get('/')
+        assert 'Super Event' in view_html
+
         # Check the dashboard status
         view_html = testapp.get('/dashboard/')
         assert 'Hello Status' in view_html
@@ -53,6 +57,19 @@ class TestViews:
         view_html = testapp.get('/dribs')
         assert 'in small amounts' in view_html
         
+    def test_project_views(self, event, testapp):
+        """Check views of projects."""
+        event = EventFactory(is_current=True)
+        project = ProjectFactory(name="My Project", event=event)
+        project.save()
+
+        # Test name view
+        view_html = testapp.get('/project/_/my-Project')
+        assert view_html.status_int == 200
+        assert 'My Project' in view_html
+        assert 'my-project' in project.surl
+
+
     def test_feeds_rss(self, event, testapp):
         """Check RSS feeds."""
         event = EventFactory()

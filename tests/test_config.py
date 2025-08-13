@@ -5,6 +5,8 @@ from dribdat.app import init_app
 from dribdat.settings import DevConfig, ProdConfig
 from dribdat.utils import strtobool
 from dribdat.user.constants import projectProgressList
+from dribdat.commands import clean, lint
+
 
 def test_production_config():
     """Production config."""

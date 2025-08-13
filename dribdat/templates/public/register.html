@@ -7,21 +7,19 @@
 
 {% block content %}
 <div class="container-narrow">
-    <h1>Register</h1>
-    <p>Already registered? 
+    <div class="float-right">
+    Already registered? 
       <i class="fa fa-arrow-right" aria-hidden="true"></i>
-      <a class="btn btn-warning btn-submit" 
+      <a class="btn btn-success btn-submit btn-lg" 
          href="{{ url_for('auth.login', next=request.args.get('next')) }}">
           Log in here</a>
-    </p>
-    <br/>
+    </div>
 
-  {% if oauth_type %}
-    <p>You can also use &#x1f511;
-      <b><a href="{{ url_for('auth.login', next=request.args.get('next')) }}">Single Sign On</a></b>
-      through {{ oauth_type }}
-      in this application.</p>
-  {% endif %}
+    {% include "includes/loginsso.html" %}
+
+    <br clear="all"/>
+    <h1>Register</h1>
+
 
   {{ render_form(url_for('auth.register'), form, formid='registerForm') }}
 

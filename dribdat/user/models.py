@@ -822,9 +822,13 @@ class Project(PkModel):
         return self.progress <= PR_CHALLENGE
 
     @property
+    def is_approved(self):
+        return self.progress >= 0
+
+    @property
     def needs_members(self):
         """Return True if the team should grow."""
-        if self.progress >= 0 and self.team_count < 5:
+        if self.is_approved and self.team_count < 5:
             return True
         return False
 
@@ -854,14 +858,20 @@ class Project(PkModel):
         """Return embedded format of webpage link."""
         return format_webembed(self.webpage_url, self.id)
 
+    #@property
+    #def longhtml(self):
+    #    """Process project longtext and return HTML."""
+    #    if not self.longtext or len(self.longtext) < 3:
+    #        return self.longtext
+    #    # TODO: apply onebox filter
+    #    # TODO: apply markdown filter
+    #    return self.longtext
+
     @property
-    def longhtml(self):
-        """Process project longtext and return HTML."""
-        if not self.longtext or len(self.longtext) < 3:
-            return self.longtext
-        # TODO: apply onebox filter
-        # TODO: apply markdown filter
-        return self.longtext
+    def surl(self):
+        """A URL with a short name for readable links."""
+        nm = self.name.lower().strip().replace(' ', '-')
+        return "/project/_/%s" % nm
 
     @property
     def url(self):
@@ -1058,6 +1068,7 @@ class Project(PkModel):
             if not by_name and not only_posts:
                 if a.project_progress and prev["progress"] != a.project_progress:
                     proj_stage = getStageByProgress(a.project_progress)
+                    # Only if past challenge stage
                     if a.project_progress > 0 and proj_stage is not None:
                         dribs.append(
                             {
@@ -1242,7 +1253,7 @@ class Project(PkModel):
 
     def set_auto_image(self):
         """Get an image if available."""
-        if self.image_url and len(self.image_url) > 1 and "#I" not in self.image_url:
+        if self.image_url and len(self.image_url) > 1 and not self.image_url.endswith("??"):
             # Ignore user-uploaded images
             return None
         topdribs = (
@@ -1257,7 +1268,9 @@ class Project(PkModel):
                     if ")" in rs and rs.startswith("http"):
                         url = rs.split(")")[0]
                         if url and url not in self.image_url:
-                            self.image_url = url + "#I"
+                            if "??" not in url:
+                                url = url + "??"
+                            self.image_url = url
                             self.save()
                             return self.image_url
         return self.image_url

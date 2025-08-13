@@ -35,7 +35,7 @@ class TestFeatures:
         project.longtext = gen_project_pitch(project)
         project.save()
         if project.longtext:
-            assert "open data" in project.longtext.lower()
+            assert "generated with" in project.longtext.lower()
 
     def test_onebox(self, project, testapp):
         """Generate one box."""
@@ -88,9 +88,9 @@ EOF""" % (url, url)
         """Check next/previous and sort ordering."""
         event = EventFactory()
         event.save()
-        project1 = ProjectFactory()
-        project2 = ProjectFactory()
-        project3 = ProjectFactory()
+        project1 = ProjectFactory(progress=0)
+        project2 = ProjectFactory(progress=1)
+        project3 = ProjectFactory(progress=2)
         getnav = navigate_around_project(project2)
         assert getnav["prev"]["id"] == project1.id
         assert getnav["next"]["id"] == project3.id

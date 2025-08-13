@@ -16,7 +16,7 @@ from sqlalchemy.orm import configure_mappers
 @pytest.fixture(scope='function')
 def app():
     """An application for the tests."""
-    _app = init_app(TestConfig)
+    _app = init_app(TestConfig)  # pyright: ignore
     ctx = _app.test_request_context()
     ctx.push()
 
@@ -42,7 +42,7 @@ def db(app):
     yield _db
 
     # Explicitly close DB connection
-    _db.session.close()
+    _db.session.close() # pyright: ignore
     _db.drop_all()
 
 
@@ -70,4 +70,3 @@ def project(db):
     project.event = event
     db.session.commit()
     return project
-

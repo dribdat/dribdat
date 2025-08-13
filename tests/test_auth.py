@@ -7,10 +7,13 @@ from flask import url_for
 
 from dribdat.user.models import User
 from dribdat.mailer import (
-    user_activation, 
-    user_activation_message, 
-    user_invitation,
+    user_activation,
+    user_activation_message,
     user_invitation_message,
+    notify_admin_message,
+)
+from dribdat.public.auth import (
+    get_or_create_sso_user,
 )
 
 from .factories import UserFactory, ProjectFactory, EventFactory
@@ -156,7 +159,7 @@ class TestRegistering:
         view_html = testapp.get('/event/start')
         assert view_html.status_code == 200
         assert '/event/new' in view_html
-        
+
 
 class TestActivation:
     """Activate a user to interact with projects."""
@@ -166,14 +169,14 @@ class TestActivation:
         # Make a deactivated user
         user = UserFactory(active=False)
         user.save()
-        
+
         # Let's get an activation mail
         my_hash = user_activation(user)
         # And go activate that user
         res = testapp.get(url_for('auth.activate', userid=user.id, userhash=my_hash))
         assert res.status_code == 302
         assert user.active
-        
+
         # Test the message now
         msg = user_activation_message(user, 'abracadabra')
         assert 'activate' in msg.body
@@ -185,9 +188,25 @@ class TestActivation:
         project.event = event
         project.user = user
         project.save()
-        # Mail is not configured in the test environment
-        assert user_invitation(user.email, project) is False
         # We can still test the message now
         msg = user_invitation_message(project)
         assert 'invited' in msg.body
 
+    def test_admin_gets_notification(self, user, testapp):
+        """Send admin some news."""
+        msg = notify_admin_message("Test message")
+        assert "Test" in msg.body
+
+    def test_sso_activation(self, user, testapp):
+        """Check that users can be found via SSO id."""
+        assert user.sso_id is None
+        # Test that the current user can be found via SSO id
+        get_or_create_sso_user('123456', user.name, user.email)
+        assert user.sso_id == '123456'
+        user.active = False
+        user.save()
+        # Now create another user account via SSO
+        get_or_create_sso_user('654321', 'another_user', 'user2@example.com')
+        user2 = User.query.filter_by(email='user2@example.com').first()
+        assert user2.sso_id == '654321'
+        assert user2.active

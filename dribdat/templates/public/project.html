@@ -40,7 +40,7 @@
 {{ detail.render_project_image(project) }}
 {{ detail.render_project_head(project) }}
 
-<div class="project-content-nav float-right mb-2">
+<div class="project-content-nav float-right mt-2 mb-2">
 {% if project_team %}
   <a id="team-tab-md" href="#team-md"
     title="Show team members">
@@ -203,7 +203,7 @@
                 <i class="fa fa-child" aria-hidden="true"></i><i class="fa fa-child" aria-hidden="true"></i>
                 builder
             </a>
-          {% elif project.progress >= 0 %}
+          {% elif project.is_approved %}
             <a class="btn btn-md btn-success project-star"
                href="{{ url_for('project.project_star', project_id=project.id) }}"
                title="{% if project.is_challenge %}Follow this challenge{% else %}Contribute to the project{% endif %}">
@@ -215,6 +215,11 @@
             title="Log and progress review">
             <i class="fa fa-paperclip" aria-hidden="true"></i>
             Log
+          </a>
+          <a class="btn btn-md btn-light" href="{{ surl }}"
+            title="Get a shortlink to this project">
+            <i class="fa fa-link" aria-hidden="true"></i>
+            Link
           </a>
         </center>
       {% endif %}

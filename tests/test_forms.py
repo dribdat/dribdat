@@ -1,8 +1,14 @@
 # -*- coding: utf-8 -*-
 """Test forms."""
 
-from dribdat.user.forms import RegisterForm, LoginForm
+from dribdat.user.forms import (
+    RegisterForm, LoginForm, ActivationForm,
+    EmailForm, UserForm, StoryForm,
+)
 from dribdat.admin.forms import EventForm
+from dribdat.user.models import User
+
+from .factories import log_me_in
 
 from datetime import time, datetime
 from dribdat.futures import UTC
@@ -67,10 +73,81 @@ class TestLoginForm:
         user.save()
         # Correct username and password, but user is not activated
         form = LoginForm(username=user.username, password='example')
-        # Deactivated use can still log in
+        # Deactivated user can still log in
         assert form.validate() is True
         res = testapp.get('/user/%s' % user.username)
         assert 'undergoing review' in res
+
+    def test_activation_form(self, user, testapp):
+        """Test the activation of a user."""
+        user.active = False
+        user.set_hashword('abracadabra')
+        user.save()
+        form = ActivationForm(code='abracadabra')
+        assert form.validate() is True
+        # Activate using the GET method
+        res = testapp.get('/activate/%d/%s' % (user.id, 'abracadabra'))
+        assert res.status_code == 302
+        # Check that the user is now active
+        user = User.query.get(user.id)
+        assert user.active is True
+
+    def test_passwordless_form(self, user, testapp):
+        """Test the passwordless login."""
+        form = EmailForm(username='abracadabra')
+        assert form.validate() is False
+        form.username.data = 'abraca@dabra.org'
+        assert form.validate() is True
+        # Try the passwordless login (just a redirect)
+        res = testapp.post('/passwordless/', params={'username': user.email})
+        assert res.status_code == 302
+
+    def test_user_deletion(self, user, testapp):
+        """Test the deactivation of a user."""
+        # Log in with the user
+        assert log_me_in(testapp, user).status_code == 200
+        # Delete using the GET method
+        res = testapp.post('/user/profile/delete')
+        assert res.status_code == 302
+        # Check that the user is now gone
+        user = User.query.get(user.id)
+        assert user is None
+
+    def test_user_profile(self, user, testapp):
+        """Test editing a user profile and story."""
+        # Log in with the user
+        assert log_me_in(testapp, user).status_code == 200
+        # Test the user form
+        form = UserForm(id=user.id, username=user.username, email=user.email)
+        form.webpage_url.data = 'https://example.com'
+        assert form.validate() is True
+        form.webpage_url.data = 'example'
+        assert form.validate() is True
+        # Test editing user profile
+        res = testapp.get('/user/profile')
+        form = res.forms['userEdit']
+        form['fullname'] = 'Ab Ra'
+        form['webpage_url'] = 'https://example.com'
+        res = form.submit().follow()
+        assert res.status_code == 200
+
+    def test_user_story(self, user, testapp):
+        """Test editing a user story."""
+        # Log in with the user
+        assert log_me_in(testapp, user).status_code == 200
+        # Test editing user story
+        form = StoryForm()
+        # Empty form is okay
+        assert form.validate() is True
+        # Edit in the session
+        res = testapp.get('/user/story')
+        form = res.forms['userStory']
+        form['my_story'] = 'My Story'
+        form['vitae'] = '{"valid":"json"}'
+        res = form.submit().follow()
+        assert res.status_code == 200
+
+
 
 
 class TestEventForm:
@@ -95,4 +172,5 @@ class TestEventForm:
         # assert form.validate() is False
         # assert 'Start time must be before end time.'
         # in form.starts_time.errors
-        assert form.validate() is True  # TODO: fixme
+        # TODO: fixme
+        assert form.validate() is True

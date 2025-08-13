@@ -9,7 +9,8 @@ def get_auth_blueprint(app):
     if 'OAUTH_TYPE' not in app.config or not app.config['OAUTH_TYPE']:
         return None
     blueprint = None
-    if app.config['OAUTH_TYPE'] == 'slack':
+    oauth_type = app.config['OAUTH_TYPE']
+    if oauth_type == 'slack':
         blueprint = slack.make_slack_blueprint(
             client_id=app.config['OAUTH_ID'],
             client_secret=app.config['OAUTH_SECRET'],
@@ -21,7 +22,7 @@ def get_auth_blueprint(app):
             # storage=None,
             subdomain=app.config['OAUTH_DOMAIN'],
         )
-    elif app.config['OAUTH_TYPE'] == 'azure':
+    elif oauth_type == 'azure':
         blueprint = azure.make_azure_blueprint(
             client_id=app.config['OAUTH_ID'],
             client_secret=app.config['OAUTH_SECRET'],
@@ -30,7 +31,7 @@ def get_auth_blueprint(app):
             redirect_to="auth.azure_login",
             login_url="/login",
         )
-    elif app.config['OAUTH_TYPE'] == 'github':
+    elif oauth_type == 'github':
         blueprint = github.make_github_blueprint(
             client_id=app.config['OAUTH_ID'],
             client_secret=app.config['OAUTH_SECRET'],
@@ -38,7 +39,7 @@ def get_auth_blueprint(app):
             redirect_to="auth.github_login",
             login_url="/login",
         )
-    elif app.config['OAUTH_TYPE'] == 'gitlab':
+    elif oauth_type == 'gitlab':
         if app.config['OAUTH_DOMAIN']:
             blueprint = gitlab.make_gitlab_blueprint(
                 client_id=app.config['OAUTH_ID'],
@@ -56,7 +57,7 @@ def get_auth_blueprint(app):
                 login_url="/login",
                 scope='read_user'
             )
-    elif app.config['OAUTH_TYPE'] == 'oauth2':
+    elif oauth_type == 'oauth2':
         if not app.config['OAUTH_DOMAIN']:
             raise Exception("Please specify an OAUTH_DOMAIN")
         blueprint = oauth2.make_oauth2_blueprint(
@@ -67,7 +68,7 @@ def get_auth_blueprint(app):
             redirect_to="auth.oauth2_login",
             login_url="/login",
         )
-    elif app.config['OAUTH_TYPE'] == 'mattermost':
+    elif oauth_type == 'mattermost':
         blueprint = mattermost.make_mattermost_blueprint(
             client_id=app.config['OAUTH_ID'],
             secret=app.config['OAUTH_SECRET'],
@@ -75,7 +76,7 @@ def get_auth_blueprint(app):
             redirect_to="auth.mattermost_login",
             login_url="/login",
         )
-    elif app.config['OAUTH_TYPE'] == 'hitobito':
+    elif oauth_type == 'hitobito':
         blueprint = hitobito.make_hitobito_blueprint(
             client_id=app.config['OAUTH_ID'],
             secret=app.config['OAUTH_SECRET'],

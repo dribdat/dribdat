@@ -38,7 +38,11 @@ from dribdat.user.forms import (
     StoryForm,
 )
 from dribdat.database import db
-from dribdat.mailer import user_activation, user_registration
+from dribdat.mailer import (
+    user_activation, 
+    user_registration,
+    notify_admin,
+)
 from datetime import datetime
 from dribdat.futures import UTC
 # noqa: I005
@@ -161,7 +165,8 @@ def register():
         # This is the first user account - promote me!
         new_user.is_admin = True
         new_user.save()
-        flash("Administrative user created - oh joy!", "success")
+        flash("Administrative user created - happy days!", "success")
+
     elif current_app.config["DRIBDAT_USER_APPROVE"]:
         # Approval of new user accounts required
         new_user.active = False
@@ -179,8 +184,14 @@ def register():
                 + "Please update your profile and await activation.",
                 "warning",
             )
+
     else:
+        # By default, users can just get started
         flash("You can now log in and submit projects.", "info")
+
+    if not new_user.is_admin:
+        notify_admin("User '%s' has registered." % new_user.username)
+
     # New user created: start session and continue
     login_user(new_user, remember=True)
     return redirect_dest(fallback=url_for("auth.user_profile"))
