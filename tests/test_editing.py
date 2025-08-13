@@ -164,7 +164,8 @@ class TestEditing:
 
         # event start, project joined, updated, boosted
         assert len(project_dribs) == 4
-        project_badge = [s for s in project_dribs if s['name'] == 'boost']
+        # TODO: check why we have an issue here with the iterable
+        project_badge = [s for s in project_dribs if s['name'] == 'boost']  # pyright: ignore
         assert len(project_badge) == 1
 
         # Check that user is part of event

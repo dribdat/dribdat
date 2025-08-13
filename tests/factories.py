@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 """Factories to help in tests."""
-from factory import PostGenerationMethodCall, Sequence
 from factory.alchemy import SQLAlchemyModelFactory
+from factory.declarations import PostGenerationMethodCall, Sequence
 
 from dribdat.database import db
 from dribdat.user.models import User, Project, Event, Activity, Role, Category
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta
 from dribdat.futures import UTC
 
 class BaseFactory(SQLAlchemyModelFactory):
