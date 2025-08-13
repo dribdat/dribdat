@@ -28,6 +28,14 @@ class UserFactory(BaseFactory):
     class Meta:  # noqa: D106
         model = User
 
+def log_me_in(testapp, user, password='myprecious'):
+    res = testapp.get('/login/')
+    form = res.forms['loginForm']
+    form['username'] = user.username
+    form['password'] = password
+    res = form.submit().follow()
+    return res
+
 
 class ProjectFactory(BaseFactory):
     """Project factory."""
@@ -74,7 +82,7 @@ class RoleFactory(BaseFactory):
 
 class CategoryFactory(BaseFactory):
     """Category factory."""
-    
+
     name = Sequence(lambda n: 'Category {0}'.format(n))
 
     class Meta:  # noqa: D106

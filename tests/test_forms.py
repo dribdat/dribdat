@@ -1,9 +1,14 @@
 # -*- coding: utf-8 -*-
 """Test forms."""
 
-from dribdat.user.forms import RegisterForm, LoginForm, ActivationForm, EmailForm
+from dribdat.user.forms import (
+    RegisterForm, LoginForm, ActivationForm,
+    EmailForm, UserForm, StoryForm,
+)
 from dribdat.admin.forms import EventForm
 from dribdat.user.models import User
+
+from .factories import log_me_in
 
 from datetime import time, datetime
 from dribdat.futures import UTC
@@ -100,18 +105,48 @@ class TestLoginForm:
     def test_user_deletion(self, user, testapp):
         """Test the deactivation of a user."""
         # Log in with the user
-        res = testapp.get('/login/')
-        form = res.forms['loginForm']
-        form['username'] = user.username
-        form['password'] = 'myprecious'
-        res = form.submit().follow()
-        assert res.status_code == 200
+        assert log_me_in(testapp, user).status_code == 200
         # Delete using the GET method
         res = testapp.post('/user/profile/delete')
         assert res.status_code == 302
         # Check that the user is now gone
         user = User.query.get(user.id)
         assert user is None
+
+    def test_user_profile(self, user, testapp):
+        """Test editing a user profile and story."""
+        # Log in with the user
+        assert log_me_in(testapp, user).status_code == 200
+        # Test the user form
+        form = UserForm(id=user.id, username=user.username, email=user.email)
+        form.webpage_url.data = 'https://example.com'
+        assert form.validate() is True
+        form.webpage_url.data = 'example'
+        assert form.validate() is True
+        # Test editing user profile
+        res = testapp.get('/user/profile')
+        form = res.forms['userEdit']
+        form['fullname'] = 'Ab Ra'
+        form['webpage_url'] = 'https://example.com'
+        res = form.submit().follow()
+        assert res.status_code == 200
+
+    def test_user_story(self, user, testapp):
+        """Test editing a user story."""
+        # Log in with the user
+        assert log_me_in(testapp, user).status_code == 200
+        # Test editing user story
+        form = StoryForm()
+        # Empty form is okay
+        assert form.validate() is True
+        # Edit in the session
+        res = testapp.get('/user/story')
+        form = res.forms['userStory']
+        form['my_story'] = 'My Story'
+        form['vitae'] = '{"valid":"json"}'
+        res = form.submit().follow()
+        assert res.status_code == 200
+
 
 
 

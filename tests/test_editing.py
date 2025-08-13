@@ -5,13 +5,16 @@ See: http://webtest.readthedocs.org/
 """
 from flask import url_for
 
-from dribdat.user.models import User, Project, Event
+from dribdat.user.models import Project, Event
 
 from dribdat.aggregation import ProjectActivity, AllowProjectEdit
 from dribdat.public.project import post_preview
-from dribdat.public.projhelper import revert_project_by_activity, templates_from_event, project_action
+from dribdat.public.projhelper import (
+    revert_project_by_activity, templates_from_event,
+    project_action,
+)
 
-from .factories import UserFactory, ProjectFactory, EventFactory
+from .factories import log_me_in, UserFactory, ProjectFactory, EventFactory
 
 
 class TestEditing:
@@ -19,12 +22,8 @@ class TestEditing:
 
     def test_log_in_and_edit(self, user, testapp):
         """Login successful."""
-        res = testapp.get('/login/')
-        form = res.forms['loginForm']
-        form['username'] = user.username
-        form['password'] = 'myprecious'
-        res = form.submit().follow()
-        assert res.status_code == 200
+        # Log in with the user
+        assert log_me_in(testapp, user).status_code == 200
         # Fills out the new event form
         res1 = testapp.get('/event/new')
         form1 = res1.forms[0]
@@ -95,14 +94,8 @@ class TestEditing:
         user = UserFactory(active=True, is_admin=True)
         user.set_password('myprecious')
         user.save()
-
-        # Login with the user
-        res = testapp.get('/login/')
-        form = res.forms['loginForm']
-        form['username'] = user.username
-        form['password'] = 'myprecious'
-        res = form.submit().follow()
-        assert res.status_code == 200
+        # Log in with the user
+        assert log_me_in(testapp, user).status_code == 200
 
         # Create an event and project
         event = EventFactory()
@@ -143,7 +136,7 @@ class TestEditing:
 
         # ... and preview it
         preview = post_preview(project.id, activity.id)
-        assert "archived version" in preview
+        assert "archived version" in str(preview)
 
         # ... and revert to it
         result, status = revert_project_by_activity(project, activity)
@@ -176,7 +169,7 @@ class TestEditing:
 
         # Check that user is part of event
         assert user.has_joined(event)
-        
+
 
     def test_create_project(self, db, testapp):
         """Test creating projects anonymously."""
