@@ -9,10 +9,11 @@ from dribdat.user.models import User
 from dribdat.mailer import (
     user_activation,
     user_activation_message,
-    user_invitation,
     user_invitation_message,
-    notify_admin,
     notify_admin_message,
+)
+from dribdat.public.auth import (
+    get_or_create_sso_user,
 )
 
 from .factories import UserFactory, ProjectFactory, EventFactory
@@ -195,3 +196,17 @@ class TestActivation:
         """Send admin some news."""
         msg = notify_admin_message("Test message")
         assert "Test" in msg.body
+
+    def test_sso_activation(self, user, testapp):
+        """Check that users can be found via SSO id."""
+        assert user.sso_id is None
+        # Test that the current user can be found via SSO id
+        get_or_create_sso_user('123456', user.name, user.email)
+        assert user.sso_id == '123456'
+        user.active = False
+        user.save()
+        # Now create another user account via SSO
+        get_or_create_sso_user('654321', 'another_user', 'user2@example.com')
+        user2 = User.query.filter_by(email='user2@example.com').first()
+        assert user2.sso_id == '654321'
+        assert user2.active
