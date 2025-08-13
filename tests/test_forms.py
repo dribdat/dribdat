@@ -91,7 +91,7 @@ class TestLoginForm:
         """Test the passwordless login."""
         form = EmailForm(username='abracadabra')
         assert form.validate() is False
-        form.username = user.email
+        form.username.data = 'abraca@dabra.org'
         assert form.validate() is True
         # Try the passwordless login (just a redirect)
         res = testapp.post('/passwordless/', params={'username': user.email})
