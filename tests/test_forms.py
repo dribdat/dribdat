@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 """Test forms."""
 
-from dribdat.user.forms import RegisterForm, LoginForm
+from dribdat.user.forms import RegisterForm, LoginForm, ActivationForm
 from dribdat.admin.forms import EventForm
+from dribdat.user.models import User
 
 from datetime import time, datetime
 from dribdat.futures import UTC
@@ -67,10 +68,24 @@ class TestLoginForm:
         user.save()
         # Correct username and password, but user is not activated
         form = LoginForm(username=user.username, password='example')
-        # Deactivated use can still log in
+        # Deactivated user can still log in
         assert form.validate() is True
         res = testapp.get('/user/%s' % user.username)
         assert 'undergoing review' in res
+
+    def test_activation_form(self, user, testapp):
+        """Test the activation of a user."""
+        user.active = False
+        user.set_hashword('abracadabra')
+        user.save()
+        form = ActivationForm(code='abracadabra')
+        assert form.validate() is True
+        # Activate using the GET method
+        res = testapp.get('/activate/%d/%s' % (user.id, 'abracadabra'))
+        assert res.status_code == 302
+        # Check that the user is now active
+        user = User.query.get(user.id)
+        assert user.active is True
 
 
 class TestEventForm:
@@ -95,4 +110,5 @@ class TestEventForm:
         # assert form.validate() is False
         # assert 'Start time must be before end time.'
         # in form.starts_time.errors
-        assert form.validate() is True  # TODO: fixme
+        # TODO: fixme
+        assert form.validate() is True

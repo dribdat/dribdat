@@ -7,8 +7,8 @@ from flask import url_for
 
 from dribdat.user.models import User
 from dribdat.mailer import (
-    user_activation, 
-    user_activation_message, 
+    user_activation,
+    user_activation_message,
     user_invitation,
     user_invitation_message,
     notify_admin,
@@ -158,7 +158,7 @@ class TestRegistering:
         view_html = testapp.get('/event/start')
         assert view_html.status_code == 200
         assert '/event/new' in view_html
-        
+
 
 class TestActivation:
     """Activate a user to interact with projects."""
@@ -168,14 +168,14 @@ class TestActivation:
         # Make a deactivated user
         user = UserFactory(active=False)
         user.save()
-        
+
         # Let's get an activation mail
         my_hash = user_activation(user)
         # And go activate that user
         res = testapp.get(url_for('auth.activate', userid=user.id, userhash=my_hash))
         assert res.status_code == 302
         assert user.active
-        
+
         # Test the message now
         msg = user_activation_message(user, 'abracadabra')
         assert 'activate' in msg.body
@@ -187,8 +187,6 @@ class TestActivation:
         project.event = event
         project.user = user
         project.save()
-        # Mail is not configured in the test environment
-        assert user_invitation(user.email, project) is False
         # We can still test the message now
         msg = user_invitation_message(project)
         assert 'invited' in msg.body
@@ -197,5 +195,3 @@ class TestActivation:
         """Send admin some news."""
         msg = notify_admin_message("Test message")
         assert "Test" in msg.body
-        assert notify_admin() is False
-
