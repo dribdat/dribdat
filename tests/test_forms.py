@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """Test forms."""
 
-from dribdat.user.forms import RegisterForm, LoginForm, ActivationForm
+from dribdat.user.forms import RegisterForm, LoginForm, ActivationForm, EmailForm
 from dribdat.admin.forms import EventForm
 from dribdat.user.models import User
 
@@ -86,6 +86,33 @@ class TestLoginForm:
         # Check that the user is now active
         user = User.query.get(user.id)
         assert user.active is True
+
+    def test_passwordless_form(self, user, testapp):
+        """Test the passwordless login."""
+        form = EmailForm(username='abracadabra')
+        assert form.validate() is False
+        form.username = user.email
+        assert form.validate() is True
+        # Try the passwordless login (just a redirect)
+        res = testapp.post('/passwordless/', params={'username': user.email})
+        assert res.status_code == 302
+
+    def test_user_deletion(self, user, testapp):
+        """Test the deactivation of a user."""
+        # Log in with the user
+        res = testapp.get('/login/')
+        form = res.forms['loginForm']
+        form['username'] = user.username
+        form['password'] = 'myprecious'
+        res = form.submit().follow()
+        assert res.status_code == 200
+        # Delete using the GET method
+        res = testapp.post('/user/profile/delete')
+        assert res.status_code == 302
+        # Check that the user is now gone
+        user = User.query.get(user.id)
+        assert user is None
+
 
 
 class TestEventForm:
