@@ -247,7 +247,6 @@ def project_post(project_id):
 
     return render_template(
         "public/projectpost.html",
-        current_event=event,
         project=project,
         form=form,
         stage=stage,
@@ -277,7 +276,6 @@ def project_comment(project_id):
 
     return render_template(
         "public/projectpost.html",
-        current_event=event,
         project=project,
         form=form,
         posts=posts,
