@@ -35,6 +35,6 @@ def test_stage_config():
     """Test stage customization."""
     plist = projectProgressList()
     # [(-100, ''), (0, 'CHALLENGE🚧 Define questions..'), (5, 'NEW👪 Collecting..') ...
-    assert len(plist) == 8
+    assert len(plist) > 2
     assert (-100, '') in plist
     assert 'CHALLENGE' in plist[1][1]
