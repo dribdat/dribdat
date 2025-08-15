@@ -115,6 +115,13 @@
 </div><!-- /category-info -->
 
 <div class="start-project btn-group pt-5 mt-5 mb-2">
+  {% if may_certify %}
+    <a class="btn btn-lg btn-light"
+      href="{{ url_for('public.user_current') }}"
+      title="Download a participation certificate on your profile">
+      <i class="fa fa-check text-info"></i>
+      <b>Get Certificate</b></a>
+  {% endif %}
   {% if current_event.webpage_url %}
     <a href="{{ current_event.webpage_url }}" class="btn btn-lg btn-dark" target="_blank">
     {% if not current_event.has_finished %}
@@ -199,14 +206,6 @@
 {% endif %}
 
 <div class="event-nav m-4 text-center" role="group" aria-label="Event navigation">
-
-  {% if may_certify %}
-    <a class="btn btn-lg btn-success"
-      href="{{ url_for('public.user_current') }}"
-      title="Download a participation certificate on your profile">
-      <i class="fa fa-check text-info"></i>
-      Certificate</a>
-  {% endif %}
 
   {% if current_event.can_start_project %}
     <div role="group" aria-label="Project creation" class="btn-group">
