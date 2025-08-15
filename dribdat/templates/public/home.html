@@ -87,28 +87,18 @@
     </a>
   {% endif %}
 
-  {% if events_tips %}
+  {% if events_tips or events_next %}
     <a name="tips"></a>
     <div class="row events-tips mt-5">
       {% for event in events_tips %}
         {{ evnt.render_home_event(event, False) }}
       {% endfor %}
-    </div><!-- /.row events-tips -->
-  {% endif %}
-
-  {% if events_next %}
-    <a name="upcoming"></a>
-    <h2 class="m-5 display-2 text-body-secondary" title="Next events">
-      <i class="fa fa-forward" aria-hidden="true"></i>
-    </h2>
-    <div class="row events-next">
       {% for event in events_next %}
         {{ evnt.render_home_event(event) }}
       {% endfor %}
-    </div><!-- /.row events-next -->
+    </div><!-- /.row events-tips -->
   {% endif %}
-
-
+  
   {% if events_past %}
     <a name="past"></a>
     <h2 class="m-5 display-2 text-body-secondary" title="Past Results">

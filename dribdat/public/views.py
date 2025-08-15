@@ -286,16 +286,8 @@ def event(event_id):
     # Admin messages
     editable = False
     if current_user and not current_user.is_anonymous:
+        # Set permission to edit the event
         editable = current_user.is_admin or event.user == current_user
-        if current_user.is_admin:
-            # Notify the admin about hidden projects
-            sum_hidden = len(event.projects) - projects.count()
-            if sum_hidden > 0:
-                flash(
-                    ("%d hidden projects " % sum_hidden)
-                    + " may need moderation: check the Admin.",
-                    "secondary",
-                )
     else:
         # Show unapproved projects only to logged-in users
         projects = projects.filter(Project.progress >= 0)
@@ -309,11 +301,11 @@ def event(event_id):
         return render_template(
             "public/embed.html", current_event=event, projects=projects
         )
-    # TODO: seems inefficient? We only need a subset of the data here:
-    summaries = [p.data for p in projects]
     # Recommend projects
+    summaries = []
     suggestions = []
     for project in projects:
+        summaries.append(project.data)
         if project.needs_members:
             suggestions.append(project)
     # Check for certificate
