@@ -1,5 +1,4 @@
 {% from "macros/_form.html" import render_form %}
-{% import "macros/_event.html" as evnt %}
 
 {% extends "layout.html" %}
 
@@ -17,8 +16,26 @@
 {% endblock %}
 
 {% block content %}
+  
+  <h2 class="project-name huge">
+    <a href="{{ url_for('project.project_view', project_id=project.id) }}"
+       title="Back to project">
+      {{project.name}}
+    </a>
+    <sup><i class="fa fa-comment text-sm"></i></sup>
+  </h2>
 
   {% if (suggestions or stage) and project.progress and project.progress < 50 %}
+
+    {% if config.LLM_API_KEY and not project.is_challenge %}
+      <button data-bs-toggle="modal" data-bs-target="#autopostModal"
+        title="Get tips from an AI coach" class="btn pl-3 pr-4 btn-lg btn-dark float-right">
+        &#x1F170;&#xFE0F;&#x2139;&#xFE0F;
+        Coach me
+      </button>
+      {% include "includes/projectdialogs.html" %}
+    {% endif %}
+
     <div class="alert float-right pe-5 mb-5 resource-list project-tips profile-projects alert-dismissible">
       <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 
@@ -56,6 +73,7 @@
           {% endfor %}
         </div>
       {% endif %}
+
     </div><!-- /alert -->
   {% endif %}
 
@@ -74,7 +92,7 @@
           <a href="{{ url_for('public.user_profile', username=current_user.username) }}">your profile</a>
           to switch.
           For more info see
-          <a href="{{ url_for('public.event_stages', event_id=current_event.id) }}" target="_blank">
+          <a href="{{ url_for('public.event_stages', event_id=project.event.id) }}" target="_blank">
             <i class="fa fa-arrow-right" aria-hidden="true"></i>
             Stages</a>
         </small></p>
@@ -82,14 +100,6 @@
       {% endif %}
     {% endif %}
   {% endif %}
-
-  <h2 class="project-name">
-    <i class="fa fa-comment text-sm"></i>
-    <a href="{{ url_for('project.project_view', project_id=project.id) }}"
-       title="Back to project">
-      {{project.name}}
-    </a>
-  </h4>
 
   {% if config.S3_KEY %}
     <button type="button" class="btn btn-light post-image-btn" style="display:none"
@@ -129,15 +139,6 @@
 
   {% if posts %}
   <div class="jumbotron mt-5">
-    {% if config.LLM_API_KEY and not project.is_challenge %}
-      <center>
-        <button data-bs-toggle="modal" data-bs-target="#autopostModal"
-          title="Get tips from an AI coach" class="btn pl-3 pr-4 btn-lg btn-dark">
-          &#x1F170;&#xFE0F;&#x2139;&#xFE0F;
-        </button>
-      </center>
-      {% include "includes/projectdialogs.html" %}
-    {% endif %}
     <section class="timeline">
     {% for s in posts %}
     <div class="timeline-item timeline-{{ s.name }} timeline-{{ s.icon }}">
