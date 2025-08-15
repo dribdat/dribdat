@@ -582,9 +582,9 @@ def import_new_project(event_id, is_anonymous=False):
     cache.clear()
 
     if is_anonymous:
-        flash("Thanks for your submission - login and Join to make changes", "warning")
+        flash("Thanks for your submission - Join in to make changes", "warning")
     else:
-        flash("Invite your team to Join this page and contribute!", "success")
+        flash("Invite others to Join this challenge, and contribute", "success")
         project_action(project.id, "create", False)
         if not current_user.is_admin:
             project_action(project.id, "star", False)
@@ -677,12 +677,12 @@ def create_new_project(event, is_anonymous=False):
 
     if is_anonymous:
         flash(
-            "Thanks for your submission - log in and Join to make changes.", "success"
+            "Thanks for your submission - Join in to make changes.", "success"
         )
     elif event.lock_resources:
-        flash("Thanks for sharing a resource here!", "success")
+        flash("Thanks for sharing a resource here", "success")
     else:
-        flash("Invite your team to Join this page and contribute!", "success")
+        flash("You can now invite others to Join this page and contribute", "success")
         project_action(project.id, "create", False)
         # Automatically join new projects
         if not current_user.is_admin:
