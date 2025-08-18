@@ -206,7 +206,7 @@ class User(UserMixin, PkModel):
             self.cardtype = "stack-overflow"
         if not self.carddata:
             # Default: generate a Gravatar link
-            gr_size = 80
+            gr_size = 256
             email = self.email.lower().encode("utf-8")
             gravatar_url = "https://www.gravatar.com/avatar/"
             gravatar_url += hashlib.md5(email).hexdigest()
