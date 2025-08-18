@@ -54,7 +54,7 @@
         $('#global-notifications-alert').removeClass('hidden');
         localStorage.removeItem('eventstatus-mute');
         localStorage.removeItem('eventstatus');
-        createNotification();
+        //createNotification();
       } else {
         localStorage.setItem('eventstatus-mute', 1);
         $('#notifications-status-text').html('Alerts have been muted');

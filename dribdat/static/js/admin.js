@@ -3,7 +3,8 @@
 if (typeof vegaEmbed !== 'undefined') {
 
   $.getJSON('/api/event/current/activity.json?limit=200', function(data) {
-    if (data.activities.length == 0) return;
+    if (data.activities.length == 0)
+        return $('#activities').hide();
     var yourVlSpec = {
       "width": "720",
       "$schema": "https://vega.github.io/schema/vega-lite/v2.0.json",
@@ -39,8 +40,16 @@ if (typeof vegaEmbed !== 'undefined') {
 $('#announcements button').click(function() {
   let $self = $(this);
   let message = $('#announcements textarea').val();
-  if (message.length < 5) return false;
-  if(!window.confirm('Are you ready to send this message?\n-------------------------------------\n' + message)) return false;
+  if (message.length == 0) {
+    if (!window.confirm(
+      'Cancel broadcast?'
+    )) return false;
+  } else { 
+    if (!window.confirm(message +
+      '\n-------------------------\n' +
+      'Ready to broadcast this?'
+    )) return false;
+  }
   //console.log(message);
   $.post('/api/event/current/push/status', {
     'text': message
@@ -48,7 +57,7 @@ $('#announcements button').click(function() {
     if (resp.status && resp.status == 'OK') {
       $self.html('✅ Sent');
       setTimeout(function() {
-        $self.html('📣 Send');
+        $self.html('📣');
       }, 5000);
     } else {
       console.error(resp);

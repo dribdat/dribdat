@@ -679,10 +679,13 @@ class Event(PkModel):
 
     def set_status(self, newstatus):
         """Sets a timed status text."""
-        self.status = ';'.join([
-            str(datetime.now().timestamp()),
-            newstatus.replace(';', ':')
-        ])
+        if newstatus is None:
+            self.status = None
+        else:
+            self.status = ';'.join([
+                str(datetime.now().timestamp()),
+                newstatus.replace(';', ':')
+            ])
 
     @property
     def status_text(self):

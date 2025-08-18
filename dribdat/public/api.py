@@ -428,8 +428,10 @@ def event_get_status():
 def event_push_status():
     """Update event status."""
     event = get_current_event()
+    if not event:
+        return jsonify(status='NO FEATURED EVENT')
     newstatus = request.form.get('text')
-    if not request.form.get('text'):
+    if not newstatus:
         # Clear the status
         event.set_status(None)
     else:

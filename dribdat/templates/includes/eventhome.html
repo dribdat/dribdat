@@ -34,7 +34,7 @@
       <div class="an-event-actions text-center mt-2 clearfix">
         {% if event.project_count %}
           <a href="{{ url_for('public.event', event_id=event.id) }}"
-             class="btn btn-default btn-lg float-right fs-4 me-2 w-100">
+             class="float-right fs-4 me-2 w-100">
           {% if event.has_finished %}
             <span title="Results">{{ event.project_count }}</span>
             <i class="fa fa-star" aria-hidden="true"></i>

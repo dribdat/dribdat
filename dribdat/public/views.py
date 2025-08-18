@@ -283,6 +283,8 @@ def event(event_id):
     event = Event.query.filter_by(id=event_id).first_or_404()
     # Sort visible projects by identity (if used), or alphabetically
     projects = Project.query.filter_by(event_id=event_id, is_hidden=False)
+    # Do not show unapproved challenges here
+    projects = projects.filter(Project.progress >= 0)
     # Admin messages
     editable = False
     if current_user and not current_user.is_anonymous:

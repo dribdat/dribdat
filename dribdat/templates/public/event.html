@@ -190,7 +190,7 @@
 </div><!-- /.event-info -->
 {% endif %}
 
-{% if current_event.countdown and not 'off' in config.DRIBDAT_CLOCK and not current_event.lock_resources %}
+{% if current_event.countdown and 'off' not in config.DRIBDAT_CLOCK and not current_event.lock_resources %}
 <center class="container-countdown-bottom">
   <a class="container-countdown"
     href="{{ url_for('public.dashboard') }}"

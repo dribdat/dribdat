@@ -2710,7 +2710,8 @@ Global alerts
     font-size: 125%;
     position: fixed;
     margin: 0 1em;
-    z-index: 999;
+    z-index: 1000;
+    bottom: 10px;
 }
 #global-notifications-alert i {
     font-size: 150%;
