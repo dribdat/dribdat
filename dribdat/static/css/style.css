@@ -2056,6 +2056,9 @@ div.project-edit-buttons {
   margin-top: -2em;
   margin-left: -3em;
 }
+.event-instruction .container p:last-child {
+  margin-bottom: 0px;
+}
 
 @media (max-width: 760px) {
     .category-info {

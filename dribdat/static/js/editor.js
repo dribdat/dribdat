@@ -22,7 +22,7 @@
       .prepend(
         '<span class="autotext-indicator float-right">' +
           '<a title="Status" class="btn-disabled me-1"><i class="fa fa-circle-o"></i></a>' +
-          '<button class="btn btn-light" type="button">Test</button>' +
+          '<button class="btn btn-light" type="button">?</button>' +
           "</span>",
       )
       .find(".autotext-indicator");
@@ -32,7 +32,7 @@
     var runAutofill = function ($button, url) {
       // Put UI in waiting mode
       $indicator.find("i").css("color", "blue");
-      $button.attr("disabled", "disabled").html("Please wait ...");
+      $button.attr("disabled", "disabled").html("Testing ...");
       // Call updater API
       $.getJSON("/api/project/autofill?url=" + url, function (data) {
         $button.removeAttr("disabled");

@@ -22,10 +22,17 @@
   {% if not current_event.has_finished and not current_user.has_joined(current_event) %}
     {% include "includes/eventjoin.html" %}
   {% endif %}
+  {% if may_certify %}
+    <a class="btn btn-lg btn-light"
+      href="{{ url_for('public.user_current') }}"
+      title="Download a participation certificate on your profile">
+      <i class="fa fa-check text-info"></i>
+      <b>Get Certificate</b></a>
+  {% endif %}
   {% if current_event.instruction %}
-    <div class="jumbotron event-instruction mt-2 mb-5 alert alert-light alert-dismissible">
+    <div class="jumbotron event-instruction mt-2 mb-5 alert alert-dismissible bg-body text-body">
       <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-      <div class="container scroll-after-200 pe-4">
+      <div class="container scroll-after-200">
         <a href="{{ url_for('public.event_instruction', event_id=current_event.id) }}" 
            class="btn btn-info btn-sm event-instruction-tip"
            title="Special instructions for participants">
@@ -43,6 +50,7 @@
 {% endif %}
 
 {% cache 300, 'event-%d' % current_event.id %}
+
 {% if current_event.has_categories %}
 <center class="nav-categories">
   <div class="btn-group" data-bs-toggle="buttons" role="group" aria-label="Filter by category">
@@ -74,14 +82,14 @@
     {% for project in summaries %}
       {{ proj.render_project_hexagon(project) }}
     {% endfor %}
-    {% if current_user and current_user.active and current_event.can_start_project %}
+    {% if current_event.can_start_project %}
       <a class="hexagon challenge new"
          href="{{ url_for('project.project_new', event_id=current_event.id) }}">
         <div class="hexagontent">
           {% if current_event.lock_resources %}
             <i title="Share a resource" class="fa fa-life-ring"></i>
           {% elif current_event.has_started %}
-            <i title="Start a project" class="fa fa-plus"></i>
+            <i title="Add your project" class="fa fa-plus"></i>
           {% elif not current_event.has_finished %}
             <i title="Post a challenge" class="fa fa-cube"></i>
           {% endif %}
@@ -120,13 +128,6 @@
 </div><!-- /category-info -->
 
 <div class="start-project btn-group pt-5 mt-5 mb-2">
-  {% if may_certify %}
-    <a class="btn btn-lg btn-light"
-      href="{{ url_for('public.user_current') }}"
-      title="Download a participation certificate on your profile">
-      <i class="fa fa-check text-info"></i>
-      <b>Get Certificate</b></a>
-  {% endif %}
   {% if current_event.webpage_url %}
     <a href="{{ current_event.webpage_url }}" class="btn btn-lg btn-dark" target="_blank">
     {% if not current_event.has_finished %}
@@ -189,8 +190,6 @@
 </div><!-- /.event-info -->
 {% endif %}
 
-{% endcache %}
-
 {% if current_event.countdown and not 'off' in config.DRIBDAT_CLOCK and not current_event.lock_resources %}
 <center class="container-countdown-bottom">
   <a class="container-countdown"
@@ -209,6 +208,8 @@
   </div>
 </div>
 {% endif %}
+
+{% endcache %}
 
 <div class="event-nav m-4 text-center" role="group" aria-label="Event navigation">
 

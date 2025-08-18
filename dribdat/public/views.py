@@ -299,7 +299,7 @@ def event(event_id):
             "public/embed.html", current_event=event, projects=projects
         )
     # Trim instructions
-    if '---' in event.instruction:
+    if event.instruction and '---' in event.instruction:
         event.instruction = event.instruction.split('---')[0]
     # Recommend projects
     summaries = []
