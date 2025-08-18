@@ -76,30 +76,32 @@
 </center>
 {% endif %}
 
-<div class="honeycomb mb-5">
-  <a name="projects"></a>
-  <div class="ibws-fix">
-    {% for project in summaries %}
-      {{ proj.render_project_hexagon(project) }}
-    {% endfor %}
-    {% if current_event.can_start_project %}
-      <a class="hexagon challenge new"
-         href="{{ url_for('project.project_new', event_id=current_event.id) }}">
-        <div class="hexagontent">
-          {% if current_event.lock_resources %}
-            <i title="Share a resource" class="fa fa-life-ring"></i>
-          {% elif current_event.has_started %}
-            <i title="Add your project" class="fa fa-plus"></i>
-          {% elif not current_event.has_finished %}
-            <i title="Post a challenge" class="fa fa-cube"></i>
-          {% endif %}
-        </div>
-      </a>
-    {% elif project_count % 2 != 0 %}
-      {{ proj.render_empty_hexagon() }}
-    {% endif %}
-  </div>
-</div><!-- /honeycomb -->
+{% if project_count > 0 %}
+  <div class="honeycomb mb-5">
+    <a name="projects"></a>
+    <div class="ibws-fix">
+      {% for project in summaries %}
+        {{ proj.render_project_hexagon(project) }}
+      {% endfor %}
+      {% if current_event.can_start_project %}
+        <a class="hexagon challenge new"
+          href="{{ url_for('project.project_new', event_id=current_event.id) }}">
+          <div class="hexagontent">
+            {% if current_event.lock_resources %}
+              <i title="Share a resource" class="fa fa-life-ring"></i>
+            {% elif current_event.has_started %}
+              <i title="Add your project" class="fa fa-plus"></i>
+            {% elif not current_event.has_finished %}
+              <i title="Post a challenge" class="fa fa-cube"></i>
+            {% endif %}
+          </div>
+        </a>
+      {% elif project_count % 2 != 0 %}
+        {{ proj.render_empty_hexagon() }}
+      {% endif %}
+    </div>
+  </div><!-- /honeycomb -->
+{% endif %}
 
 <div class="category-info clearfix">
   {% for category in current_event.categories_for_event() %}
