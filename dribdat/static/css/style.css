@@ -208,10 +208,15 @@ form input[type="checkbox"] {
     margin-bottom: 1em;
 }
 
+.scroll-after-200 {
+    overflow-y: auto;
+    max-height: 200px;
+}
 .scroll-after-500 {
     overflow-y: auto;
     max-height: 500px;
 }
+
 .alert .close {
     font-size: 1.6rem;
     margin: -0.2em -0.3em;
@@ -2044,6 +2049,12 @@ div.project-edit-buttons {
     padding: 2em;
     margin-bottom: 2em;
     text-align: center;
+}
+
+.event-instruction-tip {
+  position: absolute;
+  margin-top: -2em;
+  margin-left: -3em;
 }
 
 @media (max-width: 760px) {

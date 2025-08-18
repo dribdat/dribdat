@@ -1337,11 +1337,11 @@ class Category(PkModel):
             return 0
         return len(self.projects)
 
-    def event_projects(self, event_id):
-        """Get projects in this event."""
+    def projects_here(self, event_id):
+        """Get projects in this Category."""
         return (
             Project.query.filter_by(category_id=self.id)
-            .filter_by(event_id=event_id)
+            .filter_by(event_id=event_id, is_hidden=False)
             .all()
         )
 
