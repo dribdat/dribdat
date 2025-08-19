@@ -532,7 +532,7 @@ def import_new_project(event_id, is_anonymous=False):
     form = None
     project = Project()
 
-    if not is_anonymous:
+    if current_user and not current_user.is_anonymous:
         project.user_id = current_user.id
     else:
         project.hashtag = "Guest"
