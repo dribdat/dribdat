@@ -208,10 +208,15 @@ form input[type="checkbox"] {
     margin-bottom: 1em;
 }
 
+.scroll-after-200 {
+    overflow-y: auto;
+    max-height: 200px;
+}
 .scroll-after-500 {
     overflow-y: auto;
     max-height: 500px;
 }
+
 .alert .close {
     font-size: 1.6rem;
     margin: -0.2em -0.3em;
@@ -2046,6 +2051,17 @@ div.project-edit-buttons {
     text-align: center;
 }
 
+.event-instruction-tip {
+  position: absolute;
+  right: 3px;
+  bottom: 3px;
+  font-size: 70%;
+  border-radius: 0px;
+}
+.event-instruction .container p:last-child {
+  margin-bottom: 0px;
+}
+
 @media (max-width: 760px) {
     .category-info {
         margin-top: 0px;
@@ -2251,8 +2267,8 @@ div.project-edit-buttons {
     background-repeat: no-repeat;
     background-size: cover;
     font-size: 0px;
-    height: 70px;
-    width: 80px;
+    height: 79px;
+    width: 90px;
     margin: 10px;
 }
 .drib-count,
@@ -2696,7 +2712,8 @@ Global alerts
     font-size: 125%;
     position: fixed;
     margin: 0 1em;
-    z-index: 999;
+    z-index: 1000;
+    bottom: 10px;
 }
 #global-notifications-alert i {
     font-size: 150%;

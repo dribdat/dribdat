@@ -6,10 +6,17 @@
 
 {% if form %}
 {% if current_event.boilerplate %}
-<div class="jumbotron projectnew-boilerplate alert alert-dismissible">
+<div class="jumbotron projectnew-boilerplate alert alert-dismissible alert-light mb-5">
     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     <div class="container scroll-after-500">
-        {{ current_event.boilerplate|markdown }}
+      {% if current_event.instruction %}
+        <a href="{{ url_for('public.event_instruction', event_id=current_event.id) }}" 
+           class="btn btn-info btn-sm event-instruction-tip"
+           title="Special instructions for participants">
+          <i class="fa fa-info" aria-hidden="true"></i>
+        </a>
+      {% endif %}
+      {{ current_event.boilerplate|markdown }}
     </div>
 </div>
 {% endif %}
@@ -60,6 +67,17 @@
         {{ render_form(url_for('project.project_new', event_id=current_event.id) +
         '?create=1', form, formid="projectNew") }}
     </div>
+
+
+    <div class="container mt-4 text-center">
+        <a
+            class="btn btn-lg btn-dark"
+            href="{{ url_for('project.import_new_project', event_id=current_event.id) }}"
+        >
+            Import from repository ...
+        </a>
+    </div>
+
 {% else %}
     <div class="alert alert-info">
         Please <b><a href="{{ url_for('auth.login') }}">log in</a></b>

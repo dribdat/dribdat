@@ -17,25 +17,6 @@
   <div class="collapse navbar-collapse" id="navbar-main-collapse">
     <ul class="navbar-nav navbar-left nav-fill">
 
-      {% if current_user and current_user.is_admin %}
-        <li class="nav-item admin-area">
-          <a class="nav-link{{ ' active' if active == 'index' }}"
-             title="The engine room"
-             href="{{ url_for('admin.index') }}">
-            <i class="fa fa-gear bg-danger text-white" aria-hidden="true"></i>
-            Admin
-          </a>
-        </li>
-      {% endif %}
-
-      {% if tabs %}
-        {% for tab, link in tabs %}
-        <li class="nav-item">
-          <a class="nav-link {% if active == tab %}active{% endif %}" href="{{ link }}">{{ tab|capitalize }}</a>
-        </li>
-        {% endfor %}
-      {% endif %}
-
       <li class="nav-item">
         <a class="nav-link {% if active == 'dribs' %}active{% endif %}"
            title="Latest posts from the teams"
@@ -44,6 +25,27 @@
           Dribs
         </a>
       </li>
+
+    {% if current_user and current_user.is_admin %}
+      <li class="nav-item admin-area">
+        <a class="nav-link{{ ' active' if active == 'index' }}"
+            title="The engine room"
+            href="{{ url_for('admin.index') }}">
+          <i class="fa fa-gear bg-danger text-white" aria-hidden="true"></i>
+          Admin
+        </a>
+      </li>
+    {% endif %}
+
+    {% if tabs %}
+      {% for tab, link in tabs %}
+        <li class="nav-item">
+          <a class="nav-link {% if active == tab %}active{% endif %}" href="{{ link }}">
+            {{ tab|capitalize }}</a>
+        </li>
+      {% endfor %}
+
+    {% else %}
 
       {% if current_user and current_user.is_authenticated %}
           <li class="nav-item">
@@ -79,6 +81,7 @@
         </a>
       </li>
 
+    {% endif %}
       <li class="nav-item me-0 pe-0">
         <a class="nav-link pe-0" title="Search this dribdat site"
            onclick="$('#search input').focus()">

@@ -2,9 +2,16 @@
 block page_title %}Import project{% endblock %} {% block body_class
 %}projectform projectimport{% endblock %} {% block content %} {% if form %} {%
 if current_event.boilerplate %}
-<div class="jumbotron projectnew-boilerplate alert alert-dismissible">
+<div class="jumbotron projectnew-boilerplate alert alert-dismissible alert-light mb-5">
     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     <div class="container scroll-after-500">
+      {% if current_event.instruction %}
+        <a href="{{ url_for('public.event_instruction', event_id=current_event.id) }}" 
+           class="btn btn-info btn-sm event-instruction-tip"
+           title="Special instructions for participants">
+          <i class="fa fa-info" aria-hidden="true"></i>
+        </a>
+      {% endif %}
         {{ current_event.boilerplate|markdown }}
     </div>
 </div>
@@ -16,17 +23,13 @@ if current_event.boilerplate %}
         <a href="https://dribdat.cc/usage#sync-your-stuff" target="_blank">supported sites</a>
         shown below to sync it
         - or just
-        <a
-            href="{{ url_for('project.project_new', event_id=current_event.id) }}?create=1"
-            >skip this page</a
-        >
+        <a href="{{ url_for('project.project_new', event_id=current_event.id) }}?create=1">skip this page</a>
         to create a blank project.
     </p>
 </div>
 
 <div class="container">
-    {{ render_form(url_for('project.project_new', event_id=current_event.id),
-    form, formid="projectImport") }}
+    {{ render_form(url_for('project.import_new_project', event_id=current_event.id), form, formid="projectImport") }}
 </div>
 
 <div class="container mt-3">
@@ -130,13 +133,12 @@ if current_event.boilerplate %}
     </ul>
 </div>
 
-
-<div class="container mt-4 text-center">
+<div class="container mt-5 text-center">
     <a
-        class="btn btn-lg btn-success"
+        class="btn btn-lg btn-dark"
         href="{{ url_for('project.project_new', event_id=current_event.id) }}?create=1"
     >
-        Continue without import ...
+        Start a blank project instead ...
     </a>
 </div>
 

@@ -22,10 +22,22 @@
   {% if not current_event.has_finished and not current_user.has_joined(current_event) %}
     {% include "includes/eventjoin.html" %}
   {% endif %}
+  {% if may_certify %}
+    <a class="btn btn-lg btn-light"
+      href="{{ url_for('public.user_current') }}"
+      title="Download a participation certificate on your profile">
+      <i class="fa fa-check text-info"></i>
+      <b>Get Certificate</b></a>
+  {% endif %}
   {% if current_event.instruction %}
-    <div class="jumbotron event-instruction mt-2 mb-5 alert alert-light alert-dismissible">
+    <div class="jumbotron event-instruction mt-2 mb-5 alert alert-dismissible bg-body text-body">
       <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-      <div class="container scroll-after-500 pe-4">
+      <div class="container scroll-after-200">
+        <a href="{{ url_for('public.event_instruction', event_id=current_event.id) }}" 
+           class="btn btn-info btn-sm event-instruction-tip"
+           title="Special instructions for participants">
+          <i class="fa fa-info" aria-hidden="true"></i>
+        </a>
         {{current_event.instruction|markdown}}
       </div>
     </div>
@@ -38,6 +50,7 @@
 {% endif %}
 
 {% cache 300, 'event-%d' % current_event.id %}
+
 {% if current_event.has_categories %}
 <center class="nav-categories">
   <div class="btn-group" data-bs-toggle="buttons" role="group" aria-label="Filter by category">
@@ -63,30 +76,32 @@
 </center>
 {% endif %}
 
-<div class="honeycomb mb-5">
-  <a name="projects"></a>
-  <div class="ibws-fix">
-    {% for project in summaries %}
-      {{ proj.render_project_hexagon(project) }}
-    {% endfor %}
-    {% if current_user and current_user.active and current_event.can_start_project %}
-      <a class="hexagon challenge new"
-         href="{{ url_for('project.project_new', event_id=current_event.id) }}">
-        <div class="hexagontent">
-          {% if current_event.lock_resources %}
-            <i title="Share a resource" class="fa fa-life-ring"></i>
-          {% elif current_event.has_started %}
-            <i title="Start a project" class="fa fa-plus"></i>
-          {% elif not current_event.has_finished %}
-            <i title="Post a challenge" class="fa fa-cube"></i>
-          {% endif %}
-        </div>
-      </a>
-    {% elif project_count % 2 != 0 %}
-      {{ proj.render_empty_hexagon() }}
-    {% endif %}
-  </div>
-</div><!-- /honeycomb -->
+{% if project_count > 0 %}
+  <div class="honeycomb mb-5">
+    <a name="projects"></a>
+    <div class="ibws-fix">
+      {% for project in summaries %}
+        {{ proj.render_project_hexagon(project) }}
+      {% endfor %}
+      {% if current_event.can_start_project %}
+        <a class="hexagon challenge new"
+          href="{{ url_for('project.project_new', event_id=current_event.id) }}">
+          <div class="hexagontent">
+            {% if current_event.lock_resources %}
+              <i title="Share a resource" class="fa fa-life-ring"></i>
+            {% elif current_event.has_started %}
+              <i title="Add your project" class="fa fa-plus"></i>
+            {% elif not current_event.has_finished %}
+              <i title="Post a challenge" class="fa fa-cube"></i>
+            {% endif %}
+          </div>
+        </a>
+      {% elif project_count % 2 != 0 %}
+        {{ proj.render_empty_hexagon() }}
+      {% endif %}
+    </div>
+  </div><!-- /honeycomb -->
+{% endif %}
 
 <div class="category-info clearfix">
   {% for category in current_event.categories_for_event() %}
@@ -177,17 +192,28 @@
 </div><!-- /.event-info -->
 {% endif %}
 
+{% if current_event.countdown and 'off' not in config.DRIBDAT_CLOCK and not current_event.lock_resources %}
+<center class="container-countdown-bottom">
+  <a class="container-countdown"
+    href="{{ url_for('public.dashboard') }}"
+    title="{{ current_event.countdown }}">
+    <div id="clockEvent" class="event-countdown flipdown" data-start="{{ current_event.countdown }}"></div>
+  </a>
+</center>
+{% endif %}
+
+{% if current_event.community_embed %}
+<div class="panel panel-default community-embed">
+  <a name="community"></a>
+  <div class="panel-body">
+    {{current_event.community_embed|safe}}
+  </div>
+</div>
+{% endif %}
+
 {% endcache %}
 
 <div class="event-nav m-4 text-center" role="group" aria-label="Event navigation">
-
-  {% if may_certify %}
-    <a class="btn btn-lg btn-success"
-      href="{{ url_for('public.user_current') }}"
-      title="Download a participation certificate on your profile">
-      <i class="fa fa-check text-info"></i>
-      Certificate</a>
-  {% endif %}
 
   {% if current_event.can_start_project %}
     <div role="group" aria-label="Project creation" class="btn-group">
@@ -209,48 +235,18 @@
         </a>
     </div>
   {% endif %}
+  <a href="{{ url_for('public.event_challenges', event_id=current_event.id) }}" class="btn btn-lg btn-secondary"
+     title="Show all the challenges in this event">
+    <i class="fa fa-trophy" aria-hidden="true"></i>
+    <span>Challenges</span>
+  </a>
   {% if may_edit %}
       <a class="btn btn-lg btn-info"
         href="{{ url_for('public.event_edit', event_id=current_event.id) }}"
         title="Manage details of this event">
         <i class="fa fa-pencil"></i>
-        Edit</a>
-  {% endif %}
-  {% if current_user and current_user.active and current_user.is_admin %}
-      <div role="group" aria-label="Event administration" class="btn-group admin-area m-2 clear-both">
-        <a href="{{ url_for('admin.event_projects', event_id=current_event.id) }}" class="btn btn-secondary"
-            title="Administer event projects">
-            <i class="fa fa-check" aria-hidden="true"></i>
-            Challenges</a>
-        <a href="{{ url_for('admin.event', event_id=current_event.id) }}" class="btn btn-secondary"
-            title="Edit event details (admin view)">
-            <i class="fa fa-pencil" aria-hidden="true"></i>
-            Edit</a>
-        <a href="{{ url_for('admin.project_new', event_id=current_event.id) }}" class="btn btn-secondary"
-            title="Add a project (admin view)">
-            <i class="fa fa-plus"></i>
-            Add</a>
-      </div>
+        Edit event</a>
   {% endif %}
 </div>
-
-{% if current_event.countdown and not 'off' in config.DRIBDAT_CLOCK and not current_event.lock_resources %}
-<center class="container-countdown-bottom">
-  <a class="container-countdown"
-    href="{{ url_for('public.dashboard') }}"
-    title="{{ current_event.countdown }}">
-    <div id="clockEvent" class="event-countdown flipdown" data-start="{{ current_event.countdown }}"></div>
-  </a>
-</center>
-{% endif %}
-
-{% if current_event.community_embed %}
-<div class="panel panel-default community-embed">
-  <a name="community"></a>
-  <div class="panel-body">
-    {{current_event.community_embed|safe}}
-  </div>
-</div>
-{% endif %}
 
 {% endblock %}

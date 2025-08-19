@@ -65,17 +65,17 @@
   {% endif %}
   </div>
 
+  <br clear="all" />
+
   {% if may_certify %}
-    <div>
-      <a id="get-certified" class="btn btn-success btn-lg float-right"
+    <div class="float-right p-0 m-0">
+      <a id="get-certified" class="btn btn-success btn-lg"
         href="{{ url_for('public.user_cert') }}" download
-        title="Download a participation certificate">
+        title="Download my certificate">
         Get Certificate
       </a>
     </div>
   {% endif %}
-
-  <br clear="all" />
 {% endif %}
 
 {% if user.my_goals %}

@@ -283,22 +283,13 @@ def event(event_id):
     event = Event.query.filter_by(id=event_id).first_or_404()
     # Sort visible projects by identity (if used), or alphabetically
     projects = Project.query.filter_by(event_id=event_id, is_hidden=False)
+    # Do not show unapproved challenges here
+    projects = projects.filter(Project.progress >= 0)
     # Admin messages
     editable = False
     if current_user and not current_user.is_anonymous:
+        # Set permission to edit the event
         editable = current_user.is_admin or event.user == current_user
-        if current_user.is_admin:
-            # Notify the admin about hidden projects
-            sum_hidden = len(event.projects) - projects.count()
-            if sum_hidden > 0:
-                flash(
-                    ("%d hidden projects " % sum_hidden)
-                    + " may need moderation: check the Admin.",
-                    "secondary",
-                )
-    else:
-        # Show unapproved projects only to logged-in users
-        projects = projects.filter(Project.progress >= 0)
     # Order by ident then name
     projects = projects.order_by(
         Project.ident, Project.name
@@ -309,11 +300,14 @@ def event(event_id):
         return render_template(
             "public/embed.html", current_event=event, projects=projects
         )
-    # TODO: seems inefficient? We only need a subset of the data here:
-    summaries = [p.data for p in projects]
+    # Trim instructions
+    if event.instruction and '---' in event.instruction:
+        event.instruction = event.instruction.split('---')[0]
     # Recommend projects
+    summaries = []
     suggestions = []
     for project in projects:
+        summaries.append(project.data)
         if project.needs_members:
             suggestions.append(project)
     # Check for certificate
@@ -402,8 +396,12 @@ def event_stages(event_id):
 @blueprint.route("/event/<int:event_id>/instruction")
 def event_instruction(event_id):
     """Show instructions of an event."""
-    # Deprecated (for now)
-    return redirect(url_for("public.event_stages", event_id=event_id))
+    event = Event.query.filter_by(id=event_id).first_or_404()
+    return render_template(
+        "public/eventinstruction.html",
+        current_event=event,
+        active="instruction",
+    )
 
 
 @blueprint.route("/event/<int:event_id>/categories")
@@ -411,8 +409,7 @@ def event_categories(event_id):
     """Show categories of an event."""
     event = Event.query.filter_by(id=event_id).first_or_404()
     steps = event.categories_for_event()
-    projects = Project.query.filter_by(event_id=event.id, is_hidden=False)
-    projects = projects.filter_by(category_id=None)
+    projects = Project.query.filter_by(event_id=event.id, is_hidden=False, category_id=None)
     return render_template(
         "public/eventcategories.html",
         current_event=event,
@@ -429,9 +426,6 @@ def event_challenges(event_id):
     projects = Project.query.filter_by(event_id=event.id, is_hidden=False).order_by(
         Project.ident, Project.name
     )
-    # Only show approved challenges if you're not an admin
-    if not current_user or current_user.is_anonymous or not current_user.is_admin:
-        projects = projects.filter(Project.progress >= 0)
     challenges = [p.as_challenge() for p in projects]
     return render_template(
         "public/eventchallenges.html",

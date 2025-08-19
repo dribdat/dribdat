@@ -3,28 +3,23 @@
   <div class="modal-dialog auto-post">
     <div class="modal-content">
       <div class="modal-body text-start">
+        <h1>Coach me</h1>
         <p>
           Need a nudge? Get advice from
-          <b>{{ config.LLM_MODEL|upper }}</b>
-          - an automated service.
-          Data from your project page will be uploaded for processing,
-          then an AI-generated comment with suggestions will appear in your log.
+          <b>{{ config.LLM_MODEL|upper }}</b>!
+          Data from your project page will be uploaded for processing.
+          You may also use the prompt in a tool of your choice.
         </p>
         <p class="text-center">
           <button
              onclick="this.disabled=1; this.innerHTML='Please wait...'; location.href='{{ url_for('project.project_autopost', project_id=project.id) }}'"
              title="Get a tip from an AI coach" class="btn btn-lg btn-success">
             &#x1F170;&#xFE0F;&#x2139;&#xFE0F;
-            Coach me!
+            Send to project log
           </button>
-        </p>
-        <p>
-          Or tap here to use the prompt in another tool of your choice:
-        </p>
-        <p class="auto-prompt text-center">
           <button id="autoprompt"
              data-api="{{ url_for('project.project_autoprompt', project_id=project.id) }}"
-             class="btn btn-light btn-md">📋 Prompt my clipboard</button>
+             class="btn btn-light btn-lg">📋 Show prompt</button>
         </p>
         <hr>
         <p>

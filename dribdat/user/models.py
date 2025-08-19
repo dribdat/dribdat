@@ -206,7 +206,7 @@ class User(UserMixin, PkModel):
             self.cardtype = "stack-overflow"
         if not self.carddata:
             # Default: generate a Gravatar link
-            gr_size = 80
+            gr_size = 256
             email = self.email.lower().encode("utf-8")
             gravatar_url = "https://www.gravatar.com/avatar/"
             gravatar_url += hashlib.md5(email).hexdigest()
@@ -679,10 +679,13 @@ class Event(PkModel):
 
     def set_status(self, newstatus):
         """Sets a timed status text."""
-        self.status = ';'.join([
-            str(datetime.now().timestamp()),
-            newstatus.replace(';', ':')
-        ])
+        if newstatus is None:
+            self.status = None
+        else:
+            self.status = ';'.join([
+                str(datetime.now().timestamp()),
+                newstatus.replace(';', ':')
+            ])
 
     @property
     def status_text(self):
@@ -1337,11 +1340,11 @@ class Category(PkModel):
             return 0
         return len(self.projects)
 
-    def event_projects(self, event_id):
-        """Get projects in this event."""
+    def projects_here(self, event_id):
+        """Get projects in this Category."""
         return (
             Project.query.filter_by(category_id=self.id)
-            .filter_by(event_id=event_id)
+            .filter_by(event_id=event_id, is_hidden=False)
             .all()
         )
 
