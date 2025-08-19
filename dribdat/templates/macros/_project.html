@@ -82,38 +82,6 @@
 	</a>
 {% endmacro %}
 
-{% macro render_project_card(project) %}
-	<div class="col-lg-4 mb-4">
-	    <a class="card {{ 'challenge' if project.is_challenge else 'project' }}"
-		   href="{{ url_for('project.project_view', project_id=project.id) }}">
-			<div class="card-header w-100">
-				{% if project.image_url %}
-					<img height="60" class="card-img-left pe-3" src="{{project.image_url}}">
-				{% endif %}
-				<h5 class="card-title">{{ project.name }}</h5>
-				{% if project.score and not project.is_challenge %}
-					<div class="project-score">
-						<div class="progress" title="Summary of progress">
-							<div class="progress-bar" role="progressbar" style="width:{{project.score}}%">{{project.score}}</div>
-						</div>
-					</div>
-				{% endif %}
-				{% if project.ident %}
-					<span class="project-ident">{{ project.ident }}</span>
-				{% endif %}
-			</div>
-		    <div class="card-body bg-body text-body">
-				<div class="card-text">
-					<p class="project-summary">
-						{{ project.summary }}
-					</p>
-          {{ render_project_stats(project) }}
-				</div>
-			</div>
-	    </a>
-	</div>
-{% endmacro %}
-
 {% macro render_project_stats(project) %}
   <table class="project-stats">
     {% if project.stats and project.stats.people %}
@@ -135,9 +103,9 @@
 			  {% if False and project.image_url %}
 				<img height="60" class="card-img-left pe-3" src="{{project.image_url}}">
 			  {% endif %}
-			  <h5 class="card-title">
+			  <h5 class="card-title pt-2">
           {% if project.stats and project.stats.people %}
-            <div class="float-right m-2" title="People"><i class="fa fa-user-circle me-2 ms-3"></i>{{ project.stats.people }}</div>
+            <div class="float-right mb-2" title="People"><i class="fa fa-user-circle me-2 ms-3"></i>{{ project.stats.people }}</div>
           {% endif %}
           {% if project.ident %}
             <span class="project-ident me-2">#{{ project.ident }}</span>
@@ -146,6 +114,41 @@
         </h5>
 		</div>
 		</a>
+	</div>
+{% endmacro %}
+
+
+{% macro render_project_card(project) %}
+	<div class="col-lg-4 mb-4">
+	    <a class="card {{ 'challenge' if project.is_challenge else 'project' }}"
+		   href="{{ url_for('project.project_view', project_id=project.id) }}">
+			<div class="card-header w-100">
+				<h5 class="card-title pt-2">
+          {% if project.ident %}
+            <span class="project-ident float-left me-2">#{{ project.ident }}</span>
+          {% endif %}
+          {{ project.name }}
+        </h5>
+			</div>
+		  <div class="card-body bg-body text-body">
+        <div class="card-text">
+          {% if project.image_url %}
+            <img height="60" class="card-img-left pe-2 mb-2" src="{{project.image_url}}">
+          {% endif %}
+          <p class="project-summary">
+            {{ project.summary }}
+          </p>
+          {% if project.score and not project.is_challenge %}
+            <div class="project-score">
+              <div class="progress" title="Summary of progress">
+                <div class="progress-bar" role="progressbar" style="width:{{project.score}}%">{{project.score}}</div>
+              </div>
+            </div>
+          {% endif %}
+          {{ render_project_stats(project) }}
+        </div>
+			</div>
+	    </a>
 	</div>
 {% endmacro %}
 
@@ -158,11 +161,11 @@
             <img height="60" class="card-img-left pe-3" src="{{project.image_url}}">
           {% endif %}
           <h5 class="card-title text-black">{{ project.name }}</h5>
-          <span class="float-right m-1 ps-2 pe-2 progress" title="Project stage">
+          <span class="float-right m-1 ps-2 pb-3 pe-2 progress" title="Project stage">
             {{project.phase}}
           </span>
         </div>
-          <div class="card-body bg-body text-body">
+        <div class="card-body bg-body text-body">
           <div class="card-text">
             {% if project.summary %}
               <p class="project-summary">
@@ -191,7 +194,7 @@
           {% endif %}
 
           <a href="{{ url_for('project.project_view', project_id=project.id) }}"
-            class="float-right btn btn-sm btn-info">
+            class="float-right btn btn-sm btn-info hidden">
             Open</a>
         </div>
 	    </div>

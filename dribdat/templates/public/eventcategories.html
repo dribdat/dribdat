@@ -52,7 +52,7 @@
       {% if category.projects_here(current_event.id) %}
       <div class="profile-projects mt-2">
           <div class="row ibws-fix">
-            {% for project in category.event_projects(current_event.id) %}
+            {% for project in category.projects_here(current_event.id) %}
                 {{ proj.render_project_card(project) }}
             {% endfor %}
           </div>

@@ -1343,9 +1343,10 @@ class Category(PkModel):
     def projects_here(self, event_id):
         """Get projects in this Category."""
         return (
-            Project.query.filter_by(category_id=self.id)
-            .filter_by(event_id=event_id, is_hidden=False)
-            .all()
+            Project.query.filter_by(category_id=self.id) \
+                .filter_by(event_id=event_id, is_hidden=False) \
+                .order_by(Project.ident, Project.name) \
+                .all()
         )
 
     @property
