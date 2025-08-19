@@ -648,9 +648,9 @@ class Event(PkModel):
         """Provide a normalized countdown timer."""
         starts_at = self.starts_at_tz
         ends_at = self.ends_at_tz
-        # Check event time limit (hard coded to 30 days)
+        # Check event time limit (hard coded to 64 days)
         tz_now = datetime.now(UTC)
-        time_limit = tz_now + timedelta(days=30)
+        time_limit = tz_now + timedelta(days=64)
         # Show countdown within limits
         if starts_at > tz_now:
             if starts_at > time_limit:
