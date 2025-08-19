@@ -76,9 +76,12 @@
 				      {% if event.webpage_url and not event.has_finished %}
 						  	<a href="{{ event.webpage_url }}" class="btn btn-light text-bg-light" target="_blank">
 							    <i class="fa fa-ticket" aria-hidden="true"></i>
-							    Register
-						    </a>
-						  {% endif %}
+							    Register</a>
+              {% elif event.community_url %}
+                <a href="{{ event.community_url }}" class="btn btn-info text-bg-light" target="_blank">
+                  <i class="fa fa-comment" aria-hidden="true"></i>
+                  Connect</a>
+              {% endif %}
 						</span>
 	        	{% if event.project_count %}
 	        		<a href="{{ url_for('public.event', event_id=event.id) }}" class="btn btn-default">
