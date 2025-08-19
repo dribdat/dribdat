@@ -6,25 +6,25 @@
 {% block body_class %}userform{% endblock %}
 
 {% block content %}
-  <div class="row">
-    <h2 class="huge col-5">
-      Edit
-      <a href="{{ url_for('public.user_profile', username=user.username) }}">
-        my story</a>
-    </h2>
-    <div class="profile-header col-7">
-      {% if user.carddata %}
-        <img src="{{user.carddata}}" hspace="56" />
-      {% endif %}
 
-      <div class="btn-group float-right">
-        <a href="{{ url_for('auth.user_profile') }}" class="btn btn-warning btn-lg">
-          <i class="fa fa-arrow-right"></i>
-          Edit profile
-        </a>
-      </div>
+  <div class="profile-header">
+    <div class="float-right">
+      {% if user.carddata %}
+        <img src="{{user.carddata}}" align="right" hspace="10" vspace="5" width="100" border="1" />
+        <br />
+      {% endif %}
+      <a href="{{ url_for('auth.user_profile') }}" class="btn btn-warning btn-lg">
+        <i class="fa fa-arrow-right"></i>
+        Edit profile
+      </a>
     </div>
   </div>
+
+  <h2 class="huge">
+    Edit
+    <a href="{{ url_for('public.user_profile', username=user.username) }}">
+      my story</a>
+  </h2>
 
   {{ render_form(url_for('auth.user_story'), form, formid='userStory') }}
 
