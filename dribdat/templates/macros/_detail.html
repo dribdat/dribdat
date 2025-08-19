@@ -3,13 +3,13 @@
 {% if not project.event.lock_resources %}
   <div class="btn-group project-tab-buttons" role="group" aria-label="Switch view">
 
-    <a class="btn btn-light{% if main_view %} active{% endif %}" id="project-tab-md" href="{{ url_for('project.project_view', project_id=project.id) }}"
+    <a class="btn btn-light{% if not main_view %} active{% endif %}" id="project-tab-md" href="{{ url_for('project.project_view', project_id=project.id) }}"
        title="Go to the Pitch">
       <i class="fa fa-book" aria-hidden="true"></i>
       {%- if not main_view %}{% if project.is_challenge %} Challenge
       {%- else %} Pitch{% endif %}{% endif %}
     </a>
-    <a class="btn btn-light{% if not main_view %} active{% endif %}" id="dribs-tab-md" href="{{ url_for('project.get_log', project_id=project.id) }}"
+    <a class="btn btn-light{% if main_view %} active{% endif %}" id="dribs-tab-md" href="{{ url_for('project.get_log', project_id=project.id) }}"
        title="Log and progress review">
       <i class="fa fa-paperclip" aria-hidden="true"></i>
       {% if main_view %} Log{% endif %}

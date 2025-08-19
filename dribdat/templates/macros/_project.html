@@ -104,20 +104,24 @@
 					<p class="project-summary">
 						{{ project.summary }}
 					</p>
-					<table class="project-stats">
-			    	{% if project.stats and project.stats.people %}
-			    		<td>People:</td><th>{{ project.stats.people }}</th>
-				    	<td>Posts:</td><th>{{ project.stats.total }}</th>
-				    	<td>Dribs:</td><th>{{ project.stats.updates }}</th>
-						{% endif %}
-			    	{% if project.age %}
-			    		<td>Started:</td><th>{{ project.age|since_date }}</th>
-						{% endif %}
-				  </table>
+          {{ render_project_stats(project) }}
 				</div>
 			</div>
 	    </a>
 	</div>
+{% endmacro %}
+
+{% macro render_project_stats(project) %}
+  <table class="project-stats">
+    {% if project.stats and project.stats.people %}
+      <th title="People"><i class="fa fa-user-circle me-2 ms-3"></i>{{ project.stats.people }}</th>
+      <th title="Posts"><i class="fa fa-sticky-note me-2 ms-3"></i>{{ project.stats.total }}</th>
+      <th title="Dribs"><i class="fa fa-star me-2 ms-3"></i>{{ project.stats.updates }}</th>
+    {% endif %}
+    {% if project.age %}
+      <th title="Started"><i class="fa fa-clock-o me-2 ms-3"></i>{{ project.age|since_date }}</th>
+    {% endif %}
+  </table>
 {% endmacro %}
 
 {% macro render_join_card(project) %}

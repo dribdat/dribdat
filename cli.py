@@ -71,9 +71,10 @@ def numerise(event: int, clear: bool, primes: bool, challenges: bool):
         from dribdat.user.models import Event, Project
         event = Event.query.filter_by(id=event).first_or_404()
         print("Applying numbers to event: ", event.name)
-        projects = Project.query.filter_by(event_id=event.id) \
-                    .order_by(Project.progress.desc()) \
-                    .order_by(Project.name)
+        projects = Project.query \
+                    .filter_by(event_id=event.id, is_hidden=False) \
+                    .filter(Project.progress >= 0) \
+                    .order_by(Project.id)
         ix = 0
         count = projects.count()
         for c in projects:

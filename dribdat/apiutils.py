@@ -18,7 +18,11 @@ PY3 = version_info[0] == 3
 
 def get_projects_by_event(event_id):
     """Get all the visible projects that belong to an event."""
-    return Project.query.filter_by(event_id=event_id, is_hidden=False)
+    return Project.query \
+        .filter_by(event_id=event_id, is_hidden=False) \
+        .filter(Project.progress > 0) \
+        .order_by(Project.progress.desc()) \
+        .order_by(Project.name)
 
 
 def get_event_activities(event_id=None, limit=50, q=None, action=None):

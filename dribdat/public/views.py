@@ -423,9 +423,15 @@ def event_categories(event_id):
 def event_challenges(event_id):
     """Show all the challenges of an event."""
     event = Event.query.filter_by(id=event_id).first_or_404()
-    projects = Project.query.filter_by(event_id=event.id, is_hidden=False).order_by(
-        Project.ident, Project.name
-    )
+    MIN_PROGRESS = 0
+    if 'all' in request.args:
+        MIN_PROGRESS = -10
+    projects = Project.query \
+        .filter_by(event_id=event.id, is_hidden=False) \
+        .filter(Project.progress >= MIN_PROGRESS) \
+        .order_by(
+            Project.ident, Project.name
+        )
     challenges = [p.as_challenge() for p in projects]
     return render_template(
         "public/eventchallenges.html",

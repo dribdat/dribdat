@@ -1837,7 +1837,7 @@ main .form-actions input.btn {
     content: "Log";
 }
 #suggest-md::before {
-    content: "Stage";
+    content: "Resources";
 }
 #readme-md::before {
     content: "Readme";
