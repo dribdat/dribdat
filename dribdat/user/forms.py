@@ -85,8 +85,8 @@ class RegisterForm(FlaskForm):
         [DataRequired(), EqualTo("password", message="Passwords must match")],
     )
     webpage_url = URLField("Online profile")
-    submit = SubmitField("Continue")
     recaptcha = RecaptchaField()
+    submit = SubmitField("Continue")
 
     def __init__(self, *args, **kwargs):
         """Create instance."""

@@ -532,13 +532,18 @@ def import_new_project(event_id, is_anonymous=False):
     form = None
     project = Project()
 
-    if current_user and not current_user.is_anonymous:
+    # Check ownership of challenge
+    if not is_anonymous and current_user and not current_user.is_anonymous:
         project.user_id = current_user.id
     else:
         project.hashtag = "Guest"
         project.is_hidden = True
 
     form = ProjectImport(obj=project, next=request.args.get("next"))
+
+    # If Captcha is not configured, skip the validation
+    if not is_anonymous or not current_app.config["RECAPTCHA_PUBLIC_KEY"]:
+        del form.recaptcha
 
     if form.is_submitted() and not form.validate():
         print(form.errors)

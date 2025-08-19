@@ -32,6 +32,7 @@ class ProjectImport(FlaskForm):
     name = HiddenField(
         "Title", [length(max=80), UniqueValidator(Project, "name"), InputRequired()]
     )
+    recaptcha = RecaptchaField()
     submit = SubmitField("Import")
 
 
@@ -62,8 +63,8 @@ class ProjectNew(FlaskForm):
         description="Your channel, room, or contact address.",
     )
     template = HiddenField("template")
-    submit = SubmitField("Save")
     recaptcha = RecaptchaField()
+    submit = SubmitField("Save")
 
 
 class ProjectForm(FlaskForm):
