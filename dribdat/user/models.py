@@ -780,6 +780,7 @@ class Project(PkModel):
     def technai(self, value):
         self._technai = pack_csvlist(value)
 
+    cc_signal = Column(db.String(10), nullable=True)
     logo_color = Column(db.String(7), nullable=True)
     logo_icon = Column(db.String(40), nullable=True)
 

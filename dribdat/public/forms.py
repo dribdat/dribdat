@@ -114,6 +114,17 @@ class ProjectDetailForm(FlaskForm):
         [length(max=1024)],
         description="🏀 Comma,separated,list of skills or technologies involved.",
     )
+    cc_signal = SelectField(
+        "CC Signal for AI",
+        choices=[
+            ('', 'Not specified'),
+            ('C', 'Credit'),
+            ('C+D', 'Credit + Direct Contribution'),
+            ('C+E', 'Credit + Ecosystem Contribution'),
+            ('C+O', 'Credit + Open')
+        ],
+        description='Signal how your project data may be used for AI training.'
+    )
     download_url = URLField(
         "Demo",
         [length(max=255)],

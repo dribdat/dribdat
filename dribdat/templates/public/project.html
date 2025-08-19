@@ -164,6 +164,24 @@
     {% endif %}
   </div>
 
+  {% if project.cc_signal %}
+    <div id="cc-signal-md" class="row m-3" title="Creative Commons Signal for AI">
+      <div class="col-12 text-center">
+        <a href="https://creativecommons.org/ai-and-the-commons/cc-signals/" target="_blank" rel="noopener noreferrer" class="cc-signal">
+          {% if project.cc_signal == 'C' %}
+            <i class="fa fa-cc"></i> Credit
+          {% elif project.cc_signal == 'C+D' %}
+            <i class="fa fa-cc"></i><i class="fa fa-plus"></i><i class="fa fa-money"></i> Credit + Direct Contribution
+          {% elif project.cc_signal == 'C+E' %}
+            <i class="fa fa-cc"></i><i class="fa fa-plus"></i><i class="fa fa-users"></i> Credit + Ecosystem Contribution
+          {% elif project.cc_signal == 'C+O' %}
+            <i class="fa fa-cc"></i><i class="fa fa-plus"></i><i class="fa fa-unlock"></i> Credit + Open
+          {% endif %}
+        </a>
+      </div>
+    </div>
+  {% endif %}
+
   {% if project.technai %}
     <div id="technai-md" class="row m-3" title="Tech and skills used in this project">
       <div class="profile-skills col-12 text-center">
