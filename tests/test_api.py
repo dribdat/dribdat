@@ -6,7 +6,7 @@ import json
 
 from dribdat.aggregation import ProjectActivity
 from dribdat.apigenerate import gen_project_pitch
-from dribdat.user.models import Event
+from dribdat.user.models import Event, Category
 from dribdat.public.api import *
 
 from .factories import EventFactory, ProjectFactory, UserFactory
@@ -103,3 +103,91 @@ class TestApi:
         # Test Project search
         ppj = json.loads(projects_top_json().get_data())
         assert len(ppj['projects']) == 1
+
+    def test_get_project_list(self):
+        """Test project list API functions."""
+        event = EventFactory(name="hello", is_current=True)
+        event.save()
+        project = ProjectFactory(name="myproject", event=event)
+        project.save()
+
+        # Test basic project list
+        jsondata = json.loads(project_list_current_json().data)
+        assert len(jsondata["projects"]) == 1
+        assert jsondata["projects"][0]["name"] == "myproject"
+        assert jsondata["event"]["name"] == "hello"
+
+        jsondata = json.loads(project_list_json(event.id).data)
+        assert len(jsondata["projects"]) == 1
+        assert jsondata["projects"][0]["name"] == "myproject"
+
+    def test_get_category_list(self):
+        """Test category list API functions."""
+        event = EventFactory(name="hello", is_current=True)
+        event.save()
+        category = Category(name="mycategory")
+        category.event = event
+        category.save()
+
+        # Test basic category list
+        jsondata = json.loads(categories_list_current_json().data)
+        assert len(jsondata["categories"]) == 1
+        assert jsondata["categories"][0]["name"] == "mycategory"
+        assert jsondata["event"]["name"] == "hello"
+
+        jsondata = json.loads(categories_list_json(event.id).data)
+        assert len(jsondata["categories"]) == 1
+        assert jsondata["categories"][0]["name"] == "mycategory"
+
+    def test_get_event_activity(self):
+        """Test event activity API functions."""
+        event = EventFactory(name="hello", is_current=True)
+        event.save()
+        project = ProjectFactory(name="myproject", event=event)
+        project.save()
+        user = UserFactory()
+        user.save()
+        activity = ProjectActivity(project, 'update', user)
+
+        # Test basic event activity
+        jsondata = json.loads(event_activity_current_json().data)
+        assert len(jsondata["activities"]) > 0
+        assert jsondata["activities"][0]["name"] == "update"
+
+        jsondata = json.loads(event_activity_json(event.id).data)
+        assert len(jsondata["activities"]) > 0
+        assert jsondata["activities"][0]["name"] == "update"
+
+    def test_get_project_info(self):
+        """Test project info API functions."""
+        event = EventFactory()
+        project = ProjectFactory(name="myproject", event=event)
+        project.save()
+
+        # Test basic project info
+        jsondata = json.loads(project_info_json(project.id).data)
+        assert jsondata["project"]["name"] == "myproject"
+
+    def test_project_search(self, testapp):
+        """Test project search API functions."""
+        event = EventFactory()
+        project = ProjectFactory(name="myproject", event=event)
+        project.save()
+
+        # Test basic project search
+        res = testapp.get('/api/project/search.json?q=myproject')
+        assert res.status_code == 200
+        assert len(res.json['projects']) == 1
+        assert res.json['projects'][0]['name'] == "myproject"
+
+    def test_get_user_profile(self):
+        """Test user profile API functions."""
+        user = UserFactory(username="myuser")
+        user.save()
+
+        # Test basic user profile
+        jsondata = json.loads(profile_user_json(user.id).data)
+        assert jsondata["username"] == "myuser"
+
+        jsondata = json.loads(profile_username_json(user.username).data)
+        assert jsondata["username"] == "myuser"
