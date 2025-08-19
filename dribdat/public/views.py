@@ -448,7 +448,7 @@ def event_resources(event_id):
     """Show the resources view of an event."""
     event = Event.query.filter_by(id=event_id).first_or_404()
     projects = Project.query.filter_by(event_id=event.id, is_hidden=False).order_by(
-        Project.progress, Project.ident, Project.name
+        Project.ident, Project.progress, Project.name
     )
     return render_template(
         "public/eventresources.html",

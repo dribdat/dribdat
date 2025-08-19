@@ -154,16 +154,13 @@
 
 {% macro render_resource_card(project) %}
 	<div class="col-lg-4 mb-4">
-	  <a href="{{ url_for('project.project_view', project_id=project.id) }}">
+	  <a href="{{ url_for('project.project_view', project_id=project.id) }}" style="text-decoration:none">
 	    <div class="card challenge">
         <div class="card-header w-100 clearfix bg-light">
           {% if project.image_url %}
             <img height="60" class="card-img-left pe-3" src="{{project.image_url}}">
           {% endif %}
           <h5 class="card-title text-black">{{ project.name }}</h5>
-          <span class="float-right m-1 ps-2 pb-3 pe-2 progress" title="Project stage">
-            {{project.phase}}
-          </span>
         </div>
         <div class="card-body bg-body text-body">
           <div class="card-text">
@@ -182,20 +179,20 @@
           {% if project.download_url %}
             <a href="{{ project.download_url }}" target="_blank" rel="noopener noreferrer"
               class="btn btn-sm" title="Download">
-            <i class="fa fa-arrow-down"></i>
+              <i class="fa fa-arrow-down"></i>
             </a>
           {% endif %}
 
           {% if project.source_url %}
             <a href="{{ project.source_url }}" target="_blank" rel="noopener noreferrer"
               class="btn btn-sm" title="Source available">
-            <i class="fa fa-github"></i>
-              </a>
+              <i class="fa fa-github"></i>
+            </a>
           {% endif %}
 
-          <a href="{{ url_for('project.project_view', project_id=project.id) }}"
-            class="float-right btn btn-sm btn-info hidden">
-            Open</a>
+          <div class="card-text float-right opacity-50" title="Project stage">
+            {{project.phase}}
+          </div>
         </div>
 	    </div>
 	  </a>
