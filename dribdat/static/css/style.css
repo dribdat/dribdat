@@ -2053,10 +2053,12 @@ div.project-edit-buttons {
 
 .event-instruction-tip {
   position: absolute;
-  right: 3px;
-  bottom: 3px;
-  font-size: 70%;
+  top: 0px;
+  left: 0px;
+  margin-top: -3px;
+  font-size: 80%;
   border-radius: 0px;
+  z-index: 999;
 }
 .event-instruction .container p:last-child {
   margin-bottom: 0px;

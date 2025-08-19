@@ -98,8 +98,11 @@
 						</div>
 					</div>
 				{% endif %}
+				{% if project.ident %}
+					<span class="project-ident">{{ project.ident }}</span>
+				{% endif %}
 			</div>
-		    <div class="card-body">
+		    <div class="card-body bg-body text-body">
 				<div class="card-text">
 					<p class="project-summary">
 						{{ project.summary }}
@@ -129,17 +132,18 @@
 	    <a class="card {{ 'challenge' if project.is_challenge else 'project' }}"
 			href="{{ url_for('project.project_view', project_id=project.id) }}" target="_blank">
 		<div class="card-header w-100">
-			  {% if project.image_url %}
+			  {% if False and project.image_url %}
 				<img height="60" class="card-img-left pe-3" src="{{project.image_url}}">
 			  {% endif %}
-			  <h5 class="card-title">{{ project.name }}</h5>
-					<!--
-			<button class="btn btn-md btn-success project-star"
-                href="{{ url_for('project.project_star', project_id=project.id) }}"
-                title="Contribute to the project">
-                    <i class="fa fa-thumbs-up"></i>
-                    Join
-                    </button>  -->
+			  <h5 class="card-title">
+          {% if project.stats and project.stats.people %}
+            <div class="float-right m-2" title="People"><i class="fa fa-user-circle me-2 ms-3"></i>{{ project.stats.people }}</div>
+          {% endif %}
+          {% if project.ident %}
+            <span class="project-ident me-2">#{{ project.ident }}</span>
+          {% endif %}
+          <span>{{ project.name }}</span>
+        </h5>
 		</div>
 		</a>
 	</div>
@@ -149,47 +153,47 @@
 	<div class="col-lg-4 mb-4">
 	  <a href="{{ url_for('project.project_view', project_id=project.id) }}">
 	    <div class="card challenge">
-			<div class="card-header w-100 clearfix bg-light">
-				{% if project.image_url %}
-					<img height="60" class="card-img-left pe-3" src="{{project.image_url}}">
-				{% endif %}
-				<h5 class="card-title text-black">{{ project.name }}</h5>
-				<span class="float-right m-1 ps-2 pe-2 progress" title="Project stage">
-					{{project.phase}}
-				</span>
-			</div>
-		    <div class="card-body">
-				<div class="card-text text-body">
-					{% if project.summary %}
-						<p class="project-summary">
-							{{ project.summary }}
-						</p>
-					{% else %}
-						<p class="project-longtext">
-							{{ project.longtext|truncate(120) }}
-						</p>
-					{% endif %}
-				</div>
-			</div>
-			<div class="card-footer">
-			  {% if project.download_url %}
-			    <a href="{{ project.download_url }}" target="_blank" rel="noopener noreferrer"
-			       class="btn btn-sm" title="Download">
-					<i class="fa fa-arrow-down"></i>
-			   	 </a>
-			  {% endif %}
+        <div class="card-header w-100 clearfix bg-light">
+          {% if project.image_url %}
+            <img height="60" class="card-img-left pe-3" src="{{project.image_url}}">
+          {% endif %}
+          <h5 class="card-title text-black">{{ project.name }}</h5>
+          <span class="float-right m-1 ps-2 pe-2 progress" title="Project stage">
+            {{project.phase}}
+          </span>
+        </div>
+          <div class="card-body bg-body text-body">
+          <div class="card-text">
+            {% if project.summary %}
+              <p class="project-summary">
+                {{ project.summary }}
+              </p>
+            {% else %}
+              <p class="project-longtext">
+                {{ project.longtext|truncate(120) }}
+              </p>
+            {% endif %}
+          </div>
+        </div>
+        <div class="card-footer">
+          {% if project.download_url %}
+            <a href="{{ project.download_url }}" target="_blank" rel="noopener noreferrer"
+              class="btn btn-sm" title="Download">
+            <i class="fa fa-arrow-down"></i>
+            </a>
+          {% endif %}
 
-			  {% if project.source_url %}
-			    <a href="{{ project.source_url }}" target="_blank" rel="noopener noreferrer"
-			       class="btn btn-sm" title="Source available">
-					<i class="fa fa-github"></i>
-			   	  </a>
-			  {% endif %}
+          {% if project.source_url %}
+            <a href="{{ project.source_url }}" target="_blank" rel="noopener noreferrer"
+              class="btn btn-sm" title="Source available">
+            <i class="fa fa-github"></i>
+              </a>
+          {% endif %}
 
-			  <a href="{{ url_for('project.project_view', project_id=project.id) }}"
-			  	 class="float-right btn btn-sm btn-info">
-		   		 Open</a>
-			</div>
+          <a href="{{ url_for('project.project_view', project_id=project.id) }}"
+            class="float-right btn btn-sm btn-info">
+            Open</a>
+        </div>
 	    </div>
 	  </a>
 	</div>

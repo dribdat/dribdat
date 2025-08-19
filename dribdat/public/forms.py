@@ -281,8 +281,8 @@ class EventEdit(FlaskForm):
     )
     instruction = TextAreaField(
         "Instructions",
-        description="Shown to registered participants only - "
-        + "Markdown and HTML supported",
+        description="Shown to registered participants only. "
+        + "Markdown and HTML supported. Split with ---",
     )
     aftersubmit = TextAreaField(
         "Submissions guide",
