@@ -45,6 +45,7 @@ class ProjectFactory(BaseFactory):
     image_url = "http://image.local/something.png"
     webpage_url = "http://webpage.localhost"
     logo_color = "red"
+    progress = 0 # approved challenge
 
     class Meta:  # noqa: D106
         model = Project
