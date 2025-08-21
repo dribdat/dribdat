@@ -29,18 +29,7 @@ MAX_EXCERPT_LENGTH = 500
 
 # Containers for stage data
 PR_CHALLENGE = 0
-PR_STAGES = {"PROGRESS": {}, "STAGE": {}}
-
-# Random questions for drib post
-DRIB_QUESTIONS = [
-    "Tell us about your latest work",
-    "What was the last thing you did here?",
-    "Share a recent activity in your project",
-    "How are the vibes in your team right now?",
-    "Could you share what you just completed?",
-    "What is your current task, and next move?",
-    "Describe your current challenge",
-]
+PR_STAGES = {"PROGRESS": {}, "STAGE": {}, "SURVEY": {}, "QUESTIONS": {}}
 
 
 def load_project_stages():
@@ -48,14 +37,23 @@ def load_project_stages():
     if not PR_STAGES["PROGRESS"] == {}:
         return
     DRIBDAT_STAGE = os_env.get("DRIBDAT_STAGE", None)
+
+    # Load configuration remotely or locally
     if DRIBDAT_STAGE:
         project_stages = FetchStageConfig(DRIBDAT_STAGE)
     else:
         project_stages = load_yaml_presets("stages", "name")
+
+    # Assign data by stage
     for ps in project_stages:
         pid = int(project_stages[ps]["id"])
         PR_STAGES["PROGRESS"][pid] = project_stages[ps]["description"]
         PR_STAGES["STAGE"][pid] = project_stages[ps]
+
+    # Load surveys
+    survey_data = load_yaml_presets("survey")
+    PR_STAGES["QUESTIONS"] = survey_data["dribs"]
+    PR_STAGES["SURVEY"] = survey_data["users"]
 
 
 def projectProgressList(All=True, WithEmpty=True):
@@ -238,8 +236,14 @@ def getActivityByType(a, only_active=True):  # noqa: C901
 
 
 def drib_question():
-    q = DRIB_QUESTIONS
+    """Return a random question as Drib-prompt."""
+    q = PR_STAGES["QUESTIONS"]
     return q[round(random() * (len(q) - 1))]
+
+
+def user_questions():
+    """Return the survey questions."""
+    return PR_STAGES["SURVEY"]
 
 
 # TODO: make this happen in app.py

@@ -72,7 +72,7 @@ EOF""" % (url, url)
 
     def test_custom_stages(self, project, testapp):
         """Load custom event stages."""
-        stages_local = load_yaml_presets("stages")
+        stages_local = load_yaml_presets("stages", "name")
         assert len(stages_local) == 7
         assert "CHALLENGE" in stages_local
         assert int(stages_local["CHALLENGE"]["id"]) == PR_CHALLENGE
