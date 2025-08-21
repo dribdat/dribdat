@@ -767,9 +767,16 @@ class Project(PkModel):
     # remotely managed (by bot)
     is_autoupdate = Column(db.Boolean(), default=True)
 
+    # Main content bits
     autotext = Column(db.UnicodeText(), nullable=True, default="")
     longtext = Column(db.UnicodeText(), nullable=True, default="")
 
+    # Devilsinthedetails
+    logo_color = Column(db.String(7), nullable=True)
+    logo_icon = Column(db.String(40), nullable=True)
+    terms_reuse = Column(db.String(256), nullable=True)
+
+    # A comma delimited field
     _technai = Column(db.UnicodeText(1024), nullable=True, default="")
 
     @property
@@ -780,10 +787,7 @@ class Project(PkModel):
     def technai(self, value):
         self._technai = pack_csvlist(value)
 
-    cc_signal = Column(db.String(10), nullable=True)
-    logo_color = Column(db.String(7), nullable=True)
-    logo_icon = Column(db.String(40), nullable=True)
-
+    # Timestamps of creation and updates
     created_at = Column(db.DateTime(timezone=True), nullable=False, default=func.now())
     updated_at = Column(db.DateTime(timezone=True), nullable=False, default=func.now())
 

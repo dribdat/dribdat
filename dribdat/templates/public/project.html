@@ -164,20 +164,22 @@
     {% endif %}
   </div>
 
-  {% if project.cc_signal %}
-    <div id="cc-signal-md" class="row m-3" title="Creative Commons Signal for AI">
+  {% if project.terms_reuse %}
+    <div id="project-terms" class="row m-3" title="Legal conditions of reuse">
       <div class="col-12 text-center">
-        <a href="https://creativecommons.org/ai-and-the-commons/cc-signals/" target="_blank" rel="noopener noreferrer" class="cc-signal">
-          {% if project.cc_signal == 'C' %}
-            <i class="fa fa-cc"></i> Credit
-          {% elif project.cc_signal == 'C+D' %}
-            <i class="fa fa-cc"></i><i class="fa fa-plus"></i><i class="fa fa-money"></i> Credit + Direct Contribution
-          {% elif project.cc_signal == 'C+E' %}
-            <i class="fa fa-cc"></i><i class="fa fa-plus"></i><i class="fa fa-users"></i> Credit + Ecosystem Contribution
-          {% elif project.cc_signal == 'C+O' %}
-            <i class="fa fa-cc"></i><i class="fa fa-plus"></i><i class="fa fa-unlock"></i> Credit + Open
-          {% endif %}
-        </a>
+        {% if project.terms_reuse == 'C' or project.terms_reuse.startswith('C+') %}
+          <a href="https://creativecommons.org/ai-and-the-commons/cc-signals/" target="_blank" rel="noopener noreferrer" class="cc-signal">
+            <i class="fa fa-cc"></i><i class="fa fa-plus"></i>
+            {{ project.terms_reuse }}
+          </a>
+        {% elif project.terms_reuse.startswith('CC') %}
+          <a href="https://creativecommons.org/licenses/" target="_blank" rel="noopener noreferrer" class="cc-by">
+            <i class="fa fa-cc"></i>
+            {{ project.terms_reuse }}
+          </a>
+        {% else %}
+          {{ project.terms_reuse }}
+        {% endif %}
       </div>
     </div>
   {% endif %}
