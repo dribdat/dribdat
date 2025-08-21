@@ -164,6 +164,26 @@
     {% endif %}
   </div>
 
+  {% if project.terms_reuse %}
+    <div id="project-terms" class="row m-3" title="Legal conditions of reuse">
+      <div class="col-12 text-center">
+        {% if project.terms_reuse == 'C' or project.terms_reuse.startswith('C+') %}
+          <a href="https://creativecommons.org/ai-and-the-commons/cc-signals/" target="_blank" rel="noopener noreferrer" class="cc-signal">
+            <i class="fa fa-cc"></i><i class="fa fa-plus"></i>
+            {{ project.terms_reuse }}
+          </a>
+        {% elif project.terms_reuse.startswith('CC') %}
+          <a href="https://creativecommons.org/licenses/" target="_blank" rel="noopener noreferrer" class="cc-by">
+            <i class="fa fa-cc"></i>
+            {{ project.terms_reuse }}
+          </a>
+        {% else %}
+          {{ project.terms_reuse }}
+        {% endif %}
+      </div>
+    </div>
+  {% endif %}
+
   {% if project.technai %}
     <div id="technai-md" class="row m-3" title="Tech and skills used in this project">
       <div class="profile-skills col-12 text-center">
