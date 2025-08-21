@@ -17,7 +17,6 @@ from .factories import (
 class TestApiViews:
     """API view tests."""
     
-
     def test_hackathon_json(self):
         res = info_event_current_hackathon_json().json
         assert "@type" in res
@@ -25,6 +24,7 @@ class TestApiViews:
     
     def test_project_list(self): 
         event = Event.query.first()
+        event.projects[0].progress = 0
         res = project_list_current_json().json
         assert "event" in res
         assert len(res["projects"]) == 1
