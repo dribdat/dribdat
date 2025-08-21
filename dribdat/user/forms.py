@@ -30,22 +30,22 @@ common_user_related_fields = dict(
     fullname=StringField(
         "Display name",
         [Length(max=200)],
-        description="Your full name, if you want it shown on your profile and certificate.",
+        description="Your full name (only if you want it shown on your profile and certificate).",
     ),
     webpage_url=URLField(
         "Online profile",
         [Length(max=128)],
-        description="Link to your website or a social media profile.",
+        description="Link to your website or social media profile.",
     ),
     username=StringField(
         "Username",
         [Length(max=40), UniqueValidator(User, "username"), DataRequired()],
-        description="Short and sweet.",
+        description="Keep it short and sweet.",
     ),
     email=EmailField(
         "E-mail address",
         [Length(max=80), DataRequired()],
-        description="For a profile image, link this address at Gravatar.com",
+        description="Only admins and you can see this.",
     ),
     goals=StringField(
         "My goal",
