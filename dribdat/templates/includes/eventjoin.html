@@ -23,7 +23,6 @@
         {{ misc.render_user_profile(current_user) }}
         {% if suggestions %}
         </div><div class="modal-footer">
-          <h5 class="mb-3"><i>Teams matching your profile</i></h5>
           <div class="profile-projects mt-2" style="border:none">
             <div class="row ibws-fix">
             {% for project in suggestions %}
@@ -32,9 +31,10 @@
             </div>
           </div><!-- /profile-projects -->
           <p class="mt-2">
-            These teams are still looking for contributors.
-            Go meet them, review the challenge, leave a Comment, 
-            then use the <b>Join</b> button to start.
+            These teams are looking for members.
+            Review the challenge, see if it matches your goals,
+            go meet them or leave a <b>Comment</b>, 
+            then use the <b>Join</b> button to contribute.
           </p>
         {% else %}
           <p class="mt-2">
