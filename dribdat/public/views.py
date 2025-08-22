@@ -101,7 +101,8 @@ def about():
 def terms():
     """Render a static terms of use page."""
     terms = EVENT_PRESET["terms"]
-    return render_template("public/terms.html", active="terms", terms=terms)
+    return render_template("public/terms.html", active="terms", 
+        current_event=current_event(), terms=terms)
 
 
 @blueprint.route("/favicon.ico")
