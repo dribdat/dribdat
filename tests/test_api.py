@@ -110,6 +110,7 @@ class TestApi:
         event = EventFactory(name="hello", is_current=True)
         event.save()
         project = ProjectFactory(name="myproject", event=event)
+        project.progress = 0
         project.save()
 
         # Test basic project list
