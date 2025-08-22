@@ -202,16 +202,18 @@
 
   // Helper to copy links
   $('#invite-link').each(function() {
-    var urlContent = $(this).val();
-    $(this).parent().click(function(e) {
+    var urlContent = $(this).parent().find('input').val();
+    $(this).click(function(e) {
       e.preventDefault(); e.stopPropagation();
-      // TODO: use Toast. $(this).tooltip({'title':'Copied'}).show();
+      // TODO: use Toast. 
+      $(this)
+        .tooltip({'title': 'Copied'}).tooltip('show');
       if ('clipboard' in navigator) {
         return navigator.clipboard.writeText(urlContent);
       } else {
         return document.execCommand('copy', true, urlContent);
       }
-    });
+    }).css({'cursor': 'pointer'});
   });
 
   // Horizontal desktop dragging of project pages

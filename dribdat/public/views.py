@@ -409,7 +409,10 @@ def event_categories(event_id):
     """Show categories of an event."""
     event = Event.query.filter_by(id=event_id).first_or_404()
     steps = event.categories_for_event()
-    projects = Project.query.filter_by(event_id=event.id, is_hidden=False, category_id=None)
+    projects = Project.query \
+        .filter_by(event_id=event.id, is_hidden=False, category_id=None) \
+        .order_by(Project.ident, Project.name) \
+        .all()
     return render_template(
         "public/eventcategories.html",
         current_event=event,
@@ -423,9 +426,13 @@ def event_categories(event_id):
 def event_challenges(event_id):
     """Show all the challenges of an event."""
     event = Event.query.filter_by(id=event_id).first_or_404()
-    projects = Project.query.filter_by(event_id=event.id, is_hidden=False).order_by(
-        Project.ident, Project.name
-    )
+    projects = Project.query \
+        .filter_by(event_id=event.id, is_hidden=False)
+    if 'all' not in request.args:
+        projects = projects.filter(Project.progress >= 0)
+    projects = projects.order_by(
+            Project.ident, Project.name
+        )
     challenges = [p.as_challenge() for p in projects]
     return render_template(
         "public/eventchallenges.html",
@@ -441,7 +448,7 @@ def event_resources(event_id):
     """Show the resources view of an event."""
     event = Event.query.filter_by(id=event_id).first_or_404()
     projects = Project.query.filter_by(event_id=event.id, is_hidden=False).order_by(
-        Project.progress, Project.ident, Project.name
+        Project.ident, Project.progress, Project.name
     )
     return render_template(
         "public/eventresources.html",

@@ -3,29 +3,26 @@
 <button type="button" class="btn btn-success btn-lg"
         title="Participate in this event"
         data-bs-toggle="modal" data-bs-target="#eventJoin">
-  <i class="fa fa-connectdevelop" aria-hidden="true"></i>
-  Join event
+  <i class="fa fa-thumbs-up" aria-hidden="true"></i>
+  Join this event
 </button>
 
 <div class="modal fade" id="eventJoin" role="dialog" tabindex="-1">
   <div class="modal-dialog event-join">
     <div class="modal-content">
       <div class="modal-header text-center"><h3>
-          <i class="fa fa-connectdevelop" aria-hidden="true"></i>
-          Ready to join?
+          Let's get started!
     </h3></div>
       <div class="modal-body">
         <p>
             Make sure that
             <a href="{{ url_for('auth.user_story', user_id=current_user.id) }}" target="_blank">your story</a>
-            is complete and up-to-date:
+            is complete and up-to-date
+          <i class="fa fa-thumbs-up" aria-hidden="true"></i>
         </p>
         {{ misc.render_user_profile(current_user) }}
         {% if suggestions %}
-          <p class="mt-2">
-            Choose at least one team to participate with, review the challenge, and look for the
-            <button class="btn btn-success">Join</button> button:
-          </p>
+        </div><div class="modal-footer">
           <div class="profile-projects mt-2" style="border:none">
             <div class="row ibws-fix">
             {% for project in suggestions %}
@@ -33,6 +30,12 @@
             {% endfor %}
             </div>
           </div><!-- /profile-projects -->
+          <p class="mt-2">
+            These teams are looking for members.
+            Review the challenge, see if it matches your goals,
+            go meet them or leave a <b>Comment</b>, 
+            then use the <b>Join</b> button to contribute.
+          </p>
         {% else %}
           <p class="mt-2">
             No projects listed yet. Why not start a team and invite your friends?

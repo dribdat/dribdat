@@ -83,6 +83,7 @@ class TestApi:
         project.user = user
         project.event = event
         project.longtext = "Smee"
+        project.progress = 0
         project.save()
         ProjectActivity(project, 'update', user)
 

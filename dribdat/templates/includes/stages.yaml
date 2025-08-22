@@ -20,14 +20,14 @@ stages:
           min: 123
           help: Write at least one paragraph into the Pitch.
       agree:
-        - Your questions hint at what data will be needed, helping to scope the project.
-        - Acquiring data to meet the challenge is realistic within our time limits.
+        - Acquiring resources to meet the challenge is realistic within our time limits.
+        - Your challenge suggests what data will be needed, helping to scope the project.
   -
     id: 5
     name: PROJECT
     phase: Project
     description: Collecting resources together in a shared space 
-    tip: Find examples and resources to inspire your team.
+    tip: Find examples and resources to bootstrap your team.
     emoji: 👪
     conditions:
       validate:
@@ -38,12 +38,12 @@ stages:
           help: Between 1 and 5 people should Join your project or expedition.
       agree:
         - Our team members have agreed to work together for the duration of the event.
-        - We are obtaining data, and sharing it in a space accessible to everyone.
+        - We are obtaining resources, sharing them in a space accessible to everyone.
   -
     id: 10
     name: RESEARCH
     phase: Research
-    description: Scoping of data collection and prototyping strategy 
+    description: Scoping of design and prototyping strategy 
     tip: Write down what you are doing regularly to stay on track.
     emoji: 🥽
     conditions:
@@ -53,8 +53,8 @@ stages:
           test: validurl
           help: Provide a source link in your project Details.
       agree:
+        - A shared repository has been set up, your designs, code and data are backed up.
         - Check the metadata and context of your data, the credibility of your sources.
-        - A shared repository has been set up, your work on code and data is backed up.
   -
     id: 20
     name: SKETCH
@@ -69,8 +69,8 @@ stages:
           test: validurl
           help: Upload or link to an image in your project Details.
       agree:
-        - Annotate key datasets to reflect your understanding of the structure and content.
-        - Make wireframes or sketches of your idea, attaching it as an image to your documentation.
+        - Explain key concepts to reflect your understanding of the structures and process involved.
+        - Make wireframes or sketches of your goals, attaching it as an image to your documentation.
   -
     id: 30
     name: PROTOTYPE
@@ -101,8 +101,8 @@ stages:
           test: validurl
           help: Provide a contact link in your project Details.
       agree:
+        - You are open to questions or feedback, and contact with the team is possible.
         - While correlating and linking data fields, we are critical of causality.
-        - Contact with the maintainers is possible to ask questions or send feedback.
   -
     id: 50
     name: LIVE
@@ -117,5 +117,5 @@ stages:
           test: validurl
           help: Provide a download link in your project Details.
       agree:
-        - The full results of this work have been showcased and published under an open license.
-        - We have correctly attributed all sources, and thanked all contributors.
+        - The results of our cooperation are published under an open license.
+        - We have correctly attributed all sources and thanked all contributors.

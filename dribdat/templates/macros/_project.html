@@ -82,42 +82,17 @@
 	</a>
 {% endmacro %}
 
-{% macro render_project_card(project) %}
-	<div class="col-lg-4 mb-4">
-	    <a class="card {{ 'challenge' if project.is_challenge else 'project' }}"
-		   href="{{ url_for('project.project_view', project_id=project.id) }}">
-			<div class="card-header w-100">
-				{% if project.image_url %}
-					<img height="60" class="card-img-left pe-3" src="{{project.image_url}}">
-				{% endif %}
-				<h5 class="card-title">{{ project.name }}</h5>
-				{% if project.score and not project.is_challenge %}
-					<div class="project-score">
-						<div class="progress" title="Summary of progress">
-							<div class="progress-bar" role="progressbar" style="width:{{project.score}}%">{{project.score}}</div>
-						</div>
-					</div>
-				{% endif %}
-			</div>
-		    <div class="card-body">
-				<div class="card-text">
-					<p class="project-summary">
-						{{ project.summary }}
-					</p>
-					<table class="project-stats">
-			    	{% if project.stats and project.stats.people %}
-			    		<td>People:</td><th>{{ project.stats.people }}</th>
-				    	<td>Posts:</td><th>{{ project.stats.total }}</th>
-				    	<td>Dribs:</td><th>{{ project.stats.updates }}</th>
-						{% endif %}
-			    	{% if project.age %}
-			    		<td>Started:</td><th>{{ project.age|since_date }}</th>
-						{% endif %}
-				  </table>
-				</div>
-			</div>
-	    </a>
-	</div>
+{% macro render_project_stats(project) %}
+  <table class="project-stats">
+    {% if project.stats and project.stats.people %}
+      <th title="People"><i class="fa fa-user-circle me-2 ms-3"></i>{{ project.stats.people }}</th>
+      <th title="Posts"><i class="fa fa-sticky-note me-2 ms-3"></i>{{ project.stats.total }}</th>
+      <th title="Dribs"><i class="fa fa-star me-2 ms-3"></i>{{ project.stats.updates }}</th>
+    {% endif %}
+    {% if project.age %}
+      <th title="Started"><i class="fa fa-clock-o me-2 ms-3"></i>{{ project.age|since_date }}</th>
+    {% endif %}
+  </table>
 {% endmacro %}
 
 {% macro render_join_card(project) %}
@@ -125,67 +100,100 @@
 	    <a class="card {{ 'challenge' if project.is_challenge else 'project' }}"
 			href="{{ url_for('project.project_view', project_id=project.id) }}" target="_blank">
 		<div class="card-header w-100">
-			  {% if project.image_url %}
+			  {% if False and project.image_url %}
 				<img height="60" class="card-img-left pe-3" src="{{project.image_url}}">
 			  {% endif %}
-			  <h5 class="card-title">{{ project.name }}</h5>
-					<!--
-			<button class="btn btn-md btn-success project-star"
-                href="{{ url_for('project.project_star', project_id=project.id) }}"
-                title="Contribute to the project">
-                    <i class="fa fa-thumbs-up"></i>
-                    Join
-                    </button>  -->
+			  <h5 class="card-title pt-2">
+          {% if project.stats and project.stats.people %}
+            <div class="float-right mb-2" title="People"><i class="fa fa-user-circle me-2 ms-3"></i>{{ project.stats.people }}</div>
+          {% endif %}
+          {% if project.ident %}
+            <span class="project-ident me-2">#{{ project.ident }}</span>
+          {% endif %}
+          <span>{{ project.name }}</span>
+        </h5>
 		</div>
 		</a>
 	</div>
 {% endmacro %}
 
+
+{% macro render_project_card(project) %}
+	<div class="col-lg-4 mb-4">
+	    <a class="card {{ 'challenge' if project.is_challenge else 'project' }}"
+		   href="{{ url_for('project.project_view', project_id=project.id) }}">
+			<div class="card-header w-100">
+				<h5 class="card-title pt-2">
+          {% if project.ident %}
+            <span class="project-ident float-left me-2">#{{ project.ident }}</span>
+          {% endif %}
+          {{ project.name }}
+        </h5>
+			</div>
+		  <div class="card-body bg-body text-body">
+        <div class="card-text">
+          {% if project.image_url %}
+            <img height="60" class="card-img-left pe-2 mb-2" src="{{project.image_url}}">
+          {% endif %}
+          <p class="project-summary">
+            {{ project.summary }}
+          </p>
+          {% if project.score and not project.is_challenge %}
+            <div class="project-score">
+              <div class="progress" title="Summary of progress">
+                <div class="progress-bar" role="progressbar" style="width:{{project.score}}%">{{project.score}}</div>
+              </div>
+            </div>
+          {% endif %}
+          {{ render_project_stats(project) }}
+        </div>
+			</div>
+	    </a>
+	</div>
+{% endmacro %}
+
 {% macro render_resource_card(project) %}
 	<div class="col-lg-4 mb-4">
-	  <a href="{{ url_for('project.project_view', project_id=project.id) }}">
+	  <a href="{{ url_for('project.project_view', project_id=project.id) }}" style="text-decoration:none">
 	    <div class="card challenge">
-			<div class="card-header w-100 clearfix bg-light">
-				{% if project.image_url %}
-					<img height="60" class="card-img-left pe-3" src="{{project.image_url}}">
-				{% endif %}
-				<h5 class="card-title text-black">{{ project.name }}</h5>
-				<span class="float-right m-1 ps-2 pe-2 progress" title="Project stage">
-					{{project.phase}}
-				</span>
-			</div>
-		    <div class="card-body">
-				<div class="card-text text-body">
-					{% if project.summary %}
-						<p class="project-summary">
-							{{ project.summary }}
-						</p>
-					{% else %}
-						<p class="project-longtext">
-							{{ project.longtext|truncate(120) }}
-						</p>
-					{% endif %}
-				</div>
-			</div>
-			<div class="card-footer">
-			  {% if project.download_url %}
-			    <a href="{{ project.download_url }}" target="_blank" rel="noopener noreferrer"
-			       class="btn btn-sm" title="Download">
-					<i class="fa fa-arrow-down"></i>
-			   	 </a>
-			  {% endif %}
+        <div class="card-header w-100 clearfix bg-light">
+          {% if project.image_url %}
+            <img height="60" class="card-img-left pe-3" src="{{project.image_url}}">
+          {% endif %}
+          <h5 class="card-title text-black">{{ project.name }}</h5>
+        </div>
+        <div class="card-body bg-body text-body">
+          <div class="card-text">
+            {% if project.summary %}
+              <p class="project-summary">
+                {{ project.summary }}
+              </p>
+            {% else %}
+              <p class="project-longtext">
+                {{ project.longtext|truncate(120) }}
+              </p>
+            {% endif %}
+          </div>
+        </div>
+        <div class="card-footer">
+          {% if project.download_url %}
+            <a href="{{ project.download_url }}" target="_blank" rel="noopener noreferrer"
+              class="btn btn-sm" title="Download">
+              <i class="fa fa-arrow-down"></i>
+            </a>
+          {% endif %}
 
-			  {% if project.source_url %}
-			    <a href="{{ project.source_url }}" target="_blank" rel="noopener noreferrer"
-			       class="btn btn-sm" title="Source available">
-					<i class="fa fa-github"></i>
-			   	  </a>
-			  {% endif %}
+          {% if project.source_url %}
+            <a href="{{ project.source_url }}" target="_blank" rel="noopener noreferrer"
+              class="btn btn-sm" title="Source available">
+              <i class="fa fa-github"></i>
+            </a>
+          {% endif %}
 
-			  <a href="{{ url_for('project.project_view', project_id=project.id) }}"
-			  	 class="float-right btn btn-sm btn-info">
-		   		 Open</a>
-			</div>
+          <div class="card-text float-right opacity-50" title="Project stage">
+            {{project.phase}}
+          </div>
+        </div>
 	    </div>
 	  </a>
 	</div>

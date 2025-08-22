@@ -648,9 +648,9 @@ class Event(PkModel):
         """Provide a normalized countdown timer."""
         starts_at = self.starts_at_tz
         ends_at = self.ends_at_tz
-        # Check event time limit (hard coded to 30 days)
+        # Check event time limit (hard coded to 64 days)
         tz_now = datetime.now(UTC)
-        time_limit = tz_now + timedelta(days=30)
+        time_limit = tz_now + timedelta(days=64)
         # Show countdown within limits
         if starts_at > tz_now:
             if starts_at > time_limit:
@@ -1343,9 +1343,10 @@ class Category(PkModel):
     def projects_here(self, event_id):
         """Get projects in this Category."""
         return (
-            Project.query.filter_by(category_id=self.id)
-            .filter_by(event_id=event_id, is_hidden=False)
-            .all()
+            Project.query.filter_by(category_id=self.id) \
+                .filter_by(event_id=event_id, is_hidden=False) \
+                .order_by(Project.ident, Project.name) \
+                .all()
         )
 
     @property

@@ -652,10 +652,12 @@ nav .nav-login {
     text-align: center;
     display: block;
 }
+/*
 .event-home .event-info {
     box-shadow: 3px 3px 0px rgb(0 0 0 / 30%);
     border: 1px solid rgba(0, 0, 0, 0.3);
 }
+*/
 .event-home .event-info .event-summary {
     text-align: center;
     margin: 1em 10%;
@@ -1837,7 +1839,7 @@ main .form-actions input.btn {
     content: "Log";
 }
 #suggest-md::before {
-    content: "Stage";
+    content: "Resources";
 }
 #readme-md::before {
     content: "Readme";
@@ -2028,10 +2030,6 @@ div.project-edit-buttons {
     margin-top: 8em;
     margin-bottom: -3em;
 }
-.category-container .card-header {
-    text-align: center;
-    font-size: 125%;
-}
 .category-tip {
     opacity: 0.8;
 }
@@ -2053,10 +2051,12 @@ div.project-edit-buttons {
 
 .event-instruction-tip {
   position: absolute;
-  right: 3px;
-  bottom: 3px;
-  font-size: 70%;
+  top: 0px;
+  left: 0px;
+  margin-top: -3px;
+  font-size: 80%;
   border-radius: 0px;
+  z-index: 999;
 }
 .event-instruction .container p:last-child {
   margin-bottom: 0px;

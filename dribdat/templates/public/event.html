@@ -20,17 +20,22 @@
 
 {% if current_user and current_user.active %}
   {% if not current_event.has_finished and not current_user.has_joined(current_event) %}
-    {% include "includes/eventjoin.html" %}
+    <div class="start-project">
+      {% include "includes/eventjoin.html" %}
+    </div>
   {% endif %}
   {% if may_certify %}
-    <a class="btn btn-lg btn-light"
-      href="{{ url_for('public.user_current') }}"
-      title="Download a participation certificate on your profile">
-      <i class="fa fa-check text-info"></i>
-      <b>Get Certificate</b></a>
+    <div class="float-right p-0 m-0">
+      <a id="get-certified" class="btn btn-success btn-lg"
+        href="{{ url_for('public.user_cert') }}" download
+        title="Download my certificate">
+        Get Certificate
+      </a>
+    </div>
   {% endif %}
+
   {% if current_event.instruction %}
-    <div class="jumbotron event-instruction mt-2 mb-5 alert alert-dismissible bg-body text-body">
+    <div class="jumbotron event-instruction mt-2 alert alert-dismissible bg-body text-body">
       <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
       <div class="container scroll-after-200">
         <a href="{{ url_for('public.event_instruction', event_id=current_event.id) }}" 
@@ -42,39 +47,61 @@
       </div>
     </div>
   {% endif %}
-{% elif current_event.has_started and not current_event.has_finished %}
-  <div category-id="infobox" class="category-container category-tip mb-5">
-    <center><h4><i class="fa fa-lightbulb-o"></i> &nbsp;The event has started! Join a team after
-        <a href="/enter">you log in</a>.</h4></center>
+
+{% else %}
+
+  <div class="start-project">
+    {% if current_event.webpage_url %}
+      <a href="{{ current_event.webpage_url }}" class="btn btn-lg btn-dark" target="_blank">
+      {% if not current_event.has_finished %}
+        <i class="fa fa-ticket" aria-hidden="true"></i>
+        Register
+      {% else %}
+        About
+      {% endif %}
+      </a>
+    {% endif %}
+    {% if current_event.community_url %}
+      <a href="{{ current_event.community_url }}" target="community" class="btn btn-lg btn-info">
+        <i class="fa fa-comment"></i>
+        Connect</a>
+    {% endif %}
   </div>
+
+  {% if current_event.has_started and not current_event.has_finished %}
+    <div category-id="infobox" class="category-container category-tip">
+      <center><h4><i class="fa fa-lightbulb-o"></i> &nbsp;The event has started! Join a team after
+          <a href="/enter">you log in</a>.</h4></center>
+    </div>
+  {% endif %}
 {% endif %}
 
 {% cache 300, 'event-%d' % current_event.id %}
 
-{% if current_event.has_categories %}
-<center class="nav-categories">
-  <div class="btn-group" data-bs-toggle="buttons" role="group" aria-label="Filter by category">
-    <label class="btn btn-default active" title="All projects">
-      <input type="radio" name="category" id="" autocomplete="off" checked>
-        <i class="fa fa-cube"></i><br>
-        <span> </span>
-    </label>
-    {% for category in current_event.categories_for_event() %}
-      <label class="btn btn-default">
-        <input type="radio" name="category" id="{{category.id}}" autocomplete="off">
-          {% if category.logo_icon %}
-            {% if category.logo_icon|length==1 %}
-              <span class="logo_icon">{{category.logo_icon}}</span><br>
-            {% else %}
-              <i class="fa fa-{{category.logo_icon}}"></i><br>
-            {% endif %}
-          {% endif %}
-          <span>{{ category.name }}</span>
+<center class="nav-categories mt-5">
+  {% if current_event.has_categories %}
+    <div class="btn-group" data-bs-toggle="buttons" role="group" aria-label="Filter by category">
+      <label class="btn btn-default active" title="All projects">
+        <input type="radio" name="category" id="" autocomplete="off" checked>
+          <i class="fa fa-cube"></i><br>
+          <span> </span>
       </label>
-    {% endfor %}
-  </div>
+      {% for category in current_event.categories_for_event() %}
+        <label class="btn btn-default">
+          <input type="radio" name="category" id="{{category.id}}" autocomplete="off">
+            {% if category.logo_icon %}
+              {% if category.logo_icon|length==1 %}
+                <span class="logo_icon">{{category.logo_icon}}</span><br>
+              {% else %}
+                <i class="fa fa-{{category.logo_icon}}"></i><br>
+              {% endif %}
+            {% endif %}
+            <span>{{ category.name }}</span>
+        </label>
+      {% endfor %}
+    </div>
+  {% endif %}
 </center>
-{% endif %}
 
 {% if project_count > 0 %}
   <div class="honeycomb mb-5">
@@ -129,40 +156,22 @@
   {% endfor %}
 </div><!-- /category-info -->
 
-<div class="start-project btn-group pt-5 mt-5 mb-2">
-  {% if current_event.webpage_url %}
-    <a href="{{ current_event.webpage_url }}" class="btn btn-lg btn-dark" target="_blank">
-    {% if not current_event.has_finished %}
-      <i class="fa fa-ticket" aria-hidden="true"></i>
-      Register
-    {% else %}
-      About
-    {% endif %}
-    </a>
-  {% endif %}
-  {% if current_event.community_url %}
-    <a href="{{ current_event.community_url }}" target="community" class="btn btn-lg btn-info">
-      <i class="fa fa-comment"></i>
-      Connect</a>
-  {% endif %}
-</div>
-
-<div class="event-nav m-4 text-center" role="group" aria-label="Event navigation">
+<div class="event-nav text-center pt-5 mt-5 mb-4" role="group" aria-label="Event navigation">
 
   {% if current_event.countdown and not current_event.lock_resources %}
-    <a href="{{ url_for('public.event_stages', event_id=current_event.id) }}" class="btn"
+    <a href="{{ url_for('public.event_stages', event_id=current_event.id) }}" class="btn btn-sm"
       title="Show projects by Stage">
       <i class="fa fa-signal" aria-hidden="true"></i>
       <span>Stages</span>
     </a>
 
-    <a href="{{ url_for('public.event_participants', event_id=current_event.id) }}" class="btn"
+    <a href="{{ url_for('public.event_participants', event_id=current_event.id) }}" class="btn btn-sm"
       title="Show users who have joined projects here">
       <i class="fa fa-child" aria-hidden="true"></i>
       <span>Contributors</span>
     </a>
 
-    <a href="{{ url_for('api.info_event_ical', event_id=current_event.id) }}" class="btn"
+    <a href="{{ url_for('api.info_event_ical', event_id=current_event.id) }}" class="btn btn-sm"
         download="dribdat.ics" title="Download event for a reminder in your calendar (ICS file)">
       <sup class="time-remaining">
         {{ current_event.countdown|until_date }}
@@ -172,8 +181,8 @@
     </a>
 
   {% elif current_event.has_finished %}
-    <a href="{{ url_for('public.event_print', event_id=current_event.id) }}" class="btn"
-       title="Print an overview of results">
+    <a href="{{ url_for('public.event_print', event_id=current_event.id) }}" class="btn btn-sm"
+       title="Get an overview of results">
       <i class="fa fa-print" aria-hidden="true"></i>
       <span>Report</span>
     </a>
@@ -234,14 +243,18 @@
             <span title="Import a project from repository">Import</span>
         </a>
     </div>
+    <a href="{{ url_for('public.event_challenges', event_id=current_event.id) }}" class="btn btn-lg btn-secondary"
+      title="Show just the open challenges in this event">
+      <i class="fa fa-trophy" aria-hidden="true"></i>
+      Challenges</a>
   {% endif %}
-  <a href="{{ url_for('public.event_challenges', event_id=current_event.id) }}" class="btn btn-lg btn-secondary"
-     title="Show all the challenges in this event">
-    <i class="fa fa-trophy" aria-hidden="true"></i>
-    <span>Challenges</span>
-  </a>
+  {% if current_event.community_url %}
+    <a href="{{ current_event.community_url }}" target="community" class="btn btn-lg btn-info">
+      <i class="fa fa-comment"></i>
+      Connect</a>
+  {% endif %}
   {% if may_edit %}
-      <a class="btn btn-lg btn-info"
+      <a class="btn btn-lg btn-warning"
         href="{{ url_for('public.event_edit', event_id=current_event.id) }}"
         title="Manage details of this event">
         <i class="fa fa-pencil"></i>
