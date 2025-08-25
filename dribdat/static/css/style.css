@@ -2067,15 +2067,6 @@ div.project-edit-buttons {
     text-align: center;
 }
 
-.event-instruction-tip {
-  position: absolute;
-  top: 0px;
-  left: 0px;
-  margin-top: -3px;
-  font-size: 80%;
-  border-radius: 0px;
-  z-index: 999;
-}
 .event-instruction .container p:last-child {
   margin-bottom: 0px;
 }
