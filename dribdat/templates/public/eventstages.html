@@ -11,6 +11,15 @@
   {% if not current_event.lock_resources %}
 
     <center class="m-2 no-print float-right">
+
+    {% if current_user and current_user.active %}
+      <a href="{{ url_for('public.event_instruction', event_id=current_event.id) }}" 
+        class="btn btn-lg btn-info" id="event-instruction-tip"
+        title="Special instructions for participants">
+        <i class="fa fa-info" aria-hidden="true"></i>
+      </a>
+    {% endif %}
+
       <a class="btn btn-dark btn-lg" href="{{ url_for('public.event', event_id=current_event.id) }}"
         title="Back to project overview">
         <i class="fa fa-hexagon" aria-hidden="true">⬢</i>
@@ -33,12 +42,12 @@
     </center>
 
   {% endif %}
-  
+
     <h1 class="huge">Stages</h1>
     <br clear="all"/>
 
   <a name="steps"></a>
-  <div class="list-stages ms-5">
+  <div class="list-stages">
   {% for step in steps %}
     {% if step.projects or not current_event.lock_resources %}
     <div class="row step">

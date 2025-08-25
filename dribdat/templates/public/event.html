@@ -41,12 +41,12 @@
         {{current_event.instruction|markdown}}
       </div>
       <center>
-      <a href="{{ url_for('public.event_instruction', event_id=current_event.id) }}" 
-        class="btn btn-sm btn-info" id="event-instruction-tip"
-        title="Special instructions for participants">
-        <i class="fa fa-book" aria-hidden="true"></i>
-        Info
-      </a>
+        <a href="{{ url_for('public.event_instruction', event_id=current_event.id) }}" 
+          class="btn btn-sm btn-info" id="event-instruction-tip"
+          title="Special instructions for participants">
+          <i class="fa fa-info" aria-hidden="true"></i>
+          Get info
+        </a>
       </center>
     </div>
   {% endif %}
