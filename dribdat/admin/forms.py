@@ -171,6 +171,8 @@ class ProjectForm(FlaskForm):
         description="Team channel, hashtag, organization")
     technai = StringField(u'Technai', [length(max=1024)],
         description="Comma-separated list of skills and technologies involved")
+    terms_reuse = StringField(u"Terms of reuse", [length(max=256)],
+        description="Signal how project data may be remixed or used in AI training.")
     webpage_url = URLField(u'Presentation link', [length(max=2048)],
         description="This is embedded at the top of the page")
     download_url = URLField(u'Demo link', [length(max=2048)],

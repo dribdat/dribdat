@@ -107,28 +107,29 @@ class ProjectDetailForm(FlaskForm):
     )
     autotext_url = URLField(
         "Readme",
-        [length(max=255)],
         description="💡 URL to a code repository, document, wiki ➭ www.dribdat.cc/sync",
     )
     technai = StringField(
-        "Technai",
+        "Tech stack",
         [length(max=1024)],
-        description="🏀 Comma,separated,list of skills or technologies involved.",
+        description="🏀 Comma,separated,list of skills or technai involved.",
+    )
+    terms_reuse = StringField(
+        "Terms of reuse",
+        [length(max=256)],
+        description="📜 Specify how your project data may be remixed or used by AI, if different from event defaults. This can be a link to a license text.",
     )
     download_url = URLField(
         "Demo",
-        [length(max=255)],
         description="🧀 Link to online demo or download area for this project.",
     )
     source_url = URLField(
         "Source",
-        [length(max=255)],
         description="🗝️ Link to the source code of your project - not necessarily same as your Readme.",
     )
     # Note: contact_url could be an e-mail or room number -> StringField
     contact_url = StringField(
         "Contact",
-        [length(max=255)],
         description="📩 How to reach you, e.g. via website or e-mail.",
     )
     hashtag = StringField(
@@ -148,7 +149,6 @@ class ProjectDetailForm(FlaskForm):
     )
     image_url = StringField(
         "Cover image",
-        [length(max=255)],
         description="🖼️ Link to a top image for the project. Posts overwrite this.",
     )
     category_id = SelectField(

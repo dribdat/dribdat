@@ -67,6 +67,12 @@
 
   } // -no-dashboard
 
+  $('#event-instruction-tip').each(function() {
+    if (localStorage.getItem('eventstatus-mute')) {
+      $(this).parent().find('.btn-close').click();
+    }
+  });
+
   // Close button is just a hider
   $('#global-notifications-alert .close').click(function() {
     $('#global-notifications-alert').addClass('hidden');
