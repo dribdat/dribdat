@@ -222,12 +222,12 @@
   </div><!-- /profile-projects -->
 {% endif %}
 
-{% if user.vitae %}
+{% if vitae %}
 <a name="vitae"></a>
 <h2 title="Edolare Vitae">Resume</h2>
 <div class="profile-vitae jumbotron" title="Hacker Vitae">
     <table class="table bg-white"><tbody>
-    {% for vitatype in user.simple_resume() %}
+    {% for vitatype in vitae %}
     <tr>
       <th colspan="2" title="Type of career step" class="alert alert-info text-center"
         data-bs-toggle="collapse" href="#collapse-{{vitatype}}" role="button" aria-expanded="false">

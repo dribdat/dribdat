@@ -9,6 +9,7 @@ from flask_login import UserMixin
 from icalendar import Event as iCalEvent
 from icalendar import Calendar as iCalendar
 from json import dumps, loads
+from json.decoder import JSONDecodeError
 
 # Time functions
 from time import mktime
@@ -247,9 +248,14 @@ class User(UserMixin, PkModel):
         return False
 
     def simple_resume(self):
+        """Convert a JSON CV into a simplified dictionary."""
         if not self.vitae:
             return None
-        vvdata = loads(self.vitae)
+        try:
+            vvdata = loads(self.vitae)
+        except JSONDecodeError:
+            return None
+        # Allowed CV sections
         vvtypes = (
             "work",
             "volunteer",
