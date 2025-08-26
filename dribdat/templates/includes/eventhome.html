@@ -8,22 +8,21 @@
   {% endif %}
 
     <div class="section-header-content">
+      <span class="text-dark">{{ event.date }}</span>
+
       <h2 class="event-name text-dark">
         <span>{{ event.name }}</span>
       </h2>
 
-      {% if not event.lock_resources %}
-        <p class="an-event-meta text-dark">
-          <span>{{ event.date }}</span>
-          {% if event.hostname %}
-            <i class="fa fa-bank ms-2"></i>
-            <span>{{ event.hostname }}</span><br>
-          {% elif event.location %}
-            <i class="fa fa-map ms-2"></i>
-            <span>{{ event.location }}</span>
-          {% endif %}
-        </p>
-      {% endif %}
+      <p class="an-event-meta text-dark">
+        {% if event.hostname %}
+          <i class="fa fa-bank ms-2"></i>
+          <span>{{ event.hostname }}</span><br>
+        {% elif event.location %}
+          <i class="fa fa-map ms-2"></i>
+          <span>{{ event.location }}</span>
+        {% endif %}
+      </p>
 
       {% if event.summary|trim %}
         <div class="home-description">
@@ -34,7 +33,7 @@
       <div class="an-event-actions text-center mt-2 clearfix">
         {% if event.project_count %}
           <a href="{{ url_for('public.event', event_id=event.id) }}"
-             class="float-right fs-4 me-2 w-100">
+             class="float-right fs-4 me-2 w-100 text-dark">
           {% if event.has_finished %}
             <span title="Results">{{ event.project_count }}</span>
             <i class="fa fa-star" aria-hidden="true"></i>

@@ -683,6 +683,8 @@ class Event(PkModel):
     @property
     def date(self):
         """Get a formatted date range."""
+        if self.lock_resources:
+            return ""
         return format_date_range(self.starts_at, self.ends_at)
 
     @property
