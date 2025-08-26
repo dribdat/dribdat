@@ -343,9 +343,9 @@ def participants_directory_json():
         userdata.append({
             "user": u.username,
             "name": u.name,
-            "image": u.carddata,
-            "goals": u.my_goals,
-            "roles": u.my_roles,
+            "image": u.carddata or "",
+            "goals": u.my_goals or "",
+            "roles": u.my_roles or "",
         })
     return jsonify(users=userdata)
 
