@@ -69,7 +69,7 @@
 
   $('#event-instruction-tip').each(function() {
     if (localStorage.getItem('eventstatus-mute')) {
-      $(this).parent().find('.btn-close').click();
+      $(this).parent().parent().find('.btn-close').click();
     }
   });
 

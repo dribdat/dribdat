@@ -1,30 +1,33 @@
-<footer id="footer">
+<footer id="footer" class="container-fluid">
+  <div class="row">
 
-  <a href="{{ url_for('public.terms') }}" title="View the terms and conditions">
-    <i class="fa fa-exclamation ms-3" aria-hidden="true"></i>
-    Terms
-  </a>
-
-  <a href="{{ url_for('public.about') }}" title="About this platform">
-    <i class="fa fa-question ms-3" aria-hidden="true"></i>
-    About
-  </a>
-  
-  {% if config.ANALYTICS_HREF %}
-    <a href="{{ config.ANALYTICS_HREF }}" title="See our web analytics">
-      <i class="fa fa-bar-chart ms-3" aria-hidden="true"></i>
-      Analytics
+  <div class="col-sm m-3">
+    <a href="{{ url_for('public.terms') }}" title="View the terms and conditions">
+      <i class="fa fa-exclamation ms-3" aria-hidden="true"></i>
+      Terms
     </a>
-  {% endif %}
 
-  {% if current_user and current_user.is_admin %}
-    <a href="{{ url_for('admin.index') }}" class="font-bold">
-      <i class="fa fa-gear ms-3" aria-hidden="true"></i>
-      Admin
+    <a href="{{ url_for('public.about') }}" title="About this platform">
+      <i class="fa fa-question ms-3" aria-hidden="true"></i>
+      About
     </a>
-  {% endif %}
+    
+    {% if config.ANALYTICS_HREF %}
+      <a href="{{ config.ANALYTICS_HREF }}" title="See our web analytics">
+        <i class="fa fa-bar-chart ms-3" aria-hidden="true"></i>
+        Analytics
+      </a>
+    {% endif %}
 
-  <ul class="footer-nav">
+    {% if current_user and current_user.is_admin %}
+      <a href="{{ url_for('admin.index') }}" class="font-bold">
+        <i class="fa fa-gear ms-3" aria-hidden="true"></i>
+        Admin
+      </a>
+    {% endif %}
+  </div>
+
+  <ul class="footer-nav col-sm m-3 pe-5">
     <li>
       <a class="darkmode" href="#">&#127763;&nbsp;<span>Dark</span></a>
     </li>
@@ -55,4 +58,6 @@
       </li>
     {% endif %}
   </ul>
+
+  </div>
 </footer>

@@ -314,17 +314,16 @@ footer ul {
     list-style: none;
 }
 footer ul li {
-    float: left;
     margin-left: 10px;
+    display: inline-block;
 }
 footer .company {
     float: left;
     margin-left: 25px;
 }
 footer .footer-nav {
-    float: right;
-    margin-right: 25px;
     list-style: none;
+    text-align: right;
 }
 footer .footer-nav a {
     text-decoration: none;
@@ -840,10 +839,6 @@ nav .nav-login {
     position: relative;
     z-index: 99;
 }
-.hexagon .hexagontent.with-icon i {
-    font-size: 1em;
-    line-height: 2em;
-}
 .hexagon .hexagontent div {
     max-height: 5.4em;
 }
@@ -932,13 +927,21 @@ nav .nav-login {
     background-position: center;
 }
 .hexagon .hexaicon {
-    width: 2em;
-    height: 2em;
-    background-color: transparent;
-    background-size: cover;
     position: relative;
     left: 50%;
+    margin-left: -40%;
+}
+.hexagon .hexaicon .fa,
+.hexagon .hexaicon .logo_icon {
+    margin-right: 40%;
+    font-size: 200%;
+}
+.hexagon .hexaicon.im {
+    width: 2em;
+    height: 2em;
     margin: 0.5em 0 0 -1em;
+    background-color: transparent;
+    background-size: cover;
     box-shadow: -2px -2px 1px rgb(0 0 0 / 20%);
     border-radius: 1em;
 }

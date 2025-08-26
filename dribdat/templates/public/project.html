@@ -294,16 +294,13 @@
   {% endif %}
 </div><!-- / .project-controls -->
 
-{% if allow_edit %}
-  {% if config.LLM_API_KEY and not project.is_challenge and not project.event.lock_resources %}
+{% if allow_edit and config.LLM_API_KEY and not project.is_challenge and not project.event.lock_resources %}
   <div role="group" aria-label="Team controls" class="ms-3 me-3 btn-group project-controls">
     <button data-bs-toggle="modal" data-bs-target="#autopostModal"
        title="Get tips from an AI coach" class="btn btn-lg btn-dark">
       &#x1F170;&#xFE0F;&#x2139;&#xFE0F;
     </button>
   </div>
-  {% endif %}
-  {% include "includes/projectdialogs.html" %}
 {% endif %}
 
 {% if current_user.is_admin %}
@@ -353,6 +350,10 @@
 {% endif %}
 
 {% include "includes/projectnav.html" %}
+
+{% if allow_edit %}
+  {% include "includes/projectdialogs.html" %}
+{% endif %}
 
 {% if project.category %}
   <div class="modal fade" id="categoryModal" role="dialog" tabindex="-1">

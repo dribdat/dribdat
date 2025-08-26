@@ -24,17 +24,8 @@
       {% include "includes/eventjoin.html" %}
     </div>
   {% endif %}
-  {% if may_certify %}
-    <div class="float-right p-0 m-0">
-      <a id="get-certified" class="btn btn-success btn-lg"
-        href="{{ url_for('public.user_cert') }}" download
-        title="Download my certificate">
-        Get Certificate
-      </a>
-    </div>
-  {% endif %}
 
-  {% if current_event.instruction %}
+  {% if current_event.instruction and not current_event.has_finished %}
     <div class="jumbotron event-instruction mt-2 alert alert-dismissible bg-body text-body">
       <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
       <div class="container scroll-after-200">
@@ -51,6 +42,15 @@
     </div>
   {% endif %}
 
+  {% if may_certify %}
+    <div class="p-0 m-0" style="float:left">
+      <a id="get-certified" class="btn btn-success btn-lg"
+        href="{{ url_for('public.user_cert') }}" download
+        title="Download my certificate">
+        Get Certificate
+      </a>
+    </div>
+  {% endif %}
 {% else %}
 
   <div class="start-project">
@@ -81,7 +81,7 @@
 
 {% cache 300, 'event-%d' % current_event.id %}
 
-<center class="nav-categories mt-5">
+<center class="nav-categories mt-4">
   {% if current_event.has_categories %}
     <div class="btn-group" data-bs-toggle="buttons" role="group" aria-label="Filter by category">
       <label class="btn btn-default active" title="All projects">
