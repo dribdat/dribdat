@@ -329,6 +329,27 @@ def event_participants_csv(event_id):
                     headers=headers)
 
 
+@blueprint.route('/participants.json')
+def participants_directory_json():
+    """Search for participants across events."""
+    MAX_COUNT = 500
+    search_by = request.args.get("u") or ""
+    if len(search_by) < 3:
+        users = User.query.filter_by(active=True).all()
+    else:
+        users = get_users_by_search(search_by, MAX_COUNT)
+    userdata = []
+    for u in users:
+        userdata.append({
+            "user": u.username,
+            "name": u.name,
+            "image": u.carddata,
+            "goals": u.my_goals,
+            "roles": u.my_roles,
+        })
+    return jsonify(users=userdata)
+
+
 # ------ SEARCH ---------
 
 @blueprint.route('/project/search.json')

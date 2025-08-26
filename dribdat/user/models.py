@@ -170,8 +170,8 @@ class User(UserMixin, PkModel):
             "my_skills": self._my_skills,
             "my_wishes": self._my_wishes,
             "webpage_url": self.webpage_url,
-            "vitae": dumps(self.vitae),
-            "roles": ",".join([r.name for r in self.roles]),  # pyright: ignore
+            "vitae": self.vitae,
+            "roles": self.my_roles,
         }
 
     def set_from_data(self, data):
@@ -353,7 +353,13 @@ class User(UserMixin, PkModel):
 
     @property
     def name(self):
+        """Display name."""
         return self.fullname or self.username
+    
+    @property
+    def my_roles(self):
+        """Concatenate my roles."""
+        return ",".join([r.name for r in self.roles])
 
     @property
     def last_active(self):
