@@ -18,7 +18,7 @@
               <th width="100%">
                 <a href="?sort=username">Username</a>
                 <div style="float:right">
-                  <a href="?sort=admin" title="Administrator ?">Admin</a>
+                  <a href="?sort=admin" title="Administrator ?">SU</a>
                 </div>
               </th>
               <th>
@@ -40,12 +40,13 @@
                   &nbsp;{{ user.activity_count }}&nbsp;
               </a>
             </td>
-            <td {% if not user.active %}style="background:yellow;color:black" title="Account inactive"{% endif %}>
-              {% if user.is_admin %}
-              <div style="float:right">
-                &#10003;
+            <td {% if not user.active %}class="inactive" title="Account inactive"{% endif %}>
+              <div class="labels">
+                {% if user.vitae %}<i title="Resume">cv</i>{% endif %}
+                {% if user.carddata %}<i title="Avatar">@</i>{% endif %}
+                {% if user.webpage_url %}<i title="Web page">www</i>{% endif %}
+                {% if user.is_admin %}<i title="Admin">SU</i>{% endif %}
               </div>
-              {% endif %}
               <b>{{ user.username }}</b>
             </td>
             <td>{{ user.created_at|format_date }}</td>
@@ -79,4 +80,16 @@
     <p class="mb-4">The use of SSO user identity providers is <a href="https://dribdat.cc/deploy.html#authentication" target="_blank">recommended</a></p>
 
 </div>
+<style>
+.inactive { background:yellow; color:black; }
+.labels { float:right; }
+.labels i {
+  font-style: normal;
+  background: black; color: white;
+  padding: 2px 3px; border-radius: 5px;
+}
+.labels i[title="Resume"] { background: blue; }
+.labels i[title="Avatar"] { background: purple; }
+.labels i[title="Web page"] { background: green; }
+</style>
 {% endblock %}
