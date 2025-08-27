@@ -200,3 +200,11 @@ class TestApi:
         assert len(res.json['users']) == 1
         assert res.json['users'][0]['name'] == "myuser"
 
+    def test_set_admin_status(self, testapp):
+        """Set an Event status for broadcast."""
+        event = EventFactory(is_current=True)
+        event.set_status('Test status')
+        res = testapp.get('/api/event/current/get/status')
+        assert res.status_code == 200
+        assert 'event' in res.json
+        assert res.json['status'] == 'Test status'
