@@ -1,4 +1,17 @@
 (function($, window) {
+  let notificationsAllow = false;
+
+  function askNotificationPermission() {
+    // Check if the browser supports notifications
+    if (!("Notification" in window)) {
+      console.log("This browser does not support notifications.");
+      return;
+    }
+    Notification.requestPermission().then((permission) => {
+      // set the button to shown or hidden, depending on what the user answers
+      notificationsAllow = permission === "granted";
+    });
+  }
 
   // Create a notification with the given title
   function createNotification() {
@@ -6,6 +19,7 @@
     if (localStorage.getItem('eventstatus-mute')) {
       return;
     }
+    askNotificationPermission();
     $.get('/api/event/current/get/status', function(result) {
       //console.log(result);
       if (result.status) {
@@ -19,21 +33,29 @@
         eventStatus = result.status;
         localStorage.setItem('eventstatus', eventStatus);
 
+        // Get additional data
+        let htmlStatus = result.html;
+        let eventName = result.event;
+
         // Update the HTML widgets with new message
-        $('#notifications-status-text').html(eventStatus);
+        $('#notifications-status-text').html(htmlStatus);
         $('#global-notifications-alert').removeClass('hidden');
 
         setTimeout(function() {
           // Create and show the notification
           let userOptOut = localStorage.getItem('eventstatus-mute');
           if (!userOptOut) {
-            userOptOut = !window.confirm(eventStatus + 
-              '\n\n(Cancel to opt out from future alerts)');
+            const img = "/static/img/logo/logo12_128x128.png";
+            const txt = eventStatus.substr(0, 20);
+            const title = eventName;
+            const notification = new Notification(title, { body: txt, icon: img });
+            //userOptOut = !window.confirm(eventStatus + 
+            //  '\n\n(Cancel to opt out from future alerts)');
           }
           // Stop showing prompts in the future if user has opted out
-          if (userOptOut) {
-            localStorage.setItem('eventstatus-mute', 1);
-          }
+          //if (userOptOut) {
+          //  localStorage.setItem('eventstatus-mute', 1);
+          //}
         }, 500);
       }
     });
