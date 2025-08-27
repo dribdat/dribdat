@@ -61,7 +61,7 @@
 		{% endif %}
 		<span class="project-name">{{ project.name|truncate(60, True, '..') }}</span>
 		{% if project.image_url or project.logo_icon or project.ident %}
-			<div class="hexaicon" style="{% if project.image_url %}background-color:{{project.logo_color or '#FFF'}};background-image:url('{{project.image_url|quote_plus}}'){% endif %}">
+			<div class="hexaicon {% if project.image_url %}im" style="background-color:{{project.logo_color or '#FFF'}};background-image:url('{{project.image_url|quote_plus}}'){% endif %}">
 				{% if project.ident %}
 					<span class="project-ident">{{ project.ident }}</span>
 				{% elif project.logo_icon %}

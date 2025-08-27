@@ -101,7 +101,8 @@ def about():
 def terms():
     """Render a static terms of use page."""
     terms = EVENT_PRESET["terms"]
-    return render_template("public/terms.html", active="terms", terms=terms)
+    return render_template("public/terms.html", active="terms", 
+        current_event=current_event(), terms=terms)
 
 
 @blueprint.route("/favicon.ico")
@@ -224,15 +225,19 @@ def user_profile(username):
             if p.event not in events:
                 events.append(p.event)
     # Calculate score
+    user_score = user.get_score()
     score_tip = int(user.get_profile_percent() * 100)
+    # Parse the CV
+    user_resume = user.simple_resume()
     # Filter out by today's date
     return render_template(
         "public/userprofile.html",
         active="profile",
         user=user,
+        vitae=user_resume,
         projects=projects,
         posts=posts,
-        score=user.get_score(),
+        score=user_score,
         score_tip=score_tip,
         events=events,
         events_next=events_next,

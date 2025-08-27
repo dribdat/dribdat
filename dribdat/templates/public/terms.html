@@ -6,6 +6,15 @@
 
 {% block content %}
 
+{% if current_event and current_event.community_embed %}
+  <div class="panel panel-default community-embed">
+    <a name="community"></a>
+    <div class="panel-body">
+      {{current_event.community_embed|safe}}
+    </div>
+  </div>
+{% endif %}
+
 <div class="jumbotron">
   <div class="container">
 

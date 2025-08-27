@@ -145,6 +145,27 @@
     </div>
   {% endif %}
 
+  {% if project.terms_reuse %}
+    <div id="project-terms" class="fs-5" title="Legal conditions of reuse">
+      {% if project.terms_reuse == 'C' or project.terms_reuse.startswith('C+') %}
+        <a href="https://creativecommons.org/ai-and-the-commons/cc-signals/" target="_blank" rel="noopener noreferrer" class="cc-signal">
+          <i class="fa fa-cc"></i><i class="fa fa-plus"></i>
+          {{ project.terms_reuse }}
+        </a>
+      {% elif project.terms_reuse.startswith('CC') %}
+        <a href="https://creativecommons.org/licenses/" target="_blank" rel="noopener noreferrer" class="cc-by">
+          <i class="fa fa-cc"></i>
+          {{ project.terms_reuse }}
+        </a>
+      {% elif project.terms_reuse.startswith('http') %}
+        <a href="{{ project.terms_reuse }}" target="_blank" rel="noopener noreferrer" class="cc-by">
+          Terms of Reuse
+        </a>
+      {% else %}
+        {{ project.terms_reuse }}
+      {% endif %}
+    </div>
+  {% endif %}
 
   <div class="project-buttons mb-5" role="group" aria-label="Project links">
     {% if project.contact_url %}
@@ -163,26 +184,6 @@
       <a href="{{ project.source_url }}" class="btn btn-lg" target="_blank" rel="noopener noreferrer" title="Source code"><span>&#x1f4bb;</span> Source</a>
     {% endif %}
   </div>
-
-  {% if project.terms_reuse %}
-    <div id="project-terms" class="row m-3" title="Legal conditions of reuse">
-      <div class="col-12 text-center">
-        {% if project.terms_reuse == 'C' or project.terms_reuse.startswith('C+') %}
-          <a href="https://creativecommons.org/ai-and-the-commons/cc-signals/" target="_blank" rel="noopener noreferrer" class="cc-signal">
-            <i class="fa fa-cc"></i><i class="fa fa-plus"></i>
-            {{ project.terms_reuse }}
-          </a>
-        {% elif project.terms_reuse.startswith('CC') %}
-          <a href="https://creativecommons.org/licenses/" target="_blank" rel="noopener noreferrer" class="cc-by">
-            <i class="fa fa-cc"></i>
-            {{ project.terms_reuse }}
-          </a>
-        {% else %}
-          {{ project.terms_reuse }}
-        {% endif %}
-      </div>
-    </div>
-  {% endif %}
 
   {% if project.technai %}
     <div id="technai-md" class="row m-3" title="Tech and skills used in this project">
@@ -293,16 +294,13 @@
   {% endif %}
 </div><!-- / .project-controls -->
 
-{% if allow_edit %}
-  {% if config.LLM_API_KEY and not project.is_challenge and not project.event.lock_resources %}
+{% if allow_edit and config.LLM_API_KEY and not project.is_challenge and not project.event.lock_resources %}
   <div role="group" aria-label="Team controls" class="ms-3 me-3 btn-group project-controls">
     <button data-bs-toggle="modal" data-bs-target="#autopostModal"
        title="Get tips from an AI coach" class="btn btn-lg btn-dark">
       &#x1F170;&#xFE0F;&#x2139;&#xFE0F;
     </button>
   </div>
-  {% endif %}
-  {% include "includes/projectdialogs.html" %}
 {% endif %}
 
 {% if current_user.is_admin %}
@@ -352,6 +350,10 @@
 {% endif %}
 
 {% include "includes/projectnav.html" %}
+
+{% if allow_edit %}
+  {% include "includes/projectdialogs.html" %}
+{% endif %}
 
 {% if project.category %}
   <div class="modal fade" id="categoryModal" role="dialog" tabindex="-1">

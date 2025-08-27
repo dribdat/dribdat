@@ -45,6 +45,8 @@ from dribdat.mailer import (
 )
 from datetime import datetime
 from dribdat.futures import UTC
+from json import loads
+from json.decoder import JSONDecodeError
 # noqa: I005
 
 blueprint = Blueprint("auth", __name__, static_folder="../static")
@@ -393,6 +395,14 @@ def user_story():
         user.my_wishes = unpack_csvlist(form.my_wishes.data)
         del form.my_wishes  # avoid setting it again
 
+        # Verify CV data
+        if form.vitae.data:
+            try:
+                loads(form.vitae.data)
+            except JSONDecodeError as e:
+                flash("Invalid JSON: %s" % e, "danger")
+
+        # Finalize and save user data
         form.populate_obj(user)
         user.updated_at = datetime.now(UTC)
         db.session.add(user)

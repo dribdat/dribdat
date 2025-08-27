@@ -9,6 +9,7 @@ from flask_login import UserMixin
 from icalendar import Event as iCalEvent
 from icalendar import Calendar as iCalendar
 from json import dumps, loads
+from json.decoder import JSONDecodeError
 
 # Time functions
 from time import mktime
@@ -97,6 +98,7 @@ class User(UserMixin, PkModel):
     __tablename__ = "users"
     username = Column(db.String(80), unique=True, nullable=False)
     email = Column(db.String(80), unique=True, nullable=False)
+    # TODO: cache the score from get_score()
 
     # My full name, for use in profile or certificate
     fullname = Column(db.String(255), nullable=True)
@@ -125,6 +127,10 @@ class User(UserMixin, PkModel):
     my_story = Column(db.UnicodeText(), nullable=True)
     my_goals = Column(db.UnicodeText(), nullable=True)
 
+    # JSON blob of Curriculum Vitae
+    vitae = Column(db.UnicodeText(), nullable=True)
+
+    # CSV list of skills
     _my_skills = Column(db.UnicodeText(512), nullable=True)
 
     @property
@@ -135,6 +141,7 @@ class User(UserMixin, PkModel):
     def my_skills(self, value):
         self._my_skills = pack_csvlist(value)
 
+    # CSV list of goals
     _my_wishes = Column(db.UnicodeText(512), nullable=True)
 
     @property
@@ -144,9 +151,6 @@ class User(UserMixin, PkModel):
     @my_wishes.setter
     def my_wishes(self, value):
         self._my_wishes = pack_csvlist(value)
-
-    # JSON blob of Curriculum Vitae
-    vitae = Column(db.UnicodeText(), nullable=True)
 
     @property
     def data(self):
@@ -166,8 +170,8 @@ class User(UserMixin, PkModel):
             "my_skills": self._my_skills,
             "my_wishes": self._my_wishes,
             "webpage_url": self.webpage_url,
-            "vitae": dumps(self.vitae),
-            "roles": ",".join([r.name for r in self.roles]),  # pyright: ignore
+            "vitae": self.vitae,
+            "roles": self.my_roles,
         }
 
     def set_from_data(self, data):
@@ -247,9 +251,14 @@ class User(UserMixin, PkModel):
         return False
 
     def simple_resume(self):
+        """Convert a JSON CV into a simplified dictionary."""
         if not self.vitae:
             return None
-        vvdata = loads(self.vitae)
+        try:
+            vvdata = loads(self.vitae)
+        except JSONDecodeError:
+            return None
+        # Allowed CV sections
         vvtypes = (
             "work",
             "volunteer",
@@ -302,8 +311,10 @@ class User(UserMixin, PkModel):
             p_score = p_score + 1
         if self.my_goals and len(self.my_goals) > 6:
             p_score = p_score + 1
+        if self.vitae and len(self.vitae) > 6:
+            p_score = p_score + 2 
         if self.roles and len(self.roles) > 0:  # pyright: ignore
-            p_score = p_score + 1
+            p_score = p_score + 2
         return p_score / MAX_SCORE
 
     def get_score(self):
@@ -342,7 +353,13 @@ class User(UserMixin, PkModel):
 
     @property
     def name(self):
+        """Display name."""
         return self.fullname or self.username
+    
+    @property
+    def my_roles(self):
+        """Concatenate my roles."""
+        return ",".join([r.name for r in self.roles])
 
     @property
     def last_active(self):
@@ -666,6 +683,8 @@ class Event(PkModel):
     @property
     def date(self):
         """Get a formatted date range."""
+        if self.lock_resources:
+            return ""
         return format_date_range(self.starts_at, self.ends_at)
 
     @property

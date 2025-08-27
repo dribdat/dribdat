@@ -45,9 +45,10 @@ $('#announcements button').click(function() {
       'Cancel broadcast?'
     )) return false;
   } else { 
-    if (!window.confirm(message +
+    if (!window.confirm(message.substr(0, 20) +
       '\n-------------------------\n' +
-      'Ready to broadcast this?'
+      'Ready to broadcast this? The rest of the message ' +
+      'will be shown in the window, the first 20 bytes as title.'
     )) return false;
   }
   //console.log(message);
