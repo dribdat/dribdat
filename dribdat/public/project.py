@@ -512,33 +512,23 @@ def project_new(event_id):
 
 
 @blueprint.route("/import/<int:event_id>", methods=["GET", "POST"])
-def import_new_project(event_id, is_anonymous=False):
+def import_new_project(event_id):
     """Proceed to import a new project."""
     event = Event.query.filter_by(id=event_id).first_or_404()
     if event.lock_starting:
         flash("Projects may not be started in this event.", "error")
         return redirect(url_for("public.event", event_id=event.id))
 
-    form = None
     project = Project()
-
-    # Check ownership of challenge
-    if not is_anonymous and current_user and not current_user.is_anonymous:
-        project.user_id = current_user.id
-        # Join the project as first member
-        project_action(project.id, "star", then_redirect=False, for_user=current_user)
-    else:
-        project.hashtag = "Guest"
-        project.is_hidden = True
-
     form = ProjectImport(obj=project, next=request.args.get("next"))
 
     # If Captcha is not configured, skip the validation
+    is_anonymous = not current_user or current_user.is_anonymous
     if not is_anonymous or not current_app.config["RECAPTCHA_PUBLIC_KEY"]:
         del form.recaptcha
 
     if form.is_submitted() and not form.validate():
-        print(form.errors)
+        # Reformat submission errors 
         if "name" in form.errors and "unique" in form.errors["name"][0]:
             flash(
                 "There is already a project with this name here. Please pick a new name, and add the Readme later.",
@@ -569,6 +559,15 @@ def import_new_project(event_id, is_anonymous=False):
         project.progress = 0
     else:
         project.progress = -1
+
+    # Check ownership
+    if not is_anonymous:
+        project.user_id = current_user.id
+        # Join the project as first member
+        project_action(project.id, "star", then_redirect=False, for_user=current_user)
+    else:
+        project.hashtag = "Guest"
+        project.is_hidden = True
 
     # Update the project
     project.update_now()
