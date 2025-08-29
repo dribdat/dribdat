@@ -669,12 +669,6 @@ nav .nav-login {
 .event-home .event-info .event-description img {
     max-width: 100%;
 }
-.event-home .event-nav .btn:hover {
-    border: 1px solid black;
-}
-/*.event-home .event-nav .btn:hover span {
-  display: inline;
-}*/
 
 /* ---- Hexagonal hawtness ---- */
 
@@ -1204,19 +1198,27 @@ a.media {
 /* Conditions of project */
 #project-terms {
     float: left;
-    margin: 1em -5em 1em 0em;
+}
+@media (min-width: 576px) {
+  #project-terms {
+    margin-right: -10em;
+  }
 }
 #project-terms a {
     color: initial;
+    display: block;
     text-decoration: none;
     border: 1px dashed black;
     padding: 5px;
+    margin-top: 3px;
 }
 #project-terms a:hover {
     border-color: blue;
     box-shadow: 3px 3px 0px black;
     margin-left: -3px;
     margin-right: 3px;
+    margin-top: 0px;
+    margin-bottom: 3px;
 }
 
 /* Content blocks on project page */
@@ -2722,6 +2724,7 @@ Global alerts
     display: inline-block;
     text-align: center;
     font-size: 125%;
+    min-width: 20em;
     position: fixed;
     margin: 0 1em;
     z-index: 1000;
@@ -2730,6 +2733,9 @@ Global alerts
 #global-notifications-alert i {
     font-size: 150%;
     float: left;
+}
+#global-notifications-alert p {
+    margin-bottom: 0px;
 }
 
 /* ------------
