@@ -112,6 +112,13 @@
   {% if project.autotext %}
     <div id="readme-md" aria-labelledby="readme-tab-md">
 
+    {% if allow_edit and project.is_syncable %}
+      <a href="{{ url_for('project.project_autoupdate', project_id=project.id) }}"
+        title="Sync external Readme data" class="btn btn-sm btn-outline-dark text-light float-right">
+        <i class="fa fa-refresh" aria-hidden="true"></i>
+        Refresh</a>
+    {% endif %}
+
     {% if project.longtext %}
       <div class="project-autotext scroll-after-500">
         {{project.autotext|markdown}}
@@ -125,22 +132,15 @@
       </div>
     {% endif %}
 
-      <div class="m-2">
-        {% if project.autotext_url and not project.event.lock_resources %}
-          <span style="line-height:2.5em">
-            <i class="fa fa-asterisk" aria-hidden="true"></i>
-            Preview of
-            <a href="{{ project.autotext_url }}" target="_blank" rel="noopener noreferrer" title="Source link">
-              external content</a>.</span>
-        {% endif %}
-
-        {% if allow_edit and project.is_syncable %}
-          <a href="{{ url_for('project.project_autoupdate', project_id=project.id) }}"
-             title="Sync external Readme data" class="btn btn-md btn-default float-right">
-            <i class="fa fa-refresh" aria-hidden="true"></i>
-            Refresh</a>
-        {% endif %}
+    {% if project.autotext_url and not project.event.lock_resources %}
+      <div class="m-2 clearfix">
+        <span style="line-height:2.5em">
+          <i class="fa fa-asterisk" aria-hidden="true"></i>
+          Preview of
+          <a href="{{ project.autotext_url }}" target="_blank" rel="noopener noreferrer" title="Source link">
+            external content</a>.</span>
       </div>
+    {% endif %}
 
     </div>
   {% endif %}

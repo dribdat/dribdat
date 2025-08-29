@@ -2716,6 +2716,7 @@ Global alerts
     display: inline-block;
     text-align: center;
     font-size: 125%;
+    min-width: 20em;
     position: fixed;
     margin: 0 1em;
     z-index: 1000;
@@ -2724,6 +2725,9 @@ Global alerts
 #global-notifications-alert i {
     font-size: 150%;
     float: left;
+}
+#global-notifications-alert p {
+    margin-bottom: 0px;
 }
 
 /* ------------
