@@ -1198,19 +1198,27 @@ a.media {
 /* Conditions of project */
 #project-terms {
     float: left;
-    margin: 1em -5em 1em 0em;
+}
+@media (min-width: 576px) {
+  #project-terms {
+    margin-right: -10em;
+  }
 }
 #project-terms a {
     color: initial;
+    display: block;
     text-decoration: none;
     border: 1px dashed black;
     padding: 5px;
+    margin-top: 3px;
 }
 #project-terms a:hover {
     border-color: blue;
     box-shadow: 3px 3px 0px black;
     margin-left: -3px;
     margin-right: 3px;
+    margin-top: 0px;
+    margin-bottom: 3px;
 }
 
 /* Content blocks on project page */
