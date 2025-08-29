@@ -7,6 +7,7 @@ from dribdat.user.forms import (
 )
 from dribdat.admin.forms import EventForm
 from dribdat.user.models import User
+from dribdat.user import USER_UNDER_REVIEW_MESSAGE
 
 from .factories import log_me_in
 
@@ -76,7 +77,7 @@ class TestLoginForm:
         # Deactivated user can still log in
         assert form.validate() is True
         res = testapp.get('/user/%s' % user.username)
-        assert 'undergoing review' in res
+        assert USER_UNDER_REVIEW_MESSAGE in res
 
     def test_activation_form(self, user, testapp):
         """Test the activation of a user."""
