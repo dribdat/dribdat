@@ -502,7 +502,7 @@ def project_unstar(project_id, user_id):
 
 @blueprint.route("/new/<int:event_id>", methods=["GET", "POST"])
 def project_new(event_id):
-    """If allowed to create a new project, do so."""
+    """If allowed to create a new project, do so. Note: anonymous submissions allowed."""
     event = Event.query.filter_by(id=event_id).first_or_404()
     redir = AllowUserInEvent(current_user, event)
     if not isinstance(redir, bool):
@@ -512,6 +512,7 @@ def project_new(event_id):
 
 
 @blueprint.route("/import/<int:event_id>", methods=["GET", "POST"])
+@login_required
 def import_new_project(event_id):
     """Proceed to import a new project."""
     event = Event.query.filter_by(id=event_id).first_or_404()
@@ -523,8 +524,7 @@ def import_new_project(event_id):
     form = ProjectImport(obj=project, next=request.args.get("next"))
 
     # If Captcha is not configured, skip the validation
-    is_anonymous = not current_user or current_user.is_anonymous
-    if not is_anonymous or not current_app.config["RECAPTCHA_PUBLIC_KEY"]:
+    if not current_app.config["RECAPTCHA_PUBLIC_KEY"]:
         del form.recaptcha
 
     if form.is_submitted() and not form.validate():
@@ -561,13 +561,7 @@ def import_new_project(event_id):
         project.progress = -1
 
     # Check ownership
-    if not is_anonymous:
-        project.user_id = current_user.id
-        # Join the project as first member
-        project_action(project.id, "star", then_redirect=False, for_user=current_user)
-    else:
-        project.hashtag = "Guest"
-        project.is_hidden = True
+    project.user_id = current_user.id
 
     # Update the project
     project.update_now()
@@ -575,13 +569,11 @@ def import_new_project(event_id):
     db.session.commit()
     cache.clear()
 
-    if is_anonymous:
-        flash("Thanks for your submission - Join in to make changes", "warning")
-    else:
+    project_action(project.id, "create", False)
+    if not current_user.is_admin:
         flash("Invite others to Join this challenge, and contribute", "success")
-        project_action(project.id, "create", False)
-        if not current_user.is_admin:
-            project_action(project.id, "star", False)
+        # Join the project as first member
+        project_action(project.id, "star", then_redirect=False, for_user=current_user)
 
     # Automatically sync data
     return project_autoupdate(project.id)

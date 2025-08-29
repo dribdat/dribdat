@@ -203,7 +203,7 @@ def project_action(project_id, of_type=None, as_view=True, then_redirect=False,
     # Get navigation
     go_nav = navigate_around_project(project)
 
-    if not event.lock_resources:
+    if as_view and not event.lock_resources:
         if project.is_hidden:
             # Send a warning for hidden projects
             flash('This challenge is hidden.', 'dark')
