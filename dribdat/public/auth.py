@@ -29,6 +29,7 @@ from dribdat.utils import (
     random_password,
     sanitize_input,
 )
+from dribdat.user import isUserActive, USER_UNDER_REVIEW_MESSAGE
 from dribdat.user.forms import (
     ActivationForm,
     RegisterForm,
@@ -317,13 +318,8 @@ def user_profile():
     """Display or edit the current user profile."""
     user = current_user
     user_is_valid = True
-    if not user.active:
-        flash(
-            "This user account is under review. Please update your profile "
-            + " and contact the organizing team to access all functions of "
-            + "this platform.",
-            "warning",
-        )
+    if not isUserActive(user):
+        flash(USER_UNDER_REVIEW_MESSAGE, "warning")
 
     form = UserForm(obj=user, next=request.args.get("next"))
 
@@ -376,8 +372,8 @@ def user_story():
     """Display or edit the current user goals."""
     user = current_user
     user_is_valid = True
-    if not user.active:
-        flash("This user account is under review.", "warning")
+    if not isUserActive(user):
+        flash(USER_UNDER_REVIEW_MESSAGE, "warning")
 
     form = StoryForm(obj=user, next=request.args.get("next"))
     # Load roles
@@ -470,13 +466,8 @@ def get_or_create_sso_user(sso_id, sso_name, sso_email, sso_webpage=""):
             flash("Welcome! Please complete your user account.", "info")
             return redirect(url_for("auth.user_profile"))
     login_user(user, remember=True)
-    if not user.active:
-        flash(
-            "This user account is under review. Please update your profile "
-            + "and contact the organizing team to access all functions of "
-            + "this platform.",
-            "warning",
-        )
+    if not isUserActive(user):
+        flash(USER_UNDER_REVIEW_MESSAGE, "warning")
     else:
         flash("Logged in! Time to make something awesome ≧◡≦", "success")
 

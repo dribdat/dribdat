@@ -22,6 +22,13 @@ USER_STATUS = {
     INACTIVE: "inactive",
     ACTIVE: "active",
 }
+USER_UNDER_REVIEW_MESSAGE = """
+Your user account is in review. Please update your profile, 
+and wait for instructions from the organizing team to access
+all features of this platform.
+"""
+
+# Timeout for admin announcements
 CLEAR_STATUS_AFTER = 10  # minutes
 
 # Content length

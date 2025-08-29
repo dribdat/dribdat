@@ -13,16 +13,19 @@ from flask import (
 )
 from flask_login import login_required, current_user
 from dribdat.user.models import User, Event, Project, Role
-from dribdat.public.forms import EventNew, EventEdit
+from dribdat.user import (
+    getProjectStages, 
+    isUserActive, USER_UNDER_REVIEW_MESSAGE,
+)
 from dribdat.public.userhelper import (
     get_users_by_search,
     get_dribs_paginated,
 )
+from dribdat.public.forms import EventNew, EventEdit
 from dribdat.public.projhelper import current_event
 from dribdat.database import db
 from dribdat.extensions import cache
 from dribdat.aggregation import GetEventUsers
-from dribdat.user import getProjectStages, isUserActive
 from urllib.parse import urlparse
 from sqlalchemy import and_, func
 from datetime import datetime, timedelta
@@ -136,6 +139,8 @@ def home():
         my_projects = current_user.joined_projects(True, 3)
         if cur_event is not None:
             may_certify = cur_event.has_finished and cur_event.certificate_path
+        if not isUserActive(current_user):
+            flash(USER_UNDER_REVIEW_MESSAGE, "warning")
     # Filter past events
     MAX_PAST_EVENTS = 6
     events_past_next = events_past.count() > MAX_PAST_EVENTS
@@ -182,13 +187,8 @@ def user_profile(username):
         func.lower(User.username) == func.lower(username)
     ).first_or_404()
     if not isUserActive(user):
-        flash(
-            "Account undergoing review. Please contact the "
-            + "organizing team for full access.",
-            "info",
-        )
+        flash(USER_UNDER_REVIEW_MESSAGE, "warning")
         may_certify = False
-        is_current_user = False
     else:
         may_certify = (
             current_user
@@ -196,12 +196,12 @@ def user_profile(username):
             and current_user.id == user.id
             and user.may_certify()[0]
         )
-        # Check permissions ..
-        is_current_user = (
-            current_user
-            and not current_user.is_anonymous
-            and current_user.id == user.id
-        )
+    # Check permissions ..
+    is_current_user = (
+        current_user
+        and not current_user.is_anonymous
+        and current_user.id == user.id
+    )
     # Collect user data
     projects = user.joined_projects(False)
     posts = user.latest_posts(20)
@@ -298,6 +298,8 @@ def event(event_id):
     if current_user and not current_user.is_anonymous:
         # Set permission to edit the event
         editable = current_user.is_admin or event.user == current_user
+        if not isUserActive(current_user):
+            flash(USER_UNDER_REVIEW_MESSAGE, "warning")
     # Order by ident then name
     projects = projects.order_by(
         Project.ident, Project.name
