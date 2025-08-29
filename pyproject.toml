@@ -26,6 +26,7 @@ flask-talisman = ">=0.7.0"
 flask-wtf = ">=1.0.1"
 frictionless = ">=4.19.5,<5"
 future = ">=1.0.0"
+gevent = "<25.8.1"
 graphene = "^3.2"
 gunicorn = { extras = ["gevent"], version = ">=21.2.0" }
 hiredis = "^2.2"
