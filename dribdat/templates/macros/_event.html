@@ -41,7 +41,8 @@
 {% macro render_home_event(event, details=True) %}
 	<div class="col-lg-4 an-event mb-1">
 		<div class="card{% if event.lock_resources %} border border-info{% endif %}">
-			<div title="{{ event.hostname }}"
+      <a href="{{ url_for('public.event', event_id=event.id) }}">
+			  <div title="{{ event.hostname }}"
 					{% if event.gallery_url %}
 					  class="card-img-top gallery-img" style="background-image: url('{{ event.gallery_url }}')"
 			    {% elif event.logo_url %}
@@ -52,7 +53,8 @@
 	              <span>{{ event.date }}</span>
 	            </div>
 		        {% endif %}
-			</div>
+ 			  </div>
+      </a>
 	    <div class="card-body">
         <a href="{{ url_for('public.event', event_id=event.id) }}">
           <h3 class="card-title">
@@ -65,24 +67,22 @@
           </div>
 	      </a>
 	    	{% if details %}
-	      	<div class="an-event-actions text-center">
-			      <span class="btn-group">
-              {% if event.lock_resources %}
-                <a href="{{ url_for('public.event_resources', event_id=event.id) }}" class="btn btn-outline-light text-bg-light border-white">
-                  <i class="fa fa-life-ring" aria-hidden="true"></i>
-                  Discover</a>
-				      {% elif event.webpage_url and not event.has_finished %}
-						  	<a href="{{ event.webpage_url }}" class="btn btn-outline-light text-bg-light border-white" target="_blank">
-							    <i class="fa fa-ticket" aria-hidden="true"></i>
-							    Register</a>
-              {% elif event.community_url %}
-                <a href="{{ event.community_url }}" class="btn btn-outline-info text-bg-light border-white" target="_blank">
-                  <i class="fa fa-comment" aria-hidden="true"></i>
-                  Connect</a>
-              {% endif %}
-						</span>
+	      	<div class="an-event-actions">
+            {% if event.lock_resources %}
+              <a href="{{ url_for('public.event_resources', event_id=event.id) }}" class="btn btn-outline-light text-bg-light border-white w-50">
+                <i class="fa fa-life-ring" aria-hidden="true"></i>
+                Discover</a>
+            {% elif event.webpage_url and not event.has_finished %}
+              <a href="{{ event.webpage_url }}" class="btn btn-outline-light text-bg-light border-white w-50" target="_blank">
+                <i class="fa fa-ticket" aria-hidden="true"></i>
+                Register</a>
+            {% elif event.community_url %}
+              <a href="{{ event.community_url }}" class="btn btn-outline-info text-bg-light border-white w-50" target="_blank">
+                <i class="fa fa-comment" aria-hidden="true"></i>
+                Connect</a>
+            {% endif %}
 	        	{% if event.project_count %}
-	        		<a href="{{ url_for('public.event', event_id=event.id) }}" class="btn btn-outline-light bg-white border-white">
+	        		<div class="float-right mt-3">
 			          {% if event.has_finished %}
 			            <span title="Teams">{{ event.project_count }}</span>
 			            <i class="fa fa-star" aria-hidden="true"></i>
@@ -93,7 +93,7 @@
 			            <span title="Projects">{{ event.project_count }}</span>
 			            <i class="fa fa-arrow-right" aria-hidden="true"></i>
 			          {% endif %}
-	        		</a>
+	        		</div>
 			      {% endif %}
 	      	</div>
 			  {% endif %}
