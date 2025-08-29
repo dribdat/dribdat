@@ -83,7 +83,7 @@
     <a name="tips"></a>
     <div class="row events-tips mt-5">
       {% for event in events_tips %}
-        {{ evnt.render_home_event(event, False) }}
+        {{ evnt.render_home_event(event) }}
       {% endfor %}
       {% for event in events_next %}
         {{ evnt.render_home_event(event) }}

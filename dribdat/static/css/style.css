@@ -669,12 +669,6 @@ nav .nav-login {
 .event-home .event-info .event-description img {
     max-width: 100%;
 }
-.event-home .event-nav .btn:hover {
-    border: 1px solid black;
-}
-/*.event-home .event-nav .btn:hover span {
-  display: inline;
-}*/
 
 /* ---- Hexagonal hawtness ---- */
 
