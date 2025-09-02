@@ -551,6 +551,10 @@ def import_new_project(event_id):
             active="projects",
         )
 
+    # If Captcha is not configured, skip the validation
+    if not is_anonymous or not current_app.config["RECAPTCHA_PUBLIC_KEY"]:
+        del form.recaptcha
+    
     # Process form result
     del form.id
     form.populate_obj(project)
