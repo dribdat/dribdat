@@ -119,18 +119,9 @@
         Refresh</a>
     {% endif %}
 
-    {% if project.longtext %}
-      <div class="project-autotext">
-        {{project.autotext|markdown}}
-        <div title="Expand the Readme" class="cover">
-          <i class="fa fa-arrow-down" aria-hidden="true"></i>
-        </div>
-      </div>
-    {% else %}
-      <div class="project-autotext">
-        {{project.autotext|markdown}}
-      </div>
-    {% endif %}
+    <div class="project-autotext">
+      {{project.autotext|markdown}}
+    </div>
 
     {% if project.autotext_url and not project.event.lock_resources %}
       <div class="m-2 clearfix">
