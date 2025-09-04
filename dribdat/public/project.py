@@ -618,7 +618,7 @@ def create_new_project(event):
         del form.generate_pitch
     else:
         form.generate_pitch.label.text += (
-            " using " + current_app.config["LLM_MODEL"].upper()
+            " using " + current_app.config["LLM_TITLE"]
         )
 
     if not (form.is_submitted() and form.validate()):
