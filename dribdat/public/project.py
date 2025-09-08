@@ -403,6 +403,11 @@ def get_challenge(project_id):
 def get_log(project_id):
     """Show project log and report."""
     project = Project.query.filter_by(id=project_id).first_or_404()
+    if project.event.lock_resources:
+        is_anonymous = not current_user or current_user.is_anonymous
+        if not is_anonymous:
+            return redirect(url_for("project.project_comment", project_id=project.id))
+        return redirect(url_for("project.project_view", project_id=project.id))
     project_dribs = project.all_dribs()
     # Get access settings
     starred = IsProjectStarred(project, current_user)

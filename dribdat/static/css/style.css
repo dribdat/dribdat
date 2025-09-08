@@ -1451,6 +1451,7 @@ a.media {
     text-align: center;
     font-size: 140%;
     width: 6em;
+    height: 5em;
 }
 .projectedit form .btn:hover,
 .project-buttons .btn:hover {
@@ -1593,6 +1594,10 @@ a.media {
 @media (max-width: 990px) {
     .project-page .resizable {
         height: 348px;
+    }
+    .project-page .project-buttons .btn {
+      font-size: 120%;
+      width: 5em;
     }
 }
 @media (max-width: 1200px) {
@@ -2598,6 +2603,11 @@ Instruction page
     font-size: 125%;
 }
 
+@media (min-width: 1000px) {
+  .list-stages {
+    padding-left: 5rem;
+  }
+}
 .list-stages .step {
     margin-top: 3em;
 }
