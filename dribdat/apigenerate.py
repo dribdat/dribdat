@@ -158,7 +158,7 @@ def gen_openai(prompt: str):
         j = r.json()
         if "choices" in j:
             content = j["choices"][0]["message"]["content"]
-            return "🅰️ℹ️ `Generated with %s`\n\n%s" % (llm_title, content)
+            return "%s\n\n🅰️ℹ️ Written with help of `%s`" % (content, llm_title)
         else:
             logging.error(r.text)
             return None

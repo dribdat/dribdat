@@ -145,7 +145,7 @@ def imports(url, level='full'):
 
 
 @click.command()
-@click.argument('kind', nargs=-1, required=False)
+@click.argument('kind', nargs=-1, required=False, help="people or events")
 def exports(kind):
     """Export system data to CSV."""
     with create_app().app_context():
