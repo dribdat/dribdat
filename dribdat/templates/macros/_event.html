@@ -69,17 +69,17 @@
 	    	{% if details %}
 	      	<div class="an-event-actions">
             {% if event.lock_resources %}
-              <a href="{{ url_for('public.event_resources', event_id=event.id) }}" class="btn btn-outline-light text-bg-light border-white w-50">
+              <a title="Discover" href="{{ url_for('public.event_resources', event_id=event.id) }}" class="btn btn-outline-light text-bg-light border-white">
                 <i class="fa fa-life-ring" aria-hidden="true"></i>
-                Discover</a>
+              </a>
             {% elif event.webpage_url and not event.has_finished %}
-              <a href="{{ event.webpage_url }}" class="btn btn-outline-light text-bg-light border-white w-50" target="_blank">
+              <a title="Register" href="{{ event.webpage_url }}" class="btn btn-outline-light text-bg-light border-white" target="_blank">
                 <i class="fa fa-ticket" aria-hidden="true"></i>
-                Register</a>
+              </a>
             {% elif event.community_url %}
-              <a href="{{ event.community_url }}" class="btn btn-outline-info text-bg-light border-white w-50" target="_blank">
+              <a title="Connect" href="{{ event.community_url }}" class="btn btn-outline-info text-bg-light border-white" target="_blank">
                 <i class="fa fa-comment" aria-hidden="true"></i>
-                Connect</a>
+              </a>
             {% endif %}
 	        	{% if event.project_count %}
 	        		<div class="float-right mt-3">
