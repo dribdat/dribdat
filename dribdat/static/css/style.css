@@ -1353,6 +1353,9 @@ a.media {
 .timeline-content .content img {
     width: 100%;
 }
+.timeline-content .content > * {
+    color: black;
+}
 .timeline-content .challenge-posted {
     font-weight: bold;
 }
