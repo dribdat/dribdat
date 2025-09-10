@@ -97,12 +97,13 @@
   margin-left: -15px; }
 
 .timeline-card {
-  padding: 0 !important; }
-  .timeline-card p {
-    color: #000 !important;
-    padding: 0 20px;
-    padding-bottom: 16px;
-    margin-bottom: 0; }
+  padding: 0 !important; 
+}
+.timeline-card li,
+.timeline-card p {
+  color: #000 !important;
+  margin-bottom: 0; 
+}
 
 .timeline-card .resource-card {
     margin-left: 5%; margin-right: 5%; width: 90%; }

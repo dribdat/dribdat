@@ -259,9 +259,19 @@ def user_post():
     """Redirect to a Post form for my current project."""
     projects = current_user.joined_projects(True, 1)
     if not len(projects) > 0:
-        flash("Please Join a project to be able to Post an update.", "info")
+        flash("Join a project to Post an update, or leave a Comment first.", "info")
         return redirect(url_for("public.home"))
-    return redirect(url_for("project.project_post", project_id=projects[0].id))
+    first_p = None
+    for p in projects:
+        if not p.is_hidden:
+            first_p = p
+            break
+    if first_p is None:
+        flash("Please wait for your challenge to be approved.", "info")
+        return redirect(url_for("public.home"))
+    if not p.event.has_started or p.event.has_finished:
+        return redirect(url_for("project.project_comment", project_id=first_p.id))
+    return redirect(url_for("project.project_post", project_id=first_p.id))
 
 
 @blueprint.route("/user/_cert", methods=["GET"])

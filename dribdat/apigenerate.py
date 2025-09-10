@@ -2,6 +2,7 @@
 """Connect to generative A.I. tools."""
 
 import openai
+import requests, json # Apertus API
 
 from flask import current_app
 from .user.models import Project
@@ -127,58 +128,95 @@ def gen_openai(prompt: str):
     """Request data from a text-completion API."""
     logging = current_app.logger
 
-    if not current_app.config["LLM_API_KEY"]:
-        logging.error("Missing ChatGPT configuration (LLM_API_KEY)")
+    if "LLM_API_KEY" not in current_app.config:
+        logging.error("Missing LLM configuration (LLM_API_KEY)")
         return None
 
-    # TODO: persist in app session
-    if current_app.config["LLM_BASE_URL"]:
-        logging.info("Using custom LLM provider")
-        ai_client = openai.OpenAI(
-            api_key=current_app.config["LLM_API_KEY"],
-            base_url=current_app.config["LLM_BASE_URL"],
+    ai_client = None
+    llm_base_url = current_app.config["LLM_BASE_URL"]
+    llm_api_key = current_app.config["LLM_API_KEY"]
+    llm_model = current_app.config["LLM_MODEL"]
+    llm_title = current_app.config["LLM_TITLE"]
+
+    if 'apertus' in llm_model:
+        usr_prompt = prompt.strip()
+        sys_prompt = SYSTEM_PROMPT.strip()
+        r = requests.post(
+            f"{llm_base_url}/chat/completions",
+            headers={
+                "Content-Type": "application/json",
+                "Authorization": f"Bearer {llm_api_key}",
+            },
+            data=json.dumps({
+                    "model": llm_model,
+                    "messages": [
+                        {"role": "user", "content": usr_prompt},
+                        {"role": "assistant", "content": sys_prompt},
+                    ],
+                })
         )
-    elif current_app.config["LLM_API_KEY"]:
+        j = r.json()
+        if "choices" in j:
+            content = j["choices"][0]["message"]["content"]
+            return "%s\n\n🅰️ℹ️ Written with help of `%s`" % (content, llm_title)
+        else:
+            logging.error(r.text)
+            return None
+
+    if llm_base_url and llm_model:
+        logging.info(f"Using custom LLM provider for {llm_model}")
+        ai_client = openai.OpenAI(
+            api_key=llm_api_key,
+            base_url=llm_base_url,
+        )
+    elif llm_api_key:
         logging.info("Using default OpenAI provider")
         ai_client = openai.OpenAI(
-            api_key=current_app.config["LLM_API_KEY"],
+            api_key=llm_api_key,
         )
-    else:
+
+    if ai_client is None:
         logging.error("No LLM configuration available")
         return None
 
     # Attempt to get an interaction started
+    completion = None
     try:
+        usr_prompt = prompt.strip()
+        sys_prompt = SYSTEM_PROMPT.strip()
+
         logging.debug("Starting completions")
         completion = ai_client.chat.completions.create(
-            model=current_app.config["LLM_MODEL"],
+            model=llm_model,
             timeout=REQUEST_TIMEOUT,
             # chat_template=CHAT_TEMPLATE_1,
             messages=[
-                {"role": "user", "content": prompt.strip()},
-                {"role": "system", "content": SYSTEM_PROMPT.strip()},
+                {"role": "user", "content": usr_prompt},
+                {"role": "system", "content": sys_prompt},
             ],
         )
     except openai.InternalServerError as e:
-        logging.error("Server error (invalid model?)")
-        logging.debug(e)
+        logging.error("Server error (check your LLM id)")
+        logging.debug(e.__cause__)
         return None
     except openai.APIConnectionError:
-        logging.error("No LLM connection")
+        logging.error("No API connection to LLM")
+        logging.debug(e)
         return None
     except openai.RateLimitError:
-        logging.error("Rate limits exceeded")
+        logging.error("Rate limits on LLM exceeded")
         return None
+    except openai.APIStatusError as e:
+        logging.error("An LLM API error (%d) was received" % e.status_code)
+        logging.debug(e.response)
     except Exception as e:
         logging.error(e)
         return None
 
     # Return the obtained result
-    if len(completion.choices) > 0:
-        mymodel = current_app.config["LLM_MODEL"].upper()
+    if completion is not None and len(completion.choices) > 0:
         content = completion.choices[0].message.content or ""
-        # content = content.replace("\n", "\n> ")
-        return "🅰️ℹ️ `Generated with %s`\n\n%s" % (mymodel, content)
+        return "🅰️ℹ️ `Generated with %s`\n\n%s" % (llm_title, content)
     else:
         logging.error("No LLM data in response")
         return None

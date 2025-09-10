@@ -2,7 +2,7 @@
 [![codecov status](https://codecov.io/gh/dribdat/dribdat/branch/main/graph/badge.svg?token=Ccd1vTxRXg)](https://codecov.io/gh/dribdat/dribdat)
 [![FOSSA status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Floleg%2Fdribdat.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Floleg%2Fdribdat?ref=badge_shield)
 
-# Dribdat
+# ⬡⬢⬡ Dribdat ⬡⬢⬡
 
 **An open source hackathon management application that playfully assists your team in crowdsourcing technical designs.** 
 

@@ -87,6 +87,7 @@ class Config(object):
 
     # Configure an external LLM API
     LLM_MODEL = os_env.get("LLM_MODEL", "local-model")  # e.g. gpt-3.5-turbo
+    LLM_TITLE = LLM_MODEL.upper().replace("_", " ").split("/")[-1]
     LLM_API_KEY = os_env.get("LLM_API_KEY", "")
     LLM_BASE_URL = os_env.get("LLM_BASE_URL", "")
 
