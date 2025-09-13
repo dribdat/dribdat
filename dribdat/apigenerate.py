@@ -142,7 +142,7 @@ def gen_openai(prompt: str):
         usr_prompt = prompt.strip()
         sys_prompt = SYSTEM_PROMPT.strip()
         r = requests.post(
-            f"{llm_base_url}/chat/completions",
+            f"{llm_base_url}",
             headers={
                 "Content-Type": "application/json",
                 "Authorization": f"Bearer {llm_api_key}",
@@ -216,7 +216,7 @@ def gen_openai(prompt: str):
     # Return the obtained result
     if completion is not None and len(completion.choices) > 0:
         content = completion.choices[0].message.content or ""
-        return "🅰️ℹ️ `Generated with %s`\n\n%s" % (llm_title, content)
+        return "%s\n\n🅰️ℹ️ Written with help of `%s`" % (content, llm_title)
     else:
         logging.error("No LLM data in response")
         return None
