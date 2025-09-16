@@ -158,7 +158,7 @@ def register():
     # Continue with user creation
     new_user = User.create(
         username=sane_username,
-        email=form.email.data,
+        email=form.email.data.lower(),
         webpage_url=form.webpage_url.data,
         password=form.password.data,
         active=True,
@@ -480,7 +480,7 @@ def get_or_create_sso_user(sso_id, sso_name, sso_email, sso_webpage="", allow_cr
         user = User.create(
             username=username,
             sso_id=sso_id,
-            email=sso_email,
+            email=sso_email.lower(),
             webpage_url=sso_webpage,
             password=random_password(),
             active=True,
