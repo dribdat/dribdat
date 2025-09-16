@@ -3,6 +3,7 @@
 
 import openai
 import requests, json # Apertus API
+from json.decoder import JSONDecodeError
 
 from flask import current_app
 from .user.models import Project
@@ -184,8 +185,12 @@ def gen_openai(prompt: str):
                     ],
                 })
         )
-        j = r.json()
-        if "choices" in j:
+        try:
+            j = r.json()
+        except JSONDecodeError:
+            logging.error("No data")
+            return None
+        if "choices" in j and len(j["choices"]) > 0:
             content = j["choices"][0]["message"]["content"]
             return "%s\n\n🅰️ℹ️ `generated with %s`" % (content, llm_title)
         else:
