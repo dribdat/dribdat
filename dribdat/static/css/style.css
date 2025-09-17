@@ -2048,6 +2048,10 @@ div.project-edit-buttons {
         left: 0%;
         width: 100%;
     }
+    #homeCarousel,
+    #homeCarousel .bd-placeholder-img {
+        height: 360px;
+    }
 }
 .category-info {
     padding: 0 10%;
