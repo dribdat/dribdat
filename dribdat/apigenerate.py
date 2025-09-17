@@ -168,7 +168,8 @@ def gen_openai(prompt: str):
     llm_model = current_app.config["LLM_MODEL"]
     llm_title = current_app.config["LLM_TITLE"]
 
-    if 'apertus' in llm_model:
+    # TODO: remove this when API is updated
+    if 'publicai.co' in llm_base_url:
         usr_prompt = prompt.strip()
         sys_prompt = SYSTEM_PROMPT.strip()
         r = requests.post(
