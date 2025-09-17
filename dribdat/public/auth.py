@@ -29,6 +29,7 @@ from dribdat.utils import (
     random_password,
     sanitize_input,
 )
+from dribdat.user import isUserActive, USER_UNDER_REVIEW_MESSAGE
 from dribdat.user.forms import (
     ActivationForm,
     RegisterForm,
@@ -45,6 +46,8 @@ from dribdat.mailer import (
 )
 from datetime import datetime
 from dribdat.futures import UTC
+from json import loads
+from json.decoder import JSONDecodeError
 # noqa: I005
 
 blueprint = Blueprint("auth", __name__, static_folder="../static")
@@ -155,7 +158,7 @@ def register():
     # Continue with user creation
     new_user = User.create(
         username=sane_username,
-        email=form.email.data,
+        email=form.email.data.lower(),
         webpage_url=form.webpage_url.data,
         password=form.password.data,
         active=True,
@@ -315,13 +318,8 @@ def user_profile():
     """Display or edit the current user profile."""
     user = current_user
     user_is_valid = True
-    if not user.active:
-        flash(
-            "This user account is under review. Please update your profile "
-            + " and contact the organizing team to access all functions of "
-            + "this platform.",
-            "warning",
-        )
+    if not isUserActive(user):
+        flash(USER_UNDER_REVIEW_MESSAGE, "warning")
 
     form = UserForm(obj=user, next=request.args.get("next"))
 
@@ -374,8 +372,8 @@ def user_story():
     """Display or edit the current user goals."""
     user = current_user
     user_is_valid = True
-    if not user.active:
-        flash("This user account is under review.", "warning")
+    if not isUserActive(user):
+        flash(USER_UNDER_REVIEW_MESSAGE, "warning")
 
     form = StoryForm(obj=user, next=request.args.get("next"))
     # Load roles
@@ -393,6 +391,14 @@ def user_story():
         user.my_wishes = unpack_csvlist(form.my_wishes.data)
         del form.my_wishes  # avoid setting it again
 
+        # Verify CV data
+        if form.vitae.data:
+            try:
+                loads(form.vitae.data)
+            except JSONDecodeError as e:
+                flash("Invalid JSON: %s" % e, "danger")
+
+        # Finalize and save user data
         form.populate_obj(user)
         user.updated_at = datetime.now(UTC)
         db.session.add(user)
@@ -417,63 +423,79 @@ def user_story():
     )
 
 
-def get_or_create_sso_user(sso_id, sso_name, sso_email, sso_webpage=""):
+def get_or_create_sso_user(sso_id, sso_name, sso_email, sso_webpage="", allow_create=None):
     """Match a user account based on SSO_ID."""
     sso_id = str(sso_id)
     user = User.query.filter_by(sso_id=sso_id).first()
-    if not user:
-        if isinstance(current_user, User) and current_user.active:
-            user = current_user
-            user.sso_id = sso_id
+    # Check if user is already logged in
+    if not user and isinstance(current_user, User) and current_user.active:
+        user = current_user
+        user.sso_id = sso_id
+    if user:
+        login_user(user, remember=True)
+        if not isUserActive(user):
+            flash(USER_UNDER_REVIEW_MESSAGE, "warning")
         else:
-            user = User.query.filter_by(email=sso_email).first()
-            if user:
-                # Update SSO identifier
-                user.sso_id = sso_id
-                db.session.add(user)
-                db.session.commit()
-            else:
-                username = sso_name.lower().replace(" ", "_")
-                user = User.query.filter_by(username=username).first()
-                if user:
-                    flash(
-                        "Duplicate username (%s) - " % username
-                        + "please change it, or contact an admin for help.",
-                        "warning",
-                    )
-                    return redirect(url_for("auth.login", local=1))
-                user = User.create(
-                    username=username,
-                    sso_id=sso_id,
-                    email=sso_email,
-                    webpage_url=sso_webpage,
-                    password=random_password(),
-                    active=True,
-                )
-                if User.query.count() < 2:
-                    # This is the first user account - promote me!
-                    user.is_admin = True
-                    user.save()
-                    flash("Administrative user created - oh joy!", "success")
-            user.socialize()
-            login_user(user, remember=True)
-            flash("Welcome! Please complete your user account.", "info")
-            return redirect(url_for("auth.user_profile"))
-    login_user(user, remember=True)
-    if not user.active:
-        flash(
-            "This user account is under review. Please update your profile "
-            + "and contact the organizing team to access all functions of "
-            + "this platform.",
-            "warning",
-        )
-    else:
-        flash("Logged in! Time to make something awesome ≧◡≦", "success")
+            flash("Time to make something awesome ≧◡≦", "success")
+        if current_event():
+            return redirect(url_for("public.event", event_id=current_event().id))
+        else:
+            return redirect(url_for("public.home"))
 
-    if current_event():
-        return redirect(url_for("public.event", event_id=current_event().id))
+    # Try to match the user by e-mail
+    user = User.query.filter_by(email=sso_email).first()
+    if user:
+        # Update SSO identifier
+        # TODO: unsafe - admin should clear SSO
+        user.sso_id = sso_id
+        db.session.add(user)
+        db.session.commit()
+
     else:
-        return redirect(url_for("public.home"))
+        username = sso_name.lower().replace(" ", "_")
+        user = User.query.filter_by(username=username).first()
+        if user:
+            # Find a similar user name
+            for i in range(1, 9):
+                u_n = str(username) + str(i)
+                user = User.query.filter_by(username=u_n).first()
+                if not user:
+                    username = u_n
+                    break
+            if user:
+                flash(
+                    "Duplicate username (%s) - please ask for help" % username,
+                    "warning",
+                )
+                return redirect(url_for("auth.login", local=1))
+
+        # Check server settings
+        if allow_create is None:
+            allow_create = not current_app.config["DRIBDAT_NOT_REGISTER"]
+        if not allow_create:
+            flash("Registration currently not possible.", "warning")
+            return redirect(url_for("auth.login", local=1))
+
+        # Continue to create user account
+        user = User.create(
+            username=username,
+            sso_id=sso_id,
+            email=sso_email.lower(),
+            webpage_url=sso_webpage,
+            password=random_password(),
+            active=True,
+        )
+        if User.query.count() == 1:
+            # This is the first user account - promote me!
+            user.is_admin = True
+            user.save()
+            flash("Administrative user created - oh joy!", "success")
+
+    # Finalize the login
+    user.socialize()
+    login_user(user, remember=True)
+    flash("Welcome! Please complete your user account.", "info")
+    return redirect(url_for("auth.user_profile"))
 
 
 @blueprint.route("/slack_login", methods=["GET", "POST"])

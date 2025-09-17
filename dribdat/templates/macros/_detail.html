@@ -3,13 +3,13 @@
 {% if not project.event.lock_resources %}
   <div class="btn-group project-tab-buttons" role="group" aria-label="Switch view">
 
-    <a class="btn btn-light{% if main_view %} active{% endif %}" id="project-tab-md" href="{{ url_for('project.project_view', project_id=project.id) }}"
+    <a class="btn btn-light{% if not main_view %} active{% endif %}" id="project-tab-md" href="{{ url_for('project.project_view', project_id=project.id) }}"
        title="Go to the Pitch">
       <i class="fa fa-book" aria-hidden="true"></i>
       {%- if not main_view %}{% if project.is_challenge %} Challenge
       {%- else %} Pitch{% endif %}{% endif %}
     </a>
-    <a class="btn btn-light{% if not main_view %} active{% endif %}" id="dribs-tab-md" href="{{ url_for('project.get_log', project_id=project.id) }}"
+    <a class="btn btn-light{% if main_view %} active{% endif %}" id="dribs-tab-md" href="{{ url_for('project.get_log', project_id=project.id) }}"
        title="Log and progress review">
       <i class="fa fa-paperclip" aria-hidden="true"></i>
       {% if main_view %} Log{% endif %}
@@ -32,8 +32,8 @@
        <i class="fa fa-clock-o" aria-hidden="true"></i>
        Post
      </a>
-  {% elif current_user and current_user.active and not project.event.lock_resources %}
-    <a id="project-comment" href="{{ url_for('project.project_comment', project_id=project.id) }}"
+  {% elif current_user and current_user.active %}
+    <a id="project-comment-top" href="{{ url_for('project.project_comment', project_id=project.id) }}"
         title="Write a public comment" class="btn btn-lg btn-info">
        <i class="fa fa-comment" aria-hidden="true"></i>
        Comment
@@ -88,9 +88,11 @@
 
   {% if project.event.lock_resources %}
   <a href="{{ url_for('public.event_resources', event_id=project.event.id) }}"
-     class="float-right btn btn-lg btn-default">
+     class="float-right btn btn-lg btn-outline-light"
+     title="Recommended at this project stage">
        <i class="fa fa-life-ring" aria-hidden="true"></i>
-       Resource</a>
+       {{project.phase}}
+  </a>
   {% elif project.score and not project.is_challenge %}
     <div class="mb-4 project-score">
       <a href="{{ url_for('public.event_stages', event_id=project.event.id) }}#{{project.phase}}">

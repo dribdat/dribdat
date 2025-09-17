@@ -83,6 +83,7 @@ class TestApi:
         project.user = user
         project.event = event
         project.longtext = "Smee"
+        project.progress = 0
         project.save()
         ProjectActivity(project, 'update', user)
 
@@ -109,6 +110,7 @@ class TestApi:
         event = EventFactory(name="hello", is_current=True)
         event.save()
         project = ProjectFactory(name="myproject", event=event)
+        project.progress = 0
         project.save()
 
         # Test basic project list
@@ -180,7 +182,7 @@ class TestApi:
         assert len(res.json['projects']) == 1
         assert res.json['projects'][0]['name'] == "myproject"
 
-    def test_get_user_profile(self):
+    def test_get_user_profile(self, testapp):
         """Test user profile API functions."""
         user = UserFactory(username="myuser")
         user.save()
@@ -191,3 +193,18 @@ class TestApi:
 
         jsondata = json.loads(profile_username_json(user.username).data)
         assert jsondata["username"] == "myuser"
+
+        # Test user API
+        res = testapp.get('/api/participants.json')
+        assert res.status_code == 200
+        assert len(res.json['users']) == 1
+        assert res.json['users'][0]['name'] == "myuser"
+
+    def test_set_admin_status(self, testapp):
+        """Set an Event status for broadcast."""
+        event = EventFactory(is_current=True)
+        event.set_status('Test status')
+        res = testapp.get('/api/event/current/get/status')
+        assert res.status_code == 200
+        assert 'event' in res.json
+        assert res.json['status'] == 'Test status'

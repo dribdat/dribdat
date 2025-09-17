@@ -21,7 +21,7 @@ import json
 import re
 from sqlalchemy import and_
 from requests.exceptions import ConnectionError
-from flask import flash
+from flask import flash, redirect, url_for
 
 
 def GetProjectData(url):
@@ -217,10 +217,10 @@ def IsProjectStarred(project, current_user):
 
 def GetProjectACLs(user, event, starred):
     """Figure out some basic permissions."""
-    allow_edit = not user.is_anonymous and user.is_admin
     lock_editing = event.lock_editing
     allow_post = starred and not event.lock_resources and event.has_started
-    allow_edit = allow_edit or event.lock_resources
+    allow_edit = not user.is_anonymous and \
+                 (user.is_admin or event.lock_resources)
     allow_edit = (starred or allow_edit) and not lock_editing
     return allow_edit, allow_post, lock_editing
 
@@ -246,6 +246,20 @@ def AllowProjectEdit(project, current_user):
         return True
     # Must be a member of the team in good standing
     return IsProjectStarred(project, current_user)
+
+
+def AllowUserInEvent(user, event):
+    """Check user permission to post in this event."""
+    is_anonymous = not user or user.is_anonymous
+    if not is_anonymous and not isUserActive(user):
+        flash("Your account needs to be activated before you can post.", "warning")
+        return redirect(url_for("public.event", event_id=event_id))
+    if event.lock_starting or (event.has_finished and not user.is_admin):
+        flash("Projects may no longer be started in this event.", "error")
+        return redirect(url_for("public.event", event_id=event.id))
+    if is_anonymous:
+        flash("Your project will be private until it is approved.", "info")
+    return True
 
 
 def ProjectsByProgress(progress=None, event=None):

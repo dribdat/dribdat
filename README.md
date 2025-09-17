@@ -2,7 +2,7 @@
 [![codecov status](https://codecov.io/gh/dribdat/dribdat/branch/main/graph/badge.svg?token=Ccd1vTxRXg)](https://codecov.io/gh/dribdat/dribdat)
 [![FOSSA status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Floleg%2Fdribdat.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Floleg%2Fdribdat?ref=badge_shield)
 
-# Dribdat
+# ⬡⬢⬡ Dribdat ⬡⬢⬡
 
 **An open source hackathon management application that playfully assists your team in crowdsourcing technical designs.** 
 
@@ -18,9 +18,9 @@ We aim to include people of all backgrounds in using + developing this tool - no
 
 Created in light of the [Hacker ethic](https://en.wikipedia.org/wiki/Hacker_ethic), the Zen of Dribdat is (in a nutshell):
 
-- **Commit sustainably**: aggregate results in open, web-friendly data formats for search and archiving.
-- **Go live and let live**: efficiently deploy designs, dev envs, docs accessible to your entire team.
-- **Co-create in safe spaces**: with content and tools promoting safer conduct and increased privacy.
+- **Commit sustainably**: archive collected results in open, web-friendly data formats.
+- **Live and let live**: share designs, dev envs, docs accessible to your entire team.
+- **Co-create in safe spaces**: promote safer conduct and increased privacy.
 
 Visit the [Hackfinder](https://hackintegration.ch/hackfinder) to find events connected to current research, and join our [Hack:Org:X](https://hackorgx.dribdat.cc) meetings to say 'hi' to the maintainers and fellow hackathon organizers.
 
@@ -34,16 +34,16 @@ If you would like to run this application on any other cloud or local machine, t
 
 See also **[backboard](https://github.com/dribdat/backboard)**: a responsive, modern alternative frontend, and our **[dridbot](https://github.com/dribdat/dridbot)** chat client. Both demonstrate reuse of the dribdat API. If you need support with your deployment, please reach out through [Discussions](https://github.com/orgs/dribdat/discussions). Pull Requests and Issues welcome!
 
-Development Status: 🍌 [Perpetual beta](https://en.wikipedia.org/wiki/Perpetual_beta)
-ASCII Signature: `d}}BD{t` 
+Development Status: 🍌 [Perpetual beta](https://en.wikipedia.org/wiki/Perpetual_beta) \
+ASCII Signature: `d}}BD{t`
+
+<img src="dribdat/static/img/logo/logo13.png" width="100"/>
 
 # Credits
 
 This application was based on [cookiecutter-flask](https://github.com/sloria/cookiecutter-flask) by [Steven Loria](https://github.com/sloria), a more modern version of which is [cookiecutter-flask-restful](https://github.com/karec/cookiecutter-flask-restful). [Cookiecutter](https://cookiecutter.readthedocs.io/en/stable/README.html#available-templates) could also be a good bootstrap for your own hackathon projects!
 
 ♡ The [Open Data](https://opendata.ch), [Open Networking](https://opennetworkinfrastructure.org/) and [Open Source](https://dinacon.ch) communities in 🇨🇭 Switzerland gave this project initial form and direction through a hundred events. ♥-felt thanks to our [Contributors](https://github.com/dribdat/dribdat/graphs/contributors), and additionally: F. Wieser and M.-C. Gasser at [Swisscom](http://swisscom.com) for support at an early stage of this project, to [Alexandre Cotting](https://github.com/Cotting), [Anthony Ritz](https://github.com/RitzAnthony), [Chris Mutel](https://github.com/cmutel), [Fabien Schwob](https://github.com/jibaku), [Gonzalo Casas](https://github.com/gonzalocasas), [Iliya Tikhonenko](https://github.com/vleugelcomplement), [Janik von Rotz](https://janikvonrotz.ch/), [Jonathan Schnyder](https://github.com/jonHESSO), [Jonathan Sobel](https://github.com/JonathanSOBEL), [Philip Shemella](https://github.com/philshem), [Thomas Amberg](https://github.com/tamberg), [Yusuf Khasbulatov](https://github.com/khashashin) .. and all participants and organizers sending in bugs and requests! You are all awesome `h`a`c`k`e`r`s` ♡
-
-![](dribdat/static/img/logo/logo13.png)
 
 ## License
 

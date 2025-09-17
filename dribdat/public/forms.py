@@ -62,8 +62,8 @@ class ProjectNew(FlaskForm):
         description="Your channel, room, or contact address.",
     )
     template = HiddenField("template")
-    submit = SubmitField("Save")
     recaptcha = RecaptchaField()
+    submit = SubmitField("Save")
 
 
 class ProjectForm(FlaskForm):
@@ -113,6 +113,11 @@ class ProjectDetailForm(FlaskForm):
         [length(max=1024)],
         description="🏀 Comma,separated,list of skills or technai involved.",
     )
+    terms_reuse = StringField(
+        "Terms of reuse",
+        [length(max=256)],
+        description="📜 Specify how your project data may be remixed or used by AI, if different from event defaults. This can be a link to a license text.",
+    )
     download_url = URLField(
         "Demo",
         description="🧀 Link to online demo or download area for this project.",
@@ -120,11 +125,6 @@ class ProjectDetailForm(FlaskForm):
     source_url = URLField(
         "Source",
         description="🗝️ Link to the source code of your project - not necessarily same as your Readme.",
-    )
-    terms_reuse = StringField(
-        "Terms of reuse",
-        [length(max=256)],
-        description="📜 Signal how project data may be remixed or used in AI training.",
     )
     # Note: contact_url could be an e-mail or room number -> StringField
     contact_url = StringField(
@@ -281,8 +281,8 @@ class EventEdit(FlaskForm):
     )
     instruction = TextAreaField(
         "Instructions",
-        description="Shown to registered participants only - "
-        + "Markdown and HTML supported",
+        description="Shown to registered participants only. "
+        + "Markdown and HTML supported. Split with ---",
     )
     aftersubmit = TextAreaField(
         "Submissions guide",

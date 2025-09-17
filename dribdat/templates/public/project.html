@@ -112,77 +112,47 @@
   {% if project.autotext %}
     <div id="readme-md" aria-labelledby="readme-tab-md">
 
-    {% if project.longtext %}
-      <div class="project-autotext scroll-after-500">
-        {{project.autotext|markdown}}
-        <div title="Expand the Readme" class="cover">
-          <i class="fa fa-arrow-down" aria-hidden="true"></i>
-        </div>
-      </div>
-    {% else %}
-      <div class="project-autotext">
-        {{project.autotext|markdown}}
-      </div>
+    {% if allow_edit and project.is_syncable %}
+      <a href="{{ url_for('project.project_autoupdate', project_id=project.id) }}"
+        title="Sync external Readme data" class="btn btn-sm btn-outline-dark text-light float-right">
+        <i class="fa fa-refresh" aria-hidden="true"></i>
+        Refresh</a>
     {% endif %}
 
-      <div class="m-2">
-        {% if project.autotext_url and not project.event.lock_resources %}
-          <span style="line-height:2.5em">
-            <i class="fa fa-asterisk" aria-hidden="true"></i>
-            Preview of
-            <a href="{{ project.autotext_url }}" target="_blank" rel="noopener noreferrer" title="Source link">
-              external content</a>.</span>
-        {% endif %}
+    <div class="project-autotext">
+      {{project.autotext|markdown}}
+    </div>
 
-        {% if allow_edit and project.is_syncable %}
-          <a href="{{ url_for('project.project_autoupdate', project_id=project.id) }}"
-             title="Sync external Readme data" class="btn btn-md btn-default float-right">
-            <i class="fa fa-refresh" aria-hidden="true"></i>
-            Refresh</a>
-        {% endif %}
+    {% if project.autotext_url and not project.event.lock_resources %}
+      <div class="m-2 clearfix">
+        <span style="line-height:2.5em">
+          <i class="fa fa-asterisk" aria-hidden="true"></i>
+          Preview of
+          <a href="{{ project.autotext_url }}" target="_blank" rel="noopener noreferrer" title="Source link">
+            external content</a>.</span>
       </div>
+    {% endif %}
 
     </div>
   {% endif %}
 
-
   <div class="project-buttons mb-5" role="group" aria-label="Project links">
     {% if project.contact_url %}
       {% if project.contact_url.startswith('http') or project.contact_url.startswith('mailto:') %}
-        <a href="{{ project.contact_url }}" target="_blank" rel="noopener noreferrer" class="btn btn-lg" title="Contact the team"><span>&#x1f44b;</span> Contact</a>
+        <a href="{{ project.contact_url }}" target="_blank" rel="noopener noreferrer" class="btn btn-lg shadow-none border-light" title="Contact the team"><span>&#x1f44b;</span> Contact</a>
       {% elif '@' in project.contact_url %}
-        <a href="mailto:{{ project.contact_url }}" target="_blank" rel="noopener noreferrer" class="btn btn-lg" title="Contact the team"><span>&#x1f44b;</span> E-mail</a>
+        <a href="mailto:{{ project.contact_url }}" target="_blank" rel="noopener noreferrer" class="btn btn-lg shadow-none border-light" title="Contact the team"><span>&#x1f44b;</span> E-mail</a>
       {% else %}
         <div class="btn btn-lg" title="Contact the team"><span>&#x1f44b;</span> {{ project.contact_url }}</div>
       {% endif %}
     {% endif %}
     {% if project.download_url %}
-      <a href="{{ project.download_url }}" target="_blank" rel="noopener noreferrer" class="btn btn-lg" title="Download link"><span>&#x2728;</span> Demo</a>
+      <a href="{{ project.download_url }}" target="_blank" rel="noopener noreferrer" class="btn btn-lg shadow-none border-light" title="Download link"><span>&#x2728;</span> Demo</a>
     {% endif %}
     {% if project.source_url %}
-      <a href="{{ project.source_url }}" class="btn btn-lg" target="_blank" rel="noopener noreferrer" title="Source code"><span>&#x1f4bb;</span> Source</a>
+      <a href="{{ project.source_url }}" class="btn btn-lg shadow-none border-light" target="_blank" rel="noopener noreferrer" title="Source code"><span>&#x1f4bb;</span> Source</a>
     {% endif %}
   </div>
-
-  {% if project.terms_reuse %}
-    <div id="project-terms" class="row m-3" title="Legal conditions of reuse">
-      <div class="col-12 text-center">
-        {% if project.terms_reuse == 'C' or project.terms_reuse.startswith('C+') %}
-          <a href="https://creativecommons.org/ai-and-the-commons/cc-signals/" target="_blank" rel="noopener noreferrer" class="cc-signal">
-            <i class="fa fa-cc"></i><i class="fa fa-plus"></i>
-            {{ project.terms_reuse }}
-          </a>
-        {% elif project.terms_reuse.startswith('CC') %}
-          <a href="https://creativecommons.org/licenses/" target="_blank" rel="noopener noreferrer" class="cc-by">
-            <i class="fa fa-cc"></i>
-            {{ project.terms_reuse }}
-          </a>
-        {% else %}
-          {{ project.terms_reuse }}
-        {% endif %}
-      </div>
-    </div>
-  {% endif %}
 
   {% if project.technai %}
     <div id="technai-md" class="row m-3" title="Tech and skills used in this project">
@@ -260,7 +230,7 @@
         <i class="fa fa-clock-o" aria-hidden="true"></i>
         Post
       </a>
-    {% elif not project.event.lock_resources %}
+    {% else %}
       <a id="project-comment" href="{{ url_for('project.project_comment', project_id=project.id) }}"
           title="Write a public comment" class="btn btn-lg btn-info">
         <i class="fa fa-comment" aria-hidden="true"></i>
@@ -293,16 +263,13 @@
   {% endif %}
 </div><!-- / .project-controls -->
 
-{% if allow_edit %}
-  {% if config.LLM_API_KEY and not project.is_challenge and not project.event.lock_resources %}
+{% if allow_edit and config.LLM_API_KEY and not project.is_challenge and not project.event.lock_resources %}
   <div role="group" aria-label="Team controls" class="ms-3 me-3 btn-group project-controls">
     <button data-bs-toggle="modal" data-bs-target="#autopostModal"
        title="Get tips from an AI coach" class="btn btn-lg btn-dark">
       &#x1F170;&#xFE0F;&#x2139;&#xFE0F;
     </button>
   </div>
-  {% endif %}
-  {% include "includes/projectdialogs.html" %}
 {% endif %}
 
 {% if current_user.is_admin %}
@@ -347,11 +314,38 @@
   </div>
 </div>
 
+{% if project.terms_reuse %}
+  <div id="project-terms" class="fs-5" title="Legal conditions of reuse for this project">
+    {% if project.terms_reuse == 'C' or project.terms_reuse.startswith('C+') %}
+      <a href="https://creativecommons.org/ai-and-the-commons/cc-signals/" target="_blank" rel="noopener noreferrer" class="cc-signal">
+        <i class="fa fa-cc"></i><i class="fa fa-plus"></i>
+        {{ project.terms_reuse }}
+      </a>
+    {% elif project.terms_reuse.startswith('CC') %}
+      <a href="https://creativecommons.org/licenses/" target="_blank" rel="noopener noreferrer" class="cc-by">
+        <i class="fa fa-cc"></i>
+        {{ project.terms_reuse }}
+      </a>
+    {% elif project.terms_reuse.startswith('http') %}
+      <a href="{{ project.terms_reuse }}" target="_blank" rel="noopener noreferrer" class="cc-by">
+        Terms of Reuse
+      </a>
+    {% else %}
+      {{ project.terms_reuse }}
+    {% endif %}
+  </div>
+{% endif %}
+
+
 {% if config.DRIBDAT_SOCIAL_LINKS and share %}
   {{ social.share_links(share.text, share.url) }}
 {% endif %}
 
 {% include "includes/projectnav.html" %}
+
+{% if allow_edit %}
+  {% include "includes/projectdialogs.html" %}
+{% endif %}
 
 {% if project.category %}
   <div class="modal fade" id="categoryModal" role="dialog" tabindex="-1">

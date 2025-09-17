@@ -13,16 +13,19 @@ from flask import (
 )
 from flask_login import login_required, current_user
 from dribdat.user.models import User, Event, Project, Role
-from dribdat.public.forms import EventNew, EventEdit
+from dribdat.user import (
+    getProjectStages, 
+    isUserActive, USER_UNDER_REVIEW_MESSAGE,
+)
 from dribdat.public.userhelper import (
     get_users_by_search,
     get_dribs_paginated,
 )
+from dribdat.public.forms import EventNew, EventEdit
 from dribdat.public.projhelper import current_event
 from dribdat.database import db
 from dribdat.extensions import cache
 from dribdat.aggregation import GetEventUsers
-from dribdat.user import getProjectStages, isUserActive
 from urllib.parse import urlparse
 from sqlalchemy import and_, func
 from datetime import datetime, timedelta
@@ -101,7 +104,8 @@ def about():
 def terms():
     """Render a static terms of use page."""
     terms = EVENT_PRESET["terms"]
-    return render_template("public/terms.html", active="terms", terms=terms)
+    return render_template("public/terms.html", active="terms", 
+        current_event=current_event(), terms=terms)
 
 
 @blueprint.route("/favicon.ico")
@@ -135,6 +139,8 @@ def home():
         my_projects = current_user.joined_projects(True, 3)
         if cur_event is not None:
             may_certify = cur_event.has_finished and cur_event.certificate_path
+        if not isUserActive(current_user):
+            flash(USER_UNDER_REVIEW_MESSAGE, "warning")
     # Filter past events
     MAX_PAST_EVENTS = 6
     events_past_next = events_past.count() > MAX_PAST_EVENTS
@@ -181,13 +187,8 @@ def user_profile(username):
         func.lower(User.username) == func.lower(username)
     ).first_or_404()
     if not isUserActive(user):
-        flash(
-            "Account undergoing review. Please contact the "
-            + "organizing team for full access.",
-            "info",
-        )
+        flash(USER_UNDER_REVIEW_MESSAGE, "warning")
         may_certify = False
-        is_current_user = False
     else:
         may_certify = (
             current_user
@@ -195,12 +196,12 @@ def user_profile(username):
             and current_user.id == user.id
             and user.may_certify()[0]
         )
-        # Check permissions ..
-        is_current_user = (
-            current_user
-            and not current_user.is_anonymous
-            and current_user.id == user.id
-        )
+    # Check permissions ..
+    is_current_user = (
+        current_user
+        and not current_user.is_anonymous
+        and current_user.id == user.id
+    )
     # Collect user data
     projects = user.joined_projects(False)
     posts = user.latest_posts(20)
@@ -224,15 +225,19 @@ def user_profile(username):
             if p.event not in events:
                 events.append(p.event)
     # Calculate score
+    user_score = user.get_score()
     score_tip = int(user.get_profile_percent() * 100)
+    # Parse the CV
+    user_resume = user.simple_resume()
     # Filter out by today's date
     return render_template(
         "public/userprofile.html",
         active="profile",
         user=user,
+        vitae=user_resume,
         projects=projects,
         posts=posts,
-        score=user.get_score(),
+        score=user_score,
         score_tip=score_tip,
         events=events,
         events_next=events_next,
@@ -254,9 +259,19 @@ def user_post():
     """Redirect to a Post form for my current project."""
     projects = current_user.joined_projects(True, 1)
     if not len(projects) > 0:
-        flash("Please Join a project to be able to Post an update.", "info")
+        flash("Join a project to Post an update, or leave a Comment first.", "info")
         return redirect(url_for("public.home"))
-    return redirect(url_for("project.project_post", project_id=projects[0].id))
+    first_p = None
+    for p in projects:
+        if not p.is_hidden:
+            first_p = p
+            break
+    if first_p is None:
+        flash("Please wait for your challenge to be approved.", "info")
+        return redirect(url_for("public.home"))
+    if not p.event.has_started or p.event.has_finished:
+        return redirect(url_for("project.project_comment", project_id=first_p.id))
+    return redirect(url_for("project.project_post", project_id=first_p.id))
 
 
 @blueprint.route("/user/_cert", methods=["GET"])
@@ -281,6 +296,9 @@ def user_cert():
 def event(event_id):
     """Show an event."""
     event = Event.query.filter_by(id=event_id).first_or_404()
+    # Redirect resource type events
+    if event.lock_resources:
+        return event_resources(event_id)
     # Sort visible projects by identity (if used), or alphabetically
     projects = Project.query.filter_by(event_id=event_id, is_hidden=False)
     # Do not show unapproved challenges here
@@ -290,6 +308,8 @@ def event(event_id):
     if current_user and not current_user.is_anonymous:
         # Set permission to edit the event
         editable = current_user.is_admin or event.user == current_user
+        if not isUserActive(current_user):
+            flash(USER_UNDER_REVIEW_MESSAGE, "warning")
     # Order by ident then name
     projects = projects.order_by(
         Project.ident, Project.name
@@ -409,7 +429,10 @@ def event_categories(event_id):
     """Show categories of an event."""
     event = Event.query.filter_by(id=event_id).first_or_404()
     steps = event.categories_for_event()
-    projects = Project.query.filter_by(event_id=event.id, is_hidden=False, category_id=None)
+    projects = Project.query \
+        .filter_by(event_id=event.id, is_hidden=False, category_id=None) \
+        .order_by(Project.ident, Project.name) \
+        .all()
     return render_template(
         "public/eventcategories.html",
         current_event=event,
@@ -423,9 +446,13 @@ def event_categories(event_id):
 def event_challenges(event_id):
     """Show all the challenges of an event."""
     event = Event.query.filter_by(id=event_id).first_or_404()
-    projects = Project.query.filter_by(event_id=event.id, is_hidden=False).order_by(
-        Project.ident, Project.name
-    )
+    projects = Project.query \
+        .filter_by(event_id=event.id, is_hidden=False)
+    if 'all' not in request.args:
+        projects = projects.filter(Project.progress >= 0)
+    projects = projects.order_by(
+            Project.ident, Project.name
+        )
     challenges = [p.as_challenge() for p in projects]
     return render_template(
         "public/eventchallenges.html",
@@ -441,7 +468,7 @@ def event_resources(event_id):
     """Show the resources view of an event."""
     event = Event.query.filter_by(id=event_id).first_or_404()
     projects = Project.query.filter_by(event_id=event.id, is_hidden=False).order_by(
-        Project.progress, Project.ident, Project.name
+        Project.ident, Project.progress, Project.name
     )
     return render_template(
         "public/eventresources.html",

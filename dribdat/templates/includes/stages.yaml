@@ -6,8 +6,8 @@ stages:
     id: 0
     name: CHALLENGE
     phase: Challenge
-    description: Define questions to answer with data about issues that matter 
-    tip: Advance to the next stage by posting an update.
+    description: Start with an idea or problem that matters to you
+    tip: Advance to the project stage by posting your first update.
     emoji: 🚧
     conditions:
       validate:
@@ -20,31 +20,31 @@ stages:
           min: 123
           help: Write at least one paragraph into the Pitch.
       agree:
-        - Your questions hint at what data will be needed, helping to scope the project.
-        - Acquiring data to meet the challenge is realistic within our time limits.
+        - We have the resources to make a realistic attempt within the time limits.
+        - Our challenge suggests inputs and outputs, helping to scope the project.
   -
     id: 5
     name: PROJECT
     phase: Project
-    description: Collecting resources together in a shared space 
-    tip: Find examples and resources to inspire your team.
+    description: Get data ready, collect resources in a shared space
+    tip: Find tokenizers, datasets, examples to bootstrap your team.
     emoji: 👪
     conditions:
       validate:
         -
           field: team
           min: 1
-          max: 5
-          help: Between 1 and 5 people should Join your project or expedition.
+          max: 8
+          help: Between 1 and 8 people should Join your expedition team.
       agree:
-        - Our team members have agreed to work together for the duration of the event.
-        - We are obtaining data, and sharing it in a space accessible to everyone.
+        - Our team members have agreed  how to work together for the event duration.
+        - We are sharing files and other datasets in a space accessible to everyone.
   -
     id: 10
     name: RESEARCH
     phase: Research
-    description: Scoping of data collection and prototyping strategy 
-    tip: Write down what you are doing regularly to stay on track.
+    description: Choose open source, a pretrained model, or design framework
+    tip: Write down your plans, and the steps you are taking, to stay on track.
     emoji: 🥽
     conditions:
       validate:
@@ -53,13 +53,13 @@ stages:
           test: validurl
           help: Provide a source link in your project Details.
       agree:
+        - A shared repository was set up, so your designs, code and data are backed up.
         - Check the metadata and context of your data, the credibility of your sources.
-        - A shared repository has been set up, your work on code and data is backed up.
   -
     id: 20
     name: SKETCH
-    phase: Sketching
-    description: Evaluating and explaining to humans and machines 
+    phase: Training
+    description: Sketch, implement, fine-tune, repeat
     tip: The more you share, the more feedback you will get.
     emoji: 🎨
     conditions:
@@ -69,14 +69,14 @@ stages:
           test: validurl
           help: Upload or link to an image in your project Details.
       agree:
-        - Annotate key datasets to reflect your understanding of the structure and content.
-        - Make wireframes or sketches of your idea, attaching it as an image to your documentation.
+        - Make drawings or flowcharts of your workflows, attaching images to your documentation.
+        - Explain key concepts to share your understanding of the structures and process involved.
   -
     id: 30
     name: PROTOTYPE
     phase: Prototype
-    description: Efforts to improve the quality of the output 
-    tip: There is no such thing as a stupid question. Just ask if you are stuck.
+    description: Evaluate the model to improve the quality of the output 
+    tip: There is no such thing as a stupid question. Just ask if you are stuck!
     emoji: 🐣
     conditions:
       validate:
@@ -85,13 +85,13 @@ stages:
           test: validurl
           help: Online access to see your presentation, dataset or demo in the Project Link.
       agree:
-        - Gain more depth by exploring the data with visualisations and interactive interfaces.
-        - We have checked permissions to use all assets, data, or code, and linked the sources.
+        - Gain depth by exploring the output with visualisations and dashboards.
+        - Check permissions to use all assets, data, or code, and linked the sources.
   -
     id: 40
-    name: LAUNCH
-    phase: Launch
-    description: Gaining insights on the problem defined in the beginning 
+    name: PUBLISH
+    phase: Publish
+    description: Upload the insights you gained in response to the challenge
     tip: Make sure to give credit to everyone involved and document all sources used.
     emoji: 🎈
     conditions:
@@ -101,13 +101,13 @@ stages:
           test: validurl
           help: Provide a contact link in your project Details.
       agree:
-        - While correlating and linking data fields, we are critical of causality.
-        - Contact with the maintainers is possible to ask questions or send feedback.
+        - While correlating and linking data fields, we were critical of causality.
+        - You are open to questions or feedback, and contact with the team is possible.
   -
     id: 50
-    name: LIVE
+    name: SHARE
     phase: Share
-    description: Thinking about audience and making the results public 
+    description: Turn your model or prototype into a shareable demo
     tip: Consider next steps and action points (take-aways) from your work.
     emoji: 🚀
     conditions:
@@ -117,5 +117,5 @@ stages:
           test: validurl
           help: Provide a download link in your project Details.
       agree:
-        - The full results of this work have been showcased and published under an open license.
-        - We have correctly attributed all sources, and thanked all contributors.
+        - The results of our cooperation are published under an open license.
+        - We have correctly attributed all sources and thanked all contributors.

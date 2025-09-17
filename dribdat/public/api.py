@@ -16,7 +16,7 @@ from sqlalchemy import or_
 from markupsafe import escape
 
 from ..extensions import db, cache
-from ..utils import timesince, random_password, sanitize_url
+from ..utils import timesince, random_password, sanitize_url, markdownit
 from ..decorators import admin_required
 from ..user.models import Event, Project, Activity, User
 from ..apipackage import import_event_package, event_to_data_package
@@ -329,6 +329,27 @@ def event_participants_csv(event_id):
                     headers=headers)
 
 
+@blueprint.route('/participants.json')
+def participants_directory_json():
+    """Search for participants across events."""
+    MAX_COUNT = 500
+    search_by = request.args.get("u") or ""
+    if len(search_by) < 3:
+        users = User.query.filter_by(active=True).all()
+    else:
+        users = get_users_by_search(search_by, MAX_COUNT)
+    userdata = []
+    for u in users:
+        userdata.append({
+            "user": u.username,
+            "name": u.name,
+            "image": u.carddata or "",
+            "goals": u.my_goals or "",
+            "roles": u.my_roles or "",
+        })
+    return jsonify(users=userdata)
+
+
 # ------ SEARCH ---------
 
 @blueprint.route('/project/search.json')
@@ -419,8 +440,10 @@ def event_get_status():
     """Get current event status."""
     event = Event.query.filter_by(is_current=True).first() # ignore 404
     if not event:
-        return jsonify(status='')
-    return jsonify(status=event.status_text or '')
+        return jsonify(status='', html='')
+    text = event.status_text or ''
+    html = markdownit(text)
+    return jsonify(status=text, html=html, event=event.name)
 
 
 @blueprint.route('/event/current/push/status', methods=["PUT", "POST"])

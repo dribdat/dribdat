@@ -71,9 +71,10 @@ def numerise(event: int, clear: bool, primes: bool, challenges: bool):
         from dribdat.user.models import Event, Project
         event = Event.query.filter_by(id=event).first_or_404()
         print("Applying numbers to event: ", event.name)
-        projects = Project.query.filter_by(event_id=event.id) \
-                    .order_by(Project.progress.desc()) \
-                    .order_by(Project.name)
+        projects = Project.query \
+                    .filter_by(event_id=event.id, is_hidden=False) \
+                    .filter(Project.progress >= 0) \
+                    .order_by(Project.id)
         ix = 0
         count = projects.count()
         for c in projects:
@@ -149,15 +150,28 @@ def exports(kind):
     """Export system data to CSV."""
     with create_app().app_context():
         if 'people' in kind:
-            print(';'.join(['username','email','updated_at','fullname']))
+            print(';'.join(['id','username','email','updated_at','fullname','my_skills','my_wishes','roles','teams','project_ids']))
             for pp in User.query.filter_by(active=True).all():
-                print(';'.join([pp.username, pp.email, str(pp.updated_at or ''), str(pp.fullname or '').replace(';',':')]))
+                pdata = pp.data
+                pteams = pp.joined_projects(True, -1)
+                pdata['teams'] = ','.join([ p.name for p in pteams ])
+                pdata['project_ids'] = ','.join([ str(p.id) for p in pteams ])
+                print(';'.join([
+                    str(pp.id), pp.username, pp.email, 
+                    str(pp.updated_at or '').split('.')[0], 
+                    str(pp.fullname or '').replace(';',':'),
+                    str(pdata['my_skills'] or '').replace(';',':'), 
+                    str(pdata['my_wishes'] or '').replace(';',':'),
+                    str(pdata['roles'] or '').replace(';',':'), 
+                    pdata['teams'].replace(';',':'), 
+                    pdata['project_ids'],
+                ]))
         elif 'events' in kind:
             print(';'.join(['name','starts_at','ends_at']))
             for pp in Event.query.filter_by(is_hidden=False).all():
                 print(';'.join([pp.name.replace(';',':'), str(pp.starts_at), str(pp.ends_at)]))
         else:
-            print('At least one <kind> should be provided. See --help')
+            print('At least one <kind> should be provided: people, events')
 
 
 @click.command()

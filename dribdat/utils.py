@@ -230,17 +230,20 @@ def load_csv_presets(filename, by_col="name"):
     return settings_dict
 
 
-def load_presets(stagedata, top_element="stages", by_col="name"):
+def load_presets(stages, top_element=None, by_col=None):
     """Load presets as a dictionary."""
+    if isinstance(stages, str):
+        stages = safe_load(stages)
+    if by_col is None:
+        return stages[top_element]
     settings_dict = {}
-    stages = safe_load(stagedata)
     for row in stages[top_element]:
         settings_dict[row[by_col]] = row
     return settings_dict
 
 
-def load_yaml_presets(filename, by_col="name", filepath=None):
-    """Load structured settings from a YAML file."""
+def load_yaml(filename, filepath=None):
+    """Load a YAML file."""
     original_filename = filename
     if not (filename.endswith(".yaml") or filename.endswith(".yml")):
         filename = filename + ".yaml"
@@ -250,7 +253,14 @@ def load_yaml_presets(filename, by_col="name", filepath=None):
         filename,
     )
     with open(fn, mode="r") as file:
-        config = load_presets(file, original_filename, by_col)
+        data_dict = safe_load(file)
+    return data_dict
+
+
+def load_yaml_presets(filename, by_col=None, filepath=None):
+    """Load structured settings from a YAML file."""
+    data_dict = load_yaml(filename, filepath)
+    config = load_presets(data_dict, filename, by_col)
     return config
 
 

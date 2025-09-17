@@ -28,6 +28,7 @@ from dribdat.aggregation import (
     SyncProjectData,
     GetProjectData,
     AllowProjectEdit,
+    AllowUserInEvent,
     IsProjectStarred,
     GetProjectACLs,
 )
@@ -402,6 +403,11 @@ def get_challenge(project_id):
 def get_log(project_id):
     """Show project log and report."""
     project = Project.query.filter_by(id=project_id).first_or_404()
+    if project.event.lock_resources:
+        is_anonymous = not current_user or current_user.is_anonymous
+        if not is_anonymous:
+            return redirect(url_for("project.project_comment", project_id=project.id))
+        return redirect(url_for("project.project_view", project_id=project.id))
     project_dribs = project.all_dribs()
     # Get access settings
     starred = IsProjectStarred(project, current_user)
@@ -501,47 +507,29 @@ def project_unstar(project_id, user_id):
 
 @blueprint.route("/new/<int:event_id>", methods=["GET", "POST"])
 def project_new(event_id):
-    """If allowed to create a new project, do so."""
-
-    is_anonymous = not current_user or current_user.is_anonymous
-    if not is_anonymous and not isUserActive(current_user):
-        flash(
-            "Your account needs to be activated - " + " please contact an organizer.",
-            "warning",
-        )
-        return redirect(url_for("public.event", event_id=event_id))
-    elif is_anonymous:
-        # You are not logged in, so your new project will be invisible until it is approved.
-        pass
+    """If allowed to create a new project, do so. Note: anonymous submissions allowed."""
     event = Event.query.filter_by(id=event_id).first_or_404()
-    if event.lock_starting:
-        flash("Projects may not be started in this event.", "error")
-        return redirect(url_for("public.event", event_id=event.id))
+    redir = AllowUserInEvent(current_user, event)
+    if not isinstance(redir, bool):
+        return redir
     # Checks passed, continue ...
-    return create_new_project(event, is_anonymous)
+    return create_new_project(event)
 
 
 @blueprint.route("/import/<int:event_id>", methods=["GET", "POST"])
-def import_new_project(event_id, is_anonymous=False):
+@login_required
+def import_new_project(event_id):
     """Proceed to import a new project."""
     event = Event.query.filter_by(id=event_id).first_or_404()
     if event.lock_starting:
         flash("Projects may not be started in this event.", "error")
         return redirect(url_for("public.event", event_id=event.id))
 
-    form = None
     project = Project()
-
-    if not is_anonymous:
-        project.user_id = current_user.id
-    else:
-        project.hashtag = "Guest"
-        project.is_hidden = True
-
     form = ProjectImport(obj=project, next=request.args.get("next"))
 
     if form.is_submitted() and not form.validate():
-        print(form.errors)
+        # Reformat submission errors 
         if "name" in form.errors and "unique" in form.errors["name"][0]:
             flash(
                 "There is already a project with this name here. Please pick a new name, and add the Readme later.",
@@ -573,25 +561,26 @@ def import_new_project(event_id, is_anonymous=False):
     else:
         project.progress = -1
 
+    # Check ownership
+    project.user_id = current_user.id
+
     # Update the project
     project.update_now()
     db.session.add(project)
     db.session.commit()
     cache.clear()
 
-    if is_anonymous:
-        flash("Thanks for your submission - Join in to make changes", "warning")
-    else:
+    project_action(project.id, "create", False)
+    if not current_user.is_admin:
         flash("Invite others to Join this challenge, and contribute", "success")
-        project_action(project.id, "create", False)
-        if not current_user.is_admin:
-            project_action(project.id, "star", False)
+        # Join the project as first member
+        project_action(project.id, "star", then_redirect=False, for_user=current_user)
 
     # Automatically sync data
     return project_autoupdate(project.id)
 
 
-def create_new_project(event, is_anonymous=False):
+def create_new_project(event):
     """Proceed to create a new project."""
     # Collect resource tips (from projects in a Template Event)
     suggestions = templates_from_event(event.lock_resources)
@@ -599,7 +588,9 @@ def create_new_project(event, is_anonymous=False):
     # Project form
     form = None
     project = Project()
-
+    
+    # Check user status
+    is_anonymous = not current_user or current_user.is_anonymous
     if not is_anonymous:
         project.user_id = current_user.id
     else:
@@ -624,7 +615,7 @@ def create_new_project(event, is_anonymous=False):
         del form.generate_pitch
     else:
         form.generate_pitch.label.text += (
-            " using " + current_app.config["LLM_MODEL"].upper()
+            " using " + current_app.config["LLM_TITLE"]
         )
 
     if not (form.is_submitted() and form.validate()):
@@ -664,13 +655,16 @@ def create_new_project(event, is_anonymous=False):
     # Update the project
     project.update_now()
 
-    # Magically populate description
-    if form.generate_pitch and form.generate_pitch.data:
-        project.longtext = gen_project_pitch(project)
-
     # Save to database
     db.session.add(project)
     db.session.commit()
+
+    # Magically populate description
+    if form.generate_pitch and form.generate_pitch.data:
+        project.longtext = gen_project_pitch(project)
+        project.save()
+
+    # Cachebusters!
     cache.clear()
 
     if is_anonymous:
@@ -767,10 +761,27 @@ def project_toggle(project_id):
 def project_fork(project_id):
     """Create fork of a project."""
     project = Project.query.filter_by(id=project_id).first_or_404()
-    # TODO: Check event frozen, user active
-    # TODO: Check project name
-    fork = Project(name=project.name + " (fork)", event=project.event)
-    fork.description = project.url
+    # Check event frozen, user active
+    redir = AllowUserInEvent(current_user, project.event)
+    if not isinstance(redir, bool):
+        return redir
+    # Assign project owner
+    project.user_id = current_user.id
+    # Join the project as first member
+    project_action(project.id, "star", then_redirect=False, for_user=current_user)
+    # Check project name
+    forkname = project.name + " (fork)"
+    chkfork = Project.query.filter_by(name=forkname).count()
+    if chkfork > 0:
+        flash("A fork of this project already exists.", "error")
+        return redirect(url_for("public.event", event_id=event.id))
+    # Continue to create the fork
+    fork = Project(name=forkname, event=project.event)
+    data = project.data
+    data['name'] = forkname
+    ourl = url_for("project.project_view", project_id=project.id, _external=True)
+    fork.set_from_data(data)
+    fork.longtext = ourl + "\n\n" + fork.longtext
     fork.save()
     purl = url_for("project.project_view", project_id=fork.id)
     flash('Project "%s" has been forked.' % project.name, "success")

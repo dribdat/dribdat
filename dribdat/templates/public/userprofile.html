@@ -16,8 +16,10 @@
        title="This tip is only visible to you">
     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     To improve your score
-      ({{ score_tip }}%),
-    try to Edit a complete profile and share your Story. 
+    {% if score_tip > 0 %}
+      ({{ score_tip }}%)
+    {% endif %} -
+    write a complete Profile and share your Story. 
   </div>
 {% endif %}
 
@@ -29,7 +31,7 @@
     <div class="btn-group">
       <a href="{{ url_for('auth.user_profile') }}" class="btn btn-warning btn-lg">
         <i class="fa fa-child"></i>
-        Edit
+        Update my Profile
       </a>
 
       <a href="{{ url_for('auth.user_story') }}" class="btn btn-success btn-lg">
@@ -37,13 +39,6 @@
         My Story
       </a>
     </div>
-
-    <a id="get-mydata" class="btn btn-light btn-lg"
-      href="{{ url_for('api.current_user_hackathon_json') }}" download
-      title="Download a snapshot of my contributions">
-      <i class="fa fa-download"></i>
-      My Data
-    </a>
 
   {% elif current_user.is_admin %}
 
@@ -56,9 +51,9 @@
 
       <a id="user-edit"
           href="{{ url_for('admin.user', user_id=user.id )}}"
-          class="btn btn-secondary btn-warning btn-lg">
+          class="btn btn-secondary btn-primary btn-lg">
         <i class="fa fa-child"></i>
-        Edit
+        Review
       </a>
     </div>
 
@@ -76,6 +71,7 @@
       </a>
     </div>
   {% endif %}
+
 {% endif %}
 
 {% if user.my_goals %}
@@ -137,11 +133,19 @@
     </ul>
   </div>
 
-  {% if score %}
-  <div class="col-sm text-center">
-    <div class="user-score fs-3" title="Total score across all projects, adjusted by profile completeness">{{ score }}</div>
-  </div>
+  <div class="col-sm" style="text-align:right">
+  {% if is_current_user %}
+    <a id="get-mydata" class="btn btn-light btn-md"
+      href="{{ url_for('api.current_user_hackathon_json') }}" download
+      title="Download a snapshot of my contributions">
+      <i class="fa fa-download"></i>
+      My Data
+    </a>
   {% endif %}
+  {% if score %}
+    <div class="user-score ms-4 fs-3" title="Total score across all projects, adjusted by profile completeness">{{ score }}</div>
+  {% endif %}
+  </div>
 </div>
 
 {% if user.my_story %}
@@ -222,14 +226,14 @@
   </div><!-- /profile-projects -->
 {% endif %}
 
-{% if user.vitae %}
+{% if vitae %}
 <a name="vitae"></a>
 <h2 title="Edolare Vitae">Resume</h2>
 <div class="profile-vitae jumbotron" title="Hacker Vitae">
     <table class="table bg-white"><tbody>
-    {% for vitatype in user.simple_resume() %}
+    {% for vitatype in vitae %}
     <tr>
-      <th colspan="2" title="Type of career step" class="alert alert-info text-center"
+      <th colspan="2" title="Career step" class="bg-light text-dark text-center"
         data-bs-toggle="collapse" href="#collapse-{{vitatype}}" role="button" aria-expanded="false">
           {{ vitatype }}
       </th>

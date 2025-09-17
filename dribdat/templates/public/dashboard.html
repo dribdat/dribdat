@@ -37,7 +37,7 @@
 </div>
 
 <div class="d-flex align-items-stretch flex-fill">
-  <img id="event-logo" class="hidden" src="{{ current_event.logo_url }}">
+  <img id="event-logo" src="{{ current_event.logo_url }}">
   {% if current_event.countdown %}
     <a href="{{ url_for('public.event', event_id=current_event.id) }}">
     <div id="clockDashboard" 
@@ -136,7 +136,8 @@
 
   #event-logo {
     margin: 10px;
-    width: 100%;
+    width: auto;
+    height: 16em;
   }
 
   #metrics {

@@ -42,7 +42,6 @@ sp {
 }
 
 p > code {
-    background: black;
     padding: 3px 3px 0px 3px;
     border-radius: 3px;
 }
@@ -314,17 +313,16 @@ footer ul {
     list-style: none;
 }
 footer ul li {
-    float: left;
     margin-left: 10px;
+    display: inline-block;
 }
 footer .company {
     float: left;
     margin-left: 25px;
 }
 footer .footer-nav {
-    float: right;
-    margin-right: 25px;
     list-style: none;
+    text-align: right;
 }
 footer .footer-nav a {
     text-decoration: none;
@@ -374,9 +372,9 @@ ul.help-block {
 }
 .section-header .section-header-content .event-date {
     display: block;
-    text-align: right;
     font-size: 125%;
     margin-top: -1em;
+    margin-left: 0.2em;
     margin-right: 0.5em;
     margin-bottom: 0.5em;
 }
@@ -652,10 +650,12 @@ nav .nav-login {
     text-align: center;
     display: block;
 }
+/*
 .event-home .event-info {
     box-shadow: 3px 3px 0px rgb(0 0 0 / 30%);
     border: 1px solid rgba(0, 0, 0, 0.3);
 }
+*/
 .event-home .event-info .event-summary {
     text-align: center;
     margin: 1em 10%;
@@ -668,12 +668,6 @@ nav .nav-login {
 .event-home .event-info .event-description img {
     max-width: 100%;
 }
-.event-home .event-nav .btn:hover {
-    border: 1px solid black;
-}
-/*.event-home .event-nav .btn:hover span {
-  display: inline;
-}*/
 
 /* ---- Hexagonal hawtness ---- */
 
@@ -838,10 +832,6 @@ nav .nav-login {
     position: relative;
     z-index: 99;
 }
-.hexagon .hexagontent.with-icon i {
-    font-size: 1em;
-    line-height: 2em;
-}
 .hexagon .hexagontent div {
     max-height: 5.4em;
 }
@@ -930,13 +920,21 @@ nav .nav-login {
     background-position: center;
 }
 .hexagon .hexaicon {
-    width: 2em;
-    height: 2em;
-    background-color: transparent;
-    background-size: cover;
     position: relative;
     left: 50%;
+    margin-left: -40%;
+}
+.hexagon .hexaicon .fa,
+.hexagon .hexaicon .logo_icon {
+    margin-right: 40%;
+    font-size: 200%;
+}
+.hexagon .hexaicon.im {
+    width: 2em;
+    height: 2em;
     margin: 0.5em 0 0 -1em;
+    background-color: transparent;
+    background-size: cover;
     box-shadow: -2px -2px 1px rgb(0 0 0 / 20%);
     border-radius: 1em;
 }
@@ -1196,6 +1194,32 @@ a.media {
     padding: 0px;
 }
 
+/* Conditions of project */
+#project-terms {
+    float: left;
+}
+@media (min-width: 576px) {
+  #project-terms {
+    margin-right: -10em;
+  }
+}
+#project-terms a {
+    color: initial;
+    display: block;
+    text-decoration: none;
+    border: 1px dashed black;
+    padding: 5px;
+    margin-top: 3px;
+}
+#project-terms a:hover {
+    border-color: blue;
+    box-shadow: 3px 3px 0px black;
+    margin-left: -3px;
+    margin-right: 3px;
+    margin-top: 0px;
+    margin-bottom: 3px;
+}
+
 /* Content blocks on project page */
 .project-page .project-autotext img,
 .project-page .project-longtext img {
@@ -1329,6 +1353,9 @@ a.media {
 .timeline-content .content img {
     width: 100%;
 }
+.timeline-content .content > * {
+    color: black;
+}
 .timeline-content .challenge-posted {
     font-weight: bold;
 }
@@ -1427,6 +1454,7 @@ a.media {
     text-align: center;
     font-size: 140%;
     width: 6em;
+    height: 5em;
 }
 .projectedit form .btn:hover,
 .project-buttons .btn:hover {
@@ -1569,6 +1597,10 @@ a.media {
 @media (max-width: 990px) {
     .project-page .resizable {
         height: 348px;
+    }
+    .project-page .project-buttons .btn {
+      font-size: 120%;
+      width: 5em;
     }
 }
 @media (max-width: 1200px) {
@@ -1837,7 +1869,7 @@ main .form-actions input.btn {
     content: "Log";
 }
 #suggest-md::before {
-    content: "Stage";
+    content: "Resources";
 }
 #readme-md::before {
     content: "Readme";
@@ -2016,6 +2048,10 @@ div.project-edit-buttons {
         left: 0%;
         width: 100%;
     }
+    #homeCarousel,
+    #homeCarousel .bd-placeholder-img {
+        height: 360px;
+    }
 }
 .category-info {
     padding: 0 10%;
@@ -2027,10 +2063,6 @@ div.project-edit-buttons {
 .event-home .category-info {
     margin-top: 8em;
     margin-bottom: -3em;
-}
-.category-container .card-header {
-    text-align: center;
-    font-size: 125%;
 }
 .category-tip {
     opacity: 0.8;
@@ -2051,13 +2083,6 @@ div.project-edit-buttons {
     text-align: center;
 }
 
-.event-instruction-tip {
-  position: absolute;
-  right: 3px;
-  bottom: 3px;
-  font-size: 70%;
-  border-radius: 0px;
-}
 .event-instruction .container p:last-child {
   margin-bottom: 0px;
 }
@@ -2585,6 +2610,11 @@ Instruction page
     font-size: 125%;
 }
 
+@media (min-width: 1000px) {
+  .list-stages {
+    padding-left: 5rem;
+  }
+}
 .list-stages .step {
     margin-top: 3em;
 }
@@ -2710,6 +2740,7 @@ Global alerts
     display: inline-block;
     text-align: center;
     font-size: 125%;
+    min-width: 20em;
     position: fixed;
     margin: 0 1em;
     z-index: 1000;
@@ -2717,9 +2748,10 @@ Global alerts
 }
 #global-notifications-alert i {
     font-size: 150%;
+    float: left;
 }
-#global-notifications-alert span {
-    padding: 0 1em;
+#global-notifications-alert p {
+    margin-bottom: 0px;
 }
 
 /* ------------

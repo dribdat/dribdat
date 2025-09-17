@@ -197,7 +197,7 @@ class TestActivation:
         msg = notify_admin_message("Test message")
         assert "Test" in msg.body
 
-    def test_sso_activation(self, user, testapp):
+    def test_sso_activation(self, user):
         """Check that users can be found via SSO id."""
         assert user.sso_id is None
         # Test that the current user can be found via SSO id
@@ -210,3 +210,14 @@ class TestActivation:
         user2 = User.query.filter_by(email='user2@example.com').first()
         assert user2.sso_id == '654321'
         assert user2.active
+        # Try creating a duplicate user
+        get_or_create_sso_user('654321', 'another_user', 'user2@example.com')
+        assert User.query.filter_by(sso_id='654321').count() == 1
+
+    def test_sso_restrictions(self, user):
+        """Change the create settings and try again."""
+        get_or_create_sso_user('000009', 'late_user', 'user3@example.com', "", False)
+        assert User.query.filter_by(username='late_user').count() == 0
+        get_or_create_sso_user('000009', 'late_user', 'user3@example.com', "", True)
+        assert User.query.filter_by(username='late_user').count() == 1 
+

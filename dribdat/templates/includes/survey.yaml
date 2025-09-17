@@ -1,0 +1,30 @@
+---
+# definition of questions from the organizers 
+
+survey:
+
+  dribs:
+    - Tell us about your latest work
+    - What was the last thing you did here?
+    - Share a recent activity in your project
+    - How are the vibes in your team right now?
+    - Please share a note on what you just did
+    - What is your current task, and next move?
+    - Describe how you see your current challenge
+
+  users:
+    -
+      q: What is your T-shirt size?
+      p: S / M / L / XL
+      d: We like to dress up sustainably, locally sourced, in style.
+    -
+      q: How did you hear about this hackathon?
+      p: Social media / At work / From a friend / AI / ...
+      d: We are grateful that you are here, no matter where you came from.
+    -
+      q: How confident do you feel right now?
+      p: On a scale of 1 (nervous) - 10 (elated)
+      d: We strive to help you win, so please let us know if you need a hand.
+
+  teams:
+    - WIP

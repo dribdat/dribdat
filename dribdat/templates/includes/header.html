@@ -16,7 +16,7 @@
         </a>
       {% else %}
         <a href="{{ url_for('public.event_resources', event_id=event.id) }}">
-          <h2 class="event-name">{{ event.name }}</h2>
+          <h2 class="event-name text-muted float-right mt-4">{{ event.name }}</h2>
         </a>
       {% endif %}
       {% if event.hostname %}

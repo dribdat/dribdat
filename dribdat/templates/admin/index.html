@@ -33,30 +33,30 @@
     {% include "includes/header.html" %}
   </div>
 
-  <div class="btn-group mb-2 text-center">
+  <div class="mb-2 text-center">
     <a href="{{ url_for('admin.event', event_id=event.id) }}" class="btn btn-lg btn-warning">
       <i class="fa fa-pencil" aria-hidden="true"></i>
-      Edit</a>
+      Featured Event</a>
     <a href="{{ url_for('admin.event_projects', event_id=event.id) }}" class="btn btn-lg btn-success">
       <i class="fa fa-star" aria-hidden="true"></i>
       Projects</a>
     {% if config.BACKBOARD_URL %}
-    <a href="{{ url_for('public.backboard') }}" class="btn btn-lg btn-dark">
+    <a href="{{ url_for('public.backboard') }}" class="btn btn-lg btn-outline-dark">
       <i class="fa fa-star" aria-hidden="true"></i>
       Backboard</a>
     {% endif %}
-    <a href="{{ url_for('admin.event_resource_area') }}" class="btn btn-lg btn-light">
+    <a href="{{ url_for('admin.event_resource_area') }}" class="btn btn-lg btn-outline-light">
       <i class="fa fa-life-ring" aria-hidden="true"></i>
       Resources</a>
-    <a href="{{ url_for('public.event_start') }}" class="btn btn-lg btn-secondary">
+    <a href="{{ url_for('public.event_start') }}" class="btn btn-lg btn-outline-secondary">
       <i class="fa fa-check" aria-hidden="true"></i>
       Checklist</a>
   </div>
 {% else %}
-  <div class="btn-group mb-2 text-center">
+  <div class="mb-2 text-center">
     <a href="{{ url_for('public.event_start') }}" class="btn btn-lg btn-success">
       <i class="fa fa-calendar" aria-hidden="true"></i>
-      Plan event</a>
+      Plan an event</a>
     <a href="{{ url_for('admin.presets') }}" class="btn btn-lg btn-info">
       <i class="fa fa-pencil" aria-hidden="true"></i>
       Set roles &amp; categories</a>
@@ -68,7 +68,7 @@
   </div>
 
   <div id="announcements" class="mt-4 input-group">
-    <textarea class="form-control editable w-100 fs-5"
+    <textarea class="form-control editable w-100 fs-5 text-dark"
               style="max-width: 740px; background: #ffd73e;">{{ event.status_text }}</textarea>
     <button class="form-control fs-1"
       title="Send a message to logged in users"
