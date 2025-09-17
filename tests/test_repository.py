@@ -2,8 +2,52 @@
 """Dribdat data aggregation tests."""
 
 from dribdat.aggregation import GetProjectData
+from dribdat.git import clone_repo, get_git_log, get_file_content
 from requests.exceptions import ReadTimeout
 import warnings
+import os
+import shutil
+import subprocess
+
+class TestGit:
+    """Test the git library."""
+
+    def setup_method(self):
+        """Create a temporary git repository."""
+        self.path = "/tmp/test_repo"
+        if os.path.exists(self.path):
+            shutil.rmtree(self.path)
+        os.makedirs(self.path)
+        subprocess.check_call(['git', 'init'], cwd=self.path)
+        subprocess.check_call(['git', 'config', 'user.name', 'Test User'], cwd=self.path)
+        subprocess.check_call(['git', 'config', 'user.email', 'test@example.com'], cwd=self.path)
+        with open(os.path.join(self.path, "README.md"), "w") as f:
+            f.write("This is a test.")
+        subprocess.check_call(['git', 'add', '.'], cwd=self.path)
+        subprocess.check_call(['git', 'commit', '-m', 'Initial commit'], cwd=self.path)
+
+    def teardown_method(self):
+        """Remove the temporary repository."""
+        if os.path.exists(self.path):
+            shutil.rmtree(self.path)
+
+    def test_clone_repo(self):
+        """Test cloning a repository."""
+        clone_path = clone_repo(self.path)
+        assert os.path.exists(clone_path)
+        assert os.path.exists(os.path.join(clone_path, "README.md"))
+        shutil.rmtree(clone_path)
+
+    def test_get_git_log(self):
+        """Test getting the git log."""
+        log = get_git_log(self.path)
+        assert len(log) == 1
+        assert log[0]['message'] == 'Initial commit'
+
+    def test_get_file_content(self):
+        """Test getting file content."""
+        content = get_file_content(self.path, "README.md")
+        assert content == "This is a test."
 
 
 class TestRepository:
