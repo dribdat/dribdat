@@ -6,7 +6,6 @@ from ..utils import load_yaml_presets
 from ..apifetch import FetchStageConfig
 from random import random
 
-
 # User role
 USER = 0
 ADMIN = 1
@@ -133,9 +132,12 @@ def getProjectPhase(project):
 
 def isUserActive(user):
     """Check if a user is active."""
-    if not user or "active" not in user.__dir__():
+    if user is None:
         return False
-    return user.active
+    try:
+        return user.active
+    except Exception:
+        return False
 
 
 def validateProjectData(project):

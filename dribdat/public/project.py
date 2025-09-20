@@ -655,13 +655,16 @@ def create_new_project(event):
     # Update the project
     project.update_now()
 
-    # Magically populate description
-    if form.generate_pitch and form.generate_pitch.data:
-        project.longtext = gen_project_pitch(project)
-
     # Save to database
     db.session.add(project)
     db.session.commit()
+
+    # Magically populate description
+    if form.generate_pitch and form.generate_pitch.data:
+        project.longtext = gen_project_pitch(project)
+        project.save()
+
+    # Cachebusters!
     cache.clear()
 
     if is_anonymous:
