@@ -11,6 +11,10 @@ from .user.models import Project
 # In seconds, how long to wait for API response
 REQUEST_TIMEOUT = 30
 
+# How much prompting we can get away with
+# TODO: this should be configurable, service-dependent
+MAX_PROMPT_LENGTH = 4000
+
 # Default system prompt for our requests
 SYSTEM_PROMPT = """
 A hackathon project involves:
@@ -168,10 +172,11 @@ def gen_openai(prompt: str):
     llm_model = current_app.config["LLM_MODEL"]
     llm_title = current_app.config["LLM_TITLE"]
 
+    usr_prompt = prompt.strip()[:MAX_PROMPT_LENGTH]
+    sys_prompt = SYSTEM_PROMPT.strip()[:MAX_PROMPT_LENGTH]
+
     # TODO: remove this when API is updated
     if 'publicai.co' in llm_base_url:
-        usr_prompt = prompt.strip()
-        sys_prompt = SYSTEM_PROMPT.strip()
         r = requests.post(
             f"{llm_base_url}",
             headers={
@@ -181,8 +186,8 @@ def gen_openai(prompt: str):
             data=json.dumps({
                     "model": llm_model,
                     "messages": [
-                        {"role": "user", "content": usr_prompt},
                         {"role": "assistant", "content": sys_prompt},
+                        {"role": "user", "content": usr_prompt},
                     ],
                 })
         )
@@ -217,18 +222,15 @@ def gen_openai(prompt: str):
     # Attempt to get an interaction started
     completion = None
     try:
-        usr_prompt = prompt.strip()
-        sys_prompt = SYSTEM_PROMPT.strip()
-
         logging.debug("Starting completions")
         completion = ai_client.chat.completions.create(
             model=llm_model,
             timeout=REQUEST_TIMEOUT,
-            # chat_template=CHAT_TEMPLATE_1,
             messages=[
-                {"role": "user", "content": usr_prompt},
                 {"role": "system", "content": sys_prompt},
+                {"role": "user", "content": usr_prompt},
             ],
+            # chat_template=CHAT_TEMPLATE_1,
         )
     except openai.InternalServerError as e:
         logging.error("Server error (check your LLM id)")
