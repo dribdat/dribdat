@@ -299,12 +299,13 @@ def project_autopost(project_id):
     p = Project.query.filter_by(id=project_id).first_or_404()
     # Check if we've had some human contact, first
     # TODO: we may want to restrict this by time elapsed as well
-    lastact = p.activities[-1]
-    if lastact.content and "🅰️ℹ️" in lastact.content:
-        flash(
-            "Please write an update or commit before asking AI for more help.", "info"
-        )
-        return redirect(url_for("project.get_log", project_id=p.id))
+    if len(p.activities):
+        lastact = p.activities[-1]
+        if lastact.content and "🅰️ℹ️" in lastact.content:
+            flash(
+                "Please write an update or commit before asking AI for more help.", "info"
+            )
+            return redirect(url_for("project.get_log", project_id=p.id))
     # Go whizz up some content based on project data
     autopost = gen_project_post(p)
     if not autopost:
