@@ -9,10 +9,15 @@ from base64 import b64decode
 from bleach.sanitizer import ALLOWED_ATTRIBUTES
 from urllib.parse import quote_plus
 from .apievents import (
-    fetch_commits_github,
-    fetch_commits_gitlab,
-    fetch_commits_gitea,
+    fetch_commits,
 )
+from .git import (
+    clone_repo,
+    get_git_log,
+    get_file_content,
+)
+import huggingface_hub
+import shutil
 from .utils import (
     sanitize_url,
     load_presets,
@@ -86,7 +91,53 @@ def FetchGiteaProject(project_url):
         "source_url": json["html_url"],
         "image_url": json["avatar_url"] or json["owner"]["avatar_url"],
         "contact_url": issuesurl,
-        "commits": fetch_commits_gitea(url_q),
+        "commits": fetch_commits(json["clone_url"]),
+    }
+
+
+def FetchHuggingFaceProject(project_url):
+    """Download data from Hugging Face."""
+    current_app.logger.info("Fetching Hugging Face: %s", project_url)
+    try:
+        api = huggingface_hub.HfApi()
+        repo_info = api.repo_info(repo_id=project_url)
+        repo_files = api.list_repo_files(repo_id=project_url)
+    except huggingface_hub.utils.RepositoryNotFoundError:
+        current_app.logger.debug("Repository not found: %s", project_url)
+        return {}
+
+    readme_filename = None
+    for filename in repo_files:
+        if filename.lower() == 'readme.md':
+            readme_filename = filename
+            break
+
+    readme = ""
+    if readme_filename:
+        readme_url = huggingface_hub.hf_hub_url(project_url, readme_filename)
+        try:
+            readme = requests.get(readme_url, timeout=REQUEST_TIMEOUT).text
+        except requests.exceptions.RequestException as e:
+            current_app.logger.warning("Could not fetch README: %s", e)
+
+    # Clone the repo to get commit history
+    clone_url = "https://huggingface.co/" + project_url + ".git"
+    repo_path = clone_repo(clone_url)
+    if repo_path:
+        commits = get_git_log(repo_path)
+        shutil.rmtree(repo_path)
+    else:
+        commits = []
+
+    return {
+        "type": "Hugging Face",
+        "name": repo_info.id,
+        "summary": "",  # No summary field in repo_info
+        "description": readme,
+        "source_url": "https://huggingface.co/" + project_url,
+        "image_url": "",
+        "contact_url": "https://huggingface.co/" + project_url + "/discussions",
+        "commits": commits,
     }
 
 
@@ -118,7 +169,7 @@ def FetchGitlabProject(project_url):
         "source_url": json["web_url"],
         "image_url": json["avatar_url"],
         "contact_url": json["web_url"] + "/issues",
-        "commits": fetch_commits_gitlab(json["id"]),
+        "commits": fetch_commits(json["http_url_to_repo"]),
     }
 
 
@@ -174,7 +225,7 @@ def FetchGithubProject(project_url):
         "image_url": json["owner"]["avatar_url"],
         "contact_url": json["html_url"] + "/issues",
         "download_url": json["html_url"] + "/releases",
-        "commits": fetch_commits_github(repo_full_name),
+        "commits": fetch_commits(json["clone_url"]),
     }
 
 

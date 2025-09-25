@@ -15,6 +15,7 @@ from dribdat.apifetch import (
     FetchDribdatProject,
     FetchDataProject,
     FetchWebProject,
+    FetchHuggingFaceProject,
 )
 import json
 import re
@@ -30,6 +31,9 @@ def GetProjectData(url):
         return get_gitlab_project(url)
 
     # TODO: add support for projects
+    elif url.find("//huggingface.co/") > 0:
+        return get_huggingface_project(url)
+
     elif url.find("//github.com/") > 0 or url.find("//gist.github.com/") > 0:
         return get_github_project(url)
 
@@ -93,6 +97,15 @@ def get_gitea_project(url):
     if apiurl == url:
         return {}
     return FetchGiteaProject(apiurl)
+
+
+def get_huggingface_project(url):
+    """Prepare a HuggingFace URL for the API."""
+    apiurl = url
+    apiurl = re.sub(r"https?://huggingface\.co/", "", apiurl).strip("/")
+    if apiurl == url:
+        return {}
+    return FetchHuggingFaceProject(apiurl)
 
 
 def get_bitbucket_project(url):
