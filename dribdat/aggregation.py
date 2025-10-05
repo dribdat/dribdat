@@ -10,7 +10,7 @@ from dribdat.apifetch import (
     FetchGithubProject,
     FetchGithubIssue,
     FetchGitlabProject,
-    FetchGiteaProject,
+    FetchCodebergProject,
     FetchBitbucketProject,
     FetchDribdatProject,
     FetchDataProject,
@@ -37,10 +37,10 @@ def GetProjectData(url):
     elif url.find("//github.com/") > 0 or url.find("//gist.github.com/") > 0:
         return get_github_project(url)
 
-    # TODO: there's a lot more Gitea out there!
+    # TODO: there's a lot more Codeberg out there!
     elif url.find("//codeberg.org/") > 0:
         # TODO: especially here..
-        return get_gitea_project(url)
+        return get_codeberg_project(url)
 
     elif url.find("//bitbucket.org/") > 0:
         return get_bitbucket_project(url)
@@ -88,7 +88,7 @@ def get_github_project(url):
     return FetchGithubProject(apiurl)
 
 
-def get_gitea_project(url):
+def get_codeberg_project(url):
     apiurl = url
     apiurl = re.sub(r"(?i)/src/branch/[a-z]+/README.*", "", apiurl)
     apiurl = re.sub(r"https?://codeberg\.org/", "", apiurl).strip("/")
@@ -96,7 +96,7 @@ def get_gitea_project(url):
         apiurl = apiurl[:-4]
     if apiurl == url:
         return {}
-    return FetchGiteaProject(apiurl)
+    return FetchCodebergProject(apiurl)
 
 
 def get_huggingface_project(url):

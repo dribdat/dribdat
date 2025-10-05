@@ -1,23 +1,26 @@
 # -*- coding: utf-8 -*-
 """Collecting data from third party API repositories."""
 
-import requests
-import bleach
 from flask import current_app
 from pyquery import PyQuery as pq  # noqa: N813
 from base64 import b64decode
 from bleach.sanitizer import ALLOWED_ATTRIBUTES
 from urllib.parse import quote_plus
+import huggingface_hub
+import shutil
+import requests
+import bleach
 from .apievents import (
     fetch_commits,
+    fetch_commits_gitlab,
+    fetch_commits_github,
+    fetch_commits_codeberg,
 )
 from .git import (
     clone_repo,
     get_git_log,
     get_file_content,
 )
-import huggingface_hub
-import shutil
 from .utils import (
     sanitize_url,
     load_presets,
@@ -50,15 +53,15 @@ def FetchStageConfig(url, top_element="stages", by_col="name"):
     return load_presets(blob, top_element, by_col)
 
 
-def FetchGiteaProject(project_url):
-    """Download data from Codeberg, a large Gitea site."""
+def FetchCodebergProject(project_url):
+    """Download data from Codeberg, a large Forgejo site."""
     # Docs: https://codeberg.org/api/swagger
     site_root = "https://codeberg.org"
     url_q = quote_plus(project_url, "/")
     api_repos = site_root + "/api/v1/repos/%s" % url_q
     api_content = api_repos + "/contents"
     # Collect basic data
-    current_app.logger.info("Fetching Gitea: %s", url_q)
+    current_app.logger.info("Fetching Codeberg: %s", url_q)
     data = requests.get(api_repos, timeout=REQUEST_TIMEOUT)
     if data.text.find("{") < 0:
         current_app.logger.debug("No data: %s", data.text)
@@ -84,14 +87,14 @@ def FetchGiteaProject(project_url):
     if json["has_issues"]:
         issuesurl = json["html_url"] + "/issues"
     return {
-        "type": "Gitea",
+        "type": "Codeberg",
         "name": json["name"],
         "summary": json["description"],
         "description": readme,
         "source_url": json["html_url"],
         "image_url": json["avatar_url"] or json["owner"]["avatar_url"],
         "contact_url": issuesurl,
-        "commits": fetch_commits(json["clone_url"]),
+        "commits": fetch_commits_codeberg(json["clone_url"]),
     }
 
 
@@ -169,7 +172,7 @@ def FetchGitlabProject(project_url):
         "source_url": json["web_url"],
         "image_url": json["avatar_url"],
         "contact_url": json["web_url"] + "/issues",
-        "commits": fetch_commits(json["http_url_to_repo"]),
+        "commits": fetch_commits_gitlab(json["http_url_to_repo"]),
     }
 
 
@@ -225,7 +228,7 @@ def FetchGithubProject(project_url):
         "image_url": json["owner"]["avatar_url"],
         "contact_url": json["html_url"] + "/issues",
         "download_url": json["html_url"] + "/releases",
-        "commits": fetch_commits(json["clone_url"]),
+        "commits": fetch_commits_github(json["clone_url"]),
     }
 
 

@@ -89,7 +89,7 @@ class TestRepository:
         assert "Datasets" in test_obj["summary"]
         assert test_url == test_obj["source_url"]
 
-    def test_gitea(self, user, testapp):
+    def test_codeberg(self, user, testapp):
         """Test parsing a Codeberg readme."""
         test_url = "https://codeberg.org/dribdat/dribdat"
         try:
@@ -98,7 +98,7 @@ class TestRepository:
             return warnings.warn("Codeberg is not accessible")
         assert "name" in test_obj
         assert test_obj["name"] == "dribdat"
-        assert test_obj["type"] == "Gitea"
+        assert test_obj["type"] == "Codeberg"
         assert "commits" in test_obj
         assert len(test_obj["commits"]) > 5
 

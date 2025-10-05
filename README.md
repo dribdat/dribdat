@@ -27,7 +27,7 @@ Key features include:
 
 * **📅 Full Event Lifecycle:** From announcing your event and publishing challenges to forming teams and showcasing results, Dribdat has you covered.
 * **🧩 Project Curation:** A playful and engaging interface for participants to explore ideas and for organizers to manage projects.
-* **🔄 Data Aggregation:** Automatically sync project updates from GitHub, GitLab, Gitea, Etherpad, and more.
+* **🔄 Data Aggregation:** Automatically sync project updates from Git, Forgejo, Etherpad, and more.
 * **🛠️ Rich Tool Integrations:** Connect with popular platforms like Slack, Mattermost, Discord, and others.
 * **🎨 Customizable & Themeable:** Tailor the platform to your event's brand with a customizable frontend and admin-configurable settings.
 * **📊 Progress Tracking:** Keep a pulse on all projects with real-time progress logs and updates.
