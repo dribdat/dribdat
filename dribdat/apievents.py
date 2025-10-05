@@ -1,28 +1,49 @@
 # -*- coding: utf-8 -*-
 """Collect events from remote repositories."""
-
-import requests
-from dateutil import parser
+from .git import clone_repo, get_git_log
 from flask import current_app
+from dateutil import parser
+import shutil
+import requests
 
 # In seconds, how long to wait for API response
 REQUEST_TIMEOUT = 10
 
 
-def fetch_commits_gitea(full_name, limit=10):
-    """Parse data about Gitea commits."""
+def fetch_commits(url):
+    """Fetch commits from a git repository."""
+    repo_path = clone_repo(url)
+    if not repo_path:
+        return []
+    commits = get_git_log(repo_path)
+    shutil.rmtree(repo_path)
+    commitlog = []
+    for commit in commits:
+        # construct commit url from base url
+        commit_url = url.replace(".git", "") + "/commit/" + commit['sha']
+        commitlog.append({
+            "url": commit_url,
+            "date": commit['date'],
+            "author": commit['author_name'],
+            "message": commit['message'],
+        })
+    return commitlog
+
+
+def fetch_commits_codeberg(full_name, limit=10):
+    """Parse data about codeberg commits."""
     apiurl = "https://codeberg.org/api/v1/repos/%s/commits?limit=%d" % (
         full_name,
         limit,
     )
     data = requests.get(apiurl, timeout=REQUEST_TIMEOUT)
     if data.status_code != 200:
-        current_app.logger.warning("Could not sync Gitea commits on %s" % full_name)
+        current_app.logger.warning("Could not sync codeberg commits on %s" % full_name)
         return []
     json = data.json()
     if "message" in json:
         current_app.logger.warning(
-            "Could not sync Gitea commits on %s: %s" % (full_name, json["message"])
+            "Could not sync codeberg commits on %s: %s" % (full_name, json["message"])
         )
         return []
     commitlog = []
@@ -103,6 +124,7 @@ def fetch_commits_gitlab(project_id: int, since=None, until=None):
     """Parse data about GitLab commits."""
     apiurl = "https://gitlab.com/api/v4/"
     apiurl = apiurl + "projects/%d/repository/commits?" % project_id
+    current_app.logger.info("Fetching commits: %s" % apiurl)
     if since is not None:
         apiurl += "&since=%s" % since.replace(microsecond=0).isoformat()
     if until is not None:

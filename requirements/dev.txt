@@ -13,6 +13,7 @@ flake8-quotes
 flake8
 flask-debugtoolbar
 flask
+huggingface-hub
 isort
 mccabe
 more-itertools

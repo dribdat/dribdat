@@ -1,17 +1,25 @@
 # -*- coding: utf-8 -*-
 """Collecting data from third party API repositories."""
 
-import requests
-import bleach
 from flask import current_app
 from pyquery import PyQuery as pq  # noqa: N813
 from base64 import b64decode
 from bleach.sanitizer import ALLOWED_ATTRIBUTES
 from urllib.parse import quote_plus
+import huggingface_hub
+import shutil
+import requests
+import bleach
 from .apievents import (
-    fetch_commits_github,
+    fetch_commits,
     fetch_commits_gitlab,
-    fetch_commits_gitea,
+    fetch_commits_github,
+    fetch_commits_codeberg,
+)
+from .git import (
+    clone_repo,
+    get_git_log,
+    get_file_content,
 )
 from .utils import (
     sanitize_url,
@@ -45,15 +53,15 @@ def FetchStageConfig(url, top_element="stages", by_col="name"):
     return load_presets(blob, top_element, by_col)
 
 
-def FetchGiteaProject(project_url):
-    """Download data from Codeberg, a large Gitea site."""
+def FetchCodebergProject(project_url):
+    """Download data from Codeberg, a large Forgejo site."""
     # Docs: https://codeberg.org/api/swagger
     site_root = "https://codeberg.org"
     url_q = quote_plus(project_url, "/")
     api_repos = site_root + "/api/v1/repos/%s" % url_q
     api_content = api_repos + "/contents"
     # Collect basic data
-    current_app.logger.info("Fetching Gitea: %s", url_q)
+    current_app.logger.info("Fetching Codeberg: %s", url_q)
     data = requests.get(api_repos, timeout=REQUEST_TIMEOUT)
     if data.text.find("{") < 0:
         current_app.logger.debug("No data: %s", data.text)
@@ -79,14 +87,93 @@ def FetchGiteaProject(project_url):
     if json["has_issues"]:
         issuesurl = json["html_url"] + "/issues"
     return {
-        "type": "Gitea",
+        "type": "Codeberg",
         "name": json["name"],
         "summary": json["description"],
         "description": readme,
         "source_url": json["html_url"],
         "image_url": json["avatar_url"] or json["owner"]["avatar_url"],
         "contact_url": issuesurl,
-        "commits": fetch_commits_gitea(url_q),
+        "commits": fetch_commits_codeberg(project_url),
+    }
+
+
+def FetchGitProject(url):
+    """Download from an arbitrary Git URL."""
+    current_app.logger.info("Fetching from Git repo: %s", url)
+    repo_path = clone_repo(url)
+    if not repo_path:
+        current_app.logger.warning("Could not clone")
+        return {}
+
+    # TODO: list files to look for README
+    content = get_file_content(repo_path, "README.md")
+    if not content:
+        content = get_file_content(repo_path, "README")
+
+    # Clone the repo to get commit history
+    commits = get_git_log(repo_path)
+    shutil.rmtree(repo_path)
+
+    # Parse the repo name from URL
+    repo_name = url.split("/")[-1].replace(".git", "")
+
+    return {
+        "type": "Git",
+        "name": repo_name,
+        "summary": "",  # No summary field in repo
+        "description": content,
+        "source_url": url,
+        "image_url": "",
+        "contact_url": "", 
+        "commits": commits,
+    }
+
+
+def FetchHuggingFaceProject(project_url):
+    """Download data from Hugging Face."""
+    current_app.logger.info("Fetching Hugging Face: %s", project_url)
+    try:
+        api = huggingface_hub.HfApi()
+        repo_info = api.repo_info(repo_id=project_url)
+        repo_files = api.list_repo_files(repo_id=project_url)
+    except huggingface_hub.utils.RepositoryNotFoundError:
+        current_app.logger.debug("Repository not found: %s", project_url)
+        return {}
+
+    readme_filename = None
+    for filename in repo_files:
+        if 'readme' in filename.lower():
+            readme_filename = filename
+            break
+
+    readme = ""
+    if readme_filename:
+        readme_url = huggingface_hub.hf_hub_url(project_url, readme_filename)
+        try:
+            readme = requests.get(readme_url, timeout=REQUEST_TIMEOUT).text
+        except requests.exceptions.RequestException as e:
+            current_app.logger.warning("Could not fetch README: %s", e)
+
+    # Clone the repo to get commit history
+    # TODO: check if this is possible in API
+    clone_url = "https://huggingface.co/" + project_url + ".git"
+    repo_path = clone_repo(clone_url)
+    if repo_path:
+        commits = get_git_log(repo_path)
+        shutil.rmtree(repo_path)
+    else:
+        commits = []
+
+    return {
+        "type": "Hugging Face",
+        "name": repo_info.id,
+        "summary": "",  # No summary field in repo_info
+        "description": readme,
+        "source_url": "https://huggingface.co/" + project_url,
+        "image_url": "",
+        "contact_url": "https://huggingface.co/" + project_url + "/discussions",
+        "commits": commits,
     }
 
 
@@ -94,9 +181,9 @@ def FetchGitlabProject(project_url):
     """Download data from GitLab."""
     WEB_BASE = "https://gitlab.com"
     API_BASE = WEB_BASE + "/api/v4/projects/%s"
-    url_q = quote_plus(project_url)
+    current_app.logger.info("Fetching GitLab: %s" % project_url)
     # Collect basic data
-    current_app.logger.info("Fetching GitLab: %s", url_q)
+    url_q = quote_plus(project_url)
     data = requests.get(API_BASE % url_q, timeout=REQUEST_TIMEOUT)
     if data.text.find("{") < 0:
         current_app.logger.debug("No data: %s", data.text)
@@ -174,7 +261,7 @@ def FetchGithubProject(project_url):
         "image_url": json["owner"]["avatar_url"],
         "contact_url": json["html_url"] + "/issues",
         "download_url": json["html_url"] + "/releases",
-        "commits": fetch_commits_github(repo_full_name),
+        "commits": fetch_commits_github(json["clone_url"]),
     }
 
 
@@ -196,52 +283,6 @@ def FetchGithubIssue(project_url, issue_id):
     project_data["name"] = json["title"][:77]
     project_data["description"] = json["body"]
     return project_data
-
-
-def FetchBitbucketProject(project_url):
-    """Download data from Bitbucket."""
-    WEB_BASE = "https://bitbucket.org/%s"
-    API_BASE = "https://api.bitbucket.org/2.0/repositories/%s"
-    current_app.logger.info("Fetching Bitbucket: %s", project_url)
-    data = requests.get(API_BASE % project_url, timeout=REQUEST_TIMEOUT)
-    if data.text.find("{") < 0:
-        current_app.logger.debug("No data at: %s", project_url)
-        return {}
-    json = data.json()
-    if "name" not in json:
-        current_app.logger.debug("Invalid format at: %s", project_url)
-        return {}
-    readme = ""
-    for docext in [".md", ".rst", ".txt", ""]:
-        readmedata = requests.get(
-            API_BASE % project_url + "/src/HEAD/README.md", timeout=REQUEST_TIMEOUT
-        )
-        if readmedata.text.find('{"type":"error"') != 0:
-            readme = readmedata.text
-            break
-    web_url = WEB_BASE % project_url
-    contact_url = json["website"] or web_url
-    if json["has_issues"]:
-        contact_url = "%s/issues" % web_url
-    image_url = ""
-    if (
-        "project" in json
-        and "links" in json["project"]
-        and "avatar" in json["project"]["links"]
-    ):
-        image_url = json["project"]["links"]["avatar"]["href"]
-    elif "links" in json and "avatar" in json["links"]:
-        image_url = json["links"]["avatar"]["href"]
-    return {
-        "type": "Bitbucket",
-        "name": json["name"],
-        "summary": json["description"],
-        "description": readme,
-        "webpage_url": json["website"],
-        "source_url": web_url,
-        "image_url": image_url,
-        "contact_url": contact_url,
-    }
 
 
 def FetchDataProject(datapackage_url):
