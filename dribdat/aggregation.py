@@ -4,6 +4,7 @@
 from dribdat.user.models import Activity, User, Project
 from dribdat.user import isUserActive
 from dribdat.database import db
+from dribdat.api.parser import GetProjectData
 from dribdat.apifetch import (
     FetchWebGitHub,
     FetchWebGitHubGist,
