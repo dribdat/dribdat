@@ -94,7 +94,7 @@ def FetchCodebergProject(project_url):
         "source_url": json["html_url"],
         "image_url": json["avatar_url"] or json["owner"]["avatar_url"],
         "contact_url": issuesurl,
-        "commits": fetch_commits_codeberg(json["clone_url"]),
+        "commits": fetch_commits_codeberg(project_url),
     }
 
 
@@ -148,9 +148,9 @@ def FetchGitlabProject(project_url):
     """Download data from GitLab."""
     WEB_BASE = "https://gitlab.com"
     API_BASE = WEB_BASE + "/api/v4/projects/%s"
-    url_q = quote_plus(project_url)
+    current_app.logger.info("Fetching GitLab: %s" % project_url)
     # Collect basic data
-    current_app.logger.info("Fetching GitLab: %s", url_q)
+    url_q = quote_plus(project_url)
     data = requests.get(API_BASE % url_q, timeout=REQUEST_TIMEOUT)
     if data.text.find("{") < 0:
         current_app.logger.debug("No data: %s", data.text)
@@ -172,7 +172,7 @@ def FetchGitlabProject(project_url):
         "source_url": json["web_url"],
         "image_url": json["avatar_url"],
         "contact_url": json["web_url"] + "/issues",
-        "commits": fetch_commits_gitlab(json["http_url_to_repo"]),
+        "commits": fetch_commits_gitlab(json["id"]),
     }
 
 

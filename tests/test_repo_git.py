@@ -13,9 +13,8 @@ class TestGit:
         """Test getting the git log."""
         path = clone_repo("https://github.com/dribdat/dridbot.git")
         log = get_git_log(path)
-        print(len(log), leg[0]['message'])
         assert len(log) > 5
-        assert log[0]['message'] == 'Initial commit'
+        assert log[-1]['message'] == 'Initial bot'
         content = get_file_content(path, "README.md")
-        assert "Dridbot" in content
+        assert "dridbot" in content
 

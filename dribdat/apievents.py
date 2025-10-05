@@ -36,6 +36,7 @@ def fetch_commits_codeberg(full_name, limit=10):
         full_name,
         limit,
     )
+    print(apiurl)
     data = requests.get(apiurl, timeout=REQUEST_TIMEOUT)
     if data.status_code != 200:
         current_app.logger.warning("Could not sync codeberg commits on %s" % full_name)
@@ -124,6 +125,7 @@ def fetch_commits_gitlab(project_id: int, since=None, until=None):
     """Parse data about GitLab commits."""
     apiurl = "https://gitlab.com/api/v4/"
     apiurl = apiurl + "projects/%d/repository/commits?" % project_id
+    current_app.logger.info("Fetching commits: %s" % apiurl)
     if since is not None:
         apiurl += "&since=%s" % since.replace(microsecond=0).isoformat()
     if until is not None:
