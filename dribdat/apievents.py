@@ -36,7 +36,6 @@ def fetch_commits_codeberg(full_name, limit=10):
         full_name,
         limit,
     )
-    print(apiurl)
     data = requests.get(apiurl, timeout=REQUEST_TIMEOUT)
     if data.status_code != 200:
         current_app.logger.warning("Could not sync codeberg commits on %s" % full_name)

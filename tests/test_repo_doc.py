@@ -1,16 +1,13 @@
 # -*- coding: utf-8 -*-
 """Dribdat data aggregation tests."""
 
-from dribdat.aggregation import GetProjectData
+from dribdat.api.parser import GetProjectData
 from requests.exceptions import ReadTimeout
 import warnings
-import os
-import shutil
-import subprocess
 
 
 class TestRepository:
-    """Here be dataragons."""
+    """Harvest data from documentation."""
 
     def test_dribdat(self, user, testapp):
         """Test parsing a remote dribdat project."""

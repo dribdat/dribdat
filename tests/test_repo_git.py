@@ -2,12 +2,10 @@
 """Dribdat data aggregation tests."""
 
 from dribdat.git import clone_repo, get_git_log, get_file_content
-import os
-import shutil
-import subprocess
+
 
 class TestGit:
-    """Test the git library."""
+    """Run tests on the basic git library."""
 
     def test_get_git_log(self):
         """Test getting the git log."""

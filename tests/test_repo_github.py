@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 """Dribdat data aggregation tests."""
 
-from dribdat.aggregation import GetProjectData
+from dribdat.api.parser import GetProjectData
 from requests.exceptions import ReadTimeout
 import warnings
 
 
 class TestRepoHub:
-    """Here be dataragons."""
+    """Harvesting the Octocats."""
 
     def test_github(self, user, testapp):
         """Test parsing a GitHub readme."""
@@ -33,7 +33,6 @@ class TestRepoHub:
             test_obj = GetProjectData(test_url)
         except ReadTimeout:
             return warnings.warn("GitHub is not accessible")
-        print(test_obj)
         assert "name" in test_obj
         assert test_obj["name"] == "sync"
         assert test_obj["type"] == "Markdown"

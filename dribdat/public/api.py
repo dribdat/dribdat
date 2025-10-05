@@ -20,9 +20,9 @@ from ..utils import timesince, random_password, sanitize_url, markdownit
 from ..decorators import admin_required
 from ..user.models import Event, Project, Activity, User
 from ..apipackage import import_event_package, event_to_data_package
+from ..api.parser import GetProjectData
 from ..aggregation import (
     AddProjectDataFromAutotext,
-    GetProjectData,
 )
 from ..apiutils import (
     get_project_list,

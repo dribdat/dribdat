@@ -24,9 +24,9 @@ from dribdat.public.forms import (
     ProjectBoost,
     ProjectComment,
 )
+from dribdat.api.parser import GetProjectData
 from dribdat.aggregation import (
     SyncProjectData,
-    GetProjectData,
     AllowProjectEdit,
     AllowUserInEvent,
     IsProjectStarred,

@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 """Dribdat data aggregation tests."""
 
-from dribdat.aggregation import GetProjectData
+from dribdat.api.parser import GetProjectData
 from requests.exceptions import ReadTimeout
 import warnings
 
 
-class TestRepoApi:
-    """Here be dataragons."""
+class TestRepoOther:
+    """Fetch data from other Git repositories."""
 
     def test_codeberg(self, user, testapp):
         """Test parsing a Codeberg readme."""
@@ -36,13 +36,16 @@ class TestRepoApi:
         assert len(test_obj["commits"]) > 5
 
     def test_bitbucket(self, user, testapp):
-        """Test parsing a Bitbucket readme."""
-        test_url = "https://bitbucket.org/dribdat/dribdat/src/master/"
+        """Test parsing a Bitbucket readme (via Git)."""
+        test_url = "https://bitbucket.org/dribdat/dribdat.git"
         try:
             test_obj = GetProjectData(test_url)
         except ReadTimeout:
             return warnings.warn("Bitbucket is not accessible")
         assert "name" in test_obj
         assert test_obj["name"] == "dribdat"
-        assert test_obj["type"] == "Bitbucket"
+        assert test_obj["type"] == "Git"
         # TODO: support for commits
+        assert "commits" in test_obj
+        assert len(test_obj["commits"]) > 5
+        assert test_obj["commits"][-1]["message"] == "Initial cookiecutter-flask project"

@@ -13,7 +13,8 @@ from ..utils import (
 )
 from ..extensions import db, cache
 from ..decorators import admin_required
-from ..aggregation import GetProjectData, SyncProjectData
+from ..api.parser import GetProjectData
+from ..aggregation import SyncProjectData
 from ..user.models import Role, User, Event, Activity, Project, Category
 from ..user import getProjectStages
 from ..public.userhelper import get_user_by_name

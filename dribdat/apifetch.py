@@ -98,6 +98,38 @@ def FetchCodebergProject(project_url):
     }
 
 
+def FetchGitProject(url):
+    """Download from an arbitrary Git URL."""
+    current_app.logger.info("Fetching from Git repo: %s", url)
+    repo_path = clone_repo(url)
+    if not repo_path:
+        current_app.logger.warning("Could not clone")
+        return {}
+
+    # TODO: list files to look for README
+    content = get_file_content(repo_path, "README.md")
+    if not content:
+        content = get_file_content(repo_path, "README")
+
+    # Clone the repo to get commit history
+    commits = get_git_log(repo_path)
+    shutil.rmtree(repo_path)
+
+    # Parse the repo name from URL
+    repo_name = url.split("/")[-1].replace(".git", "")
+
+    return {
+        "type": "Git",
+        "name": repo_name,
+        "summary": "",  # No summary field in repo
+        "description": content,
+        "source_url": url,
+        "image_url": "",
+        "contact_url": "", 
+        "commits": commits,
+    }
+
+
 def FetchHuggingFaceProject(project_url):
     """Download data from Hugging Face."""
     current_app.logger.info("Fetching Hugging Face: %s", project_url)
@@ -111,7 +143,7 @@ def FetchHuggingFaceProject(project_url):
 
     readme_filename = None
     for filename in repo_files:
-        if filename.lower() == 'readme.md':
+        if 'readme' in filename.lower():
             readme_filename = filename
             break
 
@@ -124,6 +156,7 @@ def FetchHuggingFaceProject(project_url):
             current_app.logger.warning("Could not fetch README: %s", e)
 
     # Clone the repo to get commit history
+    # TODO: check if this is possible in API
     clone_url = "https://huggingface.co/" + project_url + ".git"
     repo_path = clone_repo(clone_url)
     if repo_path:
@@ -250,52 +283,6 @@ def FetchGithubIssue(project_url, issue_id):
     project_data["name"] = json["title"][:77]
     project_data["description"] = json["body"]
     return project_data
-
-
-def FetchBitbucketProject(project_url):
-    """Download data from Bitbucket."""
-    WEB_BASE = "https://bitbucket.org/%s"
-    API_BASE = "https://api.bitbucket.org/2.0/repositories/%s"
-    current_app.logger.info("Fetching Bitbucket: %s", project_url)
-    data = requests.get(API_BASE % project_url, timeout=REQUEST_TIMEOUT)
-    if data.text.find("{") < 0:
-        current_app.logger.debug("No data at: %s", project_url)
-        return {}
-    json = data.json()
-    if "name" not in json:
-        current_app.logger.debug("Invalid format at: %s", project_url)
-        return {}
-    readme = ""
-    for docext in [".md", ".rst", ".txt", ""]:
-        readmedata = requests.get(
-            API_BASE % project_url + "/src/HEAD/README.md", timeout=REQUEST_TIMEOUT
-        )
-        if readmedata.text.find('{"type":"error"') != 0:
-            readme = readmedata.text
-            break
-    web_url = WEB_BASE % project_url
-    contact_url = json["website"] or web_url
-    if json["has_issues"]:
-        contact_url = "%s/issues" % web_url
-    image_url = ""
-    if (
-        "project" in json
-        and "links" in json["project"]
-        and "avatar" in json["project"]["links"]
-    ):
-        image_url = json["project"]["links"]["avatar"]["href"]
-    elif "links" in json and "avatar" in json["links"]:
-        image_url = json["links"]["avatar"]["href"]
-    return {
-        "type": "Bitbucket",
-        "name": json["name"],
-        "summary": json["description"],
-        "description": readme,
-        "webpage_url": json["website"],
-        "source_url": web_url,
-        "image_url": image_url,
-        "contact_url": contact_url,
-    }
 
 
 def FetchDataProject(datapackage_url):
