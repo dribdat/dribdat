@@ -52,7 +52,7 @@ class TestRepoOther:
         assert len(test_obj["commits"]) > 5
         assert test_obj["commits"][-1]["message"] == "Initial cookiecutter-flask project"
 
-    def test_get_huggingface_project(testapp):
+    def test_get_huggingface_project(self, user, testapp):
         """Test getting a Hugging Face project."""
         url = "https://huggingface.co/google-bert/bert-base-uncased"
         with testapp.app.app_context():
