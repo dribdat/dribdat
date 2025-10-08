@@ -1,3 +1,14 @@
+coverage:
+  status:
+    project:
+      default:
+        target: auto
+        threshold: 10%
+        informational: true
+    patch:
+      default:
+        target: 10%
+        informational: true
 ignore:
   - "dribdat/admin/"
   - "**/test_*.py"         # glob accepted
