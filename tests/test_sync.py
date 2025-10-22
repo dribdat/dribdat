@@ -109,7 +109,7 @@ class TestSync:
 
     def test_pretalx(self, user, testapp):
         """Test parsing a Pretalx page."""
-        test_url = "https://pretalx.com/workshoptage-2024/talk/QKRVRA/"
+        test_url = "https://pretalx.com/dinacon-2025/talk/GPHRZZ/"
         test_obj = FetchWebProject(test_url)
         assert test_obj["type"] == "Pretalx"
         assert test_obj["source_url"] == test_url
