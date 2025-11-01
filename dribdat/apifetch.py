@@ -125,7 +125,7 @@ def FetchGitProject(url):
         "description": content,
         "source_url": url,
         "image_url": "",
-        "contact_url": "", 
+        "contact_url": "",
         "commits": commits,
     }
 
@@ -143,7 +143,7 @@ def FetchHuggingFaceProject(project_url):
 
     readme_filename = None
     for filename in repo_files:
-        if 'readme' in filename.lower():
+        if "readme" in filename.lower():
             readme_filename = filename
             break
 
@@ -440,7 +440,7 @@ def FetchWebProject(project_url):
     elif project_url.startswith("https://www.instructables.com/"):
         return FetchWebInstructables(datatext, project_url)
     # Pretalx
-    elif datatext.find('<meta name="generator" content="pretalx"') > 0:
+    elif datatext.find("<meta content=pretalx name=generator>") > 0:
         return FetchWebPretalx(datatext, project_url)
     # DokuWiki
     elif datatext.find('<meta name="generator" content="DokuWiki"') > 0:
@@ -451,7 +451,7 @@ def FetchWebProject(project_url):
     # CodiMD / HackMD
     elif datatext.find('<div id="doc" ') > 0:
         return FetchWebCodiMD(datatext, project_url)
-    
+
     return {}
 
 

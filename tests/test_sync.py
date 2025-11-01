@@ -104,15 +104,15 @@ class TestSync:
         readme = '![hello there](world.png) <img title="hello" src="again.jpg">'
         readme = fix_relative_links(readme, imgroot, repo_full_name, default_branch)
         assert imgroot in readme
-        assert not "(world.png)" in readme
-        assert not '"again.jpg"' in readme
+        assert "(world.png)" not in readme
+        assert '"again.jpg"' not in readme
 
     def test_pretalx(self, user, testapp):
         """Test parsing a Pretalx page."""
-        test_url = "https://pretalx.com/dinacon-2025/talk/GPHRZZ/"
+        test_url = "https://pretalx.com/democon/talk/8SELAF/"
         test_obj = FetchWebProject(test_url)
         assert test_obj["type"] == "Pretalx"
         assert test_obj["source_url"] == test_url
         assert "Open" in test_obj["name"]
-        assert "Grundlagen" in test_obj["summary"]
-        assert "Downstreaming" in test_obj["description"]
+        assert "Architect" in test_obj["summary"]
+        assert "Yard" in test_obj["description"]
