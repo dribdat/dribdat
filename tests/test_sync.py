@@ -5,6 +5,8 @@ from dribdat.aggregation import (
     AddProjectDataFromAutotext,
     SyncProjectData,
     TrimProjectData,
+)
+from dribdat.apifetch import (
     FetchWebProject,
 )
 from dribdat.utils import fix_relative_links

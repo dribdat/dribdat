@@ -427,7 +427,7 @@ def event_autosync(event_id):
     for project in event.projects:
         if not project.is_syncable:
             continue
-        data = GetProjectData(project.autotext_url)
+        data = GetProjectData(project.autotext_url, True)
         if 'name' not in data:
             flash("Could not sync: %s" % project.name, 'warning')
             continue

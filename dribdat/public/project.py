@@ -711,9 +711,9 @@ def project_autoupdate(project_id):
         return redirect(url_for("project.project_view", project_id=project_id))
 
     # Start update process
-    data = GetProjectData(project.autotext_url)
+    data = GetProjectData(project.autotext_url, True)
     if not data or "name" not in data:
-        flash("To Sync: ensure a README on the remote site.", "warning")
+        flash("Could not Sync: check that your README location is public.", "warning")
         return redirect(url_for("project.project_view", project_id=project_id))
 
     # Transfer the project fields
