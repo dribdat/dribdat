@@ -1,24 +1,12 @@
 # -*- coding: utf-8 -*-
 """Utilities for aggregating data."""
 
+import re
+import json
 from dribdat.user.models import Activity, User, Project
 from dribdat.user import isUserActive
 from dribdat.database import db
 from dribdat.api.parser import GetProjectData
-from dribdat.apifetch import (
-    FetchWebGitHub,
-    FetchWebGitHubGist,
-    FetchGithubProject,
-    FetchGithubIssue,
-    FetchGitlabProject,
-    FetchCodebergProject,
-    FetchDribdatProject,
-    FetchDataProject,
-    FetchWebProject,
-    FetchHuggingFaceProject,
-)
-import json
-import re
 from sqlalchemy import and_
 from requests.exceptions import ConnectionError
 from flask import flash, redirect, url_for
@@ -105,7 +93,7 @@ def SyncProjectData(project, data):
 def AddProjectDataFromAutotext(project):
     """Fills the project from the configured remote URL."""
     try:
-        data = GetProjectData(project.autotext_url)
+        data = GetProjectData(project.autotext_url, True)
         TrimProjectData(project, data)
     except ConnectionError as ex:
         flash("Data could not be synced.", "error")

@@ -22,7 +22,7 @@
 
 {% block content %}
 
-{% if my_projects %}
+{% if my_projects and featured_event %}
   {% cache 300, 'home-user-%d' % current_user.id %}
     <center title="My teams" class="home-teams">
       <div class="ps-4 ps-md-0 mb-5 pb-4 resource-list profile-projects">

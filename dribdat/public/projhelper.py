@@ -110,6 +110,11 @@ def project_edit_action(project_id, detail_view=False):
             project.technai = unpack_csvlist(form.technai.data)
             del form.technai # avoid setting it again
 
+        # Clear the README if no link is present
+        if not project.is_syncable:
+            project.autotext = ""
+
+        # Propagate updates
         del form.id
         form.populate_obj(project)
         project.update_now()

@@ -53,7 +53,7 @@ def FetchStageConfig(url, top_element="stages", by_col="name"):
     return load_presets(blob, top_element, by_col)
 
 
-def FetchCodebergProject(project_url):
+def FetchCodebergProject(project_url, with_history):
     """Download data from Codeberg, a large Forgejo site."""
     # Docs: https://codeberg.org/api/swagger
     site_root = "https://codeberg.org"
@@ -86,6 +86,9 @@ def FetchCodebergProject(project_url):
     issuesurl = ""
     if json["has_issues"]:
         issuesurl = json["html_url"] + "/issues"
+    commits = []
+    if with_history:
+        commits = fetch_commits_codeberg(project_url)
     return {
         "type": "Codeberg",
         "name": json["name"],
@@ -94,11 +97,11 @@ def FetchCodebergProject(project_url):
         "source_url": json["html_url"],
         "image_url": json["avatar_url"] or json["owner"]["avatar_url"],
         "contact_url": issuesurl,
-        "commits": fetch_commits_codeberg(project_url),
+        "commits": commits
     }
 
 
-def FetchGitProject(url):
+def FetchGitProject(url, with_commits):
     """Download from an arbitrary Git URL."""
     current_app.logger.info("Fetching from Git repo: %s", url)
     repo_path = clone_repo(url)
@@ -112,7 +115,9 @@ def FetchGitProject(url):
         content = get_file_content(repo_path, "README")
 
     # Clone the repo to get commit history
-    commits = get_git_log(repo_path)
+    commits = []
+    if with_commits:
+        commits = get_git_log(repo_path)
     shutil.rmtree(repo_path)
 
     # Parse the repo name from URL
@@ -130,54 +135,60 @@ def FetchGitProject(url):
     }
 
 
-def FetchHuggingFaceProject(project_url):
+def FetchHuggingFaceProject(project_url, with_commits=False):
     """Download data from Hugging Face."""
     current_app.logger.info("Fetching Hugging Face: %s", project_url)
-    try:
-        api = huggingface_hub.HfApi()
-        repo_info = api.repo_info(repo_id=project_url)
-        repo_files = api.list_repo_files(repo_id=project_url)
-    except huggingface_hub.utils.RepositoryNotFoundError:
-        current_app.logger.debug("Repository not found: %s", project_url)
-        return {}
+    card = huggingface_hub.RepoCard.load(project_url)
+    readme = card.text
 
-    readme_filename = None
-    for filename in repo_files:
-        if "readme" in filename.lower():
-            readme_filename = filename
-            break
-
-    readme = ""
-    if readme_filename:
-        readme_url = huggingface_hub.hf_hub_url(project_url, readme_filename)
+    if False:
+        # TODO: do we need this weighty alternative?
         try:
-            readme = requests.get(readme_url, timeout=REQUEST_TIMEOUT).text
-        except requests.exceptions.RequestException as e:
-            current_app.logger.warning("Could not fetch README: %s", e)
+            # Requires HF_TOKEN
+            api = huggingface_hub.HfApi()
+            repo_info = api.repo_info(repo_id=project_url)
+            repo_files = api.list_repo_files(repo_id=project_url)
+        except huggingface_hub.utils.RepositoryNotFoundError:
+            current_app.logger.debug("Repository not found: %s", project_url)
+            return {}
+
+        readme_filename = None
+        for filename in repo_files:
+            if "readme" in filename.lower():
+                readme_filename = filename
+                break
+
+        readme = ""
+        if readme_filename:
+            readme_url = huggingface_hub.hf_hub_url(project_url, readme_filename)
+            try:
+                readme = requests.get(readme_url, timeout=REQUEST_TIMEOUT).text
+            except requests.exceptions.RequestException as e:
+                current_app.logger.warning("Could not fetch README: %s", e)
 
     # Clone the repo to get commit history
-    # TODO: check if this is possible in API
-    clone_url = "https://huggingface.co/" + project_url + ".git"
-    repo_path = clone_repo(clone_url)
-    if repo_path:
-        commits = get_git_log(repo_path)
-        shutil.rmtree(repo_path)
-    else:
-        commits = []
+    commits = []
+    if with_commits:
+        # TODO: check if this is possible in API
+        clone_url = "https://huggingface.co/" + project_url + ".git"
+        repo_path = clone_repo(clone_url)
+        if repo_path:
+            commits = get_git_log(repo_path)
+            shutil.rmtree(repo_path)
 
     return {
         "type": "Hugging Face",
-        "name": repo_info.id,
+        "name": project_url,
         "summary": "",  # No summary field in repo_info
         "description": readme,
         "source_url": "https://huggingface.co/" + project_url,
-        "image_url": "",
+        "image_url": "https://huggingface.co/front/assets/huggingface_logo-noborder.svg",
         "contact_url": "https://huggingface.co/" + project_url + "/discussions",
         "commits": commits,
     }
 
 
-def FetchGitlabProject(project_url):
+def FetchGitlabProject(project_url, with_commits):
     """Download data from GitLab."""
     WEB_BASE = "https://gitlab.com"
     API_BASE = WEB_BASE + "/api/v4/projects/%s"
@@ -197,6 +208,10 @@ def FetchGitlabProject(project_url):
     readmeurl = readmeurl.replace("-/blob/", "-/raw/")
     readmedata = requests.get(readmeurl, timeout=REQUEST_TIMEOUT)
     readme = readmedata.text or ""
+    # Collect the history
+    commits = []
+    if with_commits:
+        commits = fetch_commits_gitlab(json["id"])
     return {
         "type": "GitLab",
         "name": json["name"],
@@ -205,7 +220,7 @@ def FetchGitlabProject(project_url):
         "source_url": json["web_url"],
         "image_url": json["avatar_url"],
         "contact_url": json["web_url"] + "/issues",
-        "commits": fetch_commits_gitlab(json["id"]),
+        "commits": commits
     }
 
 
@@ -222,7 +237,7 @@ def FetchGitlabAvatar(email):
     return json["avatar_url"]
 
 
-def FetchGithubProject(project_url):
+def FetchGithubProject(project_url, with_commits):
     """Download data from GitHub."""
     API_BASE = "https://api.github.com/repos/%s"
     current_app.logger.info("Fetching GitHub: %s", project_url)
@@ -251,6 +266,10 @@ def FetchGithubProject(project_url):
         # Fix relative links in text
         imgroot = "https://raw.githubusercontent.com"
         readme = fix_relative_links(readme, imgroot, repo_full_name, default_branch)
+    # Collect history
+    commits = []
+    if with_commits:
+        commits = fetch_commits_github(json["clone_url"])
     return {
         "type": "GitHub",
         "name": json["name"],
@@ -261,7 +280,7 @@ def FetchGithubProject(project_url):
         "image_url": json["owner"]["avatar_url"],
         "contact_url": json["html_url"] + "/issues",
         "download_url": json["html_url"] + "/releases",
-        "commits": fetch_commits_github(json["clone_url"]),
+        "commits": commits
     }
 
 
