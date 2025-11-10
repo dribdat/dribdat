@@ -1179,6 +1179,7 @@ a.media {
 }
 .project-page img {
     max-width: 100%;
+    height: auto;
 }
 .theme-dark .alert-light a {
     color: initial;
