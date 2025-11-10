@@ -1177,10 +1177,6 @@ a.media {
 .media .media-body {
     display: inline-block;
 }
-.project-page img {
-    max-width: 100%;
-    height: auto;
-}
 .theme-dark .alert-light a {
     color: initial;
 }
@@ -1222,10 +1218,11 @@ a.media {
 }
 
 /* Content blocks on project page */
+.project-page img,
 .project-page .project-autotext img,
 .project-page .project-longtext img {
     max-width: 100%;
-    max-height: 400px;
+    height: auto;
 }
 .theme-dark .sl-wrapper.simple-lightbox {
     background: #aaa;
