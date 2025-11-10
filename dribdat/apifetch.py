@@ -97,7 +97,7 @@ def FetchCodebergProject(project_url, with_history):
         "source_url": json["html_url"],
         "image_url": json["avatar_url"] or json["owner"]["avatar_url"],
         "contact_url": issuesurl,
-        "commits": commits
+        "commits": commits,
     }
 
 
@@ -220,7 +220,7 @@ def FetchGitlabProject(project_url, with_commits):
         "source_url": json["web_url"],
         "image_url": json["avatar_url"],
         "contact_url": json["web_url"] + "/issues",
-        "commits": commits
+        "commits": commits,
     }
 
 
@@ -269,7 +269,7 @@ def FetchGithubProject(project_url, with_commits):
     # Collect history
     commits = []
     if with_commits:
-        commits = fetch_commits_github(json["clone_url"])
+        commits = fetch_commits_github(project_url)
     return {
         "type": "GitHub",
         "name": json["name"],
@@ -280,7 +280,7 @@ def FetchGithubProject(project_url, with_commits):
         "image_url": json["owner"]["avatar_url"],
         "contact_url": json["html_url"] + "/issues",
         "download_url": json["html_url"] + "/releases",
-        "commits": commits
+        "commits": commits,
     }
 
 
