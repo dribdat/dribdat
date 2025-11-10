@@ -139,18 +139,18 @@
   <div class="project-buttons mb-5" role="group" aria-label="Project links">
     {% if project.contact_url %}
       {% if project.contact_url.startswith('http') or project.contact_url.startswith('mailto:') %}
-        <a href="{{ project.contact_url }}" target="_blank" rel="noopener noreferrer" class="btn btn-lg shadow-none border-light" title="Contact the team"><span>&#x1f44b;</span> Contact</a>
+        <a href="{{ project.contact_url }}" target="_blank" rel="noopener noreferrer" class="btn btn-lg shadow-none border-white" title="Contact the team"><span>&#x1f44b;</span> Contact</a>
       {% elif '@' in project.contact_url %}
-        <a href="mailto:{{ project.contact_url }}" target="_blank" rel="noopener noreferrer" class="btn btn-lg shadow-none border-light" title="Contact the team"><span>&#x1f44b;</span> E-mail</a>
+        <a href="mailto:{{ project.contact_url }}" target="_blank" rel="noopener noreferrer" class="btn btn-lg shadow-none border-white" title="Contact the team"><span>&#x1f44b;</span> E-mail</a>
       {% else %}
         <div class="btn btn-lg" title="Contact the team"><span>&#x1f44b;</span> {{ project.contact_url }}</div>
       {% endif %}
     {% endif %}
     {% if project.download_url %}
-      <a href="{{ project.download_url }}" target="_blank" rel="noopener noreferrer" class="btn btn-lg shadow-none border-light" title="Download link"><span>&#x2728;</span> Demo</a>
+      <a href="{{ project.download_url }}" target="_blank" rel="noopener noreferrer" class="btn btn-lg shadow-none border-white" title="Download link"><span>&#x2728;</span> Demo</a>
     {% endif %}
     {% if project.source_url %}
-      <a href="{{ project.source_url }}" class="btn btn-lg shadow-none border-light" target="_blank" rel="noopener noreferrer" title="Source code"><span>&#x1f4bb;</span> Source</a>
+      <a href="{{ project.source_url }}" class="btn btn-lg shadow-none border-white" target="_blank" rel="noopener noreferrer" title="Source code"><span>&#x1f4bb;</span> Source</a>
     {% endif %}
   </div>
 
