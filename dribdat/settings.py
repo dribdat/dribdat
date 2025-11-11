@@ -117,10 +117,12 @@ class Config(object):
     RECAPTCHA_PRIVATE_KEY = os_env.get("RECAPTCHA_PRIVATE_KEY", None)
     RECAPTCHA_PARAMETERS = os_env.get("RECAPTCHA_PARAMETERS", None)
     RECAPTCHA_HTML = os_env.get("RECAPTCHA_HTML", None)
-    RECAPTCHA_DATA_ATTRS = loads(os_env.get("RECAPTCHA_DATA_ATTRS", {}))
     RECAPTCHA_SCRIPT = os_env.get("RECAPTCHA_SCRIPT", None)
     RECAPTCHA_DIV_CLASS = os_env.get("RECAPTCHA_DIV_CLASS", None)
     RECAPTCHA_VERIFY_SERVER = os_env.get("RECAPTCHA_VERIFY_SERVER", None)
+    RECAPTCHA_DATA_ATTRS = os_env.get("RECAPTCHA_DATA_ATTRS", None)
+    if RECAPTCHA_DATA_ATTRS is not None:
+        RECAPTCHA_DATA_ATTRS = loads(RECAPTCHA_DATA_ATTRS)
 
 
 class ProdConfig(Config):
