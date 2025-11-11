@@ -2820,18 +2820,24 @@ SlackIn button
     background-position: left;
     font-size: 0px;
     height: 40px;
+    width: 158px;
 }
 .sso-login .btn.signin-azure {
     background-image: url("/static/img/sso/azure_teams.svg");
     height: 50px;
+    background-position: 98%;
+    background-size: auto 85%;
 }
 .sso-login .btn.signin-github {
     background-image: url("/static/img/sso/github-sign-in.png");
     background-position: left;
     font-size: 0px;
+    width: 275px;
 }
 .sso-login .btn.signin-gitlab {
     background-image: url("/static/img/sso/gitlab-logo.svg");
+    background-position: 98%;
+    background-size: auto 85%;
 }
 .sso-login .btn.signin-oauth2 {
     background-image: url("/static/img/sso/oauth.png");
