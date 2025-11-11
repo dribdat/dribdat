@@ -38,38 +38,37 @@
 
 {{ detail.render_project_buttons(project, project_starred, past_version, allow_edit, lock_editing, allow_revert, allow_post, current_user, True) }}
 {{ detail.render_project_image(project) }}
+
+<div class="jumbotron bg-light text-dark tab-content project-page phase-{{ project.phase }} {% if project.event.lock_resources %}resource-page{% endif %}" {% if project.logo_color %} style="border-color:{{project.logo_color}}"{% endif %}>
 {{ detail.render_project_head(project) }}
 
-<div class="project-content-nav text-end mt-2 mb-2">
-{% if project_team %}
-  <a id="team-tab-md" href="#team-md"
-    title="Show team members">
-    <i class="fa fa-user m-2" aria-hidden="true"></i>Team</a>
-{% endif %}
-{% if project.autotext %}
-  <a id="readme-tab-md" href="{{ url_for('project.project_view', project_id=project.id) }}#readme-md"
-     title="Readme content">
-    <i class="fa fa-star m-2" aria-hidden="true"></i>Readme</a>
-{% endif %}
-</div>
+  {% if project_team %}
+    <a id="team-tab-md" href="#team-md"
+      title="Show team members">
+      <i class="fa fa-user m-2" aria-hidden="true"></i>Team</a>
+  {% endif %}
+  {% if project.autotext %}
+    <a id="readme-tab-md" href="{{ url_for('project.project_view', project_id=project.id) }}#readme-md"
+      title="Readme content">
+      <i class="fa fa-star m-2" aria-hidden="true"></i>Readme</a>
+  {% endif %}
+  </div>
 
-<span class="project-badges">
-  {% for s in project_badge %}
-    <a class="boost float-left me-2" href="{{ url_for('project.get_log', project_id=project.id) }}#log" title="{{ s.title }}">
-      <i class="fa fa-{{ s.icon }}" aria-hidden="true"></i>
+  <span class="project-badges">
+    {% for s in project_badge %}
+      <a class="boost float-left me-2" href="{{ url_for('project.get_log', project_id=project.id) }}#log" title="{{ s.title }}">
+        <i class="fa fa-{{ s.icon }}" aria-hidden="true"></i>
+      </a>
+    {% endfor %}
+  </span>
+
+  {% if project.download_url %}
+    <a href="{{ project.download_url }}" target="_blank" rel="noopener noreferrer"
+      class="project-download-link btn btn-lg border border-info fw-bolder"
+      title="Download link">
+        <span>&#x2728;</span> Demo
     </a>
-  {% endfor %}
-</span>
-
-{% if project.download_url %}
-  <a href="{{ project.download_url }}" target="_blank" rel="noopener noreferrer"
-     class="project-download-link btn btn-lg border border-info fw-bolder"
-     title="Download link">
-      <span>&#x2728;</span> Demo
-  </a>
-{% endif %}
-
-<div class="clear-both mt-2" id="project-content">
+  {% endif %}
 
   {% if project.is_webembed or project.webpage_url %}
     {% if project.has_embed_longtext %}
@@ -90,6 +89,61 @@
     {% endif %}
     <br clear="all" />
   {% endif %}
+
+  {% if project_team %}
+    <div id="team-md" aria-labelledby="team-tab-md">
+
+      <div class="widget widget-team m-4">
+      {% for user in project_team %}
+        {% if project.user == user %}
+          <i class="fa fa-star project-owner"
+              title="Started this project" aria-hidden="true"></i>
+        {% endif %}
+        {{ misc.render_user_profile(user) }}
+        {% if current_user.is_admin %}
+          <a href="{{ url_for('project.project_unstar', project_id=project.id, user_id=user.id) }}" class="kick-user"
+            title="Remove this user from team" onclick="if(!window.confirm('Are you sure you wish to remove {{ user.username }} ?')) return false"
+            >&times;</a>
+        {% endif %}
+      {% endfor %}
+      </div>
+
+      {% if not lock_editing and not project.event.has_finished and not project.event.lock_resources and not past_version %}
+        <center class="team-invite-button">
+          {% if project_starred %}
+            <a class="btn btn-info btn-md" data-bs-toggle="modal" data-bs-target="#addUser"
+               title="Invite someone to this project">
+                Team
+                <i class="fa fa-child" aria-hidden="true"></i><i class="fa fa-child" aria-hidden="true"></i>
+                builder
+            </a>
+          {% elif project.is_approved %}
+            <a class="btn btn-md btn-success project-star"
+               href="{{ url_for('project.project_star', project_id=project.id) }}"
+               title="{% if project.is_challenge %}Follow this challenge{% else %}Contribute to the project{% endif %}">
+                 <i class="fa fa-thumbs-up"></i>
+                 Join the team
+            </a>
+          {% endif %}
+          <a class="btn btn-md btn-light" href="{{ url_for('project.get_log', project_id=project.id) }}"
+            title="Log and progress review">
+            <i class="fa fa-paperclip" aria-hidden="true"></i>
+            Log
+          </a>
+          <a class="btn btn-md btn-light" href="{{ surl }}"
+            title="Get a shortlink to this project">
+            <i class="fa fa-link" aria-hidden="true"></i>
+            Link
+          </a>
+        </center>
+      {% endif %}
+
+    </div><!-- /team-md -->
+  {% endif %}
+
+</div><!-- /.jumbotron .project-page -->
+
+<div class="project-content-nav text-start mt-2 mb-2 clear-both">
 
   {% if project.longtext %}
     <div id="project-md" aria-labelledby="project-tab-md">
@@ -166,59 +220,7 @@
     </div>
   {% endif %}
 
-  {% if project_team %}
-    <div id="team-md" aria-labelledby="team-tab-md">
-
-      <div class="widget widget-team m-4">
-      {% for user in project_team %}
-        {% if project.user == user %}
-          <i class="fa fa-star project-owner"
-              title="Started this project" aria-hidden="true"></i>
-        {% endif %}
-        {{ misc.render_user_profile(user) }}
-        {% if current_user.is_admin %}
-          <a href="{{ url_for('project.project_unstar', project_id=project.id, user_id=user.id) }}" class="kick-user"
-            title="Remove this user from team" onclick="if(!window.confirm('Are you sure you wish to remove {{ user.username }} ?')) return false"
-            >&times;</a>
-        {% endif %}
-      {% endfor %}
-      </div>
-
-      {% if not lock_editing and not project.event.has_finished and not project.event.lock_resources and not past_version %}
-        <center class="team-invite-button">
-          {% if project_starred %}
-            <a class="btn btn-info btn-md" data-bs-toggle="modal" data-bs-target="#addUser"
-               title="Invite someone to this project">
-                Team
-                <i class="fa fa-child" aria-hidden="true"></i><i class="fa fa-child" aria-hidden="true"></i>
-                builder
-            </a>
-          {% elif project.is_approved %}
-            <a class="btn btn-md btn-success project-star"
-               href="{{ url_for('project.project_star', project_id=project.id) }}"
-               title="{% if project.is_challenge %}Follow this challenge{% else %}Contribute to the project{% endif %}">
-                 <i class="fa fa-thumbs-up"></i>
-                 Join the team
-            </a>
-          {% endif %}
-          <a class="btn btn-md btn-light" href="{{ url_for('project.get_log', project_id=project.id) }}"
-            title="Log and progress review">
-            <i class="fa fa-paperclip" aria-hidden="true"></i>
-            Log
-          </a>
-          <a class="btn btn-md btn-light" href="{{ surl }}"
-            title="Get a shortlink to this project">
-            <i class="fa fa-link" aria-hidden="true"></i>
-            Link
-          </a>
-        </center>
-      {% endif %}
-
-    </div>
-  {% endif %}
-
-  </div><!-- /project-content -->
-</div><!-- /.jumbotron .project-page -->
+</div><!-- /project-content -->
 
 <center class="project-footer-controls mt-5">
 

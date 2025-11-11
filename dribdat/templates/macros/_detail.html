@@ -78,9 +78,7 @@
 {% endmacro %}
 
 {% macro render_project_head(project) %}
-
 <!-- Main project content container -->
-<div class="jumbotron bg-white text-dark tab-content project-page phase-{{ project.phase }} {% if project.event.lock_resources %}resource-page{% endif %}" {% if project.logo_color %} style="border-color:{{project.logo_color}}"{% endif %}>
 
   {% if project.ident %}
     <div class="project-ident">{{ project.ident }}</div>
@@ -139,6 +137,7 @@
   {% endif %}
 
   <div class="project-headline">
+
     {% if project.logo_icon %}
       {% if project.logo_icon|length==1 %}
         <span class="logo_icon">{{project.logo_icon}}</span>
@@ -149,19 +148,19 @@
 
     <h2 class="project-name">{{project.name}}</h2>
 
-  {% if project.summary %}
-    <p class="project-summary">
-      {{project.summary}}
-    </p>
-  {% endif %}
+    {% if project.summary %}
+      <p class="project-summary">
+        {{project.summary}}
+      </p>
+    {% endif %}
 
-  {% if project.hashtag %}
-    <p class="project-hashtag">
-      <a href="{{ project.event.community_url or '#' }}" target="_blank" rel="noopener noreferrer">
-        {{project.hashtag}}
-      </a>
-    </p>
-  {% endif %}
+    {% if project.hashtag %}
+      <p class="project-hashtag">
+        <a href="{{ project.event.community_url or '#' }}" target="_blank" rel="noopener noreferrer">
+          {{project.hashtag}}
+        </a>
+      </p>
+    {% endif %}
 
-  </div><!-- /.project-name -->
+  </div><!-- /.project-headline -->
 {% endmacro %}
