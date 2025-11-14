@@ -1219,8 +1219,8 @@ a.media {
 
 /* Content blocks on project page */
 .project-page img,
-.project-page .project-autotext img,
-.project-page .project-longtext img {
+.project-autotext img,
+.project-longtext img {
     max-width: 100%;
     height: auto;
 }

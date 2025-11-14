@@ -1,6 +1,6 @@
 {% macro render_user_profile(user) %}
     <a href="{{ url_for('public.user_profile', username=user.username) }}"
-        class="team-gravatar bg-body" data-id="{{ user.id }}">
+        class="team-gravatar bg-light text-dark" data-id="{{ user.id }}">
         {% if user.carddata %}
             <img src="{{user.carddata}}"/>
         {% endif %}

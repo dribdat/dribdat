@@ -40,19 +40,21 @@
 {{ detail.render_project_image(project) }}
 
 <div class="jumbotron bg-light text-dark tab-content project-page phase-{{ project.phase }} {% if project.event.lock_resources %}resource-page{% endif %}" {% if project.logo_color %} style="border-color:{{project.logo_color}}"{% endif %}>
-{{ detail.render_project_head(project) }}
 
-  {% if project_team %}
-    <a id="team-tab-md" href="#team-md"
-      title="Show team members">
-      <i class="fa fa-user m-2" aria-hidden="true"></i>Team</a>
+  {% if project.download_url %}
+    <a href="{{ project.download_url }}" target="_blank" rel="noopener noreferrer"
+      class="project-download-link btn btn-lg border border-info fw-bolder float-right ms-2"
+      title="Download link">
+        <i class="fa fa-asterisk me-2" aria-hidden="true"></i>Demo</a>
   {% endif %}
+
+  {{ detail.render_project_head(project) }}
+
   {% if project.autotext %}
     <a id="readme-tab-md" href="{{ url_for('project.project_view', project_id=project.id) }}#readme-md"
       title="Readme content">
       <i class="fa fa-star m-2" aria-hidden="true"></i>Readme</a>
   {% endif %}
-  </div>
 
   <span class="project-badges">
     {% for s in project_badge %}
@@ -61,14 +63,6 @@
       </a>
     {% endfor %}
   </span>
-
-  {% if project.download_url %}
-    <a href="{{ project.download_url }}" target="_blank" rel="noopener noreferrer"
-      class="project-download-link btn btn-lg border border-info fw-bolder"
-      title="Download link">
-        <span>&#x2728;</span> Demo
-    </a>
-  {% endif %}
 
   {% if project.is_webembed or project.webpage_url %}
     {% if project.has_embed_longtext %}
@@ -156,7 +150,7 @@
   {% if allow_edit %}
   <div class="project-edit-pitch float-left">
     <a href="{{ url_for('project.project_edit', project_id=project.id) }}#is_webembed"
-        title="Edit project pitch" class="btn btn-md btn-default">
+        title="Edit project pitch" class="btn btn-md btn-default bg-warning float-right">
       <i class="fa fa-pencil" aria-hidden="true"></i>
       Edit
     </a>
