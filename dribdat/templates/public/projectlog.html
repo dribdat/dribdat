@@ -27,7 +27,10 @@
 
 {{ detail.render_project_buttons(project, project_starred, past_version, allow_edit, lock_editing, allow_revert, allow_post, current_user, False) }}
 {{ detail.render_project_image(project) }}
-{{ detail.render_project_head(project) }}
+
+<div class="jumbotron bg-light text-dark tab-content project-page phase-{{ project.phase }} {% if project.event.lock_resources %}resource-page{% endif %}" {% if project.logo_color %} style="border-color:{{project.logo_color}}"{% endif %}>
+
+  {{ detail.render_project_head(project) }}
 
 {% if not project.is_challenge and not project.event.lock_resources %}
   <div class="float-right">
@@ -44,6 +47,7 @@
 {% endif %}
 
 <br clear="both" />
+</div>
 
 {% if suggestions %}
   <div id="suggest-md" title="Tips from the organizers for this project stage">
