@@ -148,12 +148,12 @@
   {% endif %}
 
   {% if allow_edit %}
-  <div class="project-edit-pitch float-left">
+  <div class="project-edit-pitch">
     <a href="{{ url_for('project.project_edit', project_id=project.id) }}#is_webembed"
         title="Edit project pitch" class="btn btn-md btn-default bg-warning float-right">
       <i class="fa fa-pencil" aria-hidden="true"></i>
       Edit
-    </a>
+    </a><br clear="all"/>
   </div>
   {% endif %}
 

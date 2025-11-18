@@ -1078,21 +1078,21 @@ nav .nav-login {
 
 /* --- Project page --- */
 
-.project-page .project-headline {
+.project-home .project-headline {
     margin-top: 0.5em;
     overflow-x: hidden;
 }
-.project-page .project-name {
+.project-home .project-name {
     text-shadow: 1px 1px 1px white;
     font-weight: bold;
     font-size: 3rem;
 }
-.project-page .project-summary {
+.project-home .project-summary {
     font-size: 125%;
     hyphens: auto;
     width: 85%;
 }
-.project-page .project-ident {
+.project-home .project-ident {
     display: inline-block;
     margin-bottom: 0.5em;
     font-size: 250%;
@@ -1154,7 +1154,7 @@ nav .nav-login {
 .project-page .details a {
     font-size: 120%;
 }
-.project-page .project-info {
+.project-home .project-info {
     min-height: 240px;
     overflow-x: auto;
     background-color: rgba(255, 255, 255, 0.8);
@@ -1165,7 +1165,7 @@ nav .nav-login {
     border-radius: 0px;
     clear: both;
 }
-.project-page .project-star i {
+.project-home .project-star i {
     padding-right: 5px;
 }
 .jumbotron.projectnew-boilerplate {
@@ -1234,23 +1234,23 @@ a.media {
     clear: both;
     display: block;
 }
-/*.project-page .lightboxed:hover:before {
+/*.project-home .lightboxed:hover:before {
     content: "🔍";
     font-size: 2rem;
     position: absolute;
     vertical-align: top;
     margin-left: 0.4rem;
 }*/
-.project-page .project-autotext .card,
-.project-page .project-longtext .card {
+.project-home .project-autotext .card,
+.project-home .project-longtext .card {
     background: none;
 }
-.project-page .project-autotext iframe,
-.project-page .project-longtext iframe {
+.project-home .project-autotext iframe,
+.project-home .project-longtext iframe {
     max-width: 100%;
 }
-.project-page .project-autotext blockquote,
-.project-page .project-longtext blockquote {
+.project-home .project-autotext blockquote,
+.project-home .project-longtext blockquote {
     border-left: 3px solid lightgrey;
     padding-left: 1em;
     color: #555;
@@ -1265,11 +1265,11 @@ a.media {
     .project.hexalist .hexagontent {
         left: 35%;
     }
-    .project-page .project-autotext,
-    .project-page .project-longtext {
+    .project-home .project-autotext,
+    .project-home .project-longtext {
         margin: 2em;
     }
-    .project-page .project-ident {
+    .project-home .project-ident {
         line-height: 0px;
     }
 
@@ -1283,18 +1283,19 @@ a.media {
         max-width: 800px;
     }
 }
-.project-page .project-info td,
-.project-page .project-info th {
+.project-home .project-info td,
+.project-home .project-info th {
     padding: 0.2em 1.4em 0 0;
 }
-.project-page .project-info thead {
+.project-home .project-info thead {
     border-bottom: 1px solid black;
 }
 
-.project-page .project-longtext {
+.project-home .project-longtext {
     margin: 1em 0em;
+    font-size: 125%;
 }
-.project-page .project-autotext {
+.project-home .project-autotext {
     margin: 0em;
 }
 
@@ -1497,14 +1498,14 @@ a.media {
 }
 
 /* Autotext fader */
-.project-page .project-autotext.active {
+.project-home .project-autotext.active {
     max-height: none;
     overflow: visible;
 }
-.project-page .project-autotext.active .cover {
+.project-home .project-autotext.active .cover {
     display: none;
 }
-.project-page .project-autotext .cover {
+.project-home .project-autotext .cover {
     position: absolute;
     top: 0px;
     left: 0px;
@@ -1552,7 +1553,7 @@ a.media {
         rgba(255, 255, 255, 1) 100%
     );
 }
-.project-page .project-autotext .cover i {
+.project-home .project-autotext .cover i {
     position: absolute;
     bottom: 10px;
     left: 50%;
@@ -1596,7 +1597,7 @@ a.media {
     .project-page .resizable {
         height: 348px;
     }
-    .project-page .project-buttons .btn {
+    .project-home .project-buttons .btn {
       font-size: 120%;
       width: 5em;
     }
@@ -1895,6 +1896,7 @@ main .form-actions input.btn {
     border: 3px solid rgba(150, 190, 250, 0.4);
     border-left: none;
     border-right: none;
+    border-top: none;
     padding: 1em;
     margin: 0.5em 0em;
 }
@@ -1963,24 +1965,24 @@ a.go-up {
 .project-score {
     float: right;
 }
-.project-page .project-score {
+.project-home .project-score {
     text-align: center;
     min-width: 8em;
     margin-top: -1em;
     margin-right: -1em;
     margin-bottom: 1em;
 }
-.project-page .project-category {
+.project-home .project-category {
     float: right;
     font-size: 150%;
     margin-top: 1.4em;
     text-align: right;
     clear: both;
 }
-.project-page .project-category a:hover {
+.project-home .project-category a:hover {
     text-decoration: none;
 }
-.project-page .project-category-hexagon {
+.project-home .project-category-hexagon {
     opacity: 0.3;
 }
 .profile-projects .stage-conditions .stage-no {
@@ -2089,7 +2091,7 @@ div.project-edit-buttons {
     .category-info {
         margin-top: 0px;
     }
-    .project-page .project-score {
+    .project-home .project-score {
         float: none;
         margin: 0.5em;
     }
