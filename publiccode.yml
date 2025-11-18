@@ -1,0 +1,27 @@
+publiccodeYmlVersion: "0"
+name: Dribdat
+url: "https://codeberg.org/dribdat/dribdat.git"
+platforms:
+  - web
+developmentStatus: development
+softwareType: standalone/web
+description:
+  en:
+    shortDescription: A hacky hackathon hack-tool
+    longDescription: >
+         Dribdat is an open source & self-hosted ideation and challenge board, that helps you to run code sprints, creative jams, playful hackdays and awesome hackathons.
+    features:
+       - Commit sustainably: archive collected results in open, web-friendly data formats.
+       - Live and let live: share designs, dev-envs, docs accessible to your entire team.
+       - Co-create in safe spaces: promote safer conduct, balancing openness with privacy.
+       - Appreciate hexagons: 120° of symmetry imply community resilience and social good.
+legal:
+  license: MIT
+maintenance:
+  type: community
+  contacts:
+    - name: Oleg Lavrovsky
+localisation:
+  localisationReady: false
+  availableLanguages:
+    - en
