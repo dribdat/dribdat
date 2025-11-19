@@ -114,8 +114,7 @@ def GetProjectACLs(user, event, starred):
     """Figure out some basic permissions."""
     lock_editing = event.lock_editing
     allow_post = starred and not event.lock_resources and event.has_started
-    allow_edit = not user.is_anonymous and \
-                 (user.is_admin or event.lock_resources)
+    allow_edit = not user.is_anonymous and (user.is_admin or event.lock_resources)
     allow_edit = (starred or allow_edit) and not lock_editing
     return allow_edit, allow_post, lock_editing
 
@@ -148,8 +147,8 @@ def AllowUserInEvent(user, event):
     is_anonymous = not user or user.is_anonymous
     if not is_anonymous and not isUserActive(user):
         flash("Your account needs to be activated before you can post.", "warning")
-        return redirect(url_for("public.event", event_id=event_id))
-    if event.lock_starting or (event.has_finished and not user.is_admin):
+        return redirect(url_for("public.event", event_id=event.id))
+    if event.lock_starting or event.has_finished:
         flash("Projects may no longer be started in this event.", "error")
         return redirect(url_for("public.event", event_id=event.id))
     if is_anonymous:

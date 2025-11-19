@@ -5,6 +5,7 @@
 
 import os
 from dotenv import load_dotenv
+from json import loads
 from .utils import strtobool
 
 load_dotenv()
@@ -114,11 +115,14 @@ class Config(object):
     # Recaptcha support
     RECAPTCHA_PUBLIC_KEY = os_env.get("RECAPTCHA_PUBLIC_KEY", None)
     RECAPTCHA_PRIVATE_KEY = os_env.get("RECAPTCHA_PRIVATE_KEY", None)
-    RECAPTCHA_API_SERVER = os_env.get("RECAPTCHA_API_SERVER", None)
     RECAPTCHA_PARAMETERS = os_env.get("RECAPTCHA_PARAMETERS", None)
-    RECAPTCHA_DATA_ATTRS = os_env.get("RECAPTCHA_DATA_ATTRS", {})
-    RECAPTCHA_VERIFY_SERVER = os_env.get("RECAPTCHA_VERIFY_SERVER", None)
+    RECAPTCHA_HTML = os_env.get("RECAPTCHA_HTML", None)
     RECAPTCHA_SCRIPT = os_env.get("RECAPTCHA_SCRIPT", None)
+    RECAPTCHA_DIV_CLASS = os_env.get("RECAPTCHA_DIV_CLASS", None)
+    RECAPTCHA_VERIFY_SERVER = os_env.get("RECAPTCHA_VERIFY_SERVER", None)
+    RECAPTCHA_DATA_ATTRS = os_env.get("RECAPTCHA_DATA_ATTRS", {})
+    if RECAPTCHA_DATA_ATTRS != {}:
+        RECAPTCHA_DATA_ATTRS = loads(RECAPTCHA_DATA_ATTRS)
 
 
 class ProdConfig(Config):

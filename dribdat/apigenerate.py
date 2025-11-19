@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
 """Connect to generative A.I. tools."""
 
-import openai
-import requests, json # Apertus API
+import requests
+import json
 from json.decoder import JSONDecodeError
-
 from flask import current_app
 from .user.models import Project
 
@@ -123,10 +122,10 @@ def prompt_summary(project: Project):
     # Collect project contents
     latest = []
     for d in project.latest_dribs(10):
-        dc = d.content or ''
+        dc = d.content or ""
         if "🅰️ℹ️" in dc:
             continue
-        latest.append(dc)    
+        latest.append(dc)
     dribs = "\n\n".join(latest)
     # Truncate to a reasonable length
     trunc = "\n\n#LOG\n\n".join((summary[:1024], dribs[:1024]))
@@ -161,6 +160,7 @@ def gen_project_post(project: Project, as_boost: bool = False):
 def gen_openai(prompt: str):
     """Request data from a text-completion API."""
     logging = current_app.logger
+    import openai
 
     if "LLM_API_KEY" not in current_app.config:
         logging.error("Missing LLM configuration (LLM_API_KEY)")
@@ -176,20 +176,22 @@ def gen_openai(prompt: str):
     sys_prompt = SYSTEM_PROMPT.strip()[:MAX_PROMPT_LENGTH]
 
     # TODO: remove this when API is updated
-    if 'publicai.co' in llm_base_url:
+    if "publicai.co" in llm_base_url:
         r = requests.post(
             f"{llm_base_url}",
             headers={
                 "Content-Type": "application/json",
                 "Authorization": f"Bearer {llm_api_key}",
             },
-            data=json.dumps({
+            data=json.dumps(
+                {
                     "model": llm_model,
                     "messages": [
                         {"role": "assistant", "content": sys_prompt},
                         {"role": "user", "content": usr_prompt},
                     ],
-                })
+                }
+            ),
         )
         try:
             j = r.json()
