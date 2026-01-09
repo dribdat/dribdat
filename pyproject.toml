@@ -48,7 +48,7 @@ typer = "^0.11"
 sqlalchemy = "^2.0"
 SQLAlchemy-Continuum = "^1.3"
 urllib3 = "<2"
-werkzeug = "^3.0"
+werkzeug = "^3.1"
 whitenoise = "^5.3"
 wtforms = {extras = ["email"], version = "^3.2.1"}
 openai = "^1.35.13"
