@@ -20,6 +20,7 @@ from dribdat.user import (
 from dribdat.public.userhelper import (
     get_users_by_search,
     get_dribs_paginated,
+    get_contributor_stats,
 )
 from dribdat.public.forms import EventNew, EventEdit
 from dribdat.public.projhelper import current_event
@@ -611,10 +612,12 @@ def dribs():
     page = int(request.args.get("page") or 1)
     per_page = int(request.args.get("limit") or 10)
     dribs = get_dribs_paginated(page, per_page, request.host_url)
+    stats = get_contributor_stats()
     return render_template(
         "public/dribs.html",
         current_event=current_event(),
         endpoint="public.dribs",
         active="dribs",
         data=dribs,
+        stats=stats,
     )
