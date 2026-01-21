@@ -10,6 +10,14 @@
 <div class="jumbotron">
   <div class="container">
 
+    <center class="m-2 no-print float-right">
+      <a href="{{ url_for('public.stats') }}" 
+        class="btn btn-lg btn-info" id="event-instruction-tip"
+        title="See statistics from the hackathon">
+        Statistics
+      </a>
+    </center>
+
     {% if current_user and current_user.is_authenticated %}
     <center style="position:relative">
       <a id="project-post"
@@ -101,6 +109,5 @@
   {% endif %}
 
 {% endif %}
-
 
 {% endblock %}

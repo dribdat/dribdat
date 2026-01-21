@@ -4,6 +4,8 @@
 from dribdat.user.models import User, Activity, Role
 from urllib.parse import quote, quote_plus
 from flask import flash
+from dribdat.database import db
+from sqlalchemy import func, case
 
 from sqlalchemy import or_, and_
 
@@ -87,3 +89,22 @@ def get_user_by_name(username):
         flash('Username %s not found!' % username, 'warning')
         return None
     return user
+
+def get_contributor_stats():
+    """Gathers statistics about contributors."""
+    stmt = db.session.query(
+        User.id,
+        User.username,
+        func.count(Activity.id).label('total_activities'),
+        func.sum(case((Activity.action == 'commit', 1), else_=0)).label('commits'),
+        func.sum(case((Activity.action == 'post', 1), else_=0)).label('comments')
+    ).join(Activity, User.id == Activity.user_id).group_by(User.id).subquery()
+
+    results = db.session.query(
+        stmt.c.username,
+        stmt.c.total_activities,
+        stmt.c.commits,
+        stmt.c.comments
+    ).order_by(stmt.c.total_activities.desc()).all()
+
+    return results
