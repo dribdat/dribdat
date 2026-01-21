@@ -1,0 +1,108 @@
+{% extends "layout.html" %}
+
+{% import "macros/_social.html" as social %}
+
+{% block page_title %}Stats{% endblock %}
+
+{% block body_class %}stats-page{% endblock %}
+
+{% block content %}
+<div class="jumbotron">
+  <div class="container">
+
+    <center class="m-2 no-print float-right">
+      <a href="{{ url_for('public.dribs', event_id=current_event.id) }}" 
+        class="btn btn-lg btn-info" id="event-instruction-tip"
+        title="See latest dribs from the hackathon">
+        Dribs
+      </a>
+    </center>
+
+    {% if current_user and current_user.is_authenticated %}
+    <center style="position:relative">
+      <a id="project-post"
+         href="{{ url_for('public.user_post', username=current_user.username) }}"
+         title="Post an update to your current project"
+         class="btn btn-success btn-lg">
+      <i class="fa fa-clock-o" aria-hidden="true"></i>
+        Write a Post</a>
+    </center>
+    {% endif %}
+
+    <div class="stats-section">
+      <h3>Contributor Stats</h3>
+      <div class="stats-chart"></div>
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Contributor</th>
+            <th>Total Activities</th>
+            <th>Commits</th>
+            <th>Comments</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for stat in stats %}
+          <tr>
+            <td>{{ stat.username }}</td>
+            <td>{{ stat.total_activities }}</td>
+            <td>{{ stat.commits }}</td>
+            <td>{{ stat.comments }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</div>
+
+{% if current_event %}
+
+  <center class="mt-5">
+    <a class="btn btn-light btn-lg" href="{{ url_for('public.event', event_id=current_event.id) }}">
+      <i class="fa fa-arrow-left" aria-hidden="true"></i>
+      {{ current_event.name }}</a>
+  </center>
+
+  {% if config.DRIBDAT_SOCIAL_LINKS %}
+    <center class="event-footer">
+      {{ social.share_links(current_event.hashtags, url_for('public.event', event_id=current_event.id, _external=True)) }}
+    </center>
+  {% endif %}
+
+{% endif %}
+
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+<script>
+  const stats = {{ stats|tojson }};
+  const margin = {top: 20, right: 20, bottom: 30, left: 40};
+  const width = 960 - margin.left - margin.right;
+  const height = 500 - margin.top - margin.bottom;
+  const x = d3.scaleBand().range([0, width]).padding(0.1);
+  const y = d3.scaleLinear().range([height, 0]);
+  const svg = d3.select(".stats-chart").append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+    .append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+  x.domain(stats.map(d => d.username));
+  y.domain([0, d3.max(stats, d => d.total_activities)]);
+  svg.selectAll(".bar")
+    .data(stats)
+    .enter().append("rect")
+    .attr("class", "bar")
+    .attr("x", d => x(d.username))
+    .attr("width", x.bandwidth())
+    .attr("y", d => y(d.total_activities))
+.attr("height", d => height - y(d.total_activities));
+  svg.append("g")
+    .attr("transform", "translate(0," + height + ")")
+    .call(d3.axisBottom(x));
+  svg.append("g")
+    .call(d3.axisLeft(y));
+</script>
+{% endblock %}
