@@ -14,8 +14,9 @@ from flask import (
 from flask_login import login_required, current_user
 from dribdat.user.models import User, Event, Project, Role
 from dribdat.user import (
-    getProjectStages, 
-    isUserActive, USER_UNDER_REVIEW_MESSAGE,
+    getProjectStages,
+    isUserActive,
+    USER_UNDER_REVIEW_MESSAGE,
 )
 from dribdat.public.userhelper import (
     get_users_by_search,
@@ -105,8 +106,9 @@ def about():
 def terms():
     """Render a static terms of use page."""
     terms = EVENT_PRESET["terms"]
-    return render_template("public/terms.html", active="terms", 
-        current_event=current_event(), terms=terms)
+    return render_template(
+        "public/terms.html", active="terms", current_event=current_event(), terms=terms
+    )
 
 
 @blueprint.route("/favicon.ico")
@@ -199,9 +201,7 @@ def user_profile(username):
         )
     # Check permissions ..
     is_current_user = (
-        current_user
-        and not current_user.is_anonymous
-        and current_user.id == user.id
+        current_user and not current_user.is_anonymous and current_user.id == user.id
     )
     # Collect user data
     projects = user.joined_projects(False)
@@ -312,9 +312,7 @@ def event(event_id):
         if not isUserActive(current_user):
             flash(USER_UNDER_REVIEW_MESSAGE, "warning")
     # Order by ident then name
-    projects = projects.order_by(
-        Project.ident, Project.name
-    )
+    projects = projects.order_by(Project.ident, Project.name)
     # NB: the above must match projhelper->navigate_around_project
     # Embedding view
     if request.args.get("embed"):
@@ -322,8 +320,8 @@ def event(event_id):
             "public/embed.html", current_event=event, projects=projects
         )
     # Trim instructions
-    if event.instruction and '---' in event.instruction:
-        event.instruction = event.instruction.split('---')[0]
+    if event.instruction and "---" in event.instruction:
+        event.instruction = event.instruction.split("---")[0]
     # Recommend projects
     summaries = []
     suggestions = []
@@ -430,10 +428,11 @@ def event_categories(event_id):
     """Show categories of an event."""
     event = Event.query.filter_by(id=event_id).first_or_404()
     steps = event.categories_for_event()
-    projects = Project.query \
-        .filter_by(event_id=event.id, is_hidden=False, category_id=None) \
-        .order_by(Project.ident, Project.name) \
+    projects = (
+        Project.query.filter_by(event_id=event.id, is_hidden=False, category_id=None)
+        .order_by(Project.ident, Project.name)
         .all()
+    )
     return render_template(
         "public/eventcategories.html",
         current_event=event,
@@ -447,13 +446,10 @@ def event_categories(event_id):
 def event_challenges(event_id):
     """Show all the challenges of an event."""
     event = Event.query.filter_by(id=event_id).first_or_404()
-    projects = Project.query \
-        .filter_by(event_id=event.id, is_hidden=False)
-    if 'all' not in request.args:
+    projects = Project.query.filter_by(event_id=event.id, is_hidden=False)
+    if "all" not in request.args:
         projects = projects.filter(Project.progress >= 0)
-    projects = projects.order_by(
-            Project.ident, Project.name
-        )
+    projects = projects.order_by(Project.ident, Project.name)
     challenges = [p.as_challenge() for p in projects]
     return render_template(
         "public/eventchallenges.html",
@@ -619,5 +615,18 @@ def dribs():
         endpoint="public.dribs",
         active="dribs",
         data=dribs,
+        stats=stats,
+    )
+
+
+@blueprint.route("/stats")
+def stats():
+    """Show the latest logged posts."""
+    stats = get_contributor_stats()
+    return render_template(
+        "public/stats.html",
+        current_event=current_event(),
+        endpoint="public.stats",
+        active="dribs",
         stats=stats,
     )
