@@ -7,6 +7,8 @@
 {% block body_class %}stats-page{% endblock %}
 
 {% block content %}
+{% cache 300 %}
+
 <div class="jumbotron">
   <div class="container">
 
@@ -77,6 +79,7 @@
 
 {% endif %}
 
+{% endcache %}
 {% endblock %}
 
 {% block js %}
