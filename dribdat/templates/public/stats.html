@@ -13,23 +13,22 @@
   <div class="container">
 
     <center class="m-2 no-print float-right">
+
+      {% if current_user and current_user.is_authenticated %}
+        <a id="project-post"
+          href="{{ url_for('public.user_post', username=current_user.username) }}"
+          title="Post an update to your current project"
+          class="btn btn-success btn-lg">
+        <i class="fa fa-clock-o" aria-hidden="true"></i>
+          Post</a>
+      {% endif %}
+
       <a href="{{ url_for('public.dribs') }}" 
         class="btn btn-lg btn-info" id="event-instruction-tip"
         title="See latest dribs from the hackathon">
         Dribs
       </a>
     </center>
-
-    {% if current_user and current_user.is_authenticated %}
-    <center style="position:relative">
-      <a id="project-post"
-         href="{{ url_for('public.user_post', username=current_user.username) }}"
-         title="Post an update to your current project"
-         class="btn btn-success btn-lg">
-      <i class="fa fa-clock-o" aria-hidden="true"></i>
-        Write a Post</a>
-    </center>
-    {% endif %}
 
     <div class="container chart-container mt-4 text-center">
       <div id="activities" class="activity-chart"></div>
