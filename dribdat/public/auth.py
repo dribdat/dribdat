@@ -596,6 +596,12 @@ def oauth2_login():
         nickname = resp_data["nickname"]
     elif "name" in resp_data:
         nickname = resp_data["name"]
+    elif "preferred_username" in resp_data:
+        nickname = resp_data["preferred_username"]
+    # Provide a default nickname if still empty
+    if not nickname and "email" in resp_data:
+        nickname = resp_data["email"].split("@")[0]
+    # Check for required fields
     if not nickname or not "sub" in resp_data or not "email" in resp_data:
         flash("Invalid authentication data format", "danger")
         # print(resp_data)
@@ -605,6 +611,18 @@ def oauth2_login():
         nickname,
         resp_data["email"],
     )
+
+
+@blueprint.route("/swiyu_login", methods=["GET", "POST"])
+def swiyu_login():
+    """Handle login via swiyu."""
+    return oauth2_login()
+
+
+@blueprint.route("/oid4vp_login", methods=["GET", "POST"])
+def oid4vp_login():
+    """Handle login via OID4VP."""
+    return oauth2_login()
 
 
 @blueprint.route("/mattermost_login", methods=["GET", "POST"])

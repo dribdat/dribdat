@@ -57,7 +57,7 @@ def get_auth_blueprint(app):
                 login_url="/login",
                 scope='read_user'
             )
-    elif oauth_type == 'oauth2':
+    elif oauth_type in ['oauth2', 'swiyu', 'oid4vp']:
         if not app.config['OAUTH_DOMAIN']:
             raise Exception("Please specify an OAUTH_DOMAIN")
         blueprint = oauth2.make_oauth2_blueprint(
@@ -65,8 +65,10 @@ def get_auth_blueprint(app):
             secret=app.config['OAUTH_SECRET'],
             base_url=app.config['OAUTH_DOMAIN'],
             scope=app.config['OAUTH_SCOPE'] or 'openid,profile,email',
-            redirect_to="auth.oauth2_login",
+            redirect_to="auth.%s_login" % oauth_type,
             login_url="/login",
+            authorization_url=app.config.get('OAUTH_AUTH_URL'),
+            token_url=app.config.get('OAUTH_TOKEN_URL'),
         )
     elif oauth_type == 'mattermost':
         blueprint = mattermost.make_mattermost_blueprint(
