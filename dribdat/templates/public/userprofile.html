@@ -38,6 +38,11 @@
         <i class="fa fa-child"></i>
         My Story
       </a>
+
+      <a href="{{ url_for('auth.user_ranking') }}" class="btn btn-info btn-lg">
+        <i class="fa fa-list-ol"></i>
+        Rankings
+      </a>
     </div>
 
   {% elif current_user.is_admin %}

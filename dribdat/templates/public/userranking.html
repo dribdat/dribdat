@@ -1,0 +1,71 @@
+{% extends "layout.html" %}
+
+{% block page_title %}Rank Projects{% endblock %}
+
+{% block content %}
+<div class="container">
+  <h2>Rank Projects for {{ event.name }}</h2>
+  <p>Drag and drop up to 5 projects to your ranked list. Your preferences will be used by organizers to match you with a team.</p>
+
+  <div class="row">
+    <div class="col-md-6">
+      <h4>Your Top 5</h4>
+      <ul id="ranked-list" class="list-group border p-3" style="min-height: 200px;">
+        {% for project in ranked_projects %}
+        <li class="list-group-item" data-id="{{ project.id }}">{{ project.name }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+    <div class="col-md-6">
+      <h4>Available Projects</h4>
+      <ul id="unranked-list" class="list-group border p-3" style="min-height: 200px;">
+        {% for project in unranked_projects %}
+        <li class="list-group-item" data-id="{{ project.id }}">{{ project.name }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+
+  <form method="POST" id="ranking-form" class="mt-4">
+    {{ form.hidden_tag() }}
+    {{ form.my_ranking() }}
+    <button type="submit" class="btn btn-primary btn-lg">Save rankings</button>
+    <a href="{{ url_for('public.user_profile', username=user.username) }}" class="btn btn-secondary btn-lg">Back to profile</a>
+  </form>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.14.0/Sortable.min.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    var rankedList = document.getElementById('ranked-list');
+    var unrankedList = document.getElementById('unranked-list');
+
+    new Sortable(rankedList, {
+      group: 'projects',
+      animation: 150,
+      onSort: updateRanking
+    });
+
+    new Sortable(unrankedList, {
+      group: 'projects',
+      animation: 150
+    });
+
+    function updateRanking() {
+      var ids = [];
+      var items = rankedList.querySelectorAll('li');
+      for (var i = 0; i < Math.min(items.length, 5); i++) {
+        ids.push(items[i].getAttribute('data-id'));
+      }
+      var rankingInput = document.getElementById('my_ranking');
+      if (rankingInput) {
+        rankingInput.value = ids.join(',');
+      }
+    }
+
+    document.getElementById('ranking-form').onsubmit = function() {
+      updateRanking();
+    };
+  });
+</script>
+{% endblock %}

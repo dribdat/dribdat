@@ -66,6 +66,28 @@ def user_registration(user_email):
     msg.send(fail_silently=True)
 
 
+def user_assignment_message(user, project, comment=''):
+    """Sends an invitation email to a user."""
+    from_email = current_app.config["MAIL_DEFAULT_SENDER"]
+    msg = EmailMessage(from_email=from_email)
+    msg.subject = "Dribdat: Project matching invitation"
+    msg.to = [user.email]
+    project_url = url_for("project.project_view", project_id=project.id, _external=True)
+    body = "Hi %s,\n\n" % user.username
+    body += "The organizers have matched you with the project '%s'.\n\n" % project.name
+    if comment:
+        body += "%s\n\n" % comment
+    body += "Check it out here: %s\n\n" % project_url
+    body += "Cheers!\n"
+    body += EMAIL_SIGNATURE
+    msg.body = body
+    if "mailman" not in current_app.extensions:
+        current_app.logger.warning("E-mail extension has not been configured")
+        return
+    current_app.logger.info("Sending assignment mail to user %d" % user.id)
+    msg.send(fail_silently=True)
+
+
 def user_invitation_message(project=None):
     """Craft an invitation message."""
     from_email = current_app.config["MAIL_DEFAULT_SENDER"]

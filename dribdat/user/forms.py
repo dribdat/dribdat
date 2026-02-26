@@ -203,3 +203,10 @@ class StoryForm(FlaskForm):
     my_goals = common_user_related_fields["goals"]
 
     submit = SubmitField("Save changes")
+
+
+class RankingForm(FlaskForm):
+    """User project ranking form."""
+
+    my_ranking = HiddenField("my_ranking")
+    submit = SubmitField("Save rankings")

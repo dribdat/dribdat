@@ -742,6 +742,97 @@ def role_new():
     return render_template('admin/rolenew.html', form=form)
 
 
+@blueprint.route('/teambuilder')
+@login_required
+@admin_required
+def teambuilder():
+    current_event = Event.query.filter_by(is_current=True).first()
+    if not current_event:
+        flash('No current event found.', 'warning')
+        return redirect(url_for('admin.index'))
+
+    projects = current_event.current_projects().all()
+    # Users who have some ranking or are participating
+    users = User.query.all()
+
+    participants = []
+    for u in users:
+        if u.my_ranking or u.has_joined(current_event):
+            participants.append(u)
+
+    return render_template('admin/teambuilder.html',
+                           event=current_event,
+                           projects=projects,
+                           participants=participants,
+                           active='teambuilder')
+
+
+@blueprint.route('/teambuilder/match', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def teambuilder_match():
+    current_event = Event.query.filter_by(is_current=True).first()
+    if not current_event:
+        return redirect(url_for('admin.teambuilder'))
+
+    projects = current_event.current_projects().all()
+    users = User.query.all()
+
+    # Matching algorithm (placeholder: random matching based on preferences)
+    matches = []
+    project_map = {p.id: p for p in projects}
+
+    for u in users:
+        ranking = u.my_ranking
+        if not ranking: continue
+
+        # Simple match: first available choice from ranking
+        matched_project = None
+        for pid in ranking:
+            try:
+                pid_int = int(pid)
+                if pid_int in project_map:
+                    matched_project = project_map[pid_int]
+                    break
+            except ValueError:
+                continue
+
+        if matched_project:
+            matches.append({
+                'user': u,
+                'project': matched_project
+            })
+
+    return render_template('admin/teambuilder_results.html',
+                           event=current_event,
+                           matches=matches,
+                           active='teambuilder')
+
+
+@blueprint.route('/teambuilder/send', methods=['POST'])
+@login_required
+@admin_required
+def teambuilder_send_invites():
+    from ..mailer import user_assignment_message
+
+    match_indices = request.form.getlist('match_idx')
+    comment = request.form.get('comment', '')
+
+    count = 0
+    for idx in match_indices:
+        user_id = request.form.get(f'user_id_{idx}')
+        project_id = request.form.get(f'project_id_{idx}')
+
+        user = User.query.get(user_id)
+        project = Project.query.get(project_id)
+        if user and project:
+            user_assignment_message(user, project, comment)
+            count += 1
+
+    flash(f'Sent {count} invitation emails.', 'success')
+    return redirect(url_for('admin.teambuilder'))
+
+
 @blueprint.route('/role/<int:role_id>/delete', methods=['GET', 'POST'])
 @login_required
 @admin_required
