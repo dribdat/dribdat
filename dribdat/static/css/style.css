@@ -2853,17 +2853,6 @@ SlackIn button
 .sso-login .btn.signin-hitobito {
     background-image: url("/static/img/sso/hitobito.png");
 }
-.sso-login .btn.signin-swiyu {
-    background-color: #e60000;
-    color: white;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cpath fill='white' d='M256 0c4.6 0 9.2 1 13.4 2.9L467.7 82.7c22 9.2 36.3 30.5 36.3 54.1L504 269.1c0 146.4-99.3 274.5-236.8 305.1l-1.3 .3c-6.5 1.4-13.3 1.4-19.8 0l-1.3-.3C107.3 543.6 8 415.5 8 269.1l0-132.3c0-23.6 14.3-44.9 36.3-54.1L242.6 2.9c4.2-1.9 8.9-2.9 13.4-2.9z'/%3E%3C/svg%3E");
-    background-position: 95%;
-    background-size: auto 70%;
-}
-.sso-login .btn.signin-oid4vp {
-    background-color: #004a99;
-    color: white;
-}
 
 .sso-login .btn:hover {
     color: red;

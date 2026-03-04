@@ -6,7 +6,7 @@ Dribdat supports authentication via the Swiss E-ID (swiyu) public beta using an 
 
 To enable swiyu login, you need to configure the following environment variables:
 
-- `OAUTH_TYPE`: Set this to `swiyu`.
+- `OAUTH_TYPE`: Set this to `oauth2`.
 - `OAUTH_ID`: Your Client ID from the swiyu developer portal or OIDC bridge.
 - `OAUTH_SECRET`: Your Client Secret.
 - `OAUTH_DOMAIN`: The base URL of your OIDC bridge (e.g., `sso.example.com`).
@@ -15,9 +15,6 @@ To enable swiyu login, you need to configure the following environment variables
 - `OAUTH_USERINFO`: (Optional) Full URL or path to the userinfo endpoint (defaults to `/userinfo`).
 - `OAUTH_SCOPE`: (Optional) Scopes to request, e.g., `openid,profile,email`.
 
-## OID4VP Support
-
-If you are using a direct OID4VP bridge that expects standard OIDC flows, you can also use `OAUTH_TYPE=oid4vp`. This will use the same configuration but display "Sign in with OID4VP" on the login page.
 
 ## Technical Details
 

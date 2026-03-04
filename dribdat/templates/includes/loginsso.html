@@ -42,16 +42,4 @@
         <span>&#x1f512; Sign in with Hitobito</span>
       </a>
     </p>
-  {% elif oauth_type == 'swiyu' %}
-    <p class="sso-login">
-      <a class="btn signin-swiyu" href="{{ url_for('oauth2.login', next=request.args.get('next')) }}" title="Click to sign in - swiyu">
-        <span>&#x1f512; Sign in with swiyu</span>
-      </a>
-    </p>
-  {% elif oauth_type == 'oid4vp' %}
-    <p class="sso-login">
-      <a class="btn signin-oid4vp" href="{{ url_for('oauth2.login', next=request.args.get('next')) }}" title="Click to sign in - OID4VP">
-        <span>&#x1f512; Sign in with OID4VP</span>
-      </a>
-    </p>
   {% endif %}
