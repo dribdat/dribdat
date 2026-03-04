@@ -37,6 +37,7 @@ from dribdat.user.forms import (
     LoginForm,
     UserForm,
     StoryForm,
+    RankingForm,
 )
 from dribdat.database import db
 from dribdat.mailer import (
@@ -420,6 +421,57 @@ def user_story():
 
     return render_template(
         "public/userstory.html", user=user, form=form, active="profile"
+    )
+
+
+@blueprint.route("/user/ranking", methods=["GET", "POST"])
+@login_required
+def user_ranking():
+    """Display or edit the current user's project rankings."""
+    user = current_user
+    if not isUserActive(user):
+        flash(USER_UNDER_REVIEW_MESSAGE, "warning")
+
+    event = current_event()
+    if not event:
+        flash("There is no current event to rank projects for.", "warning")
+        return redirect(url_for("public.home"))
+
+    form = RankingForm(obj=user)
+
+    if form.is_submitted() and form.validate():
+        user.my_ranking = unpack_csvlist(form.my_ranking.data)
+        user.updated_at = datetime.now(UTC)
+        db.session.add(user)
+        db.session.commit()
+        flash("Your rankings have been saved.", "success")
+        return redirect(url_for("public.user_profile", username=user.username))
+
+    # Get all projects for the current event
+    projects = event.current_projects().all()
+
+    # Get current ranking
+    ranking_ids = user.my_ranking
+    ranked_projects = []
+    unranked_projects = []
+
+    project_map = {str(p.id): p for p in projects}
+
+    for pid in ranking_ids:
+        if pid in project_map:
+            ranked_projects.append(project_map[pid])
+            del project_map[pid]
+
+    unranked_projects = list(project_map.values())
+
+    return render_template(
+        "public/userranking.html",
+        user=user,
+        event=event,
+        ranked_projects=ranked_projects,
+        unranked_projects=unranked_projects,
+        form=form,
+        active="profile"
     )
 
 

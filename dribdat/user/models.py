@@ -152,6 +152,17 @@ class User(UserMixin, PkModel):
     def my_wishes(self, value):
         self._my_wishes = pack_csvlist(value)
 
+    # CSV list of project rankings
+    _my_ranking = Column(db.UnicodeText(512), nullable=True)
+
+    @property
+    def my_ranking(self):
+        return unpack_csvlist(self._my_ranking)
+
+    @my_ranking.setter
+    def my_ranking(self, value):
+        self._my_ranking = pack_csvlist(value)
+
     @property
     def data(self):
         """Get JSON representation."""

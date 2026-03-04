@@ -1,0 +1,45 @@
+{% extends "admin/layout.html" %}
+
+{% block content %}
+<div class="container teambuilder-results">
+    <h2 class="huge">Matching Suggestions</h2>
+    <p>Review the suggested matches based on participant rankings. You can customize the message sent to them.</p>
+
+    <form action="{{ url_for('admin.teambuilder_send_invites') }}" method="POST">
+        <div class="mb-4">
+            <label for="comment" class="form-label">Custom Comment (optional)</label>
+            <textarea name="comment" id="comment" class="form-control" rows="3" placeholder="Join this exciting project!"></textarea>
+        </div>
+
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th width="50"></th>
+                    <th>Participant</th>
+                    <th>Suggested Project</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for match in matches %}
+                <tr>
+                    <td>
+                        <input class="form-check-input" type="checkbox" name="match_idx" value="{{ loop.index0 }}" checked>
+                        <input type="hidden" name="user_id_{{ loop.index0 }}" value="{{ match.user.id }}">
+                        <input type="hidden" name="project_id_{{ loop.index0 }}" value="{{ match.project.id }}">
+                    </td>
+                    <td>{{ match.user.username }}</td>
+                    <td>{{ match.project.name }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <div class="mt-4">
+            <button type="submit" class="btn btn-success btn-lg">
+                <i class="fa fa-paper-plane"></i> Send Invitations
+            </button>
+            <a href="{{ url_for('admin.teambuilder') }}" class="btn btn-secondary btn-lg">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}
