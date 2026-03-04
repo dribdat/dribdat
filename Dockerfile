@@ -1,7 +1,7 @@
 # Based on python image which itself is based on debian image
 # https://hub.docker.com/_/python
 # https://hub.docker.com/_/debian
-FROM python:3.12-slim
+FROM python:3.14-slim
 
 # Maintainer information
 LABEL maintainer="Dribdat Contributors <dribdat@datalets.ch>"
