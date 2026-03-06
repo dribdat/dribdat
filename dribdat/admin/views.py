@@ -15,6 +15,7 @@ from ..extensions import db, cache
 from ..decorators import admin_required
 from ..api.parser import GetProjectData
 from ..aggregation import SyncProjectData
+from ..matching import get_matching_results
 from ..user.models import Role, User, Event, Activity, Project, Category
 from ..user import getProjectStages
 from ..public.userhelper import get_user_by_name
@@ -776,32 +777,19 @@ def teambuilder_match():
         return redirect(url_for('admin.teambuilder'))
 
     projects = current_event.current_projects().all()
-    users = User.query.all()
+    # Users who have some ranking or are participating
+    users = [u for u in User.query.all() if u.my_ranking or u.has_joined(current_event)]
 
-    # Matching algorithm (placeholder: random matching based on preferences)
-    matches = []
-    project_map = {p.id: p for p in projects}
+    if not projects or not users:
+        flash('No projects or participants found to match.', 'warning')
+        return redirect(url_for('admin.teambuilder'))
 
-    for u in users:
-        ranking = u.my_ranking
-        if not ranking: continue
+    # Run the matching algorithm
+    matches = get_matching_results(users, projects)
 
-        # Simple match: first available choice from ranking
-        matched_project = None
-        for pid in ranking:
-            try:
-                pid_int = int(pid)
-                if pid_int in project_map:
-                    matched_project = project_map[pid_int]
-                    break
-            except ValueError:
-                continue
-
-        if matched_project:
-            matches.append({
-                'user': u,
-                'project': matched_project
-            })
+    if matches is None:
+        flash('Could not find an optimal solution. Try adjusting constraints.', 'danger')
+        return redirect(url_for('admin.teambuilder'))
 
     return render_template('admin/teambuilder_results.html',
                            event=current_event,
