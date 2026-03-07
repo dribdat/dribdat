@@ -67,6 +67,8 @@ def get_auth_blueprint(app):
             scope=app.config['OAUTH_SCOPE'] or 'openid,profile,email',
             redirect_to="auth.oauth2_login",
             login_url="/login",
+            authorization_url=app.config.get('OAUTH_AUTH_URL'),
+            token_url=app.config.get('OAUTH_TOKEN_URL'),
         )
     elif oauth_type == 'mattermost':
         blueprint = mattermost.make_mattermost_blueprint(
