@@ -4,7 +4,12 @@
 <div class="container teambuilder-admin">
     <h2 class="huge">Teambuilder: {{ event.name }}</h2>
 
-    <div class="btn-group mb-4">
+    <div class="mb-4">
+        <a href="{{ url_for('admin.teambuilder_reset') }}" 
+           onclick="if(!window.confirm('Reset preferences of ALL users?')) return false"
+           class="btn btn-dark btn-lg float-right">
+            Reset ranking
+        </a>
         <a href="{{ url_for('admin.teambuilder_match') }}" class="btn btn-primary btn-lg">
             <i class="fa fa-magic"></i> Match & Suggest
         </a>

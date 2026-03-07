@@ -762,9 +762,10 @@ def teambuilder():
         return redirect(url_for("admin.index"))
 
     projects = current_event.current_projects()
-    # Users who have some ranking or are participating
-    users = User.query.all()
 
+    # Users who have some ranking or are participating
+    # TODO: this is quite inefficient!
+    users = User.query.filter_by(active=True).all()
     participants = []
     for u in users:
         if u.my_ranking or u.has_joined(current_event):
@@ -789,6 +790,7 @@ def teambuilder_match():
 
     projects = current_event.current_projects()
     # Users who have some ranking or are participating
+    # TODO: inefficient!
     users = [u for u in User.query.all() if u.my_ranking or u.has_joined(current_event)]
 
     if not projects or not users:
@@ -810,6 +812,21 @@ def teambuilder_match():
         matches=matches,
         active="teambuilder",
     )
+
+
+@blueprint.route("/teambuilder/reset", methods=["GET"])
+@login_required
+@admin_required
+def teambuilder_reset():
+    # Get all users with a ranking
+    users = [u for u in User.query.all() if u.my_ranking]
+    user_count = len(users)
+    for u in users:
+        u.my_ranking = None
+        u.save()
+
+    flash("Reset preferences of %d users." % user_count, "info")
+    return redirect(url_for("admin.teambuilder"))
 
 
 @blueprint.route("/teambuilder/send", methods=["POST"])
