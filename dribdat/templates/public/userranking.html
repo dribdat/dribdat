@@ -1,8 +1,11 @@
 {% extends "layout.html" %}
 
 {% block page_title %}Rank Projects{% endblock %}
+{% block body_class %}user-ranking{% endblock %}
 
 {% block content %}
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.14.0/Sortable.min.js"></script>
+
 <div class="container">
   <h2>Rank Projects for {{ event.name }}</h2>
   <p>Drag and drop up to 5 projects to your ranked list. Your preferences will be used by organizers to match you with a team.</p>
@@ -12,15 +15,25 @@
       <h4>Your Top 5</h4>
       <ul id="ranked-list" class="list-group border p-3" style="min-height: 200px;">
         {% for project in ranked_projects %}
-        <li class="list-group-item" data-id="{{ project.id }}">{{ project.name }}</li>
+        <li class="list-group-item" data-id="{{ project.id }}">
+          <a href="{{ url_for('project.project_view', project_id=project.id) }}" target="_blank" title="Info">
+            <i class="fa fa-eye"></i>
+          </a>
+          {{ project.name }}
+        </li>
         {% endfor %}
       </ul>
     </div>
     <div class="col-md-6">
       <h4>Available Projects</h4>
-      <ul id="unranked-list" class="list-group border p-3" style="min-height: 200px;">
+      <ul id="unranked-list" class="list-group bg-light p-3" style="min-height: 200px;">
         {% for project in unranked_projects %}
-        <li class="list-group-item" data-id="{{ project.id }}">{{ project.name }}</li>
+        <li class="list-group-item" data-id="{{ project.id }}">
+          <a href="{{ url_for('project.project_view', project_id=project.id) }}" target="_blank" title="Info">
+            <i class="fa fa-eye"></i>
+          </a>
+          {{ project.name }}
+        </li>
         {% endfor %}
       </ul>
     </div>
@@ -34,7 +47,6 @@
   </form>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.14.0/Sortable.min.js"></script>
 <script>
   document.addEventListener('DOMContentLoaded', function() {
     var rankedList = document.getElementById('ranked-list');

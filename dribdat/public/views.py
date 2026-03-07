@@ -137,11 +137,12 @@ def home():
     resource_events = events.filter(Event.lock_resources)
     resource_events = resource_events.order_by(Event.name.asc())
     # Select my challenges
-    my_projects = may_certify = None
+    my_projects = may_certify = may_ranking = None
     if current_user and not current_user.is_anonymous:
         my_projects = current_user.joined_projects(True, 3)
         if cur_event is not None:
             may_certify = cur_event.has_finished and cur_event.certificate_path
+            may_ranking = not cur_event.has_started and not cur_event.has_finished
         if not isUserActive(current_user):
             flash(USER_UNDER_REVIEW_MESSAGE, "warning")
     # Filter past events
@@ -160,6 +161,7 @@ def home():
         events_past_next=events_past_next,
         my_projects=my_projects,
         may_certify=may_certify,
+        may_ranking=may_ranking,
     )
 
 

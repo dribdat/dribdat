@@ -41,7 +41,7 @@ from dribdat.user.forms import (
 )
 from dribdat.database import db
 from dribdat.mailer import (
-    user_activation, 
+    user_activation,
     user_registration,
     notify_admin,
 )
@@ -149,10 +149,10 @@ def register():
         flash_errors(form)
         logout_user()
         return render_template(
-            "public/register.html", 
+            "public/register.html",
             current_event=current_event(),
             oauth_type=oauth_type(),
-            form=form, 
+            form=form,
         )
     # Double check username
     sane_username = sanitize_input(form.username.data)
@@ -448,7 +448,7 @@ def user_ranking():
         return redirect(url_for("public.user_profile", username=user.username))
 
     # Get all projects for the current event
-    projects = event.current_projects().all()
+    projects = event.current_projects()
 
     # Get current ranking
     ranking_ids = user.my_ranking
@@ -471,11 +471,13 @@ def user_ranking():
         ranked_projects=ranked_projects,
         unranked_projects=unranked_projects,
         form=form,
-        active="profile"
+        active="profile",
     )
 
 
-def get_or_create_sso_user(sso_id, sso_name, sso_email, sso_webpage="", allow_create=None):
+def get_or_create_sso_user(
+    sso_id, sso_name, sso_email, sso_webpage="", allow_create=None
+):
     """Match a user account based on SSO_ID."""
     sso_id = str(sso_id)
     user = User.query.filter_by(sso_id=sso_id).first()
