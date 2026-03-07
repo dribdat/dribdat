@@ -37,10 +37,11 @@ from dribdat.user.forms import (
     LoginForm,
     UserForm,
     StoryForm,
+    RankingForm,
 )
 from dribdat.database import db
 from dribdat.mailer import (
-    user_activation, 
+    user_activation,
     user_registration,
     notify_admin,
 )
@@ -66,7 +67,7 @@ def load_user(user_id):
 
 def oauth_type():
     """Check if Slack or another OAuth has been configured."""
-    if "OAUTH_TYPE" in current_app.config:
+    if "OAUTH_TYPE" in current_app.config and current_app.config["OAUTH_TYPE"]:
         return current_app.config["OAUTH_TYPE"].lower()
     else:
         return None
@@ -148,10 +149,10 @@ def register():
         flash_errors(form)
         logout_user()
         return render_template(
-            "public/register.html", 
+            "public/register.html",
             current_event=current_event(),
             oauth_type=oauth_type(),
-            form=form, 
+            form=form,
         )
     # Double check username
     sane_username = sanitize_input(form.username.data)
@@ -423,7 +424,60 @@ def user_story():
     )
 
 
-def get_or_create_sso_user(sso_id, sso_name, sso_email, sso_webpage="", allow_create=None):
+@blueprint.route("/user/ranking", methods=["GET", "POST"])
+@login_required
+def user_ranking():
+    """Display or edit the current user's project rankings."""
+    user = current_user
+    if not isUserActive(user):
+        flash(USER_UNDER_REVIEW_MESSAGE, "warning")
+
+    event = current_event()
+    if not event:
+        flash("There is no current event to rank projects for.", "warning")
+        return redirect(url_for("public.home"))
+
+    form = RankingForm(obj=user)
+
+    if form.is_submitted() and form.validate():
+        user.my_ranking = unpack_csvlist(form.my_ranking.data)
+        user.updated_at = datetime.now(UTC)
+        db.session.add(user)
+        db.session.commit()
+        flash("Your rankings have been saved.", "success")
+        return redirect(url_for("public.user_profile", username=user.username))
+
+    # Get all projects for the current event
+    projects = event.current_projects()
+
+    # Get current ranking
+    ranking_ids = user.my_ranking
+    ranked_projects = []
+    unranked_projects = []
+
+    project_map = {str(p.id): p for p in projects}
+
+    for pid in ranking_ids:
+        if pid in project_map:
+            ranked_projects.append(project_map[pid])
+            del project_map[pid]
+
+    unranked_projects = list(project_map.values())
+
+    return render_template(
+        "public/userranking.html",
+        user=user,
+        event=event,
+        ranked_projects=ranked_projects,
+        unranked_projects=unranked_projects,
+        form=form,
+        active="profile",
+    )
+
+
+def get_or_create_sso_user(
+    sso_id, sso_name, sso_email, sso_webpage="", allow_create=None
+):
     """Match a user account based on SSO_ID."""
     sso_id = str(sso_id)
     user = User.query.filter_by(sso_id=sso_id).first()
@@ -596,7 +650,13 @@ def oauth2_login():
         nickname = resp_data["nickname"]
     elif "name" in resp_data:
         nickname = resp_data["name"]
-    if not nickname or not "sub" in resp_data or not "email" in resp_data:
+    elif "preferred_username" in resp_data:
+        nickname = resp_data["preferred_username"]
+    # Provide a default nickname if still empty
+    if not nickname and "email" in resp_data:
+        nickname = resp_data["email"].split("@")[0]
+    # Check for required fields
+    if not nickname or "sub" not in resp_data or "email" not in resp_data:
         flash("Invalid authentication data format", "danger")
         # print(resp_data)
         return redirect(url_for("auth.login", local=1))
@@ -605,6 +665,8 @@ def oauth2_login():
         nickname,
         resp_data["email"],
     )
+
+
 
 
 @blueprint.route("/mattermost_login", methods=["GET", "POST"])

@@ -152,6 +152,17 @@ class User(UserMixin, PkModel):
     def my_wishes(self, value):
         self._my_wishes = pack_csvlist(value)
 
+    # CSV list of project rankings
+    _my_ranking = Column(db.UnicodeText(512), nullable=True)
+
+    @property
+    def my_ranking(self):
+        return unpack_csvlist(self._my_ranking)
+
+    @my_ranking.setter
+    def my_ranking(self, value):
+        self._my_ranking = pack_csvlist(value)
+
     @property
     def data(self):
         """Get JSON representation."""
@@ -312,7 +323,7 @@ class User(UserMixin, PkModel):
         if self.my_goals and len(self.my_goals) > 6:
             p_score = p_score + 1
         if self.vitae and len(self.vitae) > 6:
-            p_score = p_score + 2 
+            p_score = p_score + 2
         if self.roles and len(self.roles) > 0:  # pyright: ignore
             p_score = p_score + 2
         return p_score / MAX_SCORE
@@ -355,7 +366,7 @@ class User(UserMixin, PkModel):
     def name(self):
         """Display name."""
         return self.fullname or self.username
-    
+
     @property
     def my_roles(self):
         """Concatenate my roles."""
@@ -701,10 +712,9 @@ class Event(PkModel):
         if newstatus is None:
             self.status = None
         else:
-            self.status = ';'.join([
-                str(datetime.now().timestamp()),
-                newstatus.replace(';', ':')
-            ])
+            self.status = ";".join(
+                [str(datetime.now().timestamp()), newstatus.replace(";", ":")]
+            )
 
     @property
     def status_text(self):
@@ -732,19 +742,22 @@ class Event(PkModel):
         projects = self.current_projects()
         if not projects:
             return 0
-        return projects.count()
+        return len(projects)
 
     def current_projects(self):
         """Returns active projects in an event."""
         if not self.projects:
             return None
-        return Project.query.filter_by(event_id=self.id, is_hidden=False)
+        return (
+            Project.query.filter_by(event_id=self.id, is_hidden=False)
+            .filter(Project.progress >= 0)
+            .all()
+        )
 
     def categories_for_event(self):
         """Event categories."""
         return Category.query.filter(
-            or_(Category.event_id == None,
-                Category.event_id == self.id)
+            or_(Category.event_id == None, Category.event_id == self.id)
         ).order_by("name")
 
     @property
@@ -885,8 +898,8 @@ class Project(PkModel):
         """Return embedded format of webpage link."""
         return format_webembed(self.webpage_url, self.id)
 
-    #@property
-    #def longhtml(self):
+    # @property
+    # def longhtml(self):
     #    """Process project longtext and return HTML."""
     #    if not self.longtext or len(self.longtext) < 3:
     #        return self.longtext
@@ -897,7 +910,7 @@ class Project(PkModel):
     @property
     def surl(self):
         """A URL with a short name for readable links."""
-        nm = self.name.lower().strip().replace(' ', '-')
+        nm = self.name.lower().strip().replace(" ", "-")
         return "/project/_/%s" % nm
 
     @property
@@ -1280,7 +1293,11 @@ class Project(PkModel):
 
     def set_auto_image(self):
         """Get an image if available."""
-        if self.image_url and len(self.image_url) > 1 and not self.image_url.endswith("??"):
+        if (
+            self.image_url
+            and len(self.image_url) > 1
+            and not self.image_url.endswith("??")
+        ):
             # Ignore user-uploaded images
             return None
         topdribs = (
@@ -1367,10 +1384,10 @@ class Category(PkModel):
     def projects_here(self, event_id):
         """Get projects in this Category."""
         return (
-            Project.query.filter_by(category_id=self.id) \
-                .filter_by(event_id=event_id, is_hidden=False) \
-                .order_by(Project.ident, Project.name) \
-                .all()
+            Project.query.filter_by(category_id=self.id)
+            .filter_by(event_id=event_id, is_hidden=False)
+            .order_by(Project.ident, Project.name)
+            .all()
         )
 
     @property

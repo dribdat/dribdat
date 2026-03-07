@@ -1474,6 +1474,14 @@ a.media {
     overflow: hidden;
 }
 
+.user-ranking .list-group li {
+  cursor: pointer;
+}
+.user-ranking .list-group a {
+  text-decoration: none;
+  color: blue;
+}
+
 .userprofile .nav,
 .project-page .nav {
     clear: both;
@@ -2290,10 +2298,10 @@ div.project-edit-buttons {
 #get-certified {
     background-image: url("/static/img/certificate.png");
     background-repeat: no-repeat;
-    background-size: cover;
-    font-size: 0px;
+    background-size: contain;
+    padding-left: 100px;
     height: 79px;
-    width: 90px;
+    min-width: 90px;
     margin: 10px;
 }
 .drib-count,

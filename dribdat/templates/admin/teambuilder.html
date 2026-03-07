@@ -1,0 +1,46 @@
+{% extends "admin/layout.html" %}
+
+{% block content %}
+<div class="container teambuilder-admin">
+    <h2 class="huge">Teambuilder</h2>
+    <h3>{{ event.name }}</h3>
+
+    <div class="mb-4">
+        <a href="{{ url_for('admin.teambuilder_reset') }}" 
+           onclick="if(!window.confirm('Reset preferences of ALL users?')) return false"
+           class="btn btn-dark btn-lg float-right">
+            Reset ranking
+        </a>
+        <a href="{{ url_for('admin.teambuilder_match') }}" class="btn btn-primary btn-lg">
+            <i class="fa fa-magic"></i> Match & Suggest
+        </a>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <h3>Projects ({{ projects|length }})</h3>
+            <ul class="list-group">
+                {% for p in projects %}
+                <li class="list-group-item">
+                    <strong>{{ p.name }}</strong>
+                    <span class="badge bg-secondary float-right">{{ p.team_count }} members</span>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="col-md-6">
+            <h3>Participants ({{ participants|length }})</h3>
+            <ul class="list-group">
+                {% for u in participants %}
+                <li class="list-group-item">
+                    {{ u.username }}
+                    {% if u.my_ranking %}
+                    <i class="fa fa-check-circle text-success" title="Has ranked projects"></i>
+                    {% endif %}
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}

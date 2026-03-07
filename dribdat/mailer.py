@@ -8,8 +8,9 @@ from dribdat.utils import random_password  # noqa: I005
 
 EMAIL_SIGNATURE = """ 
 ---
-Your e-mail was registered on our event platform (Dribdat). You can delete your account any time by editing your profile.
-\n// / d}}BD{t
+Your e-mail was registered on our event platform (Dribdat).
+You can delete your account any time by editing your profile.
+\n//d}}BD{t/
 """
 
 
@@ -63,6 +64,33 @@ def user_registration(user_email):
         return
     msg.to = [user_email]
     current_app.logger.info("Sending registration mail")
+    msg.send(fail_silently=True)
+
+
+def user_assignment_message(user, project, comment=""):
+    """Sends an invitation email to a user."""
+    from_email = current_app.config["MAIL_DEFAULT_SENDER"]
+    msg = EmailMessage(from_email=from_email)
+    msg.subject = "Dribdat: Project matching invitation"
+    msg.to = [user.email]
+    project_url = url_for("project.project_view", project_id=project.id, _external=True)
+    body = "Hi %s,\n" % user.name
+    if comment:
+        body += "\n%s\n" % comment
+    body += """
+Based on a statistical algorithm that uses your preferences and profile
+to help organize a diverse and inclusive event (HackIntegration), you
+were matched with a potential project team:
+    """
+    body += "\n'%s'\n\n" % project.name
+    body += "Check it out here: %s\n\n" % project_url
+    body += "Tap the JOIN button if you agree!\n"
+    body += EMAIL_SIGNATURE
+    msg.body = body
+    if "mailman" not in current_app.extensions:
+        current_app.logger.warning("E-mail extension has not been configured")
+        return
+    current_app.logger.info("Sending assignment mail to user %d" % user.id)
     msg.send(fail_silently=True)
 
 
@@ -129,4 +157,3 @@ def notify_admin(about=""):
     msg = notify_admin_message(about)
     msg.send(fail_silently=True)
     return True
-

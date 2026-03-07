@@ -81,20 +81,18 @@
                 <i class="fa fa-comment" aria-hidden="true"></i>
               </a>
             {% endif %}
-	        	{% if event.project_count %}
-	        		<div class="float-right mt-3">
-			          {% if event.has_finished %}
-			            <span title="Teams">{{ event.project_count }}</span>
-			            <i class="fa fa-star" aria-hidden="true"></i>
-			          {% elif event.has_started %}
-			            <span title="Ideas">{{ event.project_count }}</span>
-			            <i class="fa fa-cube" aria-hidden="true"></i>
-			          {% else %}
-			            <span title="Projects">{{ event.project_count }}</span>
-			            <i class="fa fa-arrow-right" aria-hidden="true"></i>
-			          {% endif %}
-	        		</div>
-			      {% endif %}
+            <div class="float-right mt-3">
+              {% if event.has_finished %}
+                <span title="Teams">{{ event.project_count }}</span>
+                <i class="fa fa-star" aria-hidden="true"></i>
+              {% elif event.has_started %}
+                <span title="Ideas">{{ event.project_count }}</span>
+                <i class="fa fa-cube" aria-hidden="true"></i>
+              {% elif event.project_count %}
+                <span title="Projects">{{ event.project_count }}</span>
+                <i class="fa fa-arrow-right" aria-hidden="true"></i>
+              {% endif %}
+            </div>
 	      	</div>
 			  {% endif %}
 	    </div><!-- /.card-body -->

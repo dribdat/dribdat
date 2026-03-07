@@ -25,6 +25,7 @@ class TestPosting:
         project = ProjectFactory()
         project.user = admin
         project.event = event
+        project.progress = -1
         project.save()
 
         # Login the user

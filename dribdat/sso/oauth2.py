@@ -16,12 +16,14 @@ def make_oauth2_blueprint(
     redirect_to: str="",
     login_url: str="",
     authorized_url: str="",
+    authorization_url: str=None,
+    token_url: str=None,
     session_class=None,
     storage=None,
     rule_kwargs=None,
 ):
     """
-    Make a blueprint for authenticating with a generic OAuth 2 provder. This requires
+    Make a blueprint for authenticating with a generic OAuth 2 provider. This requires
     an OAuth consumer. Pass the client ID and secret and URL to this constructor,
     or make sure that the Flask application config defines them, using the variables:
     :envvar:`OAUTH2_CLIENT_DOMAIN`,
@@ -41,6 +43,8 @@ def make_oauth2_blueprint(
             Defaults to ``/login``
         authorized_url (str, optional): URL path for the ``authorized`` view.
             Defaults to ``/authorized``.
+        authorization_url (str, optional): full URL to the authorization endpoint
+        token_url (str, optional): full URL to the token endpoint
         session_class (class, optional): The class to use for creating a
             Requests session. Defaults to
             :class:`~flask_dance.consumer.requests.OAuth2Session`.
@@ -62,8 +66,8 @@ def make_oauth2_blueprint(
         client_secret=secret,
         scope=scope.split(','),
         base_url=base_url,
-        authorization_url=base_url + "/authorize",
-        token_url=base_url + "/token",
+        authorization_url=authorization_url or (base_url + "/authorize"),
+        token_url=token_url or (base_url + "/token"),
         redirect_url=redirect_url,
         redirect_to=redirect_to,
         login_url=login_url,

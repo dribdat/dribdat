@@ -162,11 +162,10 @@
 {% if not current_event.lock_resources %}
 <div class="event-nav text-center pt-5 mt-5 mb-4" role="group" aria-label="Event navigation">
 
-  {% if not current_event.has_started %}
-    <a href="{{ url_for('public.event_challenges', event_id=current_event.id) }}" class="btn btn-sm"
-      title="List all challenges">
-      <i class="fa fa-trophy" aria-hidden="true"></i>
-      <span>Challenges</span>
+  {% if not current_event.has_started and not current_event.has_finished %}
+    <a href="{{ url_for('auth.user_ranking') }}" class="btn btn-info btn-md">
+      <i class="fa fa-list-ol"></i>
+      My Rankings
     </a>
 
   {% elif current_event.countdown %}
@@ -192,7 +191,7 @@
     </a>
 
   {% elif current_event.has_finished %}
-    <a href="{{ url_for('public.event_print', event_id=current_event.id) }}" class="btn btn-sm"
+    <a href="{{ url_for('public.event_print', event_id=current_event.id) }}" class="btn btn-md"
        title="Get an overview of results">
       <i class="fa fa-print" aria-hidden="true"></i>
       <span>Report</span>
