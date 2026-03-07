@@ -51,7 +51,7 @@ def get_gitlab_project(url, with_history):
     apiurl = url
     apiurl = re.sub(r"(?i)-?/blob/[a-z]+/README.*", "", apiurl)
     apiurl = re.sub(r"https?://gitlab\.com/", "", apiurl).strip("/")
-    if apiurl == url:
+    if apiurl == "" or apiurl == url:
         return {}
     return FetchGitlabProject(apiurl, with_history)
 
@@ -65,7 +65,7 @@ def get_github_project(url, with_history):
     apiurl = re.sub(r"https?://github\.com/", "", apiurl).strip("/")
     if apiurl.endswith(".git"):
         apiurl = apiurl[:-4]
-    if apiurl == url:
+    if apiurl == "" or apiurl == url:
         return {}
     if apiurl.endswith(".md"):
         # GitHub Markdown
@@ -83,7 +83,7 @@ def get_codeberg_project(url, with_history):
     apiurl = re.sub(r"https?://codeberg\.org/", "", apiurl).strip("/")
     if apiurl.endswith(".git"):
         apiurl = apiurl[:-4]
-    if apiurl == url:
+    if apiurl == "" or apiurl == url:
         return {}
     return FetchCodebergProject(apiurl, with_history)
 
@@ -91,7 +91,7 @@ def get_codeberg_project(url, with_history):
 def get_huggingface_project(url, with_history):
     """Prepare a HuggingFace URL for the API."""
     apiurl = re.sub(r"https?://huggingface\.co/", "", url).strip("/")
-    if apiurl == url:
+    if apiurl == "" or apiurl == url:
         return {}
     return FetchHuggingFaceProject(apiurl, with_history)
 

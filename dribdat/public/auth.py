@@ -67,7 +67,7 @@ def load_user(user_id):
 
 def oauth_type():
     """Check if Slack or another OAuth has been configured."""
-    if "OAUTH_TYPE" in current_app.config:
+    if "OAUTH_TYPE" in current_app.config and current_app.config["OAUTH_TYPE"]:
         return current_app.config["OAUTH_TYPE"].lower()
     else:
         return None
