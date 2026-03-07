@@ -142,7 +142,11 @@ def home():
         my_projects = current_user.joined_projects(True, 3)
         if cur_event is not None:
             may_certify = cur_event.has_finished and cur_event.certificate_path
-            may_ranking = not cur_event.has_started and not cur_event.has_finished
+            may_ranking = (
+                not cur_event.has_started
+                and not cur_event.has_finished
+                and not my_projects
+            )
         if not isUserActive(current_user):
             flash(USER_UNDER_REVIEW_MESSAGE, "warning")
     # Filter past events
