@@ -2,7 +2,8 @@
 
 {% block content %}
 <div class="container teambuilder-admin">
-    <h2 class="huge">Teambuilder: {{ event.name }}</h2>
+    <h2 class="huge">Teambuilder</h2>
+    <h3>{{ event.name }}</h3>
 
     <div class="mb-4">
         <a href="{{ url_for('admin.teambuilder_reset') }}" 

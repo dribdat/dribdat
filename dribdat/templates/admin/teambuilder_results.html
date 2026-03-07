@@ -2,7 +2,9 @@
 
 {% block content %}
 <div class="container teambuilder-results">
-    <h2 class="huge">Matching Suggestions</h2>
+    <h2 class="huge">Matching</h2>
+    <h3>{{ event.name }}</h3>
+
     <p>Review the suggested matches based on participant rankings. You can customize the message sent to them.</p>
 
     <form action="{{ url_for('admin.teambuilder_send_invites') }}" method="POST">
