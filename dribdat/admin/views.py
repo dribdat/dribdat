@@ -762,6 +762,9 @@ def teambuilder():
         return redirect(url_for("admin.index"))
 
     projects = current_event.current_projects()
+    if not projects:
+        flash("Event must have at least one challenge.", "warning")
+        return redirect(url_for("admin.index"))
 
     # Users who have some ranking or are participating
     # TODO: this is quite inefficient!
