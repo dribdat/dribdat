@@ -71,7 +71,7 @@ class EventForm(FlaskForm):
         u'Lock projects', default=False,
         description=u'🔒 Block starting new projects here.')
     lock_resources = BooleanField(
-        u'Resource area', default=False,
+        u'Bootstrap area', default=False,
         description=u'💡 Used as toolbox, ignoring start and finish.')
     lock_templates = BooleanField(
         u'Templates', default=False,

@@ -35,14 +35,14 @@ def check_update(obj, minutes=5):
     return td < timedelta(minutes=minutes)
 
 
-def resources_by_stage(progress=None, limit=None):
-    """Get all projects which are published in a resource-type event."""
+def bootstraps_by_stage(progress=None, limit=None):
+    """Get all projects which are published in a bootstrap-type event."""
     if progress is None:
         return []
     project_list = []
-    resource_events = [e.id for e in Event.query.filter_by(
+    bootstrap_events = [e.id for e in Event.query.filter_by(
         lock_resources=True, is_hidden=False).all()]
-    for eid in resource_events:
+    for eid in bootstrap_events:
         projects = Project.query.filter_by(
             event_id=eid, is_hidden=False, progress=progress)
         project_list.extend([p.data for p in projects.all()])
@@ -51,10 +51,10 @@ def resources_by_stage(progress=None, limit=None):
     return project_list
 
 
-def templates_from_event(resource_event=False):
-    """Get all projects which are published in a resource-type event."""
-    if resource_event:
-        # No need to make suggestions in a Resource event
+def templates_from_event(bootstrap_event=False):
+    """Get all projects which are published in a bootstrap-type event."""
+    if bootstrap_event:
+        # No need to make suggestions in a Bootstrap event
         return []
     project_list = []
     template_events = [e.id for e in Event.query.filter_by(
@@ -225,6 +225,7 @@ def project_action(project_id, of_type=None, as_view=True, then_redirect=False,
         allow_edit=allow_edit, allow_post=allow_post,
         lock_editing=lock_editing, missing_roles=missing_roles,
         go_nav=go_nav, share=share, surl=project.surl,
+        tab_name='pitch',
     )
 
 

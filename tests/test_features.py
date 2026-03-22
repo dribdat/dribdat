@@ -9,7 +9,7 @@ from .factories import ProjectFactory, EventFactory, UserFactory
 from dribdat.onebox import make_onebox
 from dribdat.public.projhelper import (
     check_update,
-    resources_by_stage,
+    bootstraps_by_stage,
     project_action,
     navigate_around_project,
 )
@@ -104,21 +104,21 @@ EOF""" % (url, url)
         project = ProjectFactory()
         project.name = "example resource"
         project.save()
-        assert resources_by_stage(0) == []
+        assert bootstraps_by_stage(0) == []
         project.event_id = event.id
         project.progress = 0
         project.is_hidden = False
         assert project.is_challenge
         project.save()
-        assert len(resources_by_stage(0)) == 1
+        assert len(bootstraps_by_stage(0)) == 1
         assert project_action(project.id)
         assert check_update(project)
         project2 = ProjectFactory()
         project3 = ProjectFactory()
         project2.event_id = project3.event_id = event.id
         project2.progress = project3.progress = 0
-        assert len(resources_by_stage(0)) == 3
-        assert len(resources_by_stage(0, 2)) == 2
+        assert len(bootstraps_by_stage(0)) == 3
+        assert len(bootstraps_by_stage(0, 2)) == 2
 
     def test_participant_search(self, user, testapp):
         """Search for participants."""

@@ -29,12 +29,12 @@ Some people like to hack on their own - for others, hackathons are all about col
 
 <h1 style="float:right">📦</h1>
 
-## Resources
+## Bootstraps
 
 When participants bring their own material (e.g. software or hardware), sharing is encouraged as long as the entire team can use them easily and legally. This is why we encourage the use of free, open, web-accessible bootstraps. Try to help participants from a wide range experience levels to get started.
 
 <label><input type="checkbox" checked="checked"> 7. Provide links in your event **Instructions**, such as to collections of open data </label><br>
-<label><input type="checkbox" checked="checked"> 8. Set up a **Resources** area with recommended tools for each stage </label><br>
+<label><input type="checkbox" checked="checked"> 8. Set up a **Bootstraps** area with recommended tools for each stage </label><br>
 <label><input type="checkbox" checked="checked"> 9. Customize the event **Stages** with your own hints and progression rules (see [the docs](https://dribdat.cc/deploy))</label><br>
 
 ---

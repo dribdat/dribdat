@@ -69,7 +69,7 @@
 	    	{% if details %}
 	      	<div class="an-event-actions">
             {% if event.lock_resources %}
-              <a title="Discover" href="{{ url_for('public.event_resources', event_id=event.id) }}" class="btn btn-outline-light text-bg-light border-white">
+              <a title="Discover" href="{{ url_for('public.event_bootstraps', event_id=event.id) }}" class="btn btn-outline-light text-bg-light border-white">
                 <i class="fa fa-life-ring" aria-hidden="true"></i>
               </a>
             {% elif event.webpage_url and not event.has_finished %}

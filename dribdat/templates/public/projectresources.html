@@ -1,0 +1,79 @@
+{% extends "layout.html" %}
+{% import "macros/_project.html" as proj %}
+
+{% block page_title %}Resources: {{project.name}}{% endblock %}
+
+{% block body_class %}projectresources{% endblock %}
+
+{% block content %}
+{{ detail.render_project_buttons(project, project_starred, False, allow_edit, lock_editing, False, allow_post, current_user, False, 'resources') }}
+{{ detail.render_project_image(project) }}
+
+<div class="jumbotron bg-light text-dark tab-content project-page phase-{{ project.phase }} {% if project.event.lock_resources %}bootstrap-page{% endif %}" {% if project.logo_color %} style="border-color:{{project.logo_color}}"{% endif %}>
+
+  {{ detail.render_project_head(project) }}
+  <br/>
+  {{ proj.render_project_stats(project) }}
+
+  {% if allow_post and not lock_editing %}
+    <div class="float-right mt-2">
+      <div class="btn-group">
+        <a href="{{ url_for('project.resource_new', project_id=project.id) }}" class="btn btn-success btn-lg">
+          <i class="fa fa-plus"></i> Add resource
+        </a>
+        <a href="{{ url_for('public.all_bootstraps') }}" class="btn btn-info btn-lg">
+          <i class="fa fa-search"></i> Search Bootstraps
+        </a>
+      </div>
+    </div>
+  {% endif %}
+
+  <div class="project-resources">
+    {% if project.resources %}
+      <div class="row">
+        {% for resource in project.resources %}
+          <div class="col-lg-4 mb-4">
+            <div class="card h-100">
+              <div class="card-body">
+                <h5 class="card-title">{{ resource.name }}</h5>
+                <h6 class="card-subtitle mb-2 text-muted">{{ resource.type }}</h6>
+                <p class="card-text">{{ resource.description }}</p>
+                {% if resource.license %}
+                  <p class="card-text"><small class="text-muted">License: {{ resource.license }}</small></p>
+                {% endif %}
+              </div>
+              <div class="card-footer bg-white border-top-0">
+                {% if resource.source_url %}
+                  <a href="{{ resource.source_url }}" class="btn btn-outline-primary btn-sm" target="_blank">View Source</a>
+                {% endif %}
+                {% if allow_post and not lock_editing %}
+                  <div class="btn-group">
+                    <a href="{{ url_for('project.resource_edit', project_id=project.id, resource_id=resource.id) }}" class="btn btn-outline-secondary btn-sm">Edit</a>
+                    <a href="{{ url_for('project.resource_delete', project_id=project.id, resource_id=resource.id) }}"
+                       class="btn btn-outline-danger btn-sm"
+                       onclick="if(!window.confirm('Delete this resource?')) return false">Delete</a>
+                  </div>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="text-center p-5">
+        <i class="fa fa-cube fa-4x mb-3 text-muted"></i>
+        <p class="lead">No resources attached to this project yet.</p>
+        {% if allow_post and not lock_editing %}
+          <p>Click "Add resource" to attribute a model, tool, or dataset.</p>
+        {% endif %}
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+<center class="project-nav mt-5">
+  <a href="{{ url_for('project.project_view', project_id=project.id) }}" class="btn btn-light">
+    <i class="fa fa-arrow-left" aria-hidden="true"></i> Back to Project
+  </a>
+</center>
+{% endblock %}

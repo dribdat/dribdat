@@ -406,14 +406,14 @@ def event_feature(event_id):
     return redirect(url_for("admin.events"))
 
 
-@blueprint.route("/resource/area", methods=["GET", "POST"])
+@blueprint.route("/bootstrap/area", methods=["GET", "POST"])
 @login_required
 @admin_required
-def event_resource_area():
+def event_bootstrap_area():
     event = Event.query.filter_by(lock_resources=True).first()
     if event:
         return redirect(url_for("admin.event_projects", event_id=event.id))
-    new_event = Event(name="Resources")
+    new_event = Event(name="Bootstraps")
     new_event.lock_resources = True
     new_event.save()
     return redirect(url_for("admin.event_projects", event_id=new_event.id))

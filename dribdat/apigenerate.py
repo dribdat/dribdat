@@ -26,7 +26,7 @@ A hackathon project involves:
 INITIAL_CHALLENGE_PROMPT = """
 Write a challenge statement for a collaborative hackathon project.
 Include a section with a basic introduction and first steps.
-Describe in a second section some example datasets and resources.
+Describe in a second section some example datasets and bootstraps.
 The last section should explain what kind of impact is expected.
 Use dashes (---) to separate the sections. Each section is one paragraph.
 """

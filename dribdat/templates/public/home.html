@@ -33,7 +33,7 @@
   {% elif my_projects %}
   {% cache 300, 'home-user-%d' % current_user.id %}
     <center title="My teams" class="home-teams">
-      <div class="ps-4 ps-md-0 mb-5 pb-4 resource-list profile-projects">
+      <div class="ps-4 ps-md-0 mb-5 pb-4 bootstrap-list profile-projects">
         <div class="honeycomb w-100">
         {% for project in my_projects %}
           {{ proj.render_project_hexagon(project) }}
