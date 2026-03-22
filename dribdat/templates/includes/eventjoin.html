@@ -21,6 +21,13 @@
           <i class="fa fa-thumbs-up" aria-hidden="true"></i>
         </p>
         {{ misc.render_user_profile(current_user) }}
+        {% if may_ranking %}
+          <a href="{{ url_for('auth.user_ranking') }}" 
+             class="btn btn-success btn-lg clearfix w-100 mt-3">
+            <i class="fa fa-magic"></i>
+            Start the Teambuilder
+          </a>
+        {% endif %} 
         {% if suggestions %}
         </div><div class="modal-footer">
           <div class="profile-projects mt-2" style="border:none">

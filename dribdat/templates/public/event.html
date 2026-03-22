@@ -162,10 +162,10 @@
 {% if not current_event.lock_resources %}
 <div class="event-nav text-center pt-5 mt-5 mb-4" role="group" aria-label="Event navigation">
 
-  {% if not current_event.has_started and not current_event.has_finished %}
+  {% if may_ranking %}
     <a href="{{ url_for('auth.user_ranking') }}" class="btn btn-info btn-md">
-      <i class="fa fa-list-ol"></i>
-      My Rankings
+      <i class="fa fa-magic"></i>
+      Teambuilder
     </a>
 
   {% elif current_event.countdown %}

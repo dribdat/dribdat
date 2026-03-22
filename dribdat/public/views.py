@@ -340,15 +340,20 @@ def event(event_id):
     if may_certify:
         may_certify = current_user and not current_user.is_anonymous
         may_certify = may_certify and current_user.may_certify()[0]
+    # Allow use of Teambuilder
+    may_ranking = (
+        not event.has_started and not event.has_finished and len(suggestions) > 0
+    )
     # Generate the page
     return render_template(
         "public/event.html",
         current_event=event,
         may_certify=may_certify,
+        may_ranking=may_ranking,
         may_edit=editable,
         summaries=summaries,
         project_count=len(summaries),
-        suggestions=suggestions,
+        suggestions=suggestions[:3],
         active="projects",
     )
 
