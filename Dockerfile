@@ -19,7 +19,7 @@ COPY requirements/* requirements/
 # Install compiler (used by some pip packages)
 RUN : \
     && apt-get update \
-    && apt-get install gcc make libev-dev libuv1-dev libc-ares-dev -y \
+    && apt-get install gcc g++ make libev-dev libuv1-dev libc-ares-dev -y \
     && apt-get clean 
 
 # Install requirements
