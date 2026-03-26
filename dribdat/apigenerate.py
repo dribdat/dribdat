@@ -66,7 +66,8 @@ def prompt_initial(project: Project):
     title = project.name
     topic = ""
     if project.category_id is not None:
-        topic = project.category.description
+        if project.category:
+            topic = project.category.description
     summary = project.summary
     if topic:
         topic = 'The topic is "%s".' % topic
@@ -160,13 +161,10 @@ def gen_project_post(project: Project, as_boost: bool = False):
 def gen_openai(prompt: str):
     """Request data from a text-completion API."""
     logging = current_app.logger
-    import openai
-
     if "LLM_API_KEY" not in current_app.config:
         logging.error("Missing LLM configuration (LLM_API_KEY)")
         return None
 
-    ai_client = None
     llm_base_url = current_app.config["LLM_BASE_URL"]
     llm_api_key = current_app.config["LLM_API_KEY"]
     llm_model = current_app.config["LLM_MODEL"]
@@ -175,8 +173,14 @@ def gen_openai(prompt: str):
     usr_prompt = prompt.strip()[:MAX_PROMPT_LENGTH]
     sys_prompt = SYSTEM_PROMPT.strip()[:MAX_PROMPT_LENGTH]
 
-    # TODO: remove this when API is updated
-    if "publicai.co" in llm_base_url:
+    # Connect to a standard /v1/chat/completions API
+    if llm_base_url and llm_api_key and llm_model:
+        if "/v1" not in llm_base_url and "/v2" not in llm_base_url:
+            llm_base_url = "/".join([llm_base_url.strip("/"), "v1"])
+        if "/chat" not in llm_base_url:
+            llm_base_url = "/".join([llm_base_url, "chat", "completions"])
+        logging.info(f"Dialling up remote LLM for {llm_model}")
+        # Start a JSON POST
         r = requests.post(
             f"{llm_base_url}",
             headers={
@@ -198,64 +202,12 @@ def gen_openai(prompt: str):
         except JSONDecodeError:
             logging.error("No data")
             return None
+
+        # Process the outputs
         if "choices" in j and len(j["choices"]) > 0:
             content = j["choices"][0]["message"]["content"]
             return "%s\n\n🅰️ℹ️ `generated with %s`" % (content, llm_title)
-        else:
-            logging.error(r.text)
-            return None
 
-    if llm_base_url and llm_model:
-        logging.info(f"Using custom LLM provider for {llm_model}")
-        ai_client = openai.OpenAI(
-            api_key=llm_api_key,
-            base_url=llm_base_url,
-        )
-    elif llm_api_key:
-        logging.info("Using default OpenAI provider")
-        ai_client = openai.OpenAI(
-            api_key=llm_api_key,
-        )
-
-    if ai_client is None:
-        logging.error("No LLM configuration available")
-        return None
-
-    # Attempt to get an interaction started
-    completion = None
-    try:
-        logging.debug("Starting completions")
-        completion = ai_client.chat.completions.create(
-            model=llm_model,
-            timeout=REQUEST_TIMEOUT,
-            messages=[
-                {"role": "system", "content": sys_prompt},
-                {"role": "user", "content": usr_prompt},
-            ],
-            # chat_template=CHAT_TEMPLATE_1,
-        )
-    except openai.InternalServerError as e:
-        logging.error("Server error (check your LLM id)")
-        logging.debug(e.__cause__)
-        return None
-    except openai.APIConnectionError:
-        logging.error("No API connection to LLM")
-        logging.debug(e)
-        return None
-    except openai.RateLimitError:
-        logging.error("Rate limits on LLM exceeded")
-        return None
-    except openai.APIStatusError as e:
-        logging.error("An LLM API error (%d) was received" % e.status_code)
-        logging.debug(e.response)
-    except Exception as e:
-        logging.error(e)
-        return None
-
-    # Return the obtained result
-    if completion is not None and len(completion.choices) > 0:
-        content = completion.choices[0].message.content or ""
-        return "%s\n\n🅰️ℹ️ `generated with %s`" % (content, llm_title)
-    else:
-        logging.error("No LLM data in response")
+        # Quiety log the error
+        logging.error(r.text)
         return None
