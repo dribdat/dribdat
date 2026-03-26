@@ -10,13 +10,13 @@
 <div class="jumbotron">
   <div class="container">
 
-    <center class="m-2 no-print float-right">
+    <div class="no-print text-end">
       <a href="{{ url_for('public.stats') }}" 
         class="btn btn-lg btn-info" id="event-instruction-tip"
         title="See statistics from the hackathon">
         Statistics
       </a>
-    </center>
+    </div>
 
     {% if current_user and current_user.is_authenticated %}
     <center style="position:relative">

@@ -95,7 +95,7 @@ def get_user_by_name(username):
     return user
 
 
-def get_contributor_stats(max_users=25):
+def get_contributor_stats(max_users=10):
     """Gathers statistics about contributors."""
     stmt = (
         db.session.query(

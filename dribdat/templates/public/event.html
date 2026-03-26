@@ -42,15 +42,22 @@
     </div>
   {% endif %}
 
-  {% if may_certify %}
-    <div class="p-0 m-0" style="float:left">
+  <div class="p-0 m-0 float-end">
+    {% if may_certify %}
       <a id="get-certified" class="btn btn-success btn-lg"
         href="{{ url_for('public.user_cert') }}" download
         title="Download my certificate">
         Get Certificate
       </a>
-    </div>
-  {% endif %}
+    {% endif %}
+    {% if may_edit %}
+      <a class="btn btn-lg btn-light"
+        href="{{ url_for('public.event_edit', event_id=current_event.id) }}"
+        title="Manage details of this event">
+        <i class="fa fa-pencil"></i>
+        Edit event</a>
+    {% endif %}
+  </div>
 {% else %}
 
   <div class="start-project">
@@ -222,19 +229,7 @@
 </center>
 {% endif %}
 
-{% if current_event.community_embed %}
-<div class="panel panel-default community-embed">
-  <a name="community"></a>
-  <div class="panel-body">
-    {{current_event.community_embed|safe}}
-  </div>
-</div>
-{% endif %}
-
-{% endcache %}
-
 <div class="event-nav m-4 text-center" role="group" aria-label="Event navigation">
-
   {% if current_event.can_start_project %}
     <div role="group" aria-label="Project creation" class="btn-group">
       <a href="{{ url_for('project.project_new', event_id=current_event.id) }}" class="btn btn-lg btn-warning">
@@ -260,13 +255,17 @@
       <i class="fa fa-comment"></i>
       Connect</a>
   {% endif %}
-  {% if may_edit %}
-      <a class="btn btn-lg btn-light"
-        href="{{ url_for('public.event_edit', event_id=current_event.id) }}"
-        title="Manage details of this event">
-        <i class="fa fa-pencil"></i>
-        Edit event</a>
-  {% endif %}
 </div>
+
+{% if current_event.community_embed %}
+<div class="panel panel-default community-embed">
+  <a name="community"></a>
+  <div class="panel-body">
+    {{current_event.community_embed|safe}}
+  </div>
+</div>
+{% endif %}
+
+{% endcache %}
 
 {% endblock %}

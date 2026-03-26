@@ -2,6 +2,6 @@
 # Runs a Docker build here
 
 echo Pushing to dev tag ...
-docker build -t dribdat/dribdat:dev .
-docker push dribdat/dribdat:dev
+podman build -t dribdat/dribdat:dev .
+podman push dribdat/dribdat:dev
 echo Done!
