@@ -25,10 +25,10 @@
 
 {% block content %}
 
-{{ detail.render_project_buttons(project, project_starred, past_version, allow_edit, lock_editing, allow_revert, allow_post, current_user, False) }}
+{{ detail.render_project_buttons(project, project_starred, past_version, allow_edit, lock_editing, allow_revert, allow_post, current_user, False, 'log') }}
 {{ detail.render_project_image(project) }}
 
-<div class="jumbotron bg-light text-dark tab-content project-page phase-{{ project.phase }} {% if project.event.lock_resources %}resource-page{% endif %}" {% if project.logo_color %} style="border-color:{{project.logo_color}}"{% endif %}>
+<div class="jumbotron bg-light text-dark tab-content project-page phase-{{ project.phase }} {% if project.event.lock_resources %}bootstrap-page{% endif %}" {% if project.logo_color %} style="border-color:{{project.logo_color}}"{% endif %}>
 
   {{ detail.render_project_head(project) }}
 

@@ -125,7 +125,7 @@
           href="{{ url_for('project.project_new', event_id=current_event.id) }}">
           <div class="hexagontent">
             {% if current_event.lock_resources %}
-              <i title="Share a resource" class="fa fa-life-ring"></i>
+              <i title="Share a bootstrap" class="fa fa-life-ring"></i>
             {% elif current_event.has_started %}
               <i title="Add your project" class="fa fa-plus"></i>
             {% elif not current_event.has_finished %}
@@ -235,7 +235,7 @@
       <a href="{{ url_for('project.project_new', event_id=current_event.id) }}" class="btn btn-lg btn-warning">
         {% if current_event.lock_resources %}
             <i class="fa fa-life-ring"></i>
-            <span title="Add another resource here">Share a resource</span>
+            <span title="Add another bootstrap here">Share a bootstrap</span>
         {% elif current_event.has_started %}
             <i class="fa fa-plus"></i>
             <span title="Add a project for your team">Start project</span>

@@ -89,6 +89,9 @@
       <th title="Posts"><i class="fa fa-sticky-note me-2 ms-3"></i>{{ project.stats.total }}</th>
       <th title="Dribs"><i class="fa fa-star me-2 ms-3"></i>{{ project.stats.updates }}</th>
     {% endif %}
+    {% if project.resources %}
+      <th title="Resources"><i class="fa fa-cube me-2 ms-3"></i>{{ project.resources|length }}</th>
+    {% endif %}
     {% if project.age %}
       <th title="Started"><i class="fa fa-clock-o me-2 ms-3"></i>{{ project.age|since_date }}</th>
     {% endif %}
@@ -152,7 +155,7 @@
 	</div>
 {% endmacro %}
 
-{% macro render_resource_card(project) %}
+{% macro render_bootstrap_card(project) %}
 	<div class="col-lg-4 mb-4">
 	  <a href="{{ url_for('project.project_view', project_id=project.id) }}" style="text-decoration:none">
 	    <div class="card challenge">

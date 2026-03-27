@@ -1630,8 +1630,8 @@ a.media {
         no-repeat;
 }
 
-/* Resources */
-.resource-card {
+/* Bootstraps */
+.bootstrap-card {
     display: inline-block;
     background: rgba(0, 0, 0, 0.06);
     width: 90%;
@@ -1640,11 +1640,11 @@ a.media {
     border-top: 1px solid #ccc;
     margin-right: 0.5em;
 }
-.resource-card:hover {
+.bootstrap-card:hover {
     background: rgba(0, 0, 0, 0.03);
     text-decoration: none;
 }
-.resource-card p {
+.bootstrap-card p {
     font-size: 80%;
     line-height: normal;
     color: #333;
@@ -1739,7 +1739,7 @@ a.media {
 .projectform .fld-progress select {
     font-size: 150%;
 }
-.projectform form .control-label[for="resource"],
+.projectform form .control-label[for="bootstrap"],
 .projectform form .control-label[for="note"] {
     margin-top: 0px;
 }
@@ -1876,7 +1876,7 @@ main .form-actions input.btn {
     content: "Log";
 }
 #suggest-md::before {
-    content: "Resources";
+    content: "Bootstraps";
 }
 #readme-md::before {
     content: "Readme";
@@ -1884,7 +1884,7 @@ main .form-actions input.btn {
 #project-md::before {
     content: "Pitch";
 }
-.resource-page #project-md::before {
+.bootstrap-page #project-md::before {
     display: none;
 }
 .phase-Challenge #project-md::before {
@@ -2607,12 +2607,12 @@ Issues list view
 Instruction page
 ---------------- */
 
-.instruction-page .resource-list {
+.instruction-page .bootstrap-list {
     margin: 0;
     padding: 0;
     margin-top: 1em;
 }
-.instruction-page .event-resources {
+.instruction-page .event-bootstraps {
     padding: 2rem;
     margin: 0;
     font-size: 125%;

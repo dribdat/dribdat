@@ -130,7 +130,7 @@ def AllowProjectEdit(project, current_user):
         # The project owner can always edit
         return True
     if project.event.lock_resources:
-        # In a Resource area, everyone can edit
+        # In a Bootstrap area, everyone can edit
         return True
     if project.event.user_id == current_user.id:
         # The event owner can always edit

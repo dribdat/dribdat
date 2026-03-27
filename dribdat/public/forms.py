@@ -163,6 +163,7 @@ class ProjectPost(FlaskForm):
 
     id = HiddenField("id")
     has_progress = BooleanField("Level up")
+    is_ai = BooleanField("🅰️ℹ️ AI-supported")
     note = TextAreaField(
         "How are the vibes in your team right now?",
         [length(max=1024)],
@@ -175,6 +176,7 @@ class ProjectComment(FlaskForm):
     """Add a comment to a project."""
 
     id = HiddenField("id")
+    is_ai = BooleanField("🅰️ℹ️ AI-supported")
     note = TextAreaField(
         "My question or comment:",
         [length(max=1024)],
@@ -245,6 +247,42 @@ class EventNew(FlaskForm):
         "Hashtags",
         [length(max=255)],
         description="Social media hashtags for this event",
+    )
+    submit = SubmitField("Save")
+
+
+class ResourceForm(FlaskForm):
+    """Add or edit a resource."""
+
+    id = HiddenField("id")
+    name = StringField(
+        "Name",
+        [length(max=80), DataRequired()],
+        description="Name of the model, tool, or dataset.",
+    )
+    source_url = URLField(
+        "Source URL",
+        [length(max=2048)],
+        description="Link to the resource (e.g., Hugging Face model page).",
+    )
+    type = SelectField(
+        "Type",
+        choices=[
+            ("model", "AI Model"),
+            ("tool", "Software Tool"),
+            ("dataset", "Dataset"),
+            ("framework", "Framework"),
+            ("other", "Other"),
+        ],
+    )
+    description = TextAreaField(
+        "Description",
+        description="Briefly describe how this resource was used.",
+    )
+    license = StringField(
+        "License",
+        [length(max=256)],
+        description="License of the resource (e.g., MIT, Apache 2.0, CC-BY).",
     )
     submit = SubmitField("Save")
 

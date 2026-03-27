@@ -124,7 +124,7 @@ def home():
     events = Event.query
     # Skip any hidden events
     events = events.filter(Event.is_hidden.isnot(True))
-    # Query upcoming and past events which are not resource-typed
+    # Query upcoming and past events which are not bootstrap-typed
     timed_events = events.filter(Event.lock_resources.isnot(True)).order_by(
         Event.starts_at.desc()
     )
@@ -133,9 +133,9 @@ def home():
     today = datetime.now(UTC)
     events_next = timed_events.filter(Event.ends_at > today)
     events_past = timed_events.filter(Event.ends_at < today)
-    # Select Resource-type events
-    resource_events = events.filter(Event.lock_resources)
-    resource_events = resource_events.order_by(Event.name.asc())
+    # Select Bootstrap-type events
+    bootstrap_events = events.filter(Event.lock_resources)
+    bootstrap_events = bootstrap_events.order_by(Event.name.asc())
     # Select my challenges
     my_projects = may_certify = may_ranking = None
     if current_user and not current_user.is_anonymous:
@@ -159,7 +159,7 @@ def home():
         active="home",
         featured_event=cur_event,
         events_featured=events_featured.all(),
-        events_tips=resource_events.all(),
+        events_tips=bootstrap_events.all(),
         events_next=events_next.all(),
         events_past=events_past.all(),
         events_past_next=events_past_next,
@@ -169,12 +169,24 @@ def home():
     )
 
 
+@blueprint.route("/bootstraps")
+def all_bootstraps():
+    """List all bootstrap events."""
+    events = Event.query.filter_by(lock_resources=True, is_hidden=False).order_by(Event.name.asc()).all()
+    return render_template(
+        "public/history.html",
+        active="bootstraps",
+        events_past=events,
+        current_event=None,
+    )
+
+
 @blueprint.route("/history")
 def events_past():
     """List all past events."""
     # Skip any hidden events
     events = Event.query.filter(Event.is_hidden.isnot(True))
-    # Query past events which are not resource-typed
+    # Query past events which are not bootstrap-typed
     today = datetime.now(UTC)
     timed_events = events.filter(Event.lock_resources.isnot(True)).order_by(
         Event.starts_at.desc()
@@ -303,9 +315,9 @@ def user_cert():
 def event(event_id):
     """Show an event."""
     event = Event.query.filter_by(id=event_id).first_or_404()
-    # Redirect resource type events
+    # Redirect bootstrap type events
     if event.lock_resources:
-        return event_resources(event_id)
+        return event_bootstraps(event_id)
     # Sort visible projects by identity (if used), or alphabetically
     projects = Project.query.filter_by(event_id=event_id, is_hidden=False)
     # Do not show unapproved challenges here
@@ -471,19 +483,19 @@ def event_challenges(event_id):
     )
 
 
-@blueprint.route("/event/<int:event_id>/resources")
-def event_resources(event_id):
-    """Show the resources view of an event."""
+@blueprint.route("/event/<int:event_id>/bootstraps")
+def event_bootstraps(event_id):
+    """Show the bootstraps view of an event."""
     event = Event.query.filter_by(id=event_id).first_or_404()
     projects = Project.query.filter_by(event_id=event.id, is_hidden=False).order_by(
         Project.ident, Project.progress, Project.name
     )
     return render_template(
-        "public/eventresources.html",
+        "public/eventbootstraps.html",
         current_event=event,
         projects=projects,
         project_count=projects.count(),
-        active="resources",
+        active="bootstraps",
     )
 
 

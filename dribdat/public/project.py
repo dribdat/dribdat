@@ -12,7 +12,7 @@ from flask import (
     current_app,
 )
 from flask_login import login_required, current_user
-from dribdat.user.models import Event, Project, Activity, User
+from dribdat.user.models import Event, Project, Activity, User, Resource
 from dribdat.user.constants import drib_question
 from dribdat.database import db
 from dribdat.extensions import cache
@@ -23,6 +23,7 @@ from dribdat.public.forms import (
     ProjectPost,
     ProjectBoost,
     ProjectComment,
+    ResourceForm,
 )
 from dribdat.api.parser import GetProjectData
 from dribdat.aggregation import (
@@ -41,7 +42,7 @@ from dribdat.public.projhelper import (
     project_action,
     project_edit_action,
     templates_from_event,
-    resources_by_stage,
+    bootstraps_by_stage,
     revert_project_by_activity,
     navigate_around_project,
     check_update,
@@ -196,7 +197,7 @@ def project_post(project_id):
 
     if event.lock_resources:
         flash(
-            "Comments are not available in the resource area. Please join a project.",
+            "Comments are not available in the bootstrap area. Please join a project.",
             "info",
         )
         return redirect(url_for("project.project_view", project_id=project.id))
@@ -235,7 +236,10 @@ def project_post(project_id):
         cache.clear()
 
         # Write a post
-        project_action(project_id, "update", action="post", text=form.note.data)
+        note_text = form.note.data
+        if form.is_ai.data:
+            note_text += "\n\n🅰️ℹ️ Tools were used"
+        project_action(project_id, "update", action="post", text=note_text)
         flash("Thanks for sharing your progress!", "success")
 
         # Continue with project autoupdate
@@ -267,7 +271,10 @@ def project_comment(project_id):
     # Process form
     if form.is_submitted() and form.validate():
         # Update project data
-        project_action(project_id, "review", action="post", text=form.note.data)
+        note_text = form.note.data
+        if form.is_ai.data:
+            note_text += "\n\n🅰️ℹ️ Tools were used"
+        project_action(project_id, "review", action="post", text=note_text)
 
         flash("Thanks for your feedback!", "success")
         return redirect(url_for("project.get_log", project_id=project.id))
@@ -415,8 +422,8 @@ def get_log(project_id):
     allow_edit, allow_post, lock_editing = GetProjectACLs(
         current_user, project.event, starred
     )
-    # Collect resource tips (from projects in a Template Event)
-    suggestions = resources_by_stage(project.progress, 3)
+    # Collect bootstrap tips (from projects in a Template Event)
+    suggestions = bootstraps_by_stage(project.progress, 3)
     # Render the result
     return render_template(
         "public/projectlog.html",
@@ -429,7 +436,105 @@ def get_log(project_id):
         allow_post=allow_post,
         lock_editing=lock_editing,
         suggestions=suggestions,
+        tab_name='log',
     )
+
+
+@blueprint.route("/<int:project_id>/resources", methods=["GET"])
+def project_resources(project_id):
+    """Show project resources."""
+    project = Project.query.filter_by(id=project_id).first_or_404()
+    # Get access settings
+    starred = IsProjectStarred(project, current_user)
+    allow_edit, allow_post, lock_editing = GetProjectACLs(
+        current_user, project.event, starred
+    )
+    # Render the result
+    return render_template(
+        "public/projectresources.html",
+        active="projects",
+        project=project,
+        current_event=project.event,
+        project_starred=starred,
+        allow_edit=allow_edit,
+        allow_post=allow_post,
+        lock_editing=lock_editing,
+        tab_name='resources',
+    )
+
+
+@blueprint.route("/<int:project_id>/resource/new", methods=["GET", "POST"])
+@login_required
+def resource_new(project_id):
+    """Add a new resource to a project."""
+    project = Project.query.filter_by(id=project_id).first_or_404()
+    if not AllowProjectEdit(project, current_user):
+        flash("You do not have permission to add resources.", "warning")
+        return redirect(url_for("project.project_resources", project_id=project.id))
+
+    form = ResourceForm()
+    if form.validate_on_submit():
+        resource = Resource(
+            name=form.name.data,
+            project_id=project.id,
+            source_url=form.source_url.data,
+            type=form.type.data,
+            description=form.description.data,
+            license=form.license.data,
+        )
+        db.session.add(resource)
+        db.session.commit()
+        flash("Resource added successfully.", "success")
+        return redirect(url_for("project.project_resources", project_id=project.id))
+
+    return render_template(
+        "public/bootstrapedit.html",
+        project=project,
+        form=form,
+        title="Add Resource",
+    )
+
+
+@blueprint.route("/<int:project_id>/resource/<int:resource_id>/edit", methods=["GET", "POST"])
+@login_required
+def resource_edit(project_id, resource_id):
+    """Edit a resource."""
+    project = Project.query.filter_by(id=project_id).first_or_404()
+    if not AllowProjectEdit(project, current_user):
+        flash("You do not have permission to edit resources.", "warning")
+        return redirect(url_for("project.project_resources", project_id=project.id))
+
+    resource = Resource.query.filter_by(id=resource_id, project_id=project_id).first_or_404()
+    form = ResourceForm(obj=resource)
+    if form.validate_on_submit():
+        form.populate_obj(resource)
+        db.session.add(resource)
+        db.session.commit()
+        flash("Resource updated successfully.", "success")
+        return redirect(url_for("project.project_resources", project_id=project.id))
+
+    return render_template(
+        "public/bootstrapedit.html",
+        project=project,
+        form=form,
+        title="Edit Resource",
+    )
+
+
+@blueprint.route("/<int:project_id>/resource/<int:resource_id>/delete", methods=["GET", "POST"])
+@login_required
+def resource_delete(project_id, resource_id):
+    """Delete a resource."""
+    project = Project.query.filter_by(id=project_id).first_or_404()
+    if not AllowProjectEdit(project, current_user):
+        flash("You do not have permission to delete resources.", "warning")
+        return redirect(url_for("project.project_resources", project_id=project.id))
+
+    resource = Resource.query.filter_by(id=resource_id, project_id=project_id).first_or_404()
+    db.session.delete(resource)
+    db.session.commit()
+    flash("Resource deleted successfully.", "success")
+    return redirect(url_for("project.project_resources", project_id=project.id))
 
 
 @blueprint.route("/<int:project_id>/star/me", methods=["GET", "POST"])
@@ -583,7 +688,7 @@ def import_new_project(event_id):
 
 def create_new_project(event):
     """Proceed to create a new project."""
-    # Collect resource tips (from projects in a Template Event)
+    # Collect bootstrap tips (from projects in a Template Event)
     suggestions = templates_from_event(event.lock_resources)
 
     # Project form
@@ -673,7 +778,7 @@ def create_new_project(event):
             "Thanks for your submission - Join in to make changes.", "success"
         )
     elif event.lock_resources:
-        flash("Thanks for sharing a resource here", "success")
+        flash("Thanks for sharing a bootstrap here", "success")
     else:
         flash("You can now invite others to Join this page and contribute", "success")
         project_action(project.id, "create", False)

@@ -1,2 +1,2 @@
 # -*- coding: utf-8 -*-
-"""Boxout modules for parsing resource types."""
+"""Boxout modules for parsing bootstrap types."""
