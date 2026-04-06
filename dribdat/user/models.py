@@ -664,12 +664,16 @@ class Event(PkModel):
     @property
     def ends_at_tz(self):
         """Extra property."""
-        return self.ends_at.replace(tzinfo=current_app.tz)  # pyright: ignore
+        if self.ends_at.tzinfo:
+            return self.ends_at.astimezone(current_app.tz)
+        return self.ends_at.replace(tzinfo=UTC).astimezone(current_app.tz)
 
     @property
     def starts_at_tz(self):
         """Extra property."""
-        return self.starts_at.replace(tzinfo=current_app.tz)  # pyright: ignore
+        if self.starts_at.tzinfo:
+            return self.starts_at.astimezone(current_app.tz)
+        return self.starts_at.replace(tzinfo=UTC).astimezone(current_app.tz)
 
     @property
     def countdown(self):
@@ -1455,7 +1459,10 @@ class Activity(PkModel):
     @property
     def data(self):
         """Get JSON representation."""
-        localtime = self.timestamp.replace(tzinfo=current_app.tz)  # pyright: ignore
+        if self.timestamp.tzinfo:
+            localtime = self.timestamp.astimezone(current_app.tz)
+        else:
+            localtime = self.timestamp.replace(tzinfo=UTC).astimezone(current_app.tz)
         a = {
             "id": self.id,
             "time": int(mktime(self.timestamp.timetuple())),

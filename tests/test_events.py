@@ -42,7 +42,7 @@ class TestEvent:
         assert event.starts_at != event_dt  # store as naive!?
         assert event.name == "test"
         assert event.countdown is not None
-        assert event.countdown == event_dt.replace(tzinfo=timezone)
+        assert event.countdown == event_dt.astimezone(timezone)
         assert timesince(event.countdown, until=True) == "1 week"
 
     def test_countdown_24_days(self):
@@ -55,7 +55,7 @@ class TestEvent:
         assert event.starts_at != event_dt  # store as naive!?
         assert event.name == "test"
         assert event.countdown is not None
-        assert event.countdown == event_dt.replace(tzinfo=timezone)
+        assert event.countdown == event_dt.astimezone(timezone)
         assert timesince(event.countdown, until=True) == "3 weeks"
 
     def test_countdown_4_hours(self):
