@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 {% import "macros/_event.html" as evnt %}
 
-{% block page_title %}Past events{% endblock %}
+{% block page_title %}Dribdat{% endblock %}
 
 {% block body_class %}history home{% endblock %}
 
@@ -12,7 +12,7 @@
 
   {% if events_past %}
     <a name="past"></a>
-    <h2 class="mt-4">Past events</h2>
+    <h2 class="mt-4">All events</h2>
     <div class="row events-past">
       {% for event in events_past %}
         {{ evnt.render_home_event(event) }}

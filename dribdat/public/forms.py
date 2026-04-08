@@ -16,6 +16,7 @@ from wtforms.fields import TimeField, DateField, URLField, DateTimeLocalField
 from wtforms.validators import InputRequired, DataRequired, length
 from dribdat.user.models import Project, Event
 from ..user.validators import UniqueValidator, event_date_check, event_time_check
+from ..user.constants import RESOURCE_TYPES
 from datetime import time, datetime, timedelta
 from dribdat.futures import UTC
 
@@ -271,16 +272,7 @@ class ResourceForm(FlaskForm):
         [length(max=2048)],
         description="Link to the resource (e.g., Hugging Face model page).",
     )
-    type = SelectField(
-        "Type",
-        choices=[
-            ("model", "AI Model"),
-            ("tool", "Software Tool"),
-            ("dataset", "Dataset"),
-            ("framework", "Framework"),
-            ("other", "Other"),
-        ],
-    )
+    type = SelectField("Type", choices=RESOURCE_TYPES)
     description = TextAreaField(
         "Description",
         description="Briefly describe how this resource was used.",

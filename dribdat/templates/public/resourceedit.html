@@ -2,11 +2,11 @@
 
 {% extends "layout.html" %}
 
-{% block page_title %}Bootstrap editor{% endblock %}
-{% block body_class %}bootstrapform{% endblock %}
+{% block page_title %}Resource editor{% endblock %}
+{% block body_class %}resourceform{% endblock %}
 
 {% block content %}
-  <div>Edit a bootstrap or component of
+  <div>Edit a component of
     <h2>
       <a class="project-link" href="{{ url_for('project.project_view', project_id=project.id) }}">{{project.name}}</a>
     </h2>
@@ -14,7 +14,7 @@
 
   <div class="form-bootstrap">
 
-    {{ render_form(url_for('project.bootstrap_edit', project_id=project.id), form) }}
+    {{ render_form(url_for('project.resource_edit', project_id=project.id, resource_id=resource.id), form) }}
 
   </div>
 

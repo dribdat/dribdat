@@ -153,16 +153,6 @@
     </div><!-- /project-md -->
   {% endif %}
 
-  {% if allow_edit %}
-  <div class="project-edit-pitch">
-    <a href="{{ url_for('project.project_edit', project_id=project.id) }}#is_webembed"
-        title="Edit project pitch" class="btn btn-md btn-default bg-warning float-right">
-      <i class="fa fa-pencil" aria-hidden="true"></i>
-      Edit
-    </a><br clear="all"/>
-  </div>
-  {% endif %}
-
   {% if project.autotext %}
     <div id="readme-md" aria-labelledby="readme-tab-md">
 
@@ -256,23 +246,15 @@
         <i class="fa fa-copy" aria-hidden="true"></i>
         Fork</a>
     {% if project.event.user == current_user or current_user.is_admin %}
-      <a href="{{ url_for('project.project_approve', project_id=project.id) }}" class="btn btn-lg btn-primary project-approve"
-        title="Promote to next project level">
-        <i class="fa fa-rocket" aria-hidden="true"></i>
-        Approve
-      </a>
+      </div><div class="btn-group project-controls ms-3 me-2">
+        <a href="{{ url_for('project.project_approve', project_id=project.id) }}" class="btn btn-lg btn-primary project-approve"
+          title="Promote to next project level">
+          <i class="fa fa-rocket" aria-hidden="true"></i>
+          Approve
+        </a>
     {% endif %}
   {% endif %}
 </div><!-- / .project-controls -->
-
-{% if allow_edit and config.LLM_API_KEY and not project.is_challenge and not project.event.lock_resources %}
-  <div role="group" aria-label="Team controls" class="ms-3 me-3 btn-group project-controls">
-    <button data-bs-toggle="modal" data-bs-target="#autopostModal"
-       title="Get tips from an AI coach" class="btn btn-lg btn-dark">
-      &#x1F170;&#xFE0F;&#x2139;&#xFE0F;
-    </button>
-  </div>
-{% endif %}
 
 {% if current_user.is_admin %}
 <div role="group" aria-label="Project administration" class="ml-3 btn-group admin-area" title="Admin area">
