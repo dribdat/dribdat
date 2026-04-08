@@ -1514,7 +1514,7 @@ class Activity(PkModel):
 class Resource(PkModel):
     """A framework, model, or tool used in a project."""
 
-    __tablename__ = "resources"
+    __tablename__ = "resource"
     name = Column(db.String(80), nullable=False)
     source_url = Column(db.String(2048), nullable=True)
     type = Column(db.String(80), nullable=True)  # model, tool, dataset, ...
