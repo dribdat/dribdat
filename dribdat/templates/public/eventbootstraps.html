@@ -1,17 +1,17 @@
 {% extends "layout.html" %}
 {% import "macros/_project.html" as proj %}
 
-{% block page_title %}Resources{% endblock %}
+{% block page_title %}Bootstraps{% endblock %}
 
-{% block body_class %}eventresources-page{% endblock %}
+{% block body_class %}eventbootstraps-page{% endblock %}
 
 {% block content %}
-<div class="event-resources">
+<div class="event-bootstraps">
   {% if project_count %}
     <div class="profile-projects mt-2" style="border:none">
       <div class="row ibws-fix">
         {% for project in projects %}
-            {{ proj.render_resource_card(project) }}
+            {{ proj.render_bootstrap_card(project) }}
         {% endfor %}
       </div>
     </div><!-- /profile-projects -->
@@ -23,7 +23,7 @@
     {% if not current_event.lock_starting %}
       <a href="{{ url_for('project.project_new', event_id=current_event.id) }}" class="btn btn-success">
         <i class="fa fa-life-ring"></i>
-        <span title="Add another resource here">Share a resource</span>
+        <span title="Add another bootstrap here">Share a bootstrap</span>
       </a>
 
       <a href="{{ url_for('project.import_new_project', event_id=current_event.id) }}" class="btn btn-dark">

@@ -2,19 +2,19 @@
 
 {% extends "layout.html" %}
 
-{% block page_title %}Add resource{% endblock %}
-{% block body_class %}resourceform{% endblock %}
+{% block page_title %}Add bootstrap{% endblock %}
+{% block body_class %}bootstrapform{% endblock %}
 
 {% block content %}
-  <div>Add a resource or component to
+  <div>Add a bootstrap or component to
     <h2>
       <a class="project-link" href="{{ url_for('project.project_view', project_id=project.id) }}">{{project.name}}</a>
     </h2>
   </div>
 
-  <div class="form-resource">
+  <div class="form-bootstrap">
 
-    {{ render_form(url_for('project.resource_add', project_id=project.id), form) }}
+    {{ render_form(url_for('project.bootstrap_add', project_id=project.id), form) }}
 
   </div>
 

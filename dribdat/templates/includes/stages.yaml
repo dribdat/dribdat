@@ -20,13 +20,13 @@ stages:
           min: 123
           help: Write at least one paragraph into the Pitch.
       agree:
-        - We have the resources to make a realistic attempt within the time limits.
+        - We have the bootstraps to make a realistic attempt within the time limits.
         - Our challenge suggests inputs and outputs, helping to scope the project.
   -
     id: 5
     name: PROJECT
     phase: Project
-    description: Get data ready, collect resources in a shared space
+    description: Get data ready, collect bootstraps in a shared space
     tip: Find tokenizers, datasets, examples to bootstrap your team.
     emoji: 👪
     conditions:

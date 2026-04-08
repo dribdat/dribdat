@@ -36,10 +36,10 @@
       {% include "includes/projectdialogs.html" %}
     {% endif %}
 
-    <div class="alert float-right pe-5 mb-5 resource-list project-tips profile-projects alert-dismissible">
+    <div class="alert float-right pe-5 mb-5 bootstrap-list project-tips profile-projects alert-dismissible">
       <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 
-      <div class="resource-list-suggestions container-fluid p-1">
+      <div class="bootstrap-list-suggestions container-fluid p-1">
         <h5 class="category-tip m-0 mb-2 clearfix"
             title="This tip is only visible to you and your team">
           {{stage.tip}}
@@ -61,7 +61,7 @@
             {% endfor %}
           </div>
         {% endif %}
-      </div><!-- /resource-list-suggestions -->
+      </div><!-- /bootstrap-list-suggestions -->
 
       {% if all_valid %}
         <div class="form-project-confirm clearfix pl-2 ms-1" role="alert">

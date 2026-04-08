@@ -508,7 +508,7 @@ class Event(PkModel):
     lock_starting = Column(db.Boolean(), default=False)  # prevent starting new projects
     lock_resources = Column(
         db.Boolean(), default=False
-    )  # this event contains Resources
+    )  # if True, this event contains Bootstraps (global resources)
     lock_templates = Column(
         db.Boolean(), default=False
     )  # this event contains Templates
@@ -664,12 +664,16 @@ class Event(PkModel):
     @property
     def ends_at_tz(self):
         """Extra property."""
-        return self.ends_at.replace(tzinfo=current_app.tz)  # pyright: ignore
+        if self.ends_at.tzinfo:
+            return self.ends_at.astimezone(current_app.tz)
+        return self.ends_at.replace(tzinfo=UTC).astimezone(current_app.tz)
 
     @property
     def starts_at_tz(self):
         """Extra property."""
-        return self.starts_at.replace(tzinfo=current_app.tz)  # pyright: ignore
+        if self.starts_at.tzinfo:
+            return self.starts_at.astimezone(current_app.tz)
+        return self.starts_at.replace(tzinfo=UTC).astimezone(current_app.tz)
 
     @property
     def countdown(self):
@@ -1455,7 +1459,10 @@ class Activity(PkModel):
     @property
     def data(self):
         """Get JSON representation."""
-        localtime = self.timestamp.replace(tzinfo=current_app.tz)  # pyright: ignore
+        if self.timestamp.tzinfo:
+            localtime = self.timestamp.astimezone(current_app.tz)
+        else:
+            localtime = self.timestamp.replace(tzinfo=UTC).astimezone(current_app.tz)
         a = {
             "id": self.id,
             "time": int(mktime(self.timestamp.timetuple())),
@@ -1502,6 +1509,44 @@ class Activity(PkModel):
 
     def __repr__(self):  # noqa: D105
         return "<Activity({name})>".format(name=self.name)
+
+
+class Resource(PkModel):
+    """A framework, model, or tool used in a project."""
+
+    __tablename__ = "resources"
+    name = Column(db.String(80), nullable=False)
+    source_url = Column(db.String(2048), nullable=True)
+    type = Column(db.String(80), nullable=True)  # model, tool, dataset, ...
+    description = Column(db.UnicodeText(), nullable=True)
+    license = Column(db.String(256), nullable=True)
+
+    # Project to which this resource belongs
+    project_id = reference_col("projects", nullable=True)
+    project = relationship("Project", backref="resources")
+
+    @property
+    def data(self):
+        """Get JSON representation."""
+        return {
+            "id": self.id,
+            "name": self.name,
+            "source_url": self.source_url or "",
+            "type": self.type or "",
+            "description": self.description or "",
+            "license": self.license or "",
+            "project_id": self.project_id,
+        }
+
+    def __init__(self, name=None, **kwargs):
+        """Create instance."""
+        if name:
+            db.Model.__init__(self, **kwargs)
+            self.name = name
+
+    def __repr__(self):
+        """Represent instance as a unique string."""
+        return "<Resource({name})>".format(name=self.name)
 
 
 # class Availability(PkModel):

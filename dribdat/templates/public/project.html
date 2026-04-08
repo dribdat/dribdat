@@ -1,4 +1,5 @@
 {% extends "layout.html" %}
+{% import "macros/_project.html" as proj %}
 {% import "macros/_misc.html" as misc %}
 {% import "macros/_social.html" as social %}
 {% import "macros/_detail.html" as detail %}
@@ -36,10 +37,10 @@
   </div>
 {% endif %}
 
-{{ detail.render_project_buttons(project, project_starred, past_version, allow_edit, lock_editing, allow_revert, allow_post, current_user, True) }}
+{{ detail.render_project_buttons(project, project_starred, past_version, allow_edit, lock_editing, allow_revert, allow_post, current_user, True, 'pitch') }}
 {{ detail.render_project_image(project) }}
 
-<div class="jumbotron bg-light text-dark tab-content project-page phase-{{ project.phase }} {% if project.event.lock_resources %}resource-page{% endif %}" {% if project.logo_color %} style="border-color:{{project.logo_color}}"{% endif %}>
+<div class="jumbotron bg-light text-dark tab-content project-page phase-{{ project.phase }} {% if project.event.lock_resources %}bootstrap-page{% endif %}" {% if project.logo_color %} style="border-color:{{project.logo_color}}"{% endif %}>
 
   {% if project.download_url %}
     <a href="{{ project.download_url }}" target="_blank" rel="noopener noreferrer"
@@ -49,6 +50,11 @@
   {% endif %}
 
   {{ detail.render_project_head(project) }}
+
+  {% if project.resources %}
+    <br/>
+    {{ proj.render_project_stats(project) }}
+  {% endif %}
 
   {% if project.autotext %}
     <a id="readme-tab-md" href="{{ url_for('project.project_view', project_id=project.id) }}#readme-md"
