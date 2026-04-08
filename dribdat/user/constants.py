@@ -37,6 +37,15 @@ MAX_EXCERPT_LENGTH = 500
 PR_CHALLENGE = 0
 PR_STAGES = {"PROGRESS": {}, "STAGE": {}, "SURVEY": {}, "QUESTIONS": {}}
 
+# What kinds of resources do we support
+RESOURCE_TYPES = [
+    ("dataset", "Dataset"),
+    ("model", "AI Model"),
+    ("tool", "Software Tool"),
+    ("framework", "Code Framework"),
+    ("other", "Other"),
+]
+
 
 def load_project_stages():
     """Initialize progress stages from file."""

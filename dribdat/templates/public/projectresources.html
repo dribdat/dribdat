@@ -1,22 +1,25 @@
 {% extends "layout.html" %}
 {% import "macros/_project.html" as proj %}
+{% import "macros/_detail.html" as detail %}
 
-{% block page_title %}Resources: {{project.name}}{% endblock %}
+{% block page_title %}Resources - {{project.name}}{% endblock %}
 
-{% block body_class %}projectresources{% endblock %}
+{% block body_class %}project-home{% endblock %}
 
 {% block content %}
 {{ detail.render_project_buttons(project, project_starred, False, allow_edit, lock_editing, False, allow_post, current_user, False, 'resources') }}
-{{ detail.render_project_image(project) }}
 
-<div class="jumbotron bg-light text-dark tab-content project-page phase-{{ project.phase }} {% if project.event.lock_resources %}bootstrap-page{% endif %}" {% if project.logo_color %} style="border-color:{{project.logo_color}}"{% endif %}>
+<div class="jumbotron mb-5 bg-light text-dark tab-content project-page phase-{{ project.phase }} {% if project.event.lock_resources %}bootstrap-page{% endif %}" {% if project.logo_color %} style="border-color:{{project.logo_color}}"{% endif %}>
 
   {{ detail.render_project_head(project) }}
-  <br/>
+
+{% if project.stats %}
+  <br />
   {{ proj.render_project_stats(project) }}
+{% endif %}
 
   {% if allow_post and not lock_editing %}
-    <div class="float-right mt-2">
+    <div class="float-right">
       <div class="btn-group">
         <a href="{{ url_for('project.resource_new', project_id=project.id) }}" class="btn btn-success btn-lg">
           <i class="fa fa-plus"></i> Add resource
@@ -27,6 +30,9 @@
       </div>
     </div>
   {% endif %}
+
+<br clear="both" />
+</div>
 
   <div class="project-resources">
     {% if project.resources %}
@@ -70,6 +76,26 @@
     {% endif %}
   </div>
 </div>
+
+{% if suggestions %}
+  <div id="suggest-md" title="Tips from the organizers for this project stage">
+    <div class="row flex-row profile-projects">
+    {% for project in suggestions %}
+      <a class="col align-self-top ms-1 me-1 card project border border-info"
+        {%- if project.image_url %}
+          style="background-image:url('{{project.image_url}}'); padding-left: 120px"
+        {%- endif %}
+         href="{{ url_for('project.project_view', project_id=project.id) }}">
+        <div class="card-body text-bg-light">
+          <i class="fa fa-life-ring float-right" aria-hidden="true"></i>
+          <h5 class="card-title">{{ project.name }}</h5>
+          <p class="card-text">{{ project.summary|truncate(65) }}</p>
+        </div>
+      </a>
+    {% endfor %}
+    </div>
+  </div>
+{% endif %}
 
 <center class="project-nav mt-5">
   <a href="{{ url_for('project.project_view', project_id=project.id) }}" class="btn btn-light">

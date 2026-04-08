@@ -21,8 +21,8 @@ from wtforms.validators import (
     Length,
 )
 from sqlalchemy import func
-from ..user.validators import UniqueValidator
 from dribdat.utils import sanitize_input  # noqa: I005
+from .validators import UniqueValidator
 from .models import User
 
 

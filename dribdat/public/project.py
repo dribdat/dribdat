@@ -424,8 +424,6 @@ def get_log(project_id):
     allow_edit, allow_post, lock_editing = GetProjectACLs(
         current_user, project.event, starred
     )
-    # Collect bootstrap tips (from projects in a Template Event)
-    suggestions = bootstraps_by_stage(project.progress, 3)
     # Render the result
     return render_template(
         "public/projectlog.html",
@@ -437,7 +435,6 @@ def get_log(project_id):
         allow_edit=allow_edit,
         allow_post=allow_post,
         lock_editing=lock_editing,
-        suggestions=suggestions,
         tab_name="log",
     )
 
@@ -451,11 +448,14 @@ def project_resources(project_id):
     allow_edit, allow_post, lock_editing = GetProjectACLs(
         current_user, project.event, starred
     )
+    # Collect bootstrap tips (from projects in a Template Event)
+    suggestions = bootstraps_by_stage(project.progress, 3)
     # Render the result
     return render_template(
         "public/projectresources.html",
         active="projects",
         project=project,
+        suggestions=suggestions,
         current_event=project.event,
         project_starred=starred,
         allow_edit=allow_edit,
@@ -490,7 +490,7 @@ def resource_new(project_id):
         return redirect(url_for("project.project_resources", project_id=project.id))
 
     return render_template(
-        "public/bootstrapedit.html",
+        "public/resourcenew.html",
         project=project,
         form=form,
         title="Add Resource",
@@ -520,8 +520,9 @@ def resource_edit(project_id, resource_id):
         return redirect(url_for("project.project_resources", project_id=project.id))
 
     return render_template(
-        "public/bootstrapedit.html",
+        "public/resourceedit.html",
         project=project,
+        resource=resource,
         form=form,
         title="Edit Resource",
     )
@@ -886,14 +887,14 @@ def project_fork(project_id):
     chkfork = Project.query.filter_by(name=forkname).count()
     if chkfork > 0:
         flash("A fork of this project already exists.", "error")
-        return redirect(url_for("public.event", event_id=event.id))
+        return redirect(url_for("public.event", event_id=project.event.id))
     # Continue to create the fork
     fork = Project(name=forkname, event=project.event)
     data = project.data
     data["name"] = forkname
     ourl = url_for("project.project_view", project_id=project.id, _external=True)
     fork.set_from_data(data)
-    fork.longtext = ourl + "\n\n" + fork.longtext
+    fork.longtext = ourl + "\n\n" + (fork.longtext or "")
     fork.save()
     purl = url_for("project.project_view", project_id=fork.id)
     flash('Project "%s" has been forked.' % project.name, "success")
