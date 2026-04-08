@@ -107,10 +107,10 @@ form input[type="checkbox"] {
     opacity: 1;
     margin-right: 1em;
 }
-.form-project-post .checkbox input:checked {
+.form-project-post .checkbox label[for="has_progress"] input {
     opacity: 0;
 }
-.form-project-post .checkbox:before {
+.form-project-post .checkbox label[for="has_progress"]:before {
     font-family: "FontAwesome";
     font-weight: bold;
     color: orange;

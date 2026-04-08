@@ -67,7 +67,7 @@ def project_view(project_id):
 @blueprint.route("/_/<project_name>")
 def project_view_name(project_name):
     """Show a project matching by name."""
-    project_name = project_name.replace('-', ' ')
+    project_name = project_name.replace("-", " ")
     project = Project.query.filter(Project.name.ilike(project_name)).first_or_404()
     return project_view(project.id)
 
@@ -175,11 +175,10 @@ def render(project_id):
         tpl = render_template("slides.html", project=project)
     else:
         tpl = render_template(
-            "render.html", current_event=project.event,
-            render_src=project.webpage_url
+            "render.html", current_event=project.event, render_src=project.webpage_url
         )
     resp = make_response(tpl)
-    resp.headers['Access-Control-Allow-Origin'] = '*'
+    resp.headers["Access-Control-Allow-Origin"] = "*"
     return resp
 
 
@@ -238,14 +237,16 @@ def project_post(project_id):
         # Write a post
         note_text = form.note.data
         if form.is_ai.data:
-            note_text += "\n\n🅰️ℹ️ Tools were used"
+            note_text = str(note_text) + "\n\n🅰️ℹ️"
         project_action(project_id, "update", action="post", text=note_text)
         flash("Thanks for sharing your progress!", "success")
 
         # Continue with project autoupdate
         if project.is_syncable and check_update(project, 10):
             project_autoupdate(project.id)
-        return redirect(url_for("project.get_log", project_id=project.id))
+        return redirect(
+            url_for("project.get_log", project_id=project.id) + "#suggest-md"
+        )
 
     # Get latest written posts
     posts = project.all_dribs(5, None, True)
@@ -310,7 +311,8 @@ def project_autopost(project_id):
         lastact = p.activities[-1]
         if lastact.content and "🅰️ℹ️" in lastact.content:
             flash(
-                "Please write an update or commit before asking AI for more help.", "info"
+                "Please write an update or commit before asking AI for more help.",
+                "info",
             )
             return redirect(url_for("project.get_log", project_id=p.id))
     # Go whizz up some content based on project data
@@ -436,7 +438,7 @@ def get_log(project_id):
         allow_post=allow_post,
         lock_editing=lock_editing,
         suggestions=suggestions,
-        tab_name='log',
+        tab_name="log",
     )
 
 
@@ -459,7 +461,7 @@ def project_resources(project_id):
         allow_edit=allow_edit,
         allow_post=allow_post,
         lock_editing=lock_editing,
-        tab_name='resources',
+        tab_name="resources",
     )
 
 
@@ -495,7 +497,9 @@ def resource_new(project_id):
     )
 
 
-@blueprint.route("/<int:project_id>/resource/<int:resource_id>/edit", methods=["GET", "POST"])
+@blueprint.route(
+    "/<int:project_id>/resource/<int:resource_id>/edit", methods=["GET", "POST"]
+)
 @login_required
 def resource_edit(project_id, resource_id):
     """Edit a resource."""
@@ -504,7 +508,9 @@ def resource_edit(project_id, resource_id):
         flash("You do not have permission to edit resources.", "warning")
         return redirect(url_for("project.project_resources", project_id=project.id))
 
-    resource = Resource.query.filter_by(id=resource_id, project_id=project_id).first_or_404()
+    resource = Resource.query.filter_by(
+        id=resource_id, project_id=project_id
+    ).first_or_404()
     form = ResourceForm(obj=resource)
     if form.validate_on_submit():
         form.populate_obj(resource)
@@ -521,7 +527,9 @@ def resource_edit(project_id, resource_id):
     )
 
 
-@blueprint.route("/<int:project_id>/resource/<int:resource_id>/delete", methods=["GET", "POST"])
+@blueprint.route(
+    "/<int:project_id>/resource/<int:resource_id>/delete", methods=["GET", "POST"]
+)
 @login_required
 def resource_delete(project_id, resource_id):
     """Delete a resource."""
@@ -530,7 +538,9 @@ def resource_delete(project_id, resource_id):
         flash("You do not have permission to delete resources.", "warning")
         return redirect(url_for("project.project_resources", project_id=project.id))
 
-    resource = Resource.query.filter_by(id=resource_id, project_id=project_id).first_or_404()
+    resource = Resource.query.filter_by(
+        id=resource_id, project_id=project_id
+    ).first_or_404()
     db.session.delete(resource)
     db.session.commit()
     flash("Resource deleted successfully.", "success")
@@ -635,7 +645,7 @@ def import_new_project(event_id):
     form = ProjectImport(obj=project, next=request.args.get("next"))
 
     if form.is_submitted() and not form.validate():
-        # Reformat submission errors 
+        # Reformat submission errors
         if "name" in form.errors and "unique" in form.errors["name"][0]:
             flash(
                 "There is already a project with this name here. Please pick a new name, and add the Readme later.",
@@ -694,7 +704,7 @@ def create_new_project(event):
     # Project form
     form = None
     project = Project()
-    
+
     # Check user status
     is_anonymous = not current_user or current_user.is_anonymous
     if not is_anonymous:
@@ -720,9 +730,7 @@ def create_new_project(event):
     if not current_app.config["LLM_API_KEY"]:
         del form.generate_pitch
     else:
-        form.generate_pitch.label.text += (
-            " using " + current_app.config["LLM_TITLE"]
-        )
+        form.generate_pitch.label.text += " using " + current_app.config["LLM_TITLE"]
 
     if not (form.is_submitted() and form.validate()):
         return render_template(
@@ -774,9 +782,7 @@ def create_new_project(event):
     cache.clear()
 
     if is_anonymous:
-        flash(
-            "Thanks for your submission - Join in to make changes.", "success"
-        )
+        flash("Thanks for your submission - Join in to make changes.", "success")
     elif event.lock_resources:
         flash("Thanks for sharing a bootstrap here", "success")
     else:
@@ -884,7 +890,7 @@ def project_fork(project_id):
     # Continue to create the fork
     fork = Project(name=forkname, event=project.event)
     data = project.data
-    data['name'] = forkname
+    data["name"] = forkname
     ourl = url_for("project.project_view", project_id=project.id, _external=True)
     fork.set_from_data(data)
     fork.longtext = ourl + "\n\n" + fork.longtext

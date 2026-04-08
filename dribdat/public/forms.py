@@ -101,8 +101,10 @@ class ProjectDetailForm(FlaskForm):
         description="🗞️ A short name for your project or challenge.",
     )
     summary = TextAreaField(
-        "Summary", [length(max=2048)], render_kw={"maxlength": 2048, "rows": 3},
-        description="🍫 A short headline about your team or project."
+        "Summary",
+        [length(max=2048)],
+        render_kw={"maxlength": 2048, "rows": 3},
+        description="🍫 A short headline about your team or project.",
     )
     autotext_url = URLField(
         "Readme",
@@ -138,7 +140,8 @@ class ProjectDetailForm(FlaskForm):
     )
     # Note: relative links allowed in image_url -> StringField
     logo_color = StringField(
-        "Outline color", description="🎨 Customize the color scheme of your project page."
+        "Outline color",
+        description="🎨 Customize the color scheme of your project page.",
     )
     logo_icon = StringField(
         "Project icon",
@@ -163,7 +166,10 @@ class ProjectPost(FlaskForm):
 
     id = HiddenField("id")
     has_progress = BooleanField("Level up")
-    is_ai = BooleanField("🅰️ℹ️ AI-supported")
+    is_ai = BooleanField(
+        "AI-supported",
+        render_kw={"title": "Declare the use of generative AI in your latest work."},
+    )
     note = TextAreaField(
         "How are the vibes in your team right now?",
         [length(max=1024)],
