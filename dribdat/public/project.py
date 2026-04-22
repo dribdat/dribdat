@@ -38,6 +38,7 @@ from dribdat.user import (
     stageProjectToNext,
     isUserActive,
 )
+from dribdat.mailer import notify_admin
 from dribdat.public.projhelper import (
     project_action,
     project_edit_action,
@@ -688,6 +689,8 @@ def import_new_project(event_id):
 
     project_action(project.id, "create", False)
     if not current_user.is_admin:
+        notify_admin("A new project '%s' has been imported to '%s' by %s" %
+                     (project.name, event.name, current_user.username))
         flash("Invite others to Join this challenge, and contribute", "success")
         # Join the project as first member
         project_action(project.id, "star", then_redirect=False, for_user=current_user)
@@ -784,12 +787,17 @@ def create_new_project(event):
     if is_anonymous:
         flash("Thanks for your submission - Join in to make changes.", "success")
     elif event.lock_resources:
+        if not current_user.is_admin:
+            notify_admin("A new bootstrap '%s' has been created in '%s' by %s" %
+                         (project.name, event.name, current_user.username))
         flash("Thanks for sharing a bootstrap here", "success")
     else:
         flash("You can now invite others to Join this page and contribute", "success")
         project_action(project.id, "create", False)
         # Automatically join new projects
         if not current_user.is_admin:
+            notify_admin("A new project '%s' has been created in '%s' by %s" %
+                         (project.name, event.name, current_user.username))
             project_action(project.id, "star", False)
 
     # Continue to project view

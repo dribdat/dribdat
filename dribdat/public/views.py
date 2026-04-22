@@ -26,6 +26,7 @@ from dribdat.public.userhelper import (
 from dribdat.public.forms import EventNew, EventEdit
 from dribdat.public.projhelper import current_event
 from dribdat.database import db
+from dribdat.mailer import notify_admin
 from dribdat.extensions import cache
 from dribdat.aggregation import GetEventUsers
 from urllib.parse import urlparse
@@ -563,6 +564,8 @@ def event_new():
             if not current_user.is_admin:
                 event.is_hidden = True
                 event.save()
+                notify_admin("A new event '%s' has been created by %s" %
+                             (event.name, current_user.username))
                 flash(
                     "Please contact an administrator (see About page)"
                     + "to make changes or to promote this event.",
