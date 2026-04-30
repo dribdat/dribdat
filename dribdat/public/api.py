@@ -606,13 +606,23 @@ def generate_event_package(event, format='json'):
     """Create a Data Package from the data of an event."""
     if format not in ['zip', 'json']:
         return "Format not supported"
+
+    # For JSON format, we try to return a cached version
+    cache_key = f"event_package_{event.id}_{format}"
+    if format == 'json':
+        cached_package = cache.get(cache_key)
+        if cached_package:
+            return jsonify(cached_package)
+
     full_contents = (format == 'zip')
     host_url = request.host_url
     # current_user can be empty or anonymous
     package = event_to_data_package(event, current_user, host_url, full_contents)
     if format == 'json':
         # Generate JSON representation
-        return jsonify(package)
+        package_dict = package.to_dict()
+        cache.set(cache_key, package_dict)
+        return jsonify(package_dict)
     elif format == 'zip':
         # Build a file reference
         filename = "datapackage-%s-" % event.name.lower().strip()
@@ -623,7 +633,6 @@ def generate_event_package(event, format='json'):
         return send_file(fp_package.name, as_attachment=True)
 
 @blueprint.route('/event/current/datapackage.<format>', methods=["GET"])
-@cache.cached()
 def package_current_event(format):
     """Download a Data Package for an event."""
     event = get_current_event()
@@ -631,7 +640,6 @@ def package_current_event(format):
 
 
 @blueprint.route('/event/<int:event_id>/datapackage.<format>', methods=["GET"])
-@cache.cached()
 def package_specific_event(event_id, format):
     """Download a Data Package for an event."""
     event = Event.query.filter_by(id=event_id).first_or_404()
