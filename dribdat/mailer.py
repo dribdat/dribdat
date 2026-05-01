@@ -14,6 +14,17 @@ You can delete your account any time by editing your profile.
 """
 
 
+def send_mail(msg, log_message=None):
+    """Send an e-mail message."""
+    if "mailman" not in current_app.extensions:
+        current_app.logger.warning("E-mail extension has not been configured")
+        return False
+    if log_message:
+        current_app.logger.info(log_message)
+    msg.send(fail_silently=True)
+    return True
+
+
 def user_activation_message(user, act_hash):
     """Prepare a message to send to the user."""
     # base_url = url_for("public.home", _external=True)
@@ -46,25 +57,16 @@ def user_activation(user):
     user.set_hashword(act_hash)
     user.save()
     msg = user_activation_message(user, act_hash)
-    # print(msg.body)
-    if "mailman" not in current_app.extensions:
-        current_app.logger.warning("E-mail extension has not been configured")
-        return act_hash
     msg.to = [user.email]
-    current_app.logger.info("Sending activation mail to user %d" % user.id)
-    msg.send(fail_silently=True)
+    send_mail(msg, "Sending activation mail to user %d" % user.id)
     return act_hash
 
 
 def user_registration(user_email):
     """Send an invitation by e-mail."""
     msg = user_invitation_message()
-    if "mailman" not in current_app.extensions:
-        current_app.logger.warning("E-mail extension has not been configured")
-        return
     msg.to = [user_email]
-    current_app.logger.info("Sending registration mail")
-    msg.send(fail_silently=True)
+    send_mail(msg, "Sending registration mail")
 
 
 def user_assignment_message(user, project, comment=""):
@@ -87,11 +89,7 @@ were matched with a potential project team:
     body += "Tap the JOIN button if you agree!\n"
     body += EMAIL_SIGNATURE
     msg.body = body
-    if "mailman" not in current_app.extensions:
-        current_app.logger.warning("E-mail extension has not been configured")
-        return
-    current_app.logger.info("Sending assignment mail to user %d" % user.id)
-    msg.send(fail_silently=True)
+    send_mail(msg, "Sending assignment mail to user %d" % user.id)
 
 
 def user_invitation_message(project=None):
@@ -121,14 +119,9 @@ def user_invitation_message(project=None):
 
 def user_invitation(user_email, project):
     """Send an invitation by e-mail."""
-    if "mailman" not in current_app.extensions:
-        current_app.logger.warning("E-mail extension has not been configured")
-        return False
     msg = user_invitation_message(project)
     msg.to = [user_email]
-    current_app.logger.info("Sending activation mail to %s" % user_email)
-    msg.send(fail_silently=True)
-    return True
+    return send_mail(msg, "Sending activation mail to %s" % user_email)
 
 
 def notify_admin_message(about=""):
@@ -148,12 +141,8 @@ def notify_admin(about=""):
     if current_app.config["MAIL_NOTIFY_ADMIN"] is None:
         # No e-mail address configured
         return False
-    if "mailman" not in current_app.extensions:
-        return False
     if "@" not in current_app.config["MAIL_NOTIFY_ADMIN"]:
         current_app.logger.warn("MAIL_NOTIFY_ADMIN must contain an e-mail address")
         return False
-    current_app.logger.info("Sending admin a notification mail")
     msg = notify_admin_message(about)
-    msg.send(fail_silently=True)
-    return True
+    return send_mail(msg, "Sending admin a notification mail")
