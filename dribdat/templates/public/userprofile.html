@@ -111,6 +111,16 @@
 </div>
 <div class="row mb-3">
 
+  <div class="col-3">
+  {% if user.roles %}
+    <ul class="profile-roles">
+    {% for role in user.roles %}
+      <li>{{ role.name }}</li>
+    {% endfor %}
+    </ul>
+  {% endif %}
+  </div>
+
   <div class="col-sm">
     {% if user.webpage_url %}
       <div class="profile-social m-0">
@@ -123,14 +133,6 @@
         </a>
       </div>
     {% endif %}
-  </div>
-
-  <div class="col-3">
-    <ul class="profile-roles">
-    {% for role in user.roles %}
-      <li>{{ role.name }}</li>
-    {% endfor %}
-    </ul>
   </div>
 
   <div class="col-sm" style="text-align:right">

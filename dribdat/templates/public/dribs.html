@@ -67,6 +67,11 @@
                 <a class="userlink"
                   href="{{ url_for('public.user_profile', username=s.user.username )}}">
                   {{ s.user.name }}</a>
+                {% if s.user.roles %}
+                  {% for r in s.user.roles %}
+                    <span class="ms-2" title="{{r.name}}">{{r.name[0]|upper}}</span>
+                  {% endfor %}
+                {% endif %}
               {% endif %}
             </div>
           {% if s.ref_url %}

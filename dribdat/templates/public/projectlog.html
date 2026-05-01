@@ -117,6 +117,11 @@
                 <a class="userlink"
                   href="{{ url_for('public.user_profile', username=s.author )}}">
                   {{ s.author }}</a>
+                {% if s.roles %}
+                  {% for r in s.roles %}
+                    <span class="ms-2" title="{{r}}">{{r[0]|upper}}</span>
+                  {% endfor %}
+                {% endif %}
               {% endif %}
           {% if s.ref_url %}
             </a>
@@ -133,7 +138,6 @@
 
   </div><!-- /dribs-md -->
   {% endif %}
-
 
 
   {% if project.user %}
