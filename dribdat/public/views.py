@@ -35,7 +35,7 @@ from datetime import datetime, timedelta
 from dribdat.futures import UTC
 
 # Set project version
-VERSION = "0.9.3"
+VERSION = "0.9.4"
 
 blueprint = Blueprint("public", __name__, static_folder="../static")
 
@@ -173,7 +173,11 @@ def home():
 @blueprint.route("/bootstraps")
 def all_bootstraps():
     """List all bootstrap events."""
-    events = Event.query.filter_by(lock_resources=True, is_hidden=False).order_by(Event.name.asc()).all()
+    events = (
+        Event.query.filter_by(lock_resources=True, is_hidden=False)
+        .order_by(Event.name.asc())
+        .all()
+    )
     return render_template(
         "public/history.html",
         active="bootstraps",
@@ -564,8 +568,10 @@ def event_new():
             if not current_user.is_admin:
                 event.is_hidden = True
                 event.save()
-                notify_admin("A new event '%s' has been created by %s" %
-                             (event.name, current_user.username))
+                notify_admin(
+                    "A new event '%s' has been created by %s"
+                    % (event.name, current_user.username)
+                )
                 flash(
                     "Please contact an administrator (see About page)"
                     + "to make changes or to promote this event.",
