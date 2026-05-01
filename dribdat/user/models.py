@@ -1085,7 +1085,7 @@ class Project(PkModel):
             a_parsed = getActivityByType(a, only_active)
             if a_parsed is None:
                 continue
-            (author, title, text, icon) = a_parsed
+            (author, title, text, icon, roles) = a_parsed
             if prev is not None:
                 # Skip repeat signals
                 if prev["title"] == title and prev["text"] == text:
@@ -1100,6 +1100,7 @@ class Project(PkModel):
                 "title": title,
                 "text": text,
                 "author": author,
+                "roles": roles,
                 "name": a.name,
                 "date": a.timestamp,
                 "timesince": a.data["timesince"],

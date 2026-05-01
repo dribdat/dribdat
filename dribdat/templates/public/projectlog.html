@@ -117,9 +117,9 @@
                 <a class="userlink"
                   href="{{ url_for('public.user_profile', username=s.author )}}">
                   {{ s.author }}</a>
-                {% if s.user_roles %}
-                  {% for r in s.user_roles %}
-                    <span class="badge bg-secondary" title="{{r}}">{{r[0]|upper}}</span>
+                {% if s.roles %}
+                  {% for r in s.roles %}
+                    <span class="ms-2" title="{{r}}">{{r[0]|upper}}</span>
                   {% endfor %}
                 {% endif %}
               {% endif %}

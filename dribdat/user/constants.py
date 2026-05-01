@@ -174,14 +174,16 @@ def validateProjectData(project):
 
 def getActivityByType(a, only_active=True):  # noqa: C901
     """Return Activity item representated as a tuple."""
-    author = title = text = icon = None
+    author = title = text = icon = roles = None
     # Obtain author if available
     if a.user:
-        author = a.user.username
         if only_active and not a.user.active:
             return None
+        author = a.user.username
+        roles = [r.name for r in a.user.roles]
     else:
         author = "?"
+        roles = []
 
     # We could use a config data structure like this:
     # {
@@ -250,7 +252,7 @@ def getActivityByType(a, only_active=True):  # noqa: C901
     #    icon = 'undo'
     else:
         return None
-    return (author, title, text, icon)
+    return (author, title, text, icon, roles)
 
 
 def drib_question():
