@@ -13,8 +13,7 @@ ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 
 # Copy pip requirements
-COPY requirements.txt .
-COPY requirements/* requirements/
+COPY pyproject.toml .
 
 # Install compiler (used by some pip packages)
 RUN : \
@@ -24,9 +23,9 @@ RUN : \
 
 # Install requirements
 RUN : \
-    && python -m pip install --upgrade pip \
-    && EMBED=0 pip install gevent \
-    && python -m pip install -r requirements.txt \
+    && python -m pip install --upgrade pip setuptools \
+    && EMBED=0 pip install gevent poetry \
+    && python -m poetry install \
     && apt-get purge --auto-remove -y
 
 
