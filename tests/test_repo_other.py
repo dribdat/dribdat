@@ -39,13 +39,13 @@ class TestRepoOther:
 
     def test_bitbucket(self, user, testapp):
         """Test parsing a Bitbucket readme (via Git)."""
-        test_url = "https://bitbucket.org/dribdat/dribdat.git"
+        test_url = "https://bitbucket.org/kleinstein/spear"
         try:
             test_obj = GetProjectData(test_url, True)
         except ReadTimeout:
             return warnings.warn("Bitbucket is not accessible")
         assert "name" in test_obj
-        assert test_obj["name"] == "dribdat"
+        assert test_obj["name"] == "SPEAR"
         assert test_obj["type"] == "Git"
         # TODO: support for commits
         #assert "commits" in test_obj
