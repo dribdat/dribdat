@@ -74,6 +74,8 @@ class RegisterForm(FlaskForm):
     username = StringField(
         "Username", validators=[DataRequired(), Length(min=3, max=40)]
     )
+    webpage_url = URLField("Online profile", 
+                           description="GitHub, GitLab, StackOverflow, LinkedIn, ...")
     email = EmailField(
         "Email", validators=[DataRequired(), Email(), Length(min=6, max=80)]
     )
@@ -84,7 +86,6 @@ class RegisterForm(FlaskForm):
         "Verify password",
         [DataRequired(), EqualTo("password", message="Passwords must match")],
     )
-    webpage_url = URLField("Online profile")
     recaptcha = RecaptchaField()
     submit = SubmitField("Continue")
 

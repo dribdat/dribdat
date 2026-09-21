@@ -10,6 +10,7 @@ from dribdat.user.models import User, Event
 from dribdat.settings import DevConfig, ProdConfig
 from dribdat.apipackage import fetch_datapackage, load_file_datapackage, import_users_csv
 from dribdat.futures import UTC
+from psycopg2.errors import ForeignKeyViolation
 
 HERE = os.path.abspath(os.path.dirname(__file__))
 TEST_PATH = os.path.join(HERE, 'tests')
@@ -224,19 +225,26 @@ def kick(lowscore: bool, inactive: bool, withsso: bool, delete: bool, score: int
                     del_targets.append(u)
 
         if len(del_targets) > 0:
-            print('This will affect a total of %d users' % len(del_targets))
-            print('... waiting 5 seconds - Ctrl-C to abort! ...')
-            time.sleep(5)
+            print('This will affect a total of %d users, listing top 5:' % len(del_targets))
+            print('---------------------------------------------------------------')
+            for u in del_targets[:5]:
+                print(','.join([u.username, u.fullname or '', u.email, u.webpage_url or '']))
+            print('---------------------------------------------------------------')
+            print('... waiting 7 seconds - Ctrl-C to abort! ...')
+            time.sleep(7)
 
             print('---------------------------------------------------------------')
             print('username,fullname,email,webpage_url')
             for u in del_targets:
+                print(','.join([u.username, u.fullname or '', u.email, u.webpage_url or '']))
                 if delete:
-                    u.delete()
+                    try:
+                        u.delete()
+                    except ForeignKeyViolation as ex:
+                        print(ex.message)
                 else:
                     u.active = False
                     u.save()
-                print(','.join([u.username, u.fullname or '', u.email, u.webpage_url or '']))
                 delcount = delcount + 1
             print('---------------------------------------------------------------')
 
