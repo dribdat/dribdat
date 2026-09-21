@@ -431,6 +431,7 @@ class User(UserMixin, PkModel):
 
     def check_password(self, value):
         """Check password."""
+        if value is None or value == "": return False
         return hashing.check_value(self.password, value)
 
     def set_hashword(self, hashword):
