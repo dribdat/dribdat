@@ -1864,8 +1864,14 @@ main .form-actions input.btn {
     color: #ff0000;
     content: " *";
 }
+
 .form-group .g-recaptcha > div {
     display: inline-block;
+}
+
+.form-control#recaptcha {
+    box-shadow: none;
+    border: none;
 }
 
 /* Inline "README" */

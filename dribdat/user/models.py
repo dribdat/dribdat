@@ -255,11 +255,11 @@ class User(UserMixin, PkModel):
 
     def has_joined(self, event):
         """Check if the user has starred a team at this event."""
-        jp = self.joined_projects(True, -1, event)
-        for project in jp:
-            if project.event == event:
-                return True
-        return False
+        eid = event.id if event else None
+        return Activity.query.filter_by(user_id=self.id, name="star") \
+            .join(Project) \
+            .filter(Project.event_id == eid, Project.is_hidden == False) \
+            .first() is not None
 
     def simple_resume(self):
         """Convert a JSON CV into a simplified dictionary."""

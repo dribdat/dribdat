@@ -66,6 +66,17 @@ class TestUser:
         user = User.create(username="foo", email="foo@bar.com", password="foobarbaz123")
         assert user.check_password("foobarbaz123") is True
         assert user.check_password("barfoobaz") is False
+        assert user.check_password("") is False
+        assert user.check_password(None) is False
+        # Verify that the password is not stored in plain text
+        assert user.password != "foobarbaz123"
+
+    def test_check_hashword(self):
+        """Check hashword."""
+        user = User.create(username="foo", email="foo@bar.com")
+        user.set_hashword("temporary_hash")
+        assert user.check_hashword("temporary_hash") is True
+        assert user.check_hashword("wrong_hash") is False
 
     def test_roles(self):
         """Add a role to a user."""

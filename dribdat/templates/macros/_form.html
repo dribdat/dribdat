@@ -155,6 +155,10 @@
                     {% else %}
                         {{ render_input(field) }}
                     {% endif %}
+                {% elif field.type == "RecaptchaField" %}
+                    <div class="form-group">
+                        {{ field }}
+                    </div>
                 {% else %}
                     {{ render_input(field) }}
                 {% endif %}
