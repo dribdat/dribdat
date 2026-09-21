@@ -126,7 +126,7 @@ def get_matching_results(users, projects, pre_made_teams=None):
     # 3. Solve
     solver = SolverFactory('appsi_highs')
     if not solver.available():
-         logging.error("HiGHS solver not found.")
+         logging.error("HiGHS solver not found. Run pip install highspy")
          return None
 
     results = solver.solve(model)

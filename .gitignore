@@ -5,6 +5,7 @@ yarn.lock
 .flaskenv
 coverage.xml
 profile/*.prof
+server.log
 
 # Compressed assets
 *.gz

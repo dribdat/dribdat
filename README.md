@@ -5,13 +5,16 @@
 
 # Dribdat
 
-**A playful platform for data-driven hackathons and hexagonal teams.**
+**Self-hosted challenge board for sweet open hackathons 🐝**
 
-Designed to bootstrap your [awesome hackathon](https://github.com/dribdat/awesome-hackathon) ⬡⬢⬡ Dribdat is a versatile open source toolbox for civic tech sprints and crowdsourcing. To get started, [install](#quickstart) the software.
+Designed to bootstrap your [awesome hackathon](https://github.com/dribdat/awesome-hackathon) ⬡⬢⬡ Dribdat is a versatile 
+open source toolbox for tech sprints and crowdsourcing. To get started, [install](#quickstart) the software.
+
 See 🚲 [Tour de Hack](https://dribdat.cc/tour) for examples, and 📖 [User handbook](https://dribdat.cc/usage) for screenshots.  
 There are mirrors on 🏔️ [Codeberg](https://codeberg.org/dribdat/dribdat) and [GitHub](https://github.com/dribdat/dribdat).
 
-We aim to include people of all backgrounds in using + developing this tool - no matter your age, gender, race, ability, or sexual identity. Please review our 🏳️‍🌈 [Code of Conduct](CODE_OF_CONDUCT.md).
+We aim to include people of all backgrounds in using + developing this tool - no matter your age, gender, race, ability, or sexual identity.
+Please review our 🏳️‍🌈 [Code of Conduct](CODE_OF_CONDUCT.md).
 
 **Live demo** 🫀 [demo.dribdat.cc](https://demo.dribdat.cc/)
 
@@ -33,7 +36,8 @@ For details, please see the [User Handbook](https://docs.dribdat.cc/usage). If y
 
 # Quickstart
 
-The Dribdat project can be deployed to any server capable of serving [Python](https://python.org) applications, and is set up for fast deployment using [Ansible or Docker](https://dribdat.cc/deploy)
+The Dribdat project can be deployed to any server capable of serving [Python](https://python.org) applications, 
+and is set up for fast deployment using [Ansible or Docker](https://dribdat.cc/deploy)
 🏀 The first user that registers becomes an admin, so don't delay when you make your play!
 
 **Run with Docker Compose:**

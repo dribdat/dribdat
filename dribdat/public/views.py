@@ -35,7 +35,7 @@ from datetime import datetime, timedelta
 from dribdat.futures import UTC
 
 # Set project version
-VERSION = "0.9.4"
+VERSION = "0.9.5"
 
 blueprint = Blueprint("public", __name__, static_folder="../static")
 
