@@ -21,30 +21,6 @@
 {% block content_class %}{% endblock %}
 
 {% block content %}
-
-{% if featured_event %}
-  {% if may_ranking %}
-    <center class="home-teams">
-    <a href="{{ url_for('auth.user_ranking') }}" class="btn btn-success btn-lg">
-      <i class="fa fa-magic"></i>
-      Start the Teambuilder
-    </a>
-    </center>
-  {% elif my_projects %}
-  {% cache 300, 'home-user-%d' % current_user.id %}
-    <center title="My teams" class="home-teams">
-      <div class="ps-4 ps-md-0 mb-5 pb-4 bootstrap-list profile-projects">
-        <div class="honeycomb w-100">
-        {% for project in my_projects %}
-          {{ proj.render_project_hexagon(project) }}
-        {% endfor %}
-        </div>
-      </div><br clear="all"/>
-    </center>
-  {% endcache %}
-  {% endif %}
-{% endif %}
-
 {% cache 300, 'home-page' %}
 {% if featured_event %}
   <main class="home-page">

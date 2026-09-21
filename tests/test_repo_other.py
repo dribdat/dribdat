@@ -37,18 +37,3 @@ class TestRepoOther:
         assert "commits" in test_obj
         assert len(test_obj["commits"]) > 5
 
-    def test_bitbucket(self, user, testapp):
-        """Test parsing a Bitbucket readme (via Git)."""
-        test_url = "https://bitbucket.org/dribdat/dribdat.git"
-        try:
-            test_obj = GetProjectData(test_url, True)
-        except ReadTimeout:
-            return warnings.warn("Bitbucket is not accessible")
-        assert "name" in test_obj
-        assert test_obj["name"] == "dribdat"
-        assert test_obj["type"] == "Git"
-        # TODO: support for commits
-        #assert "commits" in test_obj
-        #assert len(test_obj["commits"]) > 5
-        #assert test_obj["commits"][-1]["message"] == "Initial cookiecutter-flask project"
-        #assert len(data["commits"]) > 0

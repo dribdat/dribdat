@@ -1,7 +1,0 @@
-# Included because many Paas's require a requirements.txt file in the project root
-
-# Use PyPi simple repo for automated deployments
--i https://pypi.org/simple
-
-# Just installs the production requirements.
--r requirements/prod.txt
