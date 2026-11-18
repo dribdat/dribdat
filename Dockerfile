@@ -25,7 +25,7 @@ RUN : \
 RUN : \
     && python -m pip install --upgrade pip setuptools \
     && EMBED=0 pip install gevent poetry \
-    && python -m poetry install \
+    && POETRY_VIRTUALENVS_CREATE=false python -m poetry install --no-root \
     && apt-get purge --auto-remove -y
 
 
