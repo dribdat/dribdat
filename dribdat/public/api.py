@@ -614,7 +614,16 @@ def generate_event_package(event, format='json'):
         if cached_package:
             return jsonify(cached_package)
 
-    full_contents = (format == 'zip')
+    # The full package (zip) embeds the participants resource, including their
+    # e-mail addresses. Restrict that to the event owner or a site admin, using
+    # the same rule as event editing. Everyone else still gets the open event
+    # and project data, just without the participant list. The JSON format never
+    # includes participants, so this only narrows the zip.
+    full_contents = (
+        format == 'zip'
+        and not current_user.is_anonymous
+        and (current_user.is_admin or event.user == current_user)
+    )
     host_url = request.host_url
     # current_user can be empty or anonymous
     package = event_to_data_package(event, current_user, host_url, full_contents)
